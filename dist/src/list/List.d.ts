@@ -1,0 +1,33 @@
+import { IList } from "./IList";
+export declare class List<T> implements IList<T>, IterableIterator<T> {
+    private count;
+    private data;
+    private iteratorIndex;
+    constructor(data?: T[]);
+    add(item: T): void;
+    clear(): void;
+    contains(item: T): boolean;
+    copyTo(array: T[], arrayIndex: number): void;
+    exists(predicate: (item: T) => boolean): boolean;
+    find(predicate: (item: T) => boolean): T;
+    findAll(predicate: (item: T) => boolean): List<T>;
+    findIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number;
+    findLast(predicate: (item: T) => boolean): T;
+    findLastIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number;
+    forEach(action: (item: T) => void): void;
+    get(index: number): T;
+    indexOf(item: T): number;
+    insert(index: number, item: T): void;
+    lastIndexOf(item: T): number;
+    remove(item: T): boolean;
+    removeAll(predicate: (value: T) => boolean): number;
+    removeAt(index: number): void;
+    removeRange(index: number, count: number): void;
+    reverse(): void;
+    set(index: number, item: T): void;
+    sort(): void;
+    toArray(): T[];
+    next(): IteratorResult<T>;
+    [Symbol.iterator](): IterableIterator<T>;
+    readonly Count: number;
+}
