@@ -1,0 +1,43 @@
+{
+    "name": "@ninoha/ts-collections",
+    "version": "1.0.0-alpha",
+    "description": "A collection of wrappers for common data structures in TypeScript",
+    "main": "dist/index.js",
+    "module": "dist/index.es.js",
+    "types": "dist/index.d.ts",
+    "umd:main": "dist/index.umd.js",
+    "scripts": {
+        "build": "microbundle",
+        "docs": "typedoc --out ./docs/ index.ts -m commonjs -t ES6",
+        "prebuild": "rimraf dist",
+        "postbuild": "rimraf .rts2_*",
+        "start": "microbundle watch -i index.ts",
+        "test": "mocha -r ts-node/register tests/**/*.test.ts"
+    },
+    "keywords": [
+        "typescript",
+        "collections",
+        "data",
+        "structures"
+    ],
+    "author": "ninoha",
+    "license": "MIT",
+    "files": [
+        "dist",
+        "readme.md"
+    ],
+    "dependencies": {
+        "rimraf": "^2.6.3"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.1.7",
+        "@types/mocha": "^5.2.7",
+        "chai": "^4.2.0",
+        "microbundle": "^0.11.0",
+        "mocha": "^6.2.0",
+        "nyc": "^14.1.1",
+        "ts-node": "^8.3.0",
+        "typedoc": "^0.15.0",
+        "typescript": "^3.5.3"
+    }
+}
