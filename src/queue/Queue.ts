@@ -4,8 +4,10 @@ import { InvalidOperationException } from "../exceptions/InvalidOperationExcepti
 export class Queue<T> {
     private count: number = 0;
     private data: T[] = [];
-    public constructor(data: T[]) {
-        this.data = [...data];
+    public constructor(data?: T[]) {
+        if (data) {
+            this.data = [...data];
+        }
     }
     public clear(): void {
         this.data.length = 0;
