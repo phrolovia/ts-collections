@@ -4,8 +4,10 @@ import { InvalidOperationException } from "../exceptions/InvalidOperationExcepti
 export class Stack<T> {
     private count: number = 0;
     private data: T[] = [];
-    public constructor(data: T[]) {
-        this.data = [...data];
+    public constructor(data?: T[]) {
+        if (data) {
+            this.data = [...data];
+        }
     }
     public clear(): void {
         this.data.length = 0;
@@ -16,13 +18,13 @@ export class Stack<T> {
     }
     public peek(): T {
         if (this.Count === 0) {
-            throw new InvalidOperationException("queue is empty.");
+            throw new InvalidOperationException("stack is empty.");
         }
         return this.data[0];
     }
     public pop(): T {
-        if (this.Count === 0) {
-            throw new InvalidOperationException("queue is empty.");
+        if (this.count === 0) {
+            throw new InvalidOperationException("stack is empty.");
         }
         const item = this.data[0];
         this.data.splice(0, 1);
