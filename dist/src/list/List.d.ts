@@ -7,9 +7,8 @@ export declare class List<T> implements IList<T>, IterableIterator<T> {
     add(item: T): void;
     clear(): void;
     contains(item: T): boolean;
-    copyTo(array: T[], arrayIndex: number): void;
     exists(predicate: (item: T) => boolean): boolean;
-    find(predicate: (item: T) => boolean): T;
+    find(predicate: (item: T) => boolean): T | null;
     findAll(predicate: (item: T) => boolean): List<T>;
     findIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number;
     findLast(predicate: (item: T) => boolean): T;
@@ -25,7 +24,7 @@ export declare class List<T> implements IList<T>, IterableIterator<T> {
     removeRange(index: number, count: number): void;
     reverse(): void;
     set(index: number, item: T): void;
-    sort(): void;
+    sort(comparer?: (e1: T, e2: T) => number): void;
     toArray(): T[];
     next(): IteratorResult<T>;
     [Symbol.iterator](): IterableIterator<T>;

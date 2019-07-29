@@ -6,6 +6,5 @@ export interface ICollection<T> {
     add(item: T): void;
     clear(): void;
     contains(item: T): boolean;
-    copyTo(array: T[], startIndex: number): void;
     remove(item: T): boolean;
 }
