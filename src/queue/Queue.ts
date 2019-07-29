@@ -1,9 +1,10 @@
 import { ICollection } from "../core/ICollection";
 import { InvalidOperationException } from "../exceptions/InvalidOperationException";
 
-export class Queue<T> {
+export class Queue<T> implements IterableIterator<T> {
     private count: number = 0;
     private data: T[] = [];
+    private iteratorIndex: number = 0;
     public constructor(data?: T[]) {
         if (data) {
             this.data = [...data];
@@ -38,5 +39,17 @@ export class Queue<T> {
     public toArray(): T[] {
         return [...this.data];
     }
+
+    public next(): IteratorResult<T> {
+        if (this.iteratorIndex >= this.Count) {
+            this.iteratorIndex = 0;
+            return { done: true, value: null };
+        }
+        return { done: false, value: this.data[this.iteratorIndex++] };
+    }
+    [Symbol.iterator](): IterableIterator<T> {
+        return this;
+    }
+
     public get Count() { return this.count; }
 }
