@@ -458,4 +458,35 @@ describe("List", () => {
             expect(list.Count).to.eq(fc);
         });
     });
+    describe("#sort()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person2);
+        list.add(person4);
+        list.add(null);
+        list.add(person);
+        it("should have Alice at the end", () => {
+            list.sort((p1, p2) => !p1 || !p2 ? 1 : p1.Age > p2.Age ? 1 : -1 );            
+            expect(list.get(list.Count-1).Name).to.eq("Alice");
+        });
+    });
+    describe("#toArray()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        const array = list.toArray();
+        it("should have the same size as list", () => {
+            expect(list.Count).to.eq(array.length);
+        });
+        const personComparer = (ix: number) => {
+            it(`should have same person at the index: ${ix}`, () => {
+                const p = list.get(ix);
+                expect(p).deep.equal(array[ix]);
+            });
+        };
+        for (var ix = 0; ix < list.Count; ++ix){
+            personComparer(ix);
+        }
+    });
 });

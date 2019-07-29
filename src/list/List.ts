@@ -6,6 +6,7 @@ import { ArgumentException } from "../exceptions/ArgumentException";
 export class List<T> implements IList<T>, IterableIterator<T> {
     private count: number = 0;
     private data: T[] = [];
+    // private enumerator: IEnumerator<T> = null;
     private iteratorIndex: number = 0;
     public constructor(data?: T[]){
         if(data) {
@@ -24,19 +25,19 @@ export class List<T> implements IList<T>, IterableIterator<T> {
     public contains(item: T): boolean {
         return  this.indexOf(item) > -1;
     }
-    public copyTo(array: T[], arrayIndex: number): void {
-        if (!array) {
-            throw new ArgumentNullException("array is null.");
-        }
-        if (arrayIndex < 0) {
-            throw new ArgumentOutOfRangeException("array index is less than 0.");
-        }
-        let index = arrayIndex;
-        for(const item of this.data) {
-            array.splice(index, 0, item);
-            index++;
-        }
-    }
+    // public copyTo(array: T[], arrayIndex: number): void {
+    //     if (!array) {
+    //         throw new ArgumentNullException("array is null.");
+    //     }
+    //     if (arrayIndex < 0) {
+    //         throw new ArgumentOutOfRangeException("array index is less than 0.");
+    //     }
+    //     let index = arrayIndex;
+    //     for(const item of this.data) {
+    //         array.splice(index, 0, item);
+    //         index++;
+    //     }
+    // }
     public exists(predicate: (item: T) => boolean): boolean {
         if (!predicate) {
             throw new ArgumentNullException("predicate is null.");
@@ -140,6 +141,12 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         }
         return this.data[index];
     }
+    // public getEnumerator(): IEnumerator<T> {
+    //     return this.getListEnumerator();
+    // }
+    // private getListEnumerator(): IBaseEnumerator {
+    //     return new ListEnum(this.data);
+    // }
     public indexOf(item: T): number {
         return this.data.findIndex(d => d === item);
     }
@@ -204,17 +211,16 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        // console.log([index, this.Count]);
         if (index >= this.Count) {
             throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
         }
         this.data[index] = item;
     }
-    public sort(): void {
-        const create = <T>(ctor: { new(): T }) => new ctor();
-        if (create(List) instanceof Number) {
-
+    public sort(comparer?: (e1: T, e2: T) => number): void {
+        if (!comparer) {
+            comparer = (e1: T, e2: T) => e1 > e2 ? 1 : -1;
         }
+        this.data.sort(comparer);
     }
     public toArray(): T[] {
         return [...this.data];
@@ -226,6 +232,14 @@ export class List<T> implements IList<T>, IterableIterator<T> {
             return { done: true, value: null };
         }
         return { done: false, value: this.data[this.iteratorIndex++] };
+        // if (!this.enumerator) {
+        //     this.enumerator = this.getEnumerator();
+        // }
+        // if(this.enumerator.moveNext()) {
+        //     return { done: false, value: this.enumerator.Current };
+        // }
+        // this.enumerator.reset();
+        // return { done: true, value: null };
     }
     [Symbol.iterator](): IterableIterator<T> {
         return this;
@@ -233,3 +247,21 @@ export class List<T> implements IList<T>, IterableIterator<T> {
 
     public get Count() { return this.count; }
 }
+
+// class ListEnum<T> implements IBaseEnumerator {
+//     private data: T[];
+//     private position: number = -1;
+//     public constructor(data: T[]){
+//         this.data = data;
+//     }
+//     public moveNext(): boolean {
+//         this.position++;
+//         return this.position < this.data.length;
+//     }
+//     public reset(): void {
+//         this.position = -1;
+//     }
+//     public get Current(): T {
+//         return this.data[this.position];
+//     }
+// }
