@@ -43,7 +43,7 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         }
         return this.data.some(predicate);
     }
-    public find(predicate: (item: T) => boolean): T {
+    public find(predicate: (item: T) => boolean): T|null {
         const item = this.data.find(predicate);
         return item || null;
     }
@@ -55,7 +55,11 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         if (!predicate) {
             throw new ArgumentNullException("predicate is null.");
         }
-        if (startIndex < 0 || startIndex >= this.Count) {
+        
+        startIndex = startIndex || 0;
+        count      = count || this.Count-1;
+
+        if (startIndex! < 0 || startIndex >= this.Count) {
             throw new ArgumentOutOfRangeException("startIndex is not a valid index.");
         }
         if (count < 0) {
@@ -64,8 +68,7 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         if (startIndex+count > this.Count) {
             throw new ArgumentOutOfRangeException("startIndex and count do not specify a valid section in the list.");
         }
-        startIndex = startIndex || 0;
-        count      = count || this.Count;
+        
         let found  = false;
         let foundIndex = -1;
         for (let ix = startIndex; ix < startIndex+count; ++ix) {
@@ -126,11 +129,14 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         this.data.forEach(d => d ? action(d) : void 0);
     }
     public get(index: number): T {
+        if (index == null) {
+            throw new ArgumentNullException("index is null.");
+        }
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index > this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than ${this.Count}.`);
+        if (index >= this.Count) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
         }
         return this.data[index];
     }
@@ -141,8 +147,8 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index > this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than ${this.Count}.`);
+        if (index >= this.Count) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
         }
         this.data.splice(index, 0, item);
         this.count++;
@@ -151,12 +157,15 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         return this.data.lastIndexOf(item);
     }
     public remove(item: T): boolean {
-        const index = this.data.findIndex(d => d === item);
+        const index = this.findIndex(d => d === item);
         if (index === -1) return false;
         this.removeAt(index);
         return true;
     }
     public removeAll(predicate: (value: T) => boolean): number {
+        if (!predicate) {
+            throw new ArgumentNullException("predicate is null.");
+        }
         const preCount = this.Count;
         this.data = this.data.filter(d => !predicate(d));
         this.count = this.data.length;
@@ -167,7 +176,7 @@ export class List<T> implements IList<T>, IterableIterator<T> {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
         if (index >= this.Count) {
-            throw new ArgumentOutOfRangeException(`index is equal to or greater than ${this.Count}.`);
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
         }
         this.data.splice(index, 1);
         this.count--;
@@ -179,7 +188,7 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         if (count < 0) {
             throw new ArgumentOutOfRangeException("count is less than 0.");
         }
-        if (index+count > this.data.length) {
+        if (index+count > this.Count) {
             throw new ArgumentException("index and count do not denote a valid range of elements in the list.");
         }
         let removedCount = 0;
@@ -195,8 +204,9 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index > this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than ${this.Count}.`);
+        // console.log([index, this.Count]);
+        if (index >= this.Count) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
         }
         this.data[index] = item;
     }

@@ -224,10 +224,238 @@ describe("List", () => {
         it("should throw ArgumentNullException ['predicate is null.]", () => {
             expect(() => list.forEach(null)).to.throw("action is null.");
         });
-        it("should have age of 0 for non-null elements", () => {
-            list.forEach(p => p.Age = 0);
+        it("should increase the age of all people by 1", () => {
+            list.forEach(p => p.Age += 1);
             const ages = list.toArray().filter(p => !!p).map(p => p.Age);
-            expect(ages).deep.equal([0, 0, 0, 0, 0]);
+            expect(ages).deep.equal([24, 10, 11, 17, 17]);
+            list.forEach(p => p.Age -= 1); //restore ages
+        });
+    });
+    describe("#get()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person2);
+        list.add(person3);
+        list.add(null);
+        list.add(person4);
+        list.add(person5);
+        it("should throw ArgumentNullException ['index is null.]", () => {
+            expect(() => list.get(null)).to.throw("index is null.");
+        });
+        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+            expect(() => list.get(-1)).to.throw("index is less than 0.");
+        });
+        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.Count}.]`, () => {
+            expect(() => list.get(list.Count)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        });
+        it("should equal to a person with name Mel", () => {
+            const p = list.get(1);
+            expect(p.Name).to.eq("Mel");
+        });
+        it("should equal to null", () => {
+            const p = list.get(3);
+            expect(p).to.eq(null);
+        });
+    });
+    describe("#indexOf()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person2);
+        list.add(person3);
+        list.add(null);
+        list.add(person4);
+        it("should return 1", () => {
+            const p = list.indexOf(person2);
+            expect(p).to.eq(1);
+        });
+        it("should return 3", () => {
+            const p = list.indexOf(null);
+            expect(p).to.eq(3);
+        });
+        it("should return -1", () => {
+            const p = list.indexOf(person5);
+            expect(p).to.eq(-1);
+        });
+    });
+    describe("#insert()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+            expect(() => list.insert(-1, person2)).to.throw("index is less than 0.");
+        });
+        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.Count}.]`, () => {
+            expect(() => list.insert(list.Count, person2)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        });
+        it("should equal to a person with name Mel", () => {
+            list.insert(1, person2);
+            const p = list.get(1);
+            expect(p.Name).to.eq("Mel");
+        });
+        it("should equal to null", () => {
+            list.insert(4, null);
+            const p = list.get(4);
+            expect(p).to.eq(null);
+        });
+        it("should have the count of 6", () => {
+            expect(list.Count).to.eq(6);
+        });
+    });
+    describe("#lastIndexOf()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        list.add(null);
+        list.add(person);
+        list.add(person2);
+        it("should return 5", () => {
+            expect(list.lastIndexOf(person)).to.eq(5);
+        });
+        it("should return 4", () => {
+            expect(list.lastIndexOf(null)).to.eq(4);
+        });
+    });
+    describe("#remove()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        list.add(null);
+        list.add(person);
+        list.add(person2);
+        
+        const removed = list.remove(person5);
+        it("should return true", () => {
+            expect(removed).to.eq(true);
+        });
+        it("should have the count of 6", () => {
+            expect(list.Count).to.eq(6);
+        });
+        it("should return false", () => {
+            const r =list.remove(person4);
+            expect(r).to.eq(false);
+        });
+        it("should return true with null", () => {
+            const r = list.remove(null);
+            expect(r).to.eq(true);
+        });
+        it("should have person with name Alice at index 3", () => {
+            const p = list.get(3);
+            expect(p.Name).to.eq("Alice");
+        });
+    });
+    describe("#removeAll()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person4);
+        list.add(null);
+        list.add(person3);
+        list.add(person2);
+        list.add(null);
+        list.add(person5);
+        it("should throw ArgumentNullException ['predicate is null.]", () => {
+            expect(() => list.removeAll(null)).to.throw("predicate is null.");
+        });
+        var removedCount = list.removeAll(p => p && p.Age < 16);
+        it("should remove all people with Age < 16", () => {
+            const ages = list.toArray().filter(p => !!p).map(p => p.Age); 
+            expect(ages).deep.equal([23, 16, 16]);
+        });
+        it("should return 2", () => {
+            expect(removedCount).to.eq(2);
+        });
+    });
+    describe("#removeAt()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+            expect(() => list.removeAt(-1)).to.throw("index is less than 0.");
+        });
+        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.Count}.]`, () => {
+            expect(() => list.removeAt(list.Count)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        });
+        it("should equal to a person with name Jane at index 2", () => {
+            list.removeAt(2);
+            const p = list.get(2);
+            expect(p.Name).to.eq("Jane");
+        });
+        it("should set the count to 2 after remove", () => {
+            list.removeAt(2);
+            expect(list.Count).to.eq(2);
+        });
+    });
+    describe("#removeRange()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+            expect(() => list.removeRange(-1, 2)).to.throw("index is less than 0.");
+        });
+        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+            expect(() => list.removeRange(1, -1)).to.throw("count is less than 0.");
+        });
+        it(`should throw ArgumentException ['index and count do not denote a valid range of elements in the list.']`, () => {
+            expect(() => list.removeRange(1,4)).to.throw(`index and count do not denote a valid range of elements in the list.`);
+        });
+        it("should set the count to 2 after remove", () => {
+            list.removeRange(1,2);
+            expect(list.Count).to.eq(2);
+        });
+        it("should equal to a person with name Jane at index 1", () => {
+            const p = list.get(1);
+            expect(p.Name).to.eq("Jane");
+        });
+        it("should not contain a person with name Senna", () => {
+            const p = list.find(p => p.Name === "Senna");
+            expect(p).to.eq(null);
+        });
+    });
+    describe("#reverse()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person4);
+        list.add(null);
+        list.add(person3);
+        list.add(person2);
+        list.add(null);
+        list.add(person5);
+        it("should have a person with the surname 'Rivermist' at the end.", () => {
+            list.reverse();
+            const last = list.get(list.Count-1);
+            expect(last.Surname).to.eq("Rivermist");
+        });
+    });
+    describe("#set()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person3);
+        list.add(null);
+        list.add(person5);
+        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+            expect(() => list.set(-1, person2)).to.throw("index is less than 0.");
+        });
+        it(`should throw ArgumentOutOfRangeException ['index is greater than or equal to ${list.Count}.]`, () => {
+            expect(() => list.set(list.Count, person2)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        });
+        it("should equal to a person with surname Bluesky at index 2", () => {
+            list.set(2, person2);
+            const p = list.get(2);
+            expect(p.Surname).to.eq("Bluesky");
+        });
+        it("should not change the count", () => {
+            const fc = list.Count;
+            list.set(0, person4);
+            expect(list.Count).to.eq(fc);
         });
     });
 });
