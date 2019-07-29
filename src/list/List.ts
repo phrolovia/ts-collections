@@ -68,7 +68,7 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         count      = count || this.Count;
         let found  = false;
         let foundIndex = -1;
-        for (let ix = startIndex; ix <= count; ++ix) {
+        for (let ix = startIndex; ix < startIndex+count; ++ix) {
             found = predicate(this.data[ix]);
             if (found) {
                 foundIndex = ix;
@@ -110,7 +110,7 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         count      = count || this.Count;
         let found  = false;
         let foundIndex = -1;
-        for (let ix = startIndex+count; ix >= startIndex; --ix) {
+        for (let ix = startIndex+count-1; ix >= startIndex; --ix) {
             found = predicate(this.data[ix]);
             if (found) {
                 foundIndex = ix;
@@ -120,7 +120,10 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         return foundIndex;
     }
     public forEach(action: (item: T) => void): void {
-        this.data.forEach(d => action(d));
+        if (!action) {
+            throw new ArgumentNullException("action is null.");
+        }
+        this.data.forEach(d => d ? action(d) : void 0);
     }
     public get(index: number): T {
         if (index < 0) {
