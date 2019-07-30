@@ -12,7 +12,7 @@
         "prebuild": "rimraf dist",
         "postbuild": "rimraf .rts2_*",
         "start": "microbundle watch -i index.ts",
-        "test": "mocha --require spec-helper.js -r ts-node/register tests/**/*.test.ts"
+        "test": "nyc mocha --require spec-helper.js -r ts-node/register tests/**/*.test.ts"
     },
     "keywords": [
         "typescript",
