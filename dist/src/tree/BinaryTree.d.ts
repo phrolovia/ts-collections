@@ -1,17 +1,28 @@
+export declare type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 export declare class BinaryTree<T> {
+    private comparator;
     private root;
-    constructor();
+    constructor(comparator?: Function);
+    contains(item: T): boolean;
+    private containsRecursive;
+    insert(item: T): void;
+    private insertRecursive;
     isEmpty(): boolean;
-    insert(data: T): void;
-    private insertData;
     countNodes(): number;
     private countTreeNodes;
+    delete(item: T): void;
+    private deleteRecursive;
+    find(predicate: (item: T) => boolean): T;
+    private findRecursive;
+    private findSmallestValue;
     search(item: T): boolean;
     private searchTree;
-    inorder(): void;
-    private inorderTraversal;
-    preorder(): void;
-    private preorderTraversal;
-    postorder(): void;
-    private postorderTraversal;
+    traverseAndMap(mapper: (item: T) => T): BinaryTree<T>;
+    private traverseAndMapRecursive;
+    traverseAndMapToArray<R>(mapper: (item: T) => R, direction?: TraverseType): R[];
+    traverseAndMorph<R>(morpher: (item: T) => R, comparator?: Function): BinaryTree<R>;
+    toArray(target: T[], direction?: TraverseType): T[];
+    private toInorderArray;
+    private toPostorderArray;
+    private toPreorderArray;
 }
