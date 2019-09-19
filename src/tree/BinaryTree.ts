@@ -2,11 +2,11 @@ import { BinaryTreeNode } from "./BinaryTreeNode";
 
 export declare type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 export class BinaryTree<T> {
-    private comparator: Function = (v1:T|any, v2:T|any) => v1 - v2;
+    private comparator: Function = null;
     private root: BinaryTreeNode<T>;
-    public constructor(comparator?: Function) {
+    public constructor(comparator: Function) {
         this.root = null;
-        if (comparator) this.comparator = comparator;
+        this.comparator = comparator;
     }
     public contains(item: T): boolean {
         return this.containsRecursive(this.root, item);
@@ -81,10 +81,22 @@ export class BinaryTree<T> {
             return foundItem;
         }
         return this.findRecursive(root.getRight(), predicate);
-
     }
     private findSmallestValue(root: BinaryTreeNode<T>): T {
         return root.getLeft() == null ? root.getData() : this.findSmallestValue(root.getLeft());
+    }
+    public forEach(action: (item: T) => void): void {
+        if (this.root == null) return;
+        this.forEachRecursive(this.root, action);
+    }
+    private forEachRecursive(root: BinaryTreeNode<T>, action: (item: T) => void): void {
+        if (root == null) return;
+        this.forEachRecursive(root.getLeft(), action);
+        action(root.getData());
+        this.forEachRecursive(root.getRight(), action);
+    }
+    public getRootData(): T {
+        return this.root == null ? null : this.root.getData();
     }
     public search(item: T): boolean {
        return this.searchTree(this.root, item);
@@ -99,44 +111,34 @@ export class BinaryTree<T> {
         }
         return false;
     }
-    public traverseAndMap(mapper: (item: T) => T): BinaryTree<T> {
-        if (this.root == null) return null;
-        this.traverseAndMapRecursive(this.root, mapper);
-        return this;
-    }
-    private traverseAndMapRecursive(root: BinaryTreeNode<T>, mapper: (item: T) => T): void {
-        if (root == null) return;
-        this.traverseAndMapRecursive(root.getLeft(), mapper);
-        root.setData(mapper(root.getData()));
-        this.traverseAndMapRecursive(root.getRight(), mapper);
-    }
     public traverseAndMapToArray<R>(mapper: (item: T) => R, direction: TraverseType = "INORDER"): R[] {
         let array: T[] = [];
         switch(direction) {
             case "INORDER":
-                this.toArray(array, "INORDER");
+                array = this.toArray("INORDER");
                 break;
             case "PREORDER":
-                this.toArray(array, "PREORDER");
+                array = this.toArray("PREORDER");
                 break;
             case "POSTORDER":
-                this.toArray(array, "POSTORDER");
+                array = this.toArray("POSTORDER");
                 break;
         }
         return array.map(v => mapper(v));
     }
-    public traverseAndMorph<R>(morpher: (item: T) => R, comparator?: Function): BinaryTree<R> {
+    public traverseAndMorph<R>(morpher: (item: T) => R, comparator?: (i1: R, i2: R) => number): BinaryTree<R> {
         const compare  = comparator || this.comparator;
         const tree     = new BinaryTree<R>(compare);
         let array: T[] = [];
-        this.toArray(array);
+        array = this.toArray("PREORDER");
         array.forEach(e => {
             const morphedItem = morpher(e);
             tree.insert(morphedItem);
         });
         return tree;
     }
-    public toArray(target: T[], direction: TraverseType = "INORDER"): T[] {
+    public toArray(direction: TraverseType = "INORDER"): T[] {
+        const target: T[] = [];
         switch (direction) {
             case "INORDER":
                 this.toInorderArray(this.root, target);

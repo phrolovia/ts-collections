@@ -1,6 +1,4 @@
 import { expect } from "chai";
-import { Stack } from "../../src/stack/Stack";
-import { BinaryTree } from "../../src/tree/BinaryTree";
 import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
 
 class Person {
