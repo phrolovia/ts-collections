@@ -10,7 +10,6 @@ export class BinaryTree<T> {
     }
     public insert(data: T): void {
         this.root = this.insertData(this.root, data);
-        // console.log(this.root);
     }
     private insertData(node: BinaryTreeNode<T>, data: T): BinaryTreeNode<T> {
         if (node == null) {
