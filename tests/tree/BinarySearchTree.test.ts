@@ -42,7 +42,7 @@ describe("BinarySearchTree", () => {
             tree.insert(person4);
             tree.insert(person5);
             tree.delete(person2);
-            expect(tree.countNodes()).to.eq(4);
+            expect(tree.getNodeCount()).to.eq(4);
         });
         it("should delete 'Jane' from the tree", () => {
             const tree = new BinarySearchTree<Person>(comparator);
@@ -62,14 +62,14 @@ describe("BinarySearchTree", () => {
             tree.insert(person3);
             tree.insert(person4);
             tree.insert(person5);
-            expect(tree.countNodes()).to.eq(5);
+            expect(tree.getNodeCount()).to.eq(5);
         });
         it("should not insert same person to tree", () => {
             const tree = new BinarySearchTree<Person>(comparator);
             tree.insert(person);
             tree.insert(person5);
             tree.insert(person);
-            expect(tree.countNodes()).to.eq(2);
+            expect(tree.getNodeCount()).to.eq(2);
         });
     });
     describe("#search()", () => {

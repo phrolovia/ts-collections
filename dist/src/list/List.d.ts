@@ -17,6 +17,7 @@ export declare class List<T> implements IList<T>, IterableIterator<T> {
     get(index: number): T;
     indexOf(item: T): number;
     insert(index: number, item: T): void;
+    isEmpty(): boolean;
     lastIndexOf(item: T): number;
     remove(item: T): boolean;
     removeAll(predicate: (value: T) => boolean): number;

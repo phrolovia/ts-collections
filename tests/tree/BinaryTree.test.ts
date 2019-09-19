@@ -39,14 +39,14 @@ describe("BinaryTree", () => {
     describe("#countNodes()", () => {
         it("should return 0", () => {
             const tree = new BinaryTree<Person>(ageComparator);
-            expect(tree.countNodes()).to.eq(0);
+            expect(tree.getNodeCount()).to.eq(0);
         });
         it("should return 3", () => {
             const tree = new BinaryTree<Person>(ageComparator);
             tree.insert(person);
             tree.insert(person2);
             tree.insert(person3);
-            expect(tree.countNodes()).to.eq(3);
+            expect(tree.getNodeCount()).to.eq(3);
         });
     });
     describe("#isEmpty()", () => {
@@ -69,7 +69,7 @@ describe("BinaryTree", () => {
             tree.insert(person5);
         it("should delete person from tree", () => {
             tree.delete(person);
-            expect(tree.countNodes()).to.eq(4);
+            expect(tree.getNodeCount()).to.eq(4);
         });
         it("should not have 'Alice' at root", () => {
             expect(tree.toArray()[0].Name).to.not.eq("Alice");
@@ -104,7 +104,7 @@ describe("BinaryTree", () => {
             tree.insert(person4);
             tree.insert(person5);
         it("should insert person to tree", () => {
-            expect(tree.countNodes()).to.eq(5);
+            expect(tree.getNodeCount()).to.eq(5);
         });
         it("should have 'Alice' at root", () => {
             expect(tree.toArray()[0].Name).to.eq("Alice");

@@ -1,7 +1,7 @@
 import { ICollection } from "../core/ICollection";
 import { InvalidOperationException } from "../exceptions/InvalidOperationException";
 
-export class Stack<T> implements IterableIterator<T> {
+export class Stack<T> implements ICollection<T>, IterableIterator<T> {
     private count: number = 0;
     private data: T[] = [];
     private iteratorIndex: number = 0;
@@ -16,6 +16,9 @@ export class Stack<T> implements IterableIterator<T> {
     }
     public contains(item: T): boolean {
         return this.data.findIndex(d => d === item) > -1;
+    }
+    public isEmpty(): boolean {
+        return this.data.length === 0;
     }
     public peek(): T {
         if (this.Count === 0) {
@@ -39,7 +42,6 @@ export class Stack<T> implements IterableIterator<T> {
     public toArray(): T[] {
         return [...this.data];
     }
-
     public next(): IteratorResult<T> {
         if (this.iteratorIndex >= this.Count) {
             this.iteratorIndex = 0;
@@ -50,6 +52,5 @@ export class Stack<T> implements IterableIterator<T> {
     [Symbol.iterator](): IterableIterator<T> {
         return this;
     }
-
     public get Count() { return this.count; }
 }

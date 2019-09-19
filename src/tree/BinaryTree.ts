@@ -1,12 +1,41 @@
-import { BinaryTreeNode } from "./BinaryTreeNode";
+import { ITree } from "./ITree";
 
 export declare type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
-export class BinaryTree<T> {
+class BinaryTreeNode<T extends any> {
+    private left: BinaryTreeNode<T>;
+    private right: BinaryTreeNode<T>;
+    private data: T;
+    public constructor(rootData?: T) {
+        if (rootData) this.data = rootData;
+    }
+    public getLeft(): BinaryTreeNode<T> {
+        return this.left;
+    }
+    public getRight(): BinaryTreeNode<T> {
+        return this.right;
+    }
+    public setLeft(node: BinaryTreeNode<T>): void {
+        this.left = node;
+    }
+    public setRight(node: BinaryTreeNode<T>): void {
+        this.right = node;
+    }
+    public setData(data: T): void {
+        this.data = data;
+    }
+    public getData(): T {
+        return this.data;
+    }
+}
+export class BinaryTree<T> implements ITree<T> {
     private comparator: Function = null;
     private root: BinaryTreeNode<T>;
     public constructor(comparator: Function) {
         this.root = null;
         this.comparator = comparator;
+    }
+    public clear(): void {
+        this.root = null;
     }
     public contains(item: T): boolean {
         return this.containsRecursive(this.root, item);
@@ -35,7 +64,7 @@ export class BinaryTree<T> {
     public isEmpty(): boolean {
         return this.root == null;
     }
-    public countNodes(): number {
+    public getNodeCount(): number {
         return this.countTreeNodes(this.root);
     }
     private countTreeNodes(root: BinaryTreeNode<T>): number {

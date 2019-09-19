@@ -25,19 +25,6 @@ export class List<T> implements IList<T>, IterableIterator<T> {
     public contains(item: T): boolean {
         return  this.indexOf(item) > -1;
     }
-    // public copyTo(array: T[], arrayIndex: number): void {
-    //     if (!array) {
-    //         throw new ArgumentNullException("array is null.");
-    //     }
-    //     if (arrayIndex < 0) {
-    //         throw new ArgumentOutOfRangeException("array index is less than 0.");
-    //     }
-    //     let index = arrayIndex;
-    //     for(const item of this.data) {
-    //         array.splice(index, 0, item);
-    //         index++;
-    //     }
-    // }
     public exists(predicate: (item: T) => boolean): boolean {
         if (!predicate) {
             throw new ArgumentNullException("predicate is null.");
@@ -141,12 +128,6 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         }
         return this.data[index];
     }
-    // public getEnumerator(): IEnumerator<T> {
-    //     return this.getListEnumerator();
-    // }
-    // private getListEnumerator(): IBaseEnumerator {
-    //     return new ListEnum(this.data);
-    // }
     public indexOf(item: T): number {
         return this.data.findIndex(d => d === item);
     }
@@ -159,6 +140,9 @@ export class List<T> implements IList<T>, IterableIterator<T> {
         }
         this.data.splice(index, 0, item);
         this.count++;
+    }
+    public isEmpty(): boolean {
+        return this.data.length === 0;
     }
     public lastIndexOf(item: T): number {
         return this.data.lastIndexOf(item);
@@ -225,43 +209,15 @@ export class List<T> implements IList<T>, IterableIterator<T> {
     public toArray(): T[] {
         return [...this.data];
     }
-
     public next(): IteratorResult<T> {
         if (this.iteratorIndex >= this.Count) {
             this.iteratorIndex = 0;
             return { done: true, value: null };
         }
         return { done: false, value: this.data[this.iteratorIndex++] };
-        // if (!this.enumerator) {
-        //     this.enumerator = this.getEnumerator();
-        // }
-        // if(this.enumerator.moveNext()) {
-        //     return { done: false, value: this.enumerator.Current };
-        // }
-        // this.enumerator.reset();
-        // return { done: true, value: null };
     }
     [Symbol.iterator](): IterableIterator<T> {
         return this;
     }
-
     public get Count() { return this.count; }
 }
-
-// class ListEnum<T> implements IBaseEnumerator {
-//     private data: T[];
-//     private position: number = -1;
-//     public constructor(data: T[]){
-//         this.data = data;
-//     }
-//     public moveNext(): boolean {
-//         this.position++;
-//         return this.position < this.data.length;
-//     }
-//     public reset(): void {
-//         this.position = -1;
-//     }
-//     public get Current(): T {
-//         return this.data[this.position];
-//     }
-// }

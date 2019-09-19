@@ -1,3 +1,4 @@
+import { ITree } from "./ITree";
 declare class RedBlackNode<T> {
     static readonly RED = 0;
     static readonly BLACK = 1;
@@ -23,14 +24,16 @@ declare class RedBlackNode<T> {
     setParent(parent: RedBlackNode<T>): void;
     setRight(right: RedBlackNode<T>): void;
 }
-export declare class BinarySearchTree<T> {
+export declare class BinarySearchTree<T> implements ITree<T> {
     private root;
     private comparator;
     constructor(comparator?: Function);
+    clear(): void;
+    contains(item: T): boolean;
+    private containsRecursive;
     /**
      * Returns the number of nodes in the tree.
      */
-    countNodes(): number;
     private countTreeNodes;
     /**
      * Removes an item from the tree.
@@ -38,13 +41,19 @@ export declare class BinarySearchTree<T> {
      */
     delete(item: T): void;
     private deleteNode;
+    find(predicate: (item: T) => boolean): T;
+    private findRecursive;
     private findReplaceItem;
     private fixDoubleBlack;
     private fixRedRed;
+    forEach(action: (item: T) => void): void;
+    private forEachRecursive;
+    getNodeCount(): number;
     /**
      * Returns the root node of the tree.
      */
     getRoot(): RedBlackNode<T>;
+    getRootData(): T;
     private getSuccessor;
     /**
      * Inserts an item to the tree.

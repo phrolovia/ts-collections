@@ -85,6 +85,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/icollection.html" class="tsd-signature-type">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					<li><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
@@ -120,6 +121,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#contains" class="tsd-kind-icon">contains</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#dequeue" class="tsd-kind-icon">dequeue</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#enqueue" class="tsd-kind-icon">enqueue</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#next" class="tsd-kind-icon">next</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#peek" class="tsd-kind-icon">peek</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="queue.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
@@ -199,7 +201,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/queue/Queue.ts:54</li>
+									<li>Defined in src/queue/Queue.ts:55</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -219,7 +221,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/queue/Queue.ts:50</li>
+									<li>Defined in src/queue/Queue.ts:52</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -235,6 +237,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#clear">clear</a></p>
 								<ul>
 									<li>Defined in src/queue/Queue.ts:13</li>
 								</ul>
@@ -252,6 +255,7 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#contains">contains</a></p>
 								<ul>
 									<li>Defined in src/queue/Queue.ts:17</li>
 								</ul>
@@ -307,6 +311,24 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="isempty" class="tsd-anchor"></a>
+					<h3>is<wbr>Empty</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Empty<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#isempty">isEmpty</a></p>
+								<ul>
+									<li>Defined in src/queue/Queue.ts:33</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="next" class="tsd-anchor"></a>
 					<h3>next</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -316,7 +338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/queue/Queue.ts:43</li>
+									<li>Defined in src/queue/Queue.ts:45</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IteratorResult</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -333,7 +355,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/queue/Queue.ts:33</li>
+									<li>Defined in src/queue/Queue.ts:36</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -349,8 +371,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/icollection.html">ICollection</a>.<a href="../interfaces/icollection.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in src/queue/Queue.ts:39</li>
+									<li>Defined in src/queue/Queue.ts:42</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -384,7 +407,7 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="binarytree.html" class="tsd-kind-icon">Binary<wbr>Tree</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external tsd-is-not-exported">
 						<a href="binarytreenode.html" class="tsd-kind-icon">Binary<wbr>Tree<wbr>Node</a>
 					</li>
 					<li class=" tsd-kind-class tsd-is-external">
@@ -429,6 +452,9 @@
 								<a href="queue.html#enqueue" class="tsd-kind-icon">enqueue</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="queue.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="queue.html#next" class="tsd-kind-icon">next</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -447,23 +473,14 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="stack.html" class="tsd-kind-icon">Stack</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="../interfaces/ibaseenumerable.html" class="tsd-kind-icon">IBase<wbr>Enumerable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-is-external">
-						<a href="../interfaces/ibaseenumerator.html" class="tsd-kind-icon">IBase<wbr>Enumerator</a>
-					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="../interfaces/ienumerable.html" class="tsd-kind-icon">IEnumerable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="../interfaces/ienumerator.html" class="tsd-kind-icon">IEnumerator</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/ilist.html" class="tsd-kind-icon">IList</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/itree.html" class="tsd-kind-icon">ITree</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="../globals.html#traversetype" class="tsd-kind-icon">Traverse<wbr>Type</a>

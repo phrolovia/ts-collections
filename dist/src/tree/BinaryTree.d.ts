@@ -1,14 +1,16 @@
+import { ITree } from "./ITree";
 export declare type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
-export declare class BinaryTree<T> {
+export declare class BinaryTree<T> implements ITree<T> {
     private comparator;
     private root;
     constructor(comparator: Function);
+    clear(): void;
     contains(item: T): boolean;
     private containsRecursive;
     insert(item: T): void;
     private insertRecursive;
     isEmpty(): boolean;
-    countNodes(): number;
+    getNodeCount(): number;
     private countTreeNodes;
     delete(item: T): void;
     private deleteRecursive;

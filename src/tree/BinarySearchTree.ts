@@ -1,3 +1,5 @@
+import { ITree } from "./ITree";
+
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
 class RedBlackNode<T> {
     public static readonly RED   = 0;
@@ -56,19 +58,29 @@ class RedBlackNode<T> {
     public setRight(right: RedBlackNode<T>): void { this.right = right; }
 }
 
-export class BinarySearchTree<T> {
+export class BinarySearchTree<T> implements ITree<T> {
     private root: RedBlackNode<T>;
     private comparator: Function = (v1:T|any, v2:T|any) => v1 - v2;
     public constructor(comparator?: Function){
         if (comparator) this.comparator = comparator;
         this.root = null;
     }
+    public clear(): void {
+        this.root = null;
+    }
+    public contains(item: T): boolean {
+        return this.containsRecursive(this.root, item);
+    }
+    private containsRecursive(root: RedBlackNode<T>, item: T): boolean {
+        if (root == null) return false;
+        if (this.comparator(item, root.getData()) === 0) return true;
+        return this.comparator(item, root.getData()) < 0
+            ? this.containsRecursive(root.getLeft(), item)
+            : this.containsRecursive(root.getRight(), item);
+    }
     /**
      * Returns the number of nodes in the tree.
      */
-    public countNodes(): number {
-        return this.countTreeNodes(this.root);
-    }
     private countTreeNodes(root: RedBlackNode<T>): number {
         if (root == null) return 0;
         return 1 + this.countTreeNodes(root.getLeft()) + this.countTreeNodes(root.getRight());
@@ -133,6 +145,19 @@ export class BinarySearchTree<T> {
         }
         this.swapValues(u, v);
         this.deleteNode(u);
+    }
+    public find(predicate: (item: T) => boolean): T {
+        if (this.root == null) return null;
+        return this.findRecursive(this.root, predicate);
+    }
+    private findRecursive(root: RedBlackNode<T>, predicate: (item: T) => boolean): T {
+        if (root == null) return null;
+        if (predicate(root.getData())) return root.getData();
+        let foundItem: T = this.findRecursive(root.getLeft(), predicate);
+        if (foundItem != null){
+            return foundItem;
+        }
+        return this.findRecursive(root.getRight(), predicate);
     }
     private findReplaceItem(node: RedBlackNode<T>): RedBlackNode<T> {
         if (node.getLeft() != null && node.getRight() != null) {
@@ -232,11 +257,27 @@ export class BinarySearchTree<T> {
             }
         }
     }
+    public forEach(action: (item: T) => void): void {
+        if (this.root == null) return;
+        this.forEachRecursive(this.root, action);
+    }
+    private forEachRecursive(root: RedBlackNode<T>, action: (item: T) => void): void {
+        if (root == null) return;
+        this.forEachRecursive(root.getLeft(), action);
+        action(root.getData());
+        this.forEachRecursive(root.getRight(), action);
+    }
+    public getNodeCount(): number {
+        return this.countTreeNodes(this.root);
+    }
     /**
      * Returns the root node of the tree.
      */
     public getRoot(): RedBlackNode<T> {
         return this.root;
+    }
+    public getRootData(): T {
+        return this.root.getData();
     }
     private getSuccessor(node: RedBlackNode<T>): RedBlackNode<T> {
         let temp = node;
