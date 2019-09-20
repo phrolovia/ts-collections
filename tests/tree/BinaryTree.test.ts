@@ -23,6 +23,27 @@ describe("BinaryTree", () => {
     const person5: Person    = new Person("Jane", "Green", 33);
     const ageComparator      = (p1: Person, p2: Person) => p1.Age - p2.Age;
     const nameComparator     = (p1: Person, p2: Person) => p1.Name.localeCompare(p2.Name);
+    describe("#clear()", () => {
+        const tree = new BinaryTree<Person>(ageComparator);
+            tree.insert(person);
+            tree.insert(person2);
+            tree.insert(person3);
+            tree.insert(person5);
+        it("should clear the tree", () => {
+            tree.clear();
+            expect(tree.getNodeCount()).to.eq(0);
+        });
+        it("should not invalidate the tree", () => {
+            tree.insert(person);
+            tree.insert(person2);
+            tree.insert(person3);
+            tree.insert(person5);
+            tree.clear();
+            tree.insert(person);
+            expect(tree.getNodeCount()).to.eq(1);
+            expect(tree.getRootData()).to.eq(person);
+        });
+    });
     describe("#contains()", () => {
         const tree = new BinaryTree<Person>(ageComparator);
             tree.insert(person);
@@ -34,30 +55,6 @@ describe("BinaryTree", () => {
         });
         it("should return false", () => {
             expect(tree.contains(person4)).to.eq(false);
-        });
-    });
-    describe("#countNodes()", () => {
-        it("should return 0", () => {
-            const tree = new BinaryTree<Person>(ageComparator);
-            expect(tree.getNodeCount()).to.eq(0);
-        });
-        it("should return 3", () => {
-            const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            expect(tree.getNodeCount()).to.eq(3);
-        });
-    });
-    describe("#isEmpty()", () => {
-        it("should return true", () => {
-            const tree = new BinaryTree<Person>(ageComparator);
-            expect(tree.isEmpty()).to.eq(true);
-        });
-        it("should return false", () => {
-            const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            expect(tree.isEmpty()).to.eq(false);
         });
     });
     describe("#delete()", () => {
@@ -96,6 +93,33 @@ describe("BinaryTree", () => {
             expect(mel.Name).to.eq('Mel');
         });
     });
+    describe("#forEach()", () => {
+        const tree = new BinaryTree<Person>(ageComparator);
+            tree.insert(person);
+            tree.insert(person2);
+            tree.insert(person3);
+            tree.insert(person5);
+        const people = [person2, person3, person, person5];
+        let index    = 0;
+        it("should act on tree items inorderly", () => {
+            tree.forEach(p => {
+                expect(p.Name).to.eq(people[index++].Name);
+            });
+        });
+    });
+    describe("#getNodeCount()", () => {
+        it("should return 0", () => {
+            const tree = new BinaryTree<Person>(ageComparator);
+            expect(tree.getNodeCount()).to.eq(0);
+        });
+        it("should return 3", () => {
+            const tree = new BinaryTree<Person>(ageComparator);
+            tree.insert(person);
+            tree.insert(person2);
+            tree.insert(person3);
+            expect(tree.getNodeCount()).to.eq(3);
+        });
+    });
     describe("#insert()", () => {
         const tree = new BinaryTree<Person>(nameComparator);
             tree.insert(person);
@@ -107,7 +131,18 @@ describe("BinaryTree", () => {
             expect(tree.getNodeCount()).to.eq(5);
         });
         it("should have 'Alice' at root", () => {
-            expect(tree.toArray()[0].Name).to.eq("Alice");
+            expect(tree.getRootData().Name).to.eq("Alice");
+        });
+    });
+    describe("#isEmpty()", () => {
+        it("should return true", () => {
+            const tree = new BinaryTree<Person>(ageComparator);
+            expect(tree.isEmpty()).to.eq(true);
+        });
+        it("should return false", () => {
+            const tree = new BinaryTree<Person>(ageComparator);
+            tree.insert(person);
+            expect(tree.isEmpty()).to.eq(false);
         });
     });
     describe("#search()", () => {
@@ -121,20 +156,6 @@ describe("BinaryTree", () => {
         });
         it("should return false", () => {
             expect(tree.search(person4)).to.eq(false);
-        });
-    });
-    describe("#forEach()", () => {
-        const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        const people = [person2, person3, person, person5];
-        let index    = 0;
-        it("should act on tree items inorderly", () => {
-            tree.forEach(p => {
-                expect(p.Name).to.eq(people[index++].Name);
-            });
         });
     });
     describe("#traverseAndMapToArray(): INORDER", () => {
@@ -202,7 +223,7 @@ describe("BinaryTree", () => {
             const rootNumber = resultTree.getRootData();
             expect(rootNumber).to.eq(23);
         });
-        it("should have pre-morph and post-morph items in the same order: INORDER", () => {
+        it("should have pre-morph and post-morph items in the same order", () => {
             const personArray = tree.toArray();
             const numberArray = resultTree.toArray();
             const ageArray = personArray.map(p => p.Age);
@@ -211,25 +232,6 @@ describe("BinaryTree", () => {
             expect(numberArray[2]).to.eq(ageArray[2]);
             expect(numberArray[3]).to.eq(ageArray[3]);
         });
-        it("should have pre-morph and post-morph items in the same order: PREORDER", () => {
-            const personArray = tree.toArray("PREORDER");
-            const numberArray = resultTree.toArray("PREORDER");
-            const ageArray = personArray.map(p => p.Age);
-            expect(numberArray[0]).to.eq(ageArray[0]);
-            expect(numberArray[1]).to.eq(ageArray[1]);
-            expect(numberArray[2]).to.eq(ageArray[2]);
-            expect(numberArray[3]).to.eq(ageArray[3]);
-        });
-        it("should have pre-morph and post-morph items in the same order: POSTORDER", () => {
-            const personArray = tree.toArray("POSTORDER");
-            const numberArray = resultTree.toArray("POSTORDER");
-            const ageArray = personArray.map(p => p.Age);
-            expect(numberArray[0]).to.eq(ageArray[0]);
-            expect(numberArray[1]).to.eq(ageArray[1]);
-            expect(numberArray[2]).to.eq(ageArray[2]);
-            expect(numberArray[3]).to.eq(ageArray[3]);
-        });
-        
     });
     describe("#toArray(): INORDER", () => {
         const tree = new BinaryTree<Person>(ageComparator);

@@ -3,11 +3,9 @@ import { ArgumentNullException } from "../exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../exceptions/ArgumentOutOfRangeException";
 import { ArgumentException } from "../exceptions/ArgumentException";
 
-export class List<T> implements IList<T>, IterableIterator<T> {
+export class List<T> implements IList<T> {
     private count: number = 0;
     private data: T[] = [];
-    // private enumerator: IEnumerator<T> = null;
-    private iteratorIndex: number = 0;
     public constructor(data?: T[]){
         if(data) {
             this.data = [...data];
@@ -208,16 +206,6 @@ export class List<T> implements IList<T>, IterableIterator<T> {
     }
     public toArray(): T[] {
         return [...this.data];
-    }
-    public next(): IteratorResult<T> {
-        if (this.iteratorIndex >= this.Count) {
-            this.iteratorIndex = 0;
-            return { done: true, value: null };
-        }
-        return { done: false, value: this.data[this.iteratorIndex++] };
-    }
-    [Symbol.iterator](): IterableIterator<T> {
-        return this;
     }
     public get Count() { return this.count; }
 }

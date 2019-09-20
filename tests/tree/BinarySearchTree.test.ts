@@ -50,8 +50,7 @@ describe("BinarySearchTree", () => {
             tree.insert(person);
             tree.delete(person5);
             const result = tree.search(person5);
-            expect(result.Name).to.not.eq("Jane");
-            expect(result.Name).to.eq("Alice");
+            expect(result).to.eq(false);
         });
     });
     describe("#insert()", () => {
@@ -79,10 +78,10 @@ describe("BinarySearchTree", () => {
             tree.insert(person3);
             tree.insert(person5);
         it("should return true", () => {
-            expect(tree.search(person)).to.eq(person);
+            expect(tree.search(person)).to.eq(true);
         });
         it("should return false", () => {
-            expect(tree.search(person4)).to.not.eq(person4);
+            expect(tree.search(person4)).to.eq(false);
         });
     });
     describe("#toArray()", () => {
@@ -92,13 +91,11 @@ describe("BinarySearchTree", () => {
             tree.insert(person5);
             tree.insert(person);
         it("should have its name equal to 'Alice'", () => {
-            let result: Person[];
-            const array = tree.toArray(result);
+            const array = tree.toArray();
             expect(array[0].Name).to.eq("Alice");
         });
         it("should return array with people ordered by name (asc)", () => {
-            let result: Person[];
-            const array = tree.toArray(result);
+            const array = tree.toArray();
             expect(array[0].Name).to.eq("Alice");
             expect(array[1].Name).to.eq("Jane");
             expect(array[2].Name).to.eq("Mel");
@@ -110,8 +107,7 @@ describe("BinarySearchTree", () => {
                 tree2.insert(person);
                 tree2.insert(person5);
                 tree2.insert(person3);
-            let result: Person[];
-            const array = tree2.toArray(result);
+            const array = tree2.toArray();
             expect(array[0].Age).to.eq(9);
             expect(array[1].Age).to.eq(10);
             expect(array[2].Age).to.eq(16);

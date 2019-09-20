@@ -1,8 +1,7 @@
 import { ICollection } from "../core/ICollection";
-export declare class Stack<T> implements ICollection<T>, IterableIterator<T> {
+export declare class Stack<T> implements ICollection<T> {
     private count;
     private data;
-    private iteratorIndex;
     constructor(data?: T[]);
     clear(): void;
     contains(item: T): boolean;
@@ -11,7 +10,5 @@ export declare class Stack<T> implements ICollection<T>, IterableIterator<T> {
     pop(): T;
     push(item: T): void;
     toArray(): T[];
-    next(): IteratorResult<T>;
-    [Symbol.iterator](): IterableIterator<T>;
     readonly Count: number;
 }

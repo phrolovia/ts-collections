@@ -6,4 +6,5 @@ export interface ITree<T> extends ICollection<T> {
     getRootData(): T;
     getNodeCount(): number;
     insert(item: T): void;
+    search(item: T): boolean;
 }

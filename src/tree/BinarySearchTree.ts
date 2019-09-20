@@ -1,7 +1,8 @@
 import { ITree } from "./ITree";
+import { INode } from "./INode";
 
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
-class RedBlackNode<T> {
+class RedBlackNode<T> implements INode<T> {
     public static readonly RED   = 0;
     public static readonly BLACK = 1;
     private data: T;
@@ -344,9 +345,9 @@ export class BinarySearchTree<T> implements ITree<T> {
      * Returns the node the item belongs to,
      * or null if item does not exists in tree.
      */
-    public search(item: T): T {
+    public search(item: T): boolean {
         const node = this.searchNode(item);
-        return node.getData();
+        return this.comparator(node.getData(), item) === 0;
     }
     private searchNode(item: T): RedBlackNode<T> {
         let temp: RedBlackNode<T> = this.root;
@@ -381,9 +382,9 @@ export class BinarySearchTree<T> implements ITree<T> {
     }
     /**
      * Maps the tree data into an array inorderly.
-     * @param target The array that the data will be mapped into.
      */
-    public toArray(target: T[]=[]): T[] {
+    public toArray(): T[] {
+        const target: T[] = [];
         if (this.isEmpty()) return target;
         this.toArrayRecursive(this.root, target);
         return target;

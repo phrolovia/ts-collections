@@ -1,5 +1,6 @@
 import { ITree } from "./ITree";
-declare class RedBlackNode<T> {
+import { INode } from "./INode";
+declare class RedBlackNode<T> implements INode<T> {
     static readonly RED = 0;
     static readonly BLACK = 1;
     private data;
@@ -71,15 +72,14 @@ export declare class BinarySearchTree<T> implements ITree<T> {
      * Returns the node the item belongs to,
      * or null if item does not exists in tree.
      */
-    search(item: T): T;
+    search(item: T): boolean;
     private searchNode;
     private swapColors;
     private swapValues;
     /**
      * Maps the tree data into an array inorderly.
-     * @param target The array that the data will be mapped into.
      */
-    toArray(target?: T[]): T[];
+    toArray(): T[];
     private toArrayRecursive;
 }
 export {};

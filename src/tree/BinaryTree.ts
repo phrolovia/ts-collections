@@ -1,7 +1,8 @@
 import { ITree } from "./ITree";
+import { INode } from "./INode";
 
 export declare type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
-class BinaryTreeNode<T extends any> {
+class BinaryTreeNode<T extends any> implements INode<T> {
     private left: BinaryTreeNode<T>;
     private right: BinaryTreeNode<T>;
     private data: T;
@@ -155,16 +156,17 @@ export class BinaryTree<T> implements ITree<T> {
         }
         return array.map(v => mapper(v));
     }
-    public traverseAndMorph<R>(morpher: (item: T) => R, comparator?: (i1: R, i2: R) => number): BinaryTree<R> {
+    public traverseAndMorph<R>(morpher: (item: T) => R, comparator?: (i1: R, i2: R) => number): ITree<R> {
         const compare  = comparator || this.comparator;
         const tree     = new BinaryTree<R>(compare);
-        let array: T[] = [];
-        array = this.toArray("PREORDER");
-        array.forEach(e => {
-            const morphedItem = morpher(e);
-            tree.insert(morphedItem);
-        });
+        this.traverseAndMorphRecursive(this.root, morpher, tree);
         return tree;
+    }
+    private traverseAndMorphRecursive<R>(root: BinaryTreeNode<T>, morpher: (item: T) => R, tree: ITree<R>): void {
+        if (root == null) return;
+        tree.insert(morpher(root.getData()));
+        this.traverseAndMorphRecursive(root.getLeft(), morpher, tree);
+        this.traverseAndMorphRecursive(root.getRight(), morpher, tree);
     }
     public toArray(direction: TraverseType = "INORDER"): T[] {
         const target: T[] = [];

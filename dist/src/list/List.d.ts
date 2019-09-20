@@ -1,8 +1,7 @@
 import { IList } from "./IList";
-export declare class List<T> implements IList<T>, IterableIterator<T> {
+export declare class List<T> implements IList<T> {
     private count;
     private data;
-    private iteratorIndex;
     constructor(data?: T[]);
     add(item: T): void;
     clear(): void;
@@ -27,7 +26,5 @@ export declare class List<T> implements IList<T>, IterableIterator<T> {
     set(index: number, item: T): void;
     sort(comparer?: (e1: T, e2: T) => number): void;
     toArray(): T[];
-    next(): IteratorResult<T>;
-    [Symbol.iterator](): IterableIterator<T>;
     readonly Count: number;
 }

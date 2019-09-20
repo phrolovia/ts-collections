@@ -23,7 +23,8 @@ export declare class BinaryTree<T> implements ITree<T> {
     search(item: T): boolean;
     private searchTree;
     traverseAndMapToArray<R>(mapper: (item: T) => R, direction?: TraverseType): R[];
-    traverseAndMorph<R>(morpher: (item: T) => R, comparator?: (i1: R, i2: R) => number): BinaryTree<R>;
+    traverseAndMorph<R>(morpher: (item: T) => R, comparator?: (i1: R, i2: R) => number): ITree<R>;
+    private traverseAndMorphRecursive;
     toArray(direction?: TraverseType): T[];
     private toInorderArray;
     private toPostorderArray;
