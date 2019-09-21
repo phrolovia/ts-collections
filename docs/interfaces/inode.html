@@ -85,8 +85,8 @@
 			<section class="tsd-panel">
 				<h3>Implemented by</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../classes/binarytreenode.html" class="tsd-signature-type">BinaryTreeNode</a></li>
 					<li><a href="../classes/redblacknode.html" class="tsd-signature-type">RedBlackNode</a></li>
+					<li><a href="../classes/treenode.html" class="tsd-signature-type">TreeNode</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -99,6 +99,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="inode.html#getdata" class="tsd-kind-icon">get<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="inode.html#getleft" class="tsd-kind-icon">get<wbr>Left</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="inode.html#getright" class="tsd-kind-icon">get<wbr>Right</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="inode.html#setdata" class="tsd-kind-icon">set<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="inode.html#setleft" class="tsd-kind-icon">set<wbr>Left</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="inode.html#setright" class="tsd-kind-icon">set<wbr>Right</a></li>
 							</ul>
@@ -160,6 +161,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+					<a name="setdata" class="tsd-anchor"></a>
+					<h3>set<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Data<span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in src/tree/INode.ts:5</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>data: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
 					<a name="setleft" class="tsd-anchor"></a>
 					<h3>set<wbr>Left</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
@@ -169,7 +193,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/INode.ts:5</li>
+									<li>Defined in src/tree/INode.ts:6</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -192,7 +216,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/INode.ts:6</li>
+									<li>Defined in src/tree/INode.ts:7</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -217,6 +241,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="../classes/abstracttree.html" class="tsd-kind-icon">Abstract<wbr>Tree</a>
+					</li>
 					<li class=" tsd-kind-class tsd-is-external">
 						<a href="../classes/argumentexception.html" class="tsd-kind-icon">Argument<wbr>Exception</a>
 					</li>
@@ -232,9 +259,6 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/binarytree.html" class="tsd-kind-icon">Binary<wbr>Tree</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external tsd-is-not-exported">
-						<a href="../classes/binarytreenode.html" class="tsd-kind-icon">Binary<wbr>Tree<wbr>Node</a>
-					</li>
 					<li class=" tsd-kind-class tsd-is-external">
 						<a href="../classes/invalidoperationexception.html" class="tsd-kind-icon">Invalid<wbr>Operation<wbr>Exception</a>
 					</li>
@@ -249,6 +273,9 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/stack.html" class="tsd-kind-icon">Stack</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="../classes/treenode.html" class="tsd-kind-icon">Tree<wbr>Node</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="icollection.html" class="tsd-kind-icon">ICollection</a>
@@ -269,6 +296,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
 								<a href="inode.html#getright" class="tsd-kind-icon">get<wbr>Right</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+								<a href="inode.html#setdata" class="tsd-kind-icon">set<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
 								<a href="inode.html#setleft" class="tsd-kind-icon">set<wbr>Left</a>

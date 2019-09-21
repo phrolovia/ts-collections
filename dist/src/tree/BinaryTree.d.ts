@@ -1,32 +1,11 @@
-import { ITree } from "./ITree";
-export declare type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
-export declare class BinaryTree<T> implements ITree<T> {
-    private comparator;
-    private root;
+import { AbstractTree } from "./AbstractTree";
+export declare class BinaryTree<T> extends AbstractTree<T> {
     constructor(comparator: Function);
-    clear(): void;
-    contains(item: T): boolean;
-    private containsRecursive;
-    insert(item: T): void;
-    private insertRecursive;
-    isEmpty(): boolean;
-    getNodeCount(): number;
-    private countTreeNodes;
     delete(item: T): void;
     private deleteRecursive;
-    find(predicate: (item: T) => boolean): T;
-    private findRecursive;
     private findSmallestValue;
-    forEach(action: (item: T) => void): void;
-    private forEachRecursive;
-    getRootData(): T;
+    insert(item: T): void;
+    private insertRecursive;
     search(item: T): boolean;
     private searchTree;
-    traverseAndMapToArray<R>(mapper: (item: T) => R, direction?: TraverseType): R[];
-    traverseAndMorph<R>(morpher: (item: T) => R, comparator?: (i1: R, i2: R) => number): ITree<R>;
-    private traverseAndMorphRecursive;
-    toArray(direction?: TraverseType): T[];
-    private toInorderArray;
-    private toPostorderArray;
-    private toPreorderArray;
 }

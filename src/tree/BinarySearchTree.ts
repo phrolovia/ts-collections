@@ -1,42 +1,38 @@
-import { ITree } from "./ITree";
-import { INode } from "./INode";
+import { AbstractTree } from "./AbstractTree";
+import { TreeNode } from "./TreeNode";
 
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
-class RedBlackNode<T> implements INode<T> {
+class RedBlackNode<T> extends TreeNode<T> {
     public static readonly RED   = 0;
     public static readonly BLACK = 1;
-    private data: T;
-    private left: RedBlackNode<T>;
     private parent: RedBlackNode<T>;
-    private right: RedBlackNode<T>;
     private color: number;
     public constructor(data: T) {
-        this.parent = this.left = this.right = null;
+        super(data);
+        this.setLeft(null);
+        this.setRight(null);
+        this.parent = null;
         this.color = RedBlackNode.RED;
-        this.data  = data;
     }
-    public getData(): T { return this.data; }
     public getColor(): number { return this.color; }
-    public getLeft(): RedBlackNode<T> { return this.left; }
     public getParent(): RedBlackNode<T> { return this.parent; }
-    public getRight(): RedBlackNode<T> { return this.right; }
     public getSibling(): RedBlackNode<T> {
         if (this.parent == null) return null;
-        if (this.isOnLeft()) return this.parent.getRight();
-        return this.parent.getLeft();
+        if (this.isOnLeft()) return this.parent.getRight() as RedBlackNode<T>;
+        return this.parent.getLeft() as RedBlackNode<T>;
     }
     public getUncle(): RedBlackNode<T> {
         if (this.parent == null || this.parent.getParent() == null){
             return null;
         }
         if (this.parent.isOnLeft()){
-            return this.parent.getParent().getRight();
+            return this.parent.getParent().getRight() as RedBlackNode<T>;
         }
-        return this.parent.getParent().getLeft();
+        return this.parent.getParent().getLeft() as RedBlackNode<T>;
     }
     public hasRedChild(): boolean {
-        return (this.left != null && this.left.color === RedBlackNode.RED)
-            || (this.right != null && this.right.color === RedBlackNode.RED);
+        return (this.getLeft() != null && (this.getLeft() as RedBlackNode<T>).getColor() === RedBlackNode.RED)
+            || (this.getRight() != null && (this.getRight() as RedBlackNode<T>).getColor() === RedBlackNode.RED);
     }
     public isOnLeft(): boolean {
         return this.parent.getLeft() === this;
@@ -53,38 +49,13 @@ class RedBlackNode<T> implements INode<T> {
         this.parent = p;
     }
     public setColor(color: number): void { this.color = color; }
-    public setData(data: T): void { this.data = data; }
-    public setLeft(left: RedBlackNode<T>): void { this.left = left; }
     public setParent(parent: RedBlackNode<T>): void { this.parent = parent; }
-    public setRight(right: RedBlackNode<T>): void { this.right = right; }
 }
 
-export class BinarySearchTree<T> implements ITree<T> {
-    private root: RedBlackNode<T>;
-    private comparator: Function = (v1:T|any, v2:T|any) => v1 - v2;
-    public constructor(comparator?: Function){
-        if (comparator) this.comparator = comparator;
+export class BinarySearchTree<T> extends AbstractTree<T> {
+    public constructor(comparator: Function){
+        super(comparator);
         this.root = null;
-    }
-    public clear(): void {
-        this.root = null;
-    }
-    public contains(item: T): boolean {
-        return this.containsRecursive(this.root, item);
-    }
-    private containsRecursive(root: RedBlackNode<T>, item: T): boolean {
-        if (root == null) return false;
-        if (this.comparator(item, root.getData()) === 0) return true;
-        return this.comparator(item, root.getData()) < 0
-            ? this.containsRecursive(root.getLeft(), item)
-            : this.containsRecursive(root.getRight(), item);
-    }
-    /**
-     * Returns the number of nodes in the tree.
-     */
-    private countTreeNodes(root: RedBlackNode<T>): number {
-        if (root == null) return 0;
-        return 1 + this.countTreeNodes(root.getLeft()) + this.countTreeNodes(root.getRight());
     }
     /**
      * Removes an item from the tree.
@@ -119,7 +90,6 @@ export class BinarySearchTree<T> implements ITree<T> {
                     parent.setRight(null);
                 }
             }
-            // v = null;
             return;
         }
         if (v.getLeft() == null || v.getRight() == null) {
@@ -127,14 +97,12 @@ export class BinarySearchTree<T> implements ITree<T> {
                 v.setData(u.getData());
                 v.setLeft(null);
                 v.setRight(null);
-                // u = null;
             } else {
                 if (v.isOnLeft()) {
                     parent.setLeft(u);
                 } else {
                     parent.setRight(u);
                 }
-                // v = null;
                 u.setParent(parent);
                 if (bothBlack) {
                     this.fixDoubleBlack(u);
@@ -147,30 +115,17 @@ export class BinarySearchTree<T> implements ITree<T> {
         this.swapValues(u, v);
         this.deleteNode(u);
     }
-    public find(predicate: (item: T) => boolean): T {
-        if (this.root == null) return null;
-        return this.findRecursive(this.root, predicate);
-    }
-    private findRecursive(root: RedBlackNode<T>, predicate: (item: T) => boolean): T {
-        if (root == null) return null;
-        if (predicate(root.getData())) return root.getData();
-        let foundItem: T = this.findRecursive(root.getLeft(), predicate);
-        if (foundItem != null){
-            return foundItem;
-        }
-        return this.findRecursive(root.getRight(), predicate);
-    }
     private findReplaceItem(node: RedBlackNode<T>): RedBlackNode<T> {
         if (node.getLeft() != null && node.getRight() != null) {
-            return this.getSuccessor(node.getRight());
+            return this.getSuccessor(node.getRight() as RedBlackNode<T>);
         }
         if (node.getLeft() == null && node.getRight() == null) {
             return null;
         }
         if (node.getLeft() != null){
-            return node.getLeft();
+            return node.getLeft() as RedBlackNode<T>;
         }
-        return node.getRight();
+        return node.getRight() as RedBlackNode<T>;
     }
     private fixDoubleBlack(node: RedBlackNode<T>): void {
         if (node === this.root) return;
@@ -190,23 +145,23 @@ export class BinarySearchTree<T> implements ITree<T> {
                 this.fixDoubleBlack(node);
             } else {
                 if (sibling.hasRedChild()) {
-                    if (sibling.getLeft() != null && sibling.getLeft().getColor() === RedBlackNode.RED) {
+                    if ((sibling.getLeft() as RedBlackNode<T>) != null && (sibling.getLeft() as RedBlackNode<T>).getColor() === RedBlackNode.RED) {
                         if (sibling.isOnLeft()) {
-                            sibling.getLeft().setColor(sibling.getColor());
+                            (sibling.getLeft() as RedBlackNode<T>).setColor(sibling.getColor());
                             sibling.setColor(parent.getColor());
                             this.rightRotate(parent);
                         } else {
-                            sibling.getLeft().setColor(parent.getColor());
+                            (sibling.getLeft() as RedBlackNode<T>).setColor(parent.getColor());
                             this.rightRotate(sibling);
                             this.leftRotate(parent);
                         }
                     } else {
                         if (sibling.isOnLeft()) {
-                            sibling.getRight().setColor(parent.getColor());
+                            (sibling.getRight() as RedBlackNode<T>).setColor(parent.getColor());
                             this.leftRotate(sibling);
                             this.rightRotate(parent);
                         } else {
-                            sibling.getRight().setColor(sibling.getColor());
+                            (sibling.getRight() as RedBlackNode<T>).setColor(sibling.getColor());
                             sibling.setColor(parent.getColor());
                             this.leftRotate(parent);
                         }
@@ -258,32 +213,10 @@ export class BinarySearchTree<T> implements ITree<T> {
             }
         }
     }
-    public forEach(action: (item: T) => void): void {
-        if (this.root == null) return;
-        this.forEachRecursive(this.root, action);
-    }
-    private forEachRecursive(root: RedBlackNode<T>, action: (item: T) => void): void {
-        if (root == null) return;
-        this.forEachRecursive(root.getLeft(), action);
-        action(root.getData());
-        this.forEachRecursive(root.getRight(), action);
-    }
-    public getNodeCount(): number {
-        return this.countTreeNodes(this.root);
-    }
-    /**
-     * Returns the root node of the tree.
-     */
-    public getRoot(): RedBlackNode<T> {
-        return this.root;
-    }
-    public getRootData(): T {
-        return this.root.getData();
-    }
     private getSuccessor(node: RedBlackNode<T>): RedBlackNode<T> {
         let temp = node;
         while (temp.getLeft() != null){
-            temp = temp.getLeft();
+            temp = temp.getLeft() as RedBlackNode<T>;
         }
         return temp;
     }
@@ -310,21 +243,15 @@ export class BinarySearchTree<T> implements ITree<T> {
             this.fixRedRed(node);
         }
     }
-    /**
-     * Checks whether the tree is empty or not.
-     */
-    public isEmpty(): boolean {
-        return this.root == null;
-    }
     private leftRotate(node: RedBlackNode<T>): void {
         let p = node.getRight();
         if (node === this.root) {
             this.root = p;
         }
-        node.moveDown(p);
-        node.setRight(p.getLeft());
+        node.moveDown(p as RedBlackNode<T>);
+        node.setRight(p.getLeft() as RedBlackNode<T>);
         if (p.getLeft() != null) {
-            p.getLeft().setParent(node);
+            (p.getLeft() as RedBlackNode<T>).setParent(node);
         }
         p.setLeft(node);
     }
@@ -333,30 +260,25 @@ export class BinarySearchTree<T> implements ITree<T> {
         if (node === this.root){
             this.root = p;
         }
-        node.moveDown(p);
+        node.moveDown(p as RedBlackNode<T>);
         node.setLeft(p.getRight());
         if (p.getRight() != null) {
-            p.getRight().setParent(node);
+            (p.getRight() as RedBlackNode<T>).setParent(node);
         }
         p.setRight(node);
     }
-    /**
-     * Searchs an item in the tree.
-     * Returns the node the item belongs to,
-     * or null if item does not exists in tree.
-     */
     public search(item: T): boolean {
         const node = this.searchNode(item);
         return this.comparator(node.getData(), item) === 0;
     }
     private searchNode(item: T): RedBlackNode<T> {
-        let temp: RedBlackNode<T> = this.root;
+        let temp: RedBlackNode<T> = this.root as RedBlackNode<T>;
         while (temp != null) {
             if (this.comparator(item, temp.getData()) < 0) {
                 if (temp.getLeft() == null) {
                     break;
                 } else {
-                    temp = temp.getLeft();
+                    temp = temp.getLeft() as RedBlackNode<T>;
                 }
             } else if (item === temp.getData()) {
                 break;
@@ -364,7 +286,7 @@ export class BinarySearchTree<T> implements ITree<T> {
                 if (temp.getRight() == null) {
                     break;
                 } else {
-                    temp = temp.getRight();
+                    temp = temp.getRight() as RedBlackNode<T>;
                 }
             }
         }
@@ -379,20 +301,5 @@ export class BinarySearchTree<T> implements ITree<T> {
         let temp = u.getData();
         u.setData(v.getData());
         v.setData(temp);
-    }
-    /**
-     * Maps the tree data into an array inorderly.
-     */
-    public toArray(): T[] {
-        const target: T[] = [];
-        if (this.isEmpty()) return target;
-        this.toArrayRecursive(this.root, target);
-        return target;
-    }
-    private toArrayRecursive(root: RedBlackNode<T>, target: T[]): void {
-        if (root == null) return;
-        this.toArrayRecursive(root.getLeft(), target);
-        target.push(root.getData());
-        this.toArrayRecursive(root.getRight(), target);
     }
 }

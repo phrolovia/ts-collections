@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { BinaryTree } from "../../src/tree/BinaryTree";
+import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
 
 class Person {
     Name: string;
@@ -218,12 +219,15 @@ describe("BinaryTree", () => {
             tree.insert(person2);
             tree.insert(person3);
             tree.insert(person5);
-        const resultTree = tree.traverseAndMorph<number>(p => p.Age, (i1: number, i2: number) => i1-i2);
         it("should return a number tree with '23' at root", () => {
+            let resultTree = new BinarySearchTree<number>((v1: number, v2: number) => v1-v2);
+                resultTree = <BinarySearchTree<number>>tree.traverseAndMorph<number>(resultTree, p => p.Age);
             const rootNumber = resultTree.getRootData();
-            expect(rootNumber).to.eq(23);
+            expect(rootNumber).to.eq(10);
         });
         it("should have pre-morph and post-morph items in the same order", () => {
+            let resultTree = new BinaryTree<number>((v1: number, v2: number) => v1-v2);
+                resultTree = <BinaryTree<number>>tree.traverseAndMorph<number>(resultTree, p => p.Age);
             const personArray = tree.toArray();
             const numberArray = resultTree.toArray();
             const ageArray = personArray.map(p => p.Age);
@@ -256,56 +260,6 @@ describe("BinaryTree", () => {
             expect(people[1].Age).to.eq(10);
             expect(people[2].Age).to.eq(23);
             expect(people[3].Age).to.eq(33);
-        });
-    });
-    describe("#toArray(): PREORDER", () => {
-        const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        it("should return an array with a size of 4", () => {
-            let people: Person[] = [];
-            people = tree.toArray("PREORDER");
-            expect(people.length).to.eq(4);
-        });
-        it("should have person with age '23' (Alice) at index: 0", () => {
-            let people: Person[] = [];
-            people = tree.toArray("PREORDER");
-            expect(people[0].Age).to.eq(23);
-        });
-        it("should have people at correct indices", () => {
-            let people: Person[] = [];
-            people = tree.toArray("PREORDER");
-            expect(people[0].Age).to.eq(23);
-            expect(people[1].Age).to.eq(9);
-            expect(people[2].Age).to.eq(10);
-            expect(people[3].Age).to.eq(33);
-        });
-    });
-    describe("#toArray(): POSTORDER", () => {
-        const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        it("should return an array with a size of 4", () => {
-            let people: Person[] = [];
-            people = tree.toArray("POSTORDER");
-            expect(people.length).to.eq(4);
-        });
-        it("should have person with age '10' (Senna) at index: 0", () => {
-            let people: Person[] = [];
-            people = tree.toArray("POSTORDER");
-            expect(people[0].Age).to.eq(10);
-        });
-        it("should have people at correct indices", () => {
-            let people: Person[] = [];
-            people = tree.toArray("POSTORDER");
-            expect(people[0].Age).to.eq(10);
-            expect(people[1].Age).to.eq(9);
-            expect(people[2].Age).to.eq(33);
-            expect(people[3].Age).to.eq(23);
         });
     });
 });
