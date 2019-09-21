@@ -38,6 +38,9 @@ export class Stack<T> implements ICollection<T> {
     public push(item: T): void {
         this.data.splice(0, 0, item);
     }
+    public remove(item: T): boolean {
+        throw("");
+    }
     public size(): number {
         return this.data.length;
     }

@@ -53,6 +53,11 @@ export abstract class AbstractTree<T> implements ITree<T> {
     public isEmpty(): boolean {
         return this.root == null;
     }
+    public remove(item: T): boolean {
+        if(!this.contains(item)) return false;
+        this.delete(item);
+        return true;
+    }
     public size(): number {
         return this.countTreeNodes(this.root);
     }
@@ -115,5 +120,6 @@ export abstract class AbstractTree<T> implements ITree<T> {
     public abstract add(item: T): boolean;
     public abstract delete(item: T): void;
     public abstract insert(item: T): void;
+    // public abstract remove(item: T): boolean;
     public abstract search(item: T): boolean;
 }

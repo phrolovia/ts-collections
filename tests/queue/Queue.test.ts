@@ -1,16 +1,7 @@
-import { Queue } from "../../src/queue/Queue";
 import { expect } from "chai";
-
-class Person {
-    Name: string;
-    Surname: string;
-    Age: number;
-    constructor(name: string, surname: string, age: number) {
-        this.Name = name;
-        this.Surname = surname;
-        this.Age = age;
-    }
-}
+import { IQueue } from "../../src/queue/IQueue";
+import { List } from "../../src/list/List";
+import { Person } from "../models/Person";
 
 describe("Queue", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -19,8 +10,8 @@ describe("Queue", () => {
     const person4: Person    = new Person("Lenka", "Polakova", 16);
     const person5: Person    = new Person("Jane", "Green", 16);
     describe("#clear()", () => {
-        it("'Count' should be equal to 0", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+        it("size should be equal to 0", () => {
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(person2);
             queue.clear();
@@ -28,7 +19,7 @@ describe("Queue", () => {
         });
     });
     describe("#contains()", () => {
-        const queue: Queue<Person> = new Queue<Person>();
+        const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(null);
             queue.enqueue(person2);
@@ -45,19 +36,19 @@ describe("Queue", () => {
     });
     describe("#dequeue()", () => {
         it("should throw InvalidOperationException ['queue is empty.]", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+            const queue: IQueue<Person> = new List<Person>();
             expect(() => queue.dequeue()).to.throw("queue is empty.");
         });
         it("should return a person with the name Alice", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(person3);
             queue.enqueue(person5);
             const first = queue.dequeue();
             expect(first.Name).to.equal("Alice");
         });
-        it("'Count' should be equal to 3", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+        it("size should be equal to 3", () => {
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(person2);
             queue.enqueue(person3);
@@ -68,31 +59,31 @@ describe("Queue", () => {
     });
     describe("#enqueue()", () => {
         it("should add element to the list", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             expect(queue.peek()).to.equal(person);
         });
-        it("'Count' should be equal to 1", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+        it("size should be equal to 1", () => {
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             expect(queue.size()).to.equal(1);
         });
     });
     describe("#peek()", () => {
         it("should throw InvalidOperationException ['queue is empty.]", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+            const queue: IQueue<Person> = new List<Person>();
             expect(() => queue.peek()).to.throw("queue is empty.");
         });
         it("should return a person with the name Alice", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(person3);
             queue.enqueue(person5);
             const first = queue.peek();
             expect(first.Name).to.equal("Alice");
         });
-        it("'Count' should not change", () => {
-            const queue: Queue<Person> = new Queue<Person>();
+        it("size should not change", () => {
+            const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(person2);
             queue.enqueue(person3);
@@ -102,8 +93,31 @@ describe("Queue", () => {
             expect(queue.size()).to.eq(fc);
         });
     });
+    describe("#poll()", () => {
+        it("should return null", () => {
+            const queue: IQueue<Person> = new List<Person>();
+            expect(queue.poll()).to.eq(null);
+        });
+        it("should return a person with the name Alice", () => {
+            const queue: IQueue<Person> = new List<Person>();
+            queue.enqueue(person);
+            queue.enqueue(person3);
+            queue.enqueue(person5);
+            const first = queue.poll();
+            expect(first.Name).to.equal("Alice");
+        });
+        it("size should be equal to 3", () => {
+            const queue: IQueue<Person> = new List<Person>();
+            queue.enqueue(person);
+            queue.enqueue(person2);
+            queue.enqueue(person3);
+            queue.enqueue(person5);
+            queue.poll();
+            expect(queue.size()).to.eq(3);
+        });
+    });
     describe("#toArray()", () => {
-        const queue: Queue<Person> = new Queue<Person>();
+        const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             queue.enqueue(person2);
             queue.enqueue(person3);

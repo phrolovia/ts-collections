@@ -81,10 +81,10 @@
 						<span class="target">AbstractTree</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="binarytree.html" class="tsd-signature-type">BinaryTree</a>
+								<a href="binarysearchtree.html" class="tsd-signature-type">BinarySearchTree</a>
 							</li>
 							<li>
-								<a href="binarysearchtree.html" class="tsd-signature-type">BinarySearchTree</a>
+								<a href="binarytree.html" class="tsd-signature-type">BinaryTree</a>
 							</li>
 						</ul>
 					</li>
@@ -116,6 +116,7 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#add" class="tsd-kind-icon">add</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#clear" class="tsd-kind-icon">clear</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#contains" class="tsd-kind-icon">contains</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="abstracttree.html#containsrecursive" class="tsd-kind-icon">contains<wbr>Recursive</a></li>
@@ -125,11 +126,12 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="abstracttree.html#findrecursive" class="tsd-kind-icon">find<wbr>Recursive</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#foreach" class="tsd-kind-icon">for<wbr>Each</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="abstracttree.html#foreachrecursive" class="tsd-kind-icon">for<wbr>Each<wbr>Recursive</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#getnodecount" class="tsd-kind-icon">get<wbr>Node<wbr>Count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#getrootdata" class="tsd-kind-icon">get<wbr>Root<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#insert" class="tsd-kind-icon">insert</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#remove" class="tsd-kind-icon">remove</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#search" class="tsd-kind-icon">search</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#size" class="tsd-kind-icon">size</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstracttree.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="abstracttree.html#toarrayrecursive" class="tsd-kind-icon">to<wbr>Array<wbr>Recursive</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external"><a href="abstracttree.html#toinorderarray" class="tsd-kind-icon">to<wbr>Inorder<wbr>Array</a></li>
@@ -194,6 +196,30 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="add" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> add</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#add">add</a></p>
+								<ul>
+									<li>Defined in src/tree/AbstractTree.ts:120</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>item: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="clear" class="tsd-anchor"></a>
 					<h3>clear</h3>
@@ -296,7 +322,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#delete">delete</a></p>
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:115</li>
+									<li>Defined in src/tree/AbstractTree.ts:121</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -480,24 +506,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="getnodecount" class="tsd-anchor"></a>
-					<h3>get<wbr>Node<wbr>Count</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Node<wbr>Count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#getnodecount">getNodeCount</a></p>
-								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:50</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="getrootdata" class="tsd-anchor"></a>
 					<h3>get<wbr>Root<wbr>Data</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -508,7 +516,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#getrootdata">getRootData</a></p>
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:53</li>
+									<li>Defined in src/tree/AbstractTree.ts:50</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -526,7 +534,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#insert">insert</a></p>
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:116</li>
+									<li>Defined in src/tree/AbstractTree.ts:122</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -550,9 +558,33 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#isempty">isEmpty</a></p>
 								<ul>
+									<li>Defined in src/tree/AbstractTree.ts:53</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="remove" class="tsd-anchor"></a>
+					<h3>remove</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#remove">remove</a></p>
+								<ul>
 									<li>Defined in src/tree/AbstractTree.ts:56</li>
 								</ul>
 							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>item: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
@@ -568,7 +600,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#search">search</a></p>
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:117</li>
+									<li>Defined in src/tree/AbstractTree.ts:124</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -578,6 +610,24 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a name="size" class="tsd-anchor"></a>
+					<h3>size</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#size">size</a></p>
+								<ul>
+									<li>Defined in src/tree/AbstractTree.ts:61</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -592,7 +642,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:59</li>
+									<li>Defined in src/tree/AbstractTree.ts:64</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -609,7 +659,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:65</li>
+									<li>Defined in src/tree/AbstractTree.ts:70</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -635,7 +685,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:71</li>
+									<li>Defined in src/tree/AbstractTree.ts:76</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -661,7 +711,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:77</li>
+									<li>Defined in src/tree/AbstractTree.ts:82</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -687,7 +737,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:83</li>
+									<li>Defined in src/tree/AbstractTree.ts:88</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -713,7 +763,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:89</li>
+									<li>Defined in src/tree/AbstractTree.ts:94</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -763,7 +813,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:104</li>
+									<li>Defined in src/tree/AbstractTree.ts:109</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -813,7 +863,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/tree/AbstractTree.ts:108</li>
+									<li>Defined in src/tree/AbstractTree.ts:113</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -883,6 +933,9 @@
 								<a href="abstracttree.html#root" class="tsd-kind-icon">root</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="abstracttree.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="abstracttree.html#clear" class="tsd-kind-icon">clear</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -910,9 +963,6 @@
 								<a href="abstracttree.html#foreachrecursive" class="tsd-kind-icon">for<wbr>Each<wbr>Recursive</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstracttree.html#getnodecount" class="tsd-kind-icon">get<wbr>Node<wbr>Count</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="abstracttree.html#getrootdata" class="tsd-kind-icon">get<wbr>Root<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -922,7 +972,13 @@
 								<a href="abstracttree.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="abstracttree.html#remove" class="tsd-kind-icon">remove</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="abstracttree.html#search" class="tsd-kind-icon">search</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+								<a href="abstracttree.html#size" class="tsd-kind-icon">size</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="abstracttree.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
@@ -973,9 +1029,6 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="list.html" class="tsd-kind-icon">List</a>
 					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="queue.html" class="tsd-kind-icon">Queue</a>
-					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external tsd-is-not-exported">
 						<a href="redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
 					</li>
@@ -985,14 +1038,26 @@
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="treenode.html" class="tsd-kind-icon">Tree<wbr>Node</a>
 					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="treeset.html" class="tsd-kind-icon">Tree<wbr>Set</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/ideque.html" class="tsd-kind-icon">IDeque</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/ilist.html" class="tsd-kind-icon">IList</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/inode.html" class="tsd-kind-icon">INode</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/iqueue.html" class="tsd-kind-icon">IQueue</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/iset.html" class="tsd-kind-icon">ISet</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/itree.html" class="tsd-kind-icon">ITree</a>

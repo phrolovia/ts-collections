@@ -1,11 +1,16 @@
 import { IList } from "./IList";
-export declare class List<T> implements IList<T> {
-    private count;
+import { IQueue } from "../queue/IQueue";
+import { IDeque } from "../queue/IDeque";
+export declare class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data;
     constructor(data?: T[]);
-    add(item: T): void;
+    add(item: T): boolean;
     clear(): void;
     contains(item: T): boolean;
+    dequeue(): T;
+    dequeueLast(): T;
+    enqueue(item: T): void;
+    enqueueFirst(item: T): void;
     exists(predicate: (item: T) => boolean): boolean;
     find(predicate: (item: T) => boolean): T | null;
     findAll(predicate: (item: T) => boolean): List<T>;
@@ -18,13 +23,17 @@ export declare class List<T> implements IList<T> {
     insert(index: number, item: T): void;
     isEmpty(): boolean;
     lastIndexOf(item: T): number;
+    peek(): T;
+    peekLast(): T;
+    poll(): T;
+    pollLast(): T;
     remove(item: T): boolean;
     removeAll(predicate: (value: T) => boolean): number;
     removeAt(index: number): void;
     removeRange(index: number, count: number): void;
     reverse(): void;
     set(index: number, item: T): void;
+    size(): number;
     sort(comparer?: (e1: T, e2: T) => number): void;
     toArray(): T[];
-    readonly Count: number;
 }

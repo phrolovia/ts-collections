@@ -67,11 +67,8 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
      * @param item The item to be removed from tree.
      */
     public delete(item: T): void {
-        if (this.root == null) return;
+        if (!this.contains(item)) return;
         let v: RedBlackNode<T> = this.searchNode(item);
-        if (v.getData() !== item) {
-            return;
-        }
         this.deleteNode(v);
     }
     private deleteNode(v: RedBlackNode<T>): void {
@@ -274,6 +271,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
     }
     public search(item: T): boolean {
         const node = this.searchNode(item);
+        if (node == null) return false;
         return this.comparator(node.getData(), item) === 0;
     }
     private searchNode(item: T): RedBlackNode<T> {

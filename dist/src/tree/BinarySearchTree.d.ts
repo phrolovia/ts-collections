@@ -1,6 +1,7 @@
 import { AbstractTree } from "./AbstractTree";
 export declare class BinarySearchTree<T> extends AbstractTree<T> {
     constructor(comparator: Function);
+    add(item: T): boolean;
     /**
      * Removes an item from the tree.
      * @param item The item to be removed from tree.

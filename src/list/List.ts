@@ -2,10 +2,13 @@ import { IList } from "./IList";
 import { ArgumentNullException } from "../exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../exceptions/ArgumentOutOfRangeException";
 import { ArgumentException } from "../exceptions/ArgumentException";
+import { InvalidOperationException } from "../exceptions/InvalidOperationException";
+import { IQueue } from "../queue/IQueue";
+import { IDeque } from "../queue/IDeque";
 
-export class List<T> implements IList<T> {
+export class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data: T[] = [];
-    public constructor(data?: T[]){
+    public constructor(data?: T[]) {
         if(data) {
             this.data = [...data];
         }
@@ -19,6 +22,28 @@ export class List<T> implements IList<T> {
     }
     public contains(item: T): boolean {
         return  this.indexOf(item) > -1;
+    }
+    public dequeue(): T {
+        if (this.isEmpty()) {
+            throw new InvalidOperationException("queue is empty.");
+        }
+        const item = this.data[0];
+        this.data.splice(0, 1);
+        return item;
+    }
+    public dequeueLast(): T {
+        if (this.isEmpty()) {
+            throw new InvalidOperationException("queue is empty.");
+        }
+        const item = this.data[this.data.length - 1];
+        this.data.splice(this.data.length-1, 1);
+        return item;
+    }
+    public enqueue(item: T): void {
+        this.add(item);
+    }
+    public enqueueFirst(item: T): void {
+        this.insert(0, item);
     }
     public exists(predicate: (item: T) => boolean): boolean {
         if (!predicate) {
@@ -130,7 +155,7 @@ export class List<T> implements IList<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index >= this.size()) {
+        if (index !== 0 && index >= this.size()) {
             throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         this.data.splice(index, 0, item);
@@ -140,6 +165,32 @@ export class List<T> implements IList<T> {
     }
     public lastIndexOf(item: T): number {
         return this.data.lastIndexOf(item);
+    }
+    public peek(): T {
+        if (this.isEmpty()) {
+            throw new InvalidOperationException("queue is empty.");
+        }
+        return this.get(0);
+    }
+    public peekLast(): T {
+        if (this.isEmpty()) {
+            throw new InvalidOperationException("queue is empty.");
+        }
+        return this.get(this.size() - 1);
+    }
+    public poll(): T {
+        if (this.isEmpty()) {
+            return null;
+        }
+        const item = this.data[0];
+        this.data.splice(0, 1);
+        return item;
+    }
+    public pollLast(): T {
+        if (this.isEmpty()) return null;
+        const item = this.data[this.size() - 1];
+        this.data.splice(this.size() - 1, 1);
+        return item;
     }
     public remove(item: T): boolean {
         const index = this.findIndex(d => d === item);

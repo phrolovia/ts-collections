@@ -2,18 +2,8 @@
 import { List } from "../../src/list/List";
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { ArgumentNullException } from "../../src/exceptions/ArgumentNullException";
-
-class Person {
-    Name: string;
-    Surname: string;
-    Age: number;
-    constructor(name: string, surname: string, age: number) {
-        this.Name = name;
-        this.Surname = surname;
-        this.Age = age;
-    }
-}
+import { Person } from "../models/Person";
+import { IList } from "../../src/list/IList";
 
 describe("List", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -23,19 +13,19 @@ describe("List", () => {
     const person5: Person    = new Person("Jane", "Green", 16);
     describe("#add()", () => {
         it("should add element to the list", () => {
-            const list: List<Person> = new List<Person>();
+            const list: IList<Person> = new List<Person>();
             list.add(person);
             expect(list.get(0)).to.equal(person);
         });
-        it("'Count' should be equal to 1", () => {
+        it("size should be equal to 1", () => {
             const list: List<Person> = new List<Person>();
             list.add(person);
             expect(list.size()).to.equal(1);
         });
     });
     describe("#clear()", () => {
-        it("'Count' should be equal to 0", () => {
-            const list: List<Person> = new List<Person>();
+        it("size should be equal to 0", () => {
+            const list: IList<Person> = new List<Person>();
             list.add(person);
             list.add(person2);
             list.clear();
@@ -43,7 +33,7 @@ describe("List", () => {
         });
     });
     describe("#contains()", () => {
-        const list: List<Person> = new List<Person>();
+        const list: IList<Person> = new List<Person>();
         list.add(person);
         list.add(person2);
         list.add(null);
@@ -232,7 +222,7 @@ describe("List", () => {
         });
     });
     describe("#get()", () => {
-        const list: List<Person> = new List<Person>();
+        const list: IList<Person> = new List<Person>();
         list.add(person);
         list.add(person2);
         list.add(person3);
@@ -258,7 +248,7 @@ describe("List", () => {
         });
     });
     describe("#indexOf()", () => {
-        const list: List<Person> = new List<Person>();
+        const list: IList<Person> = new List<Person>();
         list.add(person);
         list.add(person2);
         list.add(person3);
@@ -278,7 +268,7 @@ describe("List", () => {
         });
     });
     describe("#insert()", () => {
-        const list: List<Person> = new List<Person>();
+        const list: IList<Person> = new List<Person>();
         list.add(person);
         list.add(person3);
         list.add(null);
@@ -436,7 +426,7 @@ describe("List", () => {
         });
     });
     describe("#set()", () => {
-        const list: List<Person> = new List<Person>();
+        const list: IList<Person> = new List<Person>();
         list.add(person);
         list.add(person3);
         list.add(null);
@@ -470,7 +460,7 @@ describe("List", () => {
         });
     });
     describe("#toArray()", () => {
-        const list: List<Person> = new List<Person>();
+        const list: IList<Person> = new List<Person>();
         list.add(person);
         list.add(person3);
         list.add(null);

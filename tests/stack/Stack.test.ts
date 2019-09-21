@@ -1,16 +1,6 @@
 import { expect } from "chai";
 import { Stack } from "../../src/stack/Stack";
-
-class Person {
-    Name: string;
-    Surname: string;
-    Age: number;
-    constructor(name: string, surname: string, age: number) {
-        this.Name = name;
-        this.Surname = surname;
-        this.Age = age;
-    }
-}
+import { Person } from "../models/Person";
 
 describe("Stack", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -19,7 +9,7 @@ describe("Stack", () => {
     const person4: Person    = new Person("Lenka", "Polakova", 16);
     const person5: Person    = new Person("Jane", "Green", 16);
     describe("#clear()", () => {
-        it("'Count' should be equal to 0", () => {
+        it("size should be equal to 0", () => {
             const stack: Stack<Person> = new Stack<Person>();
             stack.push(person);
             stack.push(person2);
@@ -56,7 +46,7 @@ describe("Stack", () => {
             const first = stack.peek();
             expect(first.Name).to.equal("Jane");
         });
-        it("'Count' should not change", () => {
+        it("size should not change", () => {
             const stack: Stack<Person> = new Stack<Person>();
             stack.push(person);
             stack.push(person2);
@@ -80,7 +70,7 @@ describe("Stack", () => {
             const top = stack.pop();
             expect(top.Name).to.equal("Jane");
         });
-        it("'Count' should be equal to 3", () => {
+        it("size should be equal to 3", () => {
             const stack: Stack<Person> = new Stack<Person>();
             stack.push(person);
             stack.push(person2);
@@ -96,7 +86,7 @@ describe("Stack", () => {
             stack.push(person);
             expect(stack.peek()).to.equal(person);
         });
-        it("'Count' should be equal to 1", () => {
+        it("size should be equal to 1", () => {
             const stack: Stack<Person> = new Stack<Person>();
             stack.push(person);
             expect(stack.size()).to.equal(1);

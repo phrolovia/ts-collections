@@ -1,5 +1,9 @@
-export { List } from './src/list/List';
-export { Queue } from './src/queue/Queue';
-export { Stack } from './src/stack/Stack';
-export { BinaryTree } from './src/tree/BinaryTree';
 export { BinarySearchTree } from './src/tree/BinarySearchTree';
+export { BinaryTree } from './src/tree/BinaryTree';
+export { IDeque } from './src/queue/IDeque';
+export { IList } from './src/list/IList';
+export { IQueue } from './src/queue/IQueue';
+export { ISet } from './src/set/ISet';
+export { List } from './src/list/List';
+export { Stack } from './src/stack/Stack';
+export { TreeSet } from './src/set/TreeSet';

@@ -159,6 +159,31 @@ describe("BinaryTree", () => {
             expect(tree.isEmpty()).to.eq(false);
         });
     });
+    describe("#remove()", () => {
+        const tree = new BinaryTree<Person>(nameComparator);
+            tree.insert(person);
+            tree.insert(person2);
+            tree.insert(person3);
+            tree.insert(person4);
+            tree.insert(person5);
+        it("should delete person from tree", () => {
+            tree.remove(person);
+            expect(tree.size()).to.eq(4);
+        });
+        it("should not have 'Alice' at root", () => {
+            expect(tree.toArray()[0].Name).to.not.eq("Alice");
+        });
+        it("should return true", () => {
+            const deleted = tree.remove(person2);
+            expect(deleted).to.eq(true);
+            expect(tree.size()).to.eq(3);
+        });
+        it("should return false", () => {
+            const deleted = tree.remove(person);
+            expect(deleted).to.eq(false);
+            expect(tree.size()).to.eq(3);
+        });
+    });
     describe("#search()", () => {
         const tree = new BinaryTree<Person>(ageComparator);
             tree.insert(person);

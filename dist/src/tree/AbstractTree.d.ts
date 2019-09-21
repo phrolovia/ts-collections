@@ -12,9 +12,10 @@ export declare abstract class AbstractTree<T> implements ITree<T> {
     private findRecursive;
     forEach(action: (item: T) => void): void;
     private forEachRecursive;
-    getNodeCount(): number;
     getRootData(): T;
     isEmpty(): boolean;
+    remove(item: T): boolean;
+    size(): number;
     toArray(): T[];
     private toArrayRecursive;
     protected toInorderArray(root: INode<T>, target: T[]): void;
@@ -23,6 +24,7 @@ export declare abstract class AbstractTree<T> implements ITree<T> {
     traverseAndMapToArray<R>(mapper: (item: T) => R, direction?: TraverseType): R[];
     traverseAndMorph<R>(tree: ITree<R>, morpher: (item: T) => R): ITree<R>;
     private traverseAndMorphRecursive;
+    abstract add(item: T): boolean;
     abstract delete(item: T): void;
     abstract insert(item: T): void;
     abstract search(item: T): boolean;
