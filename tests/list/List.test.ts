@@ -30,7 +30,7 @@ describe("List", () => {
         it("'Count' should be equal to 1", () => {
             const list: List<Person> = new List<Person>();
             list.add(person);
-            expect(list.Count).to.equal(1);
+            expect(list.size()).to.equal(1);
         });
     });
     describe("#clear()", () => {
@@ -39,7 +39,7 @@ describe("List", () => {
             list.add(person);
             list.add(person2);
             list.clear();
-            expect(list.Count).to.equal(0);
+            expect(list.size()).to.equal(0);
         });
     });
     describe("#contains()", () => {
@@ -103,7 +103,7 @@ describe("List", () => {
         });
         it("should have 2 people", () => {
             var foundPersonsList = list.findAll(p => p && p.Age > 9);
-            expect(foundPersonsList.Count).to.eq(2);
+            expect(foundPersonsList.size()).to.eq(2);
         });
     });
     describe("#findIndex()", () => {
@@ -245,8 +245,8 @@ describe("List", () => {
         it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
             expect(() => list.get(-1)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.Count}.]`, () => {
-            expect(() => list.get(list.Count)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.size()}.]`, () => {
+            expect(() => list.get(list.size())).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with name Mel", () => {
             const p = list.get(1);
@@ -286,8 +286,8 @@ describe("List", () => {
         it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
             expect(() => list.insert(-1, person2)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.Count}.]`, () => {
-            expect(() => list.insert(list.Count, person2)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.size()}.]`, () => {
+            expect(() => list.insert(list.size(), person2)).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with name Mel", () => {
             list.insert(1, person2);
@@ -300,7 +300,7 @@ describe("List", () => {
             expect(p).to.eq(null);
         });
         it("should have the count of 6", () => {
-            expect(list.Count).to.eq(6);
+            expect(list.size()).to.eq(6);
         });
     });
     describe("#lastIndexOf()", () => {
@@ -334,7 +334,7 @@ describe("List", () => {
             expect(removed).to.eq(true);
         });
         it("should have the count of 6", () => {
-            expect(list.Count).to.eq(6);
+            expect(list.size()).to.eq(6);
         });
         it("should return false", () => {
             const r =list.remove(person4);
@@ -379,8 +379,8 @@ describe("List", () => {
         it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
             expect(() => list.removeAt(-1)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.Count}.]`, () => {
-            expect(() => list.removeAt(list.Count)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.size()}.]`, () => {
+            expect(() => list.removeAt(list.size())).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with name Jane at index 2", () => {
             list.removeAt(2);
@@ -389,7 +389,7 @@ describe("List", () => {
         });
         it("should set the count to 2 after remove", () => {
             list.removeAt(2);
-            expect(list.Count).to.eq(2);
+            expect(list.size()).to.eq(2);
         });
     });
     describe("#removeRange()", () => {
@@ -409,7 +409,7 @@ describe("List", () => {
         });
         it("should set the count to 2 after remove", () => {
             list.removeRange(1,2);
-            expect(list.Count).to.eq(2);
+            expect(list.size()).to.eq(2);
         });
         it("should equal to a person with name Jane at index 1", () => {
             const p = list.get(1);
@@ -431,7 +431,7 @@ describe("List", () => {
         list.add(person5);
         it("should have a person with the surname 'Rivermist' at the end.", () => {
             list.reverse();
-            const last = list.get(list.Count-1);
+            const last = list.get(list.size()-1);
             expect(last.Surname).to.eq("Rivermist");
         });
     });
@@ -444,8 +444,8 @@ describe("List", () => {
         it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
             expect(() => list.set(-1, person2)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than or equal to ${list.Count}.]`, () => {
-            expect(() => list.set(list.Count, person2)).to.throw(`index is greater than or equal to ${list.Count}.`);
+        it(`should throw ArgumentOutOfRangeException ['index is greater than or equal to ${list.size()}.]`, () => {
+            expect(() => list.set(list.size(), person2)).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with surname Bluesky at index 2", () => {
             list.set(2, person2);
@@ -453,9 +453,9 @@ describe("List", () => {
             expect(p.Surname).to.eq("Bluesky");
         });
         it("should not change the count", () => {
-            const fc = list.Count;
+            const fc = list.size();
             list.set(0, person4);
-            expect(list.Count).to.eq(fc);
+            expect(list.size()).to.eq(fc);
         });
     });
     describe("#sort()", () => {
@@ -466,7 +466,7 @@ describe("List", () => {
         list.add(person);
         it("should have Alice at the end", () => {
             list.sort((p1, p2) => !p1 || !p2 ? 1 : p1.Age > p2.Age ? 1 : -1 );            
-            expect(list.get(list.Count-1).Name).to.eq("Alice");
+            expect(list.get(list.size()-1).Name).to.eq("Alice");
         });
     });
     describe("#toArray()", () => {
@@ -477,7 +477,7 @@ describe("List", () => {
         list.add(person5);
         const array = list.toArray();
         it("should have the same size as list", () => {
-            expect(list.Count).to.eq(array.length);
+            expect(list.size()).to.eq(array.length);
         });
         const personComparer = (ix: number) => {
             it(`should have same person at the index: ${ix}`, () => {
@@ -485,7 +485,7 @@ describe("List", () => {
                 expect(p).deep.equal(array[ix]);
             });
         };
-        for (var ix = 0; ix < list.Count; ++ix){
+        for (var ix = 0; ix < list.size(); ++ix){
             personComparer(ix);
         }
     });

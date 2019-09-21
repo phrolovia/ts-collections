@@ -4,21 +4,18 @@ import { ArgumentOutOfRangeException } from "../exceptions/ArgumentOutOfRangeExc
 import { ArgumentException } from "../exceptions/ArgumentException";
 
 export class List<T> implements IList<T> {
-    private count: number = 0;
     private data: T[] = [];
     public constructor(data?: T[]){
         if(data) {
             this.data = [...data];
-            this.count = this.data.length;
         }
     }
-    public add(item: T) {
+    public add(item: T): boolean {
         this.data.push(item);
-        this.count++;
+        return true;
     }
     public clear() {
         this.data.length = 0;
-        this.count = 0;
     }
     public contains(item: T): boolean {
         return  this.indexOf(item) > -1;
@@ -43,15 +40,15 @@ export class List<T> implements IList<T> {
         }
         
         startIndex = startIndex || 0;
-        count      = count || this.Count-1;
+        count      = count || this.size()-1;
 
-        if (startIndex! < 0 || startIndex >= this.Count) {
+        if (startIndex! < 0 || startIndex >= this.size()) {
             throw new ArgumentOutOfRangeException("startIndex is not a valid index.");
         }
         if (count < 0) {
             throw new ArgumentOutOfRangeException("count is less than 0.");
         }
-        if (startIndex+count > this.Count) {
+        if (startIndex+count > this.size()) {
             throw new ArgumentOutOfRangeException("startIndex and count do not specify a valid section in the list.");
         }
         
@@ -86,17 +83,17 @@ export class List<T> implements IList<T> {
         if (!predicate) {
             throw new ArgumentNullException("predicate is null.");
         }
-        if (startIndex < 0 || startIndex >= this.Count) {
+        if (startIndex < 0 || startIndex >= this.size()) {
             throw new ArgumentOutOfRangeException("startIndex is not a valid index.");
         }
         if (count < 0) {
             throw new ArgumentOutOfRangeException("count is less than 0.");
         }
-        if (startIndex+count > this.Count) {
+        if (startIndex+count > this.size()) {
             throw new ArgumentOutOfRangeException("startIndex and count do not specify a valid section in the list.");
         }
         startIndex = startIndex || 0;
-        count      = count || this.Count;
+        count      = count || this.size();
         let found  = false;
         let foundIndex = -1;
         for (let ix = startIndex+count-1; ix >= startIndex; --ix) {
@@ -121,8 +118,8 @@ export class List<T> implements IList<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index >= this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
+        if (index >= this.size()) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         return this.data[index];
     }
@@ -133,11 +130,10 @@ export class List<T> implements IList<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index >= this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
+        if (index >= this.size()) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         this.data.splice(index, 0, item);
-        this.count++;
     }
     public isEmpty(): boolean {
         return this.data.length === 0;
@@ -155,20 +151,18 @@ export class List<T> implements IList<T> {
         if (!predicate) {
             throw new ArgumentNullException("predicate is null.");
         }
-        const preCount = this.Count;
+        const preCount = this.data.length;
         this.data = this.data.filter(d => !predicate(d));
-        this.count = this.data.length;
-        return preCount - this.count;
+        return preCount - this.data.length;
     }
     public removeAt(index: number): void {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index >= this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
+        if (index >= this.size()) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         this.data.splice(index, 1);
-        this.count--;
     }
     public removeRange(index: number, count: number): void {
         if (index < 0) {
@@ -177,7 +171,7 @@ export class List<T> implements IList<T> {
         if (count < 0) {
             throw new ArgumentOutOfRangeException("count is less than 0.");
         }
-        if (index+count > this.Count) {
+        if (index+count > this.size()) {
             throw new ArgumentException("index and count do not denote a valid range of elements in the list.");
         }
         let removedCount = 0;
@@ -193,10 +187,13 @@ export class List<T> implements IList<T> {
         if (index < 0) {
             throw new ArgumentOutOfRangeException("index is less than 0.");
         }
-        if (index >= this.Count) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.Count}.`);
+        if (index >= this.size()) {
+            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         this.data[index] = item;
+    }
+    public size(): number {
+        return this.data.length;
     }
     public sort(comparer?: (e1: T, e2: T) => number): void {
         if (!comparer) {
@@ -207,5 +204,4 @@ export class List<T> implements IList<T> {
     public toArray(): T[] {
         return [...this.data];
     }
-    public get Count() { return this.count; }
 }

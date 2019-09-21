@@ -24,6 +24,19 @@ describe("BinarySearchTree", () => {
     const person5: Person    = new Person("Jane", "Green", 33);
     const ageComparator      = (p1: Person, p2: Person) => p1.Age - p2.Age;
     const nameComparator     = (p1: Person, p2: Person) => p1.Name.localeCompare(p2.Name);
+    describe("#add()", () => {
+        const tree = new BinarySearchTree<Person>(ageComparator);
+            tree.insert(person);
+            tree.insert(person2);
+        it("should return true", () => {
+            const added = tree.add(person3);
+            expect(added).to.eq(true);
+        });
+        it("should return false", () => {
+            const added = tree.add(person);
+            expect(added).to.eq(false);
+        });
+    });
     describe("#clear()", () => {
         const tree = new BinarySearchTree<Person>(ageComparator);
             tree.insert(person);
@@ -32,7 +45,7 @@ describe("BinarySearchTree", () => {
             tree.insert(person5);
         it("should clear the tree", () => {
             tree.clear();
-            expect(tree.getNodeCount()).to.eq(0);
+            expect(tree.size()).to.eq(0);
         });
         it("should not invalidate the tree", () => {
             tree.insert(person);
@@ -41,7 +54,7 @@ describe("BinarySearchTree", () => {
             tree.insert(person5);
             tree.clear();
             tree.insert(person);
-            expect(tree.getNodeCount()).to.eq(1);
+            expect(tree.size()).to.eq(1);
             expect(tree.getRootData()).to.eq(person);
         });
     });
@@ -67,7 +80,7 @@ describe("BinarySearchTree", () => {
             tree.insert(person5);
         it("should delete person from tree", () => {
             tree.delete(person);
-            expect(tree.getNodeCount()).to.eq(4);
+            expect(tree.size()).to.eq(4);
         });
         it("should not have 'Alice' at root", () => {
             expect(tree.toArray()[0].Name).to.not.eq("Alice");
@@ -111,14 +124,14 @@ describe("BinarySearchTree", () => {
     describe("#getNodeCount()", () => {
         it("should return 0", () => {
             const tree = new BinarySearchTree<Person>(ageComparator);
-            expect(tree.getNodeCount()).to.eq(0);
+            expect(tree.size()).to.eq(0);
         });
         it("should return 3", () => {
             const tree = new BinarySearchTree<Person>(ageComparator);
             tree.insert(person);
             tree.insert(person2);
             tree.insert(person3);
-            expect(tree.getNodeCount()).to.eq(3);
+            expect(tree.size()).to.eq(3);
         });
     });
     describe("#insert()", () => {
@@ -129,7 +142,7 @@ describe("BinarySearchTree", () => {
             tree.insert(person4);
             tree.insert(person5);
         it("should insert person to tree", () => {
-            expect(tree.getNodeCount()).to.eq(5);
+            expect(tree.size()).to.eq(5);
         });
         it("should have 'Mel' at root", () => {
             expect(tree.getRootData().Name).to.eq("Mel");

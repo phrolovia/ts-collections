@@ -5,6 +5,11 @@ export class BinaryTree<T> extends AbstractTree<T> {
         super(comparator);
         this.root = null;
     }
+    public add(item: T): boolean {
+        if(this.search(item)) return false;
+        this.insert(item);
+        return true;
+    }
     public delete(item: T): void {
         this.root = this.deleteRecursive(this.root as TreeNode<T>, item);
     }

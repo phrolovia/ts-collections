@@ -47,14 +47,14 @@ export abstract class AbstractTree<T> implements ITree<T> {
         action(root.getData());
         this.forEachRecursive(root.getRight(), action);
     }
-    public getNodeCount(): number {
-        return this.countTreeNodes(this.root);
-    }
     public getRootData(): T {
         return this.root.getData();
     }
     public isEmpty(): boolean {
         return this.root == null;
+    }
+    public size(): number {
+        return this.countTreeNodes(this.root);
     }
     public toArray(): T[] {
         const target: T[] = [];
@@ -112,6 +112,7 @@ export abstract class AbstractTree<T> implements ITree<T> {
         this.traverseAndMorphRecursive(root.getRight(), morpher, tree);
     }
 
+    public abstract add(item: T): boolean;
     public abstract delete(item: T): void;
     public abstract insert(item: T): void;
     public abstract search(item: T): boolean;

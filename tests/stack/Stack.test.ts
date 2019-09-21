@@ -24,7 +24,7 @@ describe("Stack", () => {
             stack.push(person);
             stack.push(person2);
             stack.clear();
-            expect(stack.Count).to.equal(0);
+            expect(stack.size()).to.equal(0);
         });
     });
     describe("#contains()", () => {
@@ -62,9 +62,9 @@ describe("Stack", () => {
             stack.push(person2);
             stack.push(person3);
             stack.push(person5);
-            const fc = stack.Count;
+            const fc = stack.size();
             stack.peek();
-            expect(stack.Count).to.eq(fc);
+            expect(stack.size()).to.eq(fc);
         });
     });
     describe("#pop()", () => {
@@ -87,7 +87,7 @@ describe("Stack", () => {
             stack.push(person3);
             stack.push(person5);
             stack.pop();
-            expect(stack.Count).to.eq(3);
+            expect(stack.size()).to.eq(3);
         });
     });
     describe("#push()", () => {
@@ -99,7 +99,7 @@ describe("Stack", () => {
         it("'Count' should be equal to 1", () => {
             const stack: Stack<Person> = new Stack<Person>();
             stack.push(person);
-            expect(stack.Count).to.equal(1);
+            expect(stack.size()).to.equal(1);
         });
     });
     
@@ -111,7 +111,7 @@ describe("Stack", () => {
         stack.push(person5);
         const array = stack.toArray();
         it("should have the same size as list", () => {
-            expect(stack.Count).to.eq(array.length);
+            expect(stack.size()).to.eq(array.length);
         });
         const personComparer = (ix: number) => {
             it(`should have same person at the index: ${ix}`, () => {
@@ -119,7 +119,7 @@ describe("Stack", () => {
                 expect(p).deep.equal(array[ix]);
             });
         };
-        for (var ix = 0; ix < stack.Count; ++ix){
+        for (var ix = 0; ix < stack.size(); ++ix){
             personComparer(ix);
         }
     });

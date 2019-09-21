@@ -24,7 +24,7 @@ describe("Queue", () => {
             queue.enqueue(person);
             queue.enqueue(person2);
             queue.clear();
-            expect(queue.Count).to.equal(0);
+            expect(queue.size()).to.equal(0);
         });
     });
     describe("#contains()", () => {
@@ -63,7 +63,7 @@ describe("Queue", () => {
             queue.enqueue(person3);
             queue.enqueue(person5);
             queue.dequeue();
-            expect(queue.Count).to.eq(3);
+            expect(queue.size()).to.eq(3);
         });
     });
     describe("#enqueue()", () => {
@@ -75,7 +75,7 @@ describe("Queue", () => {
         it("'Count' should be equal to 1", () => {
             const queue: Queue<Person> = new Queue<Person>();
             queue.enqueue(person);
-            expect(queue.Count).to.equal(1);
+            expect(queue.size()).to.equal(1);
         });
     });
     describe("#peek()", () => {
@@ -97,9 +97,9 @@ describe("Queue", () => {
             queue.enqueue(person2);
             queue.enqueue(person3);
             queue.enqueue(person5);
-            const fc = queue.Count;
+            const fc = queue.size();
             queue.peek();
-            expect(queue.Count).to.eq(fc);
+            expect(queue.size()).to.eq(fc);
         });
     });
     describe("#toArray()", () => {
@@ -110,7 +110,7 @@ describe("Queue", () => {
             queue.enqueue(person5);
         const array = queue.toArray();
         it("should have the same size as list", () => {
-            expect(queue.Count).to.eq(array.length);
+            expect(queue.size()).to.eq(array.length);
         });
         const personComparer = (ix: number) => {
             it(`should have same person at the index: ${ix}`, () => {
@@ -118,7 +118,7 @@ describe("Queue", () => {
                 expect(p).deep.equal(array[ix]);
             });
         };
-        for (var ix = 0; ix < queue.Count; ++ix){
+        for (var ix = 0; ix < queue.size(); ++ix){
             personComparer(ix);
         }
     });

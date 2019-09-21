@@ -57,6 +57,11 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         super(comparator);
         this.root = null;
     }
+    public add(item: T): boolean {
+        if(this.search(item)) return false;
+        this.insert(item);
+        return true;
+    }
     /**
      * Removes an item from the tree.
      * @param item The item to be removed from tree.
