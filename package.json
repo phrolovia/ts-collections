@@ -12,7 +12,7 @@
         "prebuild": "rimraf dist",
         "postbuild": "rimraf .rts2_*",
         "start": "microbundle watch -i index.ts",
-        "test": "nyc mocha --require spec-helper.js -r ts-node/register tests/**/*.test.ts"
+        "test": "nyc _mocha --require ts-node/register --recursive tests/**/*.test.*"
     },
     "keywords": [
         "typescript",
@@ -36,6 +36,7 @@
         "mocha": "^6.2.0",
         "nyc": "^14.1.1",
         "rimraf": "^2.7.1",
+        "source-map-support": "^0.5.13",
         "ts-node": "^8.4.1",
         "typedoc": "^0.15.0",
         "typescript": "^3.6.3"
