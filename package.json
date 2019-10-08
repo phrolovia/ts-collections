@@ -6,6 +6,7 @@
     "module": "dist/index.es.js",
     "types": "dist/index.d.ts",
     "umd:main": "dist/index.umd.js",
+    "private": false,
     "scripts": {
         "build": "microbundle -i index.ts",
         "docs": "typedoc --out ./docs/ index.ts -m commonjs -t ES6",
