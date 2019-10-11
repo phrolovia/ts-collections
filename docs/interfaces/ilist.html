@@ -130,16 +130,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#add">add</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:2</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L12">src/core/ICollection.ts:12</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adds an item to the collection</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Item that is to be added to the collection.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if item is added, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -154,9 +163,14 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:3</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L17">src/core/ICollection.ts:17</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes all items from the collection</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -172,16 +186,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:4</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L24">src/core/ICollection.ts:24</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if the given item exists in the collection.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Item whose presence is to be checked.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if item is in the collection, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -195,16 +218,30 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/list/IList.ts:4</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/list/IList.ts#L12">src/list/IList.ts:12</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Retrieves the item at the index.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><pre><code> ArgumentNullException <span class="hljs-keyword">if</span> <span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> <span class="hljs-keyword">null</span>
+ ArgumentOutOfRangeException <span class="hljs-keyword">if</span> <span class="hljs-keyword">index</span> <span class="hljs-keyword">is</span> less than <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> greated than list size.</code></pre></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>index: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The index from which the element will be retrieved.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+							<p>the item at the given index.</p>
 						</li>
 					</ul>
 				</section>
@@ -218,16 +255,25 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/list/IList.ts:5</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/list/IList.ts#L19">src/list/IList.ts:19</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Finds the index of the given item in the list.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Item whose index to be found.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>Index of the item. If item is not found, returns -1.</p>
 						</li>
 					</ul>
 				</section>
@@ -241,16 +287,33 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/list/IList.ts:6</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/list/IList.ts#L28">src/list/IList.ts:28</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Inserts an item to the given index.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>ArgumentOutOfRangeException if index is less than zero or index is greater than the size.
+										Note that if index is zero, the item will always be inserted.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>index: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Index that the item will be inserted to.</p>
+									</div>
 								</li>
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Item that will be inserted to the given index.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -268,10 +331,16 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:5</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L30">src/core/ICollection.ts:30</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks whether the collection is empty or not.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if the collection is empty, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -286,16 +355,25 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:6</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L37">src/core/ICollection.ts:37</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes the given item from the collection.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Item that is to be removed from the collection.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if item is removed from the collection, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -309,13 +387,26 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/list/IList.ts:7</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/list/IList.ts#L35">src/list/IList.ts:35</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes the item at the given index.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>ArgumentOutOfRangeException if index is less than zer or greater than the size.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>index: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The index of the item that will be removed.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -332,16 +423,32 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/list/IList.ts:8</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/list/IList.ts#L43">src/list/IList.ts:43</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Replaces the item at the fiven index</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>ArgumentOutOfRangeException if index is less than zer or greater than the size.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>index: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Index of the item that will be replaced with the given item.</p>
+									</div>
 								</li>
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Item that will replace the old item at the given index.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -359,10 +466,16 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:7</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L43">src/core/ICollection.ts:43</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the size of the collection.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>Size of the collection.</p>
 						</li>
 					</ul>
 				</section>
@@ -377,10 +490,16 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in src/core/ICollection.ts:8</li>
+									<li>Defined in <a href="https://github.com/ninohane/ts-collections/blob/e53a29d/src/core/ICollection.ts#L49">src/core/ICollection.ts:49</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns an array containing all of the items in the collection.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>an array that contains all of the items of this collection.</p>
 						</li>
 					</ul>
 				</section>
@@ -422,9 +541,6 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external tsd-is-not-exported">
 						<a href="../classes/redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="../classes/stack.html" class="tsd-kind-icon">Stack</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/treenode.html" class="tsd-kind-icon">Tree<wbr>Node</a>

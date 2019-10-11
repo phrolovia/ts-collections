@@ -67,5 +67,4 @@ export class BinaryTree<T> extends AbstractTree<T> {
         }
         return false;
     }
-
 }

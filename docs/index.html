@@ -64,6 +64,34 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
+				<p>A simple library for providing wrapper classes for collection objects.</p>
+				<a href="#list-of-classes" id="list-of-classes" style="color: inherit; text-decoration: none;">
+					<h2>List of Classes</h2>
+				</a>
+				<ul>
+					<li>List</li>
+					<li>Queue, Deque</li>
+					<li>Set (TreeSet)</li>
+					<li>Tree (BinaryTree and BinarySearchTree)</li>
+				</ul>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> list: IList&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">number</span>&gt;();
+list.add(<span class="hljs-number">1</span>);
+
+<span class="hljs-keyword">const</span> queue: IQueue&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">number</span>&gt;();
+queue.enqueue(<span class="hljs-number">1</span>);
+
+<span class="hljs-keyword">const</span> deque: IDeque&lt;<span class="hljs-built_in">number</span>&gt; = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">number</span>&gt;();
+deque.enqueue(<span class="hljs-number">2</span>);
+deque.enqueueFirst(<span class="hljs-number">1</span>);</code></pre>
+				<a href="#comparators" id="comparators" style="color: inherit; text-decoration: none;">
+					<h2>Comparators</h2>
+				</a>
+				<p>For trees, you need to provide your own comparator while creating the instances of these classes</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> comparator: <span class="hljs-function">(<span class="hljs-params">v1: <span class="hljs-built_in">string</span>, v2: <span class="hljs-built_in">string</span></span>) =&gt;</span> v1.localeCompare(v2);
+<span class="hljs-keyword">const</span> tree: ITree&lt;<span class="hljs-built_in">string</span>&gt; = <span class="hljs-keyword">new</span> BinaryTree&lt;<span class="hljs-built_in">string</span>&gt;(comparator);</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -102,9 +130,6 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external tsd-is-not-exported">
 						<a href="classes/redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/stack.html" class="tsd-kind-icon">Stack</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/treenode.html" class="tsd-kind-icon">Tree<wbr>Node</a>

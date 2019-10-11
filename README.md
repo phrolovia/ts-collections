@@ -10,6 +10,13 @@ A simple library for providing wrapper classes for collection objects.
 ```typescript
 const list: IList<number> = new List<number>();
 list.add(1);
+
+const queue: IQueue<number> = new List<number>();
+queue.enqueue(1);
+
+const deque: IDeque<number> = new List<number>();
+deque.enqueue(2);
+deque.enqueueFirst(1);
 ```
 
 ## Comparators

@@ -62,10 +62,6 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         this.insert(item);
         return true;
     }
-    /**
-     * Removes an item from the tree.
-     * @param item The item to be removed from tree.
-     */
     public delete(item: T): void {
         if (!this.contains(item)) return;
         let v: RedBlackNode<T> = this.searchNode(item);
@@ -222,10 +218,6 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         }
         return temp;
     }
-    /**
-     * Inserts an item to the tree.
-     * @param item Item to be inserted.
-     */
     public insert(item: T): void {
         const node = new RedBlackNode<T>(item);
         if (this.root == null) {
