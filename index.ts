@@ -9,6 +9,5 @@ export { IQueue } from './src/queue/IQueue';
 export { ISet } from './src/set/ISet';
 export { ITree, TraverseType } from './src/tree/ITree';
 export { List } from './src/list/List';
-export { Stack } from './src/stack/Stack';
 export { TreeNode } from './src/tree/TreeNode';
 export { TreeSet } from './src/set/TreeSet';
