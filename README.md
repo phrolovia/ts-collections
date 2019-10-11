@@ -25,3 +25,7 @@ For trees, you need to provide your own comparator while creating the instances 
 const comparator: (v1: string, v2: string) => v1.localeCompare(v2);
 const tree: ITree<string> = new BinaryTree<string>(comparator);
 ```
+
+## Documentation & API
+A simple documentation can be found at:
+https://ninohane.github.io/ts-collections/
