@@ -180,7 +180,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
             }
         }
     }
-    private fixRedRed(node: RedBlackNode<T>): void {
+    private fixDoubleRed(node: RedBlackNode<T>): void {
         if (node === this.root){
             node.setColor(RedBlackNode.BLACK);
             return;
@@ -193,7 +193,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
                 parent.setColor(RedBlackNode.BLACK);
                 uncle.setColor(RedBlackNode.BLACK);
                 grandParent.setColor(RedBlackNode.RED);
-                this.fixRedRed(grandParent);
+                this.fixDoubleRed(grandParent);
             } else {
                 if (parent.isOnLeft()) {
                     if (node.isOnLeft()) {
@@ -242,7 +242,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
             } else {
                 temp.setRight(node);
             }
-            this.fixRedRed(node);
+            this.fixDoubleRed(node);
         }
     }
     private leftRotate(node: RedBlackNode<T>): void {
