@@ -35,7 +35,7 @@ describe("Queue", () => {
         });
     });
     describe("#dequeue()", () => {
-        it("should throw InvalidOperationException ['queue is empty.]", () => {
+        it("should return null.", () => {
             const queue: IQueue<Person> = new List<Person>();
             expect(() => queue.dequeue()).to.throw("queue is empty.");
         });
@@ -70,9 +70,9 @@ describe("Queue", () => {
         });
     });
     describe("#peek()", () => {
-        it("should throw InvalidOperationException ['queue is empty.]", () => {
+        it("should return null.", () => {
             const queue: IQueue<Person> = new List<Person>();
-            expect(() => queue.peek()).to.throw("queue is empty.");
+            expect(queue.peek()).to.equal(null);
         });
         it("should return a person with the name Alice", () => {
             const queue: IQueue<Person> = new List<Person>();

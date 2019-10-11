@@ -168,13 +168,13 @@ export class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
     }
     public peek(): T {
         if (this.isEmpty()) {
-            throw new InvalidOperationException("queue is empty.");
+            return null;
         }
         return this.get(0);
     }
     public peekLast(): T {
         if (this.isEmpty()) {
-            throw new InvalidOperationException("queue is empty.");
+            return null;
         }
         return this.get(this.size() - 1);
     }

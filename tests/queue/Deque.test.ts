@@ -111,9 +111,9 @@ describe("Deque", () => {
         });
     });
     describe("#peek()", () => {
-        it("should throw InvalidOperationException ['queue is empty.]", () => {
+        it("should return null.", () => {
             const queue: IDeque<Person> = new List<Person>();
-            expect(() => queue.peek()).to.throw("queue is empty.");
+            expect(queue.peek()).to.equal(null);
         });
         it("should return a person with the name Alice", () => {
             const queue: IDeque<Person> = new List<Person>();
@@ -135,9 +135,9 @@ describe("Deque", () => {
         });
     });
     describe("#peekLast()", () => {
-        it("should throw InvalidOperationException ['queue is empty.]", () => {
+        it("should return null.", () => {
             const queue: IDeque<Person> = new List<Person>();
-            expect(() => queue.peek()).to.throw("queue is empty.");
+            expect(queue.peekLast()).to.equal(null);
         });
         it("should return a person with the name Jane", () => {
             const queue: IDeque<Person> = new List<Person>();
