@@ -1,9 +1,8 @@
-Just a simple library for providing wrapper classes.
+A simple library for providing wrapper classes for collection objects.
 
 ## List of Classes
 * List
-* Queue
-* Stack
+* Queue, Deque
 * Set (TreeSet)
 * Tree (BinaryTree and BinarySearchTree)
 
@@ -14,7 +13,7 @@ list.add(1);
 ```
 
 ## Comparators
-For trees, you need to provide your own comparator while creating instances of these classes
+For trees, you need to provide your own comparator while creating the instances of these classes
 ```typescript
 const comparator: (v1: string, v2: string) => v1.localeCompare(v2);
 const tree: ITree<string> = new BinaryTree<string>(comparator);

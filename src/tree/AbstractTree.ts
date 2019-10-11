@@ -91,6 +91,13 @@ export abstract class AbstractTree<T> implements ITree<T> {
         this.toPreorderArray(root.getLeft(), target);
         this.toPreorderArray(root.getRight(), target);
     }
+    
+    /**
+     * Traverses the tree and applies the mapper function to each item.
+     * @param  mapper The function that will be applied to each item.
+     * @param  direction The direction of the traverse. (In-order, Pre-order, Post-order)
+     * @return An array containing all the items of the tree. Order is defined by direction.
+     */
     public traverseAndMapToArray<R>(mapper: (item: T) => R, direction: TraverseType = "INORDER"): R[] {
         let array: T[] = [];
         switch(direction) {
@@ -106,6 +113,13 @@ export abstract class AbstractTree<T> implements ITree<T> {
         }
         return array.map(v => mapper(v));
     }
+    /**
+     * Traverses the tree and applies the morpher function to each item.
+     * Returns a new tree with the morphed elements. Does not modify the original tree.
+     * Pre-order traversing is used.
+     * @param tree The tree that will be filled with the morphed items. This is normally an empty tree.
+     * @param morpher The function that will be applied to each item.
+     */
     public traverseAndMorph<R>(tree: ITree<R>, morpher: (item: T) => R): ITree<R> {
         this.traverseAndMorphRecursive(this.root, morpher, tree);
         return tree;
