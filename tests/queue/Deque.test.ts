@@ -60,7 +60,7 @@ describe("Deque", () => {
     describe("#dequeueLast()", () => {
         it("should throw InvalidOperationException ['queue is empty.]", () => {
             const queue: IDeque<Person> = new List<Person>();
-            expect(() => queue.dequeue()).to.throw("queue is empty.");
+            expect(() => queue.dequeueLast()).to.throw("queue is empty.");
         });
         it("should return a person with the name Jane", () => {
             const queue: IDeque<Person> = new List<Person>();
@@ -184,7 +184,7 @@ describe("Deque", () => {
     describe("#pollLast()", () => {
         it("should return null", () => {
             const queue: IDeque<Person> = new List<Person>();
-            expect(queue.poll()).to.eq(null);
+            expect(queue.pollLast()).to.eq(null);
         });
         it("should return a person with the name Jane", () => {
             const queue: IDeque<Person> = new List<Person>();

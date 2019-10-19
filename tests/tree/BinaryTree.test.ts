@@ -85,6 +85,38 @@ describe("BinaryTree", () => {
         it("should not have 'Alice' at root", () => {
             expect(tree.toArray()[0].Name).to.not.eq("Alice");
         });
+        it("should return set root to null", () => {
+            const nullTree = new BinaryTree<Person>(ageComparator);
+            nullTree.delete(person);
+            expect(nullTree.getRootData()).to.eq(null);
+        });
+        it("should return set root to null", () => {
+            const numTree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+            numTree.insert(2);
+            numTree.insert(1);
+            numTree.delete(1);
+            expect(numTree.size()).to.eq(1);
+        });
+        it("should add 100 random number and then delete them randomly", () => {
+            const numTree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+            const randArrayGenerator = (length: number) => {
+                var arr = []
+                while(arr.length < length){
+                    var r = Math.floor(Math.random()*100) + 1;
+                    if(arr.indexOf(r) === -1) arr.push(r);
+                }
+                return arr;
+            }
+            const randArray = randArrayGenerator(100);
+            randArray.forEach(n => numTree.insert(n));
+            expect(numTree.size()).to.eq(100);
+            while (randArray.length != 0) {
+                var rand = randArray[~~(Math.random() * randArray.length)];
+                randArray.splice(randArray.indexOf(rand), 1);
+                numTree.delete(rand);
+            }
+            expect(numTree.size()).to.eq(0);
+        });
     });
     describe("#find()", () => {
         const tree = new BinaryTree<Person>(nameComparator);
@@ -106,6 +138,11 @@ describe("BinaryTree", () => {
             expect(mel.Age).to.eq(9);
             expect(mel.Name).to.eq('Mel');
         });
+        it("should return null", () => {
+            const nullTree = new BinaryTree<Person>(ageComparator);
+            const result = nullTree.find(p => p.Age > 9);
+            expect(result).to.eq(null);
+        });
     });
     describe("#forEach()", () => {
         const tree = new BinaryTree<Person>(ageComparator);
@@ -119,6 +156,11 @@ describe("BinaryTree", () => {
             tree.forEach(p => {
                 expect(p.Name).to.eq(people[index++].Name);
             });
+        });
+        it("should not immediately quit looping", () => {
+            const nullTree = new BinaryTree<Person>(ageComparator);
+            nullTree.forEach(p => p.Age+=100);
+            expect(nullTree.getRootData()).to.eq(null);
         });
     });
     describe("#getNodeCount()", () => {
@@ -146,6 +188,12 @@ describe("BinaryTree", () => {
         });
         it("should have 'Alice' at root", () => {
             expect(tree.getRootData().Name).to.eq("Alice");
+        });
+        it("should not add same item twice", () => {
+            const tree = new BinaryTree<number>((n1: number, n2: number) => n1 - n2);
+            tree.insert(1);
+            tree.insert(1);
+            expect(tree.size()).to.eq(1);
         });
     });
     describe("#isEmpty()", () => {
@@ -195,6 +243,11 @@ describe("BinaryTree", () => {
         });
         it("should return false", () => {
             expect(tree.search(person4)).to.eq(false);
+        });
+        it("should return false if tree root is null", () => {
+            const nullTree = new BinaryTree<Person>(ageComparator);
+            const result = nullTree.search(person);
+            expect(result).to.eq(false);
         });
     });
     describe("#traverseAndMapToArray(): INORDER", () => {
@@ -298,6 +351,12 @@ describe("BinaryTree", () => {
             expect(people[1].Age).to.eq(10);
             expect(people[2].Age).to.eq(23);
             expect(people[3].Age).to.eq(33);
+        });
+        it("should return empty array", () => {
+            let people: Person[] = [];
+            tree.clear();
+            people = tree.toArray();
+            expect(people.length).to.eq(0);
         });
     });
 });

@@ -58,6 +58,7 @@ export class BinaryTree<T> extends AbstractTree<T> {
        return this.searchTree(this.root as TreeNode<T>, item);
     }
     private searchTree(root: TreeNode<T>, item: T): boolean {
+        if (root == null) return false;
         if (this.comparator(item, root.getData()) === 0) return true;
         if (root.getLeft() != null) {
             if (this.searchTree(root.getLeft() as TreeNode<T>, item)) return true;
