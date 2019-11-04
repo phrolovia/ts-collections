@@ -12,6 +12,15 @@ describe("TreeSet", () => {
     const person4: Person    = new Person("Lenka", "Polakova", 16);
     const person5: Person    = new Person("Jane", "Green", 16);
     const ageComparator      = (p1: Person, p2: Person) => p1.Age - p2.Age;
+    describe("$constructor()", () => {
+        it("should set comprator to a default one", () => {
+            const set: ISet<number> = new TreeSet<number>();
+            set.add(1);
+            set.add(2);
+            set.add(4);
+            expect(set.contains(2)).to.eq(true);
+        });
+    }); 
     describe("#add()", () => {
         it("size should be equal to 1", () => {
             const set: ISet<Person> = new TreeSet<Person>(ageComparator);
@@ -39,6 +48,17 @@ describe("TreeSet", () => {
         it("should not have person3", () => {
             var contains = set.contains(person3);
             expect(contains).to.eq(false);
+        });
+    });
+    describe("#isEmpty()", () => {
+        it("should return true", () => {
+            const set: ISet<Person> = new TreeSet<Person>(ageComparator);
+            expect(set.isEmpty()).to.eq(true);
+        });
+        it("should return false", () => {
+            const set: ISet<Person> = new TreeSet<Person>(ageComparator);
+            set.add(person);
+            expect(set.isEmpty()).to.eq(false);
         });
     });
     describe("#remove()", () => {

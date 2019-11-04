@@ -48,6 +48,7 @@ export abstract class AbstractTree<T> implements ITree<T> {
         this.forEachRecursive(root.getRight(), action);
     }
     public getRootData(): T {
+        if (!this.root) return null;
         return this.root.getData();
     }
     public isEmpty(): boolean {

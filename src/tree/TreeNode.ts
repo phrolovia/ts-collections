@@ -4,8 +4,8 @@ export class TreeNode<T> implements INode<T> {
     private data: T;
     private left: INode<T>;
     private right: INode<T>;
-    public constructor(data?: T) {
-        this.data = data || null;
+    public constructor(data: T) {
+        this.data = data;
     }
     public getData(): T {
         return this.data;

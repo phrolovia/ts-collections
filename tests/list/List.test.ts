@@ -150,11 +150,11 @@ describe("List", () => {
             expect(foundPerson.Name).to.eq("Jane");
         });
         it("should be null", () => {
-            var foundPerson = list.find(p => p && p.Age === 99);
+            var foundPerson = list.findLast(p => p && p.Age === 99);
             expect(foundPerson).to.eq(null);
         });
         it("should be null with null item", () => {
-            var foundPerson = list.find(p => p === null);
+            var foundPerson = list.findLast(p => p === null);
             expect(foundPerson).to.eq(null);
         });
     });
@@ -457,6 +457,16 @@ describe("List", () => {
         it("should have Alice at the end", () => {
             list.sort((p1, p2) => !p1 || !p2 ? 1 : p1.Age > p2.Age ? 1 : -1 );            
             expect(list.get(list.size()-1).Name).to.eq("Alice");
+        });
+        it("should set the comprarer to default one", () => {
+            const numlist: List<number> = new List<number>();
+            numlist.add(6);
+            numlist.add(-5);
+            numlist.add(11);
+            numlist.sort();
+            expect(numlist.get(0)).to.eq(-5);
+            expect(numlist.get(1)).to.eq(6);
+            expect(numlist.get(2)).to.eq(11);
         });
     });
     describe("#toArray()", () => {

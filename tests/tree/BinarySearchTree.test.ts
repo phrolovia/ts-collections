@@ -82,9 +82,47 @@ describe("BinarySearchTree", () => {
             tree.delete(person);
             expect(tree.size()).to.eq(4);
         });
+        it("should not act if item is not in the tree", () => {
+            tree.delete(person);
+            expect(tree.size()).to.eq(4);
+        });
         it("should not have 'Alice' at root", () => {
             expect(tree.toArray()[0].Name).to.not.eq("Alice");
         });
+        it("should add 1000 random number and then delete them randomly", () => {
+            const numTree = new BinarySearchTree<number>((n1: number, n2: number) => n1-n2);
+            const randArrayGenerator = (length: number) => {
+                var arr = []
+                while(arr.length < length){
+                    var r = Math.floor(Math.random()*10000) + 1;
+                    if(arr.indexOf(r) === -1) arr.push(r);
+                }
+                return arr;
+            }
+            const randArray = randArrayGenerator(1000);
+            randArray.forEach(n => numTree.insert(n));
+            expect(numTree.size()).to.eq(1000);
+            while (randArray.length != 0) {
+                var rand = randArray[~~(Math.random() * randArray.length)];
+                randArray.splice(randArray.indexOf(rand), 1);
+                numTree.delete(rand);
+            }
+            expect(numTree.size()).to.eq(0);
+        });
+        it("should delete root item", () => {
+            const numTree = new BinarySearchTree<number>((n1: number, n2: number) => n1 - n2);
+            numTree.insert(99);
+            numTree.delete(99);
+            expect(numTree.size()).to.eq(0);
+        });
+        // it("should delete items", () => {
+        //     const numTree = new BinarySearchTree<number>((n1: number, n2: number) => n1 - n2);
+        //     numTree.insert(99);
+        //     numTree.insert(3657);
+        //     numTree.insert(3658);
+        //     numTree.clear();
+        //     expect(numTree.size()).to.eq(0);
+        // });
     });
     describe("#find()", () => {
         const tree = new BinarySearchTree<Person>(nameComparator);
@@ -146,6 +184,10 @@ describe("BinarySearchTree", () => {
         });
         it("should have 'Mel' at root", () => {
             expect(tree.getRootData().Name).to.eq("Mel");
+        });
+        it("should not add same person twice", () => {
+            tree.insert(person);
+            expect(tree.size()).to.eq(5);
         });
     });
     describe("#isEmpty()", () => {
