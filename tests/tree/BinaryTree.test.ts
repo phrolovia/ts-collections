@@ -1,6 +1,8 @@
 import { expect } from "chai";
 import { BinaryTree } from "../../src/tree/BinaryTree";
 import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
+import { List } from "../../src/list/List";
+import { IList } from "../../src/list/IList";
 
 class Person {
     Name: string;
@@ -302,30 +304,6 @@ describe("BinaryTree", () => {
             expect(result[1]).to.eq(81);
             expect(result[2]).to.eq(1089);
             expect(result[3]).to.eq(529);
-        });
-    });
-    describe("#traverseAndMorph()", () => {
-        const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        it("should return a number tree with '23' at root", () => {
-            let resultTree = new BinarySearchTree<number>((v1: number, v2: number) => v1-v2);
-                resultTree = <BinarySearchTree<number>>tree.traverseAndMorph<number>(resultTree, p => p.Age);
-            const rootNumber = resultTree.getRootData();
-            expect(rootNumber).to.eq(10);
-        });
-        it("should have pre-morph and post-morph items in the same order", () => {
-            let resultTree = new BinaryTree<number>((v1: number, v2: number) => v1-v2);
-                resultTree = <BinaryTree<number>>tree.traverseAndMorph<number>(resultTree, p => p.Age);
-            const personArray = tree.toArray();
-            const numberArray = resultTree.toArray();
-            const ageArray = personArray.map(p => p.Age);
-            expect(numberArray[0]).to.eq(ageArray[0]);
-            expect(numberArray[1]).to.eq(ageArray[1]);
-            expect(numberArray[2]).to.eq(ageArray[2]);
-            expect(numberArray[3]).to.eq(ageArray[3]);
         });
     });
     describe("#toArray(): INORDER", () => {

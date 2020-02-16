@@ -1,7 +1,10 @@
 import { IList } from "./IList";
 import { IQueue } from "../queue/IQueue";
 import { IDeque } from "../queue/IDeque";
-export declare class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
+import { AbstractCollection } from "../core/AbstractCollection";
+import { ICollection } from "../core/ICollection";
+import { Constructor } from "../core/Constructor";
+export declare class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data;
     constructor(data?: T[]);
     add(item: T): boolean;
@@ -36,4 +39,5 @@ export declare class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
     size(): number;
     sort(comparer?: (e1: T, e2: T) => number): void;
     toArray(): T[];
+    transform<U extends ICollection<T>>(Collection: Constructor<U>, comparator?: (v1: T, v2: T) => number): U;
 }

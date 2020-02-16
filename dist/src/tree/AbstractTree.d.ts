@@ -1,6 +1,9 @@
 import { ITree, TraverseType } from "./ITree";
 import { INode } from "./INode";
-export declare abstract class AbstractTree<T> implements ITree<T> {
+import { Constructor } from "../core/Constructor";
+import { ICollection } from "../core/ICollection";
+import { AbstractCollection } from "../core/AbstractCollection";
+export declare abstract class AbstractTree<T> extends AbstractCollection<T> implements ITree<T> {
     protected comparator: Function;
     protected root: INode<T>;
     protected constructor(comparator: Function);
@@ -21,6 +24,8 @@ export declare abstract class AbstractTree<T> implements ITree<T> {
     protected toInorderArray(root: INode<T>, target: T[]): void;
     protected toPostorderArray(root: INode<T>, target: T[]): void;
     protected toPreorderArray(root: INode<T>, target: T[]): void;
+    transform<U extends ICollection<T>>(Collection: Constructor<U>, comparator?: (v1: T, v2: T) => number): U;
+    private transformRecursive;
     /**
      * Traverses the tree and applies the mapper function to each item.
      * @param  mapper The function that will be applied to each item.
@@ -28,15 +33,6 @@ export declare abstract class AbstractTree<T> implements ITree<T> {
      * @return An array containing all the items of the tree. Order is defined by direction.
      */
     traverseAndMapToArray<R>(mapper: (item: T) => R, direction?: TraverseType): R[];
-    /**
-     * Traverses the tree and applies the morpher function to each item.
-     * Returns a new tree with the morphed elements. Does not modify the original tree.
-     * Pre-order traversing is used.
-     * @param tree The tree that will be filled with the morphed items. This is normally an empty tree.
-     * @param morpher The function that will be applied to each item.
-     */
-    traverseAndMorph<R>(tree: ITree<R>, morpher: (item: T) => R): ITree<R>;
-    private traverseAndMorphRecursive;
     abstract add(item: T): boolean;
     abstract delete(item: T): void;
     abstract insert(item: T): void;

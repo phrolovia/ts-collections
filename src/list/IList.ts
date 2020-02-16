@@ -1,6 +1,7 @@
 import { ICollection } from "../core/ICollection";
+import { ITransform } from "../core/ITransform";
 
-export interface IList<T> extends ICollection<T> {
+export interface IList<T> extends ICollection<T>, ITransform<T> {
     /**
      * Retrieves the item at the index.
      * @param  index The index from which the element will be retrieved.
@@ -35,7 +36,7 @@ export interface IList<T> extends ICollection<T> {
     removeAt(index: number): void;
     
     /**
-     * Replaces the item at the fiven index
+     * Replaces the item at the given index.
      * @param  index Index of the item that will be replaced with the given item.
      * @param  item Item that will replace the old item at the given index.
      * @throws ArgumentOutOfRangeException if index is less than zer or greater than the size.

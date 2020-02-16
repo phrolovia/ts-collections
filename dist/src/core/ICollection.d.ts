@@ -1,8 +1,3 @@
-/**
- * Oct 11th, 2019 Friday
- * This interface is the root interface in the collection hierarchy.
- * It contains the base methods that are used in all of the collection classes.
- */
 export interface ICollection<T> {
     /**
      * Adds an item to the collection

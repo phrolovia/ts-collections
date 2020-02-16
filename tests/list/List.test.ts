@@ -4,6 +4,10 @@ import { describe, it } from "mocha";
 import { expect } from "chai";
 import { Person } from "../models/Person";
 import { IList } from "../../src/list/IList";
+import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
+import { ITree } from "../../src/tree/ITree";
+import { BinaryTree } from "../../src/tree/BinaryTree";
+import { IDeque } from "../../src/queue/IDeque";
 
 describe("List", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -485,8 +489,42 @@ describe("List", () => {
                 expect(p).deep.equal(array[ix]);
             });
         };
-        for (var ix = 0; ix < list.size(); ++ix){
+        for (let ix = 0; ix < list.size(); ++ix){
             personComparer(ix);
         }
+    });
+    
+    describe("#transform()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(person);
+        list.add(person2);
+        list.add(person3);
+        list.add(person4);
+        list.add(person5);
+        it("should convert list to a BinarySearchTree", () => {
+            const tree = list.transform<BinarySearchTree<Person>>(BinarySearchTree, ((v1, v2) => v1.Age - v2.Age));
+            expect(tree instanceof BinarySearchTree).to.eq(true);
+        });
+        it("should contain four people", () => {
+            const tree = list.transform<BinarySearchTree<Person>>(BinarySearchTree, ((v1, v2) => v1.Age - v2.Age));
+            expect(tree.size()).to.eq(4); //person4 and person5 has same age, so only one is allowed.
+        });
+        it("should contain five people", () => {
+            const tree = list.transform<BinarySearchTree<Person>>(BinarySearchTree, ((v1, v2) => v1.Name.localeCompare(v2.Name)));
+            expect(tree.size()).to.eq(5);
+        });
+        it("should convert tree to a list", () => {
+            const tree = new BinaryTree<Person>((p1: Person, p2: Person) => p1.Age - p2.Age);
+            tree.insert(person);
+            tree.insert(person2);
+            tree.insert(person4);
+            tree.insert(person3);
+            tree.insert(person5);
+            const list: IDeque<Person> = tree.transform<List<Person>>(List);
+            expect(list instanceof List).to.eq(true);
+            expect(list.size()).to.eq(4);
+            expect(list.contains(person4)).to.eq(true);
+            expect(list.contains(person5)).to.eq(false);
+        });
     });
 });
