@@ -62,3 +62,7 @@ typings/
 
 # microbundle files
 .rts2_*/
+
+# IDE
+.vscode
+.idea
