@@ -1,10 +1,14 @@
 import { ITree, TraverseType } from "./ITree";
 import { INode } from "./INode";
+import { Constructor } from "../core/Constructor";
+import { ICollection } from "../core/ICollection";
+import { AbstractCollection } from "../core/AbstractCollection";
 
-export abstract class AbstractTree<T> implements ITree<T> {
+export abstract class AbstractTree<T> extends AbstractCollection<T> implements ITree<T> {
     protected comparator: Function = null;
     protected root: INode<T>;
     protected constructor(comparator: Function) {
+        super();
         this.comparator = comparator;
     }
     public clear(): void {
@@ -93,6 +97,18 @@ export abstract class AbstractTree<T> implements ITree<T> {
         this.toPreorderArray(root.getRight(), target);
     }
     
+    public transform<U extends ICollection<T>>(Collection: Constructor<U>, comparator?: (v1: T, v2: T) => number): U {
+        const c = new Collection(comparator);
+        this.transformRecursive(this.root, c);
+        return c;
+    }
+    private transformRecursive<U extends ICollection<T>>(root: INode<T>, collection: U): void {
+        if (root == null) return;
+        collection.add(root.getData());
+        this.transformRecursive(root.getLeft(), collection);
+        this.transformRecursive(root.getRight(), collection);
+    }
+    
     /**
      * Traverses the tree and applies the mapper function to each item.
      * @param  mapper The function that will be applied to each item.
@@ -113,23 +129,6 @@ export abstract class AbstractTree<T> implements ITree<T> {
                 break;
         }
         return array.map(v => mapper(v));
-    }
-    /**
-     * Traverses the tree and applies the morpher function to each item.
-     * Returns a new tree with the morphed elements. Does not modify the original tree.
-     * Pre-order traversing is used.
-     * @param tree The tree that will be filled with the morphed items. This is normally an empty tree.
-     * @param morpher The function that will be applied to each item.
-     */
-    public traverseAndMorph<R>(tree: ITree<R>, morpher: (item: T) => R): ITree<R> {
-        this.traverseAndMorphRecursive(this.root, morpher, tree);
-        return tree;
-    }
-    private traverseAndMorphRecursive<R>(root: INode<T>, morpher: (item: T) => R, tree: ITree<R>): void {
-        if (root == null) return;
-        tree.insert(morpher(root.getData()));
-        this.traverseAndMorphRecursive(root.getLeft(), morpher, tree);
-        this.traverseAndMorphRecursive(root.getRight(), morpher, tree);
     }
 
     public abstract add(item: T): boolean;

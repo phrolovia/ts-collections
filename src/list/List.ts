@@ -5,10 +5,14 @@ import { ArgumentException } from "../exceptions/ArgumentException";
 import { InvalidOperationException } from "../exceptions/InvalidOperationException";
 import { IQueue } from "../queue/IQueue";
 import { IDeque } from "../queue/IDeque";
+import { AbstractCollection } from "../core/AbstractCollection";
+import { ICollection } from "../core/ICollection";
+import { Constructor } from "../core/Constructor";
 
-export class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
+export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data: T[] = [];
     public constructor(data?: T[]) {
+        super();
         if(data) {
             this.data = [...data];
         }
@@ -254,5 +258,10 @@ export class List<T> implements IList<T>, IQueue<T>, IDeque<T> {
     }
     public toArray(): T[] {
         return [...this.data];
+    }
+    public transform<U extends ICollection<T>>(Collection: Constructor<U>, comparator?: (v1: T, v2: T) => number): U {
+        const collection = new Collection(comparator);
+        this.data.forEach(d => collection.add(d));
+        return collection;
     }
 }
