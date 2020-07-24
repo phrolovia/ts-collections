@@ -1,6 +1,6 @@
 {
     "name": "@ninoha/ts-collections",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
@@ -38,7 +38,7 @@
         "rimraf": "^3.0.2",
         "source-map-support": "^0.5.19",
         "ts-node": "^8.10.2",
-        "typedoc": "^0.16.10",
-        "typescript": "^3.7.5"
+        "typedoc": "^0.16.11",
+        "typescript": "^3.9.7"
     }
 }

@@ -1,7 +1,6 @@
 import { ICollection } from "../core/ICollection";
-import { ITransform } from "../core/ITransform";
 
-export interface IList<T> extends ICollection<T>, ITransform<T> {
+export interface IList<T> extends ICollection<T> {
     /**
      * Retrieves the item at the index.
      * @param  index The index from which the element will be retrieved.

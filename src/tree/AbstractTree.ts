@@ -97,18 +97,6 @@ export abstract class AbstractTree<T> extends AbstractCollection<T> implements I
         this.toPreorderArray(root.getRight(), target);
     }
     
-    public transform<U extends ICollection<T>>(Collection: Constructor<U>, comparator?: (v1: T, v2: T) => number): U {
-        const c = new Collection(comparator);
-        this.transformRecursive(this.root, c);
-        return c;
-    }
-    private transformRecursive<U extends ICollection<T>>(root: INode<T>, collection: U): void {
-        if (root == null) return;
-        collection.add(root.getData());
-        this.transformRecursive(root.getLeft(), collection);
-        this.transformRecursive(root.getRight(), collection);
-    }
-    
     /**
      * Traverses the tree and applies the mapper function to each item.
      * @param  mapper The function that will be applied to each item.

@@ -3,7 +3,6 @@
  * This interface is the root interface in the collection hierarchy.
  * It contains the base methods that are used in all of the collection classes.
  */
-import { ITransform } from "./ITransform";
 
 export interface ICollection<T> {
     /**

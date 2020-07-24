@@ -259,9 +259,4 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     public toArray(): T[] {
         return [...this.data];
     }
-    public transform<U extends ICollection<T>>(Collection: Constructor<U>, comparator?: (v1: T, v2: T) => number): U {
-        const collection = new Collection(comparator);
-        this.data.forEach(d => collection.add(d));
-        return collection;
-    }
 }
