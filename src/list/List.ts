@@ -6,8 +6,6 @@ import { InvalidOperationException } from "../exceptions/InvalidOperationExcepti
 import { IQueue } from "../queue/IQueue";
 import { IDeque } from "../queue/IDeque";
 import { AbstractCollection } from "../core/AbstractCollection";
-import { ICollection } from "../core/ICollection";
-import { Constructor } from "../core/Constructor";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data: T[] = [];
@@ -258,5 +256,10 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
     public toArray(): T[] {
         return [...this.data];
+    }
+    *[Symbol.iterator](): Iterator<T> {
+        for (let item of this.data) {
+            yield item;
+        }
     }
 }

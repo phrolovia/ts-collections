@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { List } from "../../src/list/List";
 import { Person } from "../models/Person";
 import { IDeque } from "../../src/queue/IDeque";
+import {describe, it} from "mocha";
 
 describe("Deque", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -223,5 +224,51 @@ describe("Deque", () => {
         for (var ix = 0; ix < queue.size(); ++ix){
             personComparer(ix);
         }
+    });
+    describe("#Count getter", () => {
+        const queue: IDeque<string> = new List();
+        queue.enqueue("Alice");
+        queue.enqueue("Rei");
+        queue.enqueue("Misaki");
+        it("should have the count of 3", () => {
+            expect(queue.Count).to.eq(3);
+            expect(queue.Count).to.eq(queue.size());
+        });
+        it("should have the count of 2", () => {
+            queue.dequeueLast();
+            expect(queue.Count).to.eq(2);
+            expect(queue.Count).to.eq(queue.size());
+        });
+        it("should have the count of 5", () => {
+            queue.enqueue("Alice");
+            queue.enqueue("Yuzuha");
+            queue.enqueue("Megumi");
+            expect(queue.Count).to.eq(5);
+            expect(queue.Count).to.eq(queue.size());
+        });
+        it("should throw an error if assigned", () => {
+            // @ts-ignore
+            expect(() => queue.Count = 10).to.throw();
+        });
+    });
+    describe("#for-of loop", () => {
+        const queue: IDeque<number> = new List<number>();
+        queue.enqueue(10);
+        queue.enqueue(50);
+        queue.enqueue(22);
+        queue.enqueue(20);
+        const numArray: number[] = [];
+        for (const num of queue) {
+            numArray.push(num);
+        }
+        it("should have four items", () => {
+            expect(numArray.length).to.eq(4);
+        });
+        it("should loop over the list", () => {
+            expect(numArray[0]).to.eq(10);
+            expect(numArray[1]).to.eq(50);
+            expect(numArray[2]).to.eq(22);
+            expect(numArray[3]).to.eq(20);
+        });
     });
 });

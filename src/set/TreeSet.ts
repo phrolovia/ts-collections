@@ -31,4 +31,12 @@ export class TreeSet<T> implements ISet<T> {
     public toArray(): T[] {
         return this.tree.toArray();
     }
+    public get Count(): number {
+        return this.tree.size();
+    }
+    *[Symbol.iterator](): Iterator<T> {
+        for (const item of this.tree) {
+            yield item;
+        }
+    }
 }

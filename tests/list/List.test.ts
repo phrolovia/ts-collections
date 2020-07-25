@@ -493,4 +493,50 @@ describe("List", () => {
             personComparer(ix);
         }
     });
+    describe("#Count getter", () => {
+        const list: IList<string> = new List();
+        list.add("Alice");
+        list.add("Rei");
+        list.add("Misaki");
+        it("should have the count of 3", () => {
+            expect(list.Count).to.eq(3);
+            expect(list.Count).to.eq(list.size());
+        });
+        it("should have the count of 2", () => {
+            list.removeAt(0);
+            expect(list.Count).to.eq(2);
+            expect(list.Count).to.eq(list.size());
+        });
+        it("should have the count of 5", () => {
+            list.add("Alice");
+            list.add("Yuzuha");
+            list.add("Megumi");
+            expect(list.Count).to.eq(5);
+            expect(list.Count).to.eq(list.size());
+        });
+        it("should throw an error if assigned", () => {
+            // @ts-ignore
+            expect(() => list.Count = 10).to.throw();
+        });
+    });
+    describe("#for-of loop", () => {
+        const list: IList<number> = new List<number>();
+        list.add(10);
+        list.add(50);
+        list.add(22);
+        list.add(20);
+        const numArray: number[] = [];
+        for (const num of list) {
+            numArray.push(num);
+        }
+        it("should have four items", () => {
+            expect(numArray.length).to.eq(4);
+        });
+        it("should loop over the list", () => {
+            expect(numArray[0]).to.eq(10);
+            expect(numArray[1]).to.eq(50);
+            expect(numArray[2]).to.eq(22);
+            expect(numArray[3]).to.eq(20);
+        });
+    });
 });

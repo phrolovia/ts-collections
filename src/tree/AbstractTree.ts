@@ -1,7 +1,5 @@
 import { ITree, TraverseType } from "./ITree";
 import { INode } from "./INode";
-import { Constructor } from "../core/Constructor";
-import { ICollection } from "../core/ICollection";
 import { AbstractCollection } from "../core/AbstractCollection";
 
 export abstract class AbstractTree<T> extends AbstractCollection<T> implements ITree<T> {
@@ -119,9 +117,21 @@ export abstract class AbstractTree<T> extends AbstractCollection<T> implements I
         return array.map(v => mapper(v));
     }
 
+    *[Symbol.iterator](): Iterator<T> {
+        yield* this.next(this.root);
+    }
+
+    private* next(node: INode<T>): Iterable<T> {
+        if (!node) {
+            return this.getRootData();
+        }
+        yield* this.next(node.getLeft());
+        yield node.getData();
+        yield* this.next(node.getRight());
+    }
+
     public abstract add(item: T): boolean;
     public abstract delete(item: T): void;
     public abstract insert(item: T): void;
-    // public abstract remove(item: T): boolean;
     public abstract search(item: T): boolean;
 }

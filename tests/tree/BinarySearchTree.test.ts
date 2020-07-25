@@ -1,6 +1,8 @@
 import { expect } from "chai";
 import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
 import { BinaryTree } from "../../src/tree/BinaryTree";
+import {describe, it} from "mocha";
+import {ITree} from "../../src/tree/ITree";
 
 class Person {
     Name: string;
@@ -115,14 +117,15 @@ describe("BinarySearchTree", () => {
             numTree.delete(99);
             expect(numTree.size()).to.eq(0);
         });
-        // it("should delete items", () => {
-        //     const numTree = new BinarySearchTree<number>((n1: number, n2: number) => n1 - n2);
-        //     numTree.insert(99);
-        //     numTree.insert(3657);
-        //     numTree.insert(3658);
-        //     numTree.clear();
-        //     expect(numTree.size()).to.eq(0);
-        // });
+        it("should delete items", () => {
+            const nameTree = new BinarySearchTree<string>((n1: string, n2: string) => n1.localeCompare(n2));
+            nameTree.insert("Alice");
+            nameTree.insert("Rei");
+            nameTree.insert("Misaki");
+            expect(nameTree.size()).to.eq(3);
+            nameTree.remove("Alice");
+            expect(nameTree.size()).to.eq(2);
+        });
     });
     describe("#find()", () => {
         const tree = new BinarySearchTree<Person>(nameComparator);
@@ -299,6 +302,59 @@ describe("BinarySearchTree", () => {
             expect(people[1].Age).to.eq(10);
             expect(people[2].Age).to.eq(23);
             expect(people[3].Age).to.eq(33);
+        });
+    });
+    describe("#Count getter", () => {
+        const tree: ITree<string> = new BinarySearchTree((s1: string, s2: string) => s1.localeCompare(s2));
+        tree.insert("Alice");
+        tree.insert("Rei");
+        tree.insert("Misaki");
+        it("should have the count of 3", () => {
+            expect(tree.Count).to.eq(3);
+            expect(tree.Count).to.eq(tree.size());
+        });
+        it("should have the count of 2", () => {
+            tree.remove("Alice");
+            expect(tree.Count).to.eq(2);
+            expect(tree.Count).to.eq(tree.size());
+        });
+        it("should have the count of 5", () => {
+            tree.insert("Alice");
+            tree.insert("Yuzuha");
+            tree.insert("Megumi");
+            expect(tree.Count).to.eq(5);
+            expect(tree.Count).to.eq(tree.size());
+        });
+        it("should throw an error if assigned", () => {
+            // @ts-ignore
+            expect(() => tree.Count = 10).to.throw();
+        });
+    });
+    describe("#for-of loop", () => {
+        const tree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+        tree.insert(50);
+        tree.insert(20);
+        tree.insert(10);
+        tree.insert(22);
+        const numArray: number[] = [];
+        for (const num of tree) {
+            numArray.push(num);
+        }
+        it("should loop over the tree", () => {
+            expect(numArray).to.include(10);
+            expect(numArray).to.include(20);
+            expect(numArray).to.include(50);
+            expect(numArray).to.include(22);
+            expect(numArray).to.not.include(-1)
+        });
+        it("should have four items", () => {
+            expect(numArray.length).to.eq(4);
+        });
+        it("should loop over the tree inorder-ly", () => {
+            expect(numArray[0]).to.eq(10);
+            expect(numArray[1]).to.eq(20);
+            expect(numArray[2]).to.eq(22);
+            expect(numArray[3]).to.eq(50);
         });
     });
 });

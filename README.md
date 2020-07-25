@@ -28,4 +28,4 @@ const tree: ITree<string> = new BinaryTree<string>(comparator);
 
 ## Documentation & API
 A simple documentation can be found at:
-https://ninohane.github.io/ts-collections/
+https://discordelia.github.io/ts-collections/

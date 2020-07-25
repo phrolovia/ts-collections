@@ -4,7 +4,9 @@
  * It contains the base methods that are used in all of the collection classes.
  */
 
-export interface ICollection<T> {
+export interface ICollection<T> extends Iterable<T> {
+    readonly Count: number;
+
     /**
      * Adds an item to the collection
      * @param  item Item that is to be added to the collection.
