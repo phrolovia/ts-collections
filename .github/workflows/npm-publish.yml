@@ -25,7 +25,8 @@ jobs:
         run: npm ci
       - name: Create production build
         run: npm run build
-      # - run: npm test
+      - name: Test production build
+        run: npm run test
       - name: Upload artifact (dist folder)
         uses: actions/upload-artifact@v1
         with:
