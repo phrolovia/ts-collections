@@ -1,6 +1,7 @@
 import { ICollection } from "../core/ICollection";
+import {IEnumerable} from "../core/IEnumerable";
 
-export interface IList<T> extends ICollection<T> {
+export interface IList<T> extends ICollection<T>, IEnumerable<T> {
     /**
      * Retrieves the item at the index.
      * @param  index The index from which the element will be retrieved.

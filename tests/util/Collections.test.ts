@@ -11,6 +11,7 @@ import {ITree} from "../../src/tree/ITree";
 import {BinarySearchTree} from "../../src/tree/BinarySearchTree";
 import {BinaryTree} from "../../src/tree/BinaryTree";
 import {IList} from "../../src/list/IList";
+import {IQueue} from "../../src/queue/IQueue";
 
 describe("Collections", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
