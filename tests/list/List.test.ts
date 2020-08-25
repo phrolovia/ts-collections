@@ -190,6 +190,30 @@ describe("List", () => {
             expect(single).to.eq(1);
         });
     });
+    describe("#elementAt()", () => {
+        const list = List.from([1, 48, 6, 195, 47]);
+        it("should return 48", () => {
+            const item = list.elementAt(1);
+            expect(item).to.eq(48);
+        });
+        it("should throw error if index is out of bounds", () => {
+            expect(() => list.elementAt(100)).to.throw();
+            expect(() => list.elementAt(-1)).to.throw();
+        });
+    });
+    describe("#elementAtOrDefault()", () => {
+        const list = List.from([1, 48, 6, 195, 47]);
+        it("should return 48", () => {
+            const item = list.elementAtOrDefault(1);
+            expect(item).to.eq(48);
+        });
+        it("should return if index is out of bounds", () => {
+            const upper = list.elementAtOrDefault(100);
+            const lower = list.elementAtOrDefault(-1);
+            expect(upper).to.eq(null);
+            expect(lower).to.eq(null);
+        });
+    });
     describe("#exists()", () => {
         const list: List<Person> = new List<Person>();
         list.add(person);
@@ -683,6 +707,18 @@ describe("List", () => {
             expect(p).to.eq(null);
         });
     });
+    describe("#repeat()", () => {
+        it("should throw error if count is less than zero", () => {
+            expect(() => new List().repeat("xyz", -1)).to.throw();
+        });
+        it("should create an IEnumerable with a length of 5 and filled with element '5'", () => {
+            const list = new List().repeat(5, 5).toList();
+            expect(list.size()).to.eq(5);
+            for (const item of list) {
+                expect(item).to.eq(5);
+            }
+        });
+    })
     describe("#reverse()", () => {
         const list: List<Person> = new List<Person>();
         list.add(person);
@@ -1015,6 +1051,30 @@ describe("List", () => {
             expect(list2.size()).to.eq(2);
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
+        });
+    });
+    describe("#zip()", () => {
+        const numberList = List.from([1,2,3,4]);
+        const stringList = List.from(["one", "two", "three"]);
+        const numStrList = numberList.zip(stringList, (first: number, second: string) => `${first} ${second}`).toList();
+        it("should throw error ['predicate is null.]", () => {
+            const list = List.from([2, 5, 6, 99]);
+            const list2 = List.from([true, true, false, true]);
+            expect(() => list.zip(list2, null)).to.throw("zipper is null.");
+        });
+        it("should return a zipped list with size of 3", () => {
+            expect(numStrList.size()).to.eq(3);
+            expect(numStrList.get(0)).to.eq("1 one");
+            expect(numStrList.get(1)).to.eq("2 two");
+            expect(numStrList.get(2)).to.eq("3 three");
+        });
+        it("should return a zipped list with size of 2", () => {
+            stringList.add("four");
+            stringList.add("five");
+            const zippedList = numberList.takeWhile(n => n <= 2).zip(stringList, (first: number, second: string) => `${second} ${first}`).toList();
+            expect(zippedList.size()).to.eq(2);
+            expect(zippedList.get(0)).to.eq("one 1");
+            expect(zippedList.get(1)).to.eq("two 2");
         });
     });
     describe("#Count getter", () => {

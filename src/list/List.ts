@@ -86,6 +86,20 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return item;
     }
 
+    public elementAt(index: number): T {
+        if (index < 0 || index >= this.size()) {
+            throw new Error("index is out of bounds.");
+        }
+        return this.get(index);
+    }
+
+    public elementAtOrDefault(index: number): T {
+        if (index < 0 || index >= this.size()) {
+            return null;
+        }
+        return this.get(index);
+    }
+
     public enqueue(item: T): void {
         this.add(item);
     }
@@ -382,6 +396,13 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         }
     }
 
+    public repeat(item: T, count: number): IEnumerable<T> {
+        if (count < 0) {
+            throw new Error("count is out of range.");
+        }
+        return new List(new Array(count).fill(item)).asEnumerable();
+    }
+
     public reverse(): IEnumerable<T> {
         return new List(this.data.slice().reverse());
     }
@@ -546,21 +567,26 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return new List(this.data.filter(predicate));
     }
 
-    public zip<T, R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U> {
-        // const sizeFirst = this.count();
-        // const sizeSecond = enumerable.count();
-        // let first = this.asEnumerable();
-        // let second = enumerable;
-        // if (sizeFirst < sizeSecond) {
-        //     second = second.take(sizeFirst).toList();
-        // } else {
-        //     first = first.take(sizeSecond).toList() as IList<T>;
-        // }
-        // const list: IList<U> = new List();
-        // for (const item of first) {
-        //
-        // }
-        return null; // TODO: Needs Element/ElementAt methods from IEnumerable
+    public zip<R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U> {
+        if (!zipper) {
+            throw new Error("zipper is null.");
+        }
+        const sizeFirst = this.count();
+        const sizeSecond = enumerable.count();
+        let first = this.asEnumerable();
+        let second = enumerable;
+        if (sizeFirst < sizeSecond) {
+            second = second.take(sizeFirst);
+        } else {
+            first = first.take(sizeSecond);
+        }
+        const list: IList<U> = new List();
+        for (let ix = 0; ix < first.count(); ++ix) {
+            const left = first.elementAt(ix);
+            const right = second.elementAt(ix);
+            list.add(zipper(left, right));
+        }
+        return list.asEnumerable();
     }
 
     * [Symbol.iterator](): Iterator<T> {

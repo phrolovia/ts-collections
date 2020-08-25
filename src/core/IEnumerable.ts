@@ -8,6 +8,8 @@ export interface IEnumerable<T> {
     contains(item: T): boolean;
     count(): number;
     defaultIfEmpty(value?: T): IEnumerable<T>;
+    elementAt(index: number): T;
+    elementAtOrDefault(index: number): T;
     // except(enumerable: IEnumerable<T>): IEnumerable<T>;
     first(predicate?: (item: T) => boolean): T;
     firstOrDefault(predicate?: (item: T) => boolean): T;
@@ -16,6 +18,7 @@ export interface IEnumerable<T> {
     max(predicate: (item: T, index?: number) => number): number;
     min(predicate: (item: T, index?: number) => number): number;
     prepend(item: T): IEnumerable<T>;
+    repeat(item: T, count: number): IEnumerable<T>;
     reverse(): IEnumerable<T>;
     select<R>(predicate: (item: T) => R): IEnumerable<R>;
     single(predicate?: (item: T) => boolean): T;
@@ -30,5 +33,5 @@ export interface IEnumerable<T> {
     toArray(): Array<T>;
     toList(): IList<T>;
     where(predicate: (item: T) => boolean): IEnumerable<T>;
-    zip<T, R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U>;
+    zip<R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U>;
 }
