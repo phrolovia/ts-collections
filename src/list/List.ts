@@ -433,11 +433,27 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return new List(this.data.slice().reverse());
     }
 
-    public select<R>(predicate: (item: T, index: number) => R): IEnumerable<R> {
+    public select<R>(predicate: (item: T, index?: number) => R): IEnumerable<R> {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
         return new List(this.data.map(predicate));
+    }
+
+    public selectMany<R>(predicate: (item: T, index?: number) => IEnumerable<R>|Array<R>): IEnumerable<R> {
+        if (!predicate) {
+            throw new Error("predicate is null.");
+        }
+        const list: IList<R> = new List();
+        this.data.forEach((d, dx) => {
+            const transformedData = predicate(d, dx);
+            if (transformedData instanceof Array) {
+                transformedData.forEach(td => list.add(td));
+            } else {
+                transformedData.toArray().forEach(td => list.add(td));
+            }
+        });
+        return list;
     }
 
     public set(index: number, item: T): void {

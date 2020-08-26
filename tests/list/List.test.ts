@@ -812,6 +812,48 @@ describe("List", () => {
             expect(list2.get(1)).to.eq(729);
         });
     });
+    describe("#selectMany()", () => {
+        it("should throw error ['predicate is null.]", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(() => list.selectMany(null)).to.throw("predicate is null.");
+        });
+        it("should return a flattened array of ages #1", () => {
+            const people: Person[] = [];
+            const viola = new Person("Viola", "Ringale", 28);
+            const rebecca = new Person("Rebecca", "Ringale", 17);
+            const jisu = new Person("Jisu", "", 14);
+            const vanessa = new Person("Vanessa", "Bloodboil", 20);
+            viola.FriendsArray = [rebecca];
+            jisu.FriendsArray = [person, person2];
+            vanessa.FriendsArray = [viola, rebecca, jisu, person];
+            rebecca.FriendsArray = [viola];
+            people.push(viola);
+            people.push(rebecca);
+            people.push(jisu);
+            people.push(vanessa);
+            const peopleList = List.from(people);
+            const friends = peopleList.selectMany(p => p.FriendsArray).select(p => p.Age).toArray();
+            expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
+        });
+        it("should return a flattened array of ages #2", () => {
+            const people: Person[] = [];
+            const viola = new Person("Viola", "Ringale", 28);
+            const rebecca = new Person("Rebecca", "Ringale", 17);
+            const jisu = new Person("Jisu", "", 14);
+            const vanessa = new Person("Vanessa", "Bloodboil", 20);
+            viola.FriendsList = List.from([rebecca]);
+            jisu.FriendsList = List.from([person, person2]);
+            vanessa.FriendsList = List.from([viola, rebecca, jisu, person]);
+            rebecca.FriendsList = List.from([viola]);
+            people.push(viola);
+            people.push(rebecca);
+            people.push(jisu);
+            people.push(vanessa);
+            const peopleList = List.from(people);
+            const friends = peopleList.selectMany(p => p.FriendsList).select(p => p.Age).toArray();
+            expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
+        });
+    });
     describe("#set()", () => {
         const list: IList<Person> = new List<Person>();
         list.add(person);

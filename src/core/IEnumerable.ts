@@ -22,7 +22,8 @@ export interface IEnumerable<T> {
     prepend(item: T): IEnumerable<T>;
     repeat(item: T, count: number): IEnumerable<T>;
     reverse(): IEnumerable<T>;
-    select<R>(predicate: (item: T) => R): IEnumerable<R>;
+    select<R>(predicate: (item: T, index?: number) => R): IEnumerable<R>;
+    selectMany<R>(predicate: (item: T, index?: number) => IEnumerable<R>|Array<R>): IEnumerable<R>;
     single(predicate?: (item: T) => boolean): T;
     singleOrDefault(predicate?: (item: T) => boolean): T;
     skip(count?: number): IEnumerable<T>;
