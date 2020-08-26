@@ -27,6 +27,21 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return true;
     }
 
+    public aggregate<R>(accumulator: (acc: R, item: T) => R, seed?: R): R {
+        if (!accumulator) {
+            throw new Error("accumulator is null.");
+        }
+        if (seed == null && this.isEmpty()) {
+            throw new Error("Sequence contains no elements.");
+        }
+        if (seed != null) {
+            return this.data.reduce(accumulator, seed);
+        } else {
+            seed = this.get(0) as unknown as R;
+            return this.data.slice(1).reduce(accumulator, seed);
+        }
+    }
+
     public all(predicate?: (item: T) => boolean): boolean {
         if (!predicate) {
             return this.size() > 0;
@@ -39,6 +54,17 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             return this.size() > 0;
         }
         return this.data.some(predicate);
+    }
+
+    public average(predicate?: (item: T, index?: number) => number): number {
+        if (predicate === null) {
+            throw new Error("predicate is null.");
+        }
+        if (this.isEmpty()) {
+            throw new Error("Sequence contains no elements.");
+        }
+        const transformedData = this.data.map((d, dx) => predicate?.(d, dx) ?? d as unknown as number);
+        return new List(transformedData).sum(d => d) / transformedData.length;
     }
 
     public append(item: T): IEnumerable<T> {

@@ -1,10 +1,12 @@
 import {IList} from "../list/IList";
 
 export interface IEnumerable<T> {
+    aggregate<R>(accumulator: (acc: R, item: T) => R, seed?: R): R;
     all(predicate?: (item: T) => boolean): boolean;
     any(predicate?: (item: T) => boolean): boolean;
     append(item: T): IEnumerable<T>;
     asEnumerable(): IEnumerable<T>;
+    average(predicate?: (item: T, index?: number) => number): number
     contains(item: T): boolean;
     count(): number;
     defaultIfEmpty(value?: T): IEnumerable<T>;

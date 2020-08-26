@@ -43,6 +43,36 @@ describe("List", () => {
             expect(list.size()).to.equal(1);
         });
     });
+    describe("#aggregate()", () => {
+        it("should return 6", () => {
+            const list = List.from([4, 8, 8, 3, 9, 0, 7, 8, 2]);
+            const result = list.aggregate((total, next) => next % 2 === 0 ? total + 1 : total, 0);
+            expect(result).to.eq(6);
+        });
+        it("should return pomegranate", () => {
+            const list = List.from(["apple", "mango", "orange", "pomegranate", "grape"]);
+            const result = list.aggregate((longest, next) => next.length > longest.length ? next : longest, "banana");
+            expect(result).to.eq("pomegranate");
+        });
+        it("should return 10", () => {
+            const list = List.from([1,2,3,4]);
+            const result = list.aggregate<number>((total, num) => total += num);
+            expect(result).to.eq(10);
+        });
+        it("should throw error ['accumulator is null.]", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(() => list.aggregate(null)).to.throw("accumulator is null.");
+        });
+        it("should throw error if list is empty and no seed is provided", () => {
+            const list = List.from<number>([]);
+            expect(() => list.aggregate<number>((acc, num) => acc *= num)).to.throw("Sequence contains no elements.");
+        });
+        it("should return the seed if list is empty", () => {
+            const list = List.from<number>([]);
+            const result = list.aggregate<number>((total, num) => total += num, -99);
+            expect(result).to.eq(-99);
+        });
+    });
     describe("#all()", () => {
         const list: IList<Person> = new List<Person>();
         list.add(person);
@@ -129,6 +159,25 @@ describe("List", () => {
         list.add(person2);
         it("should return itself as an enumerable", () => {
             expect(list.asEnumerable() === list).to.eq(true);
+        });
+    });
+    describe("#average()", () => {
+        it("should return 99948748093", () => {
+            const list = List.from(["10007", "37", "299846234235"]);
+            const avg = list.average(s => parseInt(s, 10));
+            expect(avg).to.eq(99948748093);
+        });
+        it("should throw error ['predicate is null.]", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(() => list.average(null)).to.throw("predicate is null.");
+        });
+        it("should use non-transformed values if predicate is not provided.", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(list.average()).to.eq(28);
+        });
+        it("should throw error if list is empty", () => {
+            const list = List.from<string>([]);
+            expect(() => list.average(s => parseInt(s, 10))).to.throw("Sequence contains no elements.");
         });
     });
     describe("#clear()", () => {
