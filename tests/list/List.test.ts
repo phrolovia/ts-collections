@@ -278,6 +278,20 @@ describe("List", () => {
             expect(lower).to.eq(null);
         });
     });
+    describe("#except()", () => {
+        it("should return an array of [1,2,3]", () => {
+            const list1 = List.from([1,2,3,4,5]);
+            const list2 = List.from([4,5,6,7,8]);
+            const elist = list1.except(list2).toList();
+            expect(elist.toArray()).to.deep.equal([1,2,3]);
+        });
+        it("should only have 'Alice' and 'Senna'", () => {
+            const list1 = List.from([person, person2, person3, person4, person5]);
+            const list2 = List.from([person2, person4, person5]);
+            const elist = list1.except(list2, (p1, p2) => p1.Name.localeCompare(p2.Name));
+            expect(elist.toArray()).to.deep.equal([person, person3]);
+        });
+    });
     describe("#exists()", () => {
         const list: List<Person> = new List<Person>();
         list.add(person);

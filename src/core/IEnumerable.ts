@@ -13,7 +13,7 @@ export interface IEnumerable<T> {
     distinct(comparer?: (item1: T, item2: T) => number): IEnumerable<T>;
     elementAt(index: number): T;
     elementAtOrDefault(index: number): T;
-    // except(enumerable: IEnumerable<T>): IEnumerable<T>;
+    except(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T>;
     first(predicate?: (item: T) => boolean): T;
     firstOrDefault(predicate?: (item: T) => boolean): T;
     last(predicate?: (item: T) => boolean): T;

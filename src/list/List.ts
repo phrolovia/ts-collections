@@ -152,6 +152,20 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.insert(0, item);
     }
 
+    public except(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const exceptSet: IList<T> = new List();
+        for (const item of this.data) {
+            const contains = enumerable.contains(item, comparator);
+            if (!contains) {
+                exceptSet.add(item);
+            }
+        }
+        return exceptSet;
+    }
+
     public exists(predicate: (item: T) => boolean): boolean {
         if (!predicate) {
             throw new ArgumentNullException("predicate is null.");
