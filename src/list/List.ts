@@ -83,8 +83,11 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.indexOf(item) > -1;
     }
 
-    public count(): number {
-        return this.Count;
+    public count(predicate?: (item: T) => boolean): number {
+        if (!predicate) {
+            return this.size();
+        }
+        return this.where(predicate).count();
     }
 
     public defaultIfEmpty(value: T = null): IEnumerable<T> {
@@ -501,14 +504,14 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             }
             throw new Error("Sequence contains more than one element.");
         }
-        const items = this.data.filter(predicate);
-        if (items.length > 1) {
+        const items = this.where(predicate);
+        if (items.count() > 1) {
             throw new Error("Sequence contains more than one matching element.");
         }
-        if (items.length <= 0) {
+        if (items.count() <= 0) {
             return null;
         }
-        return items[0];
+        return items.elementAt(0);
     }
 
     public size(): number {

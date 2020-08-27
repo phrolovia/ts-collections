@@ -204,18 +204,23 @@ describe("List", () => {
         });
     });
     describe("#count()", () => {
-        it("count should be equal to 2", () => {
+        it("should return 2", () => {
             const list: IList<Person> = new List<Person>();
             list.add(person);
             list.add(person2);
             expect(list.count()).to.equal(2);
         });
-        it("count should be equal to 0", () => {
+        it("should return 0", () => {
             const list: IList<Person> = new List<Person>();
             list.add(person);
             list.add(person2);
             list.clear();
             expect(list.count()).to.equal(0);
+        });
+        it("should return 5", () => {
+            const list = List.from([1,9,2,8,3,7,4,6,5,0]);
+            const count = list.count(n => n < 5);
+            expect(count).to.eq(5);
         });
     });
     describe("#defaultIfEmpty()", () => {

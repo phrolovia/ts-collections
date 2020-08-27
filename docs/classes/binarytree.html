@@ -142,6 +142,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="binarytree.html#topostorderarray" class="tsd-kind-icon">to<wbr>Postorder<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="binarytree.html#topreorderarray" class="tsd-kind-icon">to<wbr>Preorder<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="binarytree.html#traverseandmaptoarray" class="tsd-kind-icon">traverse<wbr>And<wbr>Map<wbr>ToArray</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external"><a href="binarytree.html#defaultcomparator" class="tsd-kind-icon">default<wbr>Comparator</a></li>
 							</ul>
 						</section>
 					</div>
@@ -153,20 +154,41 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Binary<wbr>Tree<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="binarytree.html" class="tsd-signature-type">BinaryTree</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Binary<wbr>Tree<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="binarytree.html" class="tsd-signature-type">BinaryTree</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L4">src/tree/BinaryTree.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L4">src/tree/BinaryTree.ts:4</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>comparator: <span class="tsd-signature-type">Function</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>item1: <span class="tsd-signature-type">T</span></h5>
+														</li>
+														<li>
+															<h5>item2: <span class="tsd-signature-type">T</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="binarytree.html" class="tsd-signature-type">BinaryTree</a></h4>
@@ -183,7 +205,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#comparator">comparator</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L6">src/tree/AbstractTree.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L6">src/tree/AbstractTree.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -194,7 +216,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#root">root</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L7">src/tree/AbstractTree.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L7">src/tree/AbstractTree.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -212,7 +234,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#count">Count</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/core/AbstractCollection.ts#L11">src/core/AbstractCollection.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/core/AbstractCollection.ts#L14">src/core/AbstractCollection.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -235,7 +257,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L120">src/tree/AbstractTree.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L120">src/tree/AbstractTree.ts:120</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -254,7 +276,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#add">add</a></p>
 								<p>Overrides <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L9">src/tree/BinaryTree.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L9">src/tree/BinaryTree.ts:9</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -280,7 +302,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#clear">clear</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L12">src/tree/AbstractTree.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L12">src/tree/AbstractTree.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -300,7 +322,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#contains">contains</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L15">src/tree/AbstractTree.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L15">src/tree/AbstractTree.ts:15</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -325,7 +347,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#delete">delete</a></p>
 								<p>Overrides <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#delete">delete</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L14">src/tree/BinaryTree.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L14">src/tree/BinaryTree.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -348,7 +370,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L17">src/tree/BinaryTree.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L17">src/tree/BinaryTree.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -375,7 +397,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#find">find</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L29">src/tree/AbstractTree.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L29">src/tree/AbstractTree.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -416,7 +438,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L41">src/tree/BinaryTree.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L41">src/tree/BinaryTree.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -440,7 +462,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#foreach">forEach</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L42">src/tree/AbstractTree.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L42">src/tree/AbstractTree.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -483,7 +505,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#getrootdata">getRootData</a></p>
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#getrootdata">getRootData</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L52">src/tree/AbstractTree.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L52">src/tree/AbstractTree.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -502,7 +524,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#insert">insert</a></p>
 								<p>Overrides <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#insert">insert</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L44">src/tree/BinaryTree.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L44">src/tree/BinaryTree.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -525,7 +547,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L47">src/tree/BinaryTree.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L47">src/tree/BinaryTree.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -554,7 +576,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#isempty">isEmpty</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L56">src/tree/AbstractTree.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L56">src/tree/AbstractTree.ts:56</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -574,7 +596,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#remove">remove</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L59">src/tree/AbstractTree.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L59">src/tree/AbstractTree.ts:59</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -599,7 +621,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#search">search</a></p>
 								<p>Overrides <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#search">search</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L58">src/tree/BinaryTree.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L58">src/tree/BinaryTree.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -622,7 +644,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/BinaryTree.ts#L61">src/tree/BinaryTree.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/BinaryTree.ts#L61">src/tree/BinaryTree.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -651,7 +673,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#size">size</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L64">src/tree/AbstractTree.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L64">src/tree/AbstractTree.ts:64</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -671,7 +693,7 @@
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#toarray">toArray</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L67">src/tree/AbstractTree.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L67">src/tree/AbstractTree.ts:67</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -689,7 +711,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#toinorderarray">toInorderArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L79">src/tree/AbstractTree.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L79">src/tree/AbstractTree.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -716,7 +738,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#topostorderarray">toPostorderArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L85">src/tree/AbstractTree.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L85">src/tree/AbstractTree.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -743,7 +765,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#topreorderarray">toPreorderArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L91">src/tree/AbstractTree.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L91">src/tree/AbstractTree.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -770,7 +792,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstracttree.html">AbstractTree</a>.<a href="abstracttree.html#traverseandmaptoarray">traverseAndMapToArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/7e9b781/src/tree/AbstractTree.ts#L104">src/tree/AbstractTree.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/tree/AbstractTree.ts#L104">src/tree/AbstractTree.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -819,6 +841,39 @@
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">[]</span></h4>
 							<p>An array containing all the items of the tree. Order is defined by direction.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
+					<a name="defaultcomparator" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> default<wbr>Comparator</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">default<wbr>Comparator&lt;E&gt;<span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#defaultcomparator">defaultComparator</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/44318d2/src/core/AbstractCollection.ts#L4">src/core/AbstractCollection.ts:4</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>E</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>item1: <span class="tsd-signature-type">E</span></h5>
+								</li>
+								<li>
+									<h5>item2: <span class="tsd-signature-type">E</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -935,6 +990,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
 								<a href="binarytree.html#traverseandmaptoarray" class="tsd-kind-icon">traverse<wbr>And<wbr>Map<wbr>ToArray</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
+								<a href="binarytree.html#defaultcomparator" class="tsd-kind-icon">default<wbr>Comparator</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -959,6 +1017,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/ideque.html" class="tsd-kind-icon">IDeque</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/ienumerable.html" class="tsd-kind-icon">IEnumerable</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/ilist.html" class="tsd-kind-icon">IList</a>
