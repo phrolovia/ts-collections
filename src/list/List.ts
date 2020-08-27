@@ -79,6 +79,10 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.data.length = 0;
     }
 
+    public concat(enumerable: IEnumerable<T>): IEnumerable<T> {
+        return new List([...this.toArray(), ...enumerable.toArray()]);
+    }
+
     public contains(item: T, comparator?: (item1: T, item2: T) => number): boolean {
         if (!comparator) {
             comparator = AbstractCollection.defaultComparator;
@@ -319,6 +323,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.data.splice(index, 0, item);
     }
 
+    public intersect(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<any> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const intersectList: IList<T> = new List();
+        for (const d of this.data) {
+            if (enumerable.contains(d, comparator)) {
+                intersectList.add(d);
+            }
+        }
+        return intersectList;
+    }
+
     public isEmpty(): boolean {
         return this.data.length === 0;
     }
@@ -490,6 +507,21 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             }
         });
         return list;
+    }
+
+    public sequenceEqual(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): boolean {
+        if (this.count() !== enumerable.count()) {
+            return false;
+        }
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        for (const [index, item] of this.data.entries()) {
+            if (comparator(this.elementAt(index), enumerable.elementAt(index)) !== 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public set(index: number, item: T): void {

@@ -7,6 +7,7 @@ export interface IEnumerable<T> {
     append(item: T): IEnumerable<T>;
     asEnumerable(): IEnumerable<T>;
     average(predicate?: (item: T, index?: number) => number): number;
+    concat(enumerable: IEnumerable<T>): IEnumerable<T>;
     contains(item: T, comparator?: (item1: T, item2: T) => number): boolean;
     count(predicate?: (item: T) => boolean): number;
     defaultIfEmpty(value?: T): IEnumerable<T>;
@@ -16,6 +17,7 @@ export interface IEnumerable<T> {
     except(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T>;
     first(predicate?: (item: T) => boolean): T;
     firstOrDefault(predicate?: (item: T) => boolean): T;
+    intersect(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<any>;
     last(predicate?: (item: T) => boolean): T;
     lastOrDefault(predicate?: (item: T) => boolean): T;
     max(predicate: (item: T, index?: number) => number): number;
@@ -25,6 +27,7 @@ export interface IEnumerable<T> {
     reverse(): IEnumerable<T>;
     select<R>(predicate: (item: T, index?: number) => R): IEnumerable<R>;
     selectMany<R>(predicate: (item: T, index?: number) => IEnumerable<R>|Array<R>): IEnumerable<R>;
+    sequenceEqual(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): boolean;
     single(predicate?: (item: T) => boolean): T;
     singleOrDefault(predicate?: (item: T) => boolean): T;
     skip(count?: number): IEnumerable<T>;

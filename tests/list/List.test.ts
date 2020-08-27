@@ -185,6 +185,14 @@ describe("List", () => {
             expect(list.size()).to.equal(0);
         });
     });
+    describe("#concat()", () => {
+        it("should return a list with [1,2,3,4,5,5,6,7,8,9]", () => {
+            const list1 = List.from([1,2,3,4,5]);
+            const list2 = List.from([5,6,7,8,9]);
+            const clist = list1.concat(list2);
+            expect(clist.toArray()).to.deep.equal([1,2,3,4,5,5,6,7,8,9]);
+        });
+    });
     describe("#contains()", () => {
         const list = List.from([1,3,5,6,7,8,9,2,0,-1,99,-99]);
         const personList = List.from([person, person2, person3]);
@@ -593,6 +601,20 @@ describe("List", () => {
             expect(list.size()).to.eq(6);
         });
     });
+    describe("#intersect()", () => {
+        it("should return an array of [4,5]", () => {
+            const list1 = List.from([1,2,3,4,5]);
+            const list2 = List.from([4,5,6,7,8]);
+            const elist = list1.intersect(list2).toList();
+            expect(elist.toArray()).to.deep.equal([4,5]);
+        });
+        it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
+            const list1 = List.from([person, person2, person3, person4, person5]);
+            const list2 = List.from([person2, person4, person5]);
+            const elist = list1.intersect(list2, (p1, p2) => p1.Name.localeCompare(p2.Name));
+            expect(elist.toArray()).to.deep.equal([person2, person4, person5]);
+        });
+    });
     describe("#last()", () => {
         it("should throw error if list is empty()", () => {
             const list = new List<number>();
@@ -899,6 +921,28 @@ describe("List", () => {
             const peopleList = List.from(people);
             const friends = peopleList.selectMany(p => p.FriendsList).select(p => p.Age).toArray();
             expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
+        });
+    });
+    describe("#sequenceEqual()", () => {
+        it("should return false for lists with different sizes", () => {
+            const list1 = List.from([1,2]);
+            const list2 = List.from([1,2,3]);
+            expect(list1.sequenceEqual(list2)).to.eq(false);
+        });
+        it("should return false if lists don't have members in the same order", () => {
+            const list1 = List.from([1,2]);
+            const list2 = List.from([2,1]);
+            expect(list1.sequenceEqual(list2)).to.eq(false);
+        });
+        it("should return true if lists have members in the same order", () => {
+            const list1 = List.from([1,2]);
+            const list2 = List.from([1,2]);
+            expect(list1.sequenceEqual(list2)).to.eq(true);
+        });
+        it("should return true if lists have members in the same order", () => {
+            const list1 = List.from([person, person2, person4]);
+            const list2 = List.from([person, person2, person4]);
+            expect(list1.sequenceEqual(list2, (p1, p2) => p1.Name.localeCompare(p2.Name))).to.eq(true);
         });
     });
     describe("#set()", () => {
