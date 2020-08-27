@@ -79,8 +79,16 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.data.length = 0;
     }
 
-    public contains(item: T): boolean {
-        return this.indexOf(item) > -1;
+    public contains(item: T, comparator?: (item1: T, item2: T) => number): boolean {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        for (const d of this.data) {
+            if (comparator(d, item) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public count(predicate?: (item: T) => boolean): number {
@@ -277,6 +285,10 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         return this.data[index];
+    }
+
+    public includes(item: T): boolean {
+        return this.indexOf(item) > -1;
     }
 
     public indexOf(item: T): number {

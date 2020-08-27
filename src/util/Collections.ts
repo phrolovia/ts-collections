@@ -16,7 +16,7 @@ export abstract class Collections {
             throw new Error("c2 is null.");
         }
         for (const item1 of c1) {
-            if (c2.contains(item1)) {
+            if (c2.includes(item1)) {
                 return false;
             }
         }

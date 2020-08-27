@@ -63,7 +63,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         return true;
     }
     public delete(item: T): void {
-        if (!this.contains(item)) return;
+        if (!this.includes(item)) return;
         let v: RedBlackNode<T> = this.searchNode(item);
         this.deleteNode(v);
     }

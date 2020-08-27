@@ -63,19 +63,6 @@ describe("BinaryTree", () => {
             expect(tree.getRootData()).to.eq(person);
         });
     });
-    describe("#contains()", () => {
-        const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        it("should return true", () => {
-            expect(tree.contains(person3)).to.eq(true);
-        });
-        it("should return false", () => {
-            expect(tree.contains(person4)).to.eq(false);
-        });
-    });
     describe("#delete()", () => {
         const tree = new BinaryTree<Person>(nameComparator);
             tree.insert(person);
@@ -179,6 +166,19 @@ describe("BinaryTree", () => {
             tree.insert(person2);
             tree.insert(person3);
             expect(tree.size()).to.eq(3);
+        });
+    });
+    describe("#includes()", () => {
+        const tree = new BinaryTree<Person>(ageComparator);
+        tree.insert(person);
+        tree.insert(person2);
+        tree.insert(person3);
+        tree.insert(person5);
+        it("should return true", () => {
+            expect(tree.includes(person3)).to.eq(true);
+        });
+        it("should return false", () => {
+            expect(tree.includes(person4)).to.eq(false);
         });
     });
     describe("#insert()", () => {

@@ -19,22 +19,6 @@ describe("Queue", () => {
             expect(queue.size()).to.equal(0);
         });
     });
-    describe("#contains()", () => {
-        const queue: IQueue<Person> = new List<Person>();
-            queue.enqueue(person);
-            queue.enqueue(null);
-            queue.enqueue(person2);
-        it("should contain person", () => {
-            const exists = queue.contains(person);
-            expect(exists).to.equal(true);
-        });
-        it("should contain null item", () => {
-            expect(queue.contains(null)).to.eq(true);
-        });
-        it("should not contain person", () => {
-            expect(queue.contains(person4)).to.eq(false);
-        });
-    });
     describe("#dequeue()", () => {
         it("should return null.", () => {
             const queue: IQueue<Person> = new List<Person>();
@@ -68,6 +52,22 @@ describe("Queue", () => {
             const queue: IQueue<Person> = new List<Person>();
             queue.enqueue(person);
             expect(queue.size()).to.equal(1);
+        });
+    });
+    describe("#includes()", () => {
+        const queue: IQueue<Person> = new List<Person>();
+        queue.enqueue(person);
+        queue.enqueue(null);
+        queue.enqueue(person2);
+        it("should contain person", () => {
+            const exists = queue.includes(person);
+            expect(exists).to.equal(true);
+        });
+        it("should contain null item", () => {
+            expect(queue.includes(null)).to.eq(true);
+        });
+        it("should not contain person", () => {
+            expect(queue.includes(person4)).to.eq(false);
         });
     });
     describe("#peek()", () => {

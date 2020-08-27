@@ -12,16 +12,6 @@ export abstract class AbstractTree<T> extends AbstractCollection<T> implements I
     public clear(): void {
         this.root = null;
     }
-    public contains(item: T): boolean {
-        return this.containsRecursive(this.root, item);
-    }
-    private containsRecursive(root: INode<T>, item: T): boolean {
-        if (root == null) return false;
-        if (this.comparator(item, root.getData()) === 0) return true;
-        return this.comparator(item, root.getData()) < 0
-            ? this.containsRecursive(root.getLeft(), item)
-            : this.containsRecursive(root.getRight(), item);
-    }
     private countTreeNodes(root: INode<T>): number {
         if (root == null) return 0;
         return 1 + this.countTreeNodes(root.getLeft()) + this.countTreeNodes(root.getRight());
@@ -53,11 +43,21 @@ export abstract class AbstractTree<T> extends AbstractCollection<T> implements I
         if (!this.root) return null;
         return this.root.getData();
     }
+    public includes(item: T): boolean {
+        return this.includesRecursive(this.root, item);
+    }
+    private includesRecursive(root: INode<T>, item: T): boolean {
+        if (root == null) return false;
+        if (this.comparator(item, root.getData()) === 0) return true;
+        return this.comparator(item, root.getData()) < 0
+            ? this.includesRecursive(root.getLeft(), item)
+            : this.includesRecursive(root.getRight(), item);
+    }
     public isEmpty(): boolean {
         return this.root == null;
     }
     public remove(item: T): boolean {
-        if(!this.contains(item)) return false;
+        if(!this.includes(item)) return false;
         this.delete(item);
         return true;
     }

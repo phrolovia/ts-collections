@@ -114,8 +114,8 @@ describe("List", () => {
         });
         it("should not have the appended item in the old list", () => {
             const newList = list.append(person4).toList();
-            expect(newList.contains(person4)).to.eq(true);
-            expect(list.contains(person4)).to.eq(false);
+            expect(newList.includes(person4)).to.eq(true);
+            expect(list.includes(person4)).to.eq(false);
         });
     });
     describe("#any()", () => {
@@ -186,21 +186,20 @@ describe("List", () => {
         });
     });
     describe("#contains()", () => {
-        const list: IList<Person> = new List<Person>();
-        list.add(person);
-        list.add(person2);
-        list.add(null);
-        it("should have person2", () => {
-            var contains = list.contains(person2);
-            expect(contains).to.eq(true);
+        const list = List.from([1,3,5,6,7,8,9,2,0,-1,99,-99]);
+        const personList = List.from([person, person2, person3]);
+        const personComparator = (p1: Person, p2: Person) => p1.Name.localeCompare(p2.Name)
+        it("should contain -1", () => {
+            expect(list.contains(-1)).to.eq(true);
         });
-        it("should not have person3", () => {
-            var contains = list.contains(person3);
-            expect(contains).to.eq(false);
+        it("should not contain -77", () => {
+            expect(list.contains(-77)).to.eq(false);
         });
-        it("should have null", () => {
-            var contains = list.contains(null);
-            expect(contains).to.eq(true);
+        it("should contain person 'Alice'", () => {
+            expect(personList.contains(person, personComparator)).to.eq(true);
+        });
+        it("should not contain person 'Lenka'", () => {
+            expect(personList.contains(person4, personComparator)).to.eq(false);
         });
     });
     describe("#count()", () => {
@@ -516,6 +515,24 @@ describe("List", () => {
             expect(p).to.eq(null);
         });
     });
+    describe("#includes()", () => {
+        const list: IList<Person> = new List<Person>();
+        list.add(person);
+        list.add(person2);
+        list.add(null);
+        it("should have person2", () => {
+            var contains = list.includes(person2);
+            expect(contains).to.eq(true);
+        });
+        it("should not have person3", () => {
+            var contains = list.includes(person3);
+            expect(contains).to.eq(false);
+        });
+        it("should have null", () => {
+            var contains = list.includes(null);
+            expect(contains).to.eq(true);
+        });
+    });
     describe("#indexOf()", () => {
         const list: IList<Person> = new List<Person>();
         list.add(person);
@@ -667,8 +684,8 @@ describe("List", () => {
         });
         it("should not have the appended item in the old list", () => {
             const newList = list.prepend(person4).toList();
-            expect(newList.contains(person4)).to.eq(true);
-            expect(list.contains(person4)).to.eq(false);
+            expect(newList.includes(person4)).to.eq(true);
+            expect(list.includes(person4)).to.eq(false);
         });
     });
     describe("#remove()", () => {

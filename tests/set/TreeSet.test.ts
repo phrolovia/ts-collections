@@ -21,7 +21,7 @@ describe("TreeSet", () => {
             set.add(1);
             set.add(2);
             set.add(4);
-            expect(set.contains(2)).to.eq(true);
+            expect(set.includes(2)).to.eq(true);
         });
     }); 
     describe("#add()", () => {
@@ -40,16 +40,16 @@ describe("TreeSet", () => {
             expect(set.size()).to.equal(0);
         });
     });
-    describe("#contains()", () => {
+    describe("#includes()", () => {
         const set: ISet<Person> = new TreeSet<Person>(ageComparator);
         set.add(person);
         set.add(person2);
         it("should have person2", () => {
-            var contains = set.contains(person2);
+            var contains = set.includes(person2);
             expect(contains).to.eq(true);
         });
         it("should not have person3", () => {
-            var contains = set.contains(person3);
+            var contains = set.includes(person3);
             expect(contains).to.eq(false);
         });
     });

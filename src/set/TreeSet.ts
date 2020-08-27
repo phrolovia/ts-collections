@@ -14,8 +14,8 @@ export class TreeSet<T> implements ISet<T> {
     public clear(): void {
         this.tree.clear();
     }
-    public contains(item: T): boolean {
-        return this.tree.contains(item);
+    public includes(item: T): boolean {
+        return this.tree.includes(item);
     }
     public isEmpty(): boolean {
         return this.tree.isEmpty();

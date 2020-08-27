@@ -24,7 +24,7 @@ export interface ICollection<T> extends Iterable<T> {
      * @param  item Item whose presence is to be checked.
      * @return true if item is in the collection, false otherwise.
      */
-    contains(item: T): boolean;
+    includes(item: T): boolean;
 
     /**
      * Checks whether the collection is empty or not.
@@ -47,7 +47,7 @@ export interface ICollection<T> extends Iterable<T> {
 
     /**
      * Returns an array containing all of the items in the collection.
-     * @return an array that contains all of the items of this collection.
+     * @return an array that includes all of the items of this collection.
      */
     toArray(): T[];
 }
