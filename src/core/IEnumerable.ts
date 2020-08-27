@@ -6,7 +6,7 @@ export interface IEnumerable<T> {
     any(predicate?: (item: T) => boolean): boolean;
     append(item: T): IEnumerable<T>;
     asEnumerable(): IEnumerable<T>;
-    average(predicate?: (item: T, index?: number) => number): number
+    average(predicate?: (item: T, index?: number) => number): number;
     // contains(item: T, comparator?: (item1: T, item2: T) => number): boolean;
     count(predicate?: (item: T) => boolean): number;
     defaultIfEmpty(value?: T): IEnumerable<T>;

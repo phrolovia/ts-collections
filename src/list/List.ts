@@ -63,7 +63,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         if (this.isEmpty()) {
             throw new Error("Sequence contains no elements.");
         }
-        const transformedData = this.data.map((d, dx) => predicate?.(d, dx) ?? d as unknown as number);
+        const transformedData = this.data.map((d, dx) => !!predicate ? predicate(d, dx) : d as unknown as number);
         return new List(transformedData).sum(d => d) / transformedData.length;
     }
 
