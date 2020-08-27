@@ -112,6 +112,13 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return item;
     }
 
+    public distinct(comparer?: (item1: T, item2: T) => number): IEnumerable<T> {
+        if (!comparer) {
+            comparer = AbstractCollection.defaultComparator;
+        }
+        return this.union([], comparer);
+    }
+
     public elementAt(index: number): T {
         if (index < 0 || index >= this.size()) {
             throw new Error("index is out of bounds.");
@@ -600,6 +607,39 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public toList(): IList<T> {
         return new List([...this.data]);
+    }
+
+    public union(enumerable: IEnumerable<T>|Array<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const unionList: IList<T> = new List();
+        const array = enumerable instanceof Array ? enumerable : enumerable.toArray();
+        this.data.forEach(item => {
+            let contains = false;
+            for (const unionItem of unionList.toArray()) {
+                if (comparator(item, unionItem) === 0) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) {
+                unionList.add(item);
+            }
+        });
+        array.forEach(item => {
+            let contains = false;
+            for (const unionItem of unionList.toArray()) {
+                if (comparator(item, unionItem) === 0) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) {
+                unionList.add(item);
+            }
+        });
+        return unionList;
     }
 
     public where(predicate: (item: T) => boolean): IEnumerable<T> {

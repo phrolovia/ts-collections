@@ -53,7 +53,7 @@ class RedBlackNode<T> extends TreeNode<T> {
 }
 
 export class BinarySearchTree<T> extends AbstractTree<T> {
-    public constructor(comparator: Function){
+    public constructor(comparator?: (item1: T, item2: T) => number){
         super(comparator);
         this.root = null;
     }

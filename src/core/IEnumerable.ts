@@ -10,6 +10,7 @@ export interface IEnumerable<T> {
     contains(item: T): boolean;
     count(): number;
     defaultIfEmpty(value?: T): IEnumerable<T>;
+    distinct(comparer?: (item1: T, item2: T) => number): IEnumerable<T>;
     elementAt(index: number): T;
     elementAtOrDefault(index: number): T;
     // except(enumerable: IEnumerable<T>): IEnumerable<T>;
@@ -35,6 +36,7 @@ export interface IEnumerable<T> {
     takeWhile(predicate: (item: T, index?: number) => boolean): IEnumerable<T>;
     toArray(): Array<T>;
     toList(): IList<T>;
+    union(enumerable: IEnumerable<T>|Array<T>, comparator?:  (item1: T, item2: T) => number): IEnumerable<T>;
     where(predicate: (item: T) => boolean): IEnumerable<T>;
     zip<R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U>;
 }

@@ -5,9 +5,9 @@ import { AbstractCollection } from "../core/AbstractCollection";
 export abstract class AbstractTree<T> extends AbstractCollection<T> implements ITree<T> {
     protected comparator: Function = null;
     protected root: INode<T>;
-    protected constructor(comparator: Function) {
+    protected constructor(comparator?: (item1: T, item2: T) => number) {
         super();
-        this.comparator = comparator;
+        this.comparator = comparator ?? AbstractCollection.defaultComparator;
     }
     public clear(): void {
         this.root = null;

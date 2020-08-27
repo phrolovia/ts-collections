@@ -2,11 +2,9 @@ import { ISet } from "./ISet";
 import { BinarySearchTree } from "../tree/BinarySearchTree";
 
 export class TreeSet<T> implements ISet<T> {
-    private comparator: (v1: T, v2: T) => number = (v1: T|any, v2: T|any) => v1-v2;
     private tree: BinarySearchTree<T>;
     public constructor(comparator?: (v1: T, v2: T) => number) {
-        if (comparator) this.comparator = comparator;
-        this.tree = new BinarySearchTree<T>(this.comparator);
+        this.tree = new BinarySearchTree<T>(comparator);
     }
     public add(item: T): boolean {
         if (this.tree.search(item)) return false;

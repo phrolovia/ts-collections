@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
-import { BinaryTree } from "../../src/tree/BinaryTree";
 import {describe, it} from "mocha";
 import {ITree} from "../../src/tree/ITree";
 
@@ -305,7 +304,7 @@ describe("BinarySearchTree", () => {
         });
     });
     describe("#Count getter", () => {
-        const tree: ITree<string> = new BinarySearchTree((s1: string, s2: string) => s1.localeCompare(s2));
+        const tree: ITree<string> = new BinarySearchTree();
         tree.insert("Alice");
         tree.insert("Rei");
         tree.insert("Misaki");
@@ -331,7 +330,7 @@ describe("BinarySearchTree", () => {
         });
     });
     describe("#for-of loop", () => {
-        const tree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+        const tree = new BinarySearchTree<number>();
         tree.insert(50);
         tree.insert(20);
         tree.insert(10);

@@ -341,7 +341,7 @@ describe("BinaryTree", () => {
         });
     });
     describe("#Count getter", () => {
-        const tree: ITree<string> = new BinaryTree((s1: string, s2: string) => s1.localeCompare(s2));
+        const tree: ITree<string> = new BinaryTree();
         tree.insert("Alice");
         tree.insert("Rei");
         tree.insert("Misaki");
@@ -367,7 +367,7 @@ describe("BinaryTree", () => {
         });
     });
     describe("#for-of loop", () => {
-        const tree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+        const tree = new BinaryTree<number>();
         tree.insert(50);
         tree.insert(20);
         tree.insert(10);

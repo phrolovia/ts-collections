@@ -2,7 +2,6 @@ import {ICollection} from "../core/ICollection";
 import {IList} from "../list/IList";
 
 export abstract class Collections {
-    private constructor() {}
     public static addAll<T>(collection: ICollection<T>, ...items: T[]): void {
         if (!collection) {
             throw new Error("Collection is null.");

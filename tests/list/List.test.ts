@@ -3,10 +3,6 @@ import {describe, it} from "mocha";
 import {expect} from "chai";
 import {Person} from "../models/Person";
 import {IList} from "../../src/list/IList";
-import {BinarySearchTree} from "../../src/tree/BinarySearchTree";
-import {ITree} from "../../src/tree/ITree";
-import {BinaryTree} from "../../src/tree/BinaryTree";
-import {IDeque} from "../../src/queue/IDeque";
 
 describe("List", () => {
     const person: Person = new Person("Alice", "Rivermist", 23);
@@ -237,6 +233,21 @@ describe("List", () => {
             expect(newList.size()).to.eq(1);
             expect(newList.get(0)).to.eq(7);
             expect(single).to.eq(1);
+        });
+    });
+    describe("#distinct()", () => {
+        it("should remove duplicate elements", () => {
+            const list = List.from([person, person2, person, person2, person3]);
+            const distinct = list.distinct((p1, p2) => p1.Name.localeCompare(p2.Name));
+            expect(distinct.toArray()).to.deep.equal([person, person2, person3]);
+        });
+        it("should use default comparator if no comparator is provided", () => {
+            const list1 = List.from([1,2,3,1,1,1,4,5,4,3]);
+            const list2 = List.from(["Alice", "Vanessa", "Misaki", "Alice", "Misaki", "Megumi", "Megumi"]);
+            const distinct1 = list1.distinct().toArray();
+            const distinct2 = list2.distinct().toArray();
+            expect(distinct1).to.deep.equal([1,2,3,4,5]);
+            expect(distinct2).to.deep.equal(["Alice", "Vanessa", "Misaki", "Megumi"]);
         });
     });
     describe("#elementAt()", () => {
@@ -1130,6 +1141,20 @@ describe("List", () => {
         for (let ix = 0; ix < list.size(); ++ix) {
             personComparer(ix);
         }
+    });
+    describe("#union()", () => {
+        it("should return a set of items from two lists", () => {
+            const list1 = List.from([1,2,3,4,5,5,5]);
+            const list2 = List.from([4,5,6,7,8,9,7]);
+            const union = list1.union(list2, (n1, n2) => n1 - n2);
+            expect(union.toArray()).to.deep.equal([1,2,3,4,5,6,7,8,9]);
+        });
+        it("should use default comparator if no comparator is provided", () => {
+            const list1 = List.from(["Alice", "Misaki", "Megumi", "Misaki"]);
+            const list2 = List.from(["Alice", "Rei", "Vanessa", "Vanessa", "Yuzuha"]);
+            const union = list1.union(list2);
+            expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
+        });
     });
     describe("#where()", () => {
         it("should throw error ['predicate is null.]", () => {
