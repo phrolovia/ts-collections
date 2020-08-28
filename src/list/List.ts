@@ -311,20 +311,9 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         if (!keyComparator) {
             keyComparator = AbstractCollection.defaultComparator;
         }
-        const keyList = new List<R>();
-        for (const item of this.data) {
-            const key = keyList.where(k => keyComparator(k, keySelector(item)) === 0).singleOrDefault();
-            if (key == null) {
-                keyList.add(keySelector(item));
-            }
-        }
-        const groupList: List<IGrouping<R, T>> = new List<IGrouping<R, T>>();
-        for (const key of keyList) {
-            const groupData = this.where(d => keyComparator(key, keySelector(d)) === 0).toArray();
-            const group = new Grouping(key, groupData);
-            groupList.add(group);
-        }
-        return groupList;
+        return this.select(d => keySelector(d))
+            .distinct(keyComparator)
+            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)) === 0).toArray()));
     }
 
     public includes(item: T): boolean {
