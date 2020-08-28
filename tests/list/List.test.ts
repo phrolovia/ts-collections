@@ -3,6 +3,8 @@ import {describe, it} from "mocha";
 import {expect} from "chai";
 import {Person} from "../models/Person";
 import {IList} from "../../src/list/IList";
+import {School} from "../models/School";
+import {Student} from "../models/Student";
 
 describe("List", () => {
     const person: Person = new Person("Alice", "Rivermist", 23);
@@ -556,7 +558,6 @@ describe("List", () => {
             for (const g in groupedAges) {
                 const sameAges = groupedAges[g];
                 const expectedAges = new Array(sameAges.length).fill(sameAges[0]);
-                console.log("g: ", sameAges);
                 expect(sameAges).to.deep.equal(expectedAges);
             }
         });
@@ -567,7 +568,6 @@ describe("List", () => {
         });
         it("should use provided comparator", () => {
             const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1.localeCompare(n2)).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
-            console.log(shortNamedPeople);
             expect(shortNamedPeople.length).to.eq(2);
             expect(shortNamedPeople).to.have.all.members([person2, person5]);
         });
@@ -648,6 +648,41 @@ describe("List", () => {
             const list2 = List.from([person2, person4, person5]);
             const elist = list1.intersect(list2, (p1, p2) => p1.Name.localeCompare(p2.Name));
             expect(elist.toArray()).to.deep.equal([person2, person4, person5]);
+        });
+    });
+    describe("#join()", () => {
+        const school1 = new School(1, "Elementary School");
+        const school2 = new School(2, "High School");
+        const school3 = new School(3, "University");
+        const desiree = new Student(100, "Desireé", "Moretti", 3);
+        const apolline = new Student(200, "Apolline", "Bruyere", 2);
+        const giselle = new Student(300, "Giselle", "García", 2);
+        const priscilla = new Student(400, "Priscilla", "Necci", 1);
+        const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
+        const schools = List.from([school1, school2, school3]);
+        const students = List.from([desiree, apolline, giselle, priscilla, lucrezia]);
+        it("should join students and schools", () => {
+            const joinedData = students.join(schools, st => st.SchoolId, sc => sc.Id,
+                (student, school) => `${student.Name} ${student.Surname} :: ${school.Name}`).toList();
+            const expectedOutputDataList = [
+                "Desireé Moretti :: University",
+                "Apolline Bruyere :: High School",
+                "Giselle García :: High School",
+                "Priscilla Necci :: Elementary School"
+            ];
+            expect(joinedData.size()).to.eq(4);
+            expect(joinedData.toArray()).to.deep.equal(expectedOutputDataList);
+        });
+        it("should set null for school if left join is true", () => {
+            const joinedData = students.join(schools, st => st.SchoolId, sc => sc.Id,
+                (student,  school) => [student, school], (stid, scid) => stid - scid, true).toArray();
+            for (const jd of joinedData) {
+                if((jd[0] as Student).Surname === "Volpe") {
+                    expect(jd[1]).to.eq(null);
+                } else {
+                    expect(jd[1]).to.not.eq(null);
+                }
+            }
         });
     });
     describe("#last()", () => {
@@ -1080,7 +1115,6 @@ describe("List", () => {
         const list = List.from([1, 2, 3, 4, 5, 6, 7]);
         it("should return a list with elements [5,6,7]", () => {
             const list2 = list.skip(4).toList();
-            console.log(list2.toArray());
             expect(list2.get(0)).to.eq(5);
             expect(list2.get(1)).to.eq(6);
             expect(list2.get(2)).to.eq(7);

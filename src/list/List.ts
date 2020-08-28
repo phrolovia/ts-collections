@@ -362,6 +362,24 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.data.length === 0;
     }
 
+    public join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: (item: T) => K, innerKeySelector: (item: E) => K,
+                         resultSelector: (outerItem: T, innerItem: E) => R,
+                         keyComparator?: (item1: K, item2: K) => number, leftJoin: boolean = false): IEnumerable<R> {
+        if (!keyComparator) {
+            keyComparator = AbstractCollection.defaultComparator;
+        }
+        const resultList: IList<R> = new List();
+        for (let odata of this.data) {
+            const outerEntries = enumerable.where(idata => keyComparator(outerKeySelector(odata), innerKeySelector(idata)) === 0);
+            if (leftJoin && !outerEntries.any()) {
+                resultList.add(resultSelector(odata, null));
+            } else {
+                outerEntries.toArray().forEach(o => resultList.add(resultSelector(odata, o)));
+            }
+        }
+        return resultList;
+    }
+
     public last(predicate?: (item: T) => boolean): T {
         if (this.isEmpty()) {
             throw new Error("Sequence contains no elements.");
@@ -635,7 +653,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public sort(comparer?: (e1: T, e2: T) => number): void {
         if (!comparer) {
-            comparer = (e1: T, e2: T) => e1 > e2 ? 1 : -1;
+            comparer = AbstractCollection.defaultComparator;
         }
         this.data.sort(comparer);
     }
