@@ -7,6 +7,8 @@ import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
 import {IEnumerable} from "../core/IEnumerable";
+import {IGrouping} from "../core/IGrouping";
+import {Grouping} from "../core/Grouping";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data: T[] = [];
@@ -303,6 +305,26 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
         }
         return this.data[index];
+    }
+
+    public groupBy<R>(keySelector: (item: T) => R, keyComparator?: (item1: R, item2: R) => number): IEnumerable<IGrouping<R, T>> {
+        if (!keyComparator) {
+            keyComparator = AbstractCollection.defaultComparator;
+        }
+        const keyList = new List<R>();
+        for (const item of this.data) {
+            const key = keyList.where(k => keyComparator(k, keySelector(item)) === 0).singleOrDefault();
+            if (key == null) {
+                keyList.add(keySelector(item));
+            }
+        }
+        const groupList: List<IGrouping<R, T>> = new List<IGrouping<R, T>>();
+        for (const key of keyList) {
+            const groupData = this.where(d => keyComparator(key, keySelector(d)) === 0).toArray();
+            const group = new Grouping(key, groupData);
+            groupList.add(group);
+        }
+        return groupList;
     }
 
     public includes(item: T): boolean {

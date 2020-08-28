@@ -1,4 +1,5 @@
 import {IList} from "../list/IList";
+import {IGrouping} from "./IGrouping";
 
 export interface IEnumerable<T> {
     aggregate<R>(accumulator: (acc: R, item: T) => R, seed?: R): R;
@@ -17,6 +18,7 @@ export interface IEnumerable<T> {
     except(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T>;
     first(predicate?: (item: T) => boolean): T;
     firstOrDefault(predicate?: (item: T) => boolean): T;
+    groupBy<R>(keySelector: (item: T) => R, keyComparator?: (item1: R, item2: R) => number): IEnumerable<IGrouping<R, T>>;
     intersect(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<any>;
     last(predicate?: (item: T) => boolean): T;
     lastOrDefault(predicate?: (item: T) => boolean): T;

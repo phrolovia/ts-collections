@@ -537,6 +537,41 @@ describe("List", () => {
             expect(p).to.eq(null);
         });
     });
+    describe("#groupBy()", () => {
+        const reina = new Person("Reina", "Karuizawa", 23);
+        const karen = new Person("Karen", "Furuya", 10);
+        const list = List.from([person, person2, person3, person4, person5, karen, reina]);
+        it("should group people by age", () => {
+            const group = list.groupBy(p => p.Age).toList();
+            const ages: number[] = [];
+            const groupedAges: { [age: number]: number[] } = {};
+            for (const ageGroup of group) {
+                ages.push(ageGroup.key);
+                groupedAges[ageGroup.key] ??= [];
+                for(const pdata of ageGroup.data) {
+                    groupedAges[ageGroup.key].push(pdata.Age);
+                }
+            }
+            expect(ages).to.have.all.members([9, 10, 16, 23]);
+            for (const g in groupedAges) {
+                const sameAges = groupedAges[g];
+                const expectedAges = new Array(sameAges.length).fill(sameAges[0]);
+                console.log("g: ", sameAges);
+                expect(sameAges).to.deep.equal(expectedAges);
+            }
+        });
+        it("should return people who are younger than 16", () => {
+            const kids = list.groupBy(p => p.Age).where(pg => pg.key < 16).selectMany(g => g.data).toArray();
+            expect(kids.length).to.eq(3);
+            expect(kids).to.have.all.members([karen, person2, person3]);
+        });
+        it("should use provided comparator", () => {
+            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1.localeCompare(n2)).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
+            console.log(shortNamedPeople);
+            expect(shortNamedPeople.length).to.eq(2);
+            expect(shortNamedPeople).to.have.all.members([person2, person5]);
+        });
+    });
     describe("#includes()", () => {
         const list: IList<Person> = new List<Person>();
         list.add(person);
