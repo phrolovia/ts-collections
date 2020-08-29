@@ -1,5 +1,6 @@
 import {IList} from "../list/IList";
 import {IGrouping} from "./IGrouping";
+import {IOrderedEnumerable} from "./IOrderedEnumerable";
 
 export interface IEnumerable<T> {
     aggregate<R>(accumulator: (acc: R, item: T) => R, seed?: R): R;
@@ -26,6 +27,8 @@ export interface IEnumerable<T> {
     lastOrDefault(predicate?: (item: T) => boolean): T;
     max(predicate: (item: T, index?: number) => number): number;
     min(predicate: (item: T, index?: number) => number): number;
+    orderBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T>;
+    orderByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T>;
     prepend(item: T): IEnumerable<T>;
     repeat(item: T, count: number): IEnumerable<T>;
     reverse(): IEnumerable<T>;

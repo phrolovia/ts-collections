@@ -9,9 +9,14 @@ import {AbstractCollection} from "../core/AbstractCollection";
 import {IEnumerable} from "../core/IEnumerable";
 import {IGrouping} from "../core/IGrouping";
 import {Grouping} from "../core/Grouping";
+import {IOrderedEnumerable} from "../core/IOrderedEnumerable";
+
+type OrderActions = { selector: Function, comparator: Function, direction: OrderDirection };
+enum OrderDirection { Ascending = 1, Descending = -1};
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data: T[] = [];
+    private orderActions: Array<OrderActions> = new Array<OrderActions>();
 
     public constructor(data?: T[]) {
         super();
@@ -427,6 +432,28 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return min;
     }
 
+    public orderBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)));;
+        const sortedList = new List<T>(sortedData);
+        this.orderActions.length = 0;
+        sortedList.addOrderAction({ selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending });
+        return sortedList;
+    }
+
+    public orderByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)) * OrderDirection.Descending );;
+        const sortedList = new List<T>(sortedData);
+        this.orderActions.length = 0;
+        sortedList.addOrderAction({ selector: keySelector, comparator: comparator, direction: OrderDirection.Descending });
+        return sortedList;
+    }
+
     public peek(): T {
         if (this.isEmpty()) {
             return null;
@@ -522,7 +549,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return new List(this.data.map(predicate));
     }
 
-    public selectMany<R>(predicate: (item: T, index?: number) => IEnumerable<R>|Array<R>): IEnumerable<R> {
+    public selectMany<R>(predicate: (item: T, index?: number) => IEnumerable<R> | Array<R>): IEnumerable<R> {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -691,6 +718,30 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return new List(this.take(endIndex).toArray());
     }
 
+    public thenBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending };
+        const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
+        const sortedData = [...this.data].sort((d1, d2) => allOrderActions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
+        const sortedList = new List<T>(sortedData);
+        sortedList.addOrderAction(allOrderActions);
+        return sortedList;
+    }
+
+    public thenByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
+        }
+        const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Descending };
+        const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
+        const sortedData = [...this.data].sort((d1, d2) => allOrderActions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
+        const sortedList = new List<T>(sortedData);
+        sortedList.addOrderAction(allOrderActions);
+        return sortedList;
+    }
+
     public toArray(): T[] {
         return [...this.data];
     }
@@ -699,7 +750,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return new List([...this.data]);
     }
 
-    public union(enumerable: IEnumerable<T>|Array<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
+    public union(enumerable: IEnumerable<T> | Array<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
         if (!comparator) {
             comparator = AbstractCollection.defaultComparator;
         }
@@ -759,6 +810,16 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             list.add(zipper(left, right));
         }
         return list.asEnumerable();
+    }
+
+    /**
+     * Used by order operations internally. Do not use it.
+     * @param action
+     * @protected
+     */
+    protected addOrderAction(action: OrderActions|OrderActions[]): void {
+        action = action instanceof Array ? action : [action];
+        action.forEach(a => this.orderActions.push(a));
     }
 
     * [Symbol.iterator](): Iterator<T> {
