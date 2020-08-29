@@ -321,6 +321,20 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)) === 0).toArray()));
     }
 
+    public groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: (item: T) => K, innerKeySelector: (item: E) => K,
+                              resultSelector: (key: K, data: IEnumerable<E>) => R,
+                              keyComparator?: (item1: K, item2: K) => number): IEnumerable<R> {
+        if (!keyComparator) {
+            keyComparator = AbstractCollection.defaultComparator;
+        }
+        const resultList: IList<R> = new List();
+        for (let odata of this.data) {
+            const joinedEntries = enumerable.where(idata => keyComparator(outerKeySelector(odata), innerKeySelector(idata)) === 0);
+            resultList.add(resultSelector(outerKeySelector(odata), joinedEntries));
+        }
+        return resultList;
+    }
+
     public includes(item: T): boolean {
         return this.indexOf(item) > -1;
     }

@@ -6,6 +6,7 @@ import {IList} from "../../src/list/IList";
 import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
+import {SchoolStudents} from "../models/SchoolStudents";
 
 describe("List", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -592,6 +593,45 @@ describe("List", () => {
             const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1.localeCompare(n2)).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
             expect(shortNamedPeople.length).to.eq(2);
             expect(shortNamedPeople).to.have.all.members([mel, jane]);
+        });
+    });
+    describe("#groupJoin()", () => {
+        const school1 = new School(1, "Elementary School");
+        const school2 = new School(2, "High School");
+        const school3 = new School(3, "University");
+        const school4 = new School(5, "Academy");
+        const desiree = new Student(100, "Desireé", "Moretti", 3);
+        const apolline = new Student(200, "Apolline", "Bruyere", 2);
+        const giselle = new Student(300, "Giselle", "García", 2);
+        const priscilla = new Student(400, "Priscilla", "Necci", 1);
+        const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
+        const schools = List.from([school1, school2, school3, school4]);
+        const students = List.from([desiree, apolline, giselle, priscilla, lucrezia]);
+        it("should join and group by school id", () => {
+            const joinedData = schools.groupJoin(students, sc => sc.Id, st => st.SchoolId,
+                (schoolId, students) => {
+                    return new SchoolStudents(schoolId, students.toList());
+                }).orderByDescending(ss => ss.Students.size());
+            const finalData = joinedData.toArray();
+            const finalOutput: string[] = [];
+            for (const sd of finalData) {
+                const school = schools.where(s => s.Id === sd.SchoolId).single();
+                finalOutput.push(`Students of ${school.Name}: `);
+                for (const student of sd.Students) {
+                    finalOutput.push(`[${student.Id}] :: ${student.Name} ${student.Surname}`);
+                }
+            }
+            const expectedOutput: string[] = [
+                "Students of High School: ",
+                "[200] :: Apolline Bruyere",
+                "[300] :: Giselle García",
+                "Students of Elementary School: ",
+                "[400] :: Priscilla Necci",
+                "Students of University: ",
+                "[100] :: Desireé Moretti",
+                "Students of Academy: "
+            ];
+            expect(finalOutput).to.deep.equal(expectedOutput);
         });
     });
     describe("#includes()", () => {
@@ -1349,7 +1389,7 @@ describe("List", () => {
                 "[43] :: Noemi Waterfox",
                 "[44] :: Julia Watson",
                 "[44] :: Megan Watson",
-                "[77] :: Olga Byakova",
+                "[77] :: Olga Byakova"
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toList()) {
@@ -1488,7 +1528,7 @@ describe("List", () => {
                 "[20] :: Hanna Jackson",
                 "[19] :: Elizabeth Jackson",
                 "[19] :: Hanna Jackson",
-                "[9] :: Priscilla Necci",
+                "[9] :: Priscilla Necci"
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toList()) {

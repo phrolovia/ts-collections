@@ -23,6 +23,9 @@ export interface IEnumerable<T> {
     intersect(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<any>;
     join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: (item: T) => K, innerKeySelector: (item: E) => K,
                   resultSelector: (outerItem: T, innerItem: E) => R, keyComparator?: (item1: K, item2: K) => number, leftJoin?: boolean): IEnumerable<R>;
+    groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: (item: T) => K, innerKeySelector: (item: E) => K,
+                       resultSelector: (key: K, data: IEnumerable<E>) => R,
+                       keyComparator?: (item1: K, item2: K) => number): IEnumerable<R>;
     last(predicate?: (item: T) => boolean): T;
     lastOrDefault(predicate?: (item: T) => boolean): T;
     max(predicate: (item: T, index?: number) => number): number;
