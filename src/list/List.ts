@@ -6,10 +6,10 @@ import {InvalidOperationException} from "../exceptions/InvalidOperationException
 import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
-import {IEnumerable} from "../core/IEnumerable";
-import {IGrouping} from "../core/IGrouping";
-import {Grouping} from "../core/Grouping";
-import {IOrderedEnumerable} from "../core/IOrderedEnumerable";
+import {IEnumerable} from "../enumerable/IEnumerable";
+import {IGrouping} from "../enumerable/IGrouping";
+import {Grouping} from "../enumerable/Grouping";
+import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
 
 type OrderActions = { selector: Function, comparator: Function, direction: OrderDirection };
 enum OrderDirection { Ascending = 1, Descending = -1};

@@ -8,17 +8,18 @@
     "umd:main": "dist/index.umd.js",
     "private": false,
     "scripts": {
-        "build": "microbundle -i index.ts",
+        "build": "webpack",
         "docs": "typedoc --out ./docs/ index.ts -m commonjs -t ES6",
         "prebuild": "rimraf dist",
         "postbuild": "rimraf .rts2_*",
-        "start": "microbundle watch -i index.ts",
         "test": "nyc _mocha --require ts-node/register --recursive tests/**/*.test.*"
     },
     "keywords": [
         "typescript",
         "collections",
-        "data structures"
+        "data structures",
+        "enumerable",
+        "linq"
     ],
     "author": "discordelia",
     "license": "MIT",
@@ -37,8 +38,11 @@
         "nyc": "^15.1.0",
         "rimraf": "^3.0.2",
         "source-map-support": "^0.5.19",
+        "ts-loader": "^8.0.3",
         "ts-node": "^9.0.0",
         "typedoc": "^0.18.0",
-        "typescript": "^4.0.2"
+        "typescript": "^4.0.2",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12"
     }
 }
