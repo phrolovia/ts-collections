@@ -1,16 +1,17 @@
 import { ICollection } from "../core/ICollection";
+import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
 
-export interface IList<T> extends ICollection<T> {
+export interface IList<T> extends ICollection<T>, IOrderedEnumerable<T> {
     /**
      * Retrieves the item at the index.
      * @param  index The index from which the element will be retrieved.
      * @return the item at the given index.
-     * @throws 
+     * @throws
      *      ArgumentNullException if index is null
      *      ArgumentOutOfRangeException if index is less than 0 or greated than list size.
      */
     get(index: number): T;
-    
+
     /**
      * Finds the index of the given item in the list.
      * @param  item Item whose index to be found.
@@ -33,7 +34,7 @@ export interface IList<T> extends ICollection<T> {
      * @throws ArgumentOutOfRangeException if index is less than zer or greater than the size.
      */
     removeAt(index: number): void;
-    
+
     /**
      * Replaces the item at the given index.
      * @param  index Index of the item that will be replaced with the given item.

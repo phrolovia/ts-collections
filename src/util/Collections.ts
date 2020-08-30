@@ -2,7 +2,6 @@ import {ICollection} from "../core/ICollection";
 import {IList} from "../list/IList";
 
 export abstract class Collections {
-    private constructor() {}
     public static addAll<T>(collection: ICollection<T>, ...items: T[]): void {
         if (!collection) {
             throw new Error("Collection is null.");
@@ -17,7 +16,7 @@ export abstract class Collections {
             throw new Error("c2 is null.");
         }
         for (const item1 of c1) {
-            if (c2.contains(item1)) {
+            if (c2.includes(item1)) {
                 return false;
             }
         }

@@ -2,7 +2,7 @@ import { AbstractTree } from "./AbstractTree";
 import { TreeNode } from "./TreeNode";
 import {INode} from "./INode";
 export class BinaryTree<T> extends AbstractTree<T> {
-    public constructor(comparator: Function) {
+    public constructor(comparator?: (item1: T, item2: T) => number) {
         super(comparator);
         this.root = null;
     }

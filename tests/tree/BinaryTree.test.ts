@@ -63,19 +63,6 @@ describe("BinaryTree", () => {
             expect(tree.getRootData()).to.eq(person);
         });
     });
-    describe("#contains()", () => {
-        const tree = new BinaryTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        it("should return true", () => {
-            expect(tree.contains(person3)).to.eq(true);
-        });
-        it("should return false", () => {
-            expect(tree.contains(person4)).to.eq(false);
-        });
-    });
     describe("#delete()", () => {
         const tree = new BinaryTree<Person>(nameComparator);
             tree.insert(person);
@@ -179,6 +166,19 @@ describe("BinaryTree", () => {
             tree.insert(person2);
             tree.insert(person3);
             expect(tree.size()).to.eq(3);
+        });
+    });
+    describe("#includes()", () => {
+        const tree = new BinaryTree<Person>(ageComparator);
+        tree.insert(person);
+        tree.insert(person2);
+        tree.insert(person3);
+        tree.insert(person5);
+        it("should return true", () => {
+            expect(tree.includes(person3)).to.eq(true);
+        });
+        it("should return false", () => {
+            expect(tree.includes(person4)).to.eq(false);
         });
     });
     describe("#insert()", () => {
@@ -341,7 +341,7 @@ describe("BinaryTree", () => {
         });
     });
     describe("#Count getter", () => {
-        const tree: ITree<string> = new BinaryTree((s1: string, s2: string) => s1.localeCompare(s2));
+        const tree: ITree<string> = new BinaryTree();
         tree.insert("Alice");
         tree.insert("Rei");
         tree.insert("Misaki");
@@ -367,7 +367,7 @@ describe("BinaryTree", () => {
         });
     });
     describe("#for-of loop", () => {
-        const tree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+        const tree = new BinaryTree<number>();
         tree.insert(50);
         tree.insert(20);
         tree.insert(10);

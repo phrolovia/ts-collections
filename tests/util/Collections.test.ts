@@ -11,6 +11,7 @@ import {ITree} from "../../src/tree/ITree";
 import {BinarySearchTree} from "../../src/tree/BinarySearchTree";
 import {BinaryTree} from "../../src/tree/BinaryTree";
 import {IList} from "../../src/list/IList";
+import {IQueue} from "../../src/queue/IQueue";
 
 describe("Collections", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -25,20 +26,20 @@ describe("Collections", () => {
             const set: ISet<number> = new TreeSet<number>();
             Collections.addAll(set, 1, 2, 3, 4, 5);
             expect(set.Count).to.eq(5);
-            expect(set.contains(1)).to.eq(true);
-            expect(set.contains(2)).to.eq(true);
-            expect(set.contains(3)).to.eq(true);
-            expect(set.contains(4)).to.eq(true);
-            expect(set.contains(5)).to.eq(true);
+            expect(set.includes(1)).to.eq(true);
+            expect(set.includes(2)).to.eq(true);
+            expect(set.includes(3)).to.eq(true);
+            expect(set.includes(4)).to.eq(true);
+            expect(set.includes(5)).to.eq(true);
         });
         it("should add items to the collection (deque)", () => {
             const deque: IDeque<Person> = new List<Person>();
             Collections.addAll(deque, person, person2, person4);
             expect(deque.Count).to.eq(3);
-            expect(deque.contains(person)).to.eq(true);
-            expect(deque.contains(person2)).to.eq(true);
-            expect(deque.contains(person3)).to.eq(false);
-            expect(deque.contains(person4)).to.eq(true);
+            expect(deque.includes(person)).to.eq(true);
+            expect(deque.includes(person2)).to.eq(true);
+            expect(deque.includes(person3)).to.eq(false);
+            expect(deque.includes(person4)).to.eq(true);
         });
         it("should throw error", () => {
             expect(() => Collections.addAll(null, 1, 2, 3)).to.throw("Collection is null.");

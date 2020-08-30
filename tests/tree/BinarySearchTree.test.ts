@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { BinarySearchTree } from "../../src/tree/BinarySearchTree";
-import { BinaryTree } from "../../src/tree/BinaryTree";
 import {describe, it} from "mocha";
 import {ITree} from "../../src/tree/ITree";
 
@@ -58,19 +57,6 @@ describe("BinarySearchTree", () => {
             tree.insert(person);
             expect(tree.size()).to.eq(1);
             expect(tree.getRootData()).to.eq(person);
-        });
-    });
-    describe("#contains()", () => {
-        const tree = new BinarySearchTree<Person>(ageComparator);
-            tree.insert(person);
-            tree.insert(person2);
-            tree.insert(person3);
-            tree.insert(person5);
-        it("should return true", () => {
-            expect(tree.contains(person3)).to.eq(true);
-        });
-        it("should return false", () => {
-            expect(tree.contains(person4)).to.eq(false);
         });
     });
     describe("#delete()", () => {
@@ -173,6 +159,19 @@ describe("BinarySearchTree", () => {
             tree.insert(person2);
             tree.insert(person3);
             expect(tree.size()).to.eq(3);
+        });
+    });
+    describe("#includes()", () => {
+        const tree = new BinarySearchTree<Person>(ageComparator);
+        tree.insert(person);
+        tree.insert(person2);
+        tree.insert(person3);
+        tree.insert(person5);
+        it("should return true", () => {
+            expect(tree.includes(person3)).to.eq(true);
+        });
+        it("should return false", () => {
+            expect(tree.includes(person4)).to.eq(false);
         });
     });
     describe("#insert()", () => {
@@ -305,7 +304,7 @@ describe("BinarySearchTree", () => {
         });
     });
     describe("#Count getter", () => {
-        const tree: ITree<string> = new BinarySearchTree((s1: string, s2: string) => s1.localeCompare(s2));
+        const tree: ITree<string> = new BinarySearchTree();
         tree.insert("Alice");
         tree.insert("Rei");
         tree.insert("Misaki");
@@ -331,7 +330,7 @@ describe("BinarySearchTree", () => {
         });
     });
     describe("#for-of loop", () => {
-        const tree = new BinaryTree<number>((n1: number, n2: number) => n1-n2);
+        const tree = new BinarySearchTree<number>();
         tree.insert(50);
         tree.insert(20);
         tree.insert(10);

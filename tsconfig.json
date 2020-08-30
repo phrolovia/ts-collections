@@ -3,6 +3,15 @@
         "esModuleInterop": true,
         "target": "es5",
         "downlevelIteration": true,
-        "declaration": true
-    }
+        "declaration": true,
+        "noImplicitAny": true,
+        "preserveConstEnums": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "outDir": "./dist"
+    },
+    "exclude": [
+        "node_modules",
+        "tests"
+    ]
 }
