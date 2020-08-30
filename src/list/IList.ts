@@ -1,5 +1,5 @@
 import { ICollection } from "../core/ICollection";
-import {IOrderedEnumerable} from "../core/IOrderedEnumerable";
+import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
 
 export interface IList<T> extends ICollection<T>, IOrderedEnumerable<T> {
     /**
