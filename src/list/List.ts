@@ -8,7 +8,7 @@ import {Grouping} from "../enumerable/Grouping";
 import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
 
 type OrderActions = { selector: Function, comparator: Function, direction: OrderDirection };
-enum OrderDirection { Ascending = 1, Descending = -1};
+enum OrderDirection { Ascending = 1, Descending = -1}
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private data: T[] = [];
@@ -446,7 +446,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         if (!comparator) {
             comparator = AbstractCollection.defaultComparator;
         }
-        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)));;
+        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)));
         const sortedList = new List<T>(sortedData);
         this.orderActions.length = 0;
         sortedList.addOrderAction({ selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending });
@@ -457,7 +457,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         if (!comparator) {
             comparator = AbstractCollection.defaultComparator;
         }
-        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)) * OrderDirection.Descending );;
+        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)) * OrderDirection.Descending );
         const sortedList = new List<T>(sortedData);
         this.orderActions.length = 0;
         sortedList.addOrderAction({ selector: keySelector, comparator: comparator, direction: OrderDirection.Descending });
@@ -750,7 +750,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return [...this.data];
     }
 
-    public toList(): IList<T> {
+    public toList(): List<T> {
         return new List([...this.data]);
     }
 

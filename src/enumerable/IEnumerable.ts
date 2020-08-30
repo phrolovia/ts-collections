@@ -1,6 +1,6 @@
-import {IList} from "../list/IList";
 import {IGrouping} from "./IGrouping";
 import {IOrderedEnumerable} from "./IOrderedEnumerable";
+import {List} from "../list/List";
 
 export interface IEnumerable<T> {
     aggregate<R>(accumulator: (acc: R, item: T) => R, seed?: R): R;
@@ -48,7 +48,7 @@ export interface IEnumerable<T> {
     takeLast(count: number): IEnumerable<T>;
     takeWhile(predicate: (item: T, index?: number) => boolean): IEnumerable<T>;
     toArray(): Array<T>;
-    toList(): IList<T>;
+    toList(): List<T>;
     union(enumerable: IEnumerable<T>|Array<T>, comparator?:  (item1: T, item2: T) => number): IEnumerable<T>;
     where(predicate: (item: T) => boolean): IEnumerable<T>;
     zip<R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U>;
