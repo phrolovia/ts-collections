@@ -8,7 +8,7 @@ export interface IList<T> extends ICollection<T>, IOrderedEnumerable<T> {
      * @return the item at the given index.
      * @throws
      *      ArgumentNullException if index is null
-     *      ArgumentOutOfRangeException if index is less than 0 or greated than list size.
+     *      ArgumentOutOfRangeException if index is less than 0 or greater than list size.
      */
     get(index: number): T;
 

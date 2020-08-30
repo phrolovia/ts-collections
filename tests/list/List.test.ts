@@ -340,7 +340,7 @@ describe("List", () => {
             var exists = list.exists(p => p && p.Age === 99);
             expect(exists).to.eq(false);
         });
-        it("should throw ArgumentNullException ['predicate is null.]", () => {
+        it("should throw error ['predicate is null.]", () => {
             expect(() => list.exists(null)).to.throw("predicate is null.");
         });
     });
@@ -381,16 +381,16 @@ describe("List", () => {
         list.add(senna);
         list.add(jane);
         list.add(null);
-        it("should throw ArgumentNullException ['predicate is null.]", () => {
+        it("should throw error ['predicate is null.]", () => {
             expect(() => list.findIndex(null)).to.throw("predicate is null.");
         });
-        it("should throw ArgumentOutOfRangeException ['startIndex is not a valid index.]", () => {
+        it("should throw error ['startIndex is not a valid index.]", () => {
             expect(() => list.findIndex(p => p.Age > 9, -1)).to.throw("startIndex is not a valid index.");
         });
-        it("should throw ArgumentOutOfRangeException ['count is less than 0.]", () => {
+        it("should throw error ['count is less than 0.]", () => {
             expect(() => list.findIndex(p => p.Age > 9, 1, -7)).to.throw("count is less than 0.");
         });
-        it("should throw ArgumentOutOfRangeException ['startIndex and count do not specify a valid section in the list.]", () => {
+        it("should throw error ['startIndex and count do not specify a valid section in the list.]", () => {
             expect(() => list.findIndex(p => p.Age > 9, 2, 5)).to.throw("startIndex and count do not specify a valid section in the list.");
         });
         it("should return 2", () => {
@@ -419,7 +419,7 @@ describe("List", () => {
         list.add(mel);
         list.add(null);
         list.add(jane);
-        it("should throw ArgumentNullException ['predicate is null.]", () => {
+        it("should throw error ['predicate is null.]", () => {
             expect(() => list.findLast(null)).to.throw("predicate is null.");
         });
         it("should be person with name Jane", () => {
@@ -443,16 +443,16 @@ describe("List", () => {
         list.add(senna);
         list.add(jane);
         list.add(null);
-        it("should throw ArgumentNullException ['predicate is null.]", () => {
+        it("should throw error ['predicate is null.]", () => {
             expect(() => list.findLastIndex(null)).to.throw("predicate is null.");
         });
-        it("should throw ArgumentOutOfRangeException ['startIndex is not a valid index.]", () => {
+        it("should throw error ['startIndex is not a valid index.]", () => {
             expect(() => list.findLastIndex(p => p.Age > 9, -1)).to.throw("startIndex is not a valid index.");
         });
-        it("should throw ArgumentOutOfRangeException ['count is less than 0.]", () => {
+        it("should throw error ['count is less than 0.]", () => {
             expect(() => list.findLastIndex(p => p.Age > 9, 1, -7)).to.throw("count is less than 0.");
         });
-        it("should throw ArgumentOutOfRangeException ['startIndex and count do not specify a valid section in the list.]", () => {
+        it("should throw error ['startIndex and count do not specify a valid section in the list.]", () => {
             expect(() => list.findLastIndex(p => p.Age > 9, 2, 5)).to.throw("startIndex and count do not specify a valid section in the list.");
         });
         it("should return 3", () => {
@@ -528,7 +528,7 @@ describe("List", () => {
         list.add(null);
         list.add(lenka);
         list.add(jane);
-        it("should throw ArgumentNullException ['predicate is null.]", () => {
+        it("should throw error ['predicate is null.]", () => {
             expect(() => list.forEach(null)).to.throw("action is null.");
         });
         it("should increase the age of all people by 1", () => {
@@ -546,13 +546,13 @@ describe("List", () => {
         list.add(null);
         list.add(lenka);
         list.add(jane);
-        it("should throw ArgumentNullException ['index is null.]", () => {
+        it("should throw error ['index is null.]", () => {
             expect(() => list.get(null)).to.throw("index is null.");
         });
-        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+        it("should throw error ['index is less than 0.]", () => {
             expect(() => list.get(-1)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.size()}.]`, () => {
+        it(`should throw error ['index is greater than ${list.size()}.]`, () => {
             expect(() => list.get(list.size())).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with name Mel", () => {
@@ -678,10 +678,10 @@ describe("List", () => {
         list.add(senna);
         list.add(null);
         list.add(jane);
-        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+        it("should throw error ['index is less than 0.]", () => {
             expect(() => list.insert(-1, mel)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.size()}.]`, () => {
+        it(`should throw error ['index is greater than ${list.size()}.]`, () => {
             expect(() => list.insert(list.size(), mel)).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with name Mel", () => {
@@ -926,7 +926,7 @@ describe("List", () => {
         list.add(mel);
         list.add(null);
         list.add(jane);
-        it("should throw ArgumentNullException ['predicate is null.]", () => {
+        it("should throw error ['predicate is null.]", () => {
             expect(() => list.removeAll(null)).to.throw("predicate is null.");
         });
         var removedCount = list.removeAll(p => p && p.Age < 16);
@@ -944,10 +944,10 @@ describe("List", () => {
         list.add(senna);
         list.add(null);
         list.add(jane);
-        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+        it("should throw error ['index is less than 0.]", () => {
             expect(() => list.removeAt(-1)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than ${list.size()}.]`, () => {
+        it(`should throw error ['index is greater than ${list.size()}.]`, () => {
             expect(() => list.removeAt(list.size())).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with name Jane at index 2", () => {
@@ -966,13 +966,13 @@ describe("List", () => {
         list.add(senna);
         list.add(null);
         list.add(jane);
-        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+        it("should throw error ['index is less than 0.]", () => {
             expect(() => list.removeRange(-1, 2)).to.throw("index is less than 0.");
         });
-        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+        it("should throw error ['index is less than 0.]", () => {
             expect(() => list.removeRange(1, -1)).to.throw("count is less than 0.");
         });
-        it(`should throw ArgumentException ['index and count do not denote a valid range of elements in the list.']`, () => {
+        it(`should throw error ['index and count do not denote a valid range of elements in the list.']`, () => {
             expect(() => list.removeRange(1, 4)).to.throw(`index and count do not denote a valid range of elements in the list.`);
         });
         it("should set the count to 2 after remove", () => {
@@ -1106,10 +1106,10 @@ describe("List", () => {
         list.add(senna);
         list.add(null);
         list.add(jane);
-        it("should throw ArgumentOutOfRangeException ['index is less than 0.]", () => {
+        it("should throw error ['index is less than 0.]", () => {
             expect(() => list.set(-1, mel)).to.throw("index is less than 0.");
         });
-        it(`should throw ArgumentOutOfRangeException ['index is greater than or equal to ${list.size()}.]`, () => {
+        it(`should throw error ['index is greater than or equal to ${list.size()}.]`, () => {
             expect(() => list.set(list.size(), mel)).to.throw(`index is greater than or equal to ${list.size()}.`);
         });
         it("should equal to a person with surname Bluesky at index 2", () => {

@@ -1,8 +1,4 @@
 import {IList} from "./IList";
-import {ArgumentNullException} from "../exceptions/ArgumentNullException";
-import {ArgumentOutOfRangeException} from "../exceptions/ArgumentOutOfRangeException";
-import {ArgumentException} from "../exceptions/ArgumentException";
-import {InvalidOperationException} from "../exceptions/InvalidOperationException";
 import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
@@ -118,7 +114,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public dequeue(): T {
         if (this.isEmpty()) {
-            throw new InvalidOperationException("queue is empty.");
+            throw new Error("queue is empty.");
         }
         const item = this.data[0];
         this.data.splice(0, 1);
@@ -127,7 +123,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public dequeueLast(): T {
         if (this.isEmpty()) {
-            throw new InvalidOperationException("queue is empty.");
+            throw new Error("queue is empty.");
         }
         const item = this.data[this.data.length - 1];
         this.data.splice(this.data.length - 1, 1);
@@ -179,7 +175,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public exists(predicate: (item: T) => boolean): boolean {
         if (!predicate) {
-            throw new ArgumentNullException("predicate is null.");
+            throw new Error("predicate is null.");
         }
         return this.data.some(predicate);
     }
@@ -196,20 +192,20 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public findIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number {
         if (!predicate) {
-            throw new ArgumentNullException("predicate is null.");
+            throw new Error("predicate is null.");
         }
 
         startIndex = startIndex || 0;
         count = count || this.size() - 1;
 
         if (startIndex! < 0 || startIndex >= this.size()) {
-            throw new ArgumentOutOfRangeException("startIndex is not a valid index.");
+            throw new Error("startIndex is not a valid index.");
         }
         if (count < 0) {
-            throw new ArgumentOutOfRangeException("count is less than 0.");
+            throw new Error("count is less than 0.");
         }
         if (startIndex + count > this.size()) {
-            throw new ArgumentOutOfRangeException("startIndex and count do not specify a valid section in the list.");
+            throw new Error("startIndex and count do not specify a valid section in the list.");
         }
 
         let found = false;
@@ -226,7 +222,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public findLast(predicate: (item: T) => boolean): T {
         if (!predicate) {
-            throw new ArgumentNullException("predicate is null.");
+            throw new Error("predicate is null.");
         }
         let found = false;
         let foundItem: T = null;
@@ -243,16 +239,16 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public findLastIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number {
         if (!predicate) {
-            throw new ArgumentNullException("predicate is null.");
+            throw new Error("predicate is null.");
         }
         if (startIndex < 0 || startIndex >= this.size()) {
-            throw new ArgumentOutOfRangeException("startIndex is not a valid index.");
+            throw new Error("startIndex is not a valid index.");
         }
         if (count < 0) {
-            throw new ArgumentOutOfRangeException("count is less than 0.");
+            throw new Error("count is less than 0.");
         }
         if (startIndex + count > this.size()) {
-            throw new ArgumentOutOfRangeException("startIndex and count do not specify a valid section in the list.");
+            throw new Error("startIndex and count do not specify a valid section in the list.");
         }
         startIndex = startIndex || 0;
         count = count || this.size();
@@ -294,20 +290,20 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public forEach(action: (item: T) => void): void {
         if (!action) {
-            throw new ArgumentNullException("action is null.");
+            throw new Error("action is null.");
         }
         this.data.forEach(d => d ? action(d) : void 0);
     }
 
     public get(index: number): T {
         if (index == null) {
-            throw new ArgumentNullException("index is null.");
+            throw new Error("index is null.");
         }
         if (index < 0) {
-            throw new ArgumentOutOfRangeException("index is less than 0.");
+            throw new Error("index is less than 0.");
         }
         if (index >= this.size()) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
+            throw new Error(`index is greater than or equal to ${this.size()}.`);
         }
         return this.data[index];
     }
@@ -345,10 +341,10 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public insert(index: number, item: T) {
         if (index < 0) {
-            throw new ArgumentOutOfRangeException("index is less than 0.");
+            throw new Error("index is less than 0.");
         }
         if (index !== 0 && index >= this.size()) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
+            throw new Error(`index is greater than or equal to ${this.size()}.`);
         }
         this.data.splice(index, 0, item);
     }
@@ -511,7 +507,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public removeAll(predicate: (value: T) => boolean): number {
         if (!predicate) {
-            throw new ArgumentNullException("predicate is null.");
+            throw new Error("predicate is null.");
         }
         const preCount = this.data.length;
         this.data = this.data.filter(d => !predicate(d));
@@ -520,23 +516,23 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public removeAt(index: number): void {
         if (index < 0) {
-            throw new ArgumentOutOfRangeException("index is less than 0.");
+            throw new Error("index is less than 0.");
         }
         if (index >= this.size()) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
+            throw new Error(`index is greater than or equal to ${this.size()}.`);
         }
         this.data.splice(index, 1);
     }
 
     public removeRange(index: number, count: number): void {
         if (index < 0) {
-            throw new ArgumentOutOfRangeException("index is less than 0.");
+            throw new Error("index is less than 0.");
         }
         if (count < 0) {
-            throw new ArgumentOutOfRangeException("count is less than 0.");
+            throw new Error("count is less than 0.");
         }
         if (index + count > this.size()) {
-            throw new ArgumentException("index and count do not denote a valid range of elements in the list.");
+            throw new Error("index and count do not denote a valid range of elements in the list.");
         }
         let removedCount = 0;
         while (removedCount < count) {
@@ -596,10 +592,10 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public set(index: number, item: T): void {
         if (index < 0) {
-            throw new ArgumentOutOfRangeException("index is less than 0.");
+            throw new Error("index is less than 0.");
         }
         if (index >= this.size()) {
-            throw new ArgumentOutOfRangeException(`index is greater than or equal to ${this.size()}.`);
+            throw new Error(`index is greater than or equal to ${this.size()}.`);
         }
         this.data[index] = item;
     }
