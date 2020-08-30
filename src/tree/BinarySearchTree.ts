@@ -67,6 +67,30 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         let v: RedBlackNode<T> = this.searchNode(item);
         this.deleteNode(v);
     }
+    public insert(item: T): void {
+        const node = new RedBlackNode<T>(item);
+        if (this.root == null) {
+            node.setColor(RedBlackNode.BLACK);
+            this.root = node;
+        } else {
+            const temp: RedBlackNode<T> = this.searchNode(item);
+            if (temp.getData() === item) {
+                return;
+            }
+            node.setParent(temp);
+            if (this.comparator(item, temp.getData()) < 0) {
+                temp.setLeft(node);
+            } else {
+                temp.setRight(node);
+            }
+            this.fixDoubleRed(node);
+        }
+    }
+    public search(item: T): boolean {
+        const node = this.searchNode(item);
+        if (node == null) return false;
+        return this.comparator(node.getData(), item) === 0;
+    }
     private deleteNode(v: RedBlackNode<T>): void {
         let u: RedBlackNode<T> = this.findReplaceItem(v);
         const bothBlack = ((u == null || u.getColor() === RedBlackNode.BLACK) && v.getColor() === RedBlackNode.BLACK);
@@ -218,25 +242,6 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         }
         return temp;
     }
-    public insert(item: T): void {
-        const node = new RedBlackNode<T>(item);
-        if (this.root == null) {
-            node.setColor(RedBlackNode.BLACK);
-            this.root = node;
-        } else {
-            const temp: RedBlackNode<T> = this.searchNode(item);
-            if (temp.getData() === item) {
-                return;
-            }
-            node.setParent(temp);
-            if (this.comparator(item, temp.getData()) < 0) {
-                temp.setLeft(node);
-            } else {
-                temp.setRight(node);
-            }
-            this.fixDoubleRed(node);
-        }
-    }
     private leftRotate(node: RedBlackNode<T>): void {
         let p = node.getRight();
         if (node === this.root) {
@@ -260,11 +265,6 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
             (p.getRight() as RedBlackNode<T>).setParent(node);
         }
         p.setRight(node);
-    }
-    public search(item: T): boolean {
-        const node = this.searchNode(item);
-        if (node == null) return false;
-        return this.comparator(node.getData(), item) === 0;
     }
     private searchNode(item: T): RedBlackNode<T> {
         let temp: RedBlackNode<T> = this.root as RedBlackNode<T>;

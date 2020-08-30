@@ -14,6 +14,12 @@ export class BinaryTree<T> extends AbstractTree<T> {
     public delete(item: T): void {
         this.root = this.deleteRecursive(this.root, item);
     }
+    public insert(item: T): void {
+        this.root = this.insertRecursive(this.root, item);
+    }
+    public search(item: T): boolean {
+       return this.searchTree(this.root, item);
+    }
     private deleteRecursive(root: INode<T>, item: T): INode<T> {
         if (root == null) return null;
         if (this.comparator(item, root.getData()) === 0) {
@@ -41,9 +47,6 @@ export class BinaryTree<T> extends AbstractTree<T> {
     private findSmallestValue(root: INode<T>): T {
         return root.getLeft() == null ? root.getData() : this.findSmallestValue(root.getLeft());
     }
-    public insert(item: T): void {
-        this.root = this.insertRecursive(this.root, item);
-    }
     private insertRecursive(root: INode<T>, item: T): INode<T> {
         if (root == null) return new TreeNode<T>(item);
         if (this.comparator(item, root.getData()) < 0) {
@@ -54,9 +57,6 @@ export class BinaryTree<T> extends AbstractTree<T> {
             return root;
         }
         return root;
-    }
-    public search(item: T): boolean {
-       return this.searchTree(this.root, item);
     }
     private searchTree(root: INode<T>, item: T): boolean {
         if (root == null) return false;
