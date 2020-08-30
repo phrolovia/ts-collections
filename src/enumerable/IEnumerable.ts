@@ -40,8 +40,8 @@ export interface IEnumerable<T> {
     sequenceEqual(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): boolean;
     single(predicate?: (item: T) => boolean): T;
     singleOrDefault(predicate?: (item: T) => boolean): T;
-    skip(count?: number): IEnumerable<T>;
-    skipLast(count?: number): IEnumerable<T>;
+    skip(count: number): IEnumerable<T>;
+    skipLast(count: number): IEnumerable<T>;
     skipWhile(predicate: (item: T, index?: number) => boolean): IEnumerable<T>;
     sum(predicate: (item: T) => number): number;
     take(count: number): IEnumerable<T>;

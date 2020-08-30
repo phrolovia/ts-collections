@@ -1204,17 +1204,6 @@ describe("List", () => {
             expect(list2.get(1)).to.eq(6);
             expect(list2.get(2)).to.eq(7);
         });
-        it("should return an unchanged list if no parameter is given", () => {
-            const list2 = list.skip().toList();
-            expect(list.Count).to.eq(list2.size());
-            expect(list2.get(0)).to.eq(list.get(0));
-            expect(list2.get(1)).to.eq(list.get(1));
-            expect(list2.get(2)).to.eq(list.get(2));
-            expect(list2.get(3)).to.eq(list.get(3));
-            expect(list2.get(4)).to.eq(list.get(4));
-            expect(list2.get(5)).to.eq(list.get(5));
-            expect(list2.get(6)).to.eq(list.get(6));
-        });
         it("should return an empty list if the list contains fewer than skipped elements", () => {
             const list2 = list.skip(100).toList();
             expect(list2.size()).to.eq(0);
@@ -1227,17 +1216,6 @@ describe("List", () => {
             expect(list2.get(0)).to.eq(1);
             expect(list2.get(1)).to.eq(2);
             expect(list2.get(2)).to.eq(3);
-        });
-        it("should return an unchanged list if no parameter is given", () => {
-            const list2 = list.skipLast().toList();
-            expect(list.Count).to.eq(list2.size());
-            expect(list2.get(0)).to.eq(list.get(0));
-            expect(list2.get(1)).to.eq(list.get(1));
-            expect(list2.get(2)).to.eq(list.get(2));
-            expect(list2.get(3)).to.eq(list.get(3));
-            expect(list2.get(4)).to.eq(list.get(4));
-            expect(list2.get(5)).to.eq(list.get(5));
-            expect(list2.get(6)).to.eq(list.get(6));
         });
         it("should return an empty list if the list contains fewer than skipped elements", () => {
             const list2 = list.skipLast(100).toList();
@@ -1424,7 +1402,7 @@ describe("List", () => {
                 "[77] :: Olga Byakova"
             ];
             const returnedOrder: string[] = [];
-            for (const p of orderedPeople.toList()) {
+            for (const p of orderedPeople.toArray()) {
                 const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
                 returnedOrder.push(personStr);
             }
@@ -1467,7 +1445,7 @@ describe("List", () => {
                 "[9] :: Priscilla Necci"
             ];
             const returnedOrder: string[] = [];
-            for (const p of orderedPeople.toList()) {
+            for (const p of orderedPeople.toArray()) {
                 const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
                 returnedOrder.push(personStr);
             }
@@ -1499,7 +1477,7 @@ describe("List", () => {
                 "[77] :: Olga Byakova"
             ];
             const returnedOrder: string[] = [];
-            for (const p of orderedPeople.toList()) {
+            for (const p of orderedPeople.toArray()) {
                 const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
                 returnedOrder.push(personStr);
             }
@@ -1531,7 +1509,7 @@ describe("List", () => {
                 "[9] :: Priscilla Necci"
             ];
             const returnedOrder: string[] = [];
-            for (const p of orderedPeople.toList()) {
+            for (const p of orderedPeople.toArray()) {
                 const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
                 returnedOrder.push(personStr);
             }

@@ -3,7 +3,8 @@
         "esModuleInterop": true,
         "target": "es5",
         "lib": [
-            "ES2015"
+            "ES2015",
+            "DOM"
         ],
         "downlevelIteration": true,
         "declaration": true,

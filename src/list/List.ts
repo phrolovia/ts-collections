@@ -642,7 +642,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.data.length;
     }
 
-    public skip(count: number = 0): IEnumerable<T> {
+    public skip(count: number): IEnumerable<T> {
         if (count > 0) {
             if (this.size() <= count) {
                 return new List<T>([]);
@@ -652,7 +652,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this;
     }
 
-    public skipLast(count: number = 0): IEnumerable<T> {
+    public skipLast(count: number): IEnumerable<T> {
         if (count > 0) {
             if (this.size() <= count) {
                 return new List<T>([]);
@@ -734,10 +734,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         }
         const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending };
         const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
-        const sortedData = [...this.data].sort((d1, d2) => allOrderActions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
-        const sortedList = new List<T>(sortedData);
-        sortedList.addOrderAction(allOrderActions);
-        return sortedList;
+        return this.sortByMultipleKeys(allOrderActions);
     }
 
     public thenByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
@@ -746,10 +743,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         }
         const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Descending };
         const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
-        const sortedData = [...this.data].sort((d1, d2) => allOrderActions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
-        const sortedList = new List<T>(sortedData);
-        sortedList.addOrderAction(allOrderActions);
-        return sortedList;
+        return this.sortByMultipleKeys(allOrderActions);
     }
 
     public toArray(): T[] {
@@ -822,14 +816,16 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return list.asEnumerable();
     }
 
-    /**
-     * Used by order operations internally. Do not use it.
-     * @param action
-     * @protected
-     */
-    protected addOrderAction(action: OrderActions|OrderActions[]): void {
+    private addOrderAction(action: OrderActions|OrderActions[]): void {
         action = action instanceof Array ? action : [action];
         action.forEach(a => this.orderActions.push(a));
+    }
+
+    private sortByMultipleKeys(actions: OrderActions[]): List<T> {
+        const sortedData = [...this.data].sort((d1, d2) => actions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
+        const sortedList = new List<T>(sortedData);
+        sortedList.addOrderAction(actions);
+        return sortedList;
     }
 
     * [Symbol.iterator](): Iterator<T> {
