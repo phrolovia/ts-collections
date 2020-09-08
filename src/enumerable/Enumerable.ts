@@ -1,4 +1,7 @@
+import {ErrorMessages} from "../shared/ErrorMessages";
+
 export class Enumerable<T> implements IEnum<T> {
+    private readonly core: EnumerableCore<T>;
     private readonly iterator: EnumerableIterator<T>;
 
     public constructor(private data: Array<T> | IterableIterator<T>) {
@@ -11,6 +14,7 @@ export class Enumerable<T> implements IEnum<T> {
         } else {
             this.iterator = () => data;
         }
+        this.core = new EnumerableCore<T>(this.iterator);
     }
 
     public [Symbol.iterator](): IterableIterator<T> {
@@ -22,55 +26,71 @@ export class Enumerable<T> implements IEnum<T> {
     }
 
     public all(predicate?: Predicate<T>): boolean {
-        return new EnumerableCore(this.iterator).all(predicate);
+        return this.core.all(predicate);
     }
 
     public any(predicate?: Predicate<T>): boolean {
-        return new EnumerableCore(this.iterator).any(predicate);
+        return this.core.any(predicate);
     }
 
     public append(item: T): IEnum<T> {
-        return new EnumerableCore(this.iterator).append(item);
+        return this.core.append(item);
     }
 
     public average(selector?: Selector<T, number>): number {
-        return new EnumerableCore(this.iterator).average(selector);
+        return this.core.average(selector);
     }
 
     public concat(enumerable: IEnum<T>): IEnum<T> {
-        return new EnumerableCore(this.iterator).concat(enumerable);
+        return this.core.concat(enumerable);
     }
 
     public contains(item: T, comparator?: Comparator<T>): boolean {
-        return new EnumerableCore(this.iterator).contains(item, comparator);
+        return this.core.contains(item, comparator);
     }
 
     public count(): number {
-        return new EnumerableCore(this.iterator).count();
+        return this.core.count();
     }
 
     public distinct(comparator?: Comparator<T>): IEnum<T> {
-        return new EnumerableCore(this.iterator).distinct(comparator);
+        return this.core.distinct(comparator);
     }
 
     public elementAt(index: number): T {
-        return new EnumerableCore(this.iterator).elementAt(index);
+        return this.core.elementAt(index);
+    }
+
+    public elementAtOrDefault(index: number): T {
+        return this.core.elementAtOrDefault(index);
+    }
+
+    public except(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
+        return this.core.except(enumerable, comparator);
+    }
+
+    public first(predicate?: Predicate<T>): T {
+        return this.core.first(predicate);
+    }
+
+    public firstOrDefault(predicate?: Predicate<T>): T {
+        return this.core.firstOrDefault(predicate);
     }
 
     public select<R>(selector: Selector<T, R>): IEnum<R> {
-        return new EnumerableCore(this.iterator).select(selector);
+        return this.core.select(selector);
     }
 
     public sum(selector: Selector<T, number>): number {
-        return new EnumerableCore(this.iterator).sum(selector);
+        return this.core.sum(selector);
     }
 
     public union(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
-        return new EnumerableCore(this.iterator).union(enumerable, comparator);
+        return this.core.union(enumerable, comparator);
     }
 
-    public where(comparator: Predicate<T>): IEnum<T> {
-        return new EnumerableCore(this.iterator).where(comparator);
+    public where(predicate: Predicate<T>): IEnum<T> {
+        return this.core.where(predicate);
     }
 
     public toArray(): T[] {
@@ -80,6 +100,7 @@ export class Enumerable<T> implements IEnum<T> {
 
 class EnumerableCore<T> implements IEnum<T> {
     public static readonly defaultComparator: Comparator<any> = <E>(i1: E, i2: E) => i1 < i2 ? -1 : i1 > i2 ? 1 : 0;
+
     public constructor(private readonly iterator: EnumerableIterator<T>) {
     }
 
@@ -128,7 +149,7 @@ class EnumerableCore<T> implements IEnum<T> {
             comparator = EnumerableCore.defaultComparator;
         }
         for (const d of this) {
-            if(comparator(d, item) === 0) {
+            if (comparator(d, item) === 0) {
                 return true;
             }
         }
@@ -158,6 +179,38 @@ class EnumerableCore<T> implements IEnum<T> {
             }
             ++ix;
         }
+    }
+
+    public elementAtOrDefault(index: number): T {
+        let ix: number = 0;
+        for (const item of this) {
+            if (index === ix) {
+                return item;
+            }
+            ++ix;
+        }
+        return null;
+    }
+
+    public except(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
+        return new EnumerableCore(() => this.exceptCore(enumerable, comparator));
+    }
+
+    public first(predicate?: Predicate<T>): T {
+        const item = this.firstOrDefault(predicate);
+        if (!item) {
+            throw new Error(ErrorMessages.NoMatchingElement);
+        }
+        return item;
+    }
+
+    public firstOrDefault(predicate?: Predicate<T>): T {
+        for (const item of this) {
+            if (predicate(item)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public select<R>(selector: Selector<T, R>): IEnum<R> {
@@ -192,6 +245,17 @@ class EnumerableCore<T> implements IEnum<T> {
     private* concatCore(enumerable: IEnum<T>): IterableIterator<T> {
         yield* this;
         yield* enumerable;
+    }
+
+    private* exceptCore(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
+        if (!comparator) {
+            comparator = EnumerableCore.defaultComparator;
+        }
+        for (const item of this) {
+            if (!enumerable.contains(item, comparator)) {
+                yield item
+            }
+        }
     }
 
     private* selectCore<R>(selector: Selector<T, R>): IterableIterator<R> {
@@ -250,6 +314,14 @@ interface IEnum<T> extends Iterable<T> {
 
     elementAt(index: number): T;
 
+    elementAtOrDefault(index: number): T;
+
+    except(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T>;
+
+    first(predicate?: Predicate<T>): T;
+
+    firstOrDefault(predicate?: Predicate<T>): T;
+
     select<R>(selector: Selector<T, R>): IEnum<R>;
 
     sum(selector: Selector<T, number>): number;
@@ -258,7 +330,7 @@ interface IEnum<T> extends Iterable<T> {
 
     union(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T>;
 
-    where(comparator: Predicate<T>): IEnum<T>;
+    where(predicate: Predicate<T>): IEnum<T>;
 }
 
 

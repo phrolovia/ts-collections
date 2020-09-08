@@ -47,6 +47,48 @@ describe("Enumerable", () => {
             expect(() => enumerable.elementAt(-1)).to.throw();
         });
     });
+    describe("#elementAtOrDefault()", () => {
+        const numList = [1, 2, 3, 45, 66, 77, 903];
+        const enumerable = Enumerable.from(numList);
+        it("should return the element at the index of 4", () => {
+            expect(enumerable.elementAtOrDefault(4)).to.eq(66);
+        });
+        it("should return null if index is less than 0.", () => {
+            expect(enumerable.elementAtOrDefault(-1)).to.eq(null);
+        });
+    });
+    describe("#except()", () => {
+        const numList1 = [1, 2, 3, 4, 5, 6];
+        const numList2 = [5, 6, 22, 55];
+        const exceptList = Enumerable.from(numList1).except(Enumerable.from(numList2)).toArray();
+        it("should return numbers that do not exist in the second list", () => {
+            expect(exceptList).to.deep.equal([1, 2, 3, 4]);
+        });
+    });
+    describe("#first()", () => {
+        const numList = [1, 11, 21, 2222, 3, 4, 5];
+        const enumerable = Enumerable.from(numList);
+        const emptyEnumerable = Enumerable.from([]);
+        it("should return first even number", () => {
+            const first = enumerable.first(p => p % 2 === 0);
+            expect(first).to.eq(2222);
+        });
+        it("should throw error if the list is empty", () => {
+            expect(() => emptyEnumerable.first(p => p % 2 === 0)).to.throw();
+        });
+    });
+    describe("#firstOrDefault()", () => {
+        const numList = [1, 11, 21, 2222, 3, 4, 5];
+        const enumerable = Enumerable.from(numList);
+        const emptyEnumerable = Enumerable.from([]);
+        it("should return first even number", () => {
+            const first = enumerable.firstOrDefault(p => p % 2 === 0);
+            expect(first).to.eq(2222);
+        });
+        it("should return null if the list is empty", () => {
+            expect(emptyEnumerable.firstOrDefault(p => p % 2 === 0)).to.eq(null);
+        });
+    });
     describe("#sum()", () => {
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         const sum = new Enumerable(numbers).sum(n => n);
