@@ -77,6 +77,26 @@ export class Enumerable<T> implements IEnum<T> {
         return this.core.firstOrDefault(predicate);
     }
 
+    public intersect(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
+        return this.core.intersect(enumerable, comparator);
+    }
+
+    public last(predicate?: Predicate<T>): T {
+        return this.core.last(predicate);
+    }
+
+    public lastOrDefault(predicate?: Predicate<T>): T {
+        return this.core.lastOrDefault(predicate);
+    }
+
+    public max(selector?: Selector<T, number>): number {
+        return this.core.max(selector);
+    }
+
+    public min(selector?: Selector<T, number>): number {
+        return this.core.min(selector);
+    }
+
     public select<R>(selector: Selector<T, R>): IEnum<R> {
         return this.core.select(selector);
     }
@@ -127,7 +147,7 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public append(item: T): IEnum<T> {
-        return new EnumerableCore(() => this.appendCore(item));
+        return new EnumerableCore(() => this.appendGenerator(item));
     }
 
     public average(selector?: Selector<T, number>): number {
@@ -141,7 +161,7 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public concat(enumerable: IEnum<T>): IEnum<T> {
-        return new EnumerableCore(() => this.concatCore(enumerable));
+        return new EnumerableCore(() => this.concatGenerator(enumerable));
     }
 
     public contains(item: T, comparator?: Comparator<T>): boolean {
@@ -165,7 +185,7 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public distinct(comparator?: Comparator<T>): IEnum<T> {
-        return new EnumerableCore(() => this.unionCore(Enumerable.from([]), comparator));
+        return new EnumerableCore(() => this.unionGenerator(Enumerable.from([]), comparator));
     }
 
     public elementAt(index: number): T {
@@ -193,7 +213,7 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public except(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
-        return new EnumerableCore(() => this.exceptCore(enumerable, comparator));
+        return new EnumerableCore(() => this.exceptGenerator(enumerable, comparator));
     }
 
     public first(predicate?: Predicate<T>): T {
@@ -213,8 +233,92 @@ class EnumerableCore<T> implements IEnum<T> {
         return null;
     }
 
+    public intersect(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
+        return new EnumerableCore(() => this.intersectGenerator(enumerable, comparator));
+    }
+
+    public last(predicate?: Predicate<T>): T {
+        let last: T = null;
+        if (!predicate) {
+            for (const item of this) {
+                last = item;
+            }
+            if (!last) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return last;
+        }
+        for (const item of this) {
+            if (predicate(item)) {
+                last = item;
+            }
+        }
+        if (!last) {
+            throw new Error(ErrorMessages.NoMatchingElement);
+        }
+        return last;
+    }
+
+    public lastOrDefault(predicate?: Predicate<T>): T {
+        let last: T = null;
+        if (!predicate) {
+            for (const item of this) {
+                last = item;
+            }
+            return last;
+        }
+        for (const item of this) {
+            if (predicate(item)) {
+                last = item;
+            }
+        }
+        return last;
+    }
+
+    public max(selector?: Selector<T, number>): number {
+        let max: number = null;
+        if (!selector) {
+            for (const item of this) {
+                max = Math.max(max ?? Number.NEGATIVE_INFINITY, item as unknown as number);
+            }
+            if (max == null) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return max;
+        } else {
+            for (const item of this) {
+                max = Math.max(max ?? Number.NEGATIVE_INFINITY, selector(item));
+            }
+            if (max == null) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return max;
+        }
+    }
+
+    public min(selector?: Selector<T, number>): number {
+        let min: number = null;
+        if (!selector) {
+            for (const item of this) {
+                min = Math.min(min ?? Number.POSITIVE_INFINITY, item as unknown as number);
+            }
+            if (min == null) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return min;
+        } else {
+            for (const item of this) {
+                min = Math.min(min ?? Number.POSITIVE_INFINITY, selector(item));
+            }
+            if (min == null) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return min;
+        }
+    }
+
     public select<R>(selector: Selector<T, R>): IEnum<R> {
-        return new EnumerableCore<R>(() => this.selectCore(selector));
+        return new EnumerableCore<R>(() => this.selectGenerator(selector));
     }
 
     public sum(selector: Selector<T, number>): number {
@@ -230,24 +334,24 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public union(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
-        return new EnumerableCore(() => this.unionCore(enumerable, comparator));
+        return new EnumerableCore(() => this.unionGenerator(enumerable, comparator));
     }
 
     public where(predicate: Predicate<T>): IEnum<T> {
-        return new EnumerableCore<T>(() => this.whereCore(predicate));
+        return new EnumerableCore<T>(() => this.whereGenerator(predicate));
     }
 
-    private* appendCore(item: T): IterableIterator<T> {
+    private* appendGenerator(item: T): IterableIterator<T> {
         yield* this;
         yield item;
     }
 
-    private* concatCore(enumerable: IEnum<T>): IterableIterator<T> {
+    private* concatGenerator(enumerable: IEnum<T>): IterableIterator<T> {
         yield* this;
         yield* enumerable;
     }
 
-    private* exceptCore(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
+    private* exceptGenerator(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
         if (!comparator) {
             comparator = EnumerableCore.defaultComparator;
         }
@@ -258,13 +362,29 @@ class EnumerableCore<T> implements IEnum<T> {
         }
     }
 
-    private* selectCore<R>(selector: Selector<T, R>): IterableIterator<R> {
+    private* intersectGenerator(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
+        if (!comparator) {
+            comparator = EnumerableCore.defaultComparator;
+        }
+        const intersectList: Array<T> = []
+        for (const item of this) {
+            if (enumerable.contains(item, comparator)) {
+                const exists = intersectList.find(d => comparator(item, d) === 0);
+                if (!exists) {
+                    yield item;
+                    intersectList.push(item);
+                }
+            }
+        }
+    }
+
+    private* selectGenerator<R>(selector: Selector<T, R>): IterableIterator<R> {
         for (const d of this) {
             yield selector(d);
         }
     }
 
-    private* unionCore(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
+    private* unionGenerator(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
         const distinctList: Array<T> = [];
         if (!comparator) {
             comparator = EnumerableCore.defaultComparator;
@@ -286,7 +406,7 @@ class EnumerableCore<T> implements IEnum<T> {
         }
     }
 
-    private* whereCore(predicate: Predicate<T>): IterableIterator<T> {
+    private* whereGenerator(predicate: Predicate<T>): IterableIterator<T> {
         for (const d of this) {
             if (predicate(d)) {
                 yield d;
@@ -321,6 +441,16 @@ interface IEnum<T> extends Iterable<T> {
     first(predicate?: Predicate<T>): T;
 
     firstOrDefault(predicate?: Predicate<T>): T;
+
+    intersect(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T>;
+
+    last(predicate?: Predicate<T>): T;
+
+    lastOrDefault(predicate?: Predicate<T>): T;
+
+    max(selector?: Selector<T, number>): number;
+
+    min(selector?: Selector<T, number>): number;
 
     select<R>(selector: Selector<T, R>): IEnum<R>;
 

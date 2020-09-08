@@ -1,6 +1,7 @@
 import {Enumerable} from "../../src/enumerable/Enumerable";
 import {describe, it} from "mocha";
 import {expect} from "chai";
+import {ErrorMessages} from "../../src/shared/ErrorMessages";
 
 describe("Enumerable", () => {
     describe("#average()", () => {
@@ -87,6 +88,74 @@ describe("Enumerable", () => {
         });
         it("should return null if the list is empty", () => {
             expect(emptyEnumerable.firstOrDefault(p => p % 2 === 0)).to.eq(null);
+        });
+    });
+    describe("#intersect()", () => {
+        const numList1 = [1, 2, 3, 4, 5, 6, 7];
+        const numList2 = [5, 6, 7, 11, 22, 33, 44, 55];
+        const intersectList = Enumerable.from(numList1).intersect(Enumerable.from(numList2)).toArray();
+        it("should return the elements from numList1 only if they also exist in numList2", () => {
+            expect(intersectList).to.deep.equal([5, 6, 7]);
+        });
+    });
+    describe("#last", () => {
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const enumerable = Enumerable.from(numbers);
+        it("should return the last number in the list", () => {
+            const last = enumerable.last();
+            expect(last).to.eq(10);
+        });
+        it("should return the last odd number in the list", () => {
+            const lastOddNumber = enumerable.last(n => n % 2 !== 0);
+            expect(lastOddNumber).to.eq(9);
+        });
+        it("should throw error if the list is empty", () => {
+            expect(() => Enumerable.from([]).last()).to.throw();
+        });
+        it("should throw error if no matching element is found", () => {
+            expect(() => enumerable.last(n => n > 10)).to.throw(ErrorMessages.NoMatchingElement);
+        });
+    });
+    describe("#lastOrDefault()", () => {
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const enumerable = Enumerable.from(numbers);
+        it("should return the last number in the list", () => {
+            const last = enumerable.lastOrDefault();
+            expect(last).to.eq(10);
+        });
+        it("should return the last odd number in the list", () => {
+            const lastOddNumber = enumerable.lastOrDefault(n => n % 2 !== 0);
+            expect(lastOddNumber).to.eq(9);
+        });
+        it("should return null if the list is empty", () => {
+            const last = Enumerable.from([]).lastOrDefault();
+            expect(last).to.eq(null);
+        });
+        it("should return null if no matching element is found", () => {
+            const last = enumerable.lastOrDefault(n => n > 10);
+            expect(last).to.eq(null);
+        });
+    });
+    describe("#max()", () => {
+        const numbers = [6, 22, 11, 55, 234, 949, 12, 90];
+        const enumerable = Enumerable.from(numbers);
+        it("should return the greatest element in the list", () => {
+            expect(enumerable.max()).to.eq(949);
+        });
+        it("should return the greatest element that is smaller than 100 in the list", () => {
+            const max = enumerable.where(n => n < 100).max();
+            expect(max).to.eq(90);
+        });
+    });
+    describe("#min()", () => {
+        const numbers = [6, 22, 11, 55, 234, 949, 12, 1, 90];
+        const enumerable = Enumerable.from(numbers);
+        it("should return the smallest element in the list", () => {
+            expect(enumerable.min()).to.eq(1);
+        });
+        it("should return the smallest element that is greater than 100 in the list", () => {
+            const max = enumerable.where(n => n > 100).min();
+            expect(max).to.eq(234);
         });
     });
     describe("#sum()", () => {
