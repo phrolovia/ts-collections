@@ -25,6 +25,18 @@ export class Enumerable<T> implements IEnum<T> {
         return new Enumerable<S>(source);
     }
 
+    public static range(start: number, count: number): IEnum<number> {
+        const numbers: number[] = [];
+        for (let ix = 0; ix < count; ++ix) {
+            numbers.push(start + ix);
+        }
+        return new Enumerable(numbers);
+    }
+
+    public static repeat<S>(item: S, count: number): IEnum<S> {
+        return new Enumerable(new Array(count).fill(item));
+    }
+
     public all(predicate?: Predicate<T>): boolean {
         return this.core.all(predicate);
     }
@@ -95,6 +107,10 @@ export class Enumerable<T> implements IEnum<T> {
 
     public min(selector?: Selector<T, number>): number {
         return this.core.min(selector);
+    }
+
+    public prepend(item: T): IEnum<T> {
+        return this.core.prepend(item);
     }
 
     public select<R>(selector: Selector<T, R>): IEnum<R> {
@@ -317,6 +333,10 @@ class EnumerableCore<T> implements IEnum<T> {
         }
     }
 
+    public prepend(item: T): IEnum<T> {
+        return new EnumerableCore(() => this.prependGenerator(item));
+    }
+
     public select<R>(selector: Selector<T, R>): IEnum<R> {
         return new EnumerableCore<R>(() => this.selectGenerator(selector));
     }
@@ -376,6 +396,11 @@ class EnumerableCore<T> implements IEnum<T> {
                 }
             }
         }
+    }
+
+    private* prependGenerator(item: T): IterableIterator<T> {
+        yield item;
+        yield* this;
     }
 
     private* selectGenerator<R>(selector: Selector<T, R>): IterableIterator<R> {
@@ -451,6 +476,8 @@ interface IEnum<T> extends Iterable<T> {
     max(selector?: Selector<T, number>): number;
 
     min(selector?: Selector<T, number>): number;
+
+    prepend(item: T): IEnum<T>;
 
     select<R>(selector: Selector<T, R>): IEnum<R>;
 

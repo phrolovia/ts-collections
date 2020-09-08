@@ -4,6 +4,14 @@ import {expect} from "chai";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 
 describe("Enumerable", () => {
+    describe("#append()", () => {
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const enumerable = Enumerable.from(numbers);
+        it("should append -888 to the end of list", () => {
+            const result = enumerable.append(-888).toArray();
+            expect(result[result.length - 1]).to.eq(-888);
+        });
+    });
     describe("#average()", () => {
         const numbers = [1, 2, 3, 4, 5];
         const average = new Enumerable(numbers).average(n => n);
@@ -156,6 +164,34 @@ describe("Enumerable", () => {
         it("should return the smallest element that is greater than 100 in the list", () => {
             const max = enumerable.where(n => n > 100).min();
             expect(max).to.eq(234);
+        });
+    });
+    describe("#prepend()", () => {
+        const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        const enumerable = Enumerable.from(numbers);
+        it("should prepend the list with -999", () => {
+            const result = enumerable.prepend(-999).toArray();
+            expect(result[0]).to.eq(-999);
+        });
+    });
+    describe("#range()", () => {
+        const enumerable = Enumerable.range(1, 5);
+        it("should create a list of increasing numbers starting with 1", () => {
+            expect(enumerable.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+        it("should create an enumerable that can be queried", () => {
+            const max = Enumerable.range(1, 10).select(n => Math.pow(n, 3)).max();
+            expect(max).to.eq(1000);
+        });
+    });
+    describe("#repeat()", () => {
+        const arrayOfFives = Enumerable.repeat(5, 5).toArray();
+        it("should create an array of 5s with the length of 5", () => {
+            expect(arrayOfFives).to.deep.equal([5, 5, 5, 5, 5]);
+        });
+        it("should create an enumerable that can be queried", () => {
+            const sum = Enumerable.repeat(10, 10).sum(n => n);
+            expect(sum).to.eq(100);
         });
     });
     describe("#sum()", () => {
