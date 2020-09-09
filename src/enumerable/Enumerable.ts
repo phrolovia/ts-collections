@@ -117,8 +117,44 @@ export class Enumerable<T> implements IEnum<T> {
         return this.core.select(selector);
     }
 
+    public sequenceEqual(enumerable: IEnum<T>, comparator?: Comparator<T>): boolean {
+        return this.core.sequenceEqual(enumerable, comparator);
+    }
+
+    public single(predicate?: Predicate<T>): T {
+        return this.core.single(predicate);
+    }
+
+    public singleOrDefault(predicate?: Predicate<T>): T {
+        return this.core.singleOrDefault(predicate);
+    }
+
+    public skip(count: number): IEnum<T> {
+        return this.core.skip(count);
+    }
+
+    public skipLast(count: number): IEnum<T> {
+        return this.core.skipLast(count);
+    }
+
+    public skipWhile(predicate: IndexedPredicate<T>): IEnum<T> {
+        return this.core.skipWhile(predicate);
+    }
+
     public sum(selector: Selector<T, number>): number {
         return this.core.sum(selector);
+    }
+
+    public take(count: number): IEnum<T> {
+        return this.core.take(count);
+    }
+
+    public takeLast(count: number): IEnum<T> {
+        return this.core.takeLast(count);
+    }
+
+    public takeWhile(predicate: IndexedPredicate<T>): IEnum<T> {
+        return this.core.takeWhile(predicate);
     }
 
     public union(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
@@ -131,6 +167,10 @@ export class Enumerable<T> implements IEnum<T> {
 
     public toArray(): T[] {
         return Array.from(this.iterator());
+    }
+
+    public zip<R, U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T, R]> | IEnum<U> {
+        return this.core.zip(enumerable, zipper);
     }
 }
 
@@ -145,6 +185,9 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public all(predicate?: Predicate<T>): boolean {
+        if (!predicate) {
+            return !this.iterator().next().done;
+        }
         for (const d of this) {
             if (!predicate(d)) {
                 return false;
@@ -154,8 +197,11 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public any(predicate?: Predicate<T>): boolean {
-        for (const d of this) {
-            if (predicate(d)) {
+        if (!predicate) {
+            return !this.iterator().next().done;
+        }
+        for (const item of this) {
+            if (predicate(item)) {
                 return true;
             }
         }
@@ -341,12 +387,122 @@ class EnumerableCore<T> implements IEnum<T> {
         return new EnumerableCore<R>(() => this.selectGenerator(selector));
     }
 
+    public sequenceEqual(enumerable: IEnum<T>, comparator?: Comparator<T>): boolean {
+        if (!comparator) {
+            comparator = EnumerableCore.defaultComparator;
+        }
+        const iterator = this.iterator();
+        const otherIterator = enumerable[Symbol.iterator]();
+        let first = iterator.next();
+        let second = otherIterator.next();
+        while (!first.done && !second.done) {
+            if (comparator(first.value, second.value) !== 0) {
+                return false;
+            }
+            first = iterator.next();
+            second = otherIterator.next();
+            if (first.done && second.done) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public single(predicate?: Predicate<T>): T {
+        let single: T = null;
+        let index: number = 0;
+
+        if (!predicate) {
+            if (!this.any()) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            for (const item of this) {
+                if (index !== 0) {
+                    throw new Error(ErrorMessages.MoreThanOneElement);
+                } else {
+                    single = item;
+                    index++;
+                }
+            }
+        } else {
+            if (!this.any()) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            for (const item of this) {
+                if (predicate(item)) {
+                    if (index !== 0) {
+                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                    } else {
+                        single = item;
+                        index++;
+                    }
+                }
+            }
+        }
+        if (index === 0) {
+            throw new Error(ErrorMessages.NoMatchingElement);
+        }
+        return single;
+    }
+
+    public singleOrDefault(predicate?: Predicate<T>): T {
+        let single: T = null;
+        let index: number = 0;
+        if (!predicate) {
+            for (const item of this) {
+                if (index !== 0) {
+                    throw new Error(ErrorMessages.MoreThanOneElement);
+                } else {
+                    single = item;
+                    index++;
+                }
+            }
+            return single;
+        } else {
+            for (const item of this) {
+                if (predicate(item)) {
+                    if (index !== 0) {
+                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                    } else {
+                        single = item;
+                        index++;
+                    }
+                }
+            }
+            return single;
+        }
+    }
+
+    public skip(count: number): IEnum<T> {
+        return new EnumerableCore(() => this.skipGenerator(count));
+    }
+
+    public skipLast(count: number): IEnum<T> {
+        return new EnumerableCore(() => this.skipLastGenerator(count));
+    }
+
+    public skipWhile(predicate: IndexedPredicate<T>): IEnum<T> {
+        return new EnumerableCore(() => this.skipWhileGenerator(predicate));
+    }
+
     public sum(selector: Selector<T, number>): number {
         let total: number = 0;
         for (const d of this) {
             total += selector(d);
         }
         return total;
+    }
+
+    public take(count: number): IEnum<T> {
+        return new EnumerableCore(() => this.takeGenerator(count));
+    }
+
+    public takeLast(count: number): IEnum<T> {
+        return new EnumerableCore(() => this.takeLastGenerator(count));
+    }
+
+    public takeWhile(predicate: IndexedPredicate<T>): IEnum<T> {
+        return new EnumerableCore(() => this.takeWhileGenerator(predicate));
     }
 
     public toArray(): Array<T> {
@@ -359,6 +515,14 @@ class EnumerableCore<T> implements IEnum<T> {
 
     public where(predicate: Predicate<T>): IEnum<T> {
         return new EnumerableCore<T>(() => this.whereGenerator(predicate));
+    }
+
+    public zip<R, U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T,R]> | IEnum<U> {
+        if (!zipper) {
+            return new EnumerableCore(() => this.zipTupleGenerator(enumerable));
+        } else {
+            return new EnumerableCore(() => this.zipGenerator(enumerable, zipper));
+        }
     }
 
     private* appendGenerator(item: T): IterableIterator<T> {
@@ -409,6 +573,79 @@ class EnumerableCore<T> implements IEnum<T> {
         }
     }
 
+    private* skipGenerator(count: number): IterableIterator<T> {
+        let index = 0;
+        for (const item of this) {
+            if (index >= count) {
+                yield item;
+            }
+            ++index;
+        }
+    }
+
+    private* skipLastGenerator(count: number): IterableIterator<T> {
+        const result: Array<T> = [];
+        for (const item of this) {
+            result.push(item);
+            if (result.length > count) {
+                yield result.shift();
+            }
+        }
+    }
+
+    private* skipWhileGenerator(predicate: IndexedPredicate<T>): IterableIterator<T> {
+        let index = 0;
+        let skipEnded = false;
+        for (const item of this) {
+            if (skipEnded) {
+                yield item;
+            } else {
+                if (predicate(item, index)) {
+                    index++;
+                } else {
+                    skipEnded = true;
+                    yield item;
+                }
+            }
+        }
+    }
+
+    private* takeGenerator(count: number): IterableIterator<T> {
+        let index = 0;
+        for (const item of this) {
+            if (index < count) {
+                yield item;
+                index++;
+            }
+        }
+    }
+
+    private* takeLastGenerator(count: number): IterableIterator<T> {
+        const result: Array<T> = [];
+        for (const item of this) {
+            result.push(item);
+            if (result.length > count) {
+                result.shift();
+            }
+        }
+        yield* result;
+    }
+
+    private* takeWhileGenerator(predicate: IndexedPredicate<T>): IterableIterator<T> {
+        let index = 0;
+        let takeEnded = false;
+        for (const item of this) {
+            if (!takeEnded) {
+                if (predicate(item, index)) {
+                    yield item;
+                    ++index;
+                } else {
+                    takeEnded = true;
+                }
+            }
+        }
+    }
+
     private* unionGenerator(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
         const distinctList: Array<T> = [];
         if (!comparator) {
@@ -438,6 +675,35 @@ class EnumerableCore<T> implements IEnum<T> {
             }
         }
     }
+
+    private* zipGenerator<R, U>(enumerable: IEnum<R>, zipper: Zipper<T, R, U>): IterableIterator<U> {
+        const iterator = this.iterator();
+        const otherIterator = enumerable[Symbol.iterator]();
+        while (true) {
+            let first = iterator.next();
+            let second = otherIterator.next();
+            if (first.done || second.done) {
+                break;
+            } else {
+                yield zipper(first.value, second.value);
+            }
+        }
+    }
+
+    private* zipTupleGenerator<R>(enumerable: IEnum<R>): IterableIterator<[T,R]> {
+        const iterator = this.iterator();
+        const otherIterator = enumerable[Symbol.iterator]();
+        while (true) {
+            let first = iterator.next();
+            let second = otherIterator.next();
+            if (first.done || second.done) {
+                break;
+            } else {
+                yield [first.value, second.value];
+            }
+        }
+    }
+
 }
 
 interface IEnum<T> extends Iterable<T> {
@@ -481,18 +747,42 @@ interface IEnum<T> extends Iterable<T> {
 
     select<R>(selector: Selector<T, R>): IEnum<R>;
 
+    sequenceEqual(enumerable: IEnum<T>, comparator?: Comparator<T>): boolean;
+
+    single(predicate?: Predicate<T>): T;
+
+    singleOrDefault(predicate?: Predicate<T>): T;
+
+    skip(count: number): IEnum<T>;
+
+    skipLast(count: number): IEnum<T>;
+
+    skipWhile(predicate: IndexedPredicate<T>): IEnum<T>;
+
     sum(selector: Selector<T, number>): number;
+
+    take(count: number): IEnum<T>;
+
+    takeLast(count: number): IEnum<T>;
+
+    takeWhile(predicate: IndexedPredicate<T>): IEnum<T>;
 
     toArray(): T[];
 
     union(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T>;
 
     where(predicate: Predicate<T>): IEnum<T>;
+
+    zip<R,U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T,R]> | IEnum<U>;
 }
 
 
 interface Predicate<T> {
     (item: T): boolean;
+}
+
+interface IndexedPredicate<T> {
+    (item: T, index?: number): boolean;
 }
 
 interface Selector<T, R> {
@@ -501,6 +791,10 @@ interface Selector<T, R> {
 
 interface Comparator<T> {
     (item1: T, item2: T): number;
+}
+
+interface Zipper<T, R, U> {
+    (item1: T, item2: R): U;
 }
 
 interface EnumerableIterator<T> {
