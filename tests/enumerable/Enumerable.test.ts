@@ -5,6 +5,10 @@ import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {List} from "../../src/list/List";
 import {Person} from "../models/Person";
 import {IList} from "../../src/list/IList";
+import {School} from "../models/School";
+import {Student} from "../models/Student";
+import {Pair} from "../models/Pair";
+import {SchoolStudents} from "../models/SchoolStudents";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -35,6 +39,36 @@ describe("Enumerable", () => {
     const suzuha = new Person("Suzuha", "Suzuki", 22);
     const suzuha2 = new Person("Suzuha", "Mizuki", 22);
     const suzuha3 = new Person("Suzuha", "Mizuki", 26);
+    describe("#aggregate()", () => {
+        it("should return 6", () => {
+            const list = Enumerable.from([4, 8, 8, 3, 9, 0, 7, 8, 2]);
+            const result = list.aggregate((total, next) => next % 2 === 0 ? total + 1 : total, 0);
+            expect(result).to.eq(6);
+        });
+        it("should return pomegranate", () => {
+            const list = Enumerable.from(["apple", "mango", "orange", "pomegranate", "grape"]);
+            const result = list.aggregate((longest, next) => next.length > longest.length ? next : longest, "banana");
+            expect(result).to.eq("pomegranate");
+        });
+        it("should return 10", () => {
+            const list = Enumerable.from([1, 2, 3, 4]);
+            const result = list.aggregate<number>((total, num) => total += num);
+            expect(result).to.eq(10);
+        });
+        it("should throw error ['aggregator is null.]", () => {
+            const list = Enumerable.from([2, 5, 6, 99]);
+            expect(() => list.aggregate(null)).to.throw(ErrorMessages.NoAggregatorProvided);
+        });
+        it("should throw error if list is empty and no seed is provided", () => {
+            const list = Enumerable.from<number>([]);
+            expect(() => list.aggregate<number>((acc, num) => acc *= num)).to.throw(ErrorMessages.NoElements);
+        });
+        it("should return the seed if list is empty", () => {
+            const list = Enumerable.from<number>([]);
+            const result = list.aggregate<number>((total, num) => total += num, -99);
+            expect(result).to.eq(-99);
+        });
+    });
     describe("#append()", () => {
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         const enumerable = Enumerable.from(numbers);
@@ -67,6 +101,31 @@ describe("Enumerable", () => {
         const contains = new Enumerable(numList).contains(77);
         it("should contain element [77]", () => {
             expect(contains).to.eq(true);
+        });
+    });
+    describe("#count()", () => {
+        it("should return 2", () => {
+            const list = Enumerable.from([alice, mel]);
+            expect(list.count()).to.equal(2);
+        });
+        it("should return 0", () => {
+            const list = Enumerable.from([]);
+            expect(list.count()).to.equal(0);
+        });
+        it("should return 5", () => {
+            const list = Enumerable.from([1, 9, 2, 8, 3, 7, 4, 6, 5, 0]);
+            const count = list.count(n => n < 5);
+            expect(count).to.eq(5);
+        });
+    });
+    describe("#defaultIfEmpty()", () => {
+        it("should return a new IEnumerable with the default values", () => {
+            const list = Enumerable.empty<number>();
+            const newList = list.defaultIfEmpty(7).toArray();
+            const single = list.defaultIfEmpty(1).single();
+            expect(newList.length).to.eq(1);
+            expect(newList[0]).to.eq(7);
+            expect(single).to.eq(1);
         });
     });
     describe("#distinct()", () => {
@@ -129,12 +188,130 @@ describe("Enumerable", () => {
             expect(emptyEnumerable.firstOrDefault(p => p % 2 === 0)).to.eq(null);
         });
     });
+    describe("#groupBy()", () => {
+        const list = Enumerable.from([alice, mel, senna, lenka, jane, karen, reina]);
+        it("should group people by age", () => {
+            const group = list.groupBy(p => p.Age).toArray();
+            const ages: number[] = [];
+            const groupedAges: { [age: number]: number[] } = {};
+            for (const ageGroup of group) {
+                ages.push(ageGroup.key);
+                groupedAges[ageGroup.key] ??= [];
+                for (const pdata of ageGroup.data) {
+                    groupedAges[ageGroup.key].push(pdata.Age);
+                }
+            }
+            expect(ages).to.have.all.members([9, 10, 16, 23]);
+            for (const g in groupedAges) {
+                const sameAges = groupedAges[g];
+                const expectedAges = new Array(sameAges.length).fill(sameAges[0]);
+                expect(sameAges).to.deep.equal(expectedAges);
+            }
+        });
+        it("should return people who are younger than 16", () => {
+            const kids = list.groupBy(p => p.Age).where(pg => pg.key < 16).selectMany(g => g.data).toArray();
+            expect(kids.length).to.eq(3);
+            expect(kids).to.have.all.members([karen, mel, senna]);
+        });
+        it("should use provided comparator", () => {
+            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1.localeCompare(n2)).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
+            expect(shortNamedPeople.length).to.eq(2);
+            expect(shortNamedPeople).to.have.all.members([mel, jane]);
+        });
+    });
+    // describe("#groupJoin()", () => {
+    //     const school1 = new School(1, "Elementary School");
+    //     const school2 = new School(2, "High School");
+    //     const school3 = new School(3, "University");
+    //     const school4 = new School(5, "Academy");
+    //     const desiree = new Student(100, "Desireé", "Moretti", 3);
+    //     const apolline = new Student(200, "Apolline", "Bruyere", 2);
+    //     const giselle = new Student(300, "Giselle", "García", 2);
+    //     const priscilla = new Student(400, "Priscilla", "Necci", 1);
+    //     const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
+    //     const schools = Enumerable.from([school1, school2, school3, school4]);
+    //     const students = Enumerable.from([desiree, apolline, giselle, priscilla, lucrezia]);
+    //     it("should join and group by school id", () => {
+    //         const joinedData = schools.groupJoin(students, sc => sc.Id, st => st.SchoolId,
+    //             (schoolId, students) => {
+    //                 return new SchoolStudents(schoolId, Array.from(students));
+    //             }).orderByDescending(ss => ss.Students.size());
+    //         const finalData = joinedData.toArray();
+    //         const finalOutput: string[] = [];
+    //         for (const sd of finalData) {
+    //             const school = schools.where(s => s.Id === sd.SchoolId).single();
+    //             finalOutput.push(`Students of ${school.Name}: `);
+    //             for (const student of sd.Students) {
+    //                 finalOutput.push(`[${student.Id}] :: ${student.Name} ${student.Surname}`);
+    //             }
+    //         }
+    //         const expectedOutput: string[] = [
+    //             "Students of High School: ",
+    //             "[200] :: Apolline Bruyere",
+    //             "[300] :: Giselle García",
+    //             "Students of Elementary School: ",
+    //             "[400] :: Priscilla Necci",
+    //             "Students of University: ",
+    //             "[100] :: Desireé Moretti",
+    //             "Students of Academy: "
+    //         ];
+    //         expect(finalOutput).to.deep.equal(expectedOutput);
+    //     });
+    // });
     describe("#intersect()", () => {
         const numList1 = [1, 2, 3, 4, 5, 6, 7];
         const numList2 = [5, 6, 7, 11, 22, 33, 44, 55];
         const intersectList = Enumerable.from(numList1).intersect(Enumerable.from(numList2)).toArray();
         it("should return the elements from numList1 only if they also exist in numList2", () => {
             expect(intersectList).to.deep.equal([5, 6, 7]);
+        });
+    });
+    describe("#join()", () => {
+        const school1 = new School(1, "Elementary School");
+        const school2 = new School(2, "High School");
+        const school3 = new School(3, "University");
+        const desiree = new Student(100, "Desireé", "Moretti", 3);
+        const apolline = new Student(200, "Apolline", "Bruyere", 2);
+        const giselle = new Student(300, "Giselle", "García", 2);
+        const priscilla = new Student(400, "Priscilla", "Necci", 1);
+        const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
+        const schools = Enumerable.from([school1, school2, school3]);
+        const students = Enumerable.from([desiree, apolline, giselle, priscilla, lucrezia]);
+        it("should join students and schools", () => {
+            const joinedData = students.join(schools, st => st.SchoolId, sc => sc.Id,
+                (student, school) => `${student.Name} ${student.Surname} :: ${school.Name}`).toArray();
+            const expectedOutputDataList = [
+                "Desireé Moretti :: University",
+                "Apolline Bruyere :: High School",
+                "Giselle García :: High School",
+                "Priscilla Necci :: Elementary School"
+            ];
+            expect(joinedData.length).to.eq(4);
+            expect(joinedData).to.deep.equal(expectedOutputDataList);
+        });
+        it("should set null for school if left join is true", () => {
+            const joinedData = students.join(schools, st => st.SchoolId, sc => sc.Id,
+                (student, school) => [student, school], (stid, scid) => stid - scid, true).toArray();
+            for (const jd of joinedData) {
+                if ((jd[0] as Student).Surname === "Volpe") {
+                    expect(jd[1]).to.eq(null);
+                } else {
+                    expect(jd[1]).to.not.eq(null);
+                }
+            }
+        });
+        it("should join key-value pairs", () => {
+            const pairList1 = Enumerable.from([new Pair(1, "A"), new Pair(2, "B"), new Pair(3, "C")]);
+            const pairList2 = Enumerable.from([new Pair(1, "a1"), new Pair(1, "a2"), new Pair(1, "a3"), new Pair(2, "b1"), new Pair(2, "b2")]);
+            const joinList = pairList1.join(pairList2, p1 => p1.key, p2 => p2.key, (pair1, pair2) => [pair1.value, pair2.value]);
+            const expectedOutput = [
+                ["A", "a1"],
+                ["A", "a2"],
+                ["A", "a3"],
+                ["B", "b1"],
+                ["B", "b2"]
+            ];
+            expect(joinList.toArray()).to.deep.equal(expectedOutput);
         });
     });
     describe("#last", () => {
@@ -223,6 +400,41 @@ describe("Enumerable", () => {
         it("should create an enumerable that can be queried", () => {
             const sum = Enumerable.repeat(10, 10).sum(n => n);
             expect(sum).to.eq(100);
+        });
+    });
+    describe("#reverse()", () => {
+        const enumerable = Enumerable.from([alice, lenka, senna, mel]);
+        it("should have a person with the surname 'Rivermist' at the end.", () => {
+            const reverseEnumerable = enumerable.reverse();
+            const reverseList = reverseEnumerable.toArray();
+            const last = reverseList[reverseList.length - 1];
+            expect(last.Surname).to.eq("Rivermist");
+            expect(reverseEnumerable.last().Name).to.eq("Alice");
+        });
+        it("should not modify the original list", () => {
+            const list = Enumerable.from([1, 2, 3, 4, 5]);
+            const list2 = list.reverse().toArray();
+            expect(list.elementAt(0)).to.eq(list2[4]);
+            expect(list.elementAt(1)).to.eq(list2[3]);
+            expect(list.elementAt(2)).to.eq(list2[2]);
+            expect(list.elementAt(3)).to.eq(list2[1]);
+            expect(list.elementAt(4)).to.eq(list2[0]);
+        });
+    });
+    describe("#selectMany()", () => {
+        it(`should throw error [${ErrorMessages.NoSelectorProvided}]`, () => {
+            const list = Enumerable.from([2, 5, 6, 99]);
+            expect(() => list.selectMany(null)).to.throw(ErrorMessages.NoSelectorProvided);
+        });
+        it("should return a flattened array of ages #1", () => {
+            viola.FriendsArray = [rebecca];
+            jisu.FriendsArray = [alice, mel];
+            vanessa.FriendsArray = [viola, rebecca, jisu, alice];
+            rebecca.FriendsArray = [viola];
+            const people: Person[] = [viola, rebecca, jisu, vanessa];
+            const peopleList = List.from(people);
+            const friends = peopleList.selectMany(p => p.FriendsArray).select(p => p.Age).toArray();
+            expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
         });
     });
     describe("#sequenceEqual()", () => {

@@ -1,4 +1,6 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
+import {IGrouping} from "./IGrouping";
+import {Grouping} from "./Grouping";
 
 export class Enumerable<T> implements IEnum<T> {
     private readonly core: EnumerableCore<T>;
@@ -21,20 +23,33 @@ export class Enumerable<T> implements IEnum<T> {
         return this.iterator();
     }
 
+    public static empty<S>(): IEnum<S> {
+        return new Enumerable<S>([]);
+    }
+
     public static from<S>(source: Array<S>): Enumerable<S> {
         return new Enumerable<S>(source);
     }
 
     public static range(start: number, count: number): IEnum<number> {
-        const numbers: number[] = [];
-        for (let ix = 0; ix < count; ++ix) {
-            numbers.push(start + ix);
-        }
-        return new Enumerable(numbers);
+        return new EnumerableCore(function* () {
+            for (let ix = 0; ix < count; ++ix) {
+                yield start + ix;
+            }
+        });
     }
 
+
     public static repeat<S>(item: S, count: number): IEnum<S> {
-        return new Enumerable(new Array(count).fill(item));
+        return new EnumerableCore(function* (){
+            for (let ix = 0; ix < count; ++ix) {
+                yield item;
+            }
+        });
+    }
+
+    public aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U {
+        return this.core.aggregate(aggregator, seed, resultSelector);
     }
 
     public all(predicate?: Predicate<T>): boolean {
@@ -61,8 +76,12 @@ export class Enumerable<T> implements IEnum<T> {
         return this.core.contains(item, comparator);
     }
 
-    public count(): number {
-        return this.core.count();
+    public count(predicate?: Predicate<T>): number {
+        return this.core.count(predicate);
+    }
+
+    public defaultIfEmpty(value?: T): IEnum<T> {
+        return this.core.defaultIfEmpty(value);
     }
 
     public distinct(comparator?: Comparator<T>): IEnum<T> {
@@ -89,8 +108,22 @@ export class Enumerable<T> implements IEnum<T> {
         return this.core.firstOrDefault(predicate);
     }
 
+    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: Comparator<R>): IEnum<IGrouping<R, T>> {
+        return this.core.groupBy(keySelector, keyComparator);
+    }
+
+    public groupJoin<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                              resultSelector: JoinSelector<K, Iterable<E>, R>, keyComparator?: Comparator<K>): IEnum<R> {
+        return this.core.groupJoin(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
     public intersect(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
         return this.core.intersect(enumerable, comparator);
+    }
+
+    public join<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                         resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin?: boolean): IEnum<R> {
+        return this.core.join(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
     public last(predicate?: Predicate<T>): T {
@@ -113,8 +146,16 @@ export class Enumerable<T> implements IEnum<T> {
         return this.core.prepend(item);
     }
 
+    public reverse(): IEnum<T> {
+        return this.core.reverse();
+    }
+
     public select<R>(selector: Selector<T, R>): IEnum<R> {
         return this.core.select(selector);
+    }
+
+    public selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnum<R> {
+        return this.core.selectMany(selector);
     }
 
     public sequenceEqual(enumerable: IEnum<T>, comparator?: Comparator<T>): boolean {
@@ -184,6 +225,29 @@ class EnumerableCore<T> implements IEnum<T> {
         return this.iterator();
     }
 
+    public aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U {
+        if (!aggregator) {
+            throw new Error(ErrorMessages.NoAggregatorProvided);
+        }
+        let aggregatedValue: R;
+        if (seed == null) {
+            aggregatedValue = this.first() as unknown as R;
+            for (const item of this.skip(1)) {
+                aggregatedValue = aggregator(aggregatedValue, item);
+            }
+        } else {
+            aggregatedValue = seed;
+            for (const item of this) {
+                aggregatedValue = aggregator(aggregatedValue, item);
+            }
+        }
+        if (resultSelector) {
+            return resultSelector(aggregatedValue);
+        } else {
+            return aggregatedValue;
+        }
+    }
+
     public all(predicate?: Predicate<T>): boolean {
         if (!predicate) {
             return !this.iterator().next().done;
@@ -238,12 +302,24 @@ class EnumerableCore<T> implements IEnum<T> {
         return false;
     }
 
-    public count(): number {
+    public count(predicate?: Predicate<T>): number {
         let count: number = 0;
-        for (const d of this) {
-            count++;
+        if (!predicate) {
+            for (const item of this) {
+                ++count;
+            }
+            return count;
+        }
+        for (const item of this) {
+            if (predicate(item)) {
+                ++count;
+            }
         }
         return count;
+    }
+
+    public defaultIfEmpty(value?: T): IEnum<T> {
+        return new EnumerableCore(() => this.defaultIfEmptyGenerator(value));
     }
 
     public distinct(comparator?: Comparator<T>): IEnum<T> {
@@ -279,6 +355,9 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public first(predicate?: Predicate<T>): T {
+        if (!this.any()) {
+            throw new Error(ErrorMessages.NoElements);
+        }
         const item = this.firstOrDefault(predicate);
         if (!item) {
             throw new Error(ErrorMessages.NoMatchingElement);
@@ -287,12 +366,41 @@ class EnumerableCore<T> implements IEnum<T> {
     }
 
     public firstOrDefault(predicate?: Predicate<T>): T {
-        for (const item of this) {
-            if (predicate(item)) {
-                return item;
+        if (!predicate) {
+            return this.iterator().next().value ?? null;
+        } else {
+            let first: T = null;
+            for (const item of this) {
+                if (predicate(item)) {
+                    first = item;
+                    break;
+                }
             }
+            return first;
         }
-        return null;
+    }
+
+    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: Comparator<R>): IEnum<IGrouping<R, T>> {
+        if (!keyComparator) {
+            keyComparator = EnumerableCore.defaultComparator;
+        }
+        return new EnumerableCore(() => this.groupByGenerator(keySelector, keyComparator));
+    }
+
+    public groupJoin<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                              resultSelector: JoinSelector<K, Iterable<E>, R>, keyComparator?: Comparator<K>): IEnum<R> {
+        if (!keyComparator) {
+            keyComparator = EnumerableCore.defaultComparator;
+        }
+        return new EnumerableCore(() => this.groupJoinGenerator(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
+    }
+
+    public join<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                         resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin?: boolean): IEnum<R> {
+        if (!keyComparator) {
+            keyComparator = EnumerableCore.defaultComparator;
+        }
+        return new EnumerableCore(() => this.joinGenerator(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin));
     }
 
     public intersect(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T> {
@@ -383,8 +491,19 @@ class EnumerableCore<T> implements IEnum<T> {
         return new EnumerableCore(() => this.prependGenerator(item));
     }
 
+    public reverse(): IEnum<T> {
+        return new EnumerableCore(() => this.reverseGenerator());
+    }
+
     public select<R>(selector: Selector<T, R>): IEnum<R> {
         return new EnumerableCore<R>(() => this.selectGenerator(selector));
+    }
+
+    public selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnum<R> {
+        if (!selector) {
+            throw new Error(ErrorMessages.NoSelectorProvided);
+        }
+        return new EnumerableCore(() => this.selectManyGenerator(selector));
     }
 
     public sequenceEqual(enumerable: IEnum<T>, comparator?: Comparator<T>): boolean {
@@ -517,7 +636,7 @@ class EnumerableCore<T> implements IEnum<T> {
         return new EnumerableCore<T>(() => this.whereGenerator(predicate));
     }
 
-    public zip<R, U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T,R]> | IEnum<U> {
+    public zip<R, U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T, R]> | IEnum<U> {
         if (!zipper) {
             return new EnumerableCore(() => this.zipTupleGenerator(enumerable));
         } else {
@@ -535,6 +654,15 @@ class EnumerableCore<T> implements IEnum<T> {
         yield* enumerable;
     }
 
+    private* defaultIfEmptyGenerator(value?: T): IterableIterator<T> {
+        if (this.any()) {
+            yield* this;
+        } else {
+            yield value;
+            yield* this;
+        }
+    }
+
     private* exceptGenerator(enumerable: IEnum<T>, comparator?: Comparator<T>): IterableIterator<T> {
         if (!comparator) {
             comparator = EnumerableCore.defaultComparator;
@@ -543,6 +671,20 @@ class EnumerableCore<T> implements IEnum<T> {
             if (!enumerable.contains(item, comparator)) {
                 yield item
             }
+        }
+    }
+
+    private* groupByGenerator<R>(keySelector: Selector<T, R>, keyComparator?: Comparator<R>): IterableIterator<IGrouping<R, T>> {
+        const groupedEnumerable = this.select(keySelector).distinct(keyComparator)
+            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)) === 0).toArray()));
+        yield* groupedEnumerable;
+    }
+
+    private* groupJoinGenerator<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                                         resultSelector: JoinSelector<K, Iterable<E>, R>, keyComparator?: Comparator<K>): IterableIterator<R> {
+        for (let item of this) {
+            const joinedEntries = enumerable.where(innerData => keyComparator(outerKeySelector(item), innerKeySelector(innerData)) === 0);
+            yield resultSelector(outerKeySelector(item), joinedEntries);
         }
     }
 
@@ -562,14 +704,42 @@ class EnumerableCore<T> implements IEnum<T> {
         }
     }
 
+    private* joinGenerator<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                                    resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin?: boolean): IterableIterator<R> {
+        for (const item of this) {
+            const outerItems = enumerable.where(innerData => keyComparator(outerKeySelector(item), innerKeySelector(innerData)) === 0);
+            if (leftJoin && !outerItems.any()) {
+                yield resultSelector(item, null);
+            } else {
+                for (const outerItem of outerItems) {
+                    yield resultSelector(item, outerItem);
+                }
+            }
+        }
+    }
+
     private* prependGenerator(item: T): IterableIterator<T> {
         yield item;
         yield* this;
     }
 
+    private* reverseGenerator(): IterableIterator<T> {
+        yield* Array.from(this).reverse();
+    }
+
     private* selectGenerator<R>(selector: Selector<T, R>): IterableIterator<R> {
         for (const d of this) {
             yield selector(d);
+        }
+    }
+
+    private* selectManyGenerator<R>(selector: IndexedSelector<T, Iterable<R>>): IterableIterator<R> {
+        let index = 0;
+        for (const item of this) {
+            for (const subItem of selector(item, index)) {
+                yield subItem;
+            }
+            ++index;
         }
     }
 
@@ -690,7 +860,7 @@ class EnumerableCore<T> implements IEnum<T> {
         }
     }
 
-    private* zipTupleGenerator<R>(enumerable: IEnum<R>): IterableIterator<[T,R]> {
+    private* zipTupleGenerator<R>(enumerable: IEnum<R>): IterableIterator<[T, R]> {
         const iterator = this.iterator();
         const otherIterator = enumerable[Symbol.iterator]();
         while (true) {
@@ -707,6 +877,8 @@ class EnumerableCore<T> implements IEnum<T> {
 }
 
 interface IEnum<T> extends Iterable<T> {
+    aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U;
+
     all(comparator?: Predicate<T>): boolean;
 
     any(comparator?: Predicate<T>): boolean;
@@ -719,7 +891,9 @@ interface IEnum<T> extends Iterable<T> {
 
     contains(item: T, comparator?: Comparator<T>): boolean;
 
-    count(): number;
+    count(predicate?: Predicate<T>): number;
+
+    defaultIfEmpty(value?: T): IEnum<T>;
 
     distinct(comparator?: Comparator<T>): IEnum<T>;
 
@@ -733,7 +907,15 @@ interface IEnum<T> extends Iterable<T> {
 
     firstOrDefault(predicate?: Predicate<T>): T;
 
+    groupBy<R>(keySelector: Selector<T, R>, keyComparator: Comparator<R>): IEnum<IGrouping<R, T>>;
+
+    groupJoin<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                       resultSelector: JoinSelector<K, Iterable<E>, R>, keyComparator?: Comparator<K>): IEnum<R>;
+
     intersect(enumerable: IEnum<T>, comparator?: Comparator<T>): IEnum<T>;
+
+    join<E, K, R>(enumerable: IEnum<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                  resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin?: boolean): IEnum<R>;
 
     last(predicate?: Predicate<T>): T;
 
@@ -745,7 +927,11 @@ interface IEnum<T> extends Iterable<T> {
 
     prepend(item: T): IEnum<T>;
 
+    reverse(): IEnum<T>;
+
     select<R>(selector: Selector<T, R>): IEnum<R>;
+
+    selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnum<R>;
 
     sequenceEqual(enumerable: IEnum<T>, comparator?: Comparator<T>): boolean;
 
@@ -773,7 +959,7 @@ interface IEnum<T> extends Iterable<T> {
 
     where(predicate: Predicate<T>): IEnum<T>;
 
-    zip<R,U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T,R]> | IEnum<U>;
+    zip<R, U>(enumerable: IEnum<R>, zipper?: Zipper<T, R, U>): IEnum<[T, R]> | IEnum<U>;
 }
 
 
@@ -789,12 +975,24 @@ interface Selector<T, R> {
     (item: T): R;
 }
 
+interface IndexedSelector<T, R> {
+    (item: T, index?: number): R;
+}
+
+interface JoinSelector<T, E, R> {
+    (firstItem: T, secondItem: E): R;
+}
+
 interface Comparator<T> {
     (item1: T, item2: T): number;
 }
 
 interface Zipper<T, R, U> {
     (item1: T, item2: R): U;
+}
+
+interface Aggregator<T, R> {
+    (acc: R, item: T): R;
 }
 
 interface EnumerableIterator<T> {
