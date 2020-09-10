@@ -39,6 +39,7 @@ describe("Enumerable", () => {
     const suzuha = new Person("Suzuha", "Suzuki", 22);
     const suzuha2 = new Person("Suzuha", "Mizuki", 22);
     const suzuha3 = new Person("Suzuha", "Mizuki", 26);
+    const randomPeopleList = [alice, suzuha3, jane, suzuha2, jisu, suzuha, viola, megan, lucrezia, noemi, priscilla, reika, bella, eliza, hanna, julia];
     describe("#aggregate()", () => {
         it("should return 6", () => {
             const list = Enumerable.from([4, 8, 8, 3, 9, 0, 7, 8, 2]);
@@ -374,6 +375,24 @@ describe("Enumerable", () => {
             expect(max).to.eq(234);
         });
     });
+    describe("#orderBy()", () => {
+        it("should order people by age [asc]", () => {
+            const people = Enumerable.from([alice, lenka, jane, jisu, karen, mel, rebecca, reina, senna, vanessa, viola]);
+            const orderedPeople = people.orderBy(p => p.Age);
+            const orderedPeopleAges = orderedPeople.select(p => p.Age);
+            const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
+            expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+    describe("#orderByDescending()", () => {
+        it("should order people by age [desc]", () => {
+            const people = Enumerable.from([alice, lenka, jane, jisu, karen, mel, rebecca, reina, senna, vanessa, viola]);
+            const orderedPeople = people.orderByDescending(p => p.Age);
+            const orderedPeopleAges = orderedPeople.select(p => p.Age);
+            const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
+            expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
     describe("#prepend()", () => {
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         const enumerable = Enumerable.from(numbers);
@@ -616,6 +635,188 @@ describe("Enumerable", () => {
             expect(list2).to.deep.equal(["apple", "banana", "mango"]);
         });
     });
+    describe("#thenBy()", () => {
+        it("should order people by age [asc] then by name[asc]", () => {
+            const people = Enumerable.from([alice, lenka, jane, jisu, karen, mel, rebecca, reina, senna, vanessa, viola]);
+            const orderedPeople = people.orderBy(p => p.Age, (a1, a2) => a1 - a2).thenBy(p => p.Name);
+            const orderedPeopleAges = orderedPeople.select(p => p.Age);
+            const orderedPeopleNames = orderedPeople.select(p => p.Name);
+            const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
+            const expectedNames = ["Mel", "Karen", "Senna", "Jisu", "Jane", "Lenka", "Rebecca", "Vanessa", "Alice", "Reina", "Viola"];
+            expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+            expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
+        });
+        it("should order people by age [asc] then by name[asc] then by surname[asc]", () => {
+            const people = Enumerable.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
+            const orderedPeople = people.orderBy(p => p.Age)
+                .thenBy(p => p.Name, (n1, n2) => n1.localeCompare(n2))
+                .thenBy(p => p.Surname);
+            const expectedOrder: string[] = [
+                "[9] :: Priscilla Necci",
+                "[19] :: Elizabeth Jackson",
+                "[19] :: Hanna Jackson",
+                "[20] :: Hanna Jackson",
+                "[21] :: Bella Rivera",
+                "[21] :: Lucrezia Volpe",
+                "[22] :: Suzuha Mizuki",
+                "[22] :: Suzuha Suzuki",
+                "[25] :: Emily Redridge",
+                "[26] :: Suzuha Mizuki",
+                "[29] :: Noemi Waterfox",
+                "[32] :: Amy Rivera",
+                "[37] :: Reika Kurohana",
+                "[43] :: Noemi Waterfox",
+                "[44] :: Julia Watson",
+                "[44] :: Megan Watson",
+                "[77] :: Olga Byakova"
+            ];
+            const returnedOrder: string[] = [];
+            for (const p of orderedPeople.toArray()) {
+                const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
+                returnedOrder.push(personStr);
+            }
+            expect(returnedOrder).to.deep.equal(expectedOrder);
+        });
+        it("should be ignored if followed by an orderBy", () => {
+            const people = Enumerable.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
+            const orderedPeople = people.orderByDescending(p => p.Age, (a1, a2) => a1 - a2)
+                .thenBy(p => p.Name)
+                .thenBy(p => p.Surname, (n1, n2) => n1.localeCompare(n2))
+                .orderBy(p => p.Age).thenBy(p => p.Name);
+            const expectedOrder: string[] = [
+                "[9] :: Priscilla Necci",
+                "[19] :: Elizabeth Jackson",
+                "[19] :: Hanna Jackson",
+                "[20] :: Hanna Jackson",
+                "[21] :: Bella Rivera",
+                "[21] :: Lucrezia Volpe",
+                "[22] :: Suzuha Mizuki",
+                "[22] :: Suzuha Suzuki",
+                "[25] :: Emily Redridge",
+                "[26] :: Suzuha Mizuki",
+                "[29] :: Noemi Waterfox",
+                "[32] :: Amy Rivera",
+                "[37] :: Reika Kurohana",
+                "[43] :: Noemi Waterfox",
+                "[44] :: Julia Watson",
+                "[44] :: Megan Watson",
+                "[77] :: Olga Byakova"
+            ];
+            const returnedOrder: string[] = [];
+            for (const p of orderedPeople.toArray()) {
+                const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
+                returnedOrder.push(personStr);
+            }
+            expect(returnedOrder).to.deep.equal(expectedOrder);
+        });
+    });
+    describe("#thenByDescending()", () => {
+        it("should order people by age [asc] then by name[desc]", () => {
+            const people = Enumerable.from([alice, lenka, jane, jisu, karen, mel, rebecca, reina, senna, vanessa, viola]);
+            const orderedPeople = people.orderBy(p => p.Age).thenByDescending(p => p.Name);
+            const orderedPeopleAges = orderedPeople.select(p => p.Age);
+            const orderedPeopleNames = orderedPeople.select(p => p.Name);
+            const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
+            const expectedNames = ["Mel", "Senna", "Karen", "Jisu", "Lenka", "Jane", "Rebecca", "Vanessa", "Reina", "Alice", "Viola"];
+            expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+            expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
+        });
+        it("should order people by age [desc] then by name[desc] then by surname[desc]", () => {
+            const people = List.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
+            const orderedPeople = people.orderByDescending(p => p.Age, (a1, a2) => a1 - a2)
+                .thenByDescending(p => p.Name)
+                .thenByDescending(p => p.Surname, (n1, n2) => n1.localeCompare(n2));
+            const expectedOrder: string[] = [
+                "[77] :: Olga Byakova",
+                "[44] :: Megan Watson",
+                "[44] :: Julia Watson",
+                "[43] :: Noemi Waterfox",
+                "[37] :: Reika Kurohana",
+                "[32] :: Amy Rivera",
+                "[29] :: Noemi Waterfox",
+                "[26] :: Suzuha Mizuki",
+                "[25] :: Emily Redridge",
+                "[22] :: Suzuha Suzuki",
+                "[22] :: Suzuha Mizuki",
+                "[21] :: Lucrezia Volpe",
+                "[21] :: Bella Rivera",
+                "[20] :: Hanna Jackson",
+                "[19] :: Hanna Jackson",
+                "[19] :: Elizabeth Jackson",
+                "[9] :: Priscilla Necci"
+            ];
+            const returnedOrder: string[] = [];
+            for (const p of orderedPeople.toArray()) {
+                const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
+                returnedOrder.push(personStr);
+            }
+            expect(returnedOrder).to.deep.equal(expectedOrder);
+        });
+        it("should be ignored if followed by an orderBy", () => {
+            const people = Enumerable.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
+            const orderedPeople = people.orderByDescending(p => p.Age, (a1, a2) => a1 - a2)
+                .thenByDescending(p => p.Name)
+                .thenByDescending(p => p.Surname, (n1, n2) => n1.localeCompare(n2))
+                .orderBy(p => p.Age).thenBy(p => p.Name);
+            const expectedOrder: string[] = [
+                "[9] :: Priscilla Necci",
+                "[19] :: Elizabeth Jackson",
+                "[19] :: Hanna Jackson",
+                "[20] :: Hanna Jackson",
+                "[21] :: Bella Rivera",
+                "[21] :: Lucrezia Volpe",
+                "[22] :: Suzuha Suzuki",
+                "[22] :: Suzuha Mizuki",
+                "[25] :: Emily Redridge",
+                "[26] :: Suzuha Mizuki",
+                "[29] :: Noemi Waterfox",
+                "[32] :: Amy Rivera",
+                "[37] :: Reika Kurohana",
+                "[43] :: Noemi Waterfox",
+                "[44] :: Julia Watson",
+                "[44] :: Megan Watson",
+                "[77] :: Olga Byakova"
+            ];
+            const returnedOrder: string[] = [];
+            for (const p of orderedPeople.toArray()) {
+                const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
+                returnedOrder.push(personStr);
+            }
+            expect(returnedOrder).to.deep.equal(expectedOrder);
+        });
+        it("should be ignored if followed by an orderByDescending", () => {
+            const people = Enumerable.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
+            const orderedPeople = people.orderByDescending(p => p.Age, (a1, a2) => a1 - a2)
+                .thenByDescending(p => p.Name)
+                .thenByDescending(p => p.Surname, (n1, n2) => n1.localeCompare(n2))
+                .orderByDescending(p => p.Age).thenBy(p => p.Name);
+            const expectedOrder: string[] = [
+                "[77] :: Olga Byakova",
+                "[44] :: Julia Watson",
+                "[44] :: Megan Watson",
+                "[43] :: Noemi Waterfox",
+                "[37] :: Reika Kurohana",
+                "[32] :: Amy Rivera",
+                "[29] :: Noemi Waterfox",
+                "[26] :: Suzuha Mizuki",
+                "[25] :: Emily Redridge",
+                "[22] :: Suzuha Suzuki",
+                "[22] :: Suzuha Mizuki",
+                "[21] :: Bella Rivera",
+                "[21] :: Lucrezia Volpe",
+                "[20] :: Hanna Jackson",
+                "[19] :: Elizabeth Jackson",
+                "[19] :: Hanna Jackson",
+                "[9] :: Priscilla Necci"
+            ];
+            const returnedOrder: string[] = [];
+            for (const p of orderedPeople.toArray()) {
+                const personStr = `[${p.Age}] :: ${p.Name} ${p.Surname}`;
+                returnedOrder.push(personStr);
+            }
+            expect(returnedOrder).to.deep.equal(expectedOrder);
+        });
+    });
     describe("#union()", () => {
         const numberList1 = [1, 2, 3, 4, 5];
         const numberList2 = [4, 5, 6, 7, 8];
@@ -656,6 +857,13 @@ describe("Enumerable", () => {
             expect(zippedList.length).to.eq(2);
             expect(zippedList[0]).to.eq("four 3");
             expect(zippedList[1]).to.eq("five 4");
+        });
+    });
+    describe("Chained Use Tests", () => {
+        it("temp value", () => {
+            const randomNumbers = Array.from({length: 100}, () => Math.floor(Math.random() * 1000));
+            const result = Enumerable.from(randomPeopleList).where(p => p.Age <= 40).orderByDescending(p => p.Age).thenBy(p => p.Surname).toArray();
+            console.log(result.map(r => [r.Age, r.Name, r.Surname]));
         });
     });
 });
