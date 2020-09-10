@@ -2,9 +2,9 @@ import {IList} from "./IList";
 import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
-import {IEnumerable} from "../enumerable/IEnumerable";
 import {IGrouping} from "../enumerable/IGrouping";
 import {Grouping} from "../enumerable/Grouping";
+import {IEnumerable} from "../enumerable/IEnumerable";
 import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
 
 type OrderActions = { selector: Function, comparator: Function, direction: OrderDirection };
@@ -813,7 +813,8 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             const right = second.elementAt(ix);
             list.add(zipper(left, right));
         }
-        return list.asEnumerable();
+        // return list.asEnumerable();
+        return list;
     }
 
     private addOrderAction(action: OrderActions|OrderActions[]): void {

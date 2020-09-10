@@ -176,14 +176,14 @@ describe("List", () => {
             expect(any).to.eq(false);
         });
     });
-    describe("#asEnumerable()", () => {
-        const list: IList<Person> = new List<Person>();
-        list.add(alice);
-        list.add(mel);
-        it("should return itself as an enumerable", () => {
-            expect(list.asEnumerable() === list).to.eq(true);
-        });
-    });
+    // describe("#asEnumerable()", () => {
+    //     const list: IList<Person> = new List<Person>();
+    //     list.add(alice);
+    //     list.add(mel);
+    //     it("should return itself as an enumerable", () => {
+    //         expect(list.asEnumerable() === list).to.eq(true);
+    //     });
+    // });
     describe("#average()", () => {
         it("should return 99948748093", () => {
             const list = List.from(["10007", "37", "299846234235"]);

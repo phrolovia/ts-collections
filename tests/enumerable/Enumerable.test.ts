@@ -2,13 +2,10 @@ import {Enumerable} from "../../src/enumerable/Enumerable";
 import {describe, it} from "mocha";
 import {expect} from "chai";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {List} from "../../src/list/List";
 import {Person} from "../models/Person";
-import {IList} from "../../src/list/IList";
 import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
-import {SchoolStudents} from "../models/SchoolStudents";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -451,7 +448,7 @@ describe("Enumerable", () => {
             vanessa.FriendsArray = [viola, rebecca, jisu, alice];
             rebecca.FriendsArray = [viola];
             const people: Person[] = [viola, rebecca, jisu, vanessa];
-            const peopleList = List.from(people);
+            const peopleList = Enumerable.from(people);
             const friends = peopleList.selectMany(p => p.FriendsArray).select(p => p.Age).toArray();
             expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
         });
@@ -722,7 +719,7 @@ describe("Enumerable", () => {
             expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
         });
         it("should order people by age [desc] then by name[desc] then by surname[desc]", () => {
-            const people = List.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
+            const people = Enumerable.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
             const orderedPeople = people.orderByDescending(p => p.Age, (a1, a2) => a1 - a2)
                 .thenByDescending(p => p.Name)
                 .thenByDescending(p => p.Surname, (n1, n2) => n1.localeCompare(n2));
