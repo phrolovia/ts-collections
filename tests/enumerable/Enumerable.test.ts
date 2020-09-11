@@ -6,6 +6,9 @@ import {Person} from "../models/Person";
 import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
+import {SchoolStudents} from "../models/SchoolStudents";
+import {IList} from "../../src/list/IList";
+import {List} from "../../src/list/List";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -65,6 +68,56 @@ describe("Enumerable", () => {
             const list = Enumerable.from<number>([]);
             const result = list.aggregate<number>((total, num) => total += num, -99);
             expect(result).to.eq(-99);
+        });
+    });
+    describe("#all()", () => {
+        const list = Enumerable.from([alice, mel, senna, null, jane]);
+        it("should not have any people younger than 9", () => {
+            const all = list.all(p => !p ? true : p.Age >= 9);
+            expect(all).to.eq(true);
+        });
+        it("should have people whose names start with an uppercase letter", () => {
+            const all = list.any(p => !p ? true : p.Name.charAt(0).toUpperCase() === p.Name.charAt(0));
+            expect(all).to.eq(true);
+        });
+        it("should have no null items", () => {
+            const all = list.all(p => p != null);
+            expect(all).to.eq(false);
+        });
+        it("should return true if no predicate is provided", () => {
+            const list2 = Enumerable.from([1]);
+            const any = list2.all();
+            expect(any).to.eq(true);
+        });
+        it("should return false if no predicate is provided and list is empty", () => {
+            const emptyList = Enumerable.from<number>([]);
+            const any = emptyList.all();
+            expect(any).to.eq(false);
+        });
+    });
+    describe("#any()", () => {
+        const list = Enumerable.from([alice, mel, senna, null, jane]);
+        it("should have a person with age '9'", () => {
+            const any = list.any(p => p.Age === 9);
+            expect(any).to.eq(true);
+        });
+        it("should not have people whose names start with 'T'", () => {
+            const any = list.any(p => p?.Name.startsWith("T"));
+            expect(any).to.eq(false);
+        });
+        it("should have null", () => {
+            const any = list.any(p => p == null);
+            expect(any).to.eq(true);
+        });
+        it("should return true if no predicate is provided", () => {
+            const list2 = Enumerable.from([]).defaultIfEmpty(1);
+            const any = list2.any();
+            expect(any).to.eq(true);
+        });
+        it("should return false if no predicate is provided and list is empty", () => {
+            const emptyList = Enumerable.empty();
+            const any = emptyList.any();
+            expect(any).to.eq(false);
         });
     });
     describe("#append()", () => {
@@ -217,45 +270,45 @@ describe("Enumerable", () => {
             expect(shortNamedPeople).to.have.all.members([mel, jane]);
         });
     });
-    // describe("#groupJoin()", () => {
-    //     const school1 = new School(1, "Elementary School");
-    //     const school2 = new School(2, "High School");
-    //     const school3 = new School(3, "University");
-    //     const school4 = new School(5, "Academy");
-    //     const desiree = new Student(100, "Desireé", "Moretti", 3);
-    //     const apolline = new Student(200, "Apolline", "Bruyere", 2);
-    //     const giselle = new Student(300, "Giselle", "García", 2);
-    //     const priscilla = new Student(400, "Priscilla", "Necci", 1);
-    //     const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
-    //     const schools = Enumerable.from([school1, school2, school3, school4]);
-    //     const students = Enumerable.from([desiree, apolline, giselle, priscilla, lucrezia]);
-    //     it("should join and group by school id", () => {
-    //         const joinedData = schools.groupJoin(students, sc => sc.Id, st => st.SchoolId,
-    //             (schoolId, students) => {
-    //                 return new SchoolStudents(schoolId, Array.from(students));
-    //             }).orderByDescending(ss => ss.Students.size());
-    //         const finalData = joinedData.toArray();
-    //         const finalOutput: string[] = [];
-    //         for (const sd of finalData) {
-    //             const school = schools.where(s => s.Id === sd.SchoolId).single();
-    //             finalOutput.push(`Students of ${school.Name}: `);
-    //             for (const student of sd.Students) {
-    //                 finalOutput.push(`[${student.Id}] :: ${student.Name} ${student.Surname}`);
-    //             }
-    //         }
-    //         const expectedOutput: string[] = [
-    //             "Students of High School: ",
-    //             "[200] :: Apolline Bruyere",
-    //             "[300] :: Giselle García",
-    //             "Students of Elementary School: ",
-    //             "[400] :: Priscilla Necci",
-    //             "Students of University: ",
-    //             "[100] :: Desireé Moretti",
-    //             "Students of Academy: "
-    //         ];
-    //         expect(finalOutput).to.deep.equal(expectedOutput);
-    //     });
-    // });
+    describe("#groupJoin()", () => {
+        const school1 = new School(1, "Elementary School");
+        const school2 = new School(2, "High School");
+        const school3 = new School(3, "University");
+        const school4 = new School(5, "Academy");
+        const desiree = new Student(100, "Desireé", "Moretti", 3);
+        const apolline = new Student(200, "Apolline", "Bruyere", 2);
+        const giselle = new Student(300, "Giselle", "García", 2);
+        const priscilla = new Student(400, "Priscilla", "Necci", 1);
+        const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
+        const schools = Enumerable.from([school1, school2, school3, school4]);
+        const students = Enumerable.from([desiree, apolline, giselle, priscilla, lucrezia]);
+        it("should join and group by school id", () => {
+            const joinedData = schools.groupJoin(students, sc => sc.Id, st => st.SchoolId,
+                (schoolId, students) => {
+                    return new SchoolStudents(schoolId, students.toList());
+                }).orderByDescending(ss => ss.Students.size());
+            const finalData = joinedData.toArray();
+            const finalOutput: string[] = [];
+            for (const sd of finalData) {
+                const school = schools.where(s => s.Id === sd.SchoolId).single();
+                finalOutput.push(`Students of ${school.Name}: `);
+                for (const student of sd.Students) {
+                    finalOutput.push(`[${student.Id}] :: ${student.Name} ${student.Surname}`);
+                }
+            }
+            const expectedOutput: string[] = [
+                "Students of High School: ",
+                "[200] :: Apolline Bruyere",
+                "[300] :: Giselle García",
+                "Students of Elementary School: ",
+                "[400] :: Priscilla Necci",
+                "Students of University: ",
+                "[100] :: Desireé Moretti",
+                "Students of Academy: "
+            ];
+            expect(finalOutput).to.deep.equal(expectedOutput);
+        });
+    });
     describe("#intersect()", () => {
         const numList1 = [1, 2, 3, 4, 5, 6, 7];
         const numList2 = [5, 6, 7, 11, 22, 33, 44, 55];
@@ -435,6 +488,28 @@ describe("Enumerable", () => {
             expect(list.elementAt(2)).to.eq(list2[2]);
             expect(list.elementAt(3)).to.eq(list2[1]);
             expect(list.elementAt(4)).to.eq(list2[0]);
+        });
+    });
+    describe("#select()", () => {
+        it("should throw error ['predicate is null.]", () => {
+            const list = Enumerable.from([2, 5, 6, 99]);
+            expect(() => list.select(null)).to.throw(ErrorMessages.NoSelectorProvided);
+        });
+        it("should return an IEnumerable with elements [4, 25, 36, 81]", () => {
+            const list = Enumerable.from([2, 5, 6, 9]);
+            const list2 = list.select(n => Math.pow(n, 2)).toList();
+            expect(list2.size()).to.eq(4);
+            expect(list2.get(0)).to.eq(4);
+            expect(list2.get(1)).to.eq(25);
+            expect(list2.get(2)).to.eq(36);
+            expect(list2.get(3)).to.eq(81);
+        });
+        it("should return an IEnumerable with elements [125, 729]", () => {
+            const list = Enumerable.from([2, 5, 6, 9]);
+            const list2 = list.where(n => n % 2 !== 0).select(n => Math.pow(n, 3)).toList();
+            expect(list2.size()).to.eq(2);
+            expect(list2.get(0)).to.eq(125);
+            expect(list2.get(1)).to.eq(729);
         });
     });
     describe("#selectMany()", () => {

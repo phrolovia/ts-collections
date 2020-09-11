@@ -39,7 +39,7 @@ export class Enumerable<T> implements IOrderedEnumerable<T> {
         return new Enumerable<S>([]);
     }
 
-    public static from<S>(source: Array<S>): Enumerable<S> {
+    public static from<S>(source: Array<S>): IEnumerable<S> {
         return new Enumerable<S>(source);
     }
 
@@ -322,9 +322,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public contains(item: T, comparator?: Comparator<T>): boolean {
-        if (!comparator) {
-            comparator = EnumerableCore.defaultComparator;
-        }
+        comparator = comparator ?? EnumerableCore.defaultComparator;
         for (const d of this) {
             if (comparator(d, item) === 0) {
                 return true;
@@ -354,6 +352,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public distinct(comparator?: Comparator<T>): IEnumerable<T> {
+        comparator = comparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.unionGenerator(Enumerable.from([]), comparator));
     }
 
@@ -382,6 +381,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public except(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T> {
+        comparator = comparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.exceptGenerator(enumerable, comparator));
     }
 
@@ -412,29 +412,24 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: Comparator<R>): IEnumerable<IGrouping<R, T>> {
-        if (!keyComparator) {
-            keyComparator = EnumerableCore.defaultComparator;
-        }
+        keyComparator = keyComparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.groupByGenerator(keySelector, keyComparator));
     }
 
     public groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
                               resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: Comparator<K>): IEnumerable<R> {
-        if (!keyComparator) {
-            keyComparator = EnumerableCore.defaultComparator;
-        }
+        keyComparator = keyComparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.groupJoinGenerator(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
     }
 
     public join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
                          resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin?: boolean): IEnumerable<R> {
-        if (!keyComparator) {
-            keyComparator = EnumerableCore.defaultComparator;
-        }
+        keyComparator = keyComparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.joinGenerator(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin));
     }
 
     public intersect(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T> {
+        comparator = comparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.intersectGenerator(enumerable, comparator));
     }
 
@@ -535,6 +530,9 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public select<R>(selector: Selector<T, R>): IEnumerable<R> {
+        if (!selector) {
+            throw new Error(ErrorMessages.NoSelectorProvided);
+        }
         return new EnumerableCore<R>(() => this.selectGenerator(selector));
     }
 
@@ -546,9 +544,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public sequenceEqual(enumerable: IEnumerable<T>, comparator?: Comparator<T>): boolean {
-        if (!comparator) {
-            comparator = EnumerableCore.defaultComparator;
-        }
+        comparator = comparator ?? EnumerableCore.defaultComparator;
         const iterator = this.iterator();
         const otherIterator = enumerable[Symbol.iterator]();
         let first = iterator.next();
@@ -680,6 +676,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public union(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T> {
+        comparator = comparator ?? EnumerableCore.defaultComparator;
         return new EnumerableCore(() => this.unionGenerator(enumerable, comparator));
     }
 
@@ -715,9 +712,6 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     private* exceptGenerator(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IterableIterator<T> {
-        if (!comparator) {
-            comparator = EnumerableCore.defaultComparator;
-        }
         for (const item of this) {
             if (!enumerable.contains(item, comparator)) {
                 yield item
@@ -740,9 +734,6 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     private* intersectGenerator(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IterableIterator<T> {
-        if (!comparator) {
-            comparator = EnumerableCore.defaultComparator;
-        }
         const intersectList: Array<T> = []
         for (const item of this) {
             if (enumerable.contains(item, comparator)) {
@@ -869,9 +860,6 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
 
     private* unionGenerator(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IterableIterator<T> {
         const distinctList: Array<T> = [];
-        if (!comparator) {
-            comparator = EnumerableCore.defaultComparator;
-        }
         for (const source of [this, enumerable]) {
             for (const item of source) {
                 let exists = false;
@@ -937,9 +925,7 @@ class OrderedEnumerableCore<T> extends EnumerableCore<T> implements IOrderedEnum
 
     public static createOrderedEnumerable<T, K>(source: Iterable<T> | IOrderedEnumerable<T>, keySelector: Selector<T, K>, ascending: boolean, viaThenBy?: boolean, comparator?: Comparator<K>) {
         const keyValueGenerator = function* <K>(source: Iterable<T> | IOrderedEnumerable<T>, keySelector: Selector<T, K>, ascending: boolean, comparator?: Comparator<K>): IterableIterator<T[]> {
-            if (!comparator) {
-                comparator = EnumerableCore.defaultComparator;
-            }
+            comparator = comparator ?? EnumerableCore.defaultComparator;
             const sortMap = OrderedEnumerableCore.createKeyValueMap(source, keySelector);
             const sortedKeys = Array.from(sortMap.keys()).sort(comparator);
             if (ascending) {
