@@ -7,7 +7,6 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
 import {SchoolStudents} from "../models/SchoolStudents";
-import {List} from "../../src/list/List";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -510,7 +509,7 @@ describe("Enumerable", () => {
         });
     });
     describe("#select()", () => {
-        it("should throw error ['predicate is null.]", () => {
+        it(`should throw error [${ErrorMessages.NoSelectorProvided}]`, () => {
             const list = Enumerable.from([2, 5, 6, 99]);
             expect(() => list.select(null)).to.throw(ErrorMessages.NoSelectorProvided);
         });
@@ -608,7 +607,7 @@ describe("Enumerable", () => {
             const item = list.singleOrDefault(n => n === 3);
             expect(item).to.eq(3);
         });
-        it("should throw error ['Sequence contains more than one matching element.']", () => {
+        it(`should throw error [${ErrorMessages.MoreThanOneMatchingElement}]`, () => {
             expect(() => list.append(3).singleOrDefault(n => n === 3)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
         });
         it("should return the only element in the list", () => {
@@ -616,9 +615,9 @@ describe("Enumerable", () => {
             const sod = list2.singleOrDefault();
             expect(sod).to.eq("Suzuha");
         });
-        it("should throw error ['Sequence contains more than one element.']", () => {
+        it(`should throw error [${ErrorMessages.MoreThanOneElement}]`, () => {
             const list2 = Enumerable.from(["Suzuha", "Suzuri"]);
-            expect(() => list2.singleOrDefault()).to.throw("Sequence contains more than one element.");
+            expect(() => list2.singleOrDefault()).to.throw(ErrorMessages.MoreThanOneElement);
         });
         it("should return default value [null] if no matching element is found.", () => {
             const sod = list.singleOrDefault(n => n < 0);
@@ -649,9 +648,9 @@ describe("Enumerable", () => {
     });
     describe("#skipWhile()", () => {
         const list = Enumerable.from([5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500]);
-        // it("should throw error ['predicate is null.]", () => {
-        //     expect(() => list.skipWhile(null)).to.throw("predicate is null.");
-        // });
+        it(`should throw error if predicate is null`, () => {
+            expect(() => list.skipWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
+        });
         it("should return an IEnumerable with elements [4000, 1500, 5500]", () => {
             const list2 = list.skipWhile((n, nx) => n > nx * 1000).toArray();
             expect(list2).to.deep.equal([4000, 1500, 5500]);

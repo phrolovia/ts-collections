@@ -48,7 +48,7 @@ export interface IEnumerable<T> extends Iterable<T> {
     skip(count: number): IEnumerable<T>;
     skipLast(count: number): IEnumerable<T>;
     skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
-    sum(selector: Selector<T, number>): number;
+    sum(selector?: Selector<T, number>): number;
     take(count: number): IEnumerable<T>;
     takeEvery(step: number): IEnumerable<T>;
     takeLast(count: number): IEnumerable<T>;
@@ -57,5 +57,5 @@ export interface IEnumerable<T> extends Iterable<T> {
     toList(): List<T>;
     union(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T>;
     where(predicate: Predicate<T>): IEnumerable<T>;
-    zip<R, U>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U>;
+    zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U>;
 }

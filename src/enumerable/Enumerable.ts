@@ -14,7 +14,7 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {List} from "../list/List";
 
-export class Enumerable<T> implements IOrderedEnumerable<T> {
+export class Enumerable<T> implements IEnumerable<T> {
     private readonly core: EnumerableCore<T>;
     private readonly iterator: EnumerableIterator<T>;
 
@@ -201,7 +201,7 @@ export class Enumerable<T> implements IOrderedEnumerable<T> {
         return this.core.skipWhile(predicate);
     }
 
-    public sum(selector: Selector<T, number>): number {
+    public sum(selector?: Selector<T, number>): number {
         return this.core.sum(selector);
     }
 
@@ -221,14 +221,6 @@ export class Enumerable<T> implements IOrderedEnumerable<T> {
         return this.core.takeWhile(predicate);
     }
 
-    public thenBy<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T> {
-        return this.core.thenBy(keySelector, comparator);
-    }
-
-    public thenByDescending<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T> {
-        return this.core.thenByDescending(keySelector, comparator);
-    }
-
     public toArray(): T[] {
         return this.core.toArray();
     }
@@ -245,7 +237,7 @@ export class Enumerable<T> implements IOrderedEnumerable<T> {
         return this.core.where(predicate);
     }
 
-    public zip<R, U>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
+    public zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
         return this.core.zip(enumerable, zipper);
     }
 }
@@ -653,10 +645,10 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         return new EnumerableCore(() => this.skipWhileGenerator(predicate));
     }
 
-    public sum(selector: Selector<T, number>): number {
+    public sum(selector?: Selector<T, number>): number {
         let total: number = 0;
         for (const d of this) {
-            total += selector(d);
+            total += selector?.(d) ?? d as unknown as number;
         }
         return total;
     }
@@ -674,6 +666,9 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T> {
+        if (!predicate) {
+            throw new Error(ErrorMessages.NoPredicateProvided);
+        }
         return new EnumerableCore(() => this.takeWhileGenerator(predicate));
     }
 
@@ -699,10 +694,13 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public where(predicate: IndexedPredicate<T>): IEnumerable<T> {
+        if (!predicate) {
+            throw new Error(ErrorMessages.NoPredicateProvided);
+        }
         return new EnumerableCore<T>(() => this.whereGenerator(predicate));
     }
 
-    public zip<R, U>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
+    public zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
         if (!zipper) {
             return new EnumerableCore(() => this.zipTupleGenerator(enumerable));
         } else {

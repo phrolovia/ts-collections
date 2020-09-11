@@ -68,21 +68,19 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section tsd-is-external">
-							<h3>Enumerations</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum tsd-is-external"><a href="enums/orderdirection.html" class="tsd-kind-icon">Order<wbr>Direction</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-external">
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/abstractcollection.html" class="tsd-kind-icon">Abstract<wbr>Collection</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/abstracttree.html" class="tsd-kind-icon">Abstract<wbr>Tree</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/binarysearchtree.html" class="tsd-kind-icon">Binary<wbr>Search<wbr>Tree</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/binarytree.html" class="tsd-kind-icon">Binary<wbr>Tree</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/enumerable.html" class="tsd-kind-icon">Enumerable</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/enumerablecore.html" class="tsd-kind-icon">Enumerable<wbr>Core</a></li>
+								<li class="tsd-kind-class tsd-is-external"><a href="classes/errormessages.html" class="tsd-kind-icon">Error<wbr>Messages</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/grouping.html" class="tsd-kind-icon">Grouping</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/igrouping.html" class="tsd-kind-icon">IGrouping</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/list.html" class="tsd-kind-icon">List</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/orderedenumerablecore.html" class="tsd-kind-icon">Ordered<wbr>Enumerable<wbr>Core</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/treenode.html" class="tsd-kind-icon">Tree<wbr>Node</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-external"><a href="classes/treeset.html" class="tsd-kind-icon">Tree<wbr>Set</a></li>
@@ -93,6 +91,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface tsd-has-type-parameter tsd-is-external"><a href="interfaces/aggregator.html" class="tsd-kind-icon">Aggregator</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter tsd-is-external"><a href="interfaces/comparator.html" class="tsd-kind-icon">Comparator</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter tsd-is-external"><a href="interfaces/enumerableiterator.html" class="tsd-kind-icon">Enumerable<wbr>Iterator</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter tsd-is-external"><a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter tsd-is-external"><a href="interfaces/ideque.html" class="tsd-kind-icon">IDeque</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter tsd-is-external"><a href="interfaces/ienumerable.html" class="tsd-kind-icon">IEnumerable</a></li>
@@ -113,7 +112,6 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#orderactions" class="tsd-kind-icon">Order<wbr>Actions</a></li>
 								<li class="tsd-kind-type-alias tsd-is-external"><a href="globals.html#traversetype" class="tsd-kind-icon">Traverse<wbr>Type</a></li>
 							</ul>
 						</section>
@@ -123,36 +121,12 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
-					<a name="orderactions" class="tsd-anchor"></a>
-					<h3>Order<wbr>Actions</h3>
-					<div class="tsd-signature tsd-kind-icon">Order<wbr>Actions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>comparator<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">; </span>direction<span class="tsd-signature-symbol">: </span><a href="enums/orderdirection.html" class="tsd-signature-type">OrderDirection</a><span class="tsd-signature-symbol">; </span>selector<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> }</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/c26024b/src/list/List.ts#L10">src/list/List.ts:10</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter">
-								<h5>comparator<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>direction<span class="tsd-signature-symbol">: </span><a href="enums/orderdirection.html" class="tsd-signature-type">OrderDirection</a></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>selector<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-is-external">
 					<a name="traversetype" class="tsd-anchor"></a>
 					<h3>Traverse<wbr>Type</h3>
 					<div class="tsd-signature tsd-kind-icon">Traverse<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"INORDER"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"PREORDER"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"POSTORDER"</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/c26024b/src/tree/ITree.ts#L3">src/tree/ITree.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/3e28b11/src/tree/ITree.ts#L3">src/tree/ITree.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -168,9 +142,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-is-external">
-						<a href="enums/orderdirection.html" class="tsd-kind-icon">Order<wbr>Direction</a>
-					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/abstractcollection.html" class="tsd-kind-icon">Abstract<wbr>Collection</a>
 					</li>
@@ -184,6 +155,15 @@
 						<a href="classes/binarytree.html" class="tsd-kind-icon">Binary<wbr>Tree</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/enumerable.html" class="tsd-kind-icon">Enumerable</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/enumerablecore.html" class="tsd-kind-icon">Enumerable<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="classes/errormessages.html" class="tsd-kind-icon">Error<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/grouping.html" class="tsd-kind-icon">Grouping</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
@@ -191,6 +171,9 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/list.html" class="tsd-kind-icon">List</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="classes/orderedenumerablecore.html" class="tsd-kind-icon">Ordered<wbr>Enumerable<wbr>Core</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="classes/redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
@@ -206,6 +189,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/comparator.html" class="tsd-kind-icon">Comparator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="interfaces/enumerableiterator.html" class="tsd-kind-icon">Enumerable<wbr>Iterator</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
@@ -251,9 +237,6 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="interfaces/zipper.html" class="tsd-kind-icon">Zipper</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="globals.html#orderactions" class="tsd-kind-icon">Order<wbr>Actions</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="globals.html#traversetype" class="tsd-kind-icon">Traverse<wbr>Type</a>

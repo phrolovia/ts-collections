@@ -14,15 +14,11 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Comparator} from "../shared/Comparator";
 import {JoinSelector} from "../shared/JoinSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
-
-type OrderActions = { selector: Function, comparator: Function, direction: OrderDirection };
-enum OrderDirection { Ascending = 1, Descending = -1}
+import {Zipper} from "../shared/Zipper";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private readonly enumerable: Enumerable<T>;
     private data: T[] = [];
-    private orderActions: Array<OrderActions> = new Array<OrderActions>();
-
     public constructor(data?: T[]) {
         super();
         if (data) {
@@ -452,60 +448,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public take(count: number): IEnumerable<T> {
-        if (count <= 0) {
-            return new List<T>([]);
-        }
-        if (count >= this.size()) {
-            return this;
-        }
-        return new List(this.data.slice(0, count));
+        return this.enumerable.take(count);
     }
 
     public takeEvery(step: number): IEnumerable<T> {
-        return Enumerable.from(this.toArray()).takeEvery(step);
+        return this.enumerable.takeEvery(step);
     }
 
     public takeLast(count: number): IEnumerable<T> {
-        if (count <= 0) {
-            return new List<T>([]);
-        }
-        if (count >= this.size()) {
-            return this;
-        }
-        return new List(this.data.slice(this.data.length - count, this.data.length));
+        return this.enumerable.takeLast(count);
     }
 
-    public takeWhile(predicate: (item: T, index?: number) => boolean): IEnumerable<T> {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        let endIndex = 0;
-        for (const [index, item] of this.data.entries()) {
-            if (predicate(item, index)) {
-                endIndex++;
-            } else {
-                break;
-            }
-        }
-        return new List(this.take(endIndex).toArray());
-    }
-
-    public thenBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending };
-        const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
-        return this.sortByMultipleKeys(allOrderActions);
-    }
-
-    public thenByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Descending };
-        const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
-        return this.sortByMultipleKeys(allOrderActions);
+    public takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T> {
+        return this.enumerable.takeWhile(predicate);
     }
 
     public toArray(): T[] {
@@ -513,83 +468,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public toList(): List<T> {
-        return new List([...this.data]);
+        return new List<T>(this.data);
     }
 
-    public union(enumerable: IEnumerable<T> | Array<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const unionList: IList<T> = new List();
-        const array = enumerable instanceof Array ? enumerable : enumerable.toArray();
-        this.data.forEach(item => {
-            let contains = false;
-            for (const unionItem of unionList.toArray()) {
-                if (comparator(item, unionItem) === 0) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                unionList.add(item);
-            }
-        });
-        array.forEach(item => {
-            let contains = false;
-            for (const unionItem of unionList.toArray()) {
-                if (comparator(item, unionItem) === 0) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                unionList.add(item);
-            }
-        });
-        return unionList;
+    public union(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T> {
+        return this.enumerable.union(enumerable, comparator);
     }
 
-    public where(predicate: (item: T) => boolean): IEnumerable<T> {
-        // if (!predicate) {
-        //     throw new Error("predicate is null.");
-        // }
-        // return new List(this.data.filter(predicate));
+    public where(predicate: Predicate<T>): IEnumerable<T> {
         return this.enumerable.where(predicate);
     }
 
-    public zip<R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U> {
-        if (!zipper) {
-            throw new Error("zipper is null.");
-        }
-        const sizeFirst = this.count();
-        const sizeSecond = enumerable.count();
-        let first = this.asEnumerable();
-        let second = enumerable;
-        if (sizeFirst < sizeSecond) {
-            second = second.take(sizeFirst);
-        } else {
-            first = first.take(sizeSecond);
-        }
-        const list: IList<U> = new List();
-        for (let ix = 0; ix < first.count(); ++ix) {
-            const left = first.elementAt(ix);
-            const right = second.elementAt(ix);
-            list.add(zipper(left, right));
-        }
-        // return list.asEnumerable();
-        return list;
-    }
-
-    private addOrderAction(action: OrderActions|OrderActions[]): void {
-        action = action instanceof Array ? action : [action];
-        action.forEach(a => this.orderActions.push(a));
-    }
-
-    private sortByMultipleKeys(actions: OrderActions[]): List<T> {
-        const sortedData = [...this.data].sort((d1, d2) => actions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
-        const sortedList = new List<T>(sortedData);
-        sortedList.addOrderAction(actions);
-        return sortedList;
+    public zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<U> | IEnumerable<[T, R]> {
+        return this.enumerable.zip(enumerable, zipper);
     }
 
     * [Symbol.iterator](): Iterator<T> {
