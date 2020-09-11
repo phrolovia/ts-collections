@@ -7,6 +7,8 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
 import {SchoolStudents} from "../models/SchoolStudents";
+import {ErrorMessages} from "../../src/shared/ErrorMessages";
+import {Enumerable} from "../../src/enumerable/Enumerable";
 
 describe("List", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -37,6 +39,7 @@ describe("List", () => {
     const suzuha = new Person("Suzuha", "Suzuki", 22);
     const suzuha2 = new Person("Suzuha", "Mizuki", 22);
     const suzuha3 = new Person("Suzuha", "Mizuki", 26);
+    const randomPeopleList = [alice, suzuha3, jane, suzuha2, jisu, suzuha, viola, megan, lucrezia, noemi, priscilla, reika, bella, eliza, hanna, julia];
     describe("[static] #from", () => {
         const list = List.from([alice, mel, senna, lenka, jane]);
         it("should be a list", () => {
@@ -82,13 +85,13 @@ describe("List", () => {
             const result = list.aggregate<number>((total, num) => total += num);
             expect(result).to.eq(10);
         });
-        it("should throw error ['accumulator is null.]", () => {
+        it(`should throw if aggregator is null`, () => {
             const list = List.from([2, 5, 6, 99]);
-            expect(() => list.aggregate(null)).to.throw("accumulator is null.");
+            expect(() => list.aggregate(null)).to.throw(ErrorMessages.NoAggregatorProvided);
         });
         it("should throw error if list is empty and no seed is provided", () => {
             const list = List.from<number>([]);
-            expect(() => list.aggregate<number>((acc, num) => acc *= num)).to.throw("Sequence contains no elements.");
+            expect(() => list.aggregate<number>((acc, num) => acc *= num)).to.throw(ErrorMessages.NoElements);
         });
         it("should return the seed if list is empty", () => {
             const list = List.from<number>([]);
@@ -127,24 +130,6 @@ describe("List", () => {
             expect(any).to.eq(false);
         });
     });
-    describe("#append()", () => {
-        const list: IList<Person> = new List<Person>();
-        list.add(mel);
-        list.add(senna);
-        it("should have two elements", () => {
-            expect(list.Count).to.eq(2);
-        });
-        it("should return a new list", () => {
-            const newList = list.append(lenka).toList();
-            expect(list.Count).to.eq(2);
-            expect(newList.Count).to.eq(3);
-        });
-        it("should not have the appended item in the old list", () => {
-            const newList = list.append(lenka).toList();
-            expect(newList.includes(lenka)).to.eq(true);
-            expect(list.includes(lenka)).to.eq(false);
-        });
-    });
     describe("#any()", () => {
         const list: IList<Person> = new List<Person>();
         list.add(alice);
@@ -176,23 +161,37 @@ describe("List", () => {
             expect(any).to.eq(false);
         });
     });
-    // describe("#asEnumerable()", () => {
-    //     const list: IList<Person> = new List<Person>();
-    //     list.add(alice);
-    //     list.add(mel);
-    //     it("should return itself as an enumerable", () => {
-    //         expect(list.asEnumerable() === list).to.eq(true);
-    //     });
-    // });
+    describe("#append()", () => {
+        const list: IList<Person> = new List<Person>();
+        list.add(mel);
+        list.add(senna);
+        it("should have two elements", () => {
+            expect(list.Count).to.eq(2);
+        });
+        it("should return a new list", () => {
+            const newList = list.append(lenka).toList();
+            expect(list.Count).to.eq(2);
+            expect(newList.Count).to.eq(3);
+        });
+        it("should not have the appended item in the old list", () => {
+            const newList = list.append(lenka).toList();
+            expect(newList.includes(lenka)).to.eq(true);
+            expect(list.includes(lenka)).to.eq(false);
+        });
+    });
+    describe("#asEnumerable()", () => {
+        const list = new List<Person>();
+        list.add(alice);
+        list.add(mel);
+        it("should return itself as an enumerable", () => {
+            expect(list.asEnumerable() instanceof Enumerable).to.eq(true);
+        });
+    });
     describe("#average()", () => {
         it("should return 99948748093", () => {
             const list = List.from(["10007", "37", "299846234235"]);
             const avg = list.average(s => parseInt(s, 10));
             expect(avg).to.eq(99948748093);
-        });
-        it("should throw error ['predicate is null.]", () => {
-            const list = List.from([2, 5, 6, 99]);
-            expect(() => list.average(null)).to.throw("predicate is null.");
         });
         it("should use non-transformed values if predicate is not provided.", () => {
             const list = List.from([2, 5, 6, 99]);
@@ -200,7 +199,7 @@ describe("List", () => {
         });
         it("should throw error if list is empty", () => {
             const list = List.from<string>([]);
-            expect(() => list.average(s => parseInt(s, 10))).to.throw("Sequence contains no elements.");
+            expect(() => list.average(s => parseInt(s, 10))).to.throw(ErrorMessages.NoElements);
         });
     });
     describe("#clear()", () => {
@@ -258,12 +257,6 @@ describe("List", () => {
         });
     });
     describe("#defaultIfEmpty()", () => {
-        it("should return the list itself if it has elements", () => {
-            const list: IList<Person> = new List<Person>();
-            list.add(alice);
-            list.add(mel);
-            expect(list.defaultIfEmpty() === list).to.eq(true);
-        });
         it("should return a new IEnumerable with the default values", () => {
             const list: IList<number> = new List();
             const newList = list.defaultIfEmpty(7).toList();
@@ -763,7 +756,7 @@ describe("List", () => {
     describe("#last()", () => {
         it("should throw error if list is empty()", () => {
             const list = new List<number>();
-            expect(() => list.last()).to.throw("Sequence contains no elements.");
+            expect(() => list.last()).to.throw(ErrorMessages.NoElements);
         });
         it("should return the last element if no predicate is provided.", () => {
             const list = List.from([99, 2, 3, 4, 5]);
@@ -772,7 +765,7 @@ describe("List", () => {
         });
         it("should throw an error if no matching element is found.", () => {
             const list = List.from([99, 2, 3, 4, 5]);
-            expect(() => list.last(n => n < 0)).to.throw("Sequence contains no matching element.");
+            expect(() => list.last(n => n < 0)).to.throw(ErrorMessages.NoMatchingElement);
         });
         it("should return 87", () => {
             const list = List.from([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
@@ -818,9 +811,6 @@ describe("List", () => {
     });
     describe("#max()", () => {
         const list = List.from([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
-        it("should throw error ['predicate is null.]", () => {
-            expect(() => list.max(null)).to.throw("predicate is null.");
-        });
         it("should return 2312", () => {
             const max = list.max(n => n);
             expect(max).to.eq(2312);
@@ -833,9 +823,6 @@ describe("List", () => {
     });
     describe("#min()", () => {
         const list = List.from([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
-        it("should throw error ['predicate is null.]", () => {
-            expect(() => list.min(null)).to.throw("predicate is null.");
-        });
         it("should return 1", () => {
             const max = list.min(n => n);
             expect(max).to.eq(1);
@@ -988,18 +975,6 @@ describe("List", () => {
             expect(p).to.eq(null);
         });
     });
-    describe("#repeat()", () => {
-        it("should throw error if count is less than zero", () => {
-            expect(() => new List().repeat("xyz", -1)).to.throw();
-        });
-        it("should create an IEnumerable with a length of 5 and filled with element '5'", () => {
-            const list = new List().repeat(5, 5).toList();
-            expect(list.size()).to.eq(5);
-            for (const item of list) {
-                expect(item).to.eq(5);
-            }
-        });
-    })
     describe("#reverse()", () => {
         const list: List<Person> = new List<Person>();
         list.add(alice);
@@ -1025,7 +1000,7 @@ describe("List", () => {
     describe("#select()", () => {
         it("should throw error ['predicate is null.]", () => {
             const list = List.from([2, 5, 6, 99]);
-            expect(() => list.select(null)).to.throw("predicate is null.");
+            expect(() => list.select(null)).to.throw(ErrorMessages.NoSelectorProvided);
         });
         it("should return an IEnumerable with elements [4, 25, 36, 81]", () => {
             const list = List.from([2, 5, 6, 9]);
@@ -1045,9 +1020,9 @@ describe("List", () => {
         });
     });
     describe("#selectMany()", () => {
-        it("should throw error ['predicate is null.]", () => {
+        it("should throw error if selector is empty", () => {
             const list = List.from([2, 5, 6, 99]);
-            expect(() => list.selectMany(null)).to.throw("predicate is null.");
+            expect(() => list.selectMany(null)).to.throw(ErrorMessages.NoSelectorProvided);
         });
         it("should return a flattened array of ages #1", () => {
             const people: Person[] = [];
@@ -1126,14 +1101,14 @@ describe("List", () => {
     describe("#single()", () => {
         it("should throw error if list is empty.", () => {
             const list: IList<Person> = new List();
-            expect(() => list.single()).to.throw("Sequence contains no elements.");
+            expect(() => list.single()).to.throw(ErrorMessages.NoElements);
         });
         it("should throw error if list has more than two elements", () => {
             const list: IList<Person> = new List();
             list.add(alice);
             list.add(senna);
             list.add(jane);
-            expect(() => list.single()).to.throw("Sequence contains more than one element.");
+            expect(() => list.single()).to.throw(ErrorMessages.MoreThanOneElement);
         });
         it("should return the only element in the list", () => {
             const list: IList<Person> = new List();
@@ -1146,7 +1121,7 @@ describe("List", () => {
             list.add(alice);
             list.add(senna);
             list.add(jane);
-            expect(() => list.single(p => p.Name === "Lenka")).to.throw("Sequence contains no matching element.");
+            expect(() => list.single(p => p.Name === "Lenka")).to.throw(ErrorMessages.NoMatchingElement);
         });
         it("should return person with name 'Alice'.", () => {
             const list: IList<Person> = new List();
@@ -1177,7 +1152,7 @@ describe("List", () => {
         });
         it("should throw error ['Sequence contains more than one matching element.']", () => {
             list.add(3);
-            expect(() => list.singleOrDefault(n => n === 3)).to.throw("Sequence contains more than one matching element.");
+            expect(() => list.singleOrDefault(n => n === 3)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
         });
         it("should return the only element in the list", () => {
             const list2: IList<string> = new List();
@@ -1189,7 +1164,7 @@ describe("List", () => {
             const list2: IList<string> = new List();
             list2.add("Suzuha");
             list2.add("Suzuri");
-            expect(() => list2.singleOrDefault()).to.throw("Sequence contains more than one element.");
+            expect(() => list2.singleOrDefault()).to.throw(ErrorMessages.MoreThanOneElement);
         });
         it("should return default value [null] if no matching element is found.", () => {
             const sod = list.singleOrDefault(n => n < 0);
@@ -1224,8 +1199,8 @@ describe("List", () => {
     });
     describe("#skipWhile()", () => {
         const list = List.from([5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500]);
-        it("should throw error ['predicate is null.]", () => {
-            expect(() => list.skipWhile(null)).to.throw("predicate is null.");
+        it("should throw error if predicate is null", () => {
+            expect(() => list.skipWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
         });
         it("should return an IEnumerable with elements [4000, 1500, 5500]", () => {
             const list2 = list.skipWhile((n, nx) => n > nx * 1000).toList();
@@ -1257,9 +1232,9 @@ describe("List", () => {
         });
     });
     describe("#sum()", () => {
-        it("should throw error ['predicate is null.]", () => {
+        it("should throw error if predicate is null", () => {
             const list = List.from([2, 5, 6, 99]);
-            expect(() => list.sum(null)).to.throw("predicate is null.");
+            expect(() => list.sum(null)).to.throw(ErrorMessages.NoPredicateProvided);
         });
         it("should return 21", () => {
             const list = List.from([1, 2, 3, 4, 5, 6]);
@@ -1551,10 +1526,10 @@ describe("List", () => {
         });
     });
     describe("#where()", () => {
-        it("should throw error ['predicate is null.]", () => {
-            const list = List.from([2, 5, 6, 99]);
-            expect(() => list.where(null)).to.throw("predicate is null.");
-        });
+        // it("should throw error ['predicate is null.]", () => {
+        //     const list = List.from([2, 5, 6, 99]);
+        //     expect(() => list.where(null)).to.throw(ErrorMessages.NoPredicateProvided);
+        // });
         it("should return an IEnumerable with elements [2,5]", () => {
             const list = List.from([2, 5, 6, 99]);
             const list2 = list.where(n => n <= 5).toList();
@@ -1631,6 +1606,14 @@ describe("List", () => {
             expect(numArray[1]).to.eq(50);
             expect(numArray[2]).to.eq(22);
             expect(numArray[3]).to.eq(20);
+        });
+    });
+    describe("Chained method tests", () => {
+        const list = List.from(randomPeopleList);
+        const doubledYoungAges = list.where(p => p.Age < 20).select(p => p.Age).toArray();
+        it("should get people who are younger than 25, then take their ages and double it.", () => {
+            console.log("Doubled Ages: ", doubledYoungAges);
+            expect(doubledYoungAges.length).to.greaterThan(0);
         });
     });
 });

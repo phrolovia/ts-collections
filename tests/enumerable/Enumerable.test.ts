@@ -7,6 +7,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
 import {SchoolStudents} from "../models/SchoolStudents";
+import {List} from "../../src/list/List";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -66,6 +67,14 @@ describe("Enumerable", () => {
             const list = Enumerable.from<number>([]);
             const result = list.aggregate<number>((total, num) => total += num, -99);
             expect(result).to.eq(-99);
+        });
+        it("should combine all names to a single string and get a substring from it which results in 'Suzuha'", () => {
+            let secondName = "";
+            const list = Enumerable.from(randomPeopleList).aggregate((namesStr: string, person) => `${namesStr} ${person.Name}`, "", namesStr => {
+                const parts = namesStr.trim().split(" ");
+                secondName = parts[1];
+            });
+            expect(secondName).to.eq("Suzuha");
         });
     });
     describe("#all()", () => {
@@ -127,10 +136,18 @@ describe("Enumerable", () => {
         });
     });
     describe("#average()", () => {
-        const numbers = [1, 2, 3, 4, 5];
-        const average = new Enumerable(numbers).average(n => n);
-        it("should return the average value of the array", () => {
-            expect(average).to.eq(3);
+        it("should return 99948748093", () => {
+            const list = Enumerable.from(["10007", "37", "299846234235"]);
+            const avg = list.average(s => parseInt(s, 10));
+            expect(avg).to.eq(99948748093);
+        });
+        it("should use non-transformed values if predicate is not provided.", () => {
+            const list = Enumerable.from([2, 5, 6, 99]);
+            expect(list.average()).to.eq(28);
+        });
+        it("should throw error if list is empty", () => {
+            const list = Enumerable.from<string>([]);
+            expect(() => list.average(s => parseInt(s, 10))).to.throw(ErrorMessages.NoElements);
         });
     });
     describe("#concat()", () => {
@@ -192,7 +209,11 @@ describe("Enumerable", () => {
             expect(enumerable.elementAt(4)).to.eq(66);
         });
         it("should throw error if index is less than 0.", () => {
-            expect(() => enumerable.elementAt(-1)).to.throw();
+            expect(() => enumerable.elementAt(-1)).to.throw(ErrorMessages.IndexOutOfBounds);
+        });
+        it("should throw error if index is greater than or equal to list size.", () => {
+            expect(() => enumerable.elementAt(7)).to.throw(ErrorMessages.IndexOutOfBounds);
+            expect(() => enumerable.elementAt(42)).to.throw(ErrorMessages.IndexOutOfBounds);
         });
     });
     describe("#elementAtOrDefault()", () => {
@@ -633,7 +654,7 @@ describe("Enumerable", () => {
         // });
         it("should return an IEnumerable with elements [4000, 1500, 5500]", () => {
             const list2 = list.skipWhile((n, nx) => n > nx * 1000).toArray();
-            expect(list2).to.deep.equal([4000,1500,5500]);
+            expect(list2).to.deep.equal([4000, 1500, 5500]);
         });
     });
     describe("#sum()", () => {
@@ -654,7 +675,7 @@ describe("Enumerable", () => {
         it("should return a list with elements [1,2,3]", () => {
             const list2 = list.take(3).toArray();
             expect(list2.length).to.eq(3);
-            expect(list2).to.deep.equal([1,2,3]);
+            expect(list2).to.deep.equal([1, 2, 3]);
         });
         it("should return all elements if count is bigger than list size", () => {
             const list2 = list.take(100).toArray();
@@ -666,6 +687,13 @@ describe("Enumerable", () => {
             expect(list2[4]).to.eq(list.elementAt(4));
             expect(list2[5]).to.eq(list.elementAt(5));
             expect(list2[6]).to.eq(list.elementAt(6));
+        });
+    });
+    describe("#takeEvery()", () => {
+        const list = Enumerable.from([1, 2, 3, 4, 5]);
+        it("should return every 2nd item", () => {
+            const items = list.takeEvery(2).toArray();
+            expect(items).to.deep.equal([1, 3, 5]);
         });
     });
     describe("#takeLast()", () => {

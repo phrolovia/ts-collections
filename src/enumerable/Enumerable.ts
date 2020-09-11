@@ -209,6 +209,10 @@ export class Enumerable<T> implements IOrderedEnumerable<T> {
         return this.core.take(count);
     }
 
+    public takeEvery(step: number): IEnumerable<T> {
+        return this.core.takeEvery(step);
+    }
+
     public takeLast(count: number): IEnumerable<T> {
         return this.core.takeLast(count);
     }
@@ -237,7 +241,7 @@ export class Enumerable<T> implements IOrderedEnumerable<T> {
         return this.core.union(enumerable, comparator);
     }
 
-    public where(predicate: Predicate<T>): IEnumerable<T> {
+    public where(predicate: IndexedPredicate<T>): IEnumerable<T> {
         return this.core.where(predicate);
     }
 
@@ -262,6 +266,9 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         }
         let aggregatedValue: R;
         if (seed == null) {
+            if (!this.any()) {
+                throw new Error(ErrorMessages.NoElements);
+            }
             aggregatedValue = this.first() as unknown as R;
             for (const item of this.skip(1)) {
                 aggregatedValue = aggregator(aggregatedValue, item);
@@ -308,10 +315,13 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public average(selector?: Selector<T, number>): number {
+        if (!this.any()) {
+            throw new Error(ErrorMessages.NoElements);
+        }
         let total: number = 0;
         let count: number = 0;
         for (const d of this) {
-            total += selector(d);
+            total += selector?.(d) ?? d as unknown as number;
             count++;
         }
         return total / count;
@@ -358,7 +368,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
 
     public elementAt(index: number): T {
         if (index < 0) {
-            throw new Error("index is smaller than 0.");
+            throw new Error(ErrorMessages.IndexOutOfBounds);
         }
         let ix: number = 0;
         for (const item of this) {
@@ -367,6 +377,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
             }
             ++ix;
         }
+        throw new Error(ErrorMessages.IndexOutOfBounds);
     }
 
     public elementAtOrDefault(index: number): T {
@@ -636,6 +647,9 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 
     public skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T> {
+        if (!predicate) {
+            throw new Error(ErrorMessages.NoPredicateProvided);
+        }
         return new EnumerableCore(() => this.skipWhileGenerator(predicate));
     }
 
@@ -649,6 +663,10 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
 
     public take(count: number): IEnumerable<T> {
         return new EnumerableCore(() => this.takeGenerator(count));
+    }
+
+    public takeEvery(step: number): IEnumerable<T> {
+        return this.where((item, index) => index % step === 0);
     }
 
     public takeLast(count: number): IEnumerable<T> {
@@ -680,7 +698,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         return new EnumerableCore(() => this.unionGenerator(enumerable, comparator));
     }
 
-    public where(predicate: Predicate<T>): IEnumerable<T> {
+    public where(predicate: IndexedPredicate<T>): IEnumerable<T> {
         return new EnumerableCore<T>(() => this.whereGenerator(predicate));
     }
 
@@ -877,11 +895,13 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         }
     }
 
-    private* whereGenerator(predicate: Predicate<T>): IterableIterator<T> {
+    private* whereGenerator(predicate: IndexedPredicate<T>): IterableIterator<T> {
+        let index = 0;
         for (const d of this) {
-            if (predicate(d)) {
+            if (predicate(d, index)) {
                 yield d;
             }
+            ++index;
         }
     }
 
