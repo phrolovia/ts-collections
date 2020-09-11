@@ -1,6 +1,8 @@
 import {IEnumerable} from "./IEnumerable";
+import {Selector} from "../shared/Selector";
+import {Comparator} from "../shared/Comparator";
 
-export interface IOrderedEnumerable<T> extends IEnumerable<T>{
-    thenBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T>;
-    thenByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T>;
+export interface IOrderedEnumerable<T> extends IEnumerable<T> {
+    thenBy<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T>;
+    thenByDescending<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T>;
 }
