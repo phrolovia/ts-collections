@@ -7,8 +7,6 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
 import {SchoolStudents} from "../models/SchoolStudents";
-import {IList} from "../../src/list/IList";
-import {List} from "../../src/list/List";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
