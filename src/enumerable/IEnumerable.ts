@@ -9,6 +9,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {List} from "../list/List";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 export interface IEnumerable<T> extends Iterable<T> {
     aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U;
@@ -17,21 +18,21 @@ export interface IEnumerable<T> extends Iterable<T> {
     append(item: T): IEnumerable<T>;
     average(selector?: Selector<T, number>): number;
     concat(enumerable: IEnumerable<T>): IEnumerable<T>;
-    contains(item: T, comparator?: Comparator<T>): boolean;
+    contains(item: T, comparator?: EqualityComparator<T>): boolean;
     count(predicate?: Predicate<T>): number;
     defaultIfEmpty(value?: T): IEnumerable<T>;
-    distinct(comparator?: Comparator<T>): IEnumerable<T>;
+    distinct(comparator?: EqualityComparator<T>): IEnumerable<T>;
     elementAt(index: number): T;
     elementAtOrDefault(index: number): T;
-    except(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T>;
+    except(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
     first(predicate?: Predicate<T>): T;
     firstOrDefault(predicate?: Predicate<T>): T;
-    groupBy<R>(keySelector: Selector<T, R>, keyComparator?: Comparator<R>): IEnumerable<IGrouping<R, T>>;
+    groupBy<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IEnumerable<IGrouping<R, T>>;
     groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
-                       resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: Comparator<K>): IEnumerable<R>;
-    intersect(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T>;
+                       resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: EqualityComparator<K>): IEnumerable<R>;
+    intersect(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
     join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
-                  resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin?: boolean): IEnumerable<R>;
+                  resultSelector: JoinSelector<T, E, R>, keyComparator?: EqualityComparator<K>, leftJoin?: boolean): IEnumerable<R>;
     last(predicate?: Predicate<T>): T;
     lastOrDefault(predicate?: Predicate<T>): T;
     max(selector?: Selector<T, number>): number;
@@ -42,7 +43,7 @@ export interface IEnumerable<T> extends Iterable<T> {
     reverse(): IEnumerable<T>;
     select<R>(selector: Selector<T, R>): IEnumerable<R>;
     selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnumerable<R>;
-    sequenceEqual(enumerable: IEnumerable<T>, comparator?: Comparator<T>): boolean;
+    sequenceEqual(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): boolean;
     single(predicate?: Predicate<T>): T;
     singleOrDefault(predicate?: Predicate<T>): T;
     skip(count: number): IEnumerable<T>;
@@ -55,7 +56,7 @@ export interface IEnumerable<T> extends Iterable<T> {
     takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
     toArray(): T[];
     toList(): List<T>;
-    union(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T>;
+    union(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
     where(predicate: Predicate<T>): IEnumerable<T>;
     zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U>;
 }

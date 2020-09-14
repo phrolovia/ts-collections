@@ -232,6 +232,13 @@ describe("Enumerable", () => {
         it("should return numbers that do not exist in the second list", () => {
             expect(exceptList).to.deep.equal([1, 2, 3, 4]);
         });
+        it("should return a person with name Lucrezia", () => {
+            const list1 = Enumerable.from([alice, lucrezia]);
+            const list2 = Enumerable.from([senna, noemi, alice]);
+            const result = list1.except(list2, (p1, p2) => p1.Name === p2.Name).toArray();
+            expect(result.length).to.eq(1);
+            expect(result[0]).to.deep.equal(lucrezia);
+        });
     });
     describe("#first()", () => {
         const numList = [1, 11, 21, 2222, 3, 4, 5];
@@ -283,7 +290,7 @@ describe("Enumerable", () => {
             expect(kids).to.have.all.members([karen, mel, senna]);
         });
         it("should use provided comparator", () => {
-            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1.localeCompare(n2)).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
+            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1 === n2).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
             expect(shortNamedPeople.length).to.eq(2);
             expect(shortNamedPeople).to.have.all.members([mel, jane]);
         });
@@ -360,7 +367,7 @@ describe("Enumerable", () => {
         });
         it("should set null for school if left join is true", () => {
             const joinedData = students.join(schools, st => st.SchoolId, sc => sc.Id,
-                (student, school) => [student, school], (stid, scid) => stid - scid, true).toArray();
+                (student, school) => [student, school], (stid, scid) => stid === scid, true).toArray();
             for (const jd of joinedData) {
                 if ((jd[0] as Student).Surname === "Volpe") {
                     expect(jd[1]).to.eq(null);
@@ -565,7 +572,7 @@ describe("Enumerable", () => {
         it("should return true if lists have members in the same order", () => {
             const list1 = Enumerable.from([alice, mel, lenka]);
             const list2 = Enumerable.from([alice, mel, lenka]);
-            expect(list1.sequenceEqual(list2, (p1, p2) => p1.Name.localeCompare(p2.Name))).to.eq(true);
+            expect(list1.sequenceEqual(list2, (p1, p2) => p1.Name === p2.Name)).to.eq(true);
         });
     });
     describe("#single()", () => {
@@ -927,17 +934,24 @@ describe("Enumerable", () => {
             const union = list1.union(list2);
             expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
         });
+        it("should be equal to second list if first list is empty", () => {
+            const list1 = Enumerable.empty<Person>();
+            const list2 = Enumerable.from([alice, noemi, karen, priscilla]);
+            const union = list1.union(list2);
+            expect(union.toArray()).to.deep.equal(list2.toArray());
+        });
     });
     describe("#where()", () => {
-        const numlist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-        const enumerable = new Enumerable(numlist);
-        // const evenNumberGen = enumerable.where(n => n % 2 === 0).select(n => Math.pow(n, 2));
-        const biggerThan3 = enumerable.where(n => n % 2 === 0).append(12).select(n => Math.pow(n, 2)).any(n => n > 6);
-        // const evenNumberArr = evenNumberGen.toArray();
-        // console.log(evenNumberArr);
-        console.log(biggerThan3);
-        it("should be return an array with the square of the even numbers", () => {
-            expect(biggerThan3).to.eq(true);
+        it("should throw error if predicate is null", () => {
+            const list = Enumerable.from([2, 5, 6, 99]);
+            expect(() => list.where(null)).to.throw(ErrorMessages.NoPredicateProvided);
+        });
+        it("should return an IEnumerable with elements [2,5]", () => {
+            const list = Enumerable.from([2, 5, 6, 99]);
+            const list2 = list.where(n => n <= 5).toList();
+            expect(list2.size()).to.eq(2);
+            expect(list2.get(0)).to.eq(2);
+            expect(list2.get(1)).to.eq(5);
         });
     });
     describe("#zip()", () => {
@@ -956,11 +970,11 @@ describe("Enumerable", () => {
             expect(zippedList[1]).to.eq("five 4");
         });
     });
-    describe("Chained Use Tests", () => {
-        it("temp value", () => {
-            const randomNumbers = Array.from({length: 100}, () => Math.floor(Math.random() * 1000));
-            const result = Enumerable.from(randomPeopleList).where(p => p.Age <= 40).orderByDescending(p => p.Age).thenBy(p => p.Surname).toArray();
-            console.log(result.map(r => [r.Age, r.Name, r.Surname]));
-        });
-    });
+    // describe("Chained Use Tests", () => {
+    //     it("temp value", () => {
+    //         const randomNumbers = Array.from({length: 100}, () => Math.floor(Math.random() * 1000));
+    //         const result = Enumerable.from(randomPeopleList).where(p => p.Age <= 40).orderByDescending(p => p.Age).thenBy(p => p.Surname).toArray();
+    //         console.log(result.map(r => [r.Age, r.Name, r.Surname]));
+    //     });
+    // });
 });

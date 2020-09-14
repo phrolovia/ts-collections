@@ -15,6 +15,7 @@ import {Comparator} from "../shared/Comparator";
 import {JoinSelector} from "../shared/JoinSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private readonly enumerable: Enumerable<T>;
@@ -68,7 +69,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.concat(enumerable);
     }
 
-    public contains(item: T, comparator?: Comparator<T>): boolean {
+    public contains(item: T, comparator?: EqualityComparator<T>): boolean {
         return this.enumerable.contains(item, comparator);
     }
 
@@ -98,7 +99,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return item;
     }
 
-    public distinct(comparator?: Comparator<T>): IEnumerable<T> {
+    public distinct(comparator?: EqualityComparator<T>): IEnumerable<T> {
         return this.enumerable.distinct(comparator);
     }
 
@@ -118,7 +119,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.insert(0, item);
     }
 
-    public except(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T> {
+    public except(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T> {
         return this.enumerable.except(enumerable, comparator);
     }
 
@@ -241,12 +242,12 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.data[index];
     }
 
-    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: Comparator<R>): IEnumerable<IGrouping<R, T>> {
+    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IEnumerable<IGrouping<R, T>> {
         return this.enumerable.groupBy(keySelector, keyComparator);
     }
 
     public groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
-                              resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: Comparator<K>): IEnumerable<R> {
+                              resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: EqualityComparator<K>): IEnumerable<R> {
         return this.enumerable.groupJoin(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
@@ -268,7 +269,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.data.splice(index, 0, item);
     }
 
-    public intersect(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<any> {
+    public intersect(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<any> {
         return this.enumerable.intersect(enumerable, comparator);
     }
 
@@ -277,7 +278,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
-                         resultSelector: JoinSelector<T, E, R>, keyComparator?: Comparator<K>, leftJoin: boolean = false): IEnumerable<R> {
+                         resultSelector: JoinSelector<T, E, R>, keyComparator?: EqualityComparator<K>, leftJoin: boolean = false): IEnumerable<R> {
         return this.enumerable.join(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
@@ -398,7 +399,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.selectMany(selector);
     }
 
-    public sequenceEqual(enumerable: IEnumerable<T>, comparator?: Comparator<T>): boolean {
+    public sequenceEqual(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): boolean {
         return this.enumerable.sequenceEqual(enumerable, comparator);
     }
 
@@ -471,7 +472,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return new List<T>(this.data);
     }
 
-    public union(enumerable: IEnumerable<T>, comparator?: Comparator<T>): IEnumerable<T> {
+    public union(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T> {
         return this.enumerable.union(enumerable, comparator);
     }
 

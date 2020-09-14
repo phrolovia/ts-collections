@@ -9,6 +9,7 @@ import {Pair} from "../models/Pair";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Enumerable} from "../../src/enumerable/Enumerable";
+import {EqualityComparator} from "../../src/shared/EqualityComparator";
 
 describe("List", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -222,7 +223,7 @@ describe("List", () => {
     describe("#contains()", () => {
         const list = List.from([1, 3, 5, 6, 7, 8, 9, 2, 0, -1, 99, -99]);
         const personList = List.from([alice, mel, senna]);
-        const personComparator = (p1: Person, p2: Person) => p1.Name.localeCompare(p2.Name)
+        const personComparator: EqualityComparator<Person> = (p1: Person, p2: Person) => p1.Name === p2.Name;
         it("should contain -1", () => {
             expect(list.contains(-1)).to.eq(true);
         });
@@ -270,7 +271,7 @@ describe("List", () => {
     describe("#distinct()", () => {
         it("should remove duplicate elements", () => {
             const list = List.from([alice, mel, alice, mel, senna]);
-            const distinct = list.distinct((p1, p2) => p1.Name.localeCompare(p2.Name));
+            const distinct = list.distinct((p1, p2) => p1.Name === p2.Name);
             expect(distinct.toArray()).to.deep.equal([alice, mel, senna]);
         });
         it("should use default comparator if no comparator is provided", () => {
@@ -316,7 +317,7 @@ describe("List", () => {
         it("should only have 'Alice' and 'Senna'", () => {
             const list1 = List.from([alice, mel, senna, lenka, jane]);
             const list2 = List.from([mel, lenka, jane]);
-            const elist = list1.except(list2, (p1, p2) => p1.Name.localeCompare(p2.Name));
+            const elist = list1.except(list2, (p1, p2) => p1.Name === p2.Name);
             expect(elist.toArray()).to.deep.equal([alice, senna]);
         });
     });
@@ -583,7 +584,7 @@ describe("List", () => {
             expect(kids).to.have.all.members([karen, mel, senna]);
         });
         it("should use provided comparator", () => {
-            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1.localeCompare(n2)).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
+            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1 === n2).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
             expect(shortNamedPeople.length).to.eq(2);
             expect(shortNamedPeople).to.have.all.members([mel, jane]);
         });
@@ -701,7 +702,7 @@ describe("List", () => {
         it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
             const list1 = List.from([alice, mel, senna, lenka, jane]);
             const list2 = List.from([mel, lenka, jane]);
-            const elist = list1.intersect(list2, (p1, p2) => p1.Name.localeCompare(p2.Name));
+            const elist = list1.intersect(list2, (p1, p2) => p1.Name === p2.Name);
             expect(elist.toArray()).to.deep.equal([mel, lenka, jane]);
         });
     });
@@ -730,7 +731,7 @@ describe("List", () => {
         });
         it("should set null for school if left join is true", () => {
             const joinedData = students.join(schools, st => st.SchoolId, sc => sc.Id,
-                (student, school) => [student, school], (stid, scid) => stid - scid, true).toArray();
+                (student, school) => [student, school], (stid, scid) => stid === scid, true).toArray();
             for (const jd of joinedData) {
                 if ((jd[0] as Student).Surname === "Volpe") {
                     expect(jd[1]).to.eq(null);
@@ -1070,7 +1071,7 @@ describe("List", () => {
         it("should return true if lists have members in the same order", () => {
             const list1 = List.from([alice, mel, lenka]);
             const list2 = List.from([alice, mel, lenka]);
-            expect(list1.sequenceEqual(list2, (p1, p2) => p1.Name.localeCompare(p2.Name))).to.eq(true);
+            expect(list1.sequenceEqual(list2, (p1, p2) => p1.Name === p2.Name)).to.eq(true);
         });
     });
     describe("#set()", () => {
@@ -1516,7 +1517,7 @@ describe("List", () => {
         it("should return a set of items from two lists", () => {
             const list1 = List.from([1, 2, 3, 4, 5, 5, 5]);
             const list2 = List.from([4, 5, 6, 7, 8, 9, 7]);
-            const union = list1.union(list2, (n1, n2) => n1 - n2);
+            const union = list1.union(list2, (n1, n2) => n1 === n2);
             expect(union.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         });
         it("should use default comparator if no comparator is provided", () => {
@@ -1613,10 +1614,14 @@ describe("List", () => {
     });
     describe("Chained method tests", () => {
         const list = List.from(randomPeopleList);
-        const doubledYoungAges = list.where(p => p.Age < 20).select(p => p.Age).toArray();
+        const doubledYoungAges = list.where(p => p.Age < 20).select(p => p.Age).orderByDescending(a => a).toArray();
         it("should get people who are younger than 25, then take their ages and double it.", () => {
-            console.log("Doubled Ages: ", doubledYoungAges);
-            expect(doubledYoungAges.length).to.greaterThan(0);
+            expect(doubledYoungAges).to.deep.equal([19, 16, 14, 9]);
+        });
+        it("should return [4,3,2]", () => {
+            const list = Enumerable.range(1, 10).toList();
+            list.removeAt(0);
+            expect(list.take(3).orderByDescending(k => k).toArray()).to.deep.equal([4, 3, 2]);
         });
     });
 });
