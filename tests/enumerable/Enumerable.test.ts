@@ -192,6 +192,12 @@ describe("Enumerable", () => {
             expect(newList[0]).to.eq(7);
             expect(single).to.eq(1);
         });
+        it("should not return a new IEnumerable with the the default value(s)", () => {
+            const list = Enumerable.range(1, 5);
+            const newList = list.defaultIfEmpty(-99).toArray();
+            expect(newList.length).to.eq(5);
+            expect(newList.indexOf(-99)).to.eq(-1);
+        });
     });
     describe("#distinct()", () => {
         const nonDistinctList = [1, 2, 3, 3, 2, 4, 5, 6, 5, 5, 5, 32, 11, 24, 11];
@@ -438,6 +444,11 @@ describe("Enumerable", () => {
             const max = enumerable.where(n => n < 100).max();
             expect(max).to.eq(90);
         });
+        it("should throw error if list is empty", () => {
+            const list = Enumerable.empty<number>();
+            expect(() => list.max()).to.throw(ErrorMessages.NoElements);
+            expect(() => list.max(n => n)).to.throw(ErrorMessages.NoElements);
+        });
     });
     describe("#min()", () => {
         const numbers = [6, 22, 11, 55, 234, 949, 12, 1, 90];
@@ -448,6 +459,11 @@ describe("Enumerable", () => {
         it("should return the smallest element that is greater than 100 in the list", () => {
             const max = enumerable.where(n => n > 100).min();
             expect(max).to.eq(234);
+        });
+        it("should throw error if list is empty", () => {
+            const list = Enumerable.empty<number>();
+            expect(() => list.min()).to.throw(ErrorMessages.NoElements);
+            expect(() => list.min(n => n)).to.throw(ErrorMessages.NoElements);
         });
     });
     describe("#orderBy()", () => {
@@ -577,8 +593,9 @@ describe("Enumerable", () => {
     });
     describe("#single()", () => {
         it("should throw error if list is empty.", () => {
-            const list = Enumerable.from([]);
+            const list = Enumerable.from<number>([]);
             expect(() => list.single()).to.throw(ErrorMessages.NoElements);
+            expect(() => list.single(n => n > 0)).to.throw(ErrorMessages.NoElements);
         });
         it("should throw error if list has more than two elements", () => {
             const list = Enumerable.from([alice, senna, jane]);
@@ -588,6 +605,10 @@ describe("Enumerable", () => {
             const list = Enumerable.from([alice]);
             const single = list.single();
             expect(single).to.eq(alice);
+        });
+        it("should throw error if searched element found multiple times", () => {
+            const list = Enumerable.from([1, 2, 2, 3]);
+            expect(() => list.single(n => n === 2)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
         });
         it("should throw error if no matching element is found.", () => {
             const list = Enumerable.from([alice, senna, jane]);

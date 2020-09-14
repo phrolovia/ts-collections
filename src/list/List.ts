@@ -3,7 +3,6 @@ import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
 import {IGrouping} from "../enumerable/IGrouping";
-import {Grouping} from "../enumerable/Grouping";
 import {IEnumerable} from "../enumerable/IEnumerable";
 import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
 import {Enumerable} from "../enumerable/Enumerable";
@@ -16,10 +15,12 @@ import {JoinSelector} from "../shared/JoinSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private readonly enumerable: Enumerable<T>;
     private data: T[] = [];
+
     public constructor(data?: T[]) {
         super();
         if (data) {
@@ -28,7 +29,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.enumerable = new Enumerable<T>(this.data);
     }
 
-    public static from<S>(array: S[]): IList<S> {
+    public static from<S>(array: S[]): List<S> {
         return new List(array);
     }
 
@@ -37,7 +38,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return true;
     }
 
-    public aggregate<R, U>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U {
+    public aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U {
         return this.enumerable.aggregate(aggregator, seed, resultSelector);
     }
 
@@ -123,24 +124,24 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.except(enumerable, comparator);
     }
 
-    public exists(predicate: (item: T) => boolean): boolean {
+    public exists(predicate: Predicate<T>): boolean {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
         return this.data.some(predicate);
     }
 
-    public find(predicate: (item: T) => boolean): T | null {
+    public find(predicate: Predicate<T>): T | null {
         const item = this.data.find(predicate);
         return item ?? null;
     }
 
-    public findAll(predicate: (item: T) => boolean): List<T> {
+    public findAll(predicate: Predicate<T>): List<T> {
         const foundData = this.data.filter(predicate);
         return new List<T>(foundData);
     }
 
-    public findIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number {
+    public findIndex(predicate: Predicate<T>, startIndex?: number, count?: number): number {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -170,7 +171,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return foundIndex;
     }
 
-    public findLast(predicate: (item: T) => boolean): T {
+    public findLast(predicate: Predicate<T>): T {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -187,7 +188,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return foundItem;
     }
 
-    public findLastIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number {
+    public findLastIndex(predicate: Predicate<T>, startIndex?: number, count?: number): number {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -222,11 +223,11 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.firstOrDefault(predicate);
     }
 
-    public forEach(action: (item: T) => void): void {
+    public forEach(action: IndexedAction<T>): void {
         if (!action) {
             throw new Error("action is null.");
         }
-        this.data.forEach(d => d ? action(d) : void 0);
+        this.data.forEach((d, ix) => action(d, ix));
     }
 
     public get(index: number): T {
@@ -395,7 +396,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.select(selector);
     }
 
-    public selectMany<R>(selector: IndexedSelector<T, IEnumerable<R>>): IEnumerable<R> {
+    public selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnumerable<R> {
         return this.enumerable.selectMany(selector);
     }
 
@@ -437,11 +438,11 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.skipWhile(predicate);
     }
 
-    public sort(comparer?: (e1: T, e2: T) => number): void {
-        if (!comparer) {
-            comparer = AbstractCollection.defaultComparator;
+    public sort(comparator?: Comparator<T>): void {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
         }
-        this.data.sort(comparer);
+        this.data.sort(comparator);
     }
 
     public sum(predicate: Selector<T, number>): number {
@@ -480,7 +481,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.where(predicate);
     }
 
-    public zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<U> | IEnumerable<[T, R]> {
+    public zip<R, U = [T, R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<U> | IEnumerable<[T, R]> {
         return this.enumerable.zip(enumerable, zipper);
     }
 

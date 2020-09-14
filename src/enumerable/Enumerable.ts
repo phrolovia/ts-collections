@@ -238,7 +238,7 @@ export class Enumerable<T> implements IEnumerable<T> {
         return this.core.where(predicate);
     }
 
-    public zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
+    public zip<R, U = [T, R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
         return this.core.zip(enumerable, zipper);
     }
 }
@@ -702,7 +702,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         return new EnumerableCore<T>(() => this.whereGenerator(predicate));
     }
 
-    public zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
+    public zip<R, U = [T, R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U> {
         if (!zipper) {
             return new EnumerableCore(() => this.zipTupleGenerator(enumerable));
         } else {
@@ -934,7 +934,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
     }
 }
 
-class OrderedEnumerableCore<T> extends EnumerableCore<T> implements IOrderedEnumerable<T>{
+class OrderedEnumerableCore<T> extends EnumerableCore<T> implements IOrderedEnumerable<T> {
     public constructor(public readonly orderedValueGroups: () => IterableIterator<T[]>) {
         super(function* () {
             for (const group of orderedValueGroups()) {

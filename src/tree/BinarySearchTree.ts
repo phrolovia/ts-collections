@@ -1,12 +1,14 @@
-import { AbstractTree } from "./AbstractTree";
-import { TreeNode } from "./TreeNode";
+import {AbstractTree} from "./AbstractTree";
+import {TreeNode} from "./TreeNode";
+import {Comparator} from "../shared/Comparator";
 
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
 class RedBlackNode<T> extends TreeNode<T> {
-    public static readonly RED   = 0;
+    public static readonly RED = 0;
     public static readonly BLACK = 1;
     private parent: RedBlackNode<T>;
     private color: number;
+
     public constructor(data: T) {
         super(data);
         this.setLeft(null);
@@ -14,29 +16,40 @@ class RedBlackNode<T> extends TreeNode<T> {
         this.parent = null;
         this.color = RedBlackNode.RED;
     }
-    public getColor(): number { return this.color; }
-    public getParent(): RedBlackNode<T> { return this.parent; }
+
+    public getColor(): number {
+        return this.color;
+    }
+
+    public getParent(): RedBlackNode<T> {
+        return this.parent;
+    }
+
     public getSibling(): RedBlackNode<T> {
         if (this.parent == null) return null;
         if (this.isOnLeft()) return this.parent.getRight() as RedBlackNode<T>;
         return this.parent.getLeft() as RedBlackNode<T>;
     }
+
     public getUncle(): RedBlackNode<T> {
-        if (this.parent == null || this.parent.getParent() == null){
+        if (this.parent == null || this.parent.getParent() == null) {
             return null;
         }
-        if (this.parent.isOnLeft()){
+        if (this.parent.isOnLeft()) {
             return this.parent.getParent().getRight() as RedBlackNode<T>;
         }
         return this.parent.getParent().getLeft() as RedBlackNode<T>;
     }
+
     public hasRedChild(): boolean {
         return (this.getLeft() != null && (this.getLeft() as RedBlackNode<T>).getColor() === RedBlackNode.RED)
             || (this.getRight() != null && (this.getRight() as RedBlackNode<T>).getColor() === RedBlackNode.RED);
     }
+
     public isOnLeft(): boolean {
         return this.parent.getLeft() === this;
     }
+
     public moveDown(p: RedBlackNode<T>): void { //p: parentnode
         if (this.parent != null) {
             if (this.isOnLeft()) {
@@ -48,25 +61,34 @@ class RedBlackNode<T> extends TreeNode<T> {
         p.setParent(this.parent);
         this.parent = p;
     }
-    public setColor(color: number): void { this.color = color; }
-    public setParent(parent: RedBlackNode<T>): void { this.parent = parent; }
+
+    public setColor(color: number): void {
+        this.color = color;
+    }
+
+    public setParent(parent: RedBlackNode<T>): void {
+        this.parent = parent;
+    }
 }
 
 export class BinarySearchTree<T> extends AbstractTree<T> {
-    public constructor(comparator?: (item1: T, item2: T) => number){
+    public constructor(comparator?: Comparator<T>) {
         super(comparator);
         this.root = null;
     }
+
     public add(item: T): boolean {
-        if(this.search(item)) return false;
+        if (this.search(item)) return false;
         this.insert(item);
         return true;
     }
+
     public delete(item: T): void {
         if (!this.includes(item)) return;
         let v: RedBlackNode<T> = this.searchNode(item);
         this.deleteNode(v);
     }
+
     public insert(item: T): void {
         const node = new RedBlackNode<T>(item);
         if (this.root == null) {
@@ -86,11 +108,13 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
             this.fixDoubleRed(node);
         }
     }
+
     public search(item: T): boolean {
         const node = this.searchNode(item);
         if (node == null) return false;
         return this.comparator(node.getData(), item) === 0;
     }
+
     private deleteNode(v: RedBlackNode<T>): void {
         let u: RedBlackNode<T> = this.findReplaceItem(v);
         const bothBlack = ((u == null || u.getColor() === RedBlackNode.BLACK) && v.getColor() === RedBlackNode.BLACK);
@@ -137,6 +161,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         this.swapValues(u, v);
         this.deleteNode(u);
     }
+
     private findReplaceItem(node: RedBlackNode<T>): RedBlackNode<T> {
         if (node.getLeft() != null && node.getRight() != null) {
             return this.getSuccessor(node.getRight() as RedBlackNode<T>);
@@ -144,15 +169,16 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         if (node.getLeft() == null && node.getRight() == null) {
             return null;
         }
-        if (node.getLeft() != null){
+        if (node.getLeft() != null) {
             return node.getLeft() as RedBlackNode<T>;
         }
         return node.getRight() as RedBlackNode<T>;
     }
+
     private fixDoubleBlack(node: RedBlackNode<T>): void {
         if (node === this.root) return;
         let sibling = node.getSibling();
-        let parent  = node.getParent();
+        let parent = node.getParent();
         if (sibling == null) {
             this.fixDoubleBlack(parent);
         } else {
@@ -200,15 +226,16 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
             }
         }
     }
+
     private fixDoubleRed(node: RedBlackNode<T>): void {
-        if (node === this.root){
+        if (node === this.root) {
             node.setColor(RedBlackNode.BLACK);
             return;
         }
         let parent: RedBlackNode<T> = node.getParent();
         let grandParent: RedBlackNode<T> = parent.getParent();
         let uncle: RedBlackNode<T> = node.getUncle();
-        if (parent.getColor() !== RedBlackNode.BLACK){
+        if (parent.getColor() !== RedBlackNode.BLACK) {
             if (uncle != null && uncle.getColor() === RedBlackNode.RED) {
                 parent.setColor(RedBlackNode.BLACK);
                 uncle.setColor(RedBlackNode.BLACK);
@@ -235,13 +262,15 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
             }
         }
     }
+
     private getSuccessor(node: RedBlackNode<T>): RedBlackNode<T> {
         let temp = node;
-        while (temp.getLeft() != null){
+        while (temp.getLeft() != null) {
             temp = temp.getLeft() as RedBlackNode<T>;
         }
         return temp;
     }
+
     private leftRotate(node: RedBlackNode<T>): void {
         let p = node.getRight();
         if (node === this.root) {
@@ -254,9 +283,10 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         }
         p.setLeft(node);
     }
+
     private rightRotate(node: RedBlackNode<T>): void {
         let p = node.getLeft();
-        if (node === this.root){
+        if (node === this.root) {
             this.root = p;
         }
         node.moveDown(p as RedBlackNode<T>);
@@ -266,6 +296,7 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         }
         p.setRight(node);
     }
+
     private searchNode(item: T): RedBlackNode<T> {
         let temp: RedBlackNode<T> = this.root as RedBlackNode<T>;
         while (temp != null) {
@@ -287,11 +318,13 @@ export class BinarySearchTree<T> extends AbstractTree<T> {
         }
         return temp;
     }
+
     private swapColors(u: RedBlackNode<T>, v: RedBlackNode<T>): void {
         let temp = u.getColor();
         u.setColor(v.getColor());
         v.setColor(temp);
     }
+
     private swapValues(u: RedBlackNode<T>, v: RedBlackNode<T>): void {
         let temp = u.getData();
         u.setData(v.getData());

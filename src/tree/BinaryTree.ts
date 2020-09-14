@@ -1,25 +1,32 @@
-import { AbstractTree } from "./AbstractTree";
-import { TreeNode } from "./TreeNode";
+import {AbstractTree} from "./AbstractTree";
+import {TreeNode} from "./TreeNode";
 import {INode} from "./INode";
+import {Comparator} from "../shared/Comparator";
+
 export class BinaryTree<T> extends AbstractTree<T> {
-    public constructor(comparator?: (item1: T, item2: T) => number) {
+    public constructor(comparator?: Comparator<T>) {
         super(comparator);
         this.root = null;
     }
+
     public add(item: T): boolean {
-        if(this.search(item)) return false;
+        if (this.search(item)) return false;
         this.insert(item);
         return true;
     }
+
     public delete(item: T): void {
         this.root = this.deleteRecursive(this.root, item);
     }
+
     public insert(item: T): void {
         this.root = this.insertRecursive(this.root, item);
     }
+
     public search(item: T): boolean {
-       return this.searchTree(this.root, item);
+        return this.searchTree(this.root, item);
     }
+
     private deleteRecursive(root: INode<T>, item: T): INode<T> {
         if (root == null) return null;
         if (this.comparator(item, root.getData()) === 0) {
@@ -44,9 +51,11 @@ export class BinaryTree<T> extends AbstractTree<T> {
         root.setRight(this.deleteRecursive(root.getRight(), item));
         return root;
     }
+
     private findSmallestValue(root: INode<T>): T {
         return root.getLeft() == null ? root.getData() : this.findSmallestValue(root.getLeft());
     }
+
     private insertRecursive(root: INode<T>, item: T): INode<T> {
         if (root == null) return new TreeNode<T>(item);
         if (this.comparator(item, root.getData()) < 0) {
@@ -58,6 +67,7 @@ export class BinaryTree<T> extends AbstractTree<T> {
         }
         return root;
     }
+
     private searchTree(root: INode<T>, item: T): boolean {
         if (root == null) return false;
         if (this.comparator(item, root.getData()) === 0) return true;

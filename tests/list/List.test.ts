@@ -519,14 +519,13 @@ describe("List", () => {
         list.add(alice);
         list.add(mel);
         list.add(senna);
-        list.add(null);
         list.add(lenka);
         list.add(jane);
         it("should throw error ['predicate is null.]", () => {
             expect(() => list.forEach(null)).to.throw("action is null.");
         });
         it("should increase the age of all people by 1", () => {
-            list.forEach(p => p.Age += 1);
+            list.where(p => !!p).toList().forEach(p => p.Age += 1);
             const ages = list.toArray().filter(p => !!p).map(p => p.Age);
             expect(ages).deep.equal([24, 10, 11, 17, 17]);
             list.forEach(p => p.Age -= 1); //restore ages
@@ -909,17 +908,15 @@ describe("List", () => {
         const list: List<Person> = new List<Person>();
         list.add(alice);
         list.add(lenka);
-        list.add(null);
         list.add(senna);
         list.add(mel);
-        list.add(null);
         list.add(jane);
         it("should throw error ['predicate is null.]", () => {
             expect(() => list.removeAll(null)).to.throw("predicate is null.");
         });
         it("should remove all people with Age < 16", () => {
             const removedCount = list.removeAll(p => p && p.Age < 16);
-            const ages = list.toArray().filter(p => !!p).map(p => p.Age);
+            const ages = list.toArray().map(p => p.Age);
             expect(ages).deep.equal([23, 16, 16]);
             expect(removedCount).to.eq(2);
         });
