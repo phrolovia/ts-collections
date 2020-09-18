@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>IList | @discordelia/ts-collections</title>
+	<title>IGrouping | @discordelia/ts-collections</title>
 	<meta name="description" content="Documentation for @discordelia/ts-collections">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="ilist.html">IList</a>
+					<a href="igrouping.html">IGrouping</a>
 				</li>
 			</ul>
-			<h1>Interface IList&lt;T&gt;</h1>
+			<h1>Interface IGrouping&lt;K, T&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,6 +70,9 @@
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
+						<h4>K</h4>
+					</li>
+					<li>
 						<h4>T</h4>
 					</li>
 				</ul>
@@ -78,13 +81,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="icollection.html" class="tsd-signature-type">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
-					</li>
-					<li>
 						<a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">IList</span>
+								<span class="target">IGrouping</span>
 							</li>
 						</ul>
 					</li>
@@ -93,149 +93,114 @@
 			<section class="tsd-panel">
 				<h3>Implemented by</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../classes/list.html" class="tsd-signature-type">List</a></li>
+					<li><a href="../classes/grouping.html" class="tsd-signature-type">Grouping</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#count" class="tsd-kind-icon">Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="igrouping.html#key" class="tsd-kind-icon">key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="igrouping.html#source" class="tsd-kind-icon">source</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-external">
+						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="ilist.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#add" class="tsd-kind-icon">add</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#aggregate" class="tsd-kind-icon">aggregate</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#all" class="tsd-kind-icon">all</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#any" class="tsd-kind-icon">any</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#append" class="tsd-kind-icon">append</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#average" class="tsd-kind-icon">average</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#clear" class="tsd-kind-icon">clear</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#concat" class="tsd-kind-icon">concat</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#contains" class="tsd-kind-icon">contains</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#count-1" class="tsd-kind-icon">count</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#distinct" class="tsd-kind-icon">distinct</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#except" class="tsd-kind-icon">except</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#first" class="tsd-kind-icon">first</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="ilist.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#groupby" class="tsd-kind-icon">group<wbr>By</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#includes" class="tsd-kind-icon">includes</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="ilist.html#indexof" class="tsd-kind-icon">index<wbr>Of</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="ilist.html#insert" class="tsd-kind-icon">insert</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#intersect" class="tsd-kind-icon">intersect</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#join" class="tsd-kind-icon">join</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#last" class="tsd-kind-icon">last</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#max" class="tsd-kind-icon">max</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#min" class="tsd-kind-icon">min</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#orderby" class="tsd-kind-icon">order<wbr>By</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#prepend" class="tsd-kind-icon">prepend</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#remove" class="tsd-kind-icon">remove</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="ilist.html#removeat" class="tsd-kind-icon">remove<wbr>At</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#reverse" class="tsd-kind-icon">reverse</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#select" class="tsd-kind-icon">select</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="ilist.html#set" class="tsd-kind-icon">set</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#single" class="tsd-kind-icon">single</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#size" class="tsd-kind-icon">size</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#skip" class="tsd-kind-icon">skip</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#sum" class="tsd-kind-icon">sum</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#take" class="tsd-kind-icon">take</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#takeevery" class="tsd-kind-icon">take<wbr>Every</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#takelast" class="tsd-kind-icon">take<wbr>Last</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#takewhile" class="tsd-kind-icon">take<wbr>While</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="ilist.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#tolist" class="tsd-kind-icon">to<wbr>List</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#union" class="tsd-kind-icon">union</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ilist.html#where" class="tsd-kind-icon">where</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="ilist.html#zip" class="tsd-kind-icon">zip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#aggregate" class="tsd-kind-icon">aggregate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#all" class="tsd-kind-icon">all</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#any" class="tsd-kind-icon">any</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#append" class="tsd-kind-icon">append</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#average" class="tsd-kind-icon">average</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#concat" class="tsd-kind-icon">concat</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#contains" class="tsd-kind-icon">contains</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#count" class="tsd-kind-icon">count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#distinct" class="tsd-kind-icon">distinct</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#except" class="tsd-kind-icon">except</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#first" class="tsd-kind-icon">first</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#groupby" class="tsd-kind-icon">group<wbr>By</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#intersect" class="tsd-kind-icon">intersect</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#join" class="tsd-kind-icon">join</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#last" class="tsd-kind-icon">last</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#max" class="tsd-kind-icon">max</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#min" class="tsd-kind-icon">min</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#orderby" class="tsd-kind-icon">order<wbr>By</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#prepend" class="tsd-kind-icon">prepend</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#reverse" class="tsd-kind-icon">reverse</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#select" class="tsd-kind-icon">select</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#single" class="tsd-kind-icon">single</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#skip" class="tsd-kind-icon">skip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#sum" class="tsd-kind-icon">sum</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#take" class="tsd-kind-icon">take</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#takeevery" class="tsd-kind-icon">take<wbr>Every</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#takelast" class="tsd-kind-icon">take<wbr>Last</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#takewhile" class="tsd-kind-icon">take<wbr>While</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#tolist" class="tsd-kind-icon">to<wbr>List</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#union" class="tsd-kind-icon">union</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="igrouping.html#where" class="tsd-kind-icon">where</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="igrouping.html#zip" class="tsd-kind-icon">zip</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="count" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> Count</h3>
-					<div class="tsd-signature tsd-kind-icon">Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="key" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> key</h3>
+					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">K</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#count">Count</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L8">src/core/ICollection.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/enumerable/Enumerable.ts#L986">src/enumerable/Enumerable.ts:986</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="source" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> source</h3>
+					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/enumerable/Enumerable.ts#L987">src/enumerable/Enumerable.ts:987</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="_symbol_iterator_" class="tsd-anchor"></a>
 					<h3>[<wbr>Symbol.iterator]</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">[<wbr>Symbol.iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
-								<p>Overrides <a href="icollection.html">ICollection</a>.<a href="icollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
 									<li>Defined in node_modules/typescript/lib/lib.es2015.iterable.d.ts:51</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="add" class="tsd-anchor"></a>
-					<h3>add</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#add">add</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L15">src/core/ICollection.ts:15</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Adds an item to the collection</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>item: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Item that is to be added to the collection.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>true if item is added, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -375,29 +340,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="clear" class="tsd-anchor"></a>
-					<h3>clear</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">clear<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#clear">clear</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L20">src/core/ICollection.ts:20</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Removes all items from the collection</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="concat" class="tsd-anchor"></a>
 					<h3>concat</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
@@ -449,7 +391,7 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="count-1" class="tsd-anchor"></a>
+					<a name="count" class="tsd-anchor"></a>
 					<h3>count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">?: </span><a href="predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
@@ -643,44 +585,6 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<a name="get" class="tsd-anchor"></a>
-					<h3>get</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/list/IList.ts#L13">src/list/IList.ts:13</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Retrieves the item at the index.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>throws</dt>
-									<dd><pre><code> ArgumentNullException <span class="hljs-keyword">if</span> index <span class="hljs-keyword">is</span> null
- ArgumentOutOfRangeException <span class="hljs-keyword">if</span> index <span class="hljs-keyword">is</span> <span class="hljs-keyword">less than</span> <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> <span class="hljs-keyword">greater than</span> <span class="hljs-built_in">list</span> size.</code></pre>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>index: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The index from which the element will be retrieved.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-							<p>the item at the given index.</p>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
 					<a name="groupby" class="tsd-anchor"></a>
 					<h3>group<wbr>By</h3>
@@ -763,114 +667,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="includes" class="tsd-anchor"></a>
-					<h3>includes</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">includes<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#includes">includes</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L27">src/core/ICollection.ts:27</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Checks if the given item exists in the collection.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>item: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Item whose presence is to be checked.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>true if item is in the collection, false otherwise.</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<a name="indexof" class="tsd-anchor"></a>
-					<h3>index<wbr>Of</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">index<wbr>Of<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/list/IList.ts#L20">src/list/IList.ts:20</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Finds the index of the given item in the list.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>item: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Item whose index to be found.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-							<p>Index of the item. If item is not found, returns -1.</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<a name="insert" class="tsd-anchor"></a>
-					<h3>insert</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">insert<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/list/IList.ts#L29">src/list/IList.ts:29</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Inserts an item to the given index.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>throws</dt>
-									<dd><p>ArgumentOutOfRangeException if index is less than zero or index is greater than the size.
-										Note that if index is zero, the item will always be inserted.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>index: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Index that the item will be inserted to.</p>
-									</div>
-								</li>
-								<li>
-									<h5>item: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Item that will be inserted to the given index.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="intersect" class="tsd-anchor"></a>
 					<h3>intersect</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
@@ -894,30 +690,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="isempty" class="tsd-anchor"></a>
-					<h3>is<wbr>Empty</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Empty<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#isempty">isEmpty</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L33">src/core/ICollection.ts:33</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Checks whether the collection is empty or not.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>true if the collection is empty, false otherwise.</p>
 						</li>
 					</ul>
 				</section>
@@ -1159,75 +931,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="remove" class="tsd-anchor"></a>
-					<h3>remove</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#remove">remove</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L40">src/core/ICollection.ts:40</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Removes the given item from the collection.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>item: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Item that is to be removed from the collection.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-							<p>true if item is removed from the collection, false otherwise.</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<a name="removeat" class="tsd-anchor"></a>
-					<h3>remove<wbr>At</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>At<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/list/IList.ts#L36">src/list/IList.ts:36</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Removes the item at the given index.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>throws</dt>
-									<dd><p>ArgumentOutOfRangeException if index is less than zer or greater than the size.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>index: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The index of the item that will be removed.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="reverse" class="tsd-anchor"></a>
 					<h3>reverse</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
@@ -1332,48 +1035,6 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<a name="set" class="tsd-anchor"></a>
-					<h3>set</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">set<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/list/IList.ts#L44">src/list/IList.ts:44</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Replaces the item at the given index.</p>
-								</div>
-								<dl class="tsd-comment-tags">
-									<dt>throws</dt>
-									<dd><p>ArgumentOutOfRangeException if index is less than zer or greater than the size.</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>index: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Index of the item that will be replaced with the given item.</p>
-									</div>
-								</li>
-								<li>
-									<h5>item: <span class="tsd-signature-type">T</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Item that will replace the old item at the given index.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="single" class="tsd-anchor"></a>
 					<h3>single</h3>
@@ -1419,30 +1080,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="size" class="tsd-anchor"></a>
-					<h3>size</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#size">size</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L46">src/core/ICollection.ts:46</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns the size of the collection.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-							<p>Size of the collection.</p>
 						</li>
 					</ul>
 				</section>
@@ -1638,28 +1275,21 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 					<a name="toarray" class="tsd-anchor"></a>
 					<h3>to<wbr>Array</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">to<wbr>Array<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#toarray">toArray</a></p>
-								<p>Overrides <a href="iorderedenumerable.html">IOrderedEnumerable</a>.<a href="iorderedenumerable.html#toarray">toArray</a></p>
+								<p>Inherited from <a href="iorderedenumerable.html">IOrderedEnumerable</a>.<a href="iorderedenumerable.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/core/ICollection.ts#L52">src/core/ICollection.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/fa1eafd/src/enumerable/IEnumerable.ts#L57">src/enumerable/IEnumerable.ts:57</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns an array containing all of the items in the collection.</p>
-								</div>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
-							<p>an array that includes all of the items of this collection.</p>
 						</li>
 					</ul>
 				</section>
@@ -1843,192 +1473,162 @@
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="ienumerable.html" class="tsd-kind-icon">IEnumerable</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="igrouping.html" class="tsd-kind-icon">IGrouping</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="ilist.html" class="tsd-kind-icon">IList</a>
+						<a href="igrouping.html" class="tsd-kind-icon">IGrouping</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#count" class="tsd-kind-icon">Count</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="igrouping.html#key" class="tsd-kind-icon">key</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="igrouping.html#source" class="tsd-kind-icon">source</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#add" class="tsd-kind-icon">add</a>
+								<a href="igrouping.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#aggregate" class="tsd-kind-icon">aggregate</a>
+								<a href="igrouping.html#aggregate" class="tsd-kind-icon">aggregate</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#all" class="tsd-kind-icon">all</a>
+								<a href="igrouping.html#all" class="tsd-kind-icon">all</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#any" class="tsd-kind-icon">any</a>
+								<a href="igrouping.html#any" class="tsd-kind-icon">any</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#append" class="tsd-kind-icon">append</a>
+								<a href="igrouping.html#append" class="tsd-kind-icon">append</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#average" class="tsd-kind-icon">average</a>
+								<a href="igrouping.html#average" class="tsd-kind-icon">average</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#clear" class="tsd-kind-icon">clear</a>
+								<a href="igrouping.html#concat" class="tsd-kind-icon">concat</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#concat" class="tsd-kind-icon">concat</a>
+								<a href="igrouping.html#contains" class="tsd-kind-icon">contains</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#contains" class="tsd-kind-icon">contains</a>
+								<a href="igrouping.html#count" class="tsd-kind-icon">count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#count-1" class="tsd-kind-icon">count</a>
+								<a href="igrouping.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
+								<a href="igrouping.html#distinct" class="tsd-kind-icon">distinct</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#distinct" class="tsd-kind-icon">distinct</a>
+								<a href="igrouping.html#elementat" class="tsd-kind-icon">element<wbr>At</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#elementat" class="tsd-kind-icon">element<wbr>At</a>
+								<a href="igrouping.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a>
+								<a href="igrouping.html#except" class="tsd-kind-icon">except</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#except" class="tsd-kind-icon">except</a>
+								<a href="igrouping.html#first" class="tsd-kind-icon">first</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#first" class="tsd-kind-icon">first</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-								<a href="ilist.html#get" class="tsd-kind-icon">get</a>
+								<a href="igrouping.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#groupby" class="tsd-kind-icon">group<wbr>By</a>
+								<a href="igrouping.html#groupby" class="tsd-kind-icon">group<wbr>By</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a>
+								<a href="igrouping.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#includes" class="tsd-kind-icon">includes</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-								<a href="ilist.html#indexof" class="tsd-kind-icon">index<wbr>Of</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-								<a href="ilist.html#insert" class="tsd-kind-icon">insert</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#intersect" class="tsd-kind-icon">intersect</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a>
+								<a href="igrouping.html#intersect" class="tsd-kind-icon">intersect</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#join" class="tsd-kind-icon">join</a>
+								<a href="igrouping.html#join" class="tsd-kind-icon">join</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#last" class="tsd-kind-icon">last</a>
+								<a href="igrouping.html#last" class="tsd-kind-icon">last</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a>
+								<a href="igrouping.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#max" class="tsd-kind-icon">max</a>
+								<a href="igrouping.html#max" class="tsd-kind-icon">max</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#min" class="tsd-kind-icon">min</a>
+								<a href="igrouping.html#min" class="tsd-kind-icon">min</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#orderby" class="tsd-kind-icon">order<wbr>By</a>
+								<a href="igrouping.html#orderby" class="tsd-kind-icon">order<wbr>By</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a>
+								<a href="igrouping.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#prepend" class="tsd-kind-icon">prepend</a>
+								<a href="igrouping.html#prepend" class="tsd-kind-icon">prepend</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#remove" class="tsd-kind-icon">remove</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-								<a href="ilist.html#removeat" class="tsd-kind-icon">remove<wbr>At</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#reverse" class="tsd-kind-icon">reverse</a>
+								<a href="igrouping.html#reverse" class="tsd-kind-icon">reverse</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#select" class="tsd-kind-icon">select</a>
+								<a href="igrouping.html#select" class="tsd-kind-icon">select</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a>
+								<a href="igrouping.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-								<a href="ilist.html#set" class="tsd-kind-icon">set</a>
+								<a href="igrouping.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#single" class="tsd-kind-icon">single</a>
+								<a href="igrouping.html#single" class="tsd-kind-icon">single</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a>
+								<a href="igrouping.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#size" class="tsd-kind-icon">size</a>
+								<a href="igrouping.html#skip" class="tsd-kind-icon">skip</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#skip" class="tsd-kind-icon">skip</a>
+								<a href="igrouping.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a>
+								<a href="igrouping.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a>
+								<a href="igrouping.html#sum" class="tsd-kind-icon">sum</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#sum" class="tsd-kind-icon">sum</a>
+								<a href="igrouping.html#take" class="tsd-kind-icon">take</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#take" class="tsd-kind-icon">take</a>
+								<a href="igrouping.html#takeevery" class="tsd-kind-icon">take<wbr>Every</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#takeevery" class="tsd-kind-icon">take<wbr>Every</a>
+								<a href="igrouping.html#takelast" class="tsd-kind-icon">take<wbr>Last</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#takelast" class="tsd-kind-icon">take<wbr>Last</a>
+								<a href="igrouping.html#takewhile" class="tsd-kind-icon">take<wbr>While</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#takewhile" class="tsd-kind-icon">take<wbr>While</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
+								<a href="igrouping.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#tolist" class="tsd-kind-icon">to<wbr>List</a>
+								<a href="igrouping.html#tolist" class="tsd-kind-icon">to<wbr>List</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#union" class="tsd-kind-icon">union</a>
+								<a href="igrouping.html#union" class="tsd-kind-icon">union</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#where" class="tsd-kind-icon">where</a>
+								<a href="igrouping.html#where" class="tsd-kind-icon">where</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="ilist.html#zip" class="tsd-kind-icon">zip</a>
+								<a href="igrouping.html#zip" class="tsd-kind-icon">zip</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="ilist.html" class="tsd-kind-icon">IList</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="inode.html" class="tsd-kind-icon">INode</a>
 					</li>
