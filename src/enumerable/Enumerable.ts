@@ -987,10 +987,10 @@ export interface IGrouping<K, T> extends IEnumerable<T>{
     readonly source: IEnumerable<T>;
 }
 
-export class Grouping<R, T> extends Enumerable<T> implements IGrouping<R, T> {
-    readonly key: R;
+export class Grouping<K, T> extends Enumerable<T> implements IGrouping<K, T> {
+    readonly key: K;
     readonly source: IEnumerable<T>;
-    public constructor(key: R, source: IEnumerable<T>) {
+    public constructor(key: K, source: IEnumerable<T>) {
         super(source.toArray());
         this.key = key;
         this.source = source;
