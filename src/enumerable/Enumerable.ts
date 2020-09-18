@@ -1,6 +1,4 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {IGrouping} from "./IGrouping";
-import {Grouping} from "./Grouping";
 import {IOrderedEnumerable} from "./IOrderedEnumerable";
 import {EnumerableIterator} from "./EnumerableIterator";
 import {IEnumerable} from "./IEnumerable";
@@ -120,7 +118,7 @@ export class Enumerable<T> implements IEnumerable<T> {
         return this.core.firstOrDefault(predicate);
     }
 
-    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IEnumerable<IGrouping<R, T>> {
+    public groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>> {
         return this.core.groupBy(keySelector, keyComparator);
     }
 
@@ -416,7 +414,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         }
     }
 
-    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IEnumerable<IGrouping<R, T>> {
+    public groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>> {
         keyComparator = keyComparator ?? EnumerableCore.defaultEqualityComparator;
         return new EnumerableCore(() => this.groupByGenerator(keySelector, keyComparator));
     }
@@ -737,9 +735,9 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         }
     }
 
-    private* groupByGenerator<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IterableIterator<IGrouping<R, T>> {
+    private* groupByGenerator<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IterableIterator<IGrouping<K, T>> {
         const groupedEnumerable = this.select(keySelector).distinct(keyComparator)
-            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d))).toArray()));
+            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)))));
         yield* groupedEnumerable;
     }
 
@@ -981,5 +979,20 @@ class OrderedEnumerableCore<T> extends EnumerableCore<T> implements IOrderedEnum
             }
         }
         return sortMap;
+    }
+}
+
+export interface IGrouping<K, T> extends IEnumerable<T>{
+    readonly key: K;
+    readonly source: IEnumerable<T>;
+}
+
+export class Grouping<R, T> extends Enumerable<T> implements IGrouping<R, T> {
+    readonly key: R;
+    readonly source: IEnumerable<T>;
+    public constructor(key: R, source: IEnumerable<T>) {
+        super(source.toArray());
+        this.key = key;
+        this.source = source;
     }
 }
