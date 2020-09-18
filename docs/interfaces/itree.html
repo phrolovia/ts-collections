@@ -136,7 +136,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#count">Count</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L8">src/core/ICollection.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L8">src/core/ICollection.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -172,7 +172,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L15">src/core/ICollection.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L15">src/core/ICollection.ts:15</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,7 +205,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L20">src/core/ICollection.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L20">src/core/ICollection.ts:20</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -227,7 +227,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/ITree.ts#L11">src/tree/ITree.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/ITree.ts#L13">src/tree/ITree.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -252,13 +252,13 @@
 					<a name="find" class="tsd-anchor"></a>
 					<h3>find</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+						<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><a href="predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/ITree.ts#L18">src/tree/ITree.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/ITree.ts#L20">src/tree/ITree.ts:20</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -269,28 +269,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>predicate: <span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></h5>
+									<h5>predicate: <a href="predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The function that will be used to find the items.</p>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>item: <span class="tsd-signature-type">T</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -302,13 +284,13 @@
 					<a name="foreach" class="tsd-anchor"></a>
 					<h3>for<wbr>Each</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">for<wbr>Each<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">for<wbr>Each<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="action.html" class="tsd-signature-type">Action</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/ITree.ts#L25">src/tree/ITree.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/ITree.ts#L27">src/tree/ITree.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -320,28 +302,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>action: <span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
+									<h5>action: <a href="action.html" class="tsd-signature-type">Action</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The action that will be called for each item.</p>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>item: <span class="tsd-signature-type">T</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -358,7 +322,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/ITree.ts#L31">src/tree/ITree.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/ITree.ts#L33">src/tree/ITree.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -382,7 +346,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#includes">includes</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L27">src/core/ICollection.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L27">src/core/ICollection.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -414,7 +378,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/ITree.ts#L37">src/tree/ITree.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/ITree.ts#L39">src/tree/ITree.ts:39</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -446,7 +410,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L33">src/core/ICollection.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L33">src/core/ICollection.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -470,7 +434,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L40">src/core/ICollection.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L40">src/core/ICollection.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -502,7 +466,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/ITree.ts#L44">src/tree/ITree.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/ITree.ts#L46">src/tree/ITree.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -535,7 +499,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L46">src/core/ICollection.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L46">src/core/ICollection.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -559,7 +523,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/ICollection.ts#L52">src/core/ICollection.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/ICollection.ts#L52">src/core/ICollection.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -584,9 +548,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-is-external">
-						<a href="../enums/orderdirection.html" class="tsd-kind-icon">Order<wbr>Direction</a>
-					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/abstractcollection.html" class="tsd-kind-icon">Abstract<wbr>Collection</a>
 					</li>
@@ -600,6 +561,15 @@
 						<a href="../classes/binarytree.html" class="tsd-kind-icon">Binary<wbr>Tree</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="../classes/enumerable.html" class="tsd-kind-icon">Enumerable</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="../classes/enumerablecore.html" class="tsd-kind-icon">Enumerable<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="../classes/errormessages.html" class="tsd-kind-icon">Error<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/grouping.html" class="tsd-kind-icon">Grouping</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
@@ -609,6 +579,9 @@
 						<a href="../classes/list.html" class="tsd-kind-icon">List</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="../classes/orderedenumerablecore.html" class="tsd-kind-icon">Ordered<wbr>Enumerable<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
@@ -616,6 +589,21 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="../classes/treeset.html" class="tsd-kind-icon">Tree<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="action.html" class="tsd-kind-icon">Action</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="aggregator.html" class="tsd-kind-icon">Aggregator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="comparator.html" class="tsd-kind-icon">Comparator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="enumerableiterator.html" class="tsd-kind-icon">Enumerable<wbr>Iterator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="equalitycomparator.html" class="tsd-kind-icon">Equality<wbr>Comparator</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="icollection.html" class="tsd-kind-icon">ICollection</a>
@@ -695,8 +683,26 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#orderactions" class="tsd-kind-icon">Order<wbr>Actions</a>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="indexedaction.html" class="tsd-kind-icon">Indexed<wbr>Action</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="indexedpredicate.html" class="tsd-kind-icon">Indexed<wbr>Predicate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="indexedselector.html" class="tsd-kind-icon">Indexed<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="joinselector.html" class="tsd-kind-icon">Join<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="predicate.html" class="tsd-kind-icon">Predicate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="selector.html" class="tsd-kind-icon">Selector</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="zipper.html" class="tsd-kind-icon">Zipper</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="../globals.html#traversetype" class="tsd-kind-icon">Traverse<wbr>Type</a>

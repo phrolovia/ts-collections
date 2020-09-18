@@ -13,14 +13,14 @@ export interface ICollection<T> extends Iterable<T> {
      * @return true if item is added, false otherwise.
      */
     add(item: T): boolean;
-    
+
     /**
      * Removes all items from the collection
      */
     clear(): void;
 
     /**
-     * Checks if the given item exists in the collection. 
+     * Checks if the given item exists in the collection.
      * @param  item Item whose presence is to be checked.
      * @return true if item is in the collection, false otherwise.
      */

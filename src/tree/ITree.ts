@@ -1,9 +1,11 @@
 import { ICollection } from "../core/ICollection";
+import {Predicate} from "../shared/Predicate";
+import {Action} from "../shared/Action";
 
 export type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 
 export interface ITree<T> extends ICollection<T> {
-    
+
     /**
      * Deletes the given item from the tree.
      * @param item Item to be removed from the tree.
@@ -15,14 +17,14 @@ export interface ITree<T> extends ICollection<T> {
      * @param  predicate The function that will be used to find the items.
      * @return First occurrence of the item that satisfies the predicate. If no item satisfies, returns null.
      */
-    find(predicate: (item: T) => boolean): T;
+    find(predicate: Predicate<T>): T;
 
     /**
      * Traverses all the items and call the given action for each of the items.
      * In-order traversing is used.
      * @param action The action that will be called for each item.
      */
-    forEach(action: (item: T) => void): void;
+    forEach(action: Action<T>): void;
 
     /**
      * Returns the data at the root of this tree.

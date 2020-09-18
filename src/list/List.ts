@@ -3,25 +3,32 @@ import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
 import {IEnumerable} from "../enumerable/IEnumerable";
-import {IGrouping} from "../enumerable/IGrouping";
-import {Grouping} from "../enumerable/Grouping";
 import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
-
-type OrderActions = { selector: Function, comparator: Function, direction: OrderDirection };
-enum OrderDirection { Ascending = 1, Descending = -1}
+import {Enumerable, IGrouping} from "../enumerable/Enumerable";
+import {Aggregator} from "../shared/Aggregator";
+import {Selector} from "../shared/Selector";
+import {Predicate} from "../shared/Predicate";
+import {IndexedSelector} from "../shared/IndexedSelector";
+import {Comparator} from "../shared/Comparator";
+import {JoinSelector} from "../shared/JoinSelector";
+import {IndexedPredicate} from "../shared/IndexedPredicate";
+import {Zipper} from "../shared/Zipper";
+import {EqualityComparator} from "../shared/EqualityComparator";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
+    private readonly enumerable: Enumerable<T>;
     private data: T[] = [];
-    private orderActions: Array<OrderActions> = new Array<OrderActions>();
 
     public constructor(data?: T[]) {
         super();
         if (data) {
             this.data = [...data];
         }
+        this.enumerable = new Enumerable<T>(this.data);
     }
 
-    public static from<S>(array: S[]): IList<S> {
+    public static from<S>(array: S[]): List<S> {
         return new List(array);
     }
 
@@ -30,52 +37,28 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return true;
     }
 
-    public aggregate<R>(accumulator: (acc: R, item: T) => R, seed?: R): R {
-        if (!accumulator) {
-            throw new Error("accumulator is null.");
-        }
-        if (seed == null && this.isEmpty()) {
-            throw new Error("Sequence contains no elements.");
-        }
-        if (seed != null) {
-            return this.data.reduce(accumulator, seed);
-        } else {
-            seed = this.get(0) as unknown as R;
-            return this.data.slice(1).reduce(accumulator, seed);
-        }
+    public aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U {
+        return this.enumerable.aggregate(aggregator, seed, resultSelector);
     }
 
-    public all(predicate?: (item: T) => boolean): boolean {
-        if (!predicate) {
-            return this.size() > 0;
-        }
-        return this.data.every(predicate);
+    public all(predicate?: Predicate<T>): boolean {
+        return this.enumerable.all(predicate);
     }
 
-    public any(predicate?: (item: T) => boolean): boolean {
-        if (!predicate) {
-            return this.size() > 0;
-        }
-        return this.data.some(predicate);
-    }
-
-    public average(predicate?: (item: T, index?: number) => number): number {
-        if (predicate === null) {
-            throw new Error("predicate is null.");
-        }
-        if (this.isEmpty()) {
-            throw new Error("Sequence contains no elements.");
-        }
-        const transformedData = this.data.map((d, dx) => !!predicate ? predicate(d, dx) : d as unknown as number);
-        return new List(transformedData).sum(d => d) / transformedData.length;
+    public any(predicate?: Predicate<T>): boolean {
+        return this.enumerable.any(predicate);
     }
 
     public append(item: T): IEnumerable<T> {
-        return new List([...this.data, item]);
+        return this.enumerable.append(item);
     }
 
     public asEnumerable(): IEnumerable<T> {
-        return this;
+        return this.enumerable;
+    }
+
+    public average(selector?: IndexedSelector<T, number>): number {
+        return this.enumerable.average(selector);
     }
 
     public clear() {
@@ -83,33 +66,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public concat(enumerable: IEnumerable<T>): IEnumerable<T> {
-        return new List([...this.toArray(), ...enumerable.toArray()]);
+        return this.enumerable.concat(enumerable);
     }
 
-    public contains(item: T, comparator?: (item1: T, item2: T) => number): boolean {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        for (const d of this.data) {
-            if (comparator(d, item) === 0) {
-                return true;
-            }
-        }
-        return false;
+    public contains(item: T, comparator?: EqualityComparator<T>): boolean {
+        return this.enumerable.contains(item, comparator);
     }
 
-    public count(predicate?: (item: T) => boolean): number {
-        if (!predicate) {
-            return this.size();
-        }
-        return this.where(predicate).count();
+    public count(predicate?: Predicate<T>): number {
+        return this.enumerable.count(predicate);
     }
 
     public defaultIfEmpty(value: T = null): IEnumerable<T> {
-        if (this.size() > 0) {
-            return this;
-        }
-        return new List([value]);
+        return this.enumerable.defaultIfEmpty(value);
     }
 
     public dequeue(): T {
@@ -130,25 +99,16 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return item;
     }
 
-    public distinct(comparer?: (item1: T, item2: T) => number): IEnumerable<T> {
-        if (!comparer) {
-            comparer = AbstractCollection.defaultComparator;
-        }
-        return this.union([], comparer);
+    public distinct(comparator?: EqualityComparator<T>): IEnumerable<T> {
+        return this.enumerable.distinct(comparator);
     }
 
     public elementAt(index: number): T {
-        if (index < 0 || index >= this.size()) {
-            throw new Error("index is out of bounds.");
-        }
-        return this.get(index);
+        return this.enumerable.elementAt(index);
     }
 
     public elementAtOrDefault(index: number): T {
-        if (index < 0 || index >= this.size()) {
-            return null;
-        }
-        return this.get(index);
+        return this.enumerable.elementAtOrDefault(index);
     }
 
     public enqueue(item: T): void {
@@ -159,38 +119,28 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.insert(0, item);
     }
 
-    public except(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const exceptSet: IList<T> = new List();
-        for (const item of this.data) {
-            const contains = enumerable.contains(item, comparator);
-            if (!contains) {
-                exceptSet.add(item);
-            }
-        }
-        return exceptSet;
+    public except(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T> {
+        return this.enumerable.except(enumerable, comparator);
     }
 
-    public exists(predicate: (item: T) => boolean): boolean {
+    public exists(predicate: Predicate<T>): boolean {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
         return this.data.some(predicate);
     }
 
-    public find(predicate: (item: T) => boolean): T | null {
+    public find(predicate: Predicate<T>): T | null {
         const item = this.data.find(predicate);
         return item ?? null;
     }
 
-    public findAll(predicate: (item: T) => boolean): List<T> {
+    public findAll(predicate: Predicate<T>): List<T> {
         const foundData = this.data.filter(predicate);
         return new List<T>(foundData);
     }
 
-    public findIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number {
+    public findIndex(predicate: Predicate<T>, startIndex?: number, count?: number): number {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -220,7 +170,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return foundIndex;
     }
 
-    public findLast(predicate: (item: T) => boolean): T {
+    public findLast(predicate: Predicate<T>): T {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -237,7 +187,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return foundItem;
     }
 
-    public findLastIndex(predicate: (item: T) => boolean, startIndex?: number, count?: number): number {
+    public findLastIndex(predicate: Predicate<T>, startIndex?: number, count?: number): number {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
@@ -264,35 +214,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return foundIndex;
     }
 
-    public first(predicate?: (item: T) => boolean): T {
-        if (this.isEmpty()) {
-            throw new Error("Sequence contains no elements.");
-        }
-        if (!predicate) {
-            return this.get(0);
-        }
-        const foundItem = this.firstOrDefault(predicate);
-        if (!foundItem) {
-            throw new Error("Sequence contains no matching element.");
-        }
-        return foundItem;
+    public first(predicate?: Predicate<T>): T {
+        return this.enumerable.first(predicate)
     }
 
-    public firstOrDefault(predicate?: (item: T) => boolean): T {
-        if (this.isEmpty()) {
-            return null;
-        }
-        if (!predicate) {
-            return this.get(0);
-        }
-        return this.find(predicate) ?? null;
+    public firstOrDefault(predicate?: Predicate<T>): T {
+        return this.enumerable.firstOrDefault(predicate);
     }
 
-    public forEach(action: (item: T) => void): void {
+    public forEach(action: IndexedAction<T>): void {
         if (!action) {
             throw new Error("action is null.");
         }
-        this.data.forEach(d => d ? action(d) : void 0);
+        this.data.forEach((d, ix) => action(d, ix));
     }
 
     public get(index: number): T {
@@ -308,27 +242,13 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.data[index];
     }
 
-    public groupBy<R>(keySelector: (item: T) => R, keyComparator?: (item1: R, item2: R) => number): IEnumerable<IGrouping<R, T>> {
-        if (!keyComparator) {
-            keyComparator = AbstractCollection.defaultComparator;
-        }
-        return this.select(d => keySelector(d))
-            .distinct(keyComparator)
-            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)) === 0).toArray()));
+    public groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>> {
+        return this.enumerable.groupBy(keySelector, keyComparator);
     }
 
-    public groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: (item: T) => K, innerKeySelector: (item: E) => K,
-                              resultSelector: (key: K, data: IEnumerable<E>) => R,
-                              keyComparator?: (item1: K, item2: K) => number): IEnumerable<R> {
-        if (!keyComparator) {
-            keyComparator = AbstractCollection.defaultComparator;
-        }
-        const resultList: IList<R> = new List();
-        for (let odata of this.data) {
-            const joinedEntries = enumerable.where(idata => keyComparator(outerKeySelector(odata), innerKeySelector(idata)) === 0);
-            resultList.add(resultSelector(outerKeySelector(odata), joinedEntries));
-        }
-        return resultList;
+    public groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                              resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: EqualityComparator<K>): IEnumerable<R> {
+        return this.enumerable.groupJoin(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public includes(item: T): boolean {
@@ -349,119 +269,45 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.data.splice(index, 0, item);
     }
 
-    public intersect(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<any> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const intersectList: IList<T> = new List();
-        for (const d of this.data) {
-            if (enumerable.contains(d, comparator)) {
-                intersectList.add(d);
-            }
-        }
-        return intersectList;
+    public intersect(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<any> {
+        return this.enumerable.intersect(enumerable, comparator);
     }
 
     public isEmpty(): boolean {
         return this.data.length === 0;
     }
 
-    public join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: (item: T) => K, innerKeySelector: (item: E) => K,
-                         resultSelector: (outerItem: T, innerItem: E) => R,
-                         keyComparator?: (item1: K, item2: K) => number, leftJoin: boolean = false): IEnumerable<R> {
-        if (!keyComparator) {
-            keyComparator = AbstractCollection.defaultComparator;
-        }
-        const resultList: IList<R> = new List();
-        for (let odata of this.data) {
-            const outerEntries = enumerable.where(idata => keyComparator(outerKeySelector(odata), innerKeySelector(idata)) === 0);
-            if (leftJoin && !outerEntries.any()) {
-                resultList.add(resultSelector(odata, null));
-            } else {
-                outerEntries.toArray().forEach(o => resultList.add(resultSelector(odata, o)));
-            }
-        }
-        return resultList;
+    public join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
+                         resultSelector: JoinSelector<T, E, R>, keyComparator?: EqualityComparator<K>, leftJoin: boolean = false): IEnumerable<R> {
+        return this.enumerable.join(enumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
-    public last(predicate?: (item: T) => boolean): T {
-        if (this.isEmpty()) {
-            throw new Error("Sequence contains no elements.");
-        }
-        if (!predicate) {
-            return this.get(this.size() - 1);
-        }
-        const foundItem = this.lastOrDefault(predicate);
-        if (!foundItem) {
-            throw new Error("Sequence contains no matching element.");
-        }
-        return foundItem;
+    public last(predicate?: Predicate<T>): T {
+        return this.enumerable.last(predicate);
     }
 
     public lastIndexOf(item: T): number {
         return this.data.lastIndexOf(item);
     }
 
-    public lastOrDefault(predicate?: (item: T) => boolean): T {
-        if (this.isEmpty()) {
-            return null;
-        }
-        if (!predicate) {
-            return this.get(this.size() - 1);
-        }
-        return this.findLast(predicate) ?? null;
+    public lastOrDefault(predicate?: Predicate<T>): T {
+        return this.enumerable.lastOrDefault(predicate);
     }
 
-    public max(predicate: (item: T, index?: number) => number): number {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        let max = 0;
-        for (const [index, item] of this.data.entries()) {
-            if (index === 0) {
-                max = predicate(item, index);
-            } else {
-                max = Math.max(max, predicate(item, index));
-            }
-        }
-        return max;
+    public max(selector?: IndexedSelector<T, number>): number {
+        return this.enumerable.max(selector);
     }
 
-    public min(predicate: (item: T, index?: number) => number): number {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        let min = 0;
-        for (const [index, item] of this.data.entries()) {
-            if (index === 0) {
-                min = predicate(item, index);
-            } else {
-                min = Math.min(min, predicate(item, index));
-            }
-        }
-        return min;
+    public min(selector?: IndexedSelector<T, number>): number {
+        return this.enumerable.min(selector);
     }
 
-    public orderBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)));
-        const sortedList = new List<T>(sortedData);
-        this.orderActions.length = 0;
-        sortedList.addOrderAction({ selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending });
-        return sortedList;
+    public orderBy<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T> {
+        return this.enumerable.orderBy(keySelector, comparator);
     }
 
-    public orderByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const sortedData = [...this.data].sort((d1, d2) => comparator(keySelector(d1), keySelector(d2)) * OrderDirection.Descending );
-        const sortedList = new List<T>(sortedData);
-        this.orderActions.length = 0;
-        sortedList.addOrderAction({ selector: keySelector, comparator: comparator, direction: OrderDirection.Descending });
-        return sortedList;
+    public orderByDescending<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T> {
+        return this.enumerable.orderByDescending(keySelector, comparator);
     }
 
     public peek(): T {
@@ -495,7 +341,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public prepend(item: T): IEnumerable<T> {
-        return new List([item, ...this.data]);
+        return this.enumerable.prepend(item);
     }
 
     public remove(item: T): boolean {
@@ -541,53 +387,20 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         }
     }
 
-    public repeat(item: T, count: number): IEnumerable<T> {
-        if (count < 0) {
-            throw new Error("count is out of range.");
-        }
-        return new List(new Array(count).fill(item)).asEnumerable();
-    }
-
     public reverse(): IEnumerable<T> {
-        return new List(this.data.slice().reverse());
+        return this.enumerable.reverse();
     }
 
-    public select<R>(predicate: (item: T, index?: number) => R): IEnumerable<R> {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        return new List(this.data.map(predicate));
+    public select<R>(selector: IndexedSelector<T, R>): IEnumerable<R> {
+        return this.enumerable.select(selector);
     }
 
-    public selectMany<R>(predicate: (item: T, index?: number) => IEnumerable<R> | Array<R>): IEnumerable<R> {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        const list: IList<R> = new List();
-        this.data.forEach((d, dx) => {
-            const transformedData = predicate(d, dx);
-            if (transformedData instanceof Array) {
-                transformedData.forEach(td => list.add(td));
-            } else {
-                transformedData.toArray().forEach(td => list.add(td));
-            }
-        });
-        return list;
+    public selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnumerable<R> {
+        return this.enumerable.selectMany(selector);
     }
 
-    public sequenceEqual(enumerable: IEnumerable<T>, comparator?: (item1: T, item2: T) => number): boolean {
-        if (this.count() !== enumerable.count()) {
-            return false;
-        }
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        for (const [index, item] of this.data.entries()) {
-            if (comparator(this.elementAt(index), enumerable.elementAt(index)) !== 0) {
-                return false;
-            }
-        }
-        return true;
+    public sequenceEqual(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): boolean {
+        return this.enumerable.sequenceEqual(enumerable, comparator);
     }
 
     public set(index: number, item: T): void {
@@ -600,42 +413,12 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         this.data[index] = item;
     }
 
-    public single(predicate?: (item: T) => boolean): T {
-        if (this.size() === 0) {
-            throw new Error("Sequence contains no elements.");
-        }
-        if (!predicate) {
-            if (this.size() > 1) {
-                throw new Error("Sequence contains more than one element.");
-            }
-            return this.get(0);
-        } else {
-            const foundItem = this.singleOrDefault(predicate);
-            if (!foundItem) {
-                throw new Error("Sequence contains no matching element.");
-            }
-            return foundItem;
-        }
+    public single(predicate?: Predicate<T>): T {
+        return this.enumerable.single(predicate);
     }
 
-    public singleOrDefault(predicate?: (item: T) => boolean): T {
-        if (this.size() === 0) {
-            return null;
-        }
-        if (!predicate) {
-            if (this.size() === 1) {
-                return this.get(0);
-            }
-            throw new Error("Sequence contains more than one element.");
-        }
-        const items = this.where(predicate);
-        if (items.count() > 1) {
-            throw new Error("Sequence contains more than one matching element.");
-        }
-        if (items.count() <= 0) {
-            return null;
-        }
-        return items.elementAt(0);
+    public singleOrDefault(predicate?: Predicate<T>): T {
+        return this.enumerable.singleOrDefault(predicate);
     }
 
     public size(): number {
@@ -643,107 +426,42 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public skip(count: number): IEnumerable<T> {
-        if (count > 0) {
-            if (this.size() <= count) {
-                return new List<T>([]);
-            }
-            return new List(this.data.slice(count, this.data.length));
-        }
-        return this;
+        return this.enumerable.skip(count);
     }
 
     public skipLast(count: number): IEnumerable<T> {
-        if (count > 0) {
-            if (this.size() <= count) {
-                return new List<T>([]);
-            }
-            return new List(this.data.slice(0, this.data.length - count));
-        }
-        return this;
+        return this.enumerable.skipLast(count);
     }
 
-    public skipWhile(predicate: (item: T, index?: number) => boolean): IEnumerable<T> {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        let startIndex = 0;
-        for (const [index, item] of this.data.entries()) {
-            if (predicate(item, index)) {
-                startIndex++;
-            } else {
-                break;
-            }
-        }
-        return new List(this.skip(startIndex).toArray());
+    public skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T> {
+        return this.enumerable.skipWhile(predicate);
     }
 
-    public sort(comparer?: (e1: T, e2: T) => number): void {
-        if (!comparer) {
-            comparer = AbstractCollection.defaultComparator;
+    public sort(comparator?: Comparator<T>): void {
+        if (!comparator) {
+            comparator = AbstractCollection.defaultComparator;
         }
-        this.data.sort(comparer);
+        this.data.sort(comparator);
     }
 
-    public sum(predicate: (item: T) => number): number {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        let total = 0;
-        this.data.forEach(d => total += predicate(d));
-        return total;
+    public sum(predicate: Selector<T, number>): number {
+        return this.enumerable.sum(predicate);
     }
 
     public take(count: number): IEnumerable<T> {
-        if (count <= 0) {
-            return new List<T>([]);
-        }
-        if (count >= this.size()) {
-            return this;
-        }
-        return new List(this.data.slice(0, count));
+        return this.enumerable.take(count);
+    }
+
+    public takeEvery(step: number): IEnumerable<T> {
+        return this.enumerable.takeEvery(step);
     }
 
     public takeLast(count: number): IEnumerable<T> {
-        if (count <= 0) {
-            return new List<T>([]);
-        }
-        if (count >= this.size()) {
-            return this;
-        }
-        return new List(this.data.slice(this.data.length - count, this.data.length));
+        return this.enumerable.takeLast(count);
     }
 
-    public takeWhile(predicate: (item: T, index?: number) => boolean): IEnumerable<T> {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        let endIndex = 0;
-        for (const [index, item] of this.data.entries()) {
-            if (predicate(item, index)) {
-                endIndex++;
-            } else {
-                break;
-            }
-        }
-        return new List(this.take(endIndex).toArray());
-    }
-
-    public thenBy<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Ascending };
-        const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
-        return this.sortByMultipleKeys(allOrderActions);
-    }
-
-    public thenByDescending<K>(keySelector: (item: T) => K, comparator?: (item1: K, item2: K) => number): IOrderedEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const orderAction: OrderActions = { selector: keySelector, comparator: comparator, direction: OrderDirection.Descending };
-        const allOrderActions: Array<OrderActions> = [...this.orderActions, orderAction];
-        return this.sortByMultipleKeys(allOrderActions);
+    public takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T> {
+        return this.enumerable.takeWhile(predicate);
     }
 
     public toArray(): T[] {
@@ -751,81 +469,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
     }
 
     public toList(): List<T> {
-        return new List([...this.data]);
+        return new List<T>(this.data);
     }
 
-    public union(enumerable: IEnumerable<T> | Array<T>, comparator?: (item1: T, item2: T) => number): IEnumerable<T> {
-        if (!comparator) {
-            comparator = AbstractCollection.defaultComparator;
-        }
-        const unionList: IList<T> = new List();
-        const array = enumerable instanceof Array ? enumerable : enumerable.toArray();
-        this.data.forEach(item => {
-            let contains = false;
-            for (const unionItem of unionList.toArray()) {
-                if (comparator(item, unionItem) === 0) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                unionList.add(item);
-            }
-        });
-        array.forEach(item => {
-            let contains = false;
-            for (const unionItem of unionList.toArray()) {
-                if (comparator(item, unionItem) === 0) {
-                    contains = true;
-                    break;
-                }
-            }
-            if (!contains) {
-                unionList.add(item);
-            }
-        });
-        return unionList;
+    public union(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T> {
+        return this.enumerable.union(enumerable, comparator);
     }
 
-    public where(predicate: (item: T) => boolean): IEnumerable<T> {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        return new List(this.data.filter(predicate));
+    public where(predicate: Predicate<T>): IEnumerable<T> {
+        return this.enumerable.where(predicate);
     }
 
-    public zip<R, U>(enumerable: IEnumerable<R>, zipper: (left: T, right: R) => U): IEnumerable<U> {
-        if (!zipper) {
-            throw new Error("zipper is null.");
-        }
-        const sizeFirst = this.count();
-        const sizeSecond = enumerable.count();
-        let first = this.asEnumerable();
-        let second = enumerable;
-        if (sizeFirst < sizeSecond) {
-            second = second.take(sizeFirst);
-        } else {
-            first = first.take(sizeSecond);
-        }
-        const list: IList<U> = new List();
-        for (let ix = 0; ix < first.count(); ++ix) {
-            const left = first.elementAt(ix);
-            const right = second.elementAt(ix);
-            list.add(zipper(left, right));
-        }
-        return list.asEnumerable();
-    }
-
-    private addOrderAction(action: OrderActions|OrderActions[]): void {
-        action = action instanceof Array ? action : [action];
-        action.forEach(a => this.orderActions.push(a));
-    }
-
-    private sortByMultipleKeys(actions: OrderActions[]): List<T> {
-        const sortedData = [...this.data].sort((d1, d2) => actions.reduce((result, action) => result ||= (action.direction * action.comparator(action.selector(d1), action.selector(d2))), 0));
-        const sortedList = new List<T>(sortedData);
-        sortedList.addOrderAction(actions);
-        return sortedList;
+    public zip<R, U = [T, R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<U> | IEnumerable<[T, R]> {
+        return this.enumerable.zip(enumerable, zipper);
     }
 
     * [Symbol.iterator](): Iterator<T> {

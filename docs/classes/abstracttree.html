@@ -153,6 +153,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external"><a href="abstracttree.html#topreorderarray" class="tsd-kind-icon">to<wbr>Preorder<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="abstracttree.html#traverseandmaptoarray" class="tsd-kind-icon">traverse<wbr>And<wbr>Map<wbr>ToArray</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external"><a href="abstracttree.html#defaultcomparator" class="tsd-kind-icon">default<wbr>Comparator</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external"><a href="abstracttree.html#defaultequalitycomparator" class="tsd-kind-icon">default<wbr>Equality<wbr>Comparator</a></li>
 							</ul>
 						</section>
 					</div>
@@ -164,40 +165,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-protected tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>Tree<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="abstracttree.html" class="tsd-signature-type">AbstractTree</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>Tree<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/comparator.html" class="tsd-signature-type">Comparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="abstracttree.html" class="tsd-signature-type">AbstractTree</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L7">src/tree/AbstractTree.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L10">src/tree/AbstractTree.ts:10</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>item1: <span class="tsd-signature-type">T</span></h5>
-														</li>
-														<li>
-															<h5>item2: <span class="tsd-signature-type">T</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/comparator.html" class="tsd-signature-type">Comparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="abstracttree.html" class="tsd-signature-type">AbstractTree</a></h4>
@@ -213,7 +193,7 @@
 					<div class="tsd-signature tsd-kind-icon">comparator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L6">src/tree/AbstractTree.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L9">src/tree/AbstractTree.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -223,7 +203,7 @@
 					<div class="tsd-signature tsd-kind-icon">root<span class="tsd-signature-symbol">:</span> <a href="../interfaces/inode.html" class="tsd-signature-type">INode</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L7">src/tree/AbstractTree.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L10">src/tree/AbstractTree.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -241,7 +221,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#count">Count</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/AbstractCollection.ts#L14">src/core/AbstractCollection.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/AbstractCollection.ts#L17">src/core/AbstractCollection.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -263,7 +243,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L120">src/tree/AbstractTree.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L141">src/tree/AbstractTree.ts:141</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -282,7 +262,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#add">add</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L133">src/tree/AbstractTree.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L154">src/tree/AbstractTree.ts:154</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -307,7 +287,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#clear">clear</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L12">src/tree/AbstractTree.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L17">src/tree/AbstractTree.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -324,7 +304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L15">src/tree/AbstractTree.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L21">src/tree/AbstractTree.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -348,7 +328,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#delete">delete</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L134">src/tree/AbstractTree.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L156">src/tree/AbstractTree.ts:156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -365,37 +345,20 @@
 					<a name="find" class="tsd-anchor"></a>
 					<h3>find</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+						<li class="tsd-signature tsd-kind-icon">find<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#find">find</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L19">src/tree/AbstractTree.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L26">src/tree/AbstractTree.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>predicate: <span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>item: <span class="tsd-signature-type">T</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5>predicate: <a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -406,13 +369,13 @@
 					<a name="findrecursive" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> find<wbr>Recursive</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">find<wbr>Recursive<span class="tsd-signature-symbol">(</span>root<span class="tsd-signature-symbol">: </span><a href="../interfaces/inode.html" class="tsd-signature-type">INode</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, predicate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Recursive<span class="tsd-signature-symbol">(</span>root<span class="tsd-signature-symbol">: </span><a href="../interfaces/inode.html" class="tsd-signature-type">INode</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, predicate<span class="tsd-signature-symbol">: </span><a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L23">src/tree/AbstractTree.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L31">src/tree/AbstractTree.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -421,25 +384,7 @@
 									<h5>root: <a href="../interfaces/inode.html" class="tsd-signature-type">INode</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
-									<h5>predicate: <span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>item: <span class="tsd-signature-type">T</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5>predicate: <a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -456,7 +401,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L32">src/tree/AbstractTree.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L41">src/tree/AbstractTree.ts:41</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -497,7 +442,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L36">src/tree/AbstractTree.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L46">src/tree/AbstractTree.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -542,7 +487,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#getrootdata">getRootData</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L42">src/tree/AbstractTree.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L53">src/tree/AbstractTree.ts:53</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -561,7 +506,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#includes">includes</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#includes">includes</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L46">src/tree/AbstractTree.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L58">src/tree/AbstractTree.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -584,7 +529,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L49">src/tree/AbstractTree.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L62">src/tree/AbstractTree.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -611,7 +556,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#insert">insert</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L135">src/tree/AbstractTree.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L158">src/tree/AbstractTree.ts:158</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -636,7 +581,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#isempty">isEmpty</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L56">src/tree/AbstractTree.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L70">src/tree/AbstractTree.ts:70</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -653,7 +598,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L124">src/tree/AbstractTree.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L145">src/tree/AbstractTree.ts:145</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -678,7 +623,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#remove">remove</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L59">src/tree/AbstractTree.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L74">src/tree/AbstractTree.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -702,7 +647,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#search">search</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L136">src/tree/AbstractTree.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L160">src/tree/AbstractTree.ts:160</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -727,7 +672,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#size">size</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L64">src/tree/AbstractTree.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L80">src/tree/AbstractTree.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -746,7 +691,7 @@
 								<p>Implementation of <a href="../interfaces/itree.html">ITree</a>.<a href="../interfaces/itree.html#toarray">toArray</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L67">src/tree/AbstractTree.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L84">src/tree/AbstractTree.ts:84</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -763,7 +708,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L73">src/tree/AbstractTree.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L91">src/tree/AbstractTree.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -789,7 +734,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L79">src/tree/AbstractTree.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L98">src/tree/AbstractTree.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -815,7 +760,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L85">src/tree/AbstractTree.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L105">src/tree/AbstractTree.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -841,7 +786,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L91">src/tree/AbstractTree.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L112">src/tree/AbstractTree.ts:112</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -861,13 +806,13 @@
 					<a name="traverseandmaptoarray" class="tsd-anchor"></a>
 					<h3>traverse<wbr>And<wbr>Map<wbr>ToArray</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">traverse<wbr>And<wbr>Map<wbr>ToArray&lt;R&gt;<span class="tsd-signature-symbol">(</span>mapper<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">R</span>, direction<span class="tsd-signature-symbol">?: </span><a href="../globals.html#traversetype" class="tsd-signature-type">TraverseType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">traverse<wbr>And<wbr>Map<wbr>ToArray&lt;R&gt;<span class="tsd-signature-symbol">(</span>mapper<span class="tsd-signature-symbol">: </span><a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span>, direction<span class="tsd-signature-symbol">?: </span><a href="../globals.html#traversetype" class="tsd-signature-type">TraverseType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/tree/AbstractTree.ts#L104">src/tree/AbstractTree.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/tree/AbstractTree.ts#L125">src/tree/AbstractTree.ts:125</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -884,28 +829,10 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>mapper: <span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">R</span></h5>
+									<h5>mapper: <a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">R</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The function that will be applied to each item.</p>
 									</div>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">R</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>item: <span class="tsd-signature-type">T</span></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">R</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> direction: <a href="../globals.html#traversetype" class="tsd-signature-type">TraverseType</a><span class="tsd-signature-symbol"> = &quot;INORDER&quot;</span></h5>
@@ -921,16 +848,16 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
 					<a name="defaultcomparator" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> default<wbr>Comparator</h3>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> default<wbr>Comparator</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">default<wbr>Comparator&lt;E&gt;<span class="tsd-signature-symbol">(</span>item1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span>, item2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">default<wbr>Comparator&lt;E&gt;<span class="tsd-signature-symbol">(</span>i1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span>, i2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">-1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">0</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#defaultcomparator">defaultComparator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/639c425/src/core/AbstractCollection.ts#L4">src/core/AbstractCollection.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/AbstractCollection.ts#L6">src/core/AbstractCollection.ts:6</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -942,13 +869,46 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>item1: <span class="tsd-signature-type">E</span></h5>
+									<h5>i1: <span class="tsd-signature-type">E</span></h5>
 								</li>
 								<li>
-									<h5>item2: <span class="tsd-signature-type">E</span></h5>
+									<h5>i2: <span class="tsd-signature-type">E</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">-1</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">0</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
+					<a name="defaultequalitycomparator" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> default<wbr>Equality<wbr>Comparator</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">default<wbr>Equality<wbr>Comparator&lt;E&gt;<span class="tsd-signature-symbol">(</span>i1<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span>, i2<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">E</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#defaultequalitycomparator">defaultEqualityComparator</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/68e7648/src/core/AbstractCollection.ts#L7">src/core/AbstractCollection.ts:7</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>E</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>i1: <span class="tsd-signature-type">E</span></h5>
+								</li>
+								<li>
+									<h5>i2: <span class="tsd-signature-type">E</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -964,9 +924,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-is-external">
-						<a href="../enums/orderdirection.html" class="tsd-kind-icon">Order<wbr>Direction</a>
-					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="abstractcollection.html" class="tsd-kind-icon">Abstract<wbr>Collection</a>
 					</li>
@@ -1062,6 +1019,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
 								<a href="abstracttree.html#defaultcomparator" class="tsd-kind-icon">default<wbr>Comparator</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static tsd-is-external">
+								<a href="abstracttree.html#defaultequalitycomparator" class="tsd-kind-icon">default<wbr>Equality<wbr>Comparator</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -1073,6 +1033,15 @@
 						<a href="binarytree.html" class="tsd-kind-icon">Binary<wbr>Tree</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="enumerable.html" class="tsd-kind-icon">Enumerable</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="enumerablecore.html" class="tsd-kind-icon">Enumerable<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-is-external">
+						<a href="errormessages.html" class="tsd-kind-icon">Error<wbr>Messages</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="grouping.html" class="tsd-kind-icon">Grouping</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
@@ -1082,6 +1051,9 @@
 						<a href="list.html" class="tsd-kind-icon">List</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
+						<a href="orderedenumerablecore.html" class="tsd-kind-icon">Ordered<wbr>Enumerable<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
@@ -1089,6 +1061,21 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
 						<a href="treeset.html" class="tsd-kind-icon">Tree<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/action.html" class="tsd-kind-icon">Action</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/aggregator.html" class="tsd-kind-icon">Aggregator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/comparator.html" class="tsd-kind-icon">Comparator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/enumerableiterator.html" class="tsd-kind-icon">Enumerable<wbr>Iterator</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/equalitycomparator.html" class="tsd-kind-icon">Equality<wbr>Comparator</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
@@ -1117,8 +1104,26 @@
 					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
 						<a href="../interfaces/itree.html" class="tsd-kind-icon">ITree</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="../globals.html#orderactions" class="tsd-kind-icon">Order<wbr>Actions</a>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/indexedaction.html" class="tsd-kind-icon">Indexed<wbr>Action</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/indexedpredicate.html" class="tsd-kind-icon">Indexed<wbr>Predicate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/indexedselector.html" class="tsd-kind-icon">Indexed<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/joinselector.html" class="tsd-kind-icon">Join<wbr>Selector</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/predicate.html" class="tsd-kind-icon">Predicate</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/selector.html" class="tsd-kind-icon">Selector</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
+						<a href="../interfaces/zipper.html" class="tsd-kind-icon">Zipper</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-is-external">
 						<a href="../globals.html#traversetype" class="tsd-kind-icon">Traverse<wbr>Type</a>
