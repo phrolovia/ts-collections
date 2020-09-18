@@ -1,4 +1,3 @@
-import {IGrouping} from "./IGrouping";
 import {Aggregator} from "../shared/Aggregator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
@@ -10,6 +9,7 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {List} from "../list/List";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {IGrouping} from "./Enumerable";
 
 export interface IEnumerable<T> extends Iterable<T> {
     aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U;
@@ -27,7 +27,7 @@ export interface IEnumerable<T> extends Iterable<T> {
     except(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
     first(predicate?: Predicate<T>): T;
     firstOrDefault(predicate?: Predicate<T>): T;
-    groupBy<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IEnumerable<IGrouping<R, T>>;
+    groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>>;
     groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
                        resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: EqualityComparator<K>): IEnumerable<R>;
     intersect(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;

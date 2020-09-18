@@ -2,10 +2,9 @@ import {IList} from "./IList";
 import {IQueue} from "../queue/IQueue";
 import {IDeque} from "../queue/IDeque";
 import {AbstractCollection} from "../core/AbstractCollection";
-import {IGrouping} from "../enumerable/IGrouping";
 import {IEnumerable} from "../enumerable/IEnumerable";
 import {IOrderedEnumerable} from "../enumerable/IOrderedEnumerable";
-import {Enumerable} from "../enumerable/Enumerable";
+import {Enumerable, IGrouping} from "../enumerable/Enumerable";
 import {Aggregator} from "../shared/Aggregator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
@@ -243,7 +242,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.data[index];
     }
 
-    public groupBy<R>(keySelector: Selector<T, R>, keyComparator?: EqualityComparator<R>): IEnumerable<IGrouping<R, T>> {
+    public groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>> {
         return this.enumerable.groupBy(keySelector, keyComparator);
     }
 

@@ -279,7 +279,7 @@ describe("Enumerable", () => {
             for (const ageGroup of group) {
                 ages.push(ageGroup.key);
                 groupedAges[ageGroup.key] ??= [];
-                for (const pdata of ageGroup.data) {
+                for (const pdata of ageGroup.source) {
                     groupedAges[ageGroup.key].push(pdata.Age);
                 }
             }
@@ -291,14 +291,25 @@ describe("Enumerable", () => {
             }
         });
         it("should return people who are younger than 16", () => {
-            const kids = list.groupBy(p => p.Age).where(pg => pg.key < 16).selectMany(g => g.data).toArray();
+            const kids = list.groupBy(p => p.Age).where(pg => pg.key < 16).selectMany(g => g.source).toArray();
             expect(kids.length).to.eq(3);
             expect(kids).to.have.all.members([karen, mel, senna]);
         });
         it("should use provided comparator", () => {
-            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1 === n2).where(pg => pg.key.length < 5).selectMany(g => g.data).toArray();
+            const shortNamedPeople = list.groupBy(p => p.Name, (n1, n2) => n1 === n2).where(pg => pg.key.length < 5).selectMany(g => g.source).toArray();
             expect(shortNamedPeople.length).to.eq(2);
             expect(shortNamedPeople).to.have.all.members([mel, jane]);
+        });
+        it("should be iterable with for-of loop", () => {
+            const groupedPeople = list.groupBy(p => p.Name.length);
+            const people: Person[] = [];
+            const expectedResult = [alice, senna, lenka, karen, reina, mel, jane];
+            for (const group of groupedPeople) {
+                for (const person of group) {
+                    people.push(person);
+                }
+            }
+            expect(people).to.deep.equal(expectedResult);
         });
     });
     describe("#groupJoin()", () => {
