@@ -1,6 +1,7 @@
-import { ICollection } from "../core/ICollection";
+import {ICollection} from "../core/ICollection";
+import {IEnumerable} from "../enumerable/IEnumerable";
 
-export interface IQueue<T> extends ICollection<T> {
+export interface IQueue<T> extends ICollection<T>, IEnumerable<T> {
     /**
      * Retrieves and removes the head of this queue.
      * @return the item at the head of the queue.
@@ -19,7 +20,7 @@ export interface IQueue<T> extends ICollection<T> {
      * @return the item at the head of the queue. Returns null if the queue is empty.
      */
     peek(): T;
-    
+
     /**
      * Retrieves and removes the head of the queue.
      * @return the item at the head of the queue. Returns null if the queue is empty.
