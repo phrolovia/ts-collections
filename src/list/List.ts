@@ -15,6 +15,7 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {IndexedAction} from "../shared/IndexedAction";
+import {Dictionary} from "../dictionary/Dictionary";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private readonly enumerable: Enumerable<T>;
@@ -130,88 +131,19 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.data.some(predicate);
     }
 
-    public find(predicate: Predicate<T>): T | null {
-        const item = this.data.find(predicate);
-        return item ?? null;
-    }
-
-    public findAll(predicate: Predicate<T>): List<T> {
-        const foundData = this.data.filter(predicate);
-        return new List<T>(foundData);
-    }
-
-    public findIndex(predicate: Predicate<T>, startIndex?: number, count?: number): number {
+    public findIndex(predicate: IndexedPredicate<T>): number {
         if (!predicate) {
             throw new Error("predicate is null.");
         }
-
-        startIndex = startIndex || 0;
-        count = count || this.size() - 1;
-
-        if (startIndex! < 0 || startIndex >= this.size()) {
-            throw new Error("startIndex is not a valid index.");
-        }
-        if (count < 0) {
-            throw new Error("count is less than 0.");
-        }
-        if (startIndex + count > this.size()) {
-            throw new Error("startIndex and count do not specify a valid section in the list.");
-        }
-
-        let found = false;
-        let foundIndex = -1;
-        for (let ix = startIndex; ix < startIndex + count; ++ix) {
-            found = predicate(this.data[ix]);
-            if (found) {
-                foundIndex = ix;
-                break;
-            }
-        }
-        return foundIndex;
+        return this.data.findIndex(predicate);
     }
 
-    public findLast(predicate: Predicate<T>): T {
-        if (!predicate) {
-            throw new Error("predicate is null.");
+    public findLastIndex(predicate: Predicate<T>): number {
+        const index = this.reverse().toList().findIndex(predicate);
+        if (index !== -1) {
+            return this.size() - 1 - index;
         }
-        let found = false;
-        let foundItem: T = null;
-        for (let ix = this.data.length - 1; ix >= 0; --ix) {
-            const elem = this.data[ix];
-            found = predicate(elem);
-            if (found) {
-                foundItem = elem;
-                break;
-            }
-        }
-        return foundItem;
-    }
-
-    public findLastIndex(predicate: Predicate<T>, startIndex?: number, count?: number): number {
-        if (!predicate) {
-            throw new Error("predicate is null.");
-        }
-        if (startIndex < 0 || startIndex >= this.size()) {
-            throw new Error("startIndex is not a valid index.");
-        }
-        if (count < 0) {
-            throw new Error("count is less than 0.");
-        }
-        if (startIndex + count > this.size()) {
-            throw new Error("startIndex and count do not specify a valid section in the list.");
-        }
-        startIndex = startIndex || 0;
-        count = count || this.size();
-        let found = false;
-        let foundIndex = -1;
-        for (let ix = startIndex + count - 1; ix >= startIndex; --ix) {
-            found = predicate(this.data[ix]);
-            if (found) {
-                foundIndex = ix;
-                break;
-            }
-        }
-        return foundIndex;
+        return index;
     }
 
     public first(predicate?: Predicate<T>): T {
@@ -466,6 +398,10 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public toArray(): T[] {
         return [...this.data];
+    }
+
+    public toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V> {
+        return this.enumerable.toDictionary(keySelector, valueSelector, keyComparator);
     }
 
     public toList(): List<T> {

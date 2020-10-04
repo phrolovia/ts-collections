@@ -7,6 +7,8 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {Pair} from "../models/Pair";
 import {SchoolStudents} from "../models/SchoolStudents";
+import {Dictionary} from "../../src/dictionary/Dictionary";
+import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
 
 describe("Enumerable", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -953,6 +955,30 @@ describe("Enumerable", () => {
             expect(returnedOrder).to.deep.equal(expectedOrder);
         });
     });
+    describe("#toDictionary()", () => {
+        it("should create a dictionary", () => {
+            const people = [alice, emily, karen, megan, suzuha];
+            const dictionary = Enumerable.from(people).toDictionary(p => p.Name, p => p);
+            expect(dictionary.size()).to.eq(5);
+            expect(dictionary.get("Alice")).to.deep.equal(alice);
+            expect(dictionary.get("Emily")).to.deep.equal(emily);
+            expect(dictionary.get("Karen")).to.deep.equal(karen);
+            expect(dictionary.get("Megan")).to.deep.equal(megan);
+            expect(dictionary.get("Suzuha")).to.deep.equal(suzuha);
+        });
+        it("should use internal key value pair to create dictionary if no selectors are provided", () => {
+            const dict = new Dictionary<Person, number>();
+            dict.put(alice, alice.Age);
+            dict.put(emily, emily.Age);
+            dict.put(karen, karen.Age);
+            const newDict = dict.append(new KeyValuePair<Person, number>(priscilla, priscilla.Age)).toDictionary();
+            expect(newDict.size()).to.eq(4);
+            expect(newDict.get(alice)).to.eq(alice.Age);
+            expect(newDict.get(emily)).to.eq(emily.Age);
+            expect(newDict.get(karen)).to.eq(karen.Age);
+            expect(newDict.get(priscilla)).to.eq(priscilla.Age);
+        });
+    });
     describe("#union()", () => {
         const numberList1 = [1, 2, 3, 4, 5];
         const numberList2 = [4, 5, 6, 7, 8];
@@ -1002,11 +1028,4 @@ describe("Enumerable", () => {
             expect(zippedList[1]).to.eq("five 4");
         });
     });
-    // describe("Chained Use Tests", () => {
-    //     it("temp value", () => {
-    //         const randomNumbers = Array.from({length: 100}, () => Math.floor(Math.random() * 1000));
-    //         const result = Enumerable.from(randomPeopleList).where(p => p.Age <= 40).orderByDescending(p => p.Age).thenBy(p => p.Surname).toArray();
-    //         console.log(result.map(r => [r.Age, r.Name, r.Surname]));
-    //     });
-    // });
 });

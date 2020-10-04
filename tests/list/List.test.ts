@@ -119,7 +119,7 @@ describe("List", () => {
             const all = list.all(p => p != null);
             expect(all).to.eq(false);
         });
-        it("should return true if no predicate is provided", () => {
+        it("should return true if no predicate is provided and list is not empty", () => {
             const list2 = new List<number>();
             list2.add(1);
             const any = list2.all();
@@ -150,7 +150,7 @@ describe("List", () => {
             const any = list.any(p => p == null);
             expect(any).to.eq(true);
         });
-        it("should return true if no predicate is provided", () => {
+        it("should return true if no predicate is provided and list is not empty", () => {
             const list2 = new List<number>();
             list2.add(1);
             const any = list2.any();
@@ -300,7 +300,7 @@ describe("List", () => {
             const item = list.elementAtOrDefault(1);
             expect(item).to.eq(48);
         });
-        it("should return if index is out of bounds", () => {
+        it("should return null if index is out of bounds", () => {
             const upper = list.elementAtOrDefault(100);
             const lower = list.elementAtOrDefault(-1);
             expect(upper).to.eq(null);
@@ -338,35 +338,6 @@ describe("List", () => {
             expect(() => list.exists(null)).to.throw("predicate is null.");
         });
     });
-    describe("#find()", () => {
-        const list: List<Person> = new List<Person>();
-        list.add(alice);
-        list.add(mel);
-        list.add(null);
-        it("should be person with age 9", () => {
-            var foundPerson = list.find(p => p && p.Age === 9);
-            expect(foundPerson.Age).to.eq(mel.Age);
-        });
-        it("should not have person with age 99", () => {
-            var foundPerson = list.find(p => p && p.Age === 99);
-            expect(foundPerson).to.eq(null);
-        });
-    });
-    describe("#findAll()", () => {
-        const list: List<Person> = new List<Person>();
-        list.add(alice);
-        list.add(mel);
-        list.add(senna);
-        list.add(null);
-        it("should return a List<T> object", () => {
-            var foundPersonsList = list.findAll(p => p && p.Age > 9);
-            expect(foundPersonsList instanceof List).to.eq(true);
-        });
-        it("should have 2 people", () => {
-            var foundPersonsList = list.findAll(p => p && p.Age > 9);
-            expect(foundPersonsList.size()).to.eq(2);
-        });
-    });
     describe("#findIndex()", () => {
         const list: List<Person> = new List<Person>();
         list.add(alice);
@@ -378,55 +349,9 @@ describe("List", () => {
         it("should throw error ['predicate is null.]", () => {
             expect(() => list.findIndex(null)).to.throw("predicate is null.");
         });
-        it("should throw error ['startIndex is not a valid index.]", () => {
-            expect(() => list.findIndex(p => p.Age > 9, -1)).to.throw("startIndex is not a valid index.");
-        });
-        it("should throw error ['count is less than 0.]", () => {
-            expect(() => list.findIndex(p => p.Age > 9, 1, -7)).to.throw("count is less than 0.");
-        });
-        it("should throw error ['startIndex and count do not specify a valid section in the list.]", () => {
-            expect(() => list.findIndex(p => p.Age > 9, 2, 5)).to.throw("startIndex and count do not specify a valid section in the list.");
-        });
         it("should return 2", () => {
             const index = list.findIndex(p => p.Age === 10);
             expect(index).to.eq(2);
-        });
-        it("should return 1 with startIndex=1", () => {
-            const index = list.findIndex(p => p.Age === 16, 1);
-            expect(index).to.eq(1);
-        });
-        it("should return 4 with startIndex=2 and count=3", () => {
-            const index = list.findIndex(p => p.Age === 16, 2, 3);
-            expect(index).to.eq(4);
-        });
-        it("should return 4 with startIndex=4 and count=2", () => {
-            const index = list.findIndex(p => p.Age === 16, 4, 2);
-            expect(index).to.eq(4);
-        });
-    });
-    describe("#findLast()", () => {
-        const list: List<Person> = new List<Person>();
-        list.add(alice);
-        list.add(lenka);
-        list.add(null);
-        list.add(senna);
-        list.add(mel);
-        list.add(null);
-        list.add(jane);
-        it("should throw error ['predicate is null.]", () => {
-            expect(() => list.findLast(null)).to.throw("predicate is null.");
-        });
-        it("should be person with name Jane", () => {
-            var foundPerson = list.findLast(p => p && p.Age === 16);
-            expect(foundPerson.Name).to.eq("Jane");
-        });
-        it("should be null", () => {
-            var foundPerson = list.findLast(p => p && p.Age === 99);
-            expect(foundPerson).to.eq(null);
-        });
-        it("should be null with null item", () => {
-            var foundPerson = list.findLast(p => p === null);
-            expect(foundPerson).to.eq(null);
         });
     });
     describe("#findLastIndex()", () => {
@@ -440,34 +365,9 @@ describe("List", () => {
         it("should throw error ['predicate is null.]", () => {
             expect(() => list.findLastIndex(null)).to.throw("predicate is null.");
         });
-        it("should throw error ['startIndex is not a valid index.]", () => {
-            expect(() => list.findLastIndex(p => p.Age > 9, -1)).to.throw("startIndex is not a valid index.");
-        });
-        it("should throw error ['count is less than 0.]", () => {
-            expect(() => list.findLastIndex(p => p.Age > 9, 1, -7)).to.throw("count is less than 0.");
-        });
-        it("should throw error ['startIndex and count do not specify a valid section in the list.]", () => {
-            expect(() => list.findLastIndex(p => p.Age > 9, 2, 5)).to.throw("startIndex and count do not specify a valid section in the list.");
-        });
         it("should return 3", () => {
             const index = list.findLastIndex(p => p && p.Age === 10);
             expect(index).to.eq(3);
-        });
-        it("should return -1 with startIndex=1", () => {
-            const index = list.findLastIndex(p => p && p.Age === 23, 1);
-            expect(index).to.eq(-1);
-        });
-        it("should return 4 with startIndex=1 and count=4", () => {
-            const index = list.findLastIndex(p => p && p.Age === 16, 1, 4);
-            expect(index).to.eq(4);
-        });
-        it("should return 1 with startIndex=1 and count=3", () => {
-            const index = list.findLastIndex(p => p && p.Age === 16, 1, 3);
-            expect(index).to.eq(1);
-        });
-        it("should return -1 with startIndex=2 and count=2", () => {
-            const index = list.findLastIndex(p => p && p.Age === 16, 2, 2);
-            expect(index).to.eq(-1);
         });
         it("should return 5 with null value", () => {
             const index = list.findLastIndex(p => p == null);
@@ -978,7 +878,7 @@ describe("List", () => {
             expect(p.Name).to.eq("Jane");
         });
         it("should not contain a person with name Senna", () => {
-            const p = list.find(p => p.Name === "Senna");
+            const p = list.firstOrDefault(p => p.Name === "Senna");
             expect(p).to.eq(null);
         });
     });

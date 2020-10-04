@@ -12,6 +12,8 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {List} from "../list/List";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {Dictionary} from "../dictionary/Dictionary";
+import {KeyValuePair} from "../dictionary/KeyValuePair";
 
 export class Enumerable<T> implements IEnumerable<T> {
     private readonly core: EnumerableCore<T>;
@@ -222,6 +224,10 @@ export class Enumerable<T> implements IEnumerable<T> {
 
     public toArray(): T[] {
         return this.core.toArray();
+    }
+
+    public toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V> {
+        return this.core.toDictionary(keySelector, valueSelector, keyComparator);
     }
 
     public toList(): List<T> {
@@ -682,6 +688,16 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
 
     public toArray(): Array<T> {
         return Array.from(this);
+    }
+
+    public toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V> {
+        const dictionary = new Dictionary<K, V>(keyComparator);
+        for (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            dictionary.put(key, value);
+        }
+        return dictionary;
     }
 
     public toList(): List<T> {
