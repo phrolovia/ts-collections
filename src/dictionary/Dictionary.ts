@@ -17,6 +17,7 @@ import {Comparator} from "../shared/Comparator";
 import {JoinSelector} from "../shared/JoinSelector";
 import {IGrouping} from "../enumerable/Enumerable";
 import {Aggregator} from "../shared/Aggregator";
+import {ErrorMessages} from "../shared/ErrorMessages";
 
 export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValuePair<K, V>> {
     private readonly dictionary: Map<K, V> = new Map<K, V>();
@@ -137,10 +138,16 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public max(selector?: Selector<KeyValuePair<K, V>, number>): number {
+        if (!selector) {
+            throw new Error(ErrorMessages.CannotConvertToNumber);
+        }
         return this.keyValuePairs.max(selector);
     }
 
     public min(selector?: Selector<KeyValuePair<K, V>, number>): number {
+        if (!selector) {
+            throw new Error(ErrorMessages.CannotConvertToNumber);
+        }
         return this.keyValuePairs.min(selector);
     }
 
@@ -149,7 +156,7 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public orderByDescending<TKey>(keySelector: Selector<KeyValuePair<K, V>, TKey>, comparator?: Comparator<TKey>): IOrderedEnumerable<KeyValuePair<K, V>> {
-        return this.keyValuePairs.orderBy(keySelector, comparator);
+        return this.keyValuePairs.orderByDescending(keySelector, comparator);
     }
 
     public prepend(item: KeyValuePair<K, V>): IEnumerable<KeyValuePair<K, V>> {

@@ -381,6 +381,91 @@ describe("Dictionary", () => {
             expect(last.value.Age).to.eq(29);
         });
     });
+    describe("#max()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.put(alice.Name, alice);
+        dictionary.put(lucrezia.Name, lucrezia);
+        dictionary.put(noemi.Name, noemi);
+        dictionary.put(priscilla.Name, priscilla);
+        it("should select return the maximum age", () => {
+            const max = dictionary.max(p => p.value.Age);
+            expect(max).to.eq(29);
+        });
+        it("should throw error if no selector is provided", () => {
+            expect(() => dictionary.max()).to.throw(ErrorMessages.CannotConvertToNumber);
+        });
+    });
+    describe("#min()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.put(alice.Name, alice);
+        dictionary.put(lucrezia.Name, lucrezia);
+        dictionary.put(noemi.Name, noemi);
+        dictionary.put(priscilla.Name, priscilla);
+        it("should select return the minimum age", () => {
+            const max = dictionary.min(p => p.value.Age);
+            expect(max).to.eq(9);
+        });
+        it("should throw error if no selector is provided", () => {
+            expect(() => dictionary.min()).to.throw(ErrorMessages.CannotConvertToNumber);
+        });
+    });
+    describe("#orderBy()", () => {
+        it("should order dictionary by key [asc]", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.put(lucrezia.Name, lucrezia);
+            dictionary.put(alice.Name, alice);
+            dictionary.put(priscilla.Name, priscilla);
+            dictionary.put(noemi.Name, noemi);
+            const orderedArray = dictionary.orderBy(p => p.key).toDictionary<string, Person>().toArray();
+            const expectedResult = [
+                new KeyValuePair<string, Person>(alice.Name, alice),
+                new KeyValuePair<string, Person>(lucrezia.Name, lucrezia),
+                new KeyValuePair<string, Person>(noemi.Name, noemi),
+                new KeyValuePair<string, Person>(priscilla.Name, priscilla)
+            ];
+            let index = 0;
+            for (const item of orderedArray) {
+                expect(item.key).to.eq(expectedResult[index].key);
+                expect(item.value).to.eq(expectedResult[index].value);
+                index++;
+            }
+        });
+    });
+    describe("#orderByDescending()", () => {
+        it("should order dictionary by key [desc]", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.put(lucrezia.Name, lucrezia);
+            dictionary.put(alice.Name, alice);
+            dictionary.put(priscilla.Name, priscilla);
+            dictionary.put(noemi.Name, noemi);
+            const orderedArray = dictionary.orderByDescending(p => p.key).toDictionary<string, Person>().toArray();
+            const expectedResult = [
+                new KeyValuePair<string, Person>(priscilla.Name, priscilla),
+                new KeyValuePair<string, Person>(noemi.Name, noemi),
+                new KeyValuePair<string, Person>(lucrezia.Name, lucrezia),
+                new KeyValuePair<string, Person>(alice.Name, alice)
+            ];
+            let index = 0;
+            for (const item of orderedArray) {
+                expect(item.key).to.eq(expectedResult[index].key);
+                expect(item.value).to.eq(expectedResult[index].value);
+                index++;
+            }
+        });
+    });
+    describe("#prepend()", () => {
+        it("should add item at the beginning of the dictionary", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.put(alice.Name, alice);
+            dictionary.put(lucrezia.Name, lucrezia);
+            dictionary.put(noemi.Name, noemi);
+            dictionary.put(priscilla.Name, priscilla);
+            const dict2 = dictionary.prepend(new KeyValuePair<string, Person>(vanessa.Name, vanessa)).toDictionary<string, Person>();
+            expect(dict2.size()).to.eq(5);
+            expect(dict2.get(vanessa.Name)).to.not.null;
+            expect(dict2.toArray()[0].key).eq(vanessa.Name);
+        });
+    });
     describe("#put()", () => {
         const dictionary = new Dictionary<string, number>();
         it("should put values into the dictionary", () => {
@@ -419,6 +504,41 @@ describe("Dictionary", () => {
         it("should return null if key is not in the dictionary", () => {
             const value = dictionary.remove(senna);
             expect(value).to.null;
+        });
+    });
+    describe("#reverse()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.put(lucrezia.Name, lucrezia);
+        dictionary.put(alice.Name, alice);
+        dictionary.put(priscilla.Name, priscilla);
+        dictionary.put(noemi.Name, noemi);
+        it("should reverse the dictionary", () => {
+            const dict = dictionary.reverse().toDictionary<string, Person>();
+            expect(dict.toArray()[dict.size() - 1].key).to.eq(lucrezia.Name);
+        });
+    });
+    describe("#select()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.put(lucrezia.Name, lucrezia);
+        dictionary.put(alice.Name, alice);
+        dictionary.put(priscilla.Name, priscilla);
+        dictionary.put(noemi.Name, noemi);
+        it("should select keys of dictionary and surname value from values", () => {
+            const result = dictionary.select(p => [p.key, p.value.Surname]).toDictionary(p => p[0], p => p[1]);
+            const expectedResult = [
+                new KeyValuePair<string, string>(lucrezia.Name, lucrezia.Surname),
+                new KeyValuePair<string, string>(alice.Name, alice.Surname),
+                new KeyValuePair<string, string>(priscilla.Name, priscilla.Surname),
+                new KeyValuePair<string, string>(noemi.Name, noemi.Surname)
+            ];
+            let index = 0;
+            for(const person of result) {
+                expect(person.equals(expectedResult[index])).to.eq(true);
+                index++;
+            }
+        });
+        it("should throw error if selector is undefined", () => {
+            expect(() => dictionary.select(null).toList()).to.throw(ErrorMessages.NoSelectorProvided);
         });
     });
     describe("#size()", () => {

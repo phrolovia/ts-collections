@@ -905,7 +905,7 @@ describe("List", () => {
         });
     });
     describe("#select()", () => {
-        it("should throw error ['predicate is null.]", () => {
+        it("should throw error if selector is undefined", () => {
             const list = List.from([2, 5, 6, 99]);
             expect(() => list.select(null)).to.throw(ErrorMessages.NoSelectorProvided);
         });
@@ -927,7 +927,7 @@ describe("List", () => {
         });
     });
     describe("#selectMany()", () => {
-        it("should throw error if selector is empty", () => {
+        it("should throw error if selector is undefined", () => {
             const list = List.from([2, 5, 6, 99]);
             expect(() => list.selectMany(null)).to.throw(ErrorMessages.NoSelectorProvided);
         });
