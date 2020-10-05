@@ -1,6 +1,7 @@
 import {ICollection} from "../core/ICollection";
+import {IEnumerable} from "../enumerable/IEnumerable";
 
-export interface IQueue<T> extends ICollection<T> {
+export interface IQueue<T> extends ICollection<T>, IEnumerable<T> {
     /**
      * Retrieves and removes the head of this queue.
      * @return the item at the head of the queue.

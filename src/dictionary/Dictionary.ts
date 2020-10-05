@@ -32,6 +32,23 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
         return this.keyValuePairs[Symbol.iterator]();
     }
 
+    public static from<TKey, TValue>(pairs: IEnumerable<KeyValuePair<TKey, TValue>>): Dictionary<TKey, TValue> {
+        const dictionary = new Dictionary<TKey, TValue>();
+        for (const p of pairs) {
+            dictionary.add(p.key, p.value);
+        }
+        return dictionary;
+    }
+
+    public add(key: K, value: V): V {
+        if (this.hasKey(key)) {
+            throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
+        }
+        this.dictionary.set(key, value);
+        this.updateKeyValuePairList(key, value);
+        return value;
+    }
+
     public aggregate<R, U = R>(aggregator: Aggregator<KeyValuePair<K, V>, R>, seed?: R, resultSelector?: Selector<R, U>): R | U {
         return this.keyValuePairs.aggregate(aggregator, seed, resultSelector);
     }
@@ -63,6 +80,16 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
 
     public contains(item: KeyValuePair<K, V>, comparator?: EqualityComparator<KeyValuePair<K, V>>): boolean {
         return this.keyValuePairs.contains(item, comparator);
+    }
+
+    public containsKey(key: K, comparator?: EqualityComparator<K>): boolean {
+        comparator ??= this.comparator;
+        return this.hasKey(key, comparator)
+    }
+
+    public containsValue(value: V, comparator?: EqualityComparator<V>): boolean {
+        comparator ??= AbstractCollection.defaultEqualityComparator;
+        return this.hasValue(value, comparator);
     }
 
     public count(predicate?: Predicate<KeyValuePair<K, V>>): number {
@@ -163,15 +190,6 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
         return this.keyValuePairs.prepend(item);
     }
 
-    public add(key: K, value: V): V {
-        if (this.dictionary.has(key)) {
-            throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
-        }
-        this.dictionary.set(key, value);
-        this.updateKeyValuePairList(key, value);
-        return value;
-    }
-
     public remove(key: K): V {
         if (!this.dictionary.has(key)) {
             return null;
@@ -253,6 +271,14 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
         return this.keyValuePairs.toList();
     }
 
+    public tryAdd(key: K, value: V): boolean {
+        if (this.hasKey(key)) {
+            return false;
+        }
+        this.add(key, value);
+        return true;
+    }
+
     public union(enumerable: IEnumerable<KeyValuePair<K, V>>, comparator?: EqualityComparator<KeyValuePair<K, V>>): IEnumerable<KeyValuePair<K, V>> {
         return this.keyValuePairs.union(enumerable, comparator ?? KeyValuePair.defaultEqualityComparator);
     }
@@ -267,6 +293,20 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
 
     public zip<R, U = [KeyValuePair<K, V>, R]>(enumerable: IEnumerable<R>, zipper?: Zipper<KeyValuePair<K, V>, R, U>): IEnumerable<[KeyValuePair<K, V>, R]> | IEnumerable<U> {
         return this.keyValuePairs.zip(enumerable, zipper);
+    }
+
+    private hasKey(key: K, comparator: EqualityComparator<K> = this.comparator): boolean {
+        const pair = this.keyValuePairs.singleOrDefault(p => comparator(p.key, key));
+        return !!pair;
+    }
+
+    private hasValue(value: V, comparator: EqualityComparator<V> = AbstractCollection.defaultEqualityComparator): boolean {
+        for (const pair of this) {
+            if (comparator(pair.value, value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private updateKeyValuePairList(key: K, value: V, remove: boolean = false): void {
