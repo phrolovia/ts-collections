@@ -373,6 +373,10 @@ describe("List", () => {
             const index = list.findLastIndex(p => p == null);
             expect(index).to.eq(5);
         });
+        it("should return -1", () => {
+            const index = list.findLastIndex(p => p?.Surname === lucrezia.Surname);
+            expect(index).to.eq(-1);
+        });
     });
     describe("#first()", () => {
         it("should throw error if list is empty()", () => {

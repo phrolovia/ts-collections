@@ -5,6 +5,9 @@ import {Dictionary} from "../../src/dictionary/Dictionary";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
+import {School} from "../models/School";
+import {Student} from "../models/Student";
+import {SchoolStudents} from "../models/SchoolStudents";
 
 describe("Dictionary", () => {
     const alice: Person = new Person("Alice", "Rivermist", 23);
@@ -36,6 +39,24 @@ describe("Dictionary", () => {
     const suzuha2 = new Person("Suzuha", "Mizuki", 22);
     const suzuha3 = new Person("Suzuha", "Mizuki", 26);
     const randomPeopleList = [alice, suzuha3, jane, suzuha2, jisu, suzuha, viola, megan, lucrezia, noemi, priscilla, reika, bella, eliza, hanna, julia];
+    describe("#add()", () => {
+        const dictionary = new Dictionary<string, number>();
+        dictionary.add("Amber", 1162621);
+        dictionary.add("Barbara", 212121211);
+        dictionary.add("Noelle", 1718615156);
+        it("should add values into the dictionary", () => {
+            expect(dictionary.size()).to.eq(3);
+            expect(dictionary.get("Amber")).to.not.undefined;
+            expect(dictionary.get("Amber")).to.eq(1162621);
+            expect(dictionary.get("Barbara")).to.not.undefined;
+            expect(dictionary.get("Barbara")).to.eq(212121211);
+            expect(dictionary.get("Noelle")).to.not.undefined;
+            expect(dictionary.get("Noelle")).to.eq(1718615156);
+        });
+        it("should throw error if key already exists", () => {
+            expect(() => dictionary.add("Amber", 1)).to.throw();
+        });
+    });
     describe("#aggregate()", () => {
         const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
@@ -310,6 +331,73 @@ describe("Dictionary", () => {
             expect(dictionary.get(jane)).to.be.null;
         });
     });
+    describe("#groupBy()", () => {
+        const dict = new Dictionary<string, Person>();
+        dict.add(alice.Name, alice);
+        dict.add(mel.Name, mel);
+        dict.add(senna.Name, senna);
+        dict.add(lenka.Name, lenka);
+        dict.add(jane.Name, jane);
+        dict.add(karen.Name, karen);
+        dict.add(reina.Name, reina);
+        it("should group people by age", () => {
+            const group = dict.groupBy(p => p.value.Age).toDictionary(g => g.key, g => g);
+            const ages: number[] = [];
+            const groupedAges: { [age: number]: number[] } = {};
+            for (const ageGroup of group.values()) {
+                ages.push(ageGroup.key)
+                groupedAges[ageGroup.key] ??= [];
+                for (const dictItem of ageGroup.source) {
+                    groupedAges[ageGroup.key].push(dictItem.value.Age);
+                }
+            }
+            expect(ages).to.have.all.members([9, 10, 16, 23]);
+            for (const g in groupedAges) {
+                const sameAges = groupedAges[g];
+                const expectedAges = new Array(sameAges.length).fill(sameAges[0]);
+                expect(sameAges).to.deep.equal(expectedAges);
+            }
+        });
+    });
+    describe("#groupJoin()", () => {
+        const schoolDict = new Dictionary<number, School>();
+        const studentDict = new Dictionary<number, Student>();
+        schoolDict.add(1, new School(1, "Elementary School"));
+        schoolDict.add(2, new School(2, "High School"));
+        schoolDict.add(3, new School(3, "University"));
+        schoolDict.add(5, new School(5, "Academy"));
+        studentDict.add(100, new Student(100, "Desireé", "Moretti", 3));
+        studentDict.add(200, new Student(200, "Apolline", "Bruyere", 2));
+        studentDict.add(300, new Student(300, "Giselle", "García", 2));
+        studentDict.add(400, new Student(400, "Priscilla", "Necci", 1));
+        studentDict.add(500, new Student(500, "Lucrezia", "Volpe", 4));
+        it("should join and group by school id", () => {
+            const joinedData = schoolDict.groupJoin(studentDict, sc => sc.value.Id, st => st.value.SchoolId,
+                (schoolId, students) => {
+                    return new SchoolStudents(schoolId, students.select(s => s.value).toList())
+                }).orderByDescending(ss => ss.Students.size());
+            const finalData = joinedData.toArray();
+            const finalOutput: string[] = [];
+            for (const sd of finalData) {
+                const school = schoolDict.where(s => s.value.Id === sd.SchoolId).single();
+                finalOutput.push(`Students of ${school.value.Name}: `);
+                for (const student of sd.Students) {
+                    finalOutput.push(`[${student.Id}] :: ${student.Name} ${student.Surname}`);
+                }
+            }
+            const expectedOutput: string[] = [
+                "Students of High School: ",
+                "[200] :: Apolline Bruyere",
+                "[300] :: Giselle García",
+                "Students of Elementary School: ",
+                "[400] :: Priscilla Necci",
+                "Students of University: ",
+                "[100] :: Desireé Moretti",
+                "Students of Academy: "
+            ];
+            expect(finalOutput).to.deep.equal(expectedOutput);
+        });
+    });
     describe("#intersect()", () => {
         const dict1 = new Dictionary<number, string>();
         const dict2 = new Dictionary<number, string>();
@@ -343,6 +431,43 @@ describe("Dictionary", () => {
             const dictionary = new Dictionary<number, string>();
             dictionary.add(1, "a");
             expect(dictionary.isEmpty()).to.eq(false);
+        });
+    });
+    describe("#join()", () => {
+        const schoolDict = new Dictionary<number, School>();
+        const studentDict = new Dictionary<number, Student>();
+        schoolDict.add(1, new School(1, "Elementary School"));
+        schoolDict.add(2, new School(2, "High School"));
+        schoolDict.add(3, new School(3, "University"));
+        schoolDict.add(5, new School(5, "Academy"));
+        studentDict.add(100, new Student(100, "Desireé", "Moretti", 3));
+        studentDict.add(200, new Student(200, "Apolline", "Bruyere", 2));
+        studentDict.add(300, new Student(300, "Giselle", "García", 2));
+        studentDict.add(400, new Student(400, "Priscilla", "Necci", 1));
+        studentDict.add(500, new Student(500, "Lucrezia", "Volpe", 4));
+        it("should join students and schools", () => {
+            const joinedData = studentDict.join(schoolDict, st => st.value.SchoolId, sc => sc.value.Id,
+                (student, school) => `${student.value.Name} ${student.value.Surname} :: ${school.value.Name}`).toArray();
+            const expectedOutput = [
+                "Desireé Moretti :: University",
+                "Apolline Bruyere :: High School",
+                "Giselle García :: High School",
+                "Priscilla Necci :: Elementary School"
+            ];
+            expect(joinedData.length).to.eq(4);
+            expect(joinedData).to.deep.equal(expectedOutput);
+        });
+        it("should set null for school if left join is true and student's school is unknown", () => {
+            const joinedData = studentDict.join(schoolDict, st => st.value.SchoolId, sc => sc.value.Id,
+                (student, school) => [student, school],
+                (stid, scid) => stid === scid, true);
+            for (const jd of joinedData) {
+                if((jd[0].value as Student).Surname === "Volpe") {
+                    expect(jd[1]).to.eq(null);
+                } else {
+                    expect(jd[1]).to.not.eq(null);
+                }
+            }
         });
     });
     describe("#keys()", () => {
@@ -484,24 +609,6 @@ describe("Dictionary", () => {
             expect(dict2.size()).to.eq(5);
             expect(dict2.get(vanessa.Name)).to.not.null;
             expect(dict2.toArray()[0].key).eq(vanessa.Name);
-        });
-    });
-    describe("#add()", () => {
-        const dictionary = new Dictionary<string, number>();
-        dictionary.add("Amber", 1162621);
-        dictionary.add("Barbara", 212121211);
-        dictionary.add("Noelle", 1718615156);
-        it("should add values into the dictionary", () => {
-            expect(dictionary.size()).to.eq(3);
-            expect(dictionary.get("Amber")).to.not.undefined;
-            expect(dictionary.get("Amber")).to.eq(1162621);
-            expect(dictionary.get("Barbara")).to.not.undefined;
-            expect(dictionary.get("Barbara")).to.eq(212121211);
-            expect(dictionary.get("Noelle")).to.not.undefined;
-            expect(dictionary.get("Noelle")).to.eq(1718615156);
-        });
-        it("should throw error if key already exists", () => {
-            expect(() => dictionary.add("Amber", 1)).to.throw();
         });
     });
     describe("#remove()", () => {
