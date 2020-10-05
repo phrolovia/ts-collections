@@ -961,9 +961,9 @@ describe("Enumerable", () => {
         });
         it("should use internal key value pair to create dictionary if no selectors are provided", () => {
             const dict = new Dictionary<Person, number>();
-            dict.put(alice, alice.Age);
-            dict.put(emily, emily.Age);
-            dict.put(karen, karen.Age);
+            dict.add(alice, alice.Age);
+            dict.add(emily, emily.Age);
+            dict.add(karen, karen.Age);
             const newDict = dict.append(new KeyValuePair<Person, number>(priscilla, priscilla.Age)).toDictionary();
             expect(newDict.size()).to.eq(4);
             expect(newDict.get(alice)).to.eq(alice.Age);

@@ -163,7 +163,7 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
         return this.keyValuePairs.prepend(item);
     }
 
-    public put(key: K, value: V): V {
+    public add(key: K, value: V): V {
         if (this.dictionary.has(key)) {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }

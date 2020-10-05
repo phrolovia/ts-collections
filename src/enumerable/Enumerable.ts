@@ -687,7 +687,7 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
-            dictionary.put(key, value);
+            dictionary.add(key, value);
         }
         return dictionary;
     }
