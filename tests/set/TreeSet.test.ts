@@ -4,9 +4,6 @@ import { expect } from "chai";
 import { Person } from "../models/Person";
 import { ISet } from "../../src/set/ISet";
 import { TreeSet } from "../../src/set/TreeSet";
-import {BinaryTree} from "../../src/tree/BinaryTree";
-import {IQueue} from "../../src/queue/IQueue";
-import {List} from "../../src/list/List";
 
 describe("TreeSet", () => {
     const person: Person     = new Person("Alice", "Rivermist", 23);
@@ -23,7 +20,7 @@ describe("TreeSet", () => {
             set.add(4);
             expect(set.includes(2)).to.eq(true);
         });
-    }); 
+    });
     describe("#add()", () => {
         it("size should be equal to 1", () => {
             const set: ISet<Person> = new TreeSet<Person>(ageComparator);
@@ -71,7 +68,7 @@ describe("TreeSet", () => {
         set.add(person5);
         set.add(person);
         set.add(person2);
-        
+
         const removed = set.remove(person5);
         it("should return true", () => {
             expect(removed).to.eq(true);

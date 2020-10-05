@@ -10,11 +10,12 @@ import {Zipper} from "../shared/Zipper";
 import {List} from "../list/List";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {IGrouping} from "./Enumerable";
+import {Dictionary} from "../dictionary/Dictionary";
 
 export interface IEnumerable<T> extends Iterable<T> {
     aggregate<R, U = R>(aggregator: Aggregator<T, R>, seed?: R, resultSelector?: Selector<R, U>): R | U;
-    all(comparator?: Predicate<T>): boolean;
-    any(comparator?: Predicate<T>): boolean;
+    all(predicate?: Predicate<T>): boolean;
+    any(predicate?: Predicate<T>): boolean;
     append(item: T): IEnumerable<T>;
     average(selector?: Selector<T, number>): number;
     concat(enumerable: IEnumerable<T>): IEnumerable<T>;
@@ -51,10 +52,10 @@ export interface IEnumerable<T> extends Iterable<T> {
     skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
     sum(selector?: Selector<T, number>): number;
     take(count: number): IEnumerable<T>;
-    takeEvery(step: number): IEnumerable<T>;
     takeLast(count: number): IEnumerable<T>;
     takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
     toArray(): T[];
+    toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V>;
     toList(): List<T>;
     union(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
     where(predicate: Predicate<T>): IEnumerable<T>;

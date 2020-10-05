@@ -12,6 +12,8 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {List} from "../list/List";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {Dictionary} from "../dictionary/Dictionary";
+import {KeyValuePair} from "../dictionary/KeyValuePair";
 
 export class Enumerable<T> implements IEnumerable<T> {
     private readonly core: EnumerableCore<T>;
@@ -208,10 +210,6 @@ export class Enumerable<T> implements IEnumerable<T> {
         return this.core.take(count);
     }
 
-    public takeEvery(step: number): IEnumerable<T> {
-        return this.core.takeEvery(step);
-    }
-
     public takeLast(count: number): IEnumerable<T> {
         return this.core.takeLast(count);
     }
@@ -222,6 +220,10 @@ export class Enumerable<T> implements IEnumerable<T> {
 
     public toArray(): T[] {
         return this.core.toArray();
+    }
+
+    public toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V> {
+        return this.core.toDictionary(keySelector, valueSelector, keyComparator);
     }
 
     public toList(): List<T> {
@@ -657,10 +659,6 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
         return new EnumerableCore(() => this.takeGenerator(count));
     }
 
-    public takeEvery(step: number): IEnumerable<T> {
-        return this.where((item, index) => index % step === 0);
-    }
-
     public takeLast(count: number): IEnumerable<T> {
         return new EnumerableCore(() => this.takeLastGenerator(count));
     }
@@ -682,6 +680,16 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
 
     public toArray(): Array<T> {
         return Array.from(this);
+    }
+
+    public toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V> {
+        const dictionary = new Dictionary<K, V>(keyComparator);
+        for (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            dictionary.add(key, value);
+        }
+        return dictionary;
     }
 
     public toList(): List<T> {

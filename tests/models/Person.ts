@@ -12,4 +12,7 @@ export class Person {
         this.Surname = surname;
         this.Age = age;
     }
+    public equals(other: Person): boolean {
+        return this.Name === other.Name && this.Surname === other.Surname && this.Age === other.Age;
+    }
 }
