@@ -210,10 +210,6 @@ export class Enumerable<T> implements IEnumerable<T> {
         return this.core.take(count);
     }
 
-    public takeEvery(step: number): IEnumerable<T> {
-        return this.core.takeEvery(step);
-    }
-
     public takeLast(count: number): IEnumerable<T> {
         return this.core.takeLast(count);
     }
@@ -661,10 +657,6 @@ class EnumerableCore<T> implements IOrderedEnumerable<T> {
 
     public take(count: number): IEnumerable<T> {
         return new EnumerableCore(() => this.takeGenerator(count));
-    }
-
-    public takeEvery(step: number): IEnumerable<T> {
-        return this.where((item, index) => index % step === 0);
     }
 
     public takeLast(count: number): IEnumerable<T> {

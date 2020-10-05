@@ -52,7 +52,6 @@ export interface IEnumerable<T> extends Iterable<T> {
     skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
     sum(selector?: Selector<T, number>): number;
     take(count: number): IEnumerable<T>;
-    takeEvery(step: number): IEnumerable<T>;
     takeLast(count: number): IEnumerable<T>;
     takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
     toArray(): T[];

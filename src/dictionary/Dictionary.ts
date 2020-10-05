@@ -110,7 +110,7 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public intersect(enumerable: IEnumerable<KeyValuePair<K, V>>, comparator?: EqualityComparator<KeyValuePair<K, V>>): IEnumerable<KeyValuePair<K, V>> {
-        return this.keyValuePairs.intersect(enumerable, comparator);
+        return this.keyValuePairs.intersect(enumerable, comparator ?? KeyValuePair.defaultEqualityComparator);
     }
 
     public isEmpty(): boolean {
@@ -164,6 +164,9 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public put(key: K, value: V): V {
+        if (this.dictionary.has(key)) {
+            throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
+        }
         this.dictionary.set(key, value);
         this.updateKeyValuePairList(key, value);
         return value;
@@ -192,7 +195,7 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public sequenceEqual(enumerable: IEnumerable<KeyValuePair<K, V>>, comparator?: EqualityComparator<KeyValuePair<K, V>>): boolean {
-        return this.keyValuePairs.sequenceEqual(enumerable, comparator);
+        return this.keyValuePairs.sequenceEqual(enumerable, comparator ?? KeyValuePair.defaultEqualityComparator);
     }
 
     public single(predicate?: Predicate<KeyValuePair<K, V>>): KeyValuePair<K, V> {
@@ -220,15 +223,14 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public sum(selector?: Selector<KeyValuePair<K, V>, number>): number {
+        if (!selector) {
+            throw new Error(ErrorMessages.CannotConvertToNumber);
+        }
         return this.keyValuePairs.sum(selector);
     }
 
     public take(count: number): IEnumerable<KeyValuePair<K, V>> {
         return this.keyValuePairs.take(count);
-    }
-
-    public takeEvery(step: number): IEnumerable<KeyValuePair<K, V>> {
-        return this.keyValuePairs.takeEvery(step);
     }
 
     public takeLast(count: number): IEnumerable<KeyValuePair<K, V>> {
@@ -252,7 +254,7 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
     }
 
     public union(enumerable: IEnumerable<KeyValuePair<K, V>>, comparator?: EqualityComparator<KeyValuePair<K, V>>): IEnumerable<KeyValuePair<K, V>> {
-        return this.keyValuePairs.union(enumerable, comparator);
+        return this.keyValuePairs.union(enumerable, comparator ?? KeyValuePair.defaultEqualityComparator);
     }
 
     public values(): IList<V> {
@@ -273,13 +275,9 @@ export class Dictionary<K, V> implements IDictionary<K, V>, IEnumerable<KeyValue
             this.keyValuePairs.add(new KeyValuePair<K, V>(key, value));
             return;
         }
-        if (item) {
+        if (item && remove) {
             const index = this.keyValuePairs.findIndex(p => p.key === key);
-            if (remove) {
-                this.keyValuePairs.removeAt(index);
-            } else {
-                this.keyValuePairs.set(index, new KeyValuePair<K, V>(key, value));
-            }
+            this.keyValuePairs.removeAt(index);
         }
     }
 }

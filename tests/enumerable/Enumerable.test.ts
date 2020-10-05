@@ -729,13 +729,6 @@ describe("Enumerable", () => {
             expect(list2[6]).to.eq(list.elementAt(6));
         });
     });
-    describe("#takeEvery()", () => {
-        const list = Enumerable.from([1, 2, 3, 4, 5]);
-        it("should return every 2nd item", () => {
-            const items = list.takeEvery(2).toArray();
-            expect(items).to.deep.equal([1, 3, 5]);
-        });
-    });
     describe("#takeLast()", () => {
         const list = Enumerable.from([1, 2, 3, 4, 5, 6, 7]);
         it("should return an empty IEnumerable", () => {

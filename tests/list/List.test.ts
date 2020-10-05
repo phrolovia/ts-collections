@@ -1172,13 +1172,6 @@ describe("List", () => {
             expect(list2.get(6)).to.eq(list.get(6));
         });
     });
-    describe("#takeEvery()", () => {
-        const list = List.from([1, 2, 3, 4, 5]);
-        it("should return every 2nd item", () => {
-            const items = list.takeEvery(2).toArray();
-            expect(items).to.deep.equal([1, 3, 5]);
-        });
-    });
     describe("#takeLast()", () => {
         const list = List.from([1, 2, 3, 4, 5, 6, 7]);
         it("should return an empty IEnumerable", () => {
@@ -1265,7 +1258,7 @@ describe("List", () => {
             const people = List.from([bella, amy, emily, eliza, hanna, hanna2, suzuha3, julia, lucrezia, megan, noemi, olga, priscilla, reika, suzuha, suzuha2, noemi2]);
             const orderedPeople = people.orderByDescending(p => p.Age, (a1, a2) => a1 - a2)
                 .thenBy(p => p.Name)
-                .thenBy(p => p.Surname, (n1, n2) => n1.localeCompare(n2))
+                .thenByDescending(p => p.Surname, (n1, n2) => n1.localeCompare(n2))
                 .orderBy(p => p.Age).thenBy(p => p.Name);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
@@ -1274,8 +1267,8 @@ describe("List", () => {
                 "[20] :: Hanna Jackson",
                 "[21] :: Bella Rivera",
                 "[21] :: Lucrezia Volpe",
-                "[22] :: Suzuha Mizuki",
                 "[22] :: Suzuha Suzuki",
+                "[22] :: Suzuha Mizuki",
                 "[25] :: Emily Redridge",
                 "[26] :: Suzuha Mizuki",
                 "[29] :: Noemi Waterfox",

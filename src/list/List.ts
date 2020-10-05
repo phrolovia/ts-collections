@@ -384,10 +384,6 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
         return this.enumerable.take(count);
     }
 
-    public takeEvery(step: number): IEnumerable<T> {
-        return this.enumerable.takeEvery(step);
-    }
-
     public takeLast(count: number): IEnumerable<T> {
         return this.enumerable.takeLast(count);
     }
