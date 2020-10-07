@@ -826,8 +826,8 @@ describe("List", () => {
         list.add(senna);
         list.add(mel);
         list.add(jane);
-        it("should throw error ['predicate is null.]", () => {
-            expect(() => list.removeAll(null)).to.throw("predicate is null.");
+        it("should throw error if no predicate is provided.", () => {
+            expect(() => list.removeAll(null)).to.throw(ErrorMessages.NoPredicateProvided);
         });
         it("should remove all people with Age < 16", () => {
             const removedCount = list.removeAll(p => p && p.Age < 16);

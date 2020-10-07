@@ -16,6 +16,7 @@ import {Zipper} from "../shared/Zipper";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Dictionary} from "../dictionary/Dictionary";
+import {ErrorMessages} from "../shared/ErrorMessages";
 
 export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T>, IDeque<T> {
     private readonly enumerable: Enumerable<T>;
@@ -285,7 +286,7 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
 
     public removeAll(predicate: (value: T) => boolean): number {
         if (!predicate) {
-            throw new Error("predicate is null.");
+            throw new Error(ErrorMessages.NoPredicateProvided);
         }
         const preCount = this.data.length;
         this.data = this.data.filter(d => !predicate(d));
