@@ -139,16 +139,16 @@ export abstract class AbstractTree<T> extends AbstractCollection<T> implements I
     }
 
     * [Symbol.iterator](): Iterator<T> {
-        yield* this.next(this.root);
+        yield* this.nextNode(this.root);
     }
 
-    private* next(node: INode<T>): Iterable<T> {
+    private* nextNode(node: INode<T>): Iterable<T> {
         if (!node) {
             return this.getRootData();
         }
-        yield* this.next(node.getLeft());
+        yield* this.nextNode(node.getLeft());
         yield node.getData();
-        yield* this.next(node.getRight());
+        yield* this.nextNode(node.getRight());
     }
 
     public abstract add(item: T): boolean;

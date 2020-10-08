@@ -835,6 +835,13 @@ describe("List", () => {
             expect(ages).deep.equal([23, 16, 16]);
             expect(removedCount).to.eq(2);
         });
+        it("should update enumerable", () => {
+            const pList = new List<Person>();
+            pList.add(alice);
+            pList.removeAll(p => p.Name === "Alice");
+            pList.add(lucrezia);
+            expect(() => pList.single(ps => ps.Name === "Lucrezia")).to.not.throw;
+        });
     });
     describe("#removeAt()", () => {
         const list: List<Person> = new List<Person>();

@@ -1,6 +1,6 @@
 {
     "name": "@discordelia/ts-collections",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.js",
     "module": "dist/index.es.js",

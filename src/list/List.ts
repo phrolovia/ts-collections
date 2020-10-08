@@ -289,7 +289,11 @@ export class List<T> extends AbstractCollection<T> implements IList<T>, IQueue<T
             throw new Error(ErrorMessages.NoPredicateProvided);
         }
         const preCount = this.data.length;
-        this.data = this.data.filter(d => !predicate(d));
+        for (let ix = this.data.length - 1; ix >= 0; --ix) {
+            if (predicate(this.data[ix])) {
+                this.removeAt(ix);
+            }
+        }
         return preCount - this.data.length;
     }
 
