@@ -7,6 +7,11 @@ import {ErrorMessages} from "../shared/ErrorMessages";
 import {Predicate} from "../shared/Predicate";
 import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
+import {IndexedSelector} from "../shared/IndexedSelector";
+import {Zipper} from "../shared/Zipper";
+import {JoinSelector} from "../shared/JoinSelector";
+import {IOrderedEnumerable} from "./IOrderedEnumerable";
+import {OrderComparator} from "../shared/OrderComparator";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;
@@ -83,8 +88,20 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.firstOrDefault(predicate);
     }
 
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+        return this.enumerator.groupBy(keySelector, keyComparator);
+    }
+
+    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return this.enumerator.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
     public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return this.enumerator.intersect(enumerable, comparator);
+    }
+
+    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
+        return this.enumerator.join(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
     public last(predicate?: Predicate<TElement>): TElement {
@@ -103,6 +120,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.min(selector);
     }
 
+    public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return this.enumerator.orderBy(keySelector, comparator);
+    }
+
+    public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return this.enumerator.orderByDescending(keySelector, comparator);
+    }
+
     public prepend(item: TElement): IEnumerable<TElement> {
         return this.enumerator.prepend(item);
     }
@@ -113,6 +138,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         return this.enumerator.select(selector);
+    }
+
+    public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult> {
+        return this.enumerator.selectMany(selector);
     }
 
     public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
@@ -170,9 +199,13 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return this.enumerator.where(predicate);
     }
+
+    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        return this.enumerator.zip(enumerable, zipper);
+    }
 }
 
-class Enumerator<TElement> implements IEnumerable<TElement> {
+class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public constructor(private readonly iterable: () => Iterable<TElement>) {
     }
 
@@ -342,9 +375,24 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
         }
     }
 
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+        keyComparator ??= Comparators.equalityComparator;
+        return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator));
+    }
+
+    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        keyComparator ??= Comparators.equalityComparator;
+        return new Enumerator(() => this.groupJoinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
+    }
+
     public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.intersectGenerator(enumerable, comparator));
+    }
+
+    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
+        keyComparator ??= Comparators.equalityComparator;
+        return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin));
     }
 
     public last(predicate?: Predicate<TElement>): TElement {
@@ -427,6 +475,14 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
         }
     }
 
+    public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
+    }
+
+    public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
+    }
+
     public prepend(item: TElement): IEnumerable<TElement> {
         return new Enumerator(() => this.prependGenerator(item));
     }
@@ -440,6 +496,13 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
             throw new Error(ErrorMessages.NoSelectorProvided);
         }
         return new Enumerator<TResult>(() => this.selectGenerator(selector));
+    }
+
+    public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult> {
+        if (!selector) {
+            throw new Error(ErrorMessages.NoSelectorProvided);
+        }
+        return new Enumerator(() => this.selectManyGenerator(selector));
     }
 
     public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
@@ -564,6 +627,14 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
         return new Enumerator(() => this.takeWhileGenerator(predicate));
     }
 
+    public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
+    }
+
+    public thenByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, true, comparator);
+    }
+
     public toArray(): TElement[] {
         const array: TElement[] = [];
         for (const element of this) {
@@ -586,6 +657,14 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
             throw new Error(ErrorMessages.NoPredicateProvided);
         }
         return new Enumerator<TElement>(() => this.whereGenerator(predicate));
+    }
+
+    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        if (!zipper) {
+            return new Enumerator(() => this.zipTupleGenerator(enumerable));
+        } else {
+            return new Enumerator(() => this.zipGenerator(enumerable, zipper));
+        }
     }
 
     private* appendGenerator(element: TElement): Iterable<TElement> {
@@ -615,6 +694,19 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
         }
     }
 
+    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): Iterable<IGrouping<TKey, TElement>> {
+        const groupedEnumerable = this.select(keySelector).distinct(keyComparator)
+            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)))));
+        yield* groupedEnumerable;
+    }
+
+    private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): Iterable<TResult> {
+        for (let element of this) {
+            const joinedEntries = innerEnumerable.where(innerElement => keyComparator(outerKeySelector(element), innerKeySelector(innerElement)));
+            yield resultSelector(outerKeySelector(element), joinedEntries);
+        }
+    }
+
     private* intersectGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
         const intersectList: Array<TElement> = []
         for (const item of this) {
@@ -623,6 +715,19 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
                 if (!exists) {
                     yield item;
                     intersectList.push(item);
+                }
+            }
+        }
+    }
+
+    private* joinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): Iterable<TResult> {
+        for (const element of this) {
+            const innerItems = innerEnumerable.where(innerElement => keyComparator(outerKeySelector(element), innerKeySelector(innerElement)));
+            if (leftJoin && !innerItems.any()) {
+                yield resultSelector(element, null);
+            } else {
+                for (const innerItem of innerItems) {
+                    yield resultSelector(element, innerItem);
                 }
             }
         }
@@ -637,9 +742,19 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
         yield* Array.from(this).reverse();
     }
 
-    private* selectGenerator<TResult>(selector: Selector<TElement, TResult>): IterableIterator<TResult> {
+    private* selectGenerator<TResult>(selector: Selector<TElement, TResult>): Iterable<TResult> {
         for (const d of this) {
             yield selector(d);
+        }
+    }
+
+    private* selectManyGenerator<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): Iterable<TResult> {
+        let index = 0;
+        for (const item of this) {
+            for (const subItem of selector(item, index)) {
+                yield subItem;
+            }
+            ++index;
         }
     }
 
@@ -743,5 +858,98 @@ class Enumerator<TElement> implements IEnumerable<TElement> {
             }
             ++index;
         }
+    }
+
+    private* zipGenerator<TSecond, TResult>(enumerable: IEnumerable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IterableIterator<TResult> {
+        const iterator = this[Symbol.iterator]();
+        const otherIterator = enumerable[Symbol.iterator]();
+        while (true) {
+            let first = iterator.next();
+            let second = otherIterator.next();
+            if (first.done || second.done) {
+                break;
+            } else {
+                yield zipper(first.value, second.value);
+            }
+        }
+    }
+
+    private* zipTupleGenerator<TSecond>(enumerable: IEnumerable<TSecond>): IterableIterator<[TElement, TSecond]> {
+        const iterator = this[Symbol.iterator]();
+        const otherIterator = enumerable[Symbol.iterator]();
+        while (true) {
+            let first = iterator.next();
+            let second = otherIterator.next();
+            if (first.done || second.done) {
+                break;
+            } else {
+                yield [first.value, second.value];
+            }
+        }
+    }
+}
+
+class OrderedEnumerator<TElement> extends Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    public constructor(public readonly orderedValueGroups: () => Iterable<Iterable<TElement>>) {
+        super(function* () {
+            for (const group of orderedValueGroups()) {
+                yield* group;
+            }
+        });
+    }
+
+    public static createOrderedEnumerable<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>) {
+        const keyValueGenerator = function* <TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, comparator?: OrderComparator<TKey>): Iterable<Iterable<TElement>> {
+            comparator ??= Comparators.orderComparator;
+            const sortMap = OrderedEnumerator.createKeyValueMap(source, keySelector);
+            const sortedKeys = Array.from(sortMap.keys()).sort(comparator);
+            if (ascending) {
+                for (const key of sortedKeys) {
+                    yield sortMap.get(key);
+                }
+            } else {
+                for (const key of sortedKeys.reverse()) {
+                    yield sortMap.get(key)
+                }
+            }
+        }
+        if (source instanceof OrderedEnumerator && viaThenBy) {
+            return new OrderedEnumerator(function* () {
+                for (const group of source.orderedValueGroups()) {
+                    yield* keyValueGenerator(group, keySelector, ascending, comparator);
+                }
+            });
+        } else {
+            return new OrderedEnumerator<TElement>(() => keyValueGenerator(source, keySelector, ascending, comparator));
+        }
+    }
+
+    private static createKeyValueMap<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>): Map<TKey, Iterable<TElement>> {
+        const sortMap: Map<TKey, TElement[]> = new Map<TKey, TElement[]>();
+        for (const element of source) {
+            const key = keySelector(element);
+            const value = sortMap.get(key);
+            if (value) {
+                value.push(element);
+            } else {
+                sortMap.set(key, [element]);
+            }
+        }
+        return sortMap;
+    }
+}
+
+export interface IGrouping<TKey, TElement> extends IEnumerable<TElement>{
+    readonly key: TKey;
+    readonly source: IEnumerable<TElement>;
+}
+
+export class Grouping<TKey, TElement> extends Enumerable<TElement> implements IGrouping<TKey, TElement> {
+    readonly key: TKey;
+    readonly source: IEnumerable<TElement>;
+    public constructor(key: TKey, source: IEnumerable<TElement>) {
+        super(source);
+        this.key = key;
+        this.source = source;
     }
 }

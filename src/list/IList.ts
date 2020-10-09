@@ -8,5 +8,5 @@ export interface IList<TElement> extends ICollection<TElement> {
     indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number;
     lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number;
     removeAt(index: number): TElement;
-    set(index: number, element: TElement): void;
+    set(index: number, element: TElement): TElement;
 }

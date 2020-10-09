@@ -8,6 +8,12 @@ import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
+import {IOrderedEnumerable} from "../enumerator/IOrderedEnumerable";
+import {OrderComparator} from "../shared/OrderComparator";
+import {Zipper} from "../shared/Zipper";
+import {IndexedSelector} from "../shared/IndexedSelector";
+import {IGrouping} from "../enumerator/Enumerable";
+import {JoinSelector} from "../shared/JoinSelector";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
 
@@ -96,12 +102,24 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.firstOrDefault(this, predicate);
     }
 
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+        return EnumerableStatic.groupBy(this, keySelector, keyComparator);
+    }
+
+    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
     public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.intersect(this, enumerable, comparator);
     }
 
     public isEmpty(): boolean {
         return this.size() === 0;
+    }
+
+    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
+        return EnumerableStatic.join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
     public last(predicate?: Predicate<TElement>): TElement {
@@ -120,6 +138,14 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.min(this, selector);
     }
 
+    public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return EnumerableStatic.orderBy(this, keySelector, comparator);
+    }
+
+    public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return EnumerableStatic.orderByDescending(this, keySelector, comparator);
+    }
+
     public prepend(item: TElement): IEnumerable<TElement> {
         return EnumerableStatic.prepend(this, item);
     }
@@ -130,6 +156,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
+    }
+
+    public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult> {
+        return EnumerableStatic.selectMany(this, selector);
     }
 
     public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
@@ -186,6 +216,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.where(this, predicate);
+    }
+
+    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        return EnumerableStatic.zip(this, enumerable, zipper);
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

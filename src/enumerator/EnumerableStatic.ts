@@ -1,11 +1,16 @@
 import {IEnumerable} from "./IEnumerable";
-import {Enumerable} from "./Enumerable";
+import {Enumerable, IGrouping} from "./Enumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
 import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
+import {IndexedSelector} from "../shared/IndexedSelector";
+import {Zipper} from "../shared/Zipper";
+import {JoinSelector} from "../shared/JoinSelector";
+import {OrderComparator} from "../shared/OrderComparator";
+import {IOrderedEnumerable} from "./IOrderedEnumerable";
 
 export class EnumerableStatic {
     public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
@@ -68,8 +73,20 @@ export class EnumerableStatic {
         return new Enumerable(source).firstOrDefault(predicate);
     }
 
+    public static groupBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+        return new Enumerable(source).groupBy(keySelector, keyComparator);
+    }
+
+    public static groupJoin<TOuter, TInner, TKey, TResult>(source: IEnumerable<TOuter>, innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TOuter, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return new Enumerable(source).groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
     public static intersect<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).intersect(enumerable, comparator);
+    }
+
+    public static join<TOuter, TInner, TKey, TResult>(source: IEnumerable<TOuter>, innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TOuter, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TOuter, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
+        return new Enumerable(source).join(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
     public static last<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
@@ -88,6 +105,14 @@ export class EnumerableStatic {
         return new Enumerable(source).min(selector);
     }
 
+    public static orderBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return new Enumerable(source).orderBy(keySelector, comparator);
+    }
+
+    public static orderByDescending<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        return new Enumerable(source).orderByDescending(keySelector, comparator);
+    }
+
     public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {
         return new Enumerable(source).prepend(item);
     }
@@ -98,6 +123,10 @@ export class EnumerableStatic {
 
     public static select<TElement, TResult>(source: IEnumerable<TElement>, selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         return new Enumerable(source).select(selector);
+    }
+
+    public static selectMany<TElement, TResult>(source: IEnumerable<TElement>, selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult> {
+        return new Enumerable(source).selectMany(selector);
     }
 
     public static sequenceEqual<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
@@ -154,5 +183,9 @@ export class EnumerableStatic {
 
     public static where<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).where(predicate);
+    }
+
+    public static zip<TElement, TSecond, TResult = [TElement, TSecond]>(source: IEnumerable<TElement>, enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        return new Enumerable(source).zip(enumerable, zipper);
     }
 }

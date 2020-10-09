@@ -87,5 +87,5 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
     public abstract addAt(element: TElement, index: number): boolean;
     public abstract get(index: number): TElement;
     public abstract removeAt(index: number): TElement;
-    public abstract set(index: number, element: TElement): void;
+    public abstract set(index: number, element: TElement): TElement;
 }

@@ -2,15 +2,14 @@ import {AbstractList} from "./AbstractList";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
-import {ICollection} from "../core/ICollection";
 
 export class List<TElement> extends AbstractList<TElement> {
     private readonly data: TElement[] = [];
 
-    public constructor(collection?: ICollection<TElement> | Iterable<TElement>) {
+    public constructor(iterable?: Iterable<TElement>) {
         super();
-        if (collection) {
-            for (const element of collection) {
+        if (iterable) {
+            for (const element of iterable) {
                 this.add(element);
             }
         }
@@ -67,11 +66,13 @@ export class List<TElement> extends AbstractList<TElement> {
         return element;
     }
 
-    public set(index: number, element: TElement): void {
+    public set(index: number, element: TElement): TElement {
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
+        const oldElement = this.data[index];
         this.data[index] = element;
+        return oldElement;
     }
 
     public size(): number {

@@ -1,7 +1,12 @@
+import {List} from "../../src/list/List";
+import {IList} from "../../src/list/IList";
+
 export class Person {
     public age: number;
     public name: string;
     public surname: string;
+    public friendsArray: Array<Person> = [];
+    public friendsList: IList<Person>;
     public constructor(name: string, surname: string, age: number) {
         this.age = age;
         this.name = name;

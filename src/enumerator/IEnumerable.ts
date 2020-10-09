@@ -2,8 +2,14 @@ import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
-import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
+import {IndexedSelector} from "../shared/IndexedSelector";
+import {Zipper} from "../shared/Zipper";
+import {IGrouping} from "./Enumerable";
+import {JoinSelector} from "../shared/JoinSelector";
+import {IOrderedEnumerable} from "./IOrderedEnumerable";
+import {OrderComparator} from "../shared/OrderComparator";
+import {List} from "../list/List";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
@@ -21,22 +27,22 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     first(predicate?: Predicate<TElement>): TElement;
     firstOrDefault(predicate?: Predicate<TElement>): TElement;
-    // groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>>;
-    // groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
-    //                    resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: EqualityComparator<K>): IEnumerable<R>;
+    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>>;
+    groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
+                       resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;
     intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
-    // join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
-    //               resultSelector: JoinSelector<T, E, R>, keyComparator?: EqualityComparator<K>, leftJoin?: boolean): IEnumerable<R>;
+    join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
+                  resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult>;
     last(predicate?: Predicate<TElement>): TElement;
     lastOrDefault(predicate?: Predicate<TElement>): TElement;
     max(selector?: Selector<TElement, number>): number;
     min(selector?: Selector<TElement, number>): number;
-    // orderBy<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T>;
-    // orderByDescending<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T>;
+    orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
+    orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
     prepend(item: TElement): IEnumerable<TElement>;
     reverse(): IEnumerable<TElement>;
     select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult>;
-    // selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnumerable<R>;
+    selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult>;
     sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean;
     single(predicate?: Predicate<TElement>): TElement;
     singleOrDefault(predicate?: Predicate<TElement>): TElement;
@@ -52,5 +58,5 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toList(): List<TElement>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
-    // zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U>;
+    zip<TSecond, TResult=[TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult>;
 }
