@@ -165,6 +165,22 @@ describe("#List", () => {
         });
     });
 
+    describe("#average()", () => {
+        it("should return 99948748093", () => {
+            const list = List.from(["10007", "37", "299846234235"]);
+            const avg = list.average(s => parseInt(s, 10));
+            expect(avg).to.eq(99948748093);
+        });
+        it("should use non-transformed values if predicate is not provided.", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(list.average()).to.eq(28);
+        });
+        it("should throw error if list is empty", () => {
+            const list = List.from<string>([]);
+            expect(() => list.average(s => parseInt(s, 10))).to.throw(ErrorMessages.NoElements);
+        });
+    });
+
     describe("#clear()", () => {
         const list1 = List.from([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
         it("should remove all elements from the collection", () => {
@@ -217,6 +233,80 @@ describe("#List", () => {
             const list3 = List.from([noemi]);
             expect(list1.containsAll(list3)).to.eq(false);
             expect(list1.containsAll(list3, (p1, p2) => p1.name === p2.name)).to.eq(true);
+        });
+    });
+
+    describe("#count()", () => {
+        it("should return 2", () => {
+            const list = new List<Person>();
+            list.add(Person.Alice);
+            list.add(Person.Mel);
+            expect(list.count()).to.equal(2);
+        });
+        it("should return 0", () => {
+            const list = new List<Person>();
+            list.add(Person.Alice);
+            list.add(Person.Mel);
+            list.clear();
+            expect(list.count()).to.equal(0);
+        });
+        it("should return 5", () => {
+            const list = List.from([1, 9, 2, 8, 3, 7, 4, 6, 5, 0]);
+            const count = list.count(n => n < 5);
+            expect(count).to.eq(5);
+        });
+    });
+
+    describe("#defaultIfEmpty()", () => {
+        it("should return a new IEnumerable with the default values", () => {
+            const list = new List();
+            const newList = list.defaultIfEmpty(7).toList();
+            const single = list.defaultIfEmpty(1).single();
+            expect(newList instanceof List).to.eq(true);
+            expect(newList.size()).to.eq(1);
+            expect(newList.get(0)).to.eq(7);
+            expect(single).to.eq(1);
+        });
+    });
+
+    describe("#distinct()", () => {
+        it("should remove duplicate elements", () => {
+            const list = List.from([Person.Alice, Person.Mel, Person.Senna, Person.Mel, Person.Alice]);
+            const distinct = list.distinct((p1, p2) => p1.name === p2.name);
+            expect(distinct.toArray()).to.deep.equal([Person.Alice, Person.Mel, Person.Senna]);
+        });
+        it("should use default comparator if no comparator is provided", () => {
+            const list1 = List.from([1, 2, 3, 1, 1, 1, 4, 5, 4, 3]);
+            const list2 = List.from(["Alice", "Vanessa", "Misaki", "Alice", "Misaki", "Megumi", "Megumi"]);
+            const distinct1 = list1.distinct().toArray();
+            const distinct2 = list2.distinct().toArray();
+            expect(distinct1).to.deep.equal([1, 2, 3, 4, 5]);
+            expect(distinct2).to.deep.equal(["Alice", "Vanessa", "Misaki", "Megumi"]);
+        });
+    });
+
+    describe("#elementAt()", () => {
+        const list = List.from([1, 48, 6, 195, 47]);
+        it("should return 48", () => {
+            const item = list.elementAt(1);
+            expect(item).to.eq(48);
+        });
+        it("should throw error if index is out of bounds", () => {
+            expect(() => list.elementAt(100)).to.throw();
+            expect(() => list.elementAt(-1)).to.throw();
+        });
+    });
+    describe("#elementAtOrDefault()", () => {
+        const list = List.from([1, 48, 6, 195, 47]);
+        it("should return 48", () => {
+            const item = list.elementAtOrDefault(1);
+            expect(item).to.eq(48);
+        });
+        it("should return null if index is out of bounds", () => {
+            const upper = list.elementAtOrDefault(100);
+            const lower = list.elementAtOrDefault(-1);
+            expect(upper).to.eq(null);
+            expect(lower).to.eq(null);
         });
     });
 
@@ -285,6 +375,21 @@ describe("#List", () => {
         });
         it("should return 3", () => {
             expect(list1.indexOf(Person.Noemi, (p1, p2) => p1?.age > p2?.age)).to.eq(3);
+        });
+    });
+
+    describe("#intersect()", () => {
+        it("should return an array of [4,5]", () => {
+            const list1 = List.from([1, 2, 3, 4, 5]);
+            const list2 = List.from([4, 5, 6, 7, 8]);
+            const elist = list1.intersect(list2).toList();
+            expect(elist.toArray()).to.deep.equal([4, 5]);
+        });
+        it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
+            const list1 = List.from([Person.Alice,Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list2 = List.from([Person.Mel, Person.Lenka, Person.Jane]);
+            const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
+            expect(elist.toArray()).to.deep.equal([Person.Mel, Person.Lenka, Person.Jane]);
         });
     });
 
@@ -443,6 +548,21 @@ describe("#List", () => {
             expect(list2 instanceof List).to.be.true;
             expect(list2.size()).to.eq(4);
             expect(list === list2).to.be.false;
+        });
+    });
+
+    describe("#union()", () => {
+        it("should return a set of items from two lists", () => {
+            const list1 = List.from([1, 2, 3, 4, 5, 5, 5]);
+            const list2 = List.from([4, 5, 6, 7, 8, 9, 7]);
+            const union = list1.union(list2, (n1, n2) => n1 === n2);
+            expect(union.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        it("should use default comparator if no comparator is provided", () => {
+            const list1 = List.from(["Alice", "Misaki", "Megumi", "Misaki"]);
+            const list2 = List.from(["Alice", "Rei", "Vanessa", "Vanessa", "Yuzuha"]);
+            const union = list1.union(list2);
+            expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
         });
     });
 

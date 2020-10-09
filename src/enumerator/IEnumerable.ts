@@ -9,21 +9,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     all(predicate?: Predicate<TElement>): boolean;
     any(predicate?: Predicate<TElement>): boolean;
     append(element: TElement): IEnumerable<TElement>;
-    // average(selector?: Selector<T, number>): number;
+    average(selector?: Selector<TElement, number>): number;
     concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
     contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean;
-    // count(predicate?: Predicate<T>): number;
-    // defaultIfEmpty(value?: T): IEnumerable<T>;
-    // distinct(comparator?: EqualityComparator<T>): IEnumerable<T>;
-    // elementAt(index: number): T;
-    // elementAtOrDefault(index: number): T;
-    // except(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
+    count(predicate?: Predicate<TElement>): number;
+    defaultIfEmpty(value?: TElement): IEnumerable<TElement>;
+    distinct(comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
+    elementAt(index: number): TElement;
+    elementAtOrDefault(index: number): TElement;
+    except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     first(predicate?: Predicate<TElement>): TElement;
     firstOrDefault(predicate?: Predicate<TElement>): TElement;
     // groupBy<K>(keySelector: Selector<T, K>, keyComparator?: EqualityComparator<K>): IEnumerable<IGrouping<K, T>>;
     // groupJoin<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
     //                    resultSelector: JoinSelector<K, IEnumerable<E>, R>, keyComparator?: EqualityComparator<K>): IEnumerable<R>;
-    // intersect(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
+    intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     // join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
     //               resultSelector: JoinSelector<T, E, R>, keyComparator?: EqualityComparator<K>, leftJoin?: boolean): IEnumerable<R>;
     // last(predicate?: Predicate<T>): T;
@@ -37,8 +37,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     // select<R>(selector: Selector<T, R>): IEnumerable<R>;
     // selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnumerable<R>;
     // sequenceEqual(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): boolean;
-    // single(predicate?: Predicate<T>): T;
-    // singleOrDefault(predicate?: Predicate<T>): T;
+    single(predicate?: Predicate<TElement>): TElement;
+    singleOrDefault(predicate?: Predicate<TElement>): TElement;
     skip(count: number): IEnumerable<TElement>;
     // skipLast(count: number): IEnumerable<T>;
     // skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
@@ -49,7 +49,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toArray(): TElement[];
     // toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V>;
     toList(): List<TElement>;
-    // union(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): IEnumerable<T>;
+    union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     // where(predicate: Predicate<T>): IEnumerable<T>;
     // zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U>;
 }

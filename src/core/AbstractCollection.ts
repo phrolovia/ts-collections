@@ -34,6 +34,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.append(this, item);
     }
 
+    public average(selector?: Selector<TElement, number>): number {
+        return EnumerableStatic.average(this, selector);
+    }
+
     public concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.concat(this, enumerable);
     }
@@ -59,6 +63,30 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return true;
     }
 
+    public count(predicate?: Predicate<TElement>): number {
+        return EnumerableStatic.count(this, predicate);
+    }
+
+    public defaultIfEmpty(value?: TElement): IEnumerable<TElement> {
+        return EnumerableStatic.defaultIfEmpty(this, value);
+    }
+
+    public distinct(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.distinct(this, comparator);
+    }
+
+    public elementAt(index: number): TElement {
+        return EnumerableStatic.elementAt(this, index);
+    }
+
+    public elementAtOrDefault(index: number): TElement {
+        return EnumerableStatic.elementAtOrDefault(this, index);
+    }
+
+    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.except(this, enumerable, comparator);
+    }
+
     public first(predicate?: Predicate<TElement>): TElement {
         return EnumerableStatic.first(this, predicate);
     }
@@ -67,8 +95,20 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.firstOrDefault(this, predicate);
     }
 
+    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.intersect(this, enumerable, comparator);
+    }
+
     public isEmpty(): boolean {
         return this.size() === 0;
+    }
+
+    public single(predicate?: Predicate<TElement>): TElement {
+        return EnumerableStatic.single(this, predicate);
+    }
+
+    public singleOrDefault(predicate?: Predicate<TElement>): TElement {
+        return EnumerableStatic.singleOrDefault(this, predicate);
     }
 
     public skip(count: number): IEnumerable<TElement> {
@@ -81,6 +121,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public toList(): List<TElement> {
         return EnumerableStatic.toList(this);
+    }
+
+    public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.union(this ,enumerable, comparator);
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;
