@@ -1,6 +1,6 @@
-import {IEnumerable} from "../enumerator/IEnumerable";
-import {EqualityComparator} from "../shared/EqualityComparator";
 import {Predicate} from "../shared/Predicate";
+import {IEnumerable} from "../../imports";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 export interface ICollection<TElement> extends IEnumerable<TElement> {
     add(element: TElement): boolean;

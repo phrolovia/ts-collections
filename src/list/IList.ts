@@ -1,5 +1,5 @@
-import {ICollection} from "../core/ICollection";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {ICollection} from "../../imports";
 
 export interface IList<TElement> extends ICollection<TElement> {
     addAt(element: TElement, index: number): boolean;

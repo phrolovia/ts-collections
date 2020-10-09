@@ -1,7 +1,7 @@
-import {AbstractList} from "./AbstractList";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
+import {AbstractList} from "../../imports";
 
 export class List<TElement> extends AbstractList<TElement> {
     private readonly data: TElement[] = [];

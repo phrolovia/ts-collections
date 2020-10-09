@@ -1,17 +1,15 @@
-import {IEnumerable} from "./IEnumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {Predicate} from "../shared/Predicate";
-import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
-import {IOrderedEnumerable} from "./IOrderedEnumerable";
 import {OrderComparator} from "../shared/OrderComparator";
+import {IEnumerable, IOrderedEnumerable, List} from "../../imports";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;
@@ -22,6 +20,22 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public static from<TSource>(source: IEnumerable<TSource> | Array<TSource>): IEnumerable<TSource> {
         return new Enumerable(source);
+    }
+
+    public static range(start: number, count: number): IEnumerable<number> {
+        return new Enumerator(function* () {
+            for (let ix = 0; ix < count; ++ix) {
+                yield start + ix;
+            }
+        });
+    }
+
+    public static repeat<TSource>(item: TSource, count: number): IEnumerable<TSource> {
+        return new Enumerator(function* () {
+            for (let ix = 0; ix < count; ++ix) {
+                yield item;
+            }
+        });
     }
 
     [Symbol.iterator](): Iterator<TElement> {

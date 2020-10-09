@@ -1,6 +1,3 @@
-import {ICollection} from "./ICollection";
-import {IEnumerable} from "../enumerator/IEnumerable";
-import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {Predicate} from "../shared/Predicate";
@@ -9,11 +6,10 @@ import {Accumulator} from "../shared/Accumulator";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
-import {IGrouping} from "../enumerator/Enumerable";
 import {JoinSelector} from "../shared/JoinSelector";
-import {IOrderedEnumerable} from "../enumerator/IOrderedEnumerable";
 import {OrderComparator} from "../shared/OrderComparator";
-import {List} from "../list/List";
+import {ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
+import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
 

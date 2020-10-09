@@ -1,9 +1,8 @@
-import {AbstractCollection} from "../core/AbstractCollection";
-import {IList} from "./IList";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {ICollection} from "../core/ICollection";
 import {Predicate} from "../shared/Predicate";
+import {AbstractCollection, IList} from "../../imports";
 
 export abstract class AbstractList<TElement> extends AbstractCollection<TElement> implements IList<TElement> {
 

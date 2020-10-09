@@ -1,16 +1,13 @@
-import {IEnumerable} from "./IEnumerable";
-import {Enumerable, IGrouping} from "./Enumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
-import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {IOrderedEnumerable} from "./IOrderedEnumerable";
+import {Enumerable, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
 
 export class EnumerableStatic {
     public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {

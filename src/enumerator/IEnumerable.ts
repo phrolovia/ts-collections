@@ -5,11 +5,9 @@ import {Predicate} from "../shared/Predicate";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
-import {IGrouping} from "./Enumerable";
 import {JoinSelector} from "../shared/JoinSelector";
-import {IOrderedEnumerable} from "./IOrderedEnumerable";
 import {OrderComparator} from "../shared/OrderComparator";
-import {List} from "../list/List";
+import {IGrouping, IOrderedEnumerable, List} from "../../imports";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
