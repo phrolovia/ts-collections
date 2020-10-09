@@ -6,16 +6,19 @@ import {Comparators} from "../shared/Comparators";
 import {Predicate} from "../shared/Predicate";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
-import {List} from "../list/List";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {IOrderedEnumerable} from "../enumerator/IOrderedEnumerable";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Zipper} from "../shared/Zipper";
 import {IndexedSelector} from "../shared/IndexedSelector";
+import {Zipper} from "../shared/Zipper";
 import {IGrouping} from "../enumerator/Enumerable";
 import {JoinSelector} from "../shared/JoinSelector";
+import {IOrderedEnumerable} from "../enumerator/IOrderedEnumerable";
+import {OrderComparator} from "../shared/OrderComparator";
+import {List} from "../list/List";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
+
+    protected constructor() {
+    }
 
     public addAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
         const oldSize = this.size();
@@ -207,11 +210,11 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public toList(): List<TElement> {
-        return EnumerableStatic.toList(this);
+        return new List<TElement>(this);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
-        return EnumerableStatic.union(this ,enumerable, comparator);
+        return EnumerableStatic.union(this, enumerable, comparator);
     }
 
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
@@ -221,7 +224,6 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
     }
-
     abstract [Symbol.iterator](): Iterator<TElement>;
     abstract add(element: TElement): boolean;
     abstract clear(): void;
