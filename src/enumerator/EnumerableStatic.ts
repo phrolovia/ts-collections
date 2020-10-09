@@ -5,6 +5,7 @@ import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
 import {List} from "../list/List";
+import {IndexedPredicate} from "../shared/IndexedPredicate";
 
 export class EnumerableStatic {
     public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
@@ -71,6 +72,38 @@ export class EnumerableStatic {
         return new Enumerable(source).intersect(enumerable, comparator);
     }
 
+    public static last<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
+        return new Enumerable(source).last(predicate);
+    }
+
+    public static lastOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
+        return new Enumerable(source).lastOrDefault(predicate);
+    }
+
+    public static max<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
+        return new Enumerable(source).max(selector);
+    }
+
+    public static min<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
+        return new Enumerable(source).min(selector);
+    }
+
+    public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {
+        return new Enumerable(source).prepend(item);
+    }
+
+    public static reverse<TElement>(source: IEnumerable<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).reverse();
+    }
+
+    public static select<TElement, TResult>(source: IEnumerable<TElement>, selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+        return new Enumerable(source).select(selector);
+    }
+
+    public static sequenceEqual<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
+        return new Enumerable(source).sequenceEqual(enumerable, comparator);
+    }
+
     public static single<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
         return new Enumerable(source).single(predicate);
     }
@@ -83,6 +116,30 @@ export class EnumerableStatic {
         return new Enumerable(source).skip(count);
     }
 
+    public static skipLast<TElement>(source: IEnumerable<TElement>, count: number): IEnumerable<TElement> {
+        return new Enumerable(source).skipLast(count);
+    }
+
+    public static skipWhile<TElement>(source: IEnumerable<TElement>, predicate?: IndexedPredicate<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).skipWhile(predicate);
+    }
+
+    public static sum<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
+        return new Enumerable(source).sum(selector);
+    }
+
+    public static take<TElement>(source: IEnumerable<TElement>, count: number): IEnumerable<TElement> {
+        return new Enumerable(source).take(count);
+    }
+
+    public static takeLast<TElement>(source: IEnumerable<TElement>, count: number): IEnumerable<TElement> {
+        return new Enumerable(source).takeLast(count);
+    }
+
+    public static takeWhile<TElement>(source: IEnumerable<TElement>, predicate?: IndexedPredicate<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).takeWhile(predicate);
+    }
+
     public static toArray<TElement>(source: IEnumerable<TElement>): TElement[] {
         return new Enumerable(source).toArray();
     }
@@ -93,5 +150,9 @@ export class EnumerableStatic {
 
     public static union<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).union(enumerable, comparator);
+    }
+
+    public static where<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).where(predicate);
     }
 }

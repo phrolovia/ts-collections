@@ -7,6 +7,7 @@ import {Predicate} from "../shared/Predicate";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {List} from "../list/List";
+import {IndexedPredicate} from "../shared/IndexedPredicate";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
 
@@ -103,6 +104,38 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return this.size() === 0;
     }
 
+    public last(predicate?: Predicate<TElement>): TElement {
+        return EnumerableStatic.last(this, predicate);
+    }
+
+    public lastOrDefault(predicate?: Predicate<TElement>): TElement {
+        return EnumerableStatic.lastOrDefault(this, predicate);
+    }
+
+    public max(selector?: Selector<TElement, number>): number {
+        return EnumerableStatic.max(this, selector);
+    }
+
+    public min(selector?: Selector<TElement, number>): number {
+        return EnumerableStatic.min(this, selector);
+    }
+
+    public prepend(item: TElement): IEnumerable<TElement> {
+        return EnumerableStatic.prepend(this, item);
+    }
+
+    public reverse(): IEnumerable<TElement> {
+        return EnumerableStatic.reverse(this);
+    }
+
+    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+        return EnumerableStatic.select(this, selector);
+    }
+
+    public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
+        return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
+    }
+
     public single(predicate?: Predicate<TElement>): TElement {
         return EnumerableStatic.single(this, predicate);
     }
@@ -115,6 +148,30 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.skip(this, count);
     }
 
+    public skipLast(count: number): IEnumerable<TElement> {
+        return EnumerableStatic.skipLast(this, count);
+    }
+
+    public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.skipWhile(this, predicate);
+    }
+
+    public sum(selector?: Selector<TElement, number>): number {
+        return EnumerableStatic.sum(this, selector);
+    }
+
+    public take(count: number): IEnumerable<TElement> {
+        return EnumerableStatic.take(this, count);
+    }
+
+    public takeLast(count: number): IEnumerable<TElement> {
+        return EnumerableStatic.takeLast(this, count);
+    }
+
+    public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.takeWhile(this, predicate);
+    }
+
     public toArray(): TElement[] {
         return EnumerableStatic.toArray(this);
     }
@@ -125,6 +182,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.union(this ,enumerable, comparator);
+    }
+
+    public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.where(this, predicate);
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

@@ -3,6 +3,7 @@ import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
 import {List} from "../list/List";
+import {IndexedPredicate} from "../shared/IndexedPredicate";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
@@ -26,30 +27,30 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     // join<E, K, R>(enumerable: IEnumerable<E>, outerKeySelector: Selector<T, K>, innerKeySelector: Selector<E, K>,
     //               resultSelector: JoinSelector<T, E, R>, keyComparator?: EqualityComparator<K>, leftJoin?: boolean): IEnumerable<R>;
-    // last(predicate?: Predicate<T>): T;
-    // lastOrDefault(predicate?: Predicate<T>): T;
-    // max(selector?: Selector<T, number>): number;
-    // min(selector?: Selector<T, number>): number;
+    last(predicate?: Predicate<TElement>): TElement;
+    lastOrDefault(predicate?: Predicate<TElement>): TElement;
+    max(selector?: Selector<TElement, number>): number;
+    min(selector?: Selector<TElement, number>): number;
     // orderBy<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T>;
     // orderByDescending<K>(keySelector: Selector<T, K>, comparator?: Comparator<K>): IOrderedEnumerable<T>;
-    // prepend(item: T): IEnumerable<T>;
-    // reverse(): IEnumerable<T>;
-    // select<R>(selector: Selector<T, R>): IEnumerable<R>;
+    prepend(item: TElement): IEnumerable<TElement>;
+    reverse(): IEnumerable<TElement>;
+    select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult>;
     // selectMany<R>(selector: IndexedSelector<T, Iterable<R>>): IEnumerable<R>;
-    // sequenceEqual(enumerable: IEnumerable<T>, comparator?: EqualityComparator<T>): boolean;
+    sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean;
     single(predicate?: Predicate<TElement>): TElement;
     singleOrDefault(predicate?: Predicate<TElement>): TElement;
     skip(count: number): IEnumerable<TElement>;
-    // skipLast(count: number): IEnumerable<T>;
-    // skipWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
-    // sum(selector?: Selector<T, number>): number;
-    // take(count: number): IEnumerable<T>;
-    // takeLast(count: number): IEnumerable<T>;
-    // takeWhile(predicate: IndexedPredicate<T>): IEnumerable<T>;
+    skipLast(count: number): IEnumerable<TElement>;
+    skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    sum(selector?: Selector<TElement, number>): number;
+    take(count: number): IEnumerable<TElement>;
+    takeLast(count: number): IEnumerable<TElement>;
+    takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     toArray(): TElement[];
     // toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V>;
     toList(): List<TElement>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
-    // where(predicate: Predicate<T>): IEnumerable<T>;
+    where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     // zip<R, U=[T,R]>(enumerable: IEnumerable<R>, zipper?: Zipper<T, R, U>): IEnumerable<[T, R]> | IEnumerable<U>;
 }

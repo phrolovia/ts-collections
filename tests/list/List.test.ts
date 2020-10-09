@@ -404,6 +404,27 @@ describe("#List", () => {
         });
     });
 
+    describe("#last()", () => {
+        it("should throw error if list is empty()", () => {
+            const list = new List<number>();
+            expect(() => list.last()).to.throw(ErrorMessages.NoElements);
+        });
+        it("should return the last element if no predicate is provided.", () => {
+            const list = List.from([99, 2, 3, 4, 5]);
+            const last = list.last();
+            expect(last).to.eq(5);
+        });
+        it("should throw an error if no matching element is found.", () => {
+            const list = List.from([99, 2, 3, 4, 5]);
+            expect(() => list.last(n => n < 0)).to.throw(ErrorMessages.NoMatchingElement);
+        });
+        it("should return 87", () => {
+            const list = List.from([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
+            const last = list.last(p => p > 80);
+            expect(last).to.eq(87);
+        });
+    });
+
     describe("#lastIndexOf", () => {
         const list1 = List.from([Person.Alice, Person.Noemi, null, Person.Noemi2, null]);
         it("should return 4", () => {
@@ -418,6 +439,76 @@ describe("#List", () => {
         it("should return -1", () => {
             list1.removeIf(p => !p);
             expect(list1.lastIndexOf(null)).to.eq(-1);
+        });
+    });
+
+    describe("#lastOrDefault()", () => {
+        it("should return null if list is empty()", () => {
+            const list = new List<number>();
+            expect(list.lastOrDefault()).to.eq(null);
+        });
+        it("should return the last element if no predicate is provided.", () => {
+            const list = List.from([99, 2, 3, 4, 5]);
+            const first = list.lastOrDefault();
+            expect(first).to.eq(5);
+        });
+        it("should return null if no matching element is found.", () => {
+            const list = List.from([99, 2, 3, 4, 5]);
+            expect(list.lastOrDefault(n => n < 0)).to.eq(null);
+        });
+        it("should return 87", () => {
+            const list = List.from([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
+            const last = list.lastOrDefault(p => p > 80);
+            expect(last).to.eq(87);
+        });
+    });
+
+    describe("#max()", () => {
+        const list = List.from([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
+        it("should return 2312", () => {
+            const max = list.max(n => n);
+            expect(max).to.eq(2312);
+        });
+        it("should return 23", () => {
+            const personList = List.from([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const max = personList.max(p => p.age);
+            expect(max).to.eq(23);
+        });
+    });
+    describe("#min()", () => {
+        const list = List.from([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
+        it("should return 1", () => {
+            const max = list.min(n => n);
+            expect(max).to.eq(1);
+        });
+        it("should return 9", () => {
+            const personList = List.from([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const max = personList.min(p => p.age);
+            expect(max).to.eq(9);
+        });
+    });
+
+    describe("#prepend()", () => {
+        const list = new List<Person>();
+        list.add(Person.Mel);
+        list.add(Person.Senna);
+        it("should have two elements", () => {
+            expect(list.size()).to.eq(2);
+        });
+        it("should return a new list", () => {
+            const newList = list.prepend(Person.Lenka).toList();
+            expect(list.size()).to.eq(2);
+            expect(newList.size()).to.eq(3);
+        });
+        it("should have the item at the beginning of the list", () => {
+            const newList = list.prepend(Person.Lenka).toList();
+            const first = newList.get(0);
+            expect(first).to.eq(Person.Lenka);
+        });
+        it("should not have the appended item in the old list", () => {
+            const newList = list.prepend(Person.Lenka).toList();
+            expect(newList.contains(Person.Lenka)).to.eq(true);
+            expect(list.contains(Person.Lenka)).to.eq(false);
         });
     });
 
@@ -498,6 +589,76 @@ describe("#List", () => {
         });
     });
 
+    describe("#reverse()", () => {
+        const list: List<Person> = new List<Person>();
+        list.add(Person.Alice);
+        list.add(Person.Lenka);
+        list.add(Person.Senna);
+        list.add(null);
+        list.add(Person.Mel);
+        it("should have a person with the surname 'Rivermist' at the end.", () => {
+            const list2 = list.reverse().toList();
+            const last = list2.get(list2.size() - 1);
+            expect(last.surname).to.eq("Rivermist");
+        });
+        it("should not modify the original list", () => {
+            const list = List.from([1, 2, 3, 4, 5]);
+            const list2 = list.reverse().toList();
+            expect(list.get(0)).to.eq(list2.get(4));
+            expect(list.get(1)).to.eq(list2.get(3));
+            expect(list.get(2)).to.eq(list2.get(2));
+            expect(list.get(3)).to.eq(list2.get(1));
+            expect(list.get(4)).to.eq(list2.get(0));
+        });
+    });
+
+    describe("#select()", () => {
+        it("should throw error if selector is undefined", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(() => list.select(null)).to.throw(ErrorMessages.NoSelectorProvided);
+        });
+        it("should return an IEnumerable with elements [4, 25, 36, 81]", () => {
+            const list = List.from([2, 5, 6, 9]);
+            const list2 = list.select(n => Math.pow(n, 2)).toList();
+            expect(list2.size()).to.eq(4);
+            expect(list2.get(0)).to.eq(4);
+            expect(list2.get(1)).to.eq(25);
+            expect(list2.get(2)).to.eq(36);
+            expect(list2.get(3)).to.eq(81);
+        });
+        it("should return an IEnumerable with elements [125, 729]", () => {
+            const list = List.from([2, 5, 6, 9]);
+            const list2 = list.where(n => n % 2 !== 0).select(n => Math.pow(n, 3)).toList();
+            expect(list2.size()).to.eq(2);
+            expect(list2.get(0)).to.eq(125);
+            expect(list2.get(1)).to.eq(729);
+        });
+    });
+
+    describe("#sequenceEqual()", () => {
+        it("should return false for lists with different sizes", () => {
+            const list1 = List.from([1, 2]);
+            const list2 = List.from([1, 2, 3]);
+            expect(list1.sequenceEqual(list2)).to.eq(false);
+        });
+        it("should return false if lists don't have members in the same order", () => {
+            const list1 = List.from([1, 2]);
+            const list2 = List.from([2, 1]);
+            expect(list1.sequenceEqual(list2)).to.eq(false);
+        });
+        it("should return true if lists have members in the same order", () => {
+            const list1 = List.from([1, 2]);
+            const list2 = List.from([1, 2]);
+            expect(list1.sequenceEqual(list2)).to.eq(true);
+        });
+        it("should return true if lists have members in the same order", () => {
+            const list1 = List.from([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi]);
+            const list2 = List.from([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi2]);
+            expect(list1.sequenceEqual(list2, (p1, p2) => p1.name === p2.name)).to.eq(true);
+            expect(list1.sequenceEqual(list2)).to.eq(false);
+        });
+    });
+
     describe("#set", () => {
         it("should throw error if index is out of bounds", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -540,6 +701,109 @@ describe("#List", () => {
         });
     });
 
+    describe("#skipLast()", () => {
+        const list = List.from([1, 2, 3, 4, 5, 6, 7]);
+        it("should return a list with elements [1,2,3]", () => {
+            const list2 = list.skipLast(4).toList();
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(2);
+            expect(list2.get(2)).to.eq(3);
+        });
+        it("should return an empty list if the list contains fewer than skipped elements", () => {
+            const list2 = list.skipLast(100).toList();
+            expect(list2.size()).to.eq(0);
+        });
+    });
+    describe("#skipWhile()", () => {
+        const list = List.from([5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500]);
+        it("should throw error if predicate is null", () => {
+            expect(() => list.skipWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
+        });
+        it("should return an IEnumerable with elements [4000, 1500, 5500]", () => {
+            const list2 = list.skipWhile((n, nx) => n > nx * 1000).toList();
+            expect(list2.get(0)).to.eq(4000);
+            expect(list2.get(1)).to.eq(1500);
+            expect(list2.get(2)).to.eq(5500);
+            expect(list2.count()).to.eq(3);
+        });
+    });
+
+    describe("#sum()", () => {
+        it("should return 21", () => {
+            const list = List.from([1, 2, 3, 4, 5, 6]);
+            const sum = list.sum(n => n);
+            expect(sum).to.eq(21);
+        });
+    });
+
+    describe("#take()", () => {
+        const list = List.from([1, 2, 3, 4, 5, 6, 7]);
+        it("should return an empty IEnumerable", () => {
+            const list2 = list.take(0).toList();
+            const list3 = list.take(-1).toList();
+            expect(list2.isEmpty()).to.eq(true);
+            expect(list3.isEmpty()).to.eq(true);
+        });
+        it("should return a list with elements [1,2,3]", () => {
+            const list2 = list.take(3).toList();
+            expect(list2.count()).to.eq(3);
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(2);
+            expect(list2.get(2)).to.eq(3);
+        });
+        it("should return all elements if count is bigger than list size", () => {
+            const list2 = list.take(100).toList();
+            expect(list.size()).to.eq(list2.size());
+            expect(list2.get(0)).to.eq(list.get(0));
+            expect(list2.get(1)).to.eq(list.get(1));
+            expect(list2.get(2)).to.eq(list.get(2));
+            expect(list2.get(3)).to.eq(list.get(3));
+            expect(list2.get(4)).to.eq(list.get(4));
+            expect(list2.get(5)).to.eq(list.get(5));
+            expect(list2.get(6)).to.eq(list.get(6));
+        });
+    });
+    describe("#takeLast()", () => {
+        const list = List.from([1, 2, 3, 4, 5, 6, 7]);
+        it("should return an empty IEnumerable", () => {
+            const list2 = list.takeLast(0).toList();
+            const list3 = list.takeLast(-1).toList();
+            expect(list2.isEmpty()).to.eq(true);
+            expect(list3.isEmpty()).to.eq(true);
+        });
+        it("should return a list with elements [5,6,7]", () => {
+            const list2 = list.takeLast(3).toList();
+            expect(list2.count()).to.eq(3);
+            expect(list2.get(0)).to.eq(5);
+            expect(list2.get(1)).to.eq(6);
+            expect(list2.get(2)).to.eq(7);
+        });
+        it("should return all elements if count is bigger than list size", () => {
+            const list2 = list.takeLast(100).toList();
+            expect(list.size()).to.eq(list2.size());
+            expect(list2.get(0)).to.eq(list.get(0));
+            expect(list2.get(1)).to.eq(list.get(1));
+            expect(list2.get(2)).to.eq(list.get(2));
+            expect(list2.get(3)).to.eq(list.get(3));
+            expect(list2.get(4)).to.eq(list.get(4));
+            expect(list2.get(5)).to.eq(list.get(5));
+            expect(list2.get(6)).to.eq(list.get(6));
+        });
+    });
+    describe("#takeWhile()", () => {
+        const list = List.from(["apple", "banana", "mango", "orange", "plum", "grape"]);
+        it("should throw error ['predicate is null.]", () => {
+            expect(() => list.takeWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
+        });
+        it("should return an IEnumerable with elements [apple, banana, mango]", () => {
+            const list2 = list.takeWhile(f => f.localeCompare("orange") !== 0).toList();
+            expect(list2.get(0)).to.eq("apple");
+            expect(list2.get(1)).to.eq("banana");
+            expect(list2.get(2)).to.eq("mango");
+            expect(list2.count()).to.eq(3);
+        });
+    });
+
     describe("#toList()", () => {
         const list = List.from([1, 2, 3]);
         const list2 = list.append(4).toList();
@@ -563,6 +827,20 @@ describe("#List", () => {
             const list2 = List.from(["Alice", "Rei", "Vanessa", "Vanessa", "Yuzuha"]);
             const union = list1.union(list2);
             expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
+        });
+    });
+
+    describe("#where()", () => {
+        it("should throw error if predicate is null", () => {
+            const list = List.from([2, 5, 6, 99]);
+            expect(() => list.where(null)).to.throw(ErrorMessages.NoPredicateProvided);
+        });
+        it("should return an IEnumerable with elements [2,5]", () => {
+            const list = List.from([2, 5, 6, 99]);
+            const list2 = list.where(n => n <= 5).toList();
+            expect(list2.size()).to.eq(2);
+            expect(list2.get(0)).to.eq(2);
+            expect(list2.get(1)).to.eq(5);
         });
     });
 
