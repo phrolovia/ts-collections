@@ -9,7 +9,12 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
 
-describe("#List", () => {
+describe("List", () => {
+
+    const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
+    const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
+    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
+
     describe("#add()", () => {
         const list = List.from([1, 2, 3]);
         it("should add element at the end of the list", () => {
@@ -230,12 +235,6 @@ describe("#List", () => {
         });
         it("should return true if list contains all the elements from the other list", () => {
             expect(list1.containsAll(list2)).to.eq(true);
-        });
-        it("should use the provided comparator", () => {
-            const noemi = new Person("Noemi", "Green", 34);
-            const list3 = List.from([noemi]);
-            expect(list1.containsAll(list3)).to.eq(false);
-            expect(list1.containsAll(list3, (p1, p2) => p1.name === p2.name)).to.eq(true);
         });
     });
 
@@ -484,9 +483,6 @@ describe("#List", () => {
         it("should return 1", () => {
             expect(list1.indexOf(Person.Noemi)).to.eq(1);
         });
-        it("should return 3", () => {
-            expect(list1.indexOf(Person.Noemi, (p1, p2) => p1?.age > p2?.age)).to.eq(3);
-        });
     });
 
     describe("#intersect()", () => {
@@ -497,7 +493,7 @@ describe("#List", () => {
             expect(elist.toArray()).to.deep.equal([4, 5]);
         });
         it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
-            const list1 = List.from([Person.Alice,Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list1 = List.from([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
             const list2 = List.from([Person.Mel, Person.Lenka, Person.Jane]);
             const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
             expect(elist.toArray()).to.deep.equal([Person.Mel, Person.Lenka, Person.Jane]);
@@ -592,9 +588,6 @@ describe("#List", () => {
         });
         it("should lastIndexOf 1", () => {
             expect(list1.lastIndexOf(Person.Noemi)).to.eq(1);
-        });
-        it("should return 3", () => {
-            expect(list1.lastIndexOf(Person.Noemi, (p1, p2) => p1?.age < p2?.age)).to.eq(3);
         });
         it("should return -1", () => {
             list1.removeIf(p => !p);
@@ -711,10 +704,10 @@ describe("#List", () => {
             list1.remove(null);
             expect(list1.get(2)).to.eq(Person.Noemi2);
         });
-        it("should remove older Noemi from the list", () => {
-            list1.remove(Person.Noemi, (p1, p2) => p1?.name === p2?.name && p1?.age !== p2?.age);
+        it("should remove Noemi from the list", () => {
+            list1.remove(Person.Noemi);
             expect(list1.get(2)).to.eq(null);
-            expect(list1.get(1)).to.eq(Person.Noemi);
+            expect(list1.get(1)).to.eq(Person.Noemi2);
         });
     });
 
@@ -727,9 +720,9 @@ describe("#List", () => {
             expect(list1.get(3)).to.eq(Person.Priscilla);
         });
         it("should use the provided comparator for comparison", () => {
-            const list1 = List.from([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+            const list1 = List.from([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola], personNameComparator);
             const list2 = List.from([Person.Vanessa, Person.Viola, Person.Noemi2]);
-            list1.removeAll(list2, (p1, p2) => p1.name === p2.name);
+            list1.removeAll(list2);
             expect(list1.size()).to.eq(3);
             expect(list1.get(2)).to.eq(Person.Priscilla);
         });
@@ -771,9 +764,9 @@ describe("#List", () => {
             expect(list1.get(1)).to.eq(5);
         });
         it("should use the provided comparator", () => {
-            const list1 = List.from([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+            const list1 = List.from([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola], personNameComparator);
             const list2 = List.from([Person.Vanessa, Person.Viola, Person.Noemi2]);
-            list1.retainAll(list2, (p1, p2) => p1.name === p2.name);
+            list1.retainAll(list2);
             expect(list1.size()).to.eq(3);
             expect(list1.get(0)).to.eq(Person.Noemi);
             expect(list1.get(1)).to.eq(Person.Vanessa);
@@ -1135,7 +1128,7 @@ describe("#List", () => {
                 .thenBy(p => p.surname);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
-                "[19] :: Elizabeth Jackson",
+                "[19] :: Eliza Jackson",
                 "[19] :: Hanna Jackson",
                 "[20] :: Hanna Jackson",
                 "[21] :: Bella Rivera",
@@ -1168,7 +1161,7 @@ describe("#List", () => {
                 .orderBy(p => p.age).thenBy(p => p.name);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
-                "[19] :: Elizabeth Jackson",
+                "[19] :: Eliza Jackson",
                 "[19] :: Hanna Jackson",
                 "[20] :: Hanna Jackson",
                 "[21] :: Bella Rivera",
@@ -1226,7 +1219,7 @@ describe("#List", () => {
                 "[21] :: Bella Rivera",
                 "[20] :: Hanna Jackson",
                 "[19] :: Hanna Jackson",
-                "[19] :: Elizabeth Jackson",
+                "[19] :: Eliza Jackson",
                 "[9] :: Priscilla Necci"
             ];
             const returnedOrder: string[] = [];
@@ -1245,7 +1238,7 @@ describe("#List", () => {
                 .orderBy(p => p.age).thenBy(p => p.name);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
-                "[19] :: Elizabeth Jackson",
+                "[19] :: Eliza Jackson",
                 "[19] :: Hanna Jackson",
                 "[20] :: Hanna Jackson",
                 "[21] :: Bella Rivera",
@@ -1291,7 +1284,7 @@ describe("#List", () => {
                 "[21] :: Bella Rivera",
                 "[21] :: Lucrezia Volpe",
                 "[20] :: Hanna Jackson",
-                "[19] :: Elizabeth Jackson",
+                "[19] :: Eliza Jackson",
                 "[19] :: Hanna Jackson",
                 "[9] :: Priscilla Necci"
             ];

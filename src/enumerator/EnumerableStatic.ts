@@ -9,7 +9,9 @@ import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Enumerable, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
 
-export class EnumerableStatic {
+export abstract class EnumerableStatic {
+    protected constructor() {}
+
     public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);
     }
@@ -170,8 +172,8 @@ export class EnumerableStatic {
         return new Enumerable(source).toArray();
     }
 
-    public static toList<TElement>(source: IEnumerable<TElement>): List<TElement> {
-        return new Enumerable(source).toList();
+    public static toList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): List<TElement> {
+        return new Enumerable(source).toList(comparator);
     }
 
     public static union<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

@@ -18,6 +18,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         this.enumerator = new Enumerator<TElement>(() => iterable);
     }
 
+    public static empty<TSource>(): IEnumerable<TSource> {
+        return new Enumerable<TSource>([]);
+    }
+
     public static from<TSource>(source: IEnumerable<TSource> | Array<TSource>): IEnumerable<TSource> {
         return new Enumerable(source);
     }
@@ -202,8 +206,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toArray();
     }
 
-    public toList(): List<TElement> {
-        return this.enumerator.toList();
+    public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
+        return this.enumerator.toList(comparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
@@ -330,7 +334,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public distinct(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.unionGenerator(Enumerable.from([]), comparator));
+        return new Enumerator(() => this.unionGenerator(Enumerable.empty(), comparator));
     }
 
     public elementAt(index: number): TElement {
@@ -657,8 +661,8 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return array;
     }
 
-    public toList(): List<TElement> {
-        return List.from(this);
+    public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
+        return List.from(this, comparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

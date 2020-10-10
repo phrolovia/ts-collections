@@ -53,7 +53,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     toArray(): TElement[];
     // toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V>;
-    toList(): List<TElement>;
+    toList(comparator?: EqualityComparator<TElement>): List<TElement>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     zip<TSecond, TResult=[TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult>;

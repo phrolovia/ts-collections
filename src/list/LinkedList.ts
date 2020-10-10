@@ -1,7 +1,6 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
 import {AbstractList, IDeque} from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {Comparators} from "../shared/Comparators";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 class Node<TElement> {
     public item: TElement;
@@ -20,8 +19,11 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
     private lastNode: Node<TElement> = null;
     private listSize: number = 0;
 
-    public constructor(iterable?: Iterable<TElement>) {
-        super();
+    public constructor(
+        iterable: Iterable<TElement> = [] as TElement[],
+        comparator?: EqualityComparator<TElement>
+    ) {
+        super(comparator);
         if (iterable) {
             for (const element of iterable) {
                 this.add(element);
@@ -29,8 +31,8 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
     }
 
-    public static from<TSource>(iterable: Iterable<TSource>): LinkedList<TSource> {
-        return new LinkedList<TSource>(iterable);
+    public static from<TSource>(iterable: Iterable<TSource>, comparator?: EqualityComparator<TSource>): LinkedList<TSource> {
+        return new LinkedList<TSource>(iterable, comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -107,8 +109,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         return node == null ? null : this.unlinkLast(node);
     }
 
-    public remove(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        comparator ??= Comparators.equalityComparator;
+    public remove(element: TElement): boolean {
         if (element == null) {
             for (let x: Node<TElement> = this.firstNode; x != null; x = x.next) {
                 if (x.item == null) {
@@ -118,7 +119,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
             }
         } else {
             for (let x: Node<TElement> = this.firstNode; x != null; x = x.next) {
-                if (comparator(x.item, element)) {
+                if (this.comparator(x.item, element)) {
                     this.unlink(x);
                     return true;
                 }

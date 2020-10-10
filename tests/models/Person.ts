@@ -24,7 +24,7 @@ export class Person {
     public static readonly Alice = new Person("Alice", "Rivermist", 23);
     public static readonly Amy = new Person("Amy", "Rivera", 32);
     public static readonly Bella = new Person("Bella", "Rivera", 21);
-    public static readonly Eliza = new Person("Elizabeth", "Jackson", 19);
+    public static readonly Eliza = new Person("Eliza", "Jackson", 19);
     public static readonly Emily = new Person("Emily", "Redridge", 25);
     public static readonly Hanna = new Person("Hanna", "Jackson", 20);
     public static readonly Hanna2 = new Person("Hanna", "Jackson", 19);

@@ -3,6 +3,12 @@ import {expect} from "chai";
 import {Enumerable} from "../../imports";
 
 describe("Enumerable", () => {
+    describe("#empty()", () => {
+        it("should create an emoty enumerable", () => {
+            const enumerable = Enumerable.empty<number>();
+            expect(enumerable.count()).to.eq(0);
+        });
+    });
     describe("#range()", () => {
         const enumerable = Enumerable.range(1, 5);
         it("should create a list of increasing numbers starting with 1", () => {

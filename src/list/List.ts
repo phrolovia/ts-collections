@@ -1,13 +1,15 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
 import {AbstractList} from "../../imports";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class List<TElement> extends AbstractList<TElement> {
     private readonly data: TElement[] = [];
 
-    public constructor(iterable?: Iterable<TElement>) {
-        super();
+    public constructor(
+        iterable: Iterable<TElement> = [] as TElement[],
+        comparator?: EqualityComparator<TElement>
+    ) {
+        super(comparator);
         if (iterable) {
             for (const element of iterable) {
                 this.add(element);
@@ -15,8 +17,8 @@ export class List<TElement> extends AbstractList<TElement> {
         }
     }
 
-    public static from<TSource>(source: Iterable<TSource>): List<TSource> {
-        return new List<TSource>(source);
+    public static from<TSource>(source: Iterable<TSource>, comparator?: EqualityComparator<TSource>): List<TSource> {
+        return new List<TSource>(source, comparator);
     }
 
     *[Symbol.iterator](): Iterator<TElement> {
@@ -44,11 +46,10 @@ export class List<TElement> extends AbstractList<TElement> {
         return this.data[index];
     }
 
-    public remove(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        comparator ??= Comparators.equalityComparator;
+    public remove(element: TElement): boolean {
         let deleted = false;
         for (let index = 0; index < this.data.length; ++index) {
-            if (comparator(element, this.data[index])) {
+            if (this.comparator(element, this.data[index])) {
                 this.data.splice(index, 1);
                 deleted = true;
                 break;

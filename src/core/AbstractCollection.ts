@@ -12,8 +12,10 @@ import {ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
+    protected readonly comparator: EqualityComparator<TElement>;
 
-    protected constructor() {
+    protected constructor(comparator?: EqualityComparator<TElement>) {
+        this.comparator = comparator ?? Comparators.equalityComparator;
     }
 
     public addAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
@@ -52,15 +54,14 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.contains(this, element, comparator);
     }
 
-    public containsAll<TSource extends TElement>(collection: ICollection<TSource>, comparator?: EqualityComparator<TElement>): boolean {
-        comparator ??= Comparators.equalityComparator;
+    public containsAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
         if (this.size() < collection.size()) {
             return false;
         }
         for (const element of collection) {
             let found = false;
             for (const thisElement of this) {
-                found ||= comparator(element, thisElement);
+                found ||= this.comparator(element, thisElement);
             }
             if (!found) {
                 return false;
@@ -205,8 +206,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toArray(this);
     }
 
-    public toList(): List<TElement> {
-        return new List<TElement>(this);
+    public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
+        return EnumerableStatic.toList(this, comparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
@@ -224,8 +225,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     abstract add(element: TElement): boolean;
     abstract clear(): void;
     abstract remove(element: TElement, comparator?: EqualityComparator<TElement>): boolean;
-    abstract removeAll<TSource extends TElement>(collection: ICollection<TElement>, comparator?: EqualityComparator<TElement>): boolean;
+    abstract removeAll<TSource extends TElement>(collection: ICollection<TSource>): boolean;
     abstract removeIf(predicate: Predicate<TElement>): boolean;
-    abstract retainAll<TSource extends TElement>(collection: ICollection<TSource>, comparator?: EqualityComparator<TElement>): boolean;
+    abstract retainAll<TSource extends TElement>(collection: ICollection<TSource>): boolean;
     abstract size(): number;
 }
