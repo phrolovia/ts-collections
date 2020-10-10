@@ -834,7 +834,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         yield* result;
     }
 
-    private* takeWhileGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    private* takeWhileGenerator(predicate: IndexedPredicate<TElement>): Iterable<TElement> {
         let index = 0;
         let takeEnded = false;
         for (const item of this) {
@@ -868,7 +868,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* whereGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    private* whereGenerator(predicate: IndexedPredicate<TElement>): Iterable<TElement> {
         let index = 0;
         for (const d of this) {
             if (predicate(d, index)) {
@@ -878,7 +878,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* zipGenerator<TSecond, TResult>(enumerable: IEnumerable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IterableIterator<TResult> {
+    private* zipGenerator<TSecond, TResult>(enumerable: IEnumerable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
         const iterator = this[Symbol.iterator]();
         const otherIterator = enumerable[Symbol.iterator]();
         while (true) {
@@ -892,7 +892,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* zipTupleGenerator<TSecond>(enumerable: IEnumerable<TSecond>): IterableIterator<[TElement, TSecond]> {
+    private* zipTupleGenerator<TSecond>(enumerable: IEnumerable<TSecond>): Iterable<[TElement, TSecond]> {
         const iterator = this[Symbol.iterator]();
         const otherIterator = enumerable[Symbol.iterator]();
         while (true) {

@@ -10,6 +10,7 @@ import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
@@ -100,6 +101,13 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public firstOrDefault(predicate?: Predicate<TElement>): TElement {
         return EnumerableStatic.firstOrDefault(this, predicate);
+    }
+
+    public forEach(action: IndexedAction<TElement>) {
+        let index: number = 0;
+        for (const element of this) {
+            action(element, index++);
+        }
     }
 
     public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {

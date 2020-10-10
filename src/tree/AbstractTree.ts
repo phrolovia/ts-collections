@@ -1,10 +1,11 @@
-import {ITree} from "./ITree";
+import {ITree, TraverseType} from "./ITree";
 import {INode} from "./INode";
 import {Predicate} from "../shared/Predicate";
 import {AbstractCollection} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class AbstractTree<TElement> extends AbstractCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement> = null;
@@ -30,11 +31,11 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return this.findRecursive(this.root, predicate);
     }
 
-    public forEach(action: (item: TElement) => void): void {
+    public forEach(action: IndexedAction<TElement>): void {
         if (this.root == null) {
             return;
         }
-        this.forEachRecursive(this.root, action);
+        super.forEach(action);
     }
 
     public getRootData(): TElement {
@@ -72,21 +73,37 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return target;
     }
 
-    protected toInorderArray(root: INode<TElement>, target: TElement[]) {
+    public traverseToArray(direction: TraverseType = "INORDER"): TElement[] {
+        const array: TElement[] = [];
+        switch (direction) {
+            case "INORDER":
+                this.toInorderArray(this.root, array);
+                break;
+            case "POSTORDER":
+                this.toPostorderArray(this.root, array);
+                break;
+            case "PREORDER":
+                this.toPreorderArray(this.root, array);
+                break;
+        }
+        return array;
+    }
+
+    protected toInorderArray(root: INode<TElement>, target: TElement[]): void {
         if (root == null) return;
         this.toInorderArray(root.getLeft(), target);
         target.push(root.getData());
         this.toInorderArray(root.getRight(), target);
     }
 
-    protected toPostorderArray(root: INode<TElement>, target: TElement[]) {
+    protected toPostorderArray(root: INode<TElement>, target: TElement[]): void {
         if (root == null) return;
         this.toPostorderArray(root.getLeft(), target);
         this.toPostorderArray(root.getRight(), target);
         target.push(root.getData());
     }
 
-    protected toPreorderArray(root: INode<TElement>, target: TElement[]) {
+    protected toPreorderArray(root: INode<TElement>, target: TElement[]): void {
         if (root == null) return;
         target.push(root.getData());
         this.toPreorderArray(root.getLeft(), target);
@@ -126,15 +143,6 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
             return foundItem;
         }
         return this.findRecursive(root.getRight(), predicate);
-    }
-
-    private forEachRecursive(root: INode<TElement>, action: (item: TElement) => void): void {
-        if (root == null) {
-            return;
-        }
-        this.forEachRecursive(root.getLeft(), action);
-        action(root.getData());
-        this.forEachRecursive(root.getRight(), action);
     }
 
     private toArrayRecursive(root: INode<TElement>, target: TElement[]): void {
