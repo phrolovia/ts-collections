@@ -31,12 +31,18 @@ describe("RedBlackTree", () => {
         return [...Array(length)].map(e => ~~(Math.random() * length));
     };
     const randomUniqueArrayGenerator = (length: number) => {
-        const arr = [];
-        while (arr.length < length) {
-            const r = Math.floor(Math.random() * 10000) + 1;
-            if (arr.indexOf(r) === -1) arr.push(r);
+        const intsmap: { [key: number]: boolean } = {};
+        let i = length;
+        const numbers: number[] = [];
+        while (i > 0) {
+            var int = Math.random() * Math.pow(10, 8) << 0;
+            if(!intsmap[int]){
+                intsmap[int] = true;
+                numbers.push(int);
+                --i;
+            }
         }
-        return arr;
+        return numbers;
     }
 
     describe("#add()", () => {

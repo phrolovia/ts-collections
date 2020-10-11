@@ -14,6 +14,20 @@ describe("Dictionary", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
     const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
+    const randomUniqueArrayGenerator = (length: number) => {
+        const intsmap: { [key: number]: boolean } = {};
+        let i = length;
+        const numbers: number[] = [];
+        while (i > 0) {
+            var int = Math.random() * Math.pow(10, 8) << 0;
+            if(!intsmap[int]){
+                intsmap[int] = true;
+                numbers.push(int);
+                --i;
+            }
+        }
+        return numbers;
+    }
 
     describe("#add()", () => {
         const dictionary = new Dictionary<string, number>();
@@ -367,6 +381,14 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Mel)).to.eq(Person.Mel.age);
             expect(dictionary.get(Person.Senna)).to.eq(Person.Senna.age);
         });
+        it("should get the value which belongs to the given key #2", () => {
+            const numbers = randomUniqueArrayGenerator(500000);
+            const dict = new Dictionary<number, string>();
+            numbers.forEach(n => dict.add(n, n.toString()));
+            for (const num of numbers) {
+                expect(dict.get(num)).to.eq(num.toString());
+            }
+        }).timeout(15000);
         it("should return null if key is not in the dictionary", () => {
             expect(dictionary.get(Person.Jane)).to.be.null;
         });

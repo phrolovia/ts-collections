@@ -45,145 +45,145 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return new Dictionary<TSourceKey, TSourceValue>(keyComparator, valueComparator, source);
     }
 
-    add(key: TKey, value: TValue): TValue {
+    public add(key: TKey, value: TValue): TValue {
         if (this.hasKey(key)) {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
-        this.keyValueTree.add(new KeyValuePair<TKey, TValue>(key, value));
+        this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
         return value;
     }
 
-    aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
-    all(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+    public all(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
         return EnumerableStatic.all(this, predicate);
     }
 
-    any(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+    public any(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
         return EnumerableStatic.any(this, predicate);
     }
 
-    append(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public append(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.append(this, element);
     }
 
-    average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
+    public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.average(this, selector);
     }
 
-    clear(): void {
+    public clear(): void {
         this.keyValueTree.clear();
     }
 
-    concat(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public concat(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.concat(this, enumerable);
     }
 
-    contains(element: KeyValuePair<TKey, TValue>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
+    public contains(element: KeyValuePair<TKey, TValue>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
         return EnumerableStatic.contains(this, element, comparator);
     }
 
-    containsKey(key: TKey): boolean {
+    public containsKey(key: TKey): boolean {
         return this.hasKey(key);
     }
 
-    containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean {
+    public containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean {
         return this.hasValue(value, comparator);
     }
 
-    count(predicate?: Predicate<KeyValuePair<TKey, TValue>>): number {
+    public count(predicate?: Predicate<KeyValuePair<TKey, TValue>>): number {
         return EnumerableStatic.count(this, predicate);
     }
 
-    defaultIfEmpty(value?: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public defaultIfEmpty(value?: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.defaultIfEmpty(this, value);
     }
 
-    distinct(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public distinct(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.distinct(this, comparator);
     }
 
-    elementAt(index: number): KeyValuePair<TKey, TValue> {
+    public elementAt(index: number): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.elementAt(this, index);
     }
 
-    elementAtOrDefault(index: number): KeyValuePair<TKey, TValue> {
+    public elementAtOrDefault(index: number): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparator;
         return EnumerableStatic.except(this, enumerable, comparator);
     }
 
-    first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.first(this, predicate);
     }
 
-    firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.firstOrDefault(this, predicate);
     }
 
-    get(key: TKey): TValue {
-        return this.firstOrDefault(pair => this.keyComparator(pair.key, key) === 0)?.value ?? null;
+    public get(key: TKey): TValue {
+        return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
     }
 
-    groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, KeyValuePair<TKey, TValue>>> {
+    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, KeyValuePair<TKey, TValue>>> {
         return EnumerableStatic.groupBy(this, keySelector, keyComparator);
     }
 
-    groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<TGroupKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
+    public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<TGroupKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparator;
         return EnumerableStatic.intersect(this, enumerable, comparator);
     }
 
-    isEmpty(): boolean {
+    public isEmpty(): boolean {
         return this.keyValueTree.isEmpty();
     }
 
-    join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
+    public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
         return EnumerableStatic.join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
-    keys(): List<TKey> {
+    public keys(): List<TKey> {
         return List.from(this.keyValueTree.toArray().map(p => p.key), (k1: TKey, k2: TKey) => this.keyComparator(k1, k2) === 0);
     }
 
-    last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.last(this, predicate);
     }
 
-    lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.lastOrDefault(this, predicate);
     }
 
-    max(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
+    public max(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.max(this, selector);
     }
 
-    min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
+    public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.min(this, selector);
     }
 
-    orderBy<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
+    public orderBy<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.orderBy(this, keySelector, comparator);
     }
 
-    orderByDescending<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
+    public orderByDescending<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
     }
 
-    prepend(item: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public prepend(item: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.prepend(this, item);
     }
 
-    remove(key: TKey): TValue {
+    public remove(key: TKey): TValue {
         const pair = Dictionary.pairWithNullValue<TKey, TValue>(key);
         const foundPair = this.keyValueTree.find(p => p.equalByKey(pair));
         if (!!foundPair) {
@@ -193,64 +193,64 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return null;
     }
 
-    reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.reverse(this);
     }
 
-    select<TResult>(selector: Selector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: Selector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }
 
-    selectMany<TResult>(selector: IndexedSelector<KeyValuePair<TKey, TValue>, Iterable<TResult>>): IEnumerable<TResult> {
+    public selectMany<TResult>(selector: IndexedSelector<KeyValuePair<TKey, TValue>, Iterable<TResult>>): IEnumerable<TResult> {
         return EnumerableStatic.selectMany(this, selector);
     }
 
-    sequenceEqual(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
+    public sequenceEqual(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
         comparator ??= this.keyValueComparator;
         return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
     }
 
-    single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.single(this, predicate);
     }
 
-    singleOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public singleOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.singleOrDefault(this, predicate);
     }
 
-    size(): number {
+    public size(): number {
         return this.keyValueTree.size();
     }
 
-    skip(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public skip(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.skip(this, count);
     }
 
-    skipLast(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public skipLast(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.skipLast(this, count);
     }
 
-    skipWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public skipWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.skipWhile(this, predicate);
     }
 
-    sum(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
+    public sum(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.sum(this, selector);
     }
 
-    take(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public take(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.take(this, count);
     }
 
-    takeLast(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public takeLast(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.takeLast(this, count);
     }
 
-    takeWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public takeWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.takeWhile(this, predicate);
     }
 
-    toArray(): KeyValuePair<TKey, TValue>[] {
+    public toArray(): KeyValuePair<TKey, TValue>[] {
         return this.keyValueTree.toArray();
     }
 
@@ -258,23 +258,23 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, keyComparator);
     }
 
-    toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {
+    public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {
         return this.keyValueTree.toList();
     }
 
-    union(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public union(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.union(this, enumerable, comparator);
     }
 
-    values(): List<TValue> {
+    public values(): List<TValue> {
         return List.from(this.keyValueTree.toArray().map(p => p.value), this.valueComparator);
     }
 
-    where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.where(this, predicate);
     }
 
-    zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {
+    public zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
     }
 
@@ -283,8 +283,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     private hasKey(key: TKey): boolean {
-        // const pair = new KeyValuePair(key, null);
-        return !!this.keyValueTree.firstOrDefault(pair => this.keyComparator(pair.key, key) === 0);
+        return !!this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
     }
 
     private hasValue(value: TValue, comparator: EqualityComparator<TValue> = Comparators.equalityComparator): boolean {

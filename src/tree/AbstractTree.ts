@@ -6,6 +6,7 @@ import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
+import {Selector} from "../shared/Selector";
 
 export abstract class AbstractTree<TElement> extends AbstractCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement> = null;
@@ -29,6 +30,13 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
             return null;
         }
         return this.findRecursive(this.root, predicate);
+    }
+
+    public findBy<TKey>(key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        if (this.root == null) {
+            return null;
+        }
+        return this.findByRecursive(this.root, key, selector, comparator);
     }
 
     public forEach(action: IndexedAction<TElement>): void {
@@ -55,7 +63,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
     }
 
     public remove(item: TElement): boolean {
-        if (!this.contains(item, this.comparator)) {
+        if (!this.search(item)) {
             return false;
         }
         this.delete(item);
@@ -68,7 +76,9 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
 
     public toArray(): TElement[] {
         const target: TElement[] = [];
-        if (this.isEmpty()) return target;
+        if (this.isEmpty()) {
+            return target;
+        }
         this.toArrayRecursive(<INode<TElement>>this.root, target);
         return target;
     }
@@ -129,6 +139,21 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
             return 0;
         }
         return 1 + this.countTreeNodes(root.getLeft()) + this.countTreeNodes(root.getRight());
+    }
+
+    private findByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        if (root == null) {
+            return null;
+        }
+        const order = comparator(key, selector(root.getData()));
+        if(order === 0) {
+            return root.getData();
+        }
+        if (order < 0) {
+            return this.findByRecursive(root.getLeft(), key, selector, comparator);
+        } else {
+            return this.findByRecursive(root.getRight(), key, selector, comparator);
+        }
     }
 
     private findRecursive(root: INode<TElement>, predicate: Predicate<TElement>): TElement {
