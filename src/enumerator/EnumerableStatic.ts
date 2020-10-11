@@ -8,6 +8,7 @@ import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Enumerable, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
+import {Dictionary} from "../dictionary/Dictionary";
 
 export abstract class EnumerableStatic {
     protected constructor() {}
@@ -170,6 +171,10 @@ export abstract class EnumerableStatic {
 
     public static toArray<TElement>(source: IEnumerable<TElement>): TElement[] {
         return new Enumerable(source).toArray();
+    }
+
+    public static toDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        return new Enumerable(source).toDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public static toList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): List<TElement> {

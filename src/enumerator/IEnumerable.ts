@@ -8,6 +8,7 @@ import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {IGrouping, IOrderedEnumerable, List} from "../../imports";
+import {Dictionary} from "../dictionary/Dictionary";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
@@ -52,7 +53,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     takeLast(count: number): IEnumerable<TElement>;
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     toArray(): TElement[];
-    // toDictionary<K, V>(keySelector?: Selector<T, K>, valueSelector?: Selector<T, V>, keyComparator?: EqualityComparator<K>): Dictionary<K, V>;
+    toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue>;
     toList(comparator?: EqualityComparator<TElement>): List<TElement>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;

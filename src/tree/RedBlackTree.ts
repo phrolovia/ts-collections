@@ -1,6 +1,5 @@
 import {AbstractTree} from "./AbstractTree";
 import {TreeNode} from "./TreeNode";
-import {EqualityComparator} from "../shared/EqualityComparator";
 import {ICollection} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";

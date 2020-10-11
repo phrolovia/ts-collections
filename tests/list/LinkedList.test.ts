@@ -643,6 +643,7 @@ describe("LinkedList", () => {
             expect(() => list.max(n => n * 2)).to.throw(ErrorMessages.NoElements);
         });
     });
+
     describe("#min()", () => {
         const list = LinkedList.from([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
         it("should return 1", () => {
@@ -1302,6 +1303,15 @@ describe("LinkedList", () => {
                 returnedOrder.push(personStr);
             }
             expect(returnedOrder).to.deep.equal(expectedOrder);
+        });
+    });
+
+    describe("#toDictionary()", () => {
+        const people = LinkedList.from([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        it("should create a dictionary from the list", () => {
+            const dict = people.toDictionary(p => p.name, p => p);
+            expect(dict.size()).to.eq(people.size());
+            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
         });
     });
 

@@ -10,6 +10,8 @@ import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {IEnumerable, IOrderedEnumerable, List} from "../../imports";
+import {Dictionary} from "../dictionary/Dictionary";
+import {KeyValuePair} from "../dictionary/KeyValuePair";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;
@@ -204,6 +206,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toArray(): TElement[] {
         return this.enumerator.toArray();
+    }
+
+    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        return this.enumerator.toDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
@@ -623,6 +629,9 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public sum(selector?: Selector<TElement, number>): number {
+        if (!this.any()) {
+            throw new Error(ErrorMessages.NoElements);
+        }
         let total: number = 0;
         for (const d of this) {
             total += selector?.(d) ?? d as unknown as number;
@@ -659,6 +668,18 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             array.push(element);
         }
         return array;
+    }
+
+    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        const dictionary = new Dictionary<TKey, TValue>(keyComparator, valueComparator, Enumerable.empty());
+        for (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            if (!dictionary.containsKey(key) || !dictionary.containsValue(value, valueComparator)) {
+                dictionary.add(key, value);
+            }
+        }
+        return dictionary;
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
