@@ -13,6 +13,8 @@ import {IEnumerable, IGrouping, IOrderedEnumerable, List, RedBlackTree} from "..
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {ISet} from "../set/ISet";
+import {TreeSet} from "../set/TreeSet";
 
 export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -151,8 +153,8 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
-    public keys(): List<TKey> {
-        return List.from(this.keyValueTree.toArray().map(p => p.key), (k1: TKey, k2: TKey) => this.keyComparator(k1, k2) === 0);
+    public keys(): ISet<TKey> {
+        return TreeSet.from(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
     }
 
     public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -183,9 +185,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.prepend(this, item);
     }
 
+    // TODO: Write a removeBy method for tree to do this operation without using a temporary KeyValuePair object.
     public remove(key: TKey): TValue {
-        const pair = Dictionary.pairWithNullValue<TKey, TValue>(key);
-        const foundPair = this.keyValueTree.find(p => p.equalByKey(pair));
+        const foundPair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
         if (!!foundPair) {
             this.keyValueTree.remove(Dictionary.pairWithNullValue(key));
             return foundPair.value;

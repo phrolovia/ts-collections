@@ -548,7 +548,6 @@ describe("Dictionary", () => {
             expect(keySet.size()).to.eq(2);
             expect(keySet.contains(Person.Alice.age)).to.eq(true);
             expect(keySet.contains(Person.Jane.age)).to.eq(true);
-            console.log(dictionary.values().toArray());
         });
     });
 

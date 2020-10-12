@@ -234,10 +234,11 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
     }
+
     abstract [Symbol.iterator](): Iterator<TElement>;
     abstract add(element: TElement): boolean;
     abstract clear(): void;
-    abstract remove(element: TElement, comparator?: EqualityComparator<TElement>): boolean;
+    abstract remove(element: TElement): boolean;
     abstract removeAll<TSource extends TElement>(collection: ICollection<TSource>): boolean;
     abstract removeIf(predicate: Predicate<TElement>): boolean;
     abstract retainAll<TSource extends TElement>(collection: ICollection<TSource>): boolean;

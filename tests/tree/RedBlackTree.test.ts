@@ -35,7 +35,7 @@ describe("RedBlackTree", () => {
         let i = length;
         const numbers: number[] = [];
         while (i > 0) {
-            var int = Math.random() * Math.pow(10, 8) << 0;
+            const int = Math.random() * Math.pow(10, 8) << 0;
             if(!intsmap[int]){
                 intsmap[int] = true;
                 numbers.push(int);
@@ -43,7 +43,7 @@ describe("RedBlackTree", () => {
             }
         }
         return numbers;
-    }
+    };
 
     describe("#add()", () => {
         it("should add elements to the tree", () => {

@@ -1,6 +1,5 @@
 import {Predicate} from "../shared/Predicate";
 import {ICollection} from "../../imports";
-// import {Action} from "../shared/Action";
 
 export type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 

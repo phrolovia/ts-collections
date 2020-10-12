@@ -10,11 +10,6 @@ export class KeyValuePair<TKey, TValue> {
         this.value = value;
     }
 
-    public equalByKey(pair: KeyValuePair<TKey, TValue>, comparator?: EqualityComparator<TKey>): boolean {
-        comparator ??= Comparators.equalityComparator;
-        return comparator(this.key, pair.key);
-    }
-
     public equals(pair: KeyValuePair<TKey, TValue>,
                   keyComparator?: EqualityComparator<TKey>,
                   valueComparator?: EqualityComparator<TValue>): boolean {
