@@ -37,7 +37,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     min(selector?: Selector<TElement, number>): number;
     orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
-    prepend(item: TElement): IEnumerable<TElement>;
+
+    prepend(element: TElement): IEnumerable<TElement>;
     reverse(): IEnumerable<TElement>;
     select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult>;
     selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult>;

@@ -34,10 +34,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         });
     }
 
-    public static repeat<TSource>(item: TSource, count: number): IEnumerable<TSource> {
+    public static repeat<TSource>(element: TSource, count: number): IEnumerable<TSource> {
         return new Enumerator(function* () {
             for (let ix = 0; ix < count; ++ix) {
-                yield item;
+                yield element;
             }
         });
     }
@@ -146,8 +146,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.orderByDescending(keySelector, comparator);
     }
 
-    public prepend(item: TElement): IEnumerable<TElement> {
-        return this.enumerator.prepend(item);
+    public prepend(element: TElement): IEnumerable<TElement> {
+        return this.enumerator.prepend(element);
     }
 
     public reverse(): IEnumerable<TElement> {
@@ -505,8 +505,8 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
     }
 
-    public prepend(item: TElement): IEnumerable<TElement> {
-        return new Enumerator(() => this.prependGenerator(item));
+    public prepend(element: TElement): IEnumerable<TElement> {
+        return new Enumerator(() => this.prependGenerator(element));
     }
 
     public reverse(): IEnumerable<TElement> {

@@ -189,19 +189,12 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
     }
 
-    public prepend(item: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.prepend(this, item);
+    public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.prepend(this, element);
     }
 
-    // TODO: Write a removeBy method for tree to do this operation without using a temporary KeyValuePair object.
     public remove(key: TKey): TValue {
-        // const foundPair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
-        // if (!!foundPair) {
-        //     this.keyValueTree.remove(Dictionary.pairWithNullValue(key));
-        //     return foundPair.value;
-        // }
         return this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
-        // return null;
     }
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {

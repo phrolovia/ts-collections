@@ -7,19 +7,11 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {
-    Dictionary,
-    Enumerable,
-    IEnumerable,
-    IGrouping,
-    IOrderedEnumerable,
-    LinkedList,
-    List,
-    TreeSet
-} from "../../imports";
+import {Dictionary, Enumerable, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
 
 export abstract class EnumerableStatic {
-    protected constructor() {}
+    protected constructor() {
+    }
 
     public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);

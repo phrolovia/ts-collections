@@ -39,8 +39,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.any(this, predicate);
     }
 
-    public append(item: TElement): IEnumerable<TElement> {
-        return EnumerableStatic.append(this, item);
+    public append(element: TElement): IEnumerable<TElement> {
+        return EnumerableStatic.append(this, element);
     }
 
     public average(selector?: Selector<TElement, number>): number {
@@ -159,8 +159,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
     }
 
-    public prepend(item: TElement): IEnumerable<TElement> {
-        return EnumerableStatic.prepend(this, item);
+    public prepend(element: TElement): IEnumerable<TElement> {
+        return EnumerableStatic.prepend(this, element);
     }
 
     public reverse(): IEnumerable<TElement> {

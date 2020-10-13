@@ -88,34 +88,34 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         return new RedBlackTree<TSource>(comparator, source);
     }
 
-    public add(item: TElement): boolean {
-        if (this.search(item)) {
+    public add(element: TElement): boolean {
+        if (this.search(element)) {
             return false;
         }
-        this.insert(item);
+        this.insert(element);
         return true;
     }
 
-    public delete(item: TElement): void {
-        if (!this.contains(item)) {
+    public delete(element: TElement): void {
+        if (!this.contains(element)) {
             return;
         }
-        const node = this.searchNode(item);
+        const node = this.searchNode(element);
         this.deleteNode(node);
     }
 
-    public insert(item: TElement): void {
-        const node = new RedBlackNode<TElement>(item);
+    public insert(element: TElement): void {
+        const node = new RedBlackNode<TElement>(element);
         if (this.root == null) {
             node.setColor(RedBlackNode.BLACK);
             this.root = node;
         } else {
-            const temp: RedBlackNode<TElement> = this.searchNode(item);
-            if (temp.getData() === item) {
+            const temp: RedBlackNode<TElement> = this.searchNode(element);
+            if (temp.getData() === element) {
                 return;
             }
             node.setParent(temp);
-            if (this.orderComparator(item, temp.getData()) < 0) {
+            if (this.orderComparator(element, temp.getData()) < 0) {
                 temp.setLeft(node);
             } else {
                 temp.setRight(node);
@@ -159,12 +159,12 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         return this.size() !== oldSize;
     }
 
-    public search(item: TElement): boolean {
-        const node = this.searchNode(item);
+    public search(element: TElement): boolean {
+        const node = this.searchNode(element);
         if (node == null) {
             return false;
         }
-        return this.comparator(node.getData(), item);
+        return this.comparator(node.getData(), element);
     }
 
     private deleteNode(v: RedBlackNode<TElement>): void {
@@ -349,16 +349,16 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         p.setRight(node);
     }
 
-    private searchNode(item: TElement): RedBlackNode<TElement> {
+    private searchNode(element: TElement): RedBlackNode<TElement> {
         let temp: RedBlackNode<TElement> = this.root as RedBlackNode<TElement>;
         while (temp != null) {
-            if (this.orderComparator(item, temp.getData()) < 0) {
+            if (this.orderComparator(element, temp.getData()) < 0) {
                 if (temp.getLeft() == null) {
                     break;
                 } else {
                     temp = temp.getLeft() as RedBlackNode<TElement>;
                 }
-            } else if (this.comparator(item, temp.getData())) {
+            } else if (this.comparator(element, temp.getData())) {
                 break;
             } else {
                 if (temp.getRight() == null) {

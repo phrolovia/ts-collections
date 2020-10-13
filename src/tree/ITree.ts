@@ -7,9 +7,9 @@ export interface ITree<TElement> extends ICollection<TElement> {
 
     /**
      * Deletes the given item from the tree.
-     * @param item Item to be removed from the tree.
+     * @param element Item to be removed from the tree.
      */
-    delete(item: TElement): void;
+    delete(element: TElement): void;
 
     /**
      * Returns the first occurrence of an item that satisfy the condition by the predicate.
@@ -27,20 +27,20 @@ export interface ITree<TElement> extends ICollection<TElement> {
 
     /**
      * Returns the data at the root of this tree.
-     * @return the data at the root of the tree.
+     * @return The data at the root of the tree.
      */
     getRootData(): TElement;
 
     /**
      * Inserts an item to this tree.
-     * @param item Item that is to be inserted.
+     * @param element Item that is to be inserted.
      */
-    insert(item: TElement): void;
+    insert(element: TElement): void;
 
     /**
      * Searches for an item in this tree.
-     * @param  item Item to be searched.
+     * @param  element Item to be searched.
      * @return true if the item is found, false otherwise.
      */
-    search(item: TElement): boolean;
+    search(element: TElement): boolean;
 }

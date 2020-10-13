@@ -52,20 +52,20 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return this.root.getData();
     }
 
-    public contains(item: TElement, comparator?: EqualityComparator<TElement>): boolean {
+    public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
         comparator ??= this.comparator;
-        return this.containsRecursive(this.root, item, comparator);
+        return this.containsRecursive(this.root, element, comparator);
     }
 
     public isEmpty(): boolean {
         return this.root == null;
     }
 
-    public remove(item: TElement): boolean {
-        if (!this.search(item)) {
+    public remove(element: TElement): boolean {
+        if (!this.search(element)) {
             return false;
         }
-        this.delete(item);
+        this.delete(element);
         return true;
     }
 
@@ -126,18 +126,18 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         this.toPreorderArray(root.getRight(), target);
     }
 
-    private containsRecursive(root: INode<TElement>, item: TElement, comparator: EqualityComparator<TElement>): boolean {
+    private containsRecursive(root: INode<TElement>, element: TElement, comparator: EqualityComparator<TElement>): boolean {
         if (root == null) {
             return false;
         }
-        const equal = comparator(item, root.getData());
+        const equal = comparator(element, root.getData());
         if (equal) {
             return true;
         }
-        const order = this.orderComparator(item, root.getData());
+        const order = this.orderComparator(element, root.getData());
         return order < 0
-            ? this.containsRecursive(root.getLeft(), item, comparator)
-            : this.containsRecursive(root.getRight(), item, comparator);
+            ? this.containsRecursive(root.getLeft(), element, comparator)
+            : this.containsRecursive(root.getRight(), element, comparator);
     }
 
     private countTreeNodes(root: INode<TElement>): number {
@@ -211,8 +211,8 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         yield* this.nextNode(node.getRight());
     }
 
-    public abstract add(item: TElement): boolean;
-    public abstract delete(item: TElement): void;
-    public abstract insert(item: TElement): void;
-    public abstract search(item: TElement): boolean;
+    public abstract add(element: TElement): boolean;
+    public abstract delete(element: TElement): void;
+    public abstract insert(element: TElement): void;
+    public abstract search(element: TElement): boolean;
 }
