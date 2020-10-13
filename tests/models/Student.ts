@@ -1,12 +1,12 @@
 export class Student {
-    Id: number;
-    Name: string;
-    Surname: string;
-    SchoolId: number;
+    public id: number;
+    public name: string;
+    public surname: string;
+    public schoolId: number;
     public constructor(id: number, name: string, surname: string, schoolId?: number) {
-        this.Id = id;
-        this.Name = name;
-        this.Surname = surname;
-        this.SchoolId = schoolId;
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.schoolId = schoolId;
     }
 }

@@ -1,16 +1,20 @@
-export class KeyValuePair<K, V> {
-    public static readonly defaultEqualityComparator
-        = <K, V>(p1: KeyValuePair<K, V>, p2: KeyValuePair<K, V>) => Object.is(p1.key, p2.key) && Object.is(p1.value, p2.value);
+import {EqualityComparator} from "../shared/EqualityComparator";
+import {Comparators} from "../shared/Comparators";
 
-    public readonly key: K;
-    public value: V;
+export class KeyValuePair<TKey, TValue> {
+    public readonly key: TKey;
+    public value: TValue;
 
-    public constructor(key: K, value: V) {
+    public constructor(key: TKey, value: TValue) {
         this.key = key;
         this.value = value;
     }
 
-    public equals(other: KeyValuePair<K, V>): boolean {
-        return KeyValuePair.defaultEqualityComparator(this, other);
+    public equals(pair: KeyValuePair<TKey, TValue>,
+                  keyComparator?: EqualityComparator<TKey>,
+                  valueComparator?: EqualityComparator<TValue>): boolean {
+        keyComparator ??= Comparators.equalityComparator;
+        valueComparator ??= Comparators.equalityComparator
+        return keyComparator(this.key, pair.key) && valueComparator(this.value, pair.value);
     }
 }

@@ -1,3 +1,3 @@
-export interface IndexedSelector<T, R> {
-    (item: T, index?: number): R;
+export interface IndexedSelector<TElement, TResult> {
+    (item: TElement, index?: number): TResult;
 }

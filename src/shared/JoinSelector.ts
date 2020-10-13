@@ -1,3 +1,3 @@
-export interface JoinSelector<T, E, R> {
-    (firstItem: T, secondItem: E): R;
+export interface JoinSelector<TFirst, TSecond, TResult> {
+    (firstItem: TFirst, secondItem: TSecond): TResult;
 }

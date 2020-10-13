@@ -1,3 +1,3 @@
-export interface IndexedAction<T, R = void> {
-    (item: T, index?: number): R;
+export interface IndexedAction<TElement, TReturn = void> {
+    (item: TElement, index?: number): TReturn;
 }

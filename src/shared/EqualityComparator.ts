@@ -1,3 +1,3 @@
-export interface EqualityComparator<T> {
-    (item1: T, item2: T): boolean;
+export interface EqualityComparator<TElement> {
+    (e1: TElement, e2: TElement): boolean;
 }

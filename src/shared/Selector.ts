@@ -1,3 +1,3 @@
-export interface Selector<T, R> {
-    (item: T): R;
+export interface Selector<TElement, TResult> {
+    (item: TElement): TResult;
 }

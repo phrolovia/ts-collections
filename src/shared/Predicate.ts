@@ -1,3 +1,3 @@
-export interface Predicate<T> {
-    (item: T): boolean;
+export interface Predicate<TElement> {
+    (element: TElement): boolean;
 }

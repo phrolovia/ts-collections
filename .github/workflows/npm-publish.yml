@@ -6,6 +6,7 @@ on:
     tags:
       - 'v3.*'
       - 'v4.*'
+      - 'v5.*'
 
 jobs:
   build:

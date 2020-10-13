@@ -1,8 +1,8 @@
-export interface INode<T> {
-    getData(): T;
-    getLeft(): INode<T>;
-    getRight(): INode<T>;
-    setData(data: T): void;
-    setLeft(node: INode<T>): void;
-    setRight(node: INode<T>): void;
+export interface INode<TElement> {
+    getData(): TElement;
+    getLeft(): INode<TElement>;
+    getRight(): INode<TElement>;
+    setData(data: TElement): void;
+    setLeft(node: INode<TElement>): void;
+    setRight(node: INode<TElement>): void;
 }

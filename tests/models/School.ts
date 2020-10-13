@@ -1,9 +1,9 @@
 export class School {
-    Id: number;
-    Name: string;
+    public id: number;
+    public name: string;
 
     public constructor(id: number, name: string) {
-        this.Id = id;
-        this.Name = name;
+        this.id = id;
+        this.name = name;
     }
 }

@@ -1,11 +1,11 @@
-import {IList} from "../../src/list/IList";
 import {Student} from "./Student";
+import {IList} from "../../src/list/IList";
 
 export class SchoolStudents {
-    SchoolId: number;
-    Students: IList<Student>;
+    public schoolId: number;
+    public students: IList<Student>;
     public constructor(schoolId: number, students: IList<Student>) {
-        this.SchoolId = schoolId;
-        this.Students = students;
+        this.schoolId = schoolId;
+        this.students = students;
     }
 }
