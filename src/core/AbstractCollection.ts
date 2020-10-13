@@ -8,10 +8,9 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
-import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {Dictionary, ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
-import {Dictionary} from "../dictionary/Dictionary";
+import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
@@ -20,7 +19,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         this.comparator = comparator ?? Comparators.equalityComparator;
     }
 
-    public addAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public addAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         const oldSize = this.size();
         for (const element of collection) {
             this.add(element);
@@ -53,11 +52,13 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        comparator ??= this.comparator;
         return EnumerableStatic.contains(this, element, comparator);
     }
 
-    public containsAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
-        if (this.size() < collection.size()) {
+    public containsAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+        const size = collection instanceof Array ? collection.length : collection.size();
+        if (this.size() < size) {
             return false;
         }
         for (const element of collection) {
@@ -81,6 +82,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public distinct(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        comparator ??= this.comparator;
         return EnumerableStatic.distinct(this, comparator);
     }
 
@@ -93,6 +95,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        comparator ??= this.comparator;
         return EnumerableStatic.except(this, enumerable, comparator);
     }
 
@@ -120,6 +123,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        comparator ??= this.comparator;
         return EnumerableStatic.intersect(this, enumerable, comparator);
     }
 
@@ -172,6 +176,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
+        comparator ??= this.comparator;
         return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
     }
 
@@ -220,10 +225,12 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
+        comparator ??= this.comparator;
         return EnumerableStatic.toList(this, comparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        comparator ??= this.comparator;
         return EnumerableStatic.union(this, enumerable, comparator);
     }
 
@@ -236,11 +243,18 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;
+
     abstract add(element: TElement): boolean;
+
     abstract clear(): void;
+
     abstract remove(element: TElement): boolean;
-    abstract removeAll<TSource extends TElement>(collection: ICollection<TSource>): boolean;
+
+    abstract removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
+
     abstract removeIf(predicate: Predicate<TElement>): boolean;
-    abstract retainAll<TSource extends TElement>(collection: ICollection<TSource>): boolean;
+
+    abstract retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
+
     abstract size(): number;
 }

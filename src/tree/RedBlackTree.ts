@@ -1,8 +1,7 @@
-import {AbstractTree} from "./AbstractTree";
-import {TreeNode} from "./TreeNode";
-import {ICollection} from "../../imports";
+import {AbstractTree, ICollection} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
+import {TreeNode} from "./TreeNode";
 
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
 class RedBlackNode<TElement> extends TreeNode<TElement> {
@@ -125,7 +124,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         }
     }
 
-    public removeAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         const oldSize = this.size();
         for (const element of collection) {
             this.delete(element);
@@ -145,11 +144,14 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         return this.size() !== oldSize;
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         const oldSize = this.size();
         const elementsToRemove: TElement[] = [];
+        const collectionTree = collection instanceof Array
+            ? RedBlackTree.from(collection, this.orderComparator)
+            : collection;
         for (const element of this) {
-            if (!collection.contains(element as TSource, this.comparator)) {
+            if (!collectionTree.contains(element as TSource, this.comparator)) {
                 elementsToRemove.push(element);
             }
         }

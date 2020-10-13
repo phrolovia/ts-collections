@@ -7,8 +7,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {IGrouping, IOrderedEnumerable, List} from "../../imports";
-import {Dictionary} from "../dictionary/Dictionary";
+import {Dictionary, IGrouping, IOrderedEnumerable, LinkedList, List, TreeSet} from "../../imports";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;

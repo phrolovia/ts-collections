@@ -1,12 +1,11 @@
-import {ITree, TraverseType} from "./ITree";
-import {INode} from "./INode";
 import {Predicate} from "../shared/Predicate";
-import {AbstractCollection} from "../../imports";
+import {AbstractCollection, ITree, TraverseType} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Selector} from "../shared/Selector";
+import {INode} from "./INode";
 
 export abstract class AbstractTree<TElement> extends AbstractCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement> = null;
@@ -68,6 +67,13 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         }
         this.delete(item);
         return true;
+    }
+
+    public removeBy<TKey>(key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        if (this.root == null) {
+            return null;
+        }
+        return this.removeByRecursive(this.root, key, selector, comparator);
     }
 
     public size(): number {
@@ -168,6 +174,23 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
             return foundItem;
         }
         return this.findRecursive(root.getRight(), predicate);
+    }
+
+    private removeByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        if (root == null) {
+            return null;
+        }
+        const order = comparator(key, selector(root.getData()));
+        if (order === 0) {
+            const element = root.getData();
+            this.delete(root.getData());
+            return element;
+        }
+        if (order < 0) {
+            return this.removeByRecursive(root.getLeft(), key, selector, comparator);
+        } else {
+            return this.removeByRecursive(root.getRight(), key, selector, comparator);
+        }
     }
 
     private toArrayRecursive(root: INode<TElement>, target: TElement[]): void {

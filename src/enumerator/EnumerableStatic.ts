@@ -7,8 +7,16 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Enumerable, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
-import {Dictionary} from "../dictionary/Dictionary";
+import {
+    Dictionary,
+    Enumerable,
+    IEnumerable,
+    IGrouping,
+    IOrderedEnumerable,
+    LinkedList,
+    List,
+    TreeSet
+} from "../../imports";
 
 export abstract class EnumerableStatic {
     protected constructor() {}

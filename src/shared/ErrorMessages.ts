@@ -9,5 +9,6 @@ export enum ErrorMessages {
     NoSelectorProvided = "selector is null.",
     NoElements = "Sequence contains no elements.",
     NoMatchingElement = "Sequence contains no matching element.",
-    NoSuchElement = "No such element exists in the sequence"
+    NoSuchElement = "No such element exists in the sequence",
+    NullKey = "Key cannot be null."
 }

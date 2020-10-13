@@ -2,7 +2,7 @@ import {ICollection} from "../../imports";
 
 export interface IList<TElement> extends ICollection<TElement> {
     addAt(element: TElement, index: number): boolean;
-    addAll<TSource extends TElement>(collection: ICollection<TSource>, index?: number): boolean;
+    addAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
     get(index: number): TElement;
     indexOf(element: TElement): number;
     lastIndexOf(element: TElement): number;

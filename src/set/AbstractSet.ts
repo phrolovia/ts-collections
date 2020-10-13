@@ -1,5 +1,4 @@
-import {ISet} from "./ISet";
-import {AbstractCollection} from "../../imports";
+import {AbstractCollection, ISet} from "../../imports";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
 

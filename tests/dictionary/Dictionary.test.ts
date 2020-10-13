@@ -8,12 +8,13 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Dictionary} from "../../src/dictionary/Dictionary";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
+import {LinkedList, List, TreeSet} from "../../imports";
 
 describe("Dictionary", () => {
 
-    const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
-    const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
-    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
+    const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
+    const personNameComparator = (p1: Person, p2: Person) => p1.name.localeCompare(p2.name)
+    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname.localeCompare(p2.surname);
     const randomUniqueArrayGenerator = (length: number) => {
         const intsmap: { [key: number]: boolean } = {};
         let i = length;
@@ -45,6 +46,9 @@ describe("Dictionary", () => {
         });
         it("should throw error if key already exists", () => {
             expect(() => dictionary.add("Amber", 1)).to.throw();
+        });
+        it("should throw error if key is null", () => {
+            expect(() => dictionary.add(null, 1)).to.throw(ErrorMessages.NullKey);
         });
     });
 
@@ -372,7 +376,7 @@ describe("Dictionary", () => {
     });
 
     describe("#get()", () => {
-        const dictionary = new Dictionary<Person, number>((p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        const dictionary = new Dictionary<Person, number>(personNameComparator);
         it("should get the value which belongs to the given key", () => {
             dictionary.add(Person.Alice, Person.Alice.age);
             dictionary.add(Person.Mel, Person.Mel.age);
@@ -694,14 +698,15 @@ describe("Dictionary", () => {
     });
 
     describe("#remove()", () => {
-        const dictionary = new Dictionary<Person, string>((p1, p2) => p1.name.localeCompare(p2.name));
+        const dictionary = new Dictionary<Person, string>(personNameComparator);
         dictionary.add(Person.Jane, Person.Jane.name);
         dictionary.add(Person.Mel, Person.Mel.name);
         it("should remove the value from dictionary", () => {
-            dictionary.remove(Person.Mel);
+            const value = dictionary.remove(Person.Mel);
             expect(dictionary.size()).to.eq(1);
             expect(dictionary.get(Person.Jane)).to.not.null;
             expect(dictionary.get(Person.Mel)).to.null;
+            expect(value).to.eq(Person.Mel.name);
         });
         it("should return the value that is mapped to the given key", () => {
             const value = dictionary.remove(Person.Jane);
@@ -766,8 +771,7 @@ describe("Dictionary", () => {
             dictionary.add(Person.Vanessa.name, Person.Vanessa);
             dictionary.add(Person.Noemi.name, Person.Noemi);
             const friendsAges = dictionary.selectMany(p => p.value.friendsArray).select(p => p.age).toArray();
-            // const expectedResult = [17, 23, 44, 28, 21, 37, 44, 77];
-            const expectedResult = [23, 44, 44, 77, 28, 21, 37, 17]; // Friends of Jisu -> Noemi -> Vanessa -> Viola (ordered because of RedBlackTree)
+            const expectedResult = [23, 44, 44, 77, 28, 21, 37, 17]; // Friends of Jisu -> Noemi -> Vanessa -> Viola (ordered by name because of RedBlackTree)
             expect(friendsAges).to.deep.equal(expectedResult);
         });
     });
@@ -880,7 +884,7 @@ describe("Dictionary", () => {
     });
 
     describe("#size()", () => {
-        const dictionary = new Dictionary<Person, string>((p1, p2) => p1.name.localeCompare(p2.name));
+        const dictionary = new Dictionary<Person, string>(personNameComparator);
         dictionary.add(Person.Mel, Person.Mel.surname);
         dictionary.add(Person.Lenka, Person.Lenka.surname);
         dictionary.add(Person.Jane, Person.Jane.surname);
@@ -1284,24 +1288,30 @@ describe("Dictionary", () => {
             expect(list.size()).to.eq(dictionary.size());
             expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
             expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
+            expect(list instanceof List).to.be.true;
         });
     });
 
-    // describe("#tryAdd()", () => {
-    //     const dictionary = new Dictionary<Person, string>();
-    //     dictionary.add(Person.Alice, Person.Alice.name);
-    //     dictionary.add(Person.Hanna, Person.Hanna.Name);
-    //     it("should not throw if key already exists", () => {
-    //         expect(() => dictionary.add(Person.Alice, "Alicia")).to.throw(ErrorMessages.KeyAlreadyAdded);
-    //         expect(() => dictionary.tryAdd(Person.Alice, "Alicia")).to.not.throw;
-    //     });
-    //     it("should return true if key doesn't exist and item is added", () => {
-    //         expect(dictionary.tryAdd(suzuha, suzuha.Name)).to.eq(true);
-    //     });
-    //     it("should return true if key already exists and item is not added", () => {
-    //         expect(dictionary.tryAdd(Person.Alice, Person.Alice.name)).to.eq(false);
-    //     });
-    // });
+    describe("#tryAdd()", () => {
+        const dictionary = new Dictionary<Person, string>(personNameComparator);
+        dictionary.add(Person.Alice, Person.Alice.name);
+        dictionary.add(Person.Hanna, Person.Hanna.name);
+        it("should not throw if key already exists", () => {
+            expect(() => dictionary.add(Person.Alice, "Alicia")).to.throw(ErrorMessages.KeyAlreadyAdded);
+            expect(() => dictionary.tryAdd(Person.Alice, "Alicia")).to.not.throw;
+        });
+        it("should return true if key doesn't exist and item is added", () => {
+            expect(dictionary.tryAdd(Person.Suzuha, Person.Suzuha.name)).to.eq(true);
+            expect(dictionary.size()).to.eq(3);
+        });
+        it("should return true if key already exists and item is not added", () => {
+            expect(dictionary.tryAdd(Person.Alice, Person.Alice.name)).to.eq(false);
+            expect(dictionary.size()).to.eq(3);
+        });
+        it("should throw error if key is null", () => {
+            expect(() => dictionary.tryAdd(null, Person.Karen.name)).to.throw(ErrorMessages.NullKey);
+        });
+    });
 
     describe("#union()", () => {
         const dict1 = new Dictionary<number, string>();

@@ -235,6 +235,7 @@ describe("LinkedList", () => {
     describe("#containsAll()", () => {
         const list1 = LinkedList.from([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
         const list2 = LinkedList.from([Person.Vanessa, Person.Viola]);
+        const array = [Person.Vanessa, Person.Viola];
         it("should return false if size is smaller than the other list's size", () => {
             expect(list2.containsAll(list1)).to.eq(false);
         });
@@ -244,6 +245,9 @@ describe("LinkedList", () => {
         });
         it("should return true if list contains all the elements from the other list", () => {
             expect(list1.containsAll(list2)).to.eq(true);
+        });
+        it("should return true if list contains all the elements from the array", () => {
+            expect(list1.containsAll(array)).to.eq(true);
         });
     });
 

@@ -1,4 +1,4 @@
-import {ICollection} from "../core/ICollection";
+import {ICollection} from "../../imports";
 
 export interface ISet<TElement> extends ICollection<TElement> {
     headSet(toElement: TElement, inclusive?: boolean): ISet<TElement>;

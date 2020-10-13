@@ -1,7 +1,5 @@
-import {IEnumerable, List} from "../../imports";
-import {KeyValuePair} from "./KeyValuePair";
+import {IEnumerable, ISet, KeyValuePair, List} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {ISet} from "../set/ISet";
 
 export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
     add(key: TKey, value: TValue): TValue;
@@ -13,5 +11,6 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
     keys(): ISet<TKey>;
     remove(key: TKey): TValue;
     size(): number;
+    tryAdd(key: TKey, value: TValue): boolean;
     values(): List<TValue>;
 }

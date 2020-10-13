@@ -15,3 +15,6 @@ export {RedBlackTree} from "./src/tree/RedBlackTree";
 export {IDictionary} from "./src/dictionary/IDictionary";
 export {Dictionary} from "./src/dictionary/Dictionary";
 export {KeyValuePair} from "./src/dictionary/KeyValuePair";
+export {ISet} from "./src/set/ISet"
+export {AbstractSet} from "./src/set/AbstractSet"
+export {TreeSet} from "./src/set/TreeSet";

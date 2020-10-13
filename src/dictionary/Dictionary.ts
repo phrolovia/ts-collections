@@ -1,5 +1,3 @@
-import {IDictionary} from "./IDictionary";
-import {KeyValuePair} from "./KeyValuePair";
 import {Accumulator} from "../shared/Accumulator";
 import {JoinSelector} from "../shared/JoinSelector";
 import {EqualityComparator} from "../shared/EqualityComparator";
@@ -9,12 +7,19 @@ import {Predicate} from "../shared/Predicate";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Selector} from "../shared/Selector";
-import {IEnumerable, IGrouping, IOrderedEnumerable, List, RedBlackTree} from "../../imports";
+import {
+    IDictionary,
+    IEnumerable,
+    IGrouping,
+    IOrderedEnumerable,
+    ISet,
+    KeyValuePair, LinkedList,
+    List,
+    RedBlackTree, TreeSet
+} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
-import {ISet} from "../set/ISet";
-import {TreeSet} from "../set/TreeSet";
 
 export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -48,6 +53,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     public add(key: TKey, value: TValue): TValue {
+        if (key == null) {
+            throw new Error(ErrorMessages.NullKey);
+        }
         if (this.hasKey(key)) {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
@@ -187,12 +195,13 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
     // TODO: Write a removeBy method for tree to do this operation without using a temporary KeyValuePair object.
     public remove(key: TKey): TValue {
-        const foundPair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
-        if (!!foundPair) {
-            this.keyValueTree.remove(Dictionary.pairWithNullValue(key));
-            return foundPair.value;
-        }
-        return null;
+        // const foundPair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
+        // if (!!foundPair) {
+        //     this.keyValueTree.remove(Dictionary.pairWithNullValue(key));
+        //     return foundPair.value;
+        // }
+        return this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
+        // return null;
     }
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -264,6 +273,17 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return this.keyValueTree.toList();
     }
 
+    public tryAdd(key: TKey, value: TValue): boolean {
+        if (key == null) {
+            throw new Error(ErrorMessages.NullKey);
+        }
+        if (this.hasKey(key)) {
+            return false;
+        }
+        this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
+        return true;
+    }
+
     public union(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.union(this, enumerable, comparator);
     }
@@ -278,10 +298,6 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
     public zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
-    }
-
-    private static pairWithNullValue<TKey, TValue>(key: TKey): KeyValuePair<TKey, TValue> {
-        return new KeyValuePair<TKey, TValue>(key, null);
     }
 
     private hasKey(key: TKey): boolean {

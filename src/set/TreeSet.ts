@@ -1,9 +1,7 @@
-import {ISet} from "./ISet";
-import {ICollection, ITree, RedBlackTree} from "../../imports";
+import {AbstractSet, ICollection, ISet, ITree, RedBlackTree} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
-import {AbstractSet} from "./AbstractSet";
 
 export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
     private readonly tree: ITree<TElement>;
@@ -43,7 +41,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
         return this.tree.remove(element);
     }
 
-    public removeAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         return this.tree.removeAll(collection);
     }
 
@@ -51,7 +49,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
         return this.tree.removeIf(predicate);
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         return this.tree.retainAll(collection);
     }
 

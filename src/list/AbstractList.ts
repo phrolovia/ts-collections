@@ -1,7 +1,6 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {ICollection} from "../core/ICollection";
 import {Predicate} from "../shared/Predicate";
-import {AbstractCollection, IList} from "../../imports";
+import {AbstractCollection, ICollection, IList, LinkedList} from "../../imports";
 
 export abstract class AbstractList<TElement> extends AbstractCollection<TElement> implements IList<TElement> {
 
@@ -51,7 +50,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return -1;
     }
 
-    public removeAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         const oldSize = this.size();
         let index = 0;
         for (const e of collection) {
@@ -73,10 +72,13 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return this.size() !== oldSize;
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         const oldSize = this.size();
+        const collectionList = collection instanceof Array
+            ? LinkedList.from(collection, this.comparator)
+            : collection as ICollection<TSource>;
         for (let index = this.size() - 1; index >= 0; --index) {
-            if (!collection.contains(this.get(index) as TSource, this.comparator)) {
+            if (!collectionList.contains(this.get(index) as TSource, this.comparator)) {
                 this.removeAt(index);
             }
         }
