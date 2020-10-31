@@ -30,7 +30,6 @@ export interface ICollection<TElement> extends IEnumerable<TElement> {
      */
     containsAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
 
-
     /**
      * Iterates over the collection and runs the given action against every element.
      * @param action The action that will be run against the elements of this collection
