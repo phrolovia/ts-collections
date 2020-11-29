@@ -1330,9 +1330,11 @@ describe("List", () => {
             expect(lookup.hasKey("Noemi")).to.eq(true);
             for (const item of lookup) {
                 console.log("Key: ", item.key);
-                for (const val of item.source) {
-                    console.log("Value: ", val);
+                const value = lookup.get(item.key);
+                for (const p of value) {
+                    console.log("Person Value: ", p);
                 }
+                console.log("Null: ", lookup.get("Fujiwara"));
             }
         });
     });

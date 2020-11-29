@@ -1,5 +1,5 @@
 import {IEnumerable} from "../enumerator/IEnumerable";
-import {Grouping, IGrouping} from "../enumerator/Enumerable";
+import {Enumerable, Grouping, IGrouping} from "../enumerator/Enumerable";
 import {ILookup} from "./ILookup";
 import {Accumulator} from "../shared/Accumulator";
 import {JoinSelector} from "../shared/JoinSelector";
@@ -23,7 +23,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         this.lookupTree = new RedBlackTree<IGrouping<TKey, TElement>>(lookupComparator);
     }
 
-    public static create<TSource, TKey, TValue>(source: IEnumerable<TSource>, keySelector?: Selector<TSource, TKey>, valueSelector?: Selector<TSource, TValue>, keyComparator?: OrderComparator<TKey>): Lookup<TKey, TValue> {
+    public static create<TSource, TKey, TValue>(source: IEnumerable<TSource>, keySelector?: Selector<TSource, TKey>,
+                                                valueSelector?: Selector<TSource, TValue>, keyComparator?: OrderComparator<TKey>): Lookup<TKey, TValue> {
         if (source == null) {
             throw new Error("Source cannot be null.");
         }
@@ -49,7 +50,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         yield* this.lookupTree;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<IGrouping<TKey, TElement>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<IGrouping<TKey, TElement>, TAccumulate>,
+                                                         seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return this.lookupTree.aggregate(accumulator, seed, resultSelector);
     }
 
@@ -109,23 +111,35 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.firstOrDefault(predicate);
     }
 
+    public get(key: TKey): IEnumerable<TElement> {
+        const value = this.lookupTree.findBy(key, g => g.key, this.keyComparator);
+        if (value) {
+            return value;
+        }
+        return Enumerable.empty<TElement>();
+    }
+
     public groupBy<TGroupKey>(keySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, IGrouping<TKey, TElement>>> {
         return this.lookupTree.groupBy(keySelector, keyComparator);
     }
 
-    public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<TGroupKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
+    public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>,
+                                                 innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<TGroupKey, IEnumerable<TInner>, TResult>,
+                                                 keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
         return this.lookupTree.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public hasKey(key: TKey): boolean {
-        return !!this.lookupTree.singleOrDefault(p => this.keyComparator(p.key, key) === 0);
+        return !!this.lookupTree.findBy(key, g => g.key, this.keyComparator);
     }
 
     public intersect(enumerable: IEnumerable<IGrouping<TKey, TElement>>, comparator?: EqualityComparator<IGrouping<TKey, TElement>>): IEnumerable<IGrouping<TKey, TElement>> {
         return this.lookupTree.intersect(enumerable, comparator);
     }
 
-    public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<IGrouping<TKey, TElement>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
+    public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>,
+                                            innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<IGrouping<TKey, TElement>, TInner, TResult>,
+                                            keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
         return this.lookupTree.join(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
@@ -217,7 +231,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toArray();
     }
 
-    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
+    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
+                                              keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
         return this.lookupTree.toDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
@@ -225,7 +240,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toList(comparator);
     }
 
-    public toLookup<TLookupKey, TLookupValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TLookupKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
+    public toLookup<TLookupKey, TLookupValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TLookupKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TLookupValue>,
+                                              keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
         return this.lookupTree.toLookup(keySelector, valueSelector, keyComparator);
     }
 
