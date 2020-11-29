@@ -4,6 +4,8 @@ export {
     Enumerable,
     Grouping,
     IGrouping,
+    ILookup,
+    Lookup,
     ICollection,
     AbstractCollection,
     IList,

@@ -7,7 +7,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Dictionary, Enumerable, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
+import {Dictionary, Enumerable, IEnumerable, IGrouping, ILookup, IOrderedEnumerable, List} from "../../imports";
 
 export abstract class EnumerableStatic {
     protected constructor() {
@@ -179,6 +179,10 @@ export abstract class EnumerableStatic {
 
     public static toList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): List<TElement> {
         return new Enumerable(source).toList(comparator);
+    }
+
+    public static toLookup<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+        return new Enumerable(source).toLookup(keySelector, valueSelector, keyComparator);
     }
 
     public static union<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

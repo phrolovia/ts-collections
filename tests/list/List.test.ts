@@ -1322,6 +1322,21 @@ describe("List", () => {
         });
     });
 
+    describe("#toLookup()", () => {
+        const list = List.from([Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2]);
+        const lookup = list.toLookup(p => p.name, p => p, (n1, n2) => n1.localeCompare(n2));
+        it("should create a lookup with name being the key", () => {
+            expect(lookup.size()).to.eq(3);
+            expect(lookup.hasKey("Noemi")).to.eq(true);
+            for (const item of lookup) {
+                console.log("Key: ", item.key);
+                for (const val of item.source) {
+                    console.log("Value: ", val);
+                }
+            }
+        });
+    });
+
     describe("#union()", () => {
         it("should return a set of items from two lists", () => {
             const list1 = List.from([1, 2, 3, 4, 5, 5, 5]);
