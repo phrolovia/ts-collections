@@ -8,7 +8,7 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Dictionary} from "../../src/dictionary/Dictionary";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
-import {LinkedList, List, TreeSet} from "../../imports";
+import {List} from "../../imports";
 
 describe("Dictionary", () => {
 

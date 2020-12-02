@@ -9,7 +9,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Dictionary, IEnumerable, IOrderedEnumerable, KeyValuePair, List} from "../../imports";
+import {Dictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, Lookup} from "../../imports";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;
@@ -212,6 +212,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
         return this.enumerator.toList(comparator);
+    }
+
+    public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+        return this.enumerator.toLookup(keySelector, valueSelector, keyComparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
@@ -682,6 +686,10 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
         return List.from(this, comparator);
+    }
+
+    public toLookup<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+        return Lookup.create(this, keySelector, valueSelector, keyComparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

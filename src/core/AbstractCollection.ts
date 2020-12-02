@@ -11,6 +11,7 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {Dictionary, ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {ILookup} from "../lookup/ILookup";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
@@ -227,6 +228,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
         comparator ??= this.comparator;
         return EnumerableStatic.toList(this, comparator);
+    }
+
+    public toLookup<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+        return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

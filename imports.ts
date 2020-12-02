@@ -1,6 +1,8 @@
 export {IEnumerable} from "./src/enumerator/IEnumerable";
 export {IOrderedEnumerable} from "./src/enumerator/IOrderedEnumerable";
 export {Enumerable, Grouping, IGrouping} from "./src/enumerator/Enumerable";
+export {ILookup} from "./src/lookup/ILookup";
+export {Lookup} from "./src/lookup/Lookup";
 export {ICollection} from "./src/core/ICollection";
 export {AbstractCollection} from "./src/core/AbstractCollection";
 export {IList} from "./src/list/IList";
