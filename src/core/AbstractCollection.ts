@@ -12,7 +12,6 @@ import {Dictionary, ICollection, IEnumerable, IGrouping, IOrderedEnumerable, Lis
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {ILookup} from "../lookup/ILookup";
-import {Lookup} from "../lookup/Lookup";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;

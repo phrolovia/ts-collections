@@ -267,7 +267,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return this.keyValueTree.toList();
     }
 
-    public toLookup<TLookupKey, TLookupValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TLookupKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
+    public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TLookupKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
         return this.keyValueTree.toLookup(keySelector, valueSelector, keyComparator);
     }
 

@@ -181,7 +181,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toList(comparator);
     }
 
-    public static toLookup<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+    public static toLookup<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
         return new Enumerable(source).toLookup(keySelector, valueSelector, keyComparator);
     }
 

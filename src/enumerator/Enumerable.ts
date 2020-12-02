@@ -214,7 +214,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toList(comparator);
     }
 
-    public toLookup<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+    public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
         return this.enumerator.toLookup(keySelector, valueSelector, keyComparator);
     }
 

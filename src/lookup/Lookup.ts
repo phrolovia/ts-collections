@@ -18,15 +18,16 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly lookupTree: RedBlackTree<IGrouping<TKey, TElement>>;
 
     private constructor(keyComparator?: OrderComparator<TKey>) {
-        this.keyComparator = keyComparator ?? Comparators.orderComparator;
+        this.keyComparator = keyComparator;
         const lookupComparator = (g1: IGrouping<TKey, TElement>, g2: IGrouping<TKey, TElement>) => this.keyComparator(g1.key, g2.key);
         this.lookupTree = new RedBlackTree<IGrouping<TKey, TElement>>(lookupComparator);
     }
 
-    public static create<TSource, TKey, TValue>(source: IEnumerable<TSource>, keySelector?: Selector<TSource, TKey>,
-                                                valueSelector?: Selector<TSource, TValue>, keyComparator?: OrderComparator<TKey>): Lookup<TKey, TValue> {
+    public static create<TSource, TKey, TValue>(source: IEnumerable<TSource>, keySelector: Selector<TSource, TKey>,
+                                                valueSelector: Selector<TSource, TValue>,
+                                                keyComparator: OrderComparator<TKey> = Comparators.orderComparator): Lookup<TKey, TValue> {
         if (source == null) {
-            throw new Error("Source cannot be null.");
+            throw new Error("source cannot be null.");
         }
         if (keySelector == null) {
             throw new Error("keySelector cannot be null.");
@@ -113,10 +114,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public get(key: TKey): IEnumerable<TElement> {
         const value = this.lookupTree.findBy(key, g => g.key, this.keyComparator);
-        if (value) {
-            return value;
-        }
-        return Enumerable.empty<TElement>();
+        return value ?? Enumerable.empty<TElement>();
     }
 
     public groupBy<TGroupKey>(keySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, IGrouping<TKey, TElement>>> {
@@ -240,7 +238,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toList(comparator);
     }
 
-    public toLookup<TLookupKey, TLookupValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TLookupKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TLookupValue>,
+    public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<IGrouping<TKey, TElement>, TLookupKey>, valueSelector: Selector<IGrouping<TKey, TElement>, TLookupValue>,
                                               keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
         return this.lookupTree.toLookup(keySelector, valueSelector, keyComparator);
     }
