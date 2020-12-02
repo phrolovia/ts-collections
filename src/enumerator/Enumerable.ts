@@ -9,7 +9,8 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Dictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, Lookup} from "../../imports";
+import {Dictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List} from "../../imports";
+import {Lookup} from "../lookup/Lookup";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;

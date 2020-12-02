@@ -5,7 +5,6 @@ export {
     Grouping,
     IGrouping,
     ILookup,
-    Lookup,
     ICollection,
     AbstractCollection,
     IList,

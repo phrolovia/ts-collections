@@ -23,7 +23,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         this.lookupTree = new RedBlackTree<IGrouping<TKey, TElement>>(lookupComparator);
     }
 
-    public static create<TSource, TKey, TValue>(source: IEnumerable<TSource>, keySelector: Selector<TSource, TKey>,
+    public static create<TSource, TKey, TValue>(source: Iterable<TSource>, keySelector: Selector<TSource, TKey>,
                                                 valueSelector: Selector<TSource, TValue>,
                                                 keyComparator: OrderComparator<TKey> = Comparators.orderComparator): Lookup<TKey, TValue> {
         if (source == null) {
