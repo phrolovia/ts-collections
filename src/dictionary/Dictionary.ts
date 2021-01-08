@@ -259,8 +259,8 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return this.keyValueTree.toArray();
     }
 
-    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>): Dictionary<TDictKey, TDictValue> {
-        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, keyComparator);
+    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {
