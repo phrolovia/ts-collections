@@ -16,7 +16,7 @@ describe("Lookup", () => {
 
     describe("#aggregate()", () => {
         it("should return 4", () => {
-            const list = List.from([4, 8, 8, 3, 9, 0, 7, 8, 2]);
+            const list = new List([4, 8, 8, 3, 9, 0, 7, 8, 2]);
             const lookup = list.toLookup(n => n, n => n * 2);
             const result = lookup.aggregate((total, next) => next.key % 2 === 0 ? total + 1 : total, 0);
             expect(result).to.eq(4); // for 4, 8, 0 and 2
@@ -25,7 +25,7 @@ describe("Lookup", () => {
 
     describe("#get()", () => {
         it("should get the data that belongs to the given key", () => {
-            const list = LinkedList.from(peopleArray);
+            const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const noemiData = lookup.get("Noemi");
             expect(noemiData.toArray()).to.have.all.members([Person.Noemi, Person.Noemi2]);
@@ -54,7 +54,7 @@ describe("Lookup", () => {
 
     describe("#size()", () => {
         it("should return the size of the lookup", () => {
-            const queue: IQueue<Person> = LinkedList.from(peopleArray);
+            const queue: IQueue<Person> = new LinkedList(peopleArray);
             const lookup = queue.toLookup(p => p.name, p => p);
             const lookup2 = Enumerable.empty<Person>().toLookup(p => p.surname, p => p.age);
             expect(lookup.size()).to.eq(3); // Hanna, Noemi, Suzuha

@@ -17,10 +17,6 @@ export class List<TElement> extends AbstractList<TElement> {
         }
     }
 
-    public static from<TSource>(source: Iterable<TSource>, comparator?: EqualityComparator<TSource>): List<TSource> {
-        return new List<TSource>(source, comparator);
-    }
-
     *[Symbol.iterator](): Iterator<TElement> {
         for (const element of this.data) {
             yield element;

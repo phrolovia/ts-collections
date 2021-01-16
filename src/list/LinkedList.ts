@@ -31,10 +31,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
     }
 
-    public static from<TSource>(iterable: Iterable<TSource>, comparator?: EqualityComparator<TSource>): LinkedList<TSource> {
-        return new LinkedList<TSource>(iterable, comparator);
-    }
-
     * [Symbol.iterator](): Iterator<TElement> {
         for (let node = this.firstNode; node != null; node = node.next) {
             yield node.item;

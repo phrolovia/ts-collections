@@ -686,7 +686,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
-        return List.from(this, comparator);
+        return new List<TElement>(this, comparator);
     }
 
     public toLookup<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {

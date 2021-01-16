@@ -265,7 +265,7 @@ describe("RedBlackTree", () => {
     describe("#removeAll()", () => {
         it("should remove all elements of the collection from the tree", () => {
             const tree = RedBlackTree.from([Person.Alice, Person.Eliza, Person.Bella, Person.Lucrezia, Person.Vanessa], personComparator);
-            const list = LinkedList.from([Person.Alice, Person.Eliza, Person.Vanessa]);
+            const list = new LinkedList([Person.Alice, Person.Eliza, Person.Vanessa]);
             tree.removeAll(list);
             expect(tree.size()).to.eq(2);
             expect(tree.contains(Person.Alice)).to.be.false;
@@ -292,7 +292,7 @@ describe("RedBlackTree", () => {
     describe("#retainAll()", () => {
         it("should remove all elements of the collection from the tree", () => {
             const tree = RedBlackTree.from([Person.Alice, Person.Eliza, Person.Bella, Person.Lucrezia, Person.Vanessa], personComparator);
-            const list = LinkedList.from([Person.Alice, Person.Eliza, Person.Vanessa]);
+            const list = new LinkedList([Person.Alice, Person.Eliza, Person.Vanessa]);
             tree.retainAll(list);
             expect(tree.size()).to.eq(3);
             expect(tree.contains(Person.Alice)).to.be.true;

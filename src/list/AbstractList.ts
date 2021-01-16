@@ -75,7 +75,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
     public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
         const oldSize = this.size();
         const collectionList = collection instanceof Array
-            ? LinkedList.from(collection, this.comparator)
+            ? new LinkedList<TSource>(collection, this.comparator)
             : collection as ICollection<TSource>;
         for (let index = this.size() - 1; index >= 0; --index) {
             if (!collectionList.contains(this.get(index) as TSource, this.comparator)) {

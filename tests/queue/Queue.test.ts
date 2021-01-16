@@ -10,7 +10,7 @@ describe("Queue", () => {
             expect(() => queue.dequeue()).to.throw(ErrorMessages.NoElements);
         });
         it("should remove the head of the queue and return it", () => {
-            const queue: IQueue<number> = LinkedList.from([1, 2, 3]);
+            const queue: IQueue<number> = new LinkedList([1, 2, 3]);
             const head = queue.dequeue();
             expect(head).to.eq(1);
             expect(queue.size()).to.eq(2);
@@ -34,7 +34,7 @@ describe("Queue", () => {
             expect(() => queue.peek()).to.not.throw;
         });
         it("should return the head of the queue but not remove it", () => {
-            const queue: IQueue<number> = LinkedList.from([1, 2, 3]);
+            const queue: IQueue<number> = new LinkedList([1, 2, 3]);
             const head = queue.peek();
             expect(head).to.eq(1);
             expect(queue.size()).to.eq(3);
@@ -42,7 +42,7 @@ describe("Queue", () => {
             expect(queue.toArray()).to.deep.equal([1, 2, 3]);
         });
         it("should return null if queue is empty", () => {
-            const queue: IQueue<number> = LinkedList.from([1, 2]);
+            const queue: IQueue<number> = new LinkedList([1, 2]);
             queue.removeIf(e => e < 3);
             expect(queue.isEmpty()).to.eq(true);
             expect(queue.peek()).to.be.null;
@@ -54,7 +54,7 @@ describe("Queue", () => {
             expect(() => queue.poll()).to.not.throw;
         });
         it("should remove the head of the queue and return it", () => {
-            const queue: IQueue<number> = LinkedList.from([1, 2, 3]);
+            const queue: IQueue<number> = new LinkedList([1, 2, 3]);
             const head = queue.poll();
             expect(head).to.eq(1);
             expect(queue.size()).to.eq(2);
@@ -62,14 +62,14 @@ describe("Queue", () => {
             expect(queue.toArray()).to.deep.equal([2, 3]);
         });
         it("should return null if queue is empty", () => {
-            const queue: IQueue<number> = LinkedList.from([1, 2]);
+            const queue: IQueue<number> = new LinkedList([1, 2]);
             queue.remove(1);
             queue.remove(2);
             expect(queue.isEmpty()).to.eq(true);
             expect(queue.poll()).to.be.null;
         });
         it("should remove everything by polling", () => {
-            const queue: IQueue<number> = LinkedList.from([1, 2, 3]);
+            const queue: IQueue<number> = new LinkedList([1, 2, 3]);
             queue.poll();
             queue.poll();
             queue.poll();
