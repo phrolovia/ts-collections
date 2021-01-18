@@ -17,6 +17,9 @@ export class List<TElement> extends AbstractList<TElement> {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static from<TSource>(source: Iterable<TSource>, comparator?: EqualityComparator<TSource>): List<TSource> {
         return new List<TSource>(source, comparator);
     }

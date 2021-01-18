@@ -31,6 +31,9 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static from<TSource>(iterable: Iterable<TSource>, comparator?: EqualityComparator<TSource>): LinkedList<TSource> {
         return new LinkedList<TSource>(iterable, comparator);
     }

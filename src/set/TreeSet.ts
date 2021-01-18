@@ -14,6 +14,9 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
         this.tree = new RedBlackTree<TElement>(comparator, iterable);
     }
 
+    /**
+     * @deprecated
+     */
     public static from<TSource>(source: Iterable<TSource>, comparator?: OrderComparator<TSource>): TreeSet<TSource> {
         return new TreeSet(source, comparator);
     }

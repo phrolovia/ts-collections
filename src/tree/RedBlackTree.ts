@@ -84,6 +84,9 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static from<TSource>(source: Iterable<TSource>, comparator?: OrderComparator<TSource>): RedBlackTree<TSource> {
         return new RedBlackTree<TSource>(comparator, source);
     }

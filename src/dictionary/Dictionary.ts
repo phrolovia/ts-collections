@@ -47,6 +47,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static from<TSourceKey, TSourceValue>(source: Iterable<KeyValuePair<TSourceKey, TSourceValue>>,
                                                  keyComparator?: OrderComparator<TSourceKey>,
                                                  valueComparator?: EqualityComparator<TSourceValue>): Dictionary<TSourceKey, TSourceValue> {
