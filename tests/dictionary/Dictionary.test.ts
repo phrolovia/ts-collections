@@ -350,18 +350,6 @@ describe("Dictionary", () => {
         });
     });
 
-    describe("#from[static]", () => {
-        it("should create a dictionary", () => {
-            const keyValuePairs: KeyValuePair<string, Person>[] = [];
-            [Person.Alice, Person.Noemi, Person.Reika, Person.Jisu].forEach(p => {
-                keyValuePairs.push(new KeyValuePair<string, Person>(p.name, p));
-            });
-            const dict = new Dictionary(null, (p1, p2) => p1.name === p2.name, keyValuePairs);
-            expect(dict instanceof Dictionary).to.be.true;
-            expect(dict.size()).to.eq(4);
-        });
-    });
-
     describe("#get()", () => {
         const dictionary = new Dictionary<Person, number>(personNameComparator);
         it("should get the value which belongs to the given key", () => {

@@ -3,7 +3,7 @@ import {AbstractList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class List<TElement> extends AbstractList<TElement> {
-    private readonly data: TElement[] = [];
+    protected readonly data: TElement[] = [];
 
     public constructor(
         iterable: Iterable<TElement> = [] as TElement[],
@@ -17,10 +17,8 @@ export class List<TElement> extends AbstractList<TElement> {
         }
     }
 
-    *[Symbol.iterator](): Iterator<TElement> {
-        for (const element of this.data) {
-            yield element;
-        }
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.data;
     }
 
     public addAt(element: TElement, index: number): boolean {

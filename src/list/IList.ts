@@ -40,7 +40,7 @@ export interface IList<TElement> extends ICollection<TElement> {
     lastIndexOf(element: TElement): number;
 
     /**
-     * Removes The element at the given index from this list.
+     * Removes the element at the given index from this list.
      * @param index The index from which the element will be removed.
      * @returns The removed element.
      * @throws {Error} If the index is out of bounds.
