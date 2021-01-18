@@ -23,13 +23,6 @@ const person2 = new Person("John", "Doe", 55);
 const comparator: EqualityComparator = (p1, p2) => p1.name === p2.name && p1.surname == p2.surname && p1.age == p2.age;
 const list = new List([person1, person2], comparator);
 ````
-
-You can create a List by calling the static from method as well.
-
-````typescript
-const list = List.from([1, 2, 3, 4, 5]);
-```` 
-
 ---
 
 ## LinkedList
@@ -55,13 +48,6 @@ const person2 = new Person("John", "Doe", 55);
 const comparator: EqualityComparator = (p1, p2) => p1.name === p2.name && p1.surname == p2.surname && p1.age == p2.age;
 const list = new LinkedList([person1, person2], comparator);
 ````
-
-You can create a LinkedList by calling the static from method as well.
-
-````typescript
-const list = LinkedList.from([1, 2, 3, 4, 5]);
-```` 
-
 ---
 
 ## RedBlackTree
@@ -87,13 +73,6 @@ const person2 = new Person("John", "Doe", 55);
 const comparator: OrderComparator = (p1, p2) => p1.name.localeCompare(p2.name);
 const list = new RedBlackTree(comparator, [person1, person2]);
 ````
-
-You can create a RedBlackTree by calling the static from method as well.
-
-````typescript
-const list = RedBlackTree.from([1, 2, 3, 4, 5]);
-```` 
-
 ---
 
 ## TreeSet
@@ -119,13 +98,6 @@ const person2 = new Person("John", "Doe", 55);
 const comparator: OrderComparator = (p1, p2) => p1.name.localeCompare(p2.name);
 const list = new TreeSet([person1, person2], comparator);
 ````
-
-You can create a TreeSet by calling the static from method as well.
-
-````typescript
-const list = TreeSet.from([1, 2, 3, 4, 5]);
-```` 
-
 ---
 
 ## Dictionary
