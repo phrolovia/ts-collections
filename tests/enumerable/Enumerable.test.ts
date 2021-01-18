@@ -4,9 +4,18 @@ import {Enumerable} from "../../imports";
 
 describe("Enumerable", () => {
     describe("#empty()", () => {
-        it("should create an emoty enumerable", () => {
+        it("should create an empty enumerable", () => {
             const enumerable = Enumerable.empty<number>();
             expect(enumerable.count()).to.eq(0);
+        });
+    });
+    describe("#forEach()", () => {
+        it("should loop over the enumerable", () => {
+            const enumerable = Enumerable.from([1, 2, 3, 4, 5, 6]);
+            const enum2 = enumerable.where(n => n % 2 === 0);
+            const result: number[] = [];
+            enum2.forEach(n => result.push(n));
+            expect(result).to.deep.equal([2, 4, 6]);
         });
     });
     describe("#range()", () => {

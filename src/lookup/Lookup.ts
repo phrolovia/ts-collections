@@ -12,6 +12,7 @@ import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
 import {Dictionary, IOrderedEnumerable, List, RedBlackTree} from "../../imports";
 import {Comparators} from "../shared/Comparators";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -110,6 +111,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public firstOrDefault(predicate?: Predicate<IGrouping<TKey, TElement>>): IGrouping<TKey, TElement> {
         return this.lookupTree.firstOrDefault(predicate);
+    }
+
+    public forEach(action: IndexedAction<IGrouping<TKey, TElement>>): void {
+        this.lookupTree.forEach(action);
     }
 
     public get(key: TKey): IEnumerable<TElement> {

@@ -72,7 +72,7 @@ export abstract class Collections {
         list.set(secondIndex, temp);
     }
 
-    private static binarySearchCore<TElement>(list: IList<TElement>, element: TElement, startIndex: number, endIndex: number, comparator?: OrderComparator<TElement>): number {
+    private static binarySearchCore<TElement>(list: IList<TElement>, element: TElement, startIndex: number, endIndex: number, comparator: OrderComparator<TElement>): number {
         if (startIndex === endIndex) {
             if (comparator(list.get(startIndex), element) === 0) {
                 return startIndex;
@@ -80,8 +80,7 @@ export abstract class Collections {
             return -1;
         }
         const middleIndex = Math.ceil((endIndex - startIndex) / 2 + startIndex);
-        const middleElement = list.get(middleIndex);
-        const comparatorResult = comparator(element, middleElement);
+        const comparatorResult = comparator(element, list.get(middleIndex));
         if (comparatorResult === 0) {
             return middleIndex;
         }

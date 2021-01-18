@@ -350,6 +350,19 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#forEach()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.add(Person.Alice.name, Person.Alice);
+        dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+        dictionary.add(Person.Noemi.name, Person.Noemi);
+        dictionary.add(Person.Priscilla.name, Person.Priscilla);
+        it("should loop over the dictionary", () => {
+            const names: string[] = [];
+            dictionary.forEach(pair => names.push(pair.value.name));
+            expect(names).to.deep.equal([Person.Alice.name, Person.Lucrezia.name, Person.Noemi.name, Person.Priscilla.name]);
+        });
+    });
+
     describe("#get()", () => {
         const dictionary = new Dictionary<Person, number>(personNameComparator);
         it("should get the value which belongs to the given key", () => {

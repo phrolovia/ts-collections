@@ -21,6 +21,7 @@ import {
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -127,6 +128,10 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
     public firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.firstOrDefault(this, predicate);
+    }
+
+    public forEach(action: IndexedAction<KeyValuePair<TKey, TValue>>): void {
+        EnumerableStatic.forEach(this, action);
     }
 
     public get(key: TKey): TValue {
