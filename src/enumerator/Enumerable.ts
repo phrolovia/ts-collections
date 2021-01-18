@@ -11,6 +11,7 @@ import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Dictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List} from "../../imports";
 import {Lookup} from "../lookup/Lookup";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;
@@ -105,6 +106,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public firstOrDefault(predicate?: Predicate<TElement>): TElement {
         return this.enumerator.firstOrDefault(predicate);
+    }
+
+    public forEach(action: IndexedAction<TElement>): void {
+        this.enumerator.forEach(action);
     }
 
     public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
@@ -402,6 +407,13 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    public forEach(action: IndexedAction<TElement>): void {
+        let index = 0;
+        for (const item of this) {
+            action(item, index++);
+        }
+    }
+
     public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator));
@@ -686,7 +698,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
-        return List.from(this, comparator);
+        return new List<TElement>(this, comparator);
     }
 
     public toLookup<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
@@ -985,7 +997,7 @@ class OrderedEnumerator<TElement> extends Enumerator<TElement> implements IOrder
     }
 }
 
-export interface IGrouping<TKey, TElement> extends IEnumerable<TElement>{
+export interface IGrouping<TKey, TElement> extends IEnumerable<TElement> {
     readonly key: TKey;
     readonly source: IEnumerable<TElement>;
 }
@@ -993,6 +1005,7 @@ export interface IGrouping<TKey, TElement> extends IEnumerable<TElement>{
 export class Grouping<TKey, TElement> extends Enumerable<TElement> implements IGrouping<TKey, TElement> {
     readonly key: TKey;
     readonly source: IEnumerable<TElement>;
+
     public constructor(key: TKey, source: IEnumerable<TElement>) {
         super(source);
         this.key = key;

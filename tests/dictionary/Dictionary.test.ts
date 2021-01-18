@@ -9,26 +9,13 @@ import {SchoolStudents} from "../models/SchoolStudents";
 import {Dictionary} from "../../src/dictionary/Dictionary";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
 import {List} from "../../imports";
+import {Helper} from "../helpers/Helper";
 
 describe("Dictionary", () => {
 
     const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name.localeCompare(p2.name)
     const personSurnameComparator = (p1: Person, p2: Person) => p1.surname.localeCompare(p2.surname);
-    const randomUniqueArrayGenerator = (length: number) => {
-        const intsmap: { [key: number]: boolean } = {};
-        let i = length;
-        const numbers: number[] = [];
-        while (i > 0) {
-            var int = Math.random() * Math.pow(10, 8) << 0;
-            if(!intsmap[int]){
-                intsmap[int] = true;
-                numbers.push(int);
-                --i;
-            }
-        }
-        return numbers;
-    }
 
     describe("#add()", () => {
         const dictionary = new Dictionary<string, number>();
@@ -363,15 +350,16 @@ describe("Dictionary", () => {
         });
     });
 
-    describe("#from[static]", () => {
-        it("should create a dictionary", () => {
-            const keyValuePairs: KeyValuePair<string, Person>[] = [];
-            [Person.Alice, Person.Noemi, Person.Reika, Person.Jisu].forEach(p => {
-                keyValuePairs.push(new KeyValuePair<string, Person>(p.name, p));
-            });
-            const dict = Dictionary.from(keyValuePairs, null, (p1, p2) => p1.name === p2.name);
-            expect(dict instanceof Dictionary).to.be.true;
-            expect(dict.size()).to.eq(4);
+    describe("#forEach()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.add(Person.Alice.name, Person.Alice);
+        dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+        dictionary.add(Person.Noemi.name, Person.Noemi);
+        dictionary.add(Person.Priscilla.name, Person.Priscilla);
+        it("should loop over the dictionary", () => {
+            const names: string[] = [];
+            dictionary.forEach(pair => names.push(pair.value.name));
+            expect(names).to.deep.equal([Person.Alice.name, Person.Lucrezia.name, Person.Noemi.name, Person.Priscilla.name]);
         });
     });
 
@@ -386,7 +374,7 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Senna)).to.eq(Person.Senna.age);
         });
         it("should get the value which belongs to the given key #2", () => {
-            const numbers = randomUniqueArrayGenerator(500000);
+            const numbers = Helper.generateRandomUniqueNumbers(500000);
             const dict = new Dictionary<number, string>();
             numbers.forEach(n => dict.add(n, n.toString()));
             for (const num of numbers) {

@@ -8,6 +8,7 @@ import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Dictionary, IGrouping, ILookup, IOrderedEnumerable, List} from "../../imports";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
@@ -25,6 +26,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     first(predicate?: Predicate<TElement>): TElement;
     firstOrDefault(predicate?: Predicate<TElement>): TElement;
+    forEach(action: IndexedAction<TElement>): void;
     groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>>;
     groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
                        resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;

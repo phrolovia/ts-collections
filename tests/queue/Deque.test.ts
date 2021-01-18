@@ -10,7 +10,7 @@ describe("Deque", () => {
             expect(() => deque.dequeueLast()).to.throw(ErrorMessages.NoElements);
         });
         it("should remove the tail of the queue and return it", () => {
-            const deque: IDeque<number> = LinkedList.from([1, 2, 3]);
+            const deque: IDeque<number> = new LinkedList([1, 2, 3]);
             const head = deque.dequeueLast();
             expect(head).to.eq(3);
             expect(deque.size()).to.eq(2);
@@ -34,7 +34,7 @@ describe("Deque", () => {
             expect(() => deque.peekLast()).to.not.throw;
         });
         it("should return the head of the queue but not remove it", () => {
-            const deque: IDeque<number> = LinkedList.from([1, 2, 3]);
+            const deque: IDeque<number> = new LinkedList([1, 2, 3]);
             const head = deque.peekLast();
             expect(head).to.eq(3);
             expect(deque.size()).to.eq(3);
@@ -42,7 +42,7 @@ describe("Deque", () => {
             expect(deque.toArray()).to.deep.equal([1, 2, 3]);
         });
         it("should return null if queue is empty", () => {
-            const deque: IDeque<number> = LinkedList.from([1, 2]);
+            const deque: IDeque<number> = new LinkedList([1, 2]);
             deque.removeIf(e => e < 3);
             expect(deque.isEmpty()).to.eq(true);
             expect(deque.peekLast()).to.be.null;
@@ -54,7 +54,7 @@ describe("Deque", () => {
             expect(() => deque.pollLast()).to.not.throw;
         });
         it("should remove the head of the queue and return it", () => {
-            const deque: IDeque<number> = LinkedList.from([1, 2, 3]);
+            const deque: IDeque<number> = new LinkedList([1, 2, 3]);
             const head = deque.pollLast();
             expect(head).to.eq(3);
             expect(deque.size()).to.eq(2);
@@ -62,14 +62,14 @@ describe("Deque", () => {
             expect(deque.toArray()).to.deep.equal([1, 2]);
         });
         it("should return null if deque is empty", () => {
-            const deque: IDeque<number> = LinkedList.from([1, 2]);
+            const deque: IDeque<number> = new LinkedList([1, 2]);
             deque.remove(1);
             deque.remove(2);
             expect(deque.isEmpty()).to.eq(true);
             expect(deque.pollLast()).to.be.null;
         });
         it("should remove everything by polling from tail", () => {
-            const deque: IDeque<number> = LinkedList.from([1, 2, 3]);
+            const deque: IDeque<number> = new LinkedList([1, 2, 3]);
             deque.pollLast();
             deque.pollLast();
             deque.pollLast();

@@ -8,6 +8,7 @@ import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Dictionary, Enumerable, IEnumerable, IGrouping, ILookup, IOrderedEnumerable, List} from "../../imports";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class EnumerableStatic {
     protected constructor() {
@@ -71,6 +72,10 @@ export abstract class EnumerableStatic {
 
     public static firstOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
         return new Enumerable(source).firstOrDefault(predicate);
+    }
+
+    public static forEach<TElement>(source: IEnumerable<TElement>, action: IndexedAction<TElement>): void {
+        new Enumerable(source).forEach(action);
     }
 
     public static groupBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {

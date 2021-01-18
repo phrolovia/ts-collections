@@ -21,6 +21,7 @@ import {
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -42,18 +43,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
-        for (const pair of this.keyValueTree) {
-            yield pair;
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    public static from<TSourceKey, TSourceValue>(source: Iterable<KeyValuePair<TSourceKey, TSourceValue>>,
-                                                 keyComparator?: OrderComparator<TSourceKey>,
-                                                 valueComparator?: EqualityComparator<TSourceValue>): Dictionary<TSourceKey, TSourceValue> {
-        return new Dictionary<TSourceKey, TSourceValue>(keyComparator, valueComparator, source);
+        yield* this.keyValueTree;
     }
 
     public add(key: TKey, value: TValue): TValue {
@@ -140,6 +130,10 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.firstOrDefault(this, predicate);
     }
 
+    public forEach(action: IndexedAction<KeyValuePair<TKey, TValue>>): void {
+        EnumerableStatic.forEach(this, action);
+    }
+
     public get(key: TKey): TValue {
         return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
     }
@@ -166,7 +160,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     public keys(): ISet<TKey> {
-        return TreeSet.from(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
+        return new TreeSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
     }
 
     public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -290,7 +284,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     public values(): List<TValue> {
-        return List.from(this.keyValueTree.toArray().map(p => p.value), this.valueComparator);
+        return new List<TValue>(this.keyValueTree.toArray().map(p => p.value), this.valueComparator);
     }
 
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {

@@ -15,7 +15,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#headSet()", () => {
-        const set = TreeSet.from([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+        const set = new TreeSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const headSet = set.headSet(4);
         const headSetInclusive = set.headSet(4, true);
         it("should create head set without the toElement included", () => {
@@ -43,7 +43,7 @@ describe("TreeSet", () => {
         set.add(Person.Jisu);
         set.add(Person.Amy);
         set.add(Person.Bella);
-        const list = LinkedList.from([Person.Amy, Person.Jisu]);
+        const list = new LinkedList([Person.Amy, Person.Jisu]);
         it("should remove all the items of the list from the set", () => {
             set.removeAll(list);
             expect(set.size()).to.eq(1);
@@ -70,7 +70,7 @@ describe("TreeSet", () => {
         set.add(Person.Jisu);
         set.add(Person.Amy);
         set.add(Person.Bella);
-        const list = LinkedList.from([Person.Amy, Person.Jisu]);
+        const list = new LinkedList([Person.Amy, Person.Jisu]);
         it("should remove all the items of the list from the set", () => {
             set.retainAll(list);
             expect(set.size()).to.eq(2);
@@ -80,7 +80,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#subSet()", () => {
-        const set = TreeSet.from([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+        const set = new TreeSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const incExcSubset = set.subSet(3, 7, true, false);
         const incIncSubset = set.subSet(3, 7, true, true);
         const excIncSubset = set.subSet(3, 7, false, true);
@@ -99,7 +99,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#tailSet()", () => {
-        const set = TreeSet.from([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+        const set = new TreeSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const tailSet = set.tailSet(4);
         const tailSetInclusive = set.tailSet(4, true);
         it("should create tail set without the toElement included", () => {
