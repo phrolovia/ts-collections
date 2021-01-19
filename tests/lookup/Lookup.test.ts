@@ -31,7 +31,7 @@ describe("Lookup", () => {
             expect(noemiData.toArray()).to.have.all.members([Person.Noemi, Person.Noemi2]);
         });
         it("should return empty enumerable if key have no data", () => {
-            const tree = RedBlackTree.from(peopleArray, (p1, p2) => p1.name.localeCompare(p2.name));
+            const tree = new RedBlackTree((p1, p2) => p1.name.localeCompare(p2.name), peopleArray);
             const lookup = tree.toLookup(p => p.name, p => p);
             const karenData = lookup.get("Karen");
             expect(karenData.any()).to.eq(false);
