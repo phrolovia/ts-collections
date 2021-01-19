@@ -967,7 +967,7 @@ class OrderedEnumerator<TElement> extends Enumerator<TElement> implements IOrder
                 }
             } else {
                 for (const key of sortedKeys.reverse()) {
-                    yield sortMap.get(key)
+                    yield sortMap.get(key);
                 }
             }
         }

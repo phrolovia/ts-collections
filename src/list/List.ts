@@ -1,6 +1,8 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {AbstractList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {OrderComparator} from "../shared/OrderComparator";
+import {Comparators} from "../shared/Comparators";
 
 export class List<TElement> extends AbstractList<TElement> {
     protected readonly data: TElement[] = [];
@@ -72,5 +74,10 @@ export class List<TElement> extends AbstractList<TElement> {
 
     public size(): number {
         return this.data.length;
+    }
+
+    public sort(comparator?: OrderComparator<TElement>): void {
+        comparator ??= Comparators.orderComparator;
+        this.data.sort(comparator);
     }
 }

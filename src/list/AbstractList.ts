@@ -1,6 +1,7 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Predicate} from "../shared/Predicate";
 import {AbstractCollection, ICollection, IList, LinkedList} from "../../imports";
+import {OrderComparator} from "../shared/OrderComparator";
 
 export abstract class AbstractList<TElement> extends AbstractCollection<TElement> implements IList<TElement> {
 
@@ -89,4 +90,5 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
     public abstract get(index: number): TElement;
     public abstract removeAt(index: number): TElement;
     public abstract set(index: number, element: TElement): TElement;
+    public abstract sort(comparator?: OrderComparator<TElement>): void;
 }

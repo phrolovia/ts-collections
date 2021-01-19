@@ -1,6 +1,8 @@
 import {AbstractList, IDeque} from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {OrderComparator} from "../shared/OrderComparator";
+import {Comparators} from "../shared/Comparators";
 
 class Node<TElement> {
     public item: TElement;
@@ -138,6 +140,15 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
 
     public size(): number {
         return this.listSize;
+    }
+
+    public sort(comparator?: OrderComparator<TElement>): void {
+        const array = this.toArray();
+        comparator ??= Comparators.orderComparator;
+        array.sort(comparator);
+        for (const [index, element] of array.entries()) {
+            this.set(index, element);
+        }
     }
 
     private checkElementIndex(index: number): void {

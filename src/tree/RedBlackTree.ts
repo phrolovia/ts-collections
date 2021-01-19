@@ -84,13 +84,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         }
     }
 
-    /**
-     * @deprecated
-     */
-    public static from<TSource>(source: Iterable<TSource>, comparator?: OrderComparator<TSource>): RedBlackTree<TSource> {
-        return new RedBlackTree<TSource>(comparator, source);
-    }
-
     public add(element: TElement): boolean {
         if (this.search(element)) {
             return false;
@@ -151,7 +144,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         const oldSize = this.size();
         const elementsToRemove: TElement[] = [];
         const collectionTree = collection instanceof Array
-            ? RedBlackTree.from(collection, this.orderComparator)
+            ? new RedBlackTree(this.orderComparator, collection)
             : collection;
         for (const element of this) {
             if (!collectionTree.contains(element as TSource, this.comparator)) {

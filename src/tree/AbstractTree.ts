@@ -35,6 +35,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         if (this.root == null) {
             return null;
         }
+        comparator ??= Comparators.orderComparator;
         return this.findByRecursive(this.root, key, selector, comparator);
     }
 
@@ -73,6 +74,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         if (this.root == null) {
             return null;
         }
+        comparator ??= Comparators.orderComparator;
         return this.removeByRecursive(this.root, key, selector, comparator);
     }
 
@@ -147,7 +149,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return 1 + this.countTreeNodes(root.getLeft()) + this.countTreeNodes(root.getRight());
     }
 
-    private findByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+    private findByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement {
         if (root == null) {
             return null;
         }
@@ -176,7 +178,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return this.findRecursive(root.getRight(), predicate);
     }
 
-    private removeByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+    private removeByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement {
         if (root == null) {
             return null;
         }

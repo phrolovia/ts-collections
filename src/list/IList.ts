@@ -1,4 +1,5 @@
 import {ICollection} from "../../imports";
+import {OrderComparator} from "../shared/OrderComparator";
 
 export interface IList<TElement> extends ICollection<TElement> {
 
@@ -55,4 +56,11 @@ export interface IList<TElement> extends ICollection<TElement> {
      * @throws {Error} If the index is out of bounds.
      */
     set(index: number, element: TElement): TElement;
+
+    /**
+     * Sorts the lists according to the specified comparator.
+     * If not specified, the list will be sorted by using the natural ordering of the elements.
+     * @param comparator The comparator used to compare the list elements.
+     */
+    sort(comparator?: OrderComparator<TElement>): void;
 }

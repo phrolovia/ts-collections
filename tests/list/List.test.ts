@@ -1031,6 +1031,29 @@ describe("List", () => {
         });
     });
 
+    describe("#sort", () => {
+        it("should sort list with the specified constructor", () => {
+            const list = new List([Person.Noemi, Person.Alice, Person.Lucrezia, Person.Priscilla, Person.Eliza, Person.Bella]);
+            list.sort((p1, p2) => p1.name.localeCompare(p2.name));
+            expect(list.get(0)).to.eq(Person.Alice);
+            expect(list.get(1)).to.eq(Person.Bella);
+            expect(list.get(2)).to.eq(Person.Eliza);
+            expect(list.get(3)).to.eq(Person.Lucrezia);
+            expect(list.get(4)).to.eq(Person.Noemi);
+            expect(list.get(5)).to.eq(Person.Priscilla);
+        });
+        it("should sort list with the default comparator if no comparator is specified", () => {
+            const list = new List([3, 1, -1, 8, 10, -9]);
+            list.sort();
+            expect(list.get(0)).to.eq(-9);
+            expect(list.get(1)).to.eq(-1);
+            expect(list.get(2)).to.eq(1);
+            expect(list.get(3)).to.eq(3);
+            expect(list.get(4)).to.eq(8);
+            expect(list.get(5)).to.eq(10);
+        })
+    });
+
     describe("#sum()", () => {
         it("should return 21", () => {
             const list = new List([1, 2, 3, 4, 5, 6]);

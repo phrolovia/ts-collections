@@ -54,14 +54,14 @@ const list = new LinkedList([person1, person2], comparator);
 ### Usage
 
 ```typescript
-const list = new RedBlackTree<string>();
+const tree = new RedBlackTree<string>();
 ```
 
 You can pass an Iterable object to the constructor.
 
 ````typescript
 const array = [1, 2, 3, 4, 5];
-const list = new RedBlackTree(array);
+const tree = new RedBlackTree(array);
 ````
 
 You can also pass an order comparator that will be used instead of default order comparator.
@@ -71,7 +71,7 @@ You should always define this custom order comparator if your RedBlackTree conta
 const person1 = new Person("John", "Doe", 21);
 const person2 = new Person("John", "Doe", 55);
 const comparator: OrderComparator = (p1, p2) => p1.name.localeCompare(p2.name);
-const list = new RedBlackTree(comparator, [person1, person2]);
+const tree = new RedBlackTree(comparator, [person1, person2]);
 ````
 ---
 
@@ -79,14 +79,14 @@ const list = new RedBlackTree(comparator, [person1, person2]);
 ### Usage
 
 ```typescript
-const list = new TreeSet<string>();
+const treeSet = new TreeSet<string>();
 ```
 
 You can pass an Iterable object to the constructor.
 
 ````typescript
 const array = [1, 2, 3, 4, 5];
-const list = new TreeSet(array);
+const treeSet = new TreeSet(array);
 ````
 
 You can also pass an order comparator that will be used instead of default order comparator.
@@ -96,7 +96,7 @@ You should always define this custom order comparator if your TreeSet contains c
 const person1 = new Person("John", "Doe", 21);
 const person2 = new Person("John", "Doe", 55);
 const comparator: OrderComparator = (p1, p2) => p1.name.localeCompare(p2.name);
-const list = new TreeSet([person1, person2], comparator);
+const treeSet = new TreeSet([person1, person2], comparator);
 ````
 ---
 
@@ -120,7 +120,7 @@ const array: KeyValuePair<number, string> = [
 const dictionary = new Dictionary(null, null, array);
 ````
 
-You can also pass an order comparator and an equality comparator that will be used instead of default order and equality comparators.
+You can also pass an order comparator, and an equality comparator that will be used instead of default order and equality comparators.
 You should always define these custom comparators if your dictionary contains complex objects.
 
 Dictionary has two comparators.
@@ -150,11 +150,12 @@ const deque: IDeque<string> = new LinkedList<string>();
 ---
 
 ## Enumerable Support
-All of the provided classes in library has intergrated enumerable support.
+All the provided classes in the library has integrated enumerable support.
 
 ### Example Usage
+
 ````typescript
-const list = List.from([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 const list2 = list.select(n => n * n).takeWhile(n <= 25).skipWhile(n < 10).orderByDescending(n => n).toList();
 const array = list.takeLast(5).toArray();
 ````
