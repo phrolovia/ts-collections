@@ -199,7 +199,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L11">src/core/ICollection.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L11">src/core/ICollection.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -232,7 +232,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#addall">addAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L19">src/core/ICollection.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L19">src/core/ICollection.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,9 +272,15 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#aggregate">aggregate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L14">src/enumerator/IEnumerable.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L21">src/enumerator/IEnumerable.ts:21</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
+									If resultSelector function is specified, it will be used to select the result value.</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -288,12 +294,21 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>accumulator: <a href="accumulator.html" class="tsd-signature-type">Accumulator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TAccumulate</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The accumulator function that will be applied over the sequence.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> seed: <span class="tsd-signature-type">TAccumulate</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> resultSelector: <a href="selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TAccumulate</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TResult</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The function that will be used to select the result value.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TAccumulate</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TResult</span></h4>
@@ -311,13 +326,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#all">all</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L15">src/enumerator/IEnumerable.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L27">src/enumerator/IEnumerable.ts:27</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines if all elements of the sequence satisfy the specified predicate.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> predicate: <a href="predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -335,13 +358,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#any">any</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L16">src/enumerator/IEnumerable.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L33">src/enumerator/IEnumerable.ts:33</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines if any element of the sequence satisfies the specified predicate.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> predicate: <a href="predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -359,13 +390,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#append">append</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L17">src/enumerator/IEnumerable.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L39">src/enumerator/IEnumerable.ts:39</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Appends the specified element to the end of the sequence.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>element: <span class="tsd-signature-type">TElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The element that will be appended to the end of the sequence</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -383,13 +422,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#average">average</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L18">src/enumerator/IEnumerable.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L45">src/enumerator/IEnumerable.ts:45</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> selector: <a href="selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The selector function that will select a numeric value from the sequence elements.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -407,7 +454,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L24">src/core/ICollection.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L24">src/core/ICollection.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -430,13 +477,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#concat">concat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L19">src/enumerator/IEnumerable.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L51">src/enumerator/IEnumerable.ts:51</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Concatenates two sequences.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>enumerable: <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The enumerable sequence that will be concatenated to the first sequence.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -454,16 +509,27 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L20">src/enumerator/IEnumerable.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L58">src/enumerator/IEnumerable.ts:58</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines where the sequence contains the specified element.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>element: <span class="tsd-signature-type">TElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The element whose existence will be checked.</p>
+									</div>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -481,7 +547,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#containsall">containsAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L31">src/core/ICollection.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L31">src/core/ICollection.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -520,13 +586,22 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#count">count</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L21">src/enumerator/IEnumerable.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L66">src/enumerator/IEnumerable.ts:66</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the number of elements in the sequence.</p>
+								</div>
+								<p><b>Note:</b> If you want to check whether a sequence contains any elements, do not use <code>sequence.count() > 0</code>. Use <code>sequence.any()</code> instead.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> predicate: <a href="predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The predicate function that will be used to check each element for a condition.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -544,13 +619,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#defaultifempty">defaultIfEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L22">src/enumerator/IEnumerable.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L72">src/enumerator/IEnumerable.ts:72</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> value: <span class="tsd-signature-type">TElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The value to return if the sequence is empty.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -568,13 +651,21 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#distinct">distinct</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L23">src/enumerator/IEnumerable.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L78">src/enumerator/IEnumerable.ts:78</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns distinct elements from the sequence.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -592,7 +683,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#elementat">elementAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L24">src/enumerator/IEnumerable.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L79">src/enumerator/IEnumerable.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -616,7 +707,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#elementatordefault">elementAtOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L25">src/enumerator/IEnumerable.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L80">src/enumerator/IEnumerable.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -640,7 +731,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#except">except</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L26">src/enumerator/IEnumerable.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L81">src/enumerator/IEnumerable.ts:81</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -667,7 +758,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#first">first</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L27">src/enumerator/IEnumerable.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L82">src/enumerator/IEnumerable.ts:82</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -691,7 +782,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#firstordefault">firstOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L28">src/enumerator/IEnumerable.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L83">src/enumerator/IEnumerable.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -716,7 +807,7 @@
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#foreach">forEach</a></p>
 								<p>Overrides <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#foreach">forEach</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L37">src/core/ICollection.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L37">src/core/ICollection.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -748,7 +839,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#groupby">groupBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L30">src/enumerator/IEnumerable.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L85">src/enumerator/IEnumerable.ts:85</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -781,7 +872,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#groupjoin">groupJoin</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L31">src/enumerator/IEnumerable.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L86">src/enumerator/IEnumerable.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -828,7 +919,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/set/ISet.ts#L4">src/set/ISet.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/set/ISet.ts#L4">src/set/ISet.ts:4</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -855,7 +946,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#intersect">intersect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L33">src/enumerator/IEnumerable.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L88">src/enumerator/IEnumerable.ts:88</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -882,7 +973,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L43">src/core/ICollection.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L43">src/core/ICollection.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -906,7 +997,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#join">join</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L34">src/enumerator/IEnumerable.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L89">src/enumerator/IEnumerable.ts:89</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -957,7 +1048,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#last">last</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L36">src/enumerator/IEnumerable.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L91">src/enumerator/IEnumerable.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -981,7 +1072,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#lastordefault">lastOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L37">src/enumerator/IEnumerable.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L92">src/enumerator/IEnumerable.ts:92</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1005,7 +1096,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#max">max</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L38">src/enumerator/IEnumerable.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L93">src/enumerator/IEnumerable.ts:93</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1029,7 +1120,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#min">min</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L39">src/enumerator/IEnumerable.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L94">src/enumerator/IEnumerable.ts:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1053,7 +1144,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#orderby">orderBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L40">src/enumerator/IEnumerable.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L95">src/enumerator/IEnumerable.ts:95</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1086,7 +1177,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#orderbydescending">orderByDescending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L41">src/enumerator/IEnumerable.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L96">src/enumerator/IEnumerable.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1119,7 +1210,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#prepend">prepend</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L43">src/enumerator/IEnumerable.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L98">src/enumerator/IEnumerable.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1143,7 +1234,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L50">src/core/ICollection.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L50">src/core/ICollection.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1176,7 +1267,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#removeall">removeAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L57">src/core/ICollection.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L57">src/core/ICollection.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1215,7 +1306,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#removeif">removeIf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L64">src/core/ICollection.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L64">src/core/ICollection.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1248,7 +1339,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#retainall">retainAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L71">src/core/ICollection.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L71">src/core/ICollection.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1287,7 +1378,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#reverse">reverse</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L44">src/enumerator/IEnumerable.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L99">src/enumerator/IEnumerable.ts:99</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1305,7 +1396,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#select">select</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L45">src/enumerator/IEnumerable.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L100">src/enumerator/IEnumerable.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1335,7 +1426,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#selectmany">selectMany</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L46">src/enumerator/IEnumerable.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L101">src/enumerator/IEnumerable.ts:101</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1365,7 +1456,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#sequenceequal">sequenceEqual</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L47">src/enumerator/IEnumerable.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L102">src/enumerator/IEnumerable.ts:102</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1392,7 +1483,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#single">single</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L48">src/enumerator/IEnumerable.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L103">src/enumerator/IEnumerable.ts:103</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1416,7 +1507,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#singleordefault">singleOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L49">src/enumerator/IEnumerable.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L104">src/enumerator/IEnumerable.ts:104</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1440,7 +1531,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="icollection.html">ICollection</a>.<a href="icollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/core/ICollection.ts#L76">src/core/ICollection.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/ICollection.ts#L76">src/core/ICollection.ts:76</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1463,7 +1554,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#skip">skip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L50">src/enumerator/IEnumerable.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L105">src/enumerator/IEnumerable.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1487,7 +1578,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#skiplast">skipLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L51">src/enumerator/IEnumerable.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L106">src/enumerator/IEnumerable.ts:106</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1511,7 +1602,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#skipwhile">skipWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L52">src/enumerator/IEnumerable.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L107">src/enumerator/IEnumerable.ts:107</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1534,7 +1625,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/set/ISet.ts#L5">src/set/ISet.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/set/ISet.ts#L5">src/set/ISet.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1567,7 +1658,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#sum">sum</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L53">src/enumerator/IEnumerable.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L108">src/enumerator/IEnumerable.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1590,7 +1681,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/set/ISet.ts#L6">src/set/ISet.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/set/ISet.ts#L6">src/set/ISet.ts:6</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1617,7 +1708,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#take">take</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L54">src/enumerator/IEnumerable.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L109">src/enumerator/IEnumerable.ts:109</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1641,7 +1732,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#takelast">takeLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L55">src/enumerator/IEnumerable.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L110">src/enumerator/IEnumerable.ts:110</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1665,7 +1756,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#takewhile">takeWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L56">src/enumerator/IEnumerable.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L111">src/enumerator/IEnumerable.ts:111</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1689,7 +1780,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L57">src/enumerator/IEnumerable.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L112">src/enumerator/IEnumerable.ts:112</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1707,7 +1798,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#todictionary">toDictionary</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L58">src/enumerator/IEnumerable.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L113">src/enumerator/IEnumerable.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1749,7 +1840,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#tolist">toList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L59">src/enumerator/IEnumerable.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L114">src/enumerator/IEnumerable.ts:114</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1773,7 +1864,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#tolookup">toLookup</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L60">src/enumerator/IEnumerable.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L115">src/enumerator/IEnumerable.ts:115</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1812,7 +1903,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#union">union</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L61">src/enumerator/IEnumerable.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L116">src/enumerator/IEnumerable.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1839,7 +1930,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#where">where</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L62">src/enumerator/IEnumerable.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L117">src/enumerator/IEnumerable.ts:117</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1863,7 +1954,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="ienumerable.html">IEnumerable</a>.<a href="ienumerable.html#zip">zip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/2e1c68d/src/enumerator/IEnumerable.ts#L63">src/enumerator/IEnumerable.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/enumerator/IEnumerable.ts#L118">src/enumerator/IEnumerable.ts:118</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>

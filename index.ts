@@ -22,7 +22,8 @@ export {
     ISet,
     AbstractSet,
     TreeSet,
-    TraverseType
+    TraverseType,
+    Collections
 } from "./imports";
 export {Accumulator} from "./src/shared/Accumulator";
 export {EqualityComparator} from "./src/shared/EqualityComparator";

@@ -11,15 +11,70 @@ import {Dictionary, IGrouping, ILookup, IOrderedEnumerable, List} from "../../im
 import {IndexedAction} from "../shared/IndexedAction";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
+    /**
+     * Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
+     * If resultSelector function is specified, it will be used to select the result value.
+     * @param accumulator The accumulator function that will be applied over the sequence.
+     * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
+     * @param resultSelector The function that will be used to select the result value.
+     */
     aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
+
+    /**
+     * Determines if all elements of the sequence satisfy the specified predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.
+     */
     all(predicate?: Predicate<TElement>): boolean;
+
+    /**
+     * Determines if any element of the sequence satisfies the specified predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.
+     */
     any(predicate?: Predicate<TElement>): boolean;
+
+    /**
+     * Appends the specified element to the end of the sequence.
+     * @param element The element that will be appended to the end of the sequence
+     */
     append(element: TElement): IEnumerable<TElement>;
+
+    /**
+     * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
+     * @param selector The selector function that will select a numeric value from the sequence elements.
+     */
     average(selector?: Selector<TElement, number>): number;
+
+    /**
+     * Concatenates two sequences.
+     * @param enumerable The enumerable sequence that will be concatenated to the first sequence.
+     */
     concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
+
+    /**
+     * Determines where the sequence contains the specified element.
+     * @param element The element whose existence will be checked.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean;
+
+    /**
+     * Returns the number of elements in the sequence.
+     *
+     * <b>Note:</b> If you want to check whether a sequence contains any elements, do not use <code>sequence.count() > 0</code>. Use <code>sequence.any()</code> instead.
+     * @param predicate The predicate function that will be used to check each element for a condition.
+     */
     count(predicate?: Predicate<TElement>): number;
+
+    /**
+     * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
+     * @param value The value to return if the sequence is empty.
+     */
     defaultIfEmpty(value?: TElement): IEnumerable<TElement>;
+
+    /**
+     * Returns distinct elements from the sequence.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     */
     distinct(comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     elementAt(index: number): TElement;
     elementAtOrDefault(index: number): TElement;

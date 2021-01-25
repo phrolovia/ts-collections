@@ -19,3 +19,4 @@ export {KeyValuePair} from "./src/dictionary/KeyValuePair";
 export {ISet} from "./src/set/ISet"
 export {AbstractSet} from "./src/set/AbstractSet"
 export {TreeSet} from "./src/set/TreeSet";
+export {Collections} from "./src/core/Collections";
