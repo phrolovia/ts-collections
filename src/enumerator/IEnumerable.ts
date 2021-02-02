@@ -11,6 +11,7 @@ import {Dictionary, IGrouping, ILookup, IOrderedEnumerable, List} from "../../im
 import {IndexedAction} from "../shared/IndexedAction";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
+
     /**
      * Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
      * If resultSelector function is specified, it will be used to select the result value.
@@ -94,7 +95,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     min(selector?: Selector<TElement, number>): number;
     orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
-
     prepend(element: TElement): IEnumerable<TElement>;
     reverse(): IEnumerable<TElement>;
     select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult>;

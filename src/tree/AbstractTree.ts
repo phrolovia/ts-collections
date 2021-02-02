@@ -12,7 +12,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
     protected root: INode<TElement> = null;
 
     protected constructor(comparator?: OrderComparator<TElement>) {
-        super(((e1, e2) => Object.is(e1, e2) || (comparator ?? Comparators.orderComparator)(e1, e2) === 0));
+        super(((e1: TElement, e2: TElement) => Object.is(e1, e2) || (comparator ?? Comparators.orderComparator)(e1, e2) === 0));
         this.orderComparator = comparator ?? Comparators.orderComparator;
     }
 
@@ -47,10 +47,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
     }
 
     public getRootData(): TElement {
-        if (!this.root) {
-            return null;
-        }
-        return this.root.getData();
+        return this.root?.getData() ?? null;
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {

@@ -8,6 +8,8 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
+import {Enumerable, IList} from "../../imports";
+import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
 
@@ -324,16 +326,37 @@ describe("List", () => {
 
     describe("#except()", () => {
         it("should return an array of [1,2,3]", () => {
-            const list1 = new List([1, 2, 3, 4, 5]);
+            const list1 = new List([1, 2, 3, 3, 4, 5]);
             const list2 = new List([4, 5, 6, 7, 8]);
             const elist = list1.except(list2).toList();
             expect(elist.toArray()).to.deep.equal([1, 2, 3]);
         });
-        it("should only have 'Alice' and 'Senna'", () => {
-            const list1 = new List([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+        it("should return an array of [1,2]", () => {
+            const list1 = new List([1, 2, 3, 3, 4, 5]);
+            const list2 = new List([3, 4, 5, 6, 7, 8]);
+            const elist = list1.except(list2).toList();
+            expect(elist.toArray()).to.deep.equal([1, 2]);
+        });
+        it("should only have 'Alice', 'Noemi' and 'Senna'", () => {
+            const list1 = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
             const list2 = new List([Person.Mel, Person.Lenka, Person.Jane]);
             const elist = list1.except(list2, (p1, p2) => p1.name === p2.name);
-            expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Senna]);
+            expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Senna]);
+        });
+        it("should return people unique to first enumerable", () => {
+            const list1 = new List<Person>();
+            const list2 = new List<Person>();
+            for (let px = 0; px < 16000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
+                list1.add(p);
+            }
+            for (let px = 0; px < 7500; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                list2.add(p);
+            }
+            const exceptionList = list1.except(list2, (p1, p2) => p1.age === p2.age);
+            const ageCount = exceptionList.count(p => p.age <= 50);
+            expect(ageCount).to.eq(0);
         });
     });
 

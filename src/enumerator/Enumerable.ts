@@ -745,9 +745,17 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
+        const dict = new Dictionary<number, TElement>(null, comparator);
+        let index = 0;
+        for (const item of enumerable) {
+            if (!dict.containsValue(item, comparator)) {
+                dict.add(index++, item);
+            }
+        }
         for (const item of this) {
-            if (!enumerable.contains(item, comparator)) {
-                yield item
+            if (!dict.containsValue(item, comparator)) {
+                yield item;
+                dict.add(index++, item);
             }
         }
     }
