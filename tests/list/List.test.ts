@@ -357,7 +357,7 @@ describe("List", () => {
             const exceptionList = list1.except(list2, (p1, p2) => p1.age === p2.age);
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
-        });
+        }).timeout(10000);
     });
 
     describe("#first()", () => {

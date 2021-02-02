@@ -284,12 +284,10 @@ describe("Dictionary", () => {
     describe("#except()", () => {
         const dict1 = new Dictionary<number, string>();
         const dict2 = new Dictionary<number, string>();
-
         dict1.add(1, "a");
         dict1.add(2, "b");
         dict1.add(3, "c");
         dict1.add(4, "d");
-
         dict2.add(5, "e");
         dict2.add(2, "b");
         it("should return a new dictionary with the elements unique to first dictionary", () => {
