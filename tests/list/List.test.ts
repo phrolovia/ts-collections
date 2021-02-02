@@ -346,11 +346,11 @@ describe("List", () => {
         it("should return people unique to first enumerable", () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
-            for (let px = 0; px < 16000; ++px) {
+            for (let px = 0; px < 1600; ++px) {
                 const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
                 list1.add(p);
             }
-            for (let px = 0; px < 7500; ++px) {
+            for (let px = 0; px < 750; ++px) {
                 const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
                 list2.add(p);
             }
