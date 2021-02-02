@@ -338,19 +338,25 @@ describe("List", () => {
             expect(elist.toArray()).to.deep.equal([1, 2]);
         });
         it("should only have 'Alice', 'Noemi' and 'Senna'", () => {
-            const list1 = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane]);
-            const elist = list1.except(list2, (p1, p2) => p1.name === p2.name);
+            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const elist = list1.except(list2);
             expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Senna]);
         });
-        it("should return people unique to first enumerable", () => {
+        it("should only have 'Alice' and 'Senna'", () => {
+            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const elist = list1.except(list2, (p1, p2) => p1.name === p2.name);
+            expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Senna]);
+        });
+        it("should return a set of people unique to first enumerable", () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
-            for (let px = 0; px < 1600; ++px) {
+            for (let px = 0; px < 100000; ++px) {
                 const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
                 list1.add(p);
             }
-            for (let px = 0; px < 750; ++px) {
+            for (let px = 0; px < 100000; ++px) {
                 const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
                 list2.add(p);
             }
@@ -515,12 +521,39 @@ describe("List", () => {
             const elist = list1.intersect(list2).toList();
             expect(elist.toArray()).to.deep.equal([4, 5]);
         });
+        it("should return an array of [3, 4, 5]", () => {
+            const list1 = new List([1, 2, 3, 3, 4, 5, 5, 5, 11]);
+            const list2 = new List([3, 3, 3, 4, 4, 5, 5, 6, 7, 8]);
+            const elist = list1.intersect(list2).toList();
+            expect(elist.toArray()).to.deep.equal([3, 4, 5]);
+        });
         it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
-            const list1 = new List([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane]);
-            const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
+            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const elist = list1.intersect(list2);
             expect(elist.toArray()).to.deep.equal([Person.Mel, Person.Lenka, Person.Jane]);
         });
+        it("should only have 'Noemi', 'Mel', 'Lenka' and 'Jane'", () => {
+            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
+            expect(elist.toArray()).to.deep.equal([Person.Noemi, Person.Mel, Person.Lenka, Person.Jane]);
+        });
+        it("should return a set of people common in both enumerables", () => {
+            const list1 = new List<Person>();
+            const list2 = new List<Person>();
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
+                list1.add(p);
+            }
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                list2.add(p);
+            }
+            const exceptionList = list1.intersect(list2, (p1, p2) => p1.age === p2.age);
+            const ageCount = exceptionList.count(p => p.age > 50);
+            expect(ageCount).to.eq(0);
+        }).timeout(10000);
     });
 
     describe("#isEmpty()", () => {
@@ -1398,6 +1431,21 @@ describe("List", () => {
             const union = list1.union(list2);
             expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
         });
+        it("should return union of two enumerables", () => {
+            const list1 = new List<Person>();
+            const list2 = new List<Person>();
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
+                list1.add(p);
+            }
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                list2.add(p);
+            }
+            const exceptionList = list1.union(list2, (p1, p2) => p1.age === p2.age);
+            const ageCount = exceptionList.select(p => p.age).distinct().count();
+            expect(ageCount).to.not.greaterThan(90);
+        }).timeout(10000);
     });
 
     describe("#where()", () => {

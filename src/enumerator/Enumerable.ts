@@ -745,17 +745,16 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
-        const dict = new Dictionary<number, TElement>(null, comparator);
-        let index = 0;
+        const list = new List<TElement>([], comparator);
         for (const item of enumerable) {
-            if (!dict.containsValue(item, comparator)) {
-                dict.add(index++, item);
+            if (list.indexOf(item) === -1) {
+                list.add(item);
             }
         }
         for (const item of this) {
-            if (!dict.containsValue(item, comparator)) {
+            if (list.indexOf(item) === -1) {
+                list.add(item);
                 yield item;
-                dict.add(index++, item);
             }
         }
     }
@@ -774,14 +773,15 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* intersectGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
-        const intersectList: Array<TElement> = []
+        const list = new List<TElement>([], comparator);
+        for (const item of enumerable) {
+            if (list.indexOf(item) === -1) {
+                list.add(item);
+            }
+        }
         for (const item of this) {
-            if (enumerable.contains(item, comparator)) {
-                const exists = intersectList.find(d => comparator(item, d));
-                if (!exists) {
-                    yield item;
-                    intersectList.push(item);
-                }
+            if (list.remove(item)) {
+                yield item;
             }
         }
     }
