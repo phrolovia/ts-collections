@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai";
-import {LinkedList} from "../../imports";
+import {Enumerable, LinkedList} from "../../imports";
 import {Person} from "../models/Person";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
@@ -331,6 +331,16 @@ describe("LinkedList", () => {
             const lower = list.elementAtOrDefault(-1);
             expect(upper).to.eq(null);
             expect(lower).to.eq(null);
+        });
+    });
+
+    describe("#entries()", () => {
+        it("should return an indexed IterableIterator", () => {
+            const list = new LinkedList(Enumerable.range(1, 100));
+            for (const [index, element] of list.entries()) {
+                expect(index + 1).to.eq(element);
+                expect(list.get(index)).to.eq(element);
+            }
         });
     });
 

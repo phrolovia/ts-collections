@@ -20,6 +20,18 @@ export interface IList<TElement> extends ICollection<TElement> {
     addAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
 
     /**
+     * Returns an IterableIterator that yields a tuple of [index, element].
+     * <pre>
+     *     <code>
+     *          for (const [index, element] of list.entries()) {
+     *             //
+     *          }
+     *     </code>
+     * </pre>
+     */
+    entries(): IterableIterator<[number, TElement]>;
+
+    /**
      * Returns the element at the given index.
      * @param index The index from which the element will be returned.
      * @returns The element at the given index

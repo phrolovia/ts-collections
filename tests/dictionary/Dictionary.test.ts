@@ -281,6 +281,25 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#entries()", () => {
+        const dictionary = new Dictionary<string, Person>();
+        dictionary.add(Person.Noemi.name, Person.Noemi);
+        dictionary.add(Person.Alice.name, Person.Alice);
+        let index = 0;
+        it("should return an IterableIterator with key-value tuple", () => {
+            for (const [key, value] of dictionary.entries()) {
+                if (index === 0) {
+                    expect(key).to.eq(Person.Alice.name);
+                    expect(value.equals(Person.Alice)).to.be.true;
+                } else if (index === 1) {
+                    expect(key).to.eq(Person.Noemi.name);
+                    expect(value.equals(Person.Noemi)).to.be.true;
+                }
+                ++index;
+            }
+        });
+    });
+
     describe("#except()", () => {
         const dict1 = new Dictionary<number, string>();
         const dict2 = new Dictionary<number, string>();
@@ -459,7 +478,6 @@ describe("Dictionary", () => {
         dict1.add(1, "a");
         dict1.add(2, "b");
         dict1.add(3, "c");
-
         dict2.add(4, "d");
         dict2.add(2, "b");
         it("should return a dictionary consisting of equal KeyValuePairs", () => {

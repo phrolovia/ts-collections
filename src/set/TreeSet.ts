@@ -15,7 +15,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield * this.tree;
+        yield* this.tree;
     }
 
     public add(element: TElement): boolean {

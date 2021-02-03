@@ -241,8 +241,8 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public constructor(private readonly iterable: () => Iterable<TElement>) {
     }
 
-    [Symbol.iterator](): Iterator<TElement> {
-        return this.iterable()[Symbol.iterator]();
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.iterable();
     }
 
     public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
@@ -766,7 +766,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): Iterable<TResult> {
-        for (let element of this) {
+        for (const element of this) {
             const joinedEntries = innerEnumerable.where(innerElement => keyComparator(outerKeySelector(element), innerKeySelector(innerElement)));
             yield resultSelector(outerKeySelector(element), joinedEntries);
         }
@@ -817,9 +817,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* selectManyGenerator<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): Iterable<TResult> {
         let index = 0;
         for (const item of this) {
-            for (const subItem of selector(item, index)) {
-                yield subItem;
-            }
+            yield* selector(item, index);
             ++index;
         }
     }

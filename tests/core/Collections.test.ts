@@ -35,46 +35,105 @@ describe("Collections", () => {
 
     describe("#binarySearch()", () => {
         it("should search and find the index of given item", () => {
-            const list = new List([1, 2, 3]);
+            const array = [1, 2, 3];
+            const list = new List(array);
             expect(Collections.binarySearch(list, 1)).to.eq(0);
+            expect(Collections.binarySearch(array, 1)).to.eq(0);
             expect(Collections.binarySearch(list, 2)).to.eq(1);
+            expect(Collections.binarySearch(array, 2)).to.eq(1);
             expect(Collections.binarySearch(list, 3)).to.eq(2);
+            expect(Collections.binarySearch(array, 3)).to.eq(2);
             expect(Collections.binarySearch(list, 4)).to.eq(-1);
+            expect(Collections.binarySearch(array, 4)).to.eq(-1);
         });
         it("should search and find the index of given item #2", () => {
             const list = Enumerable.range(0, 100).toList();
+            const array = list.toArray();
             expect(Collections.binarySearch(list, 0)).to.eq(0);
-            expect(Collections.binarySearch(list, 50)).to.eq(50)
+            expect(Collections.binarySearch(array, 0)).to.eq(0);
+            expect(Collections.binarySearch(list, 50)).to.eq(50);
+            expect(Collections.binarySearch(array, 50)).to.eq(50);
             expect(Collections.binarySearch(list, 99)).to.eq(99);
+            expect(Collections.binarySearch(array, 99)).to.eq(99);
             for (let ix = 0; ix < 100; ++ix) {
                 expect(Collections.binarySearch(list, ix)).to.eq(ix);
+                expect(Collections.binarySearch(array, ix)).to.eq(ix);
             }
         });
         it("should search and find the index of given item #3", () => {
-            const list = new List([0]);
+            const array = [0];
+            const list = new List(array);
             expect(Collections.binarySearch(list, 0)).to.eq(0);
+            expect(Collections.binarySearch(array, 0)).to.eq(0);
             expect(Collections.binarySearch(list, 1)).to.eq(-1);
+            expect(Collections.binarySearch(array, 1)).to.eq(-1);
             list.clear();
+            array.length = 0;
             expect(Collections.binarySearch(list, 0)).to.eq(-1);
+            expect(Collections.binarySearch(array, 0)).to.eq(-1);
         });
         it("should search and find the index of given item #4", () => {
             const source: Person[] = [Person.Alice, Person.Bella, Person.Eliza, Person.Lenka, Person.Mel, Person.Priscilla];
             const list = new LinkedList(source);
             expect(Collections.binarySearch(list, Person.Priscilla, (p1, p2) => p1.name.localeCompare(p2.name))).to.eq(5);
+            expect(Collections.binarySearch(source, Person.Priscilla, (p1, p2) => p1.name.localeCompare(p2.name))).to.eq(5);
         });
     });
     describe("#fill()", () => {
         it("should replace all elements in the list with the given element", () => {
             const list = new List(["a", "b", "c", "d", "e"]);
-            Collections.fill(list, "x");
+            Collections.fill(list, "v");
             for (const s of list) {
-                expect(s).to.eq("x");
+                expect(s).to.eq("v");
             }
         });
         it("should not affect empty list", () => {
             const list = new LinkedList<Person>();
             Collections.fill(list, Person.Lucrezia);
             expect(list.size()).to.eq(0);
+        });
+    });
+    describe("#frequency()", () => {
+        it("should find the frequency of the given element", () => {
+            const array = ["A", "B", "F", "F", "R", "F", "T", "G", "N", "F"];
+            const list = new List(array);
+            const linkedList = new LinkedList(array);
+            const listFrequency = Collections.frequency(list, "F");
+            const linkedListFrequency = Collections.frequency(linkedList, "F");
+            const arrayFrequency = Collections.frequency(array, "F");
+            expect([arrayFrequency, linkedListFrequency, listFrequency]).to.deep.equal([4, 4, 4]);
+        });
+        it("should find the frequency of the given element #2", () => {
+            const array = [Person.Alice, Person.Alice, Person.Lucrezia, Person.Priscilla, Person.Jisu, Person.Alice, Person.Lucrezia, Person.Noemi2];
+            const list = new List(array);
+            const frequencyA = Collections.frequency(list, Person.Alice, (p1, p2) => p1.name === p2.name);
+            const frequencyL = Collections.frequency(list, Person.Lucrezia, (p1, p2) => p1.name === p2.name);
+            const frequencyN = Collections.frequency(array, Person.Noemi, (p1, p2) => p1.name === p2.name);
+            const frequencyP = Collections.frequency(array, Person.Priscilla, (p1, p2) => p1.name === p2.name);
+            expect(frequencyA).to.eq(3);
+            expect(frequencyL).to.eq(2);
+            expect(frequencyN).to.eq(1);
+            expect(frequencyP).to.eq(1);
+        });
+    });
+    describe("#replaceAll()", () => {
+        it("should replace old elements with new elements", () => {
+            const list = new List([1, 2, 3, 3, 1, 5, 6, 7]);
+            const array = list.toArray();
+            const oldListSize = list.size();
+            const oldArraySize = array.length;
+            const listResult = Collections.replaceAll(list, 3, 0);
+            const arrayResult = Collections.replaceAll(array, 1, -1);
+            const listResult2 = Collections.replaceAll(list, 111, 555);
+            expect(list.get(2)).to.eq(0);
+            expect(list.get(3)).to.eq(0);
+            expect(list.size()).to.eq(oldListSize);
+            expect(array[0]).to.eq(-1);
+            expect(array[4]).to.eq(-1);
+            expect(array.length).to.eq(oldArraySize);
+            expect(listResult).to.be.true;
+            expect(arrayResult).to.be.true;
+            expect(listResult2).to.be.false;
         });
     });
     describe("#swap()", () => {

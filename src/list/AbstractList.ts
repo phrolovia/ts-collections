@@ -13,6 +13,13 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return this.addAt(element, this.size());
     }
 
+    public* entries(): IterableIterator<[number, TElement]> {
+        let index = 0;
+        for (const element of this) {
+            yield [index++, element];
+        }
+    }
+
     public indexOf(element: TElement): number {
         let index = 0;
         if (element == null) {

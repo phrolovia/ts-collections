@@ -8,7 +8,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
-import {Enumerable, IList} from "../../imports";
+import {Enumerable} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
@@ -323,7 +323,15 @@ describe("List", () => {
             expect(lower).to.eq(null);
         });
     });
-
+    describe("#entries()", () => {
+        it("should return an indexed IterableIterator", () => {
+            const list = Enumerable.range(1, 100).toList();
+            for (const [index, element] of list.entries()) {
+                expect(index + 1).to.eq(element);
+                expect(list.get(index)).to.eq(element);
+            }
+        });
+    });
     describe("#except()", () => {
         it("should return an array of [1,2,3]", () => {
             const list1 = new List([1, 2, 3, 3, 4, 5]);

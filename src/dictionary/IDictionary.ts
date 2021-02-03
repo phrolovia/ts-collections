@@ -32,6 +32,18 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
     containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean;
 
     /**
+     * Returns an IterableIterator that yields a tuple of [key, value].
+     * <pre>
+     *     <code>
+     *          for (const [key, value] of dict.entries()) {
+     *             //
+     *          }
+     *     </code>
+     * </pre>
+     */
+    entries(): IterableIterator<[TKey, TValue]>;
+
+    /**
      * Returns the value associated with the given key.
      * @param key The key whose associated value will be returned
      * @returns The associated value of the key. If key does not exist, it will return null.

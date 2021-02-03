@@ -117,6 +117,12 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
+    public* entries(): IterableIterator<[TKey, TValue]> {
+        for (const pair of this) {
+            yield [pair.key, pair.value];
+        }
+    };
+
     public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparator;
         return EnumerableStatic.except(this, enumerable, comparator);
@@ -284,7 +290,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     public values(): List<TValue> {
-        return new List<TValue>(this.keyValueTree.toArray().map(p => p.value), this.valueComparator);
+        return this.keyValueTree.select(p => p.value).toList(this.valueComparator);
     }
 
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
