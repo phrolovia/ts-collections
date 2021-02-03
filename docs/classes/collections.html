@@ -89,8 +89,15 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="collections.html#addall" class="tsd-kind-icon">add<wbr>All</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="collections.html#binarysearch" class="tsd-kind-icon">binary<wbr>Search</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#binarysearchcore" class="tsd-kind-icon">binary<wbr>Search<wbr>Core</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#binarysearcharray" class="tsd-kind-icon">binary<wbr>Search<wbr>Array</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#binarysearcharraycore" class="tsd-kind-icon">binary<wbr>Search<wbr>Array<wbr>Core</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#binarysearchlist" class="tsd-kind-icon">binary<wbr>Search<wbr>List</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#binarysearchlistcore" class="tsd-kind-icon">binary<wbr>Search<wbr>List<wbr>Core</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="collections.html#fill" class="tsd-kind-icon">fill</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="collections.html#frequency" class="tsd-kind-icon">frequency</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="collections.html#replaceall" class="tsd-kind-icon">replace<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#replaceallarray" class="tsd-kind-icon">replace<wbr>All<wbr>Array</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external"><a href="collections.html#replacealllist" class="tsd-kind-icon">replace<wbr>All<wbr>List</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="collections.html#swap" class="tsd-kind-icon">swap</a></li>
 							</ul>
 						</section>
@@ -109,7 +116,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/Collections.ts#L7">src/core/Collections.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L8">src/core/Collections.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="collections.html" class="tsd-signature-type">Collections</a></h4>
@@ -129,7 +136,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/Collections.ts#L18">src/core/Collections.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L19">src/core/Collections.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -170,19 +177,19 @@
 					<a name="binarysearch" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> binary<wbr>Search</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>list<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>sequence<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/Collections.ts#L34">src/core/Collections.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L35">src/core/Collections.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Performs a binary search on the given list and returns the index of the element. The list must be sorted prior to calling this method.
-									If the searched element exists multiple times in the list, the returned index is arbitrary.</p>
+									<p>Performs a binary search on the given sequence and returns the index of the element. The sequence must be sorted prior to calling this method.
+									If the searched element exists multiple times in the sequence, the returned index is arbitrary.</p>
 								</div>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -194,9 +201,9 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>list: <a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>sequence: <a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The list in which the element will be binary-searched for. It must be sorted.</p>
+										<p>The list or array in which the element will be binary-searched for. It must be sorted.</p>
 									</div>
 								</li>
 								<li>
@@ -208,7 +215,7 @@
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The comparator method that will be used to compare the elements. It should always be provided if the list is of a complex type.</p>
+										<p>The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.</p>
 									</div>
 								</li>
 							</ul>
@@ -218,16 +225,127 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
-					<a name="binarysearchcore" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> binary<wbr>Search<wbr>Core</h3>
+					<a name="binarysearcharray" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> binary<wbr>Search<wbr>Array</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search<wbr>Core&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>list<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, startIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, comparator<span class="tsd-signature-symbol">: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search<wbr>Array&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>array<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/Collections.ts#L75">src/core/Collections.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L100">src/core/Collections.ts:100</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>array: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>element: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+					<a name="binarysearcharraycore" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> binary<wbr>Search<wbr>Array<wbr>Core</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search<wbr>Array<wbr>Core&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>array<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, startIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, comparator<span class="tsd-signature-symbol">: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L114">src/core/Collections.ts:114</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>array: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>element: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5>startIndex: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>endIndex: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+					<a name="binarysearchlist" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> binary<wbr>Search<wbr>List</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search<wbr>List&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>list<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L132">src/core/Collections.ts:132</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>list: <a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>element: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+					<a name="binarysearchlistcore" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> binary<wbr>Search<wbr>List<wbr>Core</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">binary<wbr>Search<wbr>List<wbr>Core&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>list<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, startIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, endIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, comparator<span class="tsd-signature-symbol">: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L146">src/core/Collections.ts:146</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -268,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/Collections.ts#L53">src/core/Collections.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L48">src/core/Collections.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -302,6 +420,186 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
+					<a name="frequency" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> frequency</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">frequency&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L60">src/core/Collections.ts:60</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Finds the count of the given element in the source iterable.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>source: <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The iterable source in which the given element will be counted.</p>
+									</div>
+								</li>
+								<li>
+									<h5>element: <span class="tsd-signature-type">TElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The element that will be counted.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The comparator method that will be used to compare the equality of the elements.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
+					<a name="replaceall" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> replace<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">replace<wbr>All&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>sequence<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, oldElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, newElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L76">src/core/Collections.ts:76</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Replaces the old element with the new element in a given sequence.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sequence: <a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The sequence whose old elements will be replaced.</p>
+									</div>
+								</li>
+								<li>
+									<h5>oldElement: <span class="tsd-signature-type">TElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The element that will be replaced with the new element.</p>
+									</div>
+								</li>
+								<li>
+									<h5>newElement: <span class="tsd-signature-type">TElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The element that will replace the old element.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The comparator method that will be used to compare the equality of the elements.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+					<a name="replaceallarray" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> replace<wbr>All<wbr>Array</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">replace<wbr>All<wbr>Array&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>array<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, oldElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, newElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L164">src/core/Collections.ts:164</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>array: <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>oldElement: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5>newElement: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5>comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+					<a name="replacealllist" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> replace<wbr>All<wbr>List</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">replace<wbr>All<wbr>List&lt;TElement&gt;<span class="tsd-signature-symbol">(</span>list<span class="tsd-signature-symbol">: </span><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, oldElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, newElement<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L175">src/core/Collections.ts:175</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TElement</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>list: <a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>oldElement: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5>newElement: <span class="tsd-signature-type">TElement</span></h5>
+								</li>
+								<li>
+									<h5>comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
 					<a name="swap" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> swap</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
@@ -311,7 +609,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/45708f2/src/core/Collections.ts#L66">src/core/Collections.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d3307c8/src/core/Collections.ts#L91">src/core/Collections.ts:91</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -382,10 +680,31 @@
 								<a href="collections.html#binarysearch" class="tsd-kind-icon">binary<wbr>Search</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
-								<a href="collections.html#binarysearchcore" class="tsd-kind-icon">binary<wbr>Search<wbr>Core</a>
+								<a href="collections.html#binarysearcharray" class="tsd-kind-icon">binary<wbr>Search<wbr>Array</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+								<a href="collections.html#binarysearcharraycore" class="tsd-kind-icon">binary<wbr>Search<wbr>Array<wbr>Core</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+								<a href="collections.html#binarysearchlist" class="tsd-kind-icon">binary<wbr>Search<wbr>List</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+								<a href="collections.html#binarysearchlistcore" class="tsd-kind-icon">binary<wbr>Search<wbr>List<wbr>Core</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
 								<a href="collections.html#fill" class="tsd-kind-icon">fill</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
+								<a href="collections.html#frequency" class="tsd-kind-icon">frequency</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
+								<a href="collections.html#replaceall" class="tsd-kind-icon">replace<wbr>All</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+								<a href="collections.html#replaceallarray" class="tsd-kind-icon">replace<wbr>All<wbr>Array</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-private tsd-is-static tsd-is-external">
+								<a href="collections.html#replacealllist" class="tsd-kind-icon">replace<wbr>All<wbr>List</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external">
 								<a href="collections.html#swap" class="tsd-kind-icon">swap</a>
