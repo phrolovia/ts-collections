@@ -13,13 +13,6 @@ export interface IList<TElement> extends ICollection<TElement> {
     addAt(element: TElement, index: number): boolean;
 
     /**
-     * Adds all of the elements from the given collection or array to this list.
-     * @param collection The collection or array whose elements will be added to this list.
-     * @returns {boolean} true if this list is modified as a result.
-     */
-    addAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
-
-    /**
      * Returns an IterableIterator that yields a tuple of [index, element].
      * <pre>
      *     <code>

@@ -16,7 +16,7 @@ export interface ICollection<TElement> extends IEnumerable<TElement> {
      * to this collection.
      * @returns {boolean} Returns true if this collection is changed.
      */
-    addAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
+    addAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
 
     /**
      * Remove all elements from this collection.

@@ -24,7 +24,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return new Enumerable<TSource>([]);
     }
 
-    public static from<TSource>(source: IEnumerable<TSource> | Array<TSource>): IEnumerable<TSource> {
+    public static from<TSource>(source: Iterable<TSource>): IEnumerable<TSource> {
         return new Enumerable(source);
     }
 
@@ -44,8 +44,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         });
     }
 
-    [Symbol.iterator](): Iterator<TElement> {
-        return this.iterable[Symbol.iterator]();
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.iterable;
     }
 
     public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {

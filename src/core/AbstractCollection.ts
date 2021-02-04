@@ -20,7 +20,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         this.comparator = comparator ?? Comparators.equalityComparator;
     }
 
-    public addAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public addAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
         for (const element of collection) {
             this.add(element);
