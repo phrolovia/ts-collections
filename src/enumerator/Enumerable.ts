@@ -760,9 +760,18 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): Iterable<IGrouping<TKey, TElement>> {
-        const groupedEnumerable = this.select(keySelector).distinct(keyComparator)
-            .select(k => new Grouping(k, this.where(d => keyComparator(k, keySelector(d)))));
-        yield* groupedEnumerable;
+        const groups: Array<IGrouping<TKey, TElement>> = [];
+        for (const item of this) {
+            const key = keySelector(item);
+            const group = groups.find(g => keyComparator(g.key, key));
+            if (group) {
+                (group.source as List<TElement>).add(item);
+            } else {
+                const newGroup = new Grouping(key, new List([item]));
+                groups.push(newGroup);
+            }
+        }
+        yield* groups;
     }
 
     private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): Iterable<TResult> {

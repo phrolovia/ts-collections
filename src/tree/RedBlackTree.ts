@@ -120,7 +120,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         }
     }
 
-    public removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
         for (const element of collection) {
             this.delete(element);

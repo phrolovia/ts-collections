@@ -470,6 +470,19 @@ describe("List", () => {
             }
             expect(people).to.deep.equal(expectedResult);
         });
+        it("should work with good performance", () => {
+            const list = new List<Person>();
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                list.add(p);
+            }
+            console.time("groupBy");
+            const people: Person[] = [];
+            list.groupBy(p => p.age).forEach(g => {
+                g.source.orderBy(n => n).forEach(p => people.push(p));
+            });
+            console.timeEnd("groupBy");
+        });
     });
 
     describe("#groupJoin()", () => {

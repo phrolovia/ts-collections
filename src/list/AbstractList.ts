@@ -13,6 +13,17 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return this.addAt(element, this.size());
     }
 
+    public elementAt(index: number): TElement {
+        return this.get(index);
+    }
+
+    public elementAtOrDefault(index: number): TElement {
+        if (index < 0 || index >= this.size()) {
+            return null;
+        }
+        return this.get(index);
+    }
+
     public* entries(): IterableIterator<[number, TElement]> {
         let index = 0;
         for (const element of this) {
@@ -58,7 +69,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return -1;
     }
 
-    public removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
         let index = 0;
         for (const e of collection) {

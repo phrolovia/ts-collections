@@ -54,7 +54,7 @@ export interface ICollection<TElement> extends IEnumerable<TElement> {
      * @param collection The collection or array whose elements will be removed from this collection.
      * @returns true if this collection is modified as a result.
      */
-    removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
+    removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
 
     /**
      * Removes all the elements that satisfy the given predicate from this collection.

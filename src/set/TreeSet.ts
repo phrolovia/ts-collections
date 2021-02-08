@@ -35,7 +35,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
         return this.tree.remove(element);
     }
 
-    public removeAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         return this.tree.removeAll(collection);
     }
 
