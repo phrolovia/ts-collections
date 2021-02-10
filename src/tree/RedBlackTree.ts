@@ -107,7 +107,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             this.root = node;
         } else {
             const temp: RedBlackNode<TElement> = this.searchNode(element);
-            if (temp.getData() === element) {
+            if (this.orderComparator(temp.getData(), element) === 0) {
                 return;
             }
             node.setParent(temp);
