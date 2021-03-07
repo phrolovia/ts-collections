@@ -31,7 +31,8 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         }
     }
 
-    public indexOf(element: TElement): number {
+    public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
+        comparator ??= this.comparator;
         let index = 0;
         if (element == null) {
             for (const e of this) {
@@ -42,7 +43,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
             }
         } else {
             for (const e of this) {
-                if (this.comparator(e, element)) {
+                if (comparator(e, element)) {
                     return index;
                 }
                 ++index;
@@ -51,8 +52,9 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return -1;
     }
 
-    public lastIndexOf(element: TElement): number {
+    public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
         const array = this.toArray();
+        comparator ??= this.comparator;
         if (element == null) {
             for (let index = array.length - 1; index >= 0; --index) {
                 if (array[index] == null) {
@@ -61,7 +63,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
             }
         } else {
             for (let index = array.length - 1; index >= 0; --index) {
-                if (this.comparator(element, array[index])) {
+                if (comparator(element, array[index])) {
                     return index;
                 }
             }

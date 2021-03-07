@@ -533,6 +533,11 @@ describe("List", () => {
         it("should return 1", () => {
             expect(list1.indexOf(Person.Noemi)).to.eq(1);
         });
+        it("should use the given comparator", () => {
+            const ageComparator = (p1: Person, p2: Person) => p1?.age === p2?.age;
+            const index = list1.indexOf(Person.Noemi2, ageComparator);
+            expect(index).to.eq(3);
+        });
     });
 
     describe("#intersect()", () => {
@@ -665,6 +670,11 @@ describe("List", () => {
         });
         it("should lastIndexOf 1", () => {
             expect(list1.lastIndexOf(Person.Noemi)).to.eq(1);
+        });
+        it("should use the given comparator", () => {
+            const nameComparator = (p1: Person, p2: Person) => p1?.name === p2?.name;
+            const index = list1.lastIndexOf(Person.Noemi, nameComparator);
+            expect(index).to.eq(3);
         });
         it("should return -1", () => {
             list1.removeIf(p => !p);
