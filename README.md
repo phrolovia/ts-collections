@@ -168,4 +168,4 @@ const array = Enumerable.from([1, 2, 3, 4, 5]).where(n => n % 2 !== 0).toArray()
 
 ## Documentation & API
 A simple documentation can be found at:
-https://discordelia.github.io/ts-collections/
+https://luminela.github.io/ts-collections/
