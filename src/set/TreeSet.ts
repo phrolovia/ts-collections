@@ -2,6 +2,7 @@ import {AbstractSet, ICollection, ISet, ITree, RedBlackTree} from "../../imports
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
     private readonly tree: ITree<TElement>;
@@ -24,6 +25,10 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
 
     public clear(): void {
         this.tree.clear();
+    }
+
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.tree.contains(element, comparator);
     }
 
     public headSet(toElement: TElement, inclusive: boolean = false): ISet<TElement> {

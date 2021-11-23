@@ -13,6 +13,10 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return this.addAt(element, this.size());
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.indexOf(element, comparator) !== -1;
+    }
+
     public elementAt(index: number): TElement {
         return this.get(index);
     }

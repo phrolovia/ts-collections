@@ -227,6 +227,14 @@ describe("List", () => {
         it("should not contain person 'Lenka'", () => {
             expect(personList.contains(Person.Lenka, personComparator)).to.eq(false);
         });
+        it("should run fast with big collections", () => {
+            const bigPeopleArray = Helper.generateRandomPerson(200000);
+            const searchedPerson = new Person("Mona", "Lumia", 21);
+            bigPeopleArray.splice(Helper.generateRandomNumber(0, bigPeopleArray.length - 1), 0, searchedPerson);
+            const list = new List(bigPeopleArray);
+            const includes = list.contains(searchedPerson, personComparator);
+            expect(includes).to.be.true;
+        });
     });
 
     describe("#containsAll()", () => {
@@ -1438,14 +1446,14 @@ describe("List", () => {
         it("should create a lookup with name being the key", () => {
             expect(lookup.size()).to.eq(3);
             expect(lookup.hasKey("Noemi")).to.eq(true);
-            for (const item of lookup) {
-                console.log("Key: ", item.key);
-                const value = lookup.get(item.key);
-                for (const p of value) {
-                    console.log("Person Value: ", p);
-                }
-                console.log("Null: ", lookup.get("Fujiwara"));
-            }
+            // for (const item of lookup) {
+            //     console.log("Key: ", item.key);
+            //     const value = lookup.get(item.key);
+            //     for (const p of value) {
+            //         console.log("Person Value: ", p);
+            //     }
+            //     console.log("Null: ", lookup.get("Fujiwara"));
+            // }
         });
     });
 

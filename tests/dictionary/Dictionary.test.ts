@@ -415,7 +415,7 @@ describe("Dictionary", () => {
         it("should group people by age", () => {
             const group = dict.groupBy(p => p.value.age).toDictionary(g => g.key, g => g, null);
             const ages: number[] = [];
-            const groupedAges: { [age: number]: number[] } = {};
+            const groupedAges: Record<number, number[]> = {};
             for (const ageGroup of group.values()) {
                 ages.push(ageGroup.key)
                 groupedAges[ageGroup.key] ??= [];

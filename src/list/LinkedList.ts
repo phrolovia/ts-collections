@@ -55,12 +55,12 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
     }
 
     public clear(): void {
-        for (let x: Node<TElement> = this.firstNode; x != null;) {
-            const next = x.next;
-            x.item = null;
-            x.next = null;
-            x.prev = null;
-            x = next;
+        for (let node: Node<TElement> = this.firstNode; node != null;) {
+            const next = node.next;
+            node.item = null;
+            node.next = null;
+            node.prev = null;
+            node = next;
         }
         this.firstNode = this.lastNode = null;
         this.listSize = 0;
@@ -109,16 +109,16 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
 
     public remove(element: TElement): boolean {
         if (element == null) {
-            for (let x: Node<TElement> = this.firstNode; x != null; x = x.next) {
-                if (x.item == null) {
-                    this.unlink(x);
+            for (let node: Node<TElement> = this.firstNode; node != null; node = node.next) {
+                if (node.item == null) {
+                    this.unlink(node);
                     return true;
                 }
             }
         } else {
-            for (let x: Node<TElement> = this.firstNode; x != null; x = x.next) {
-                if (this.comparator(x.item, element)) {
-                    this.unlink(x);
+            for (let node: Node<TElement> = this.firstNode; node != null; node = node.next) {
+                if (this.comparator(node.item, element)) {
+                    this.unlink(node);
                     return true;
                 }
             }
@@ -132,9 +132,9 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
 
     public set(index: number, element: TElement): TElement {
         this.checkElementIndex(index);
-        const x = this.node(index);
-        const oldElement = x.item;
-        x.item = element;
+        const node = this.node(index);
+        const oldElement = node.item;
+        node.item = element;
         return oldElement;
     }
 
@@ -209,17 +209,17 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
 
     private node(index: number): Node<TElement> {
         if (index < (this.listSize >> 1)) {
-            let x = this.firstNode;
+            let node = this.firstNode;
             for (let ix = 0; ix < index; ++ix) {
-                x = x.next;
+                node = node.next;
             }
-            return x;
+            return node;
         } else {
-            let x = this.lastNode;
+            let node = this.lastNode;
             for (let ix = this.listSize - 1; ix > index; --ix) {
-                x = x.prev;
+                node = node.prev;
             }
-            return x;
+            return node;
         }
     }
 
@@ -239,26 +239,26 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         return this.unlinkLast(lastNode);
     }
 
-    private unlink(x: Node<TElement>): TElement {
-        const element: TElement = x.item;
-        const next = x.next;
-        const prev = x.prev;
+    private unlink(node: Node<TElement>): TElement {
+        const element: TElement = node.item;
+        const next = node.next;
+        const prev = node.prev;
 
         if (prev == null) {
             this.firstNode = next;
         } else {
             prev.next = next;
-            x.prev = null;
+            node.prev = null;
         }
 
         if (next == null) {
             this.lastNode = prev;
         } else {
             next.prev = prev;
-            x.next = null;
+            node.next = null;
         }
 
-        x.item = null;
+        node.item = null;
         this.listSize--;
         return element;
     }

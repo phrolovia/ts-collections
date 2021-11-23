@@ -1,3 +1,5 @@
+import {Person} from "../models/Person";
+
 export abstract class Helper {
     public static generateRandomNumber(min: number, max: number) {
         return Math.floor( Math.random() * ( 1 + max - min ) ) + min;
@@ -16,7 +18,7 @@ export abstract class Helper {
         let i = count;
         const numbers: number[] = [];
         while (i > 0) {
-            var int = Math.random() * Math.pow(10, 8) << 0;
+            const int = Math.random() * Math.pow(10, 8) << 0;
             if (!intsmap[int]) {
                 intsmap[int] = true;
                 numbers.push(int);
@@ -24,5 +26,13 @@ export abstract class Helper {
             }
         }
         return numbers;
+    }
+    public static generateRandomPerson(count: number): Person[] {
+        const people: Person[] = [];
+        for (let px = 0; px < count; ++px) {
+            const person = new Person(this.generateRandomString(10), this.generateRandomString(15), this.generateRandomNumber(1, 100));
+            people.push(person);
+        }
+        return people;
     }
 }
