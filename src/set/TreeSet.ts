@@ -5,13 +5,15 @@ import {Comparators} from "../shared/Comparators";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
+    private readonly orderComparator: OrderComparator<TElement>;
     private readonly tree: ITree<TElement>;
 
     public constructor(
         iterable: Iterable<TElement> = [] as TElement[],
         comparator: OrderComparator<TElement> = Comparators.orderComparator
     ) {
-        super(comparator);
+        super((e1, e2) => comparator(e1, e2) === 0);
+        this.orderComparator = comparator;
         this.tree = new RedBlackTree<TElement>(comparator, iterable);
     }
 
