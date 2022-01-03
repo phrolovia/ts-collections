@@ -1,6 +1,6 @@
 {
     "name": "@luminela/ts-collections",
-    "version": "7.0.0",
+    "version": "7.0.0-beta",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
