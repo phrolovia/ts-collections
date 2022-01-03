@@ -71,12 +71,12 @@ describe("RedBlackTree", () => {
             expect(tree.Count).to.eq(3);
         });
         it("should not have duplicates", () => {
-            const randomArray = randomArrayGenerator(10000);
+            const randomArray = randomArrayGenerator(5000);
             const distinct = Enumerable.from(randomArray).distinct().toArray();
             const tree = new RedBlackTree<number>(null, randomArray);
             expect(distinct.length).to.eq(tree.size());
             expect(distinct.length).to.eq(tree.Count);
-        });
+        }).timeout(5000);
         it("should not have duplicates #2", () => {
             const repeatedEnumerable = Enumerable.repeat(100, 100);
             const tree = new RedBlackTree<number>(null, repeatedEnumerable);

@@ -397,7 +397,7 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Senna)).to.eq(Person.Senna.age);
         });
         it("should get the value which belongs to the given key #2", () => {
-            const numbers = Helper.generateRandomUniqueNumbers(1000000);
+            const numbers = Helper.generateRandomUniqueNumbers(500000);
             const dict = new Dictionary<number, string>();
             numbers.forEach(n => dict.add(n, n.toString()));
             for (const num of numbers) {
