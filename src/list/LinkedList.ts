@@ -31,6 +31,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
                 this.add(element);
             }
         }
+        this.updateCount();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -63,7 +64,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
             node = next;
         }
         this.firstNode = this.lastNode = null;
-        this.listSize = 0;
+        this.ListSize = 0;
     }
 
     public dequeue(): TElement {
@@ -180,7 +181,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         } else {
             predecessor.next = newNode;
         }
-        this.listSize++;
+        this.ListSize = this.listSize + 1;
     }
 
     private linkFirst(element: TElement): void {
@@ -192,7 +193,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         } else {
             firstNode.prev = newNode;
         }
-        this.listSize++;
+        this.ListSize = this.listSize + 1;
     }
 
     private linkLast(element: TElement): void {
@@ -204,7 +205,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         } else {
             last.next = newNode;
         }
-        this.listSize++;
+        this.ListSize = this.listSize + 1;
     }
 
     private node(index: number): Node<TElement> {
@@ -259,7 +260,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
 
         node.item = null;
-        this.listSize--;
+        this.ListSize = this.listSize - 1;
         return element;
     }
 
@@ -274,7 +275,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         } else {
             next.prev = null;
         }
-        this.listSize--;
+        this.ListSize = this.listSize - 1;
         return element;
     }
 
@@ -289,7 +290,12 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         } else {
             prev.next = null;
         }
-        this.listSize--;
+        this.ListSize = this.listSize - 1;
         return element;
+    }
+
+    private set ListSize(size: number) {
+        this.listSize = size;
+        this.updateCount();
     }
 }

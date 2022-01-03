@@ -6,10 +6,12 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Selector} from "../shared/Selector";
 import {INode} from "./INode";
+import {Writable} from "../shared/Writable";
 
 export abstract class AbstractTree<TElement> extends AbstractCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement> = null;
     protected root: INode<TElement> = null;
+    protected treeSize: number = 0;
 
     protected constructor(comparator?: OrderComparator<TElement>) {
         super(((e1: TElement, e2: TElement) => Object.is(e1, e2) || (comparator ?? Comparators.orderComparator)(e1, e2) === 0));
@@ -22,6 +24,8 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
 
     public clear(): void {
         this.root = null;
+        this.treeSize = 0;
+        this.updateCount();
     }
 
     public find(predicate: Predicate<TElement>): TElement {
@@ -76,7 +80,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
     }
 
     public size(): number {
-        return this.countTreeNodes(this.root);
+        return this.treeSize;
     }
 
     public toArray(): TElement[] {
@@ -102,6 +106,14 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
                 break;
         }
         return array;
+    }
+
+    /**
+     * Updates the Count property of the tree.
+     * @param countDiff 1 for increase, -1 for decrease
+     */
+    protected updateTreeCount(countDiff: 1 | -1): void {
+        (this.Count as Writable<number>) = this.Count + countDiff;
     }
 
     protected toInorderArray(root: INode<TElement>, target: TElement[]): void {

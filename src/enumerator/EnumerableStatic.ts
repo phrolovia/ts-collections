@@ -50,8 +50,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).defaultIfEmpty(value);
     }
 
-    public static distinct<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
-        return new Enumerable(source).distinct(comparator);
+    public static distinct<TElement, TKey>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return new Enumerable(source).distinct(keySelector, keyComparator);
     }
 
     public static elementAt<TElement>(source: IEnumerable<TElement>, index: number): TElement {

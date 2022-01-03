@@ -84,6 +84,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
                 this.removeAt(index);
             }
         }
+        this.updateCount();
         return this.size() !== oldSize;
     }
 
@@ -94,6 +95,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
                 this.removeAt(index);
             }
         }
+        this.updateCount();
         return this.size() !== oldSize;
     }
 
@@ -107,6 +109,7 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
                 this.removeAt(index);
             }
         }
+        this.updateCount();
         return this.size() !== oldSize;
     }
 

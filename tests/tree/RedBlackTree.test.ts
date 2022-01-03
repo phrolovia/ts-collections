@@ -55,6 +55,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(1)).to.be.true;
             expect(tree.contains(2)).to.be.true;
             expect(tree.contains(3)).to.be.true;
+            expect(tree.Count).to.eq(3);
         });
         it("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>(personComparator);
@@ -67,17 +68,20 @@ describe("RedBlackTree", () => {
             expect(tree.size()).to.eq(3);
             expect(tree.contains(noemiTest)).to.be.true; // since it is equal to Person.Noemi via personComparator
             expect(added).to.be.false;
+            expect(tree.Count).to.eq(3);
         });
         it("should not have duplicates", () => {
             const randomArray = randomArrayGenerator(10000);
             const distinct = Enumerable.from(randomArray).distinct().toArray();
             const tree = new RedBlackTree<number>(null, randomArray);
             expect(distinct.length).to.eq(tree.size());
+            expect(distinct.length).to.eq(tree.Count);
         });
         it("should not have duplicates #2", () => {
             const repeatedEnumerable = Enumerable.repeat(100, 100);
             const tree = new RedBlackTree<number>(null, repeatedEnumerable);
             expect(tree.size()).to.eq(1);
+            expect(tree.Count).to.eq(1);
         });
     });
 
@@ -86,8 +90,10 @@ describe("RedBlackTree", () => {
         it("should remove all data from the tree", () => {
             tree.clear();
             expect(tree.size()).to.eq(0);
+            expect(tree.Count).to.eq(0);
             tree.insert("z");
             expect(tree.size()).to.eq(1);
+            expect(tree.Count).to.eq(1);
         });
     });
 
@@ -101,6 +107,7 @@ describe("RedBlackTree", () => {
             tree.delete(1010); // this will do nothing
             expect(tree.size()).to.eq(2);
             expect(tree.contains(2)).to.be.false;
+            expect(tree.Count).to.eq(2);
         });
         it("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>(personComparator);
@@ -110,6 +117,7 @@ describe("RedBlackTree", () => {
             tree.delete(Person.Noemi);
             expect(tree.size()).to.eq(2);
             expect(tree.contains(Person.Noemi2)).to.be.true; // since it is equal to Person.Noemi via personComparator
+            expect(tree.Count).to.eq(2);
         });
         it("should add 1000 random number and then delete them randomly", () => {
             const numTree = new RedBlackTree<number>();
@@ -122,6 +130,7 @@ describe("RedBlackTree", () => {
                 numTree.delete(rand);
             }
             expect(numTree.size()).to.eq(0);
+            expect(numTree.Count).to.eq(0);
         });
     });
 
@@ -201,6 +210,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(1)).to.be.true;
             expect(tree.contains(2)).to.be.true;
             expect(tree.contains(3)).to.be.true;
+            expect(tree.Count).to.eq(3);
         });
         it("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>(personComparator);
@@ -212,15 +222,18 @@ describe("RedBlackTree", () => {
             tree.insert(noemiTest);
             expect(tree.size()).to.eq(3);
             expect(tree.contains(noemiTest)).to.be.true; // since it is equal to Person.Noemi via personComparator
+            expect(tree.Count).to.eq(3);
         });
     });
 
-    describe("#isEmpty", () => {
+    describe("#isEmpty()", () => {
         it("should return true if tree is empty (and false if not)", () => {
             const tree = new RedBlackTree<number>();
             expect(tree.isEmpty()).to.be.true;
+            expect(tree.Count).to.eq(0);
             tree.insert(1);
             expect(tree.isEmpty()).to.be.false;
+            expect(tree.Count).to.eq(1);
         });
     });
 
@@ -233,6 +246,7 @@ describe("RedBlackTree", () => {
             tree.remove(2);
             tree.remove(1010); // this will do nothing
             expect(tree.size()).to.eq(2);
+            expect(tree.Count).to.eq(2);
             expect(tree.contains(2)).to.be.false;
         });
         it("should use provided comparator", () => {
@@ -242,6 +256,7 @@ describe("RedBlackTree", () => {
             tree.add(Person.Noemi2);
             tree.remove(Person.Noemi);
             expect(tree.size()).to.eq(2);
+            expect(tree.Count).to.eq(2);
             expect(tree.contains(Person.Noemi2)).to.be.true; // since it is equal to Person.Noemi via personComparator
         });
         it("should add 1000 random number and then delete them randomly", () => {
@@ -255,6 +270,7 @@ describe("RedBlackTree", () => {
                 numTree.remove(rand);
             }
             expect(numTree.size()).to.eq(0);
+            expect(numTree.Count).to.eq(0);
         });
         it("should return false if element is not in the tree", () => {
             const tree = new RedBlackTree(null, [1, 2, 3, 4]);
@@ -273,6 +289,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Vanessa)).to.be.false;
             expect(tree.contains(Person.Bella)).to.be.true;
             expect(tree.contains(Person.Lucrezia)).to.be.true;
+            expect(tree.Count).to.eq(2);
         });
     });
 
@@ -286,6 +303,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Bella)).to.be.false;
             expect(tree.contains(Person.Vanessa)).to.be.true;
             expect(tree.contains(Person.Lucrezia)).to.be.true;
+            expect(tree.Count).to.eq(2);
         });
     });
 
@@ -300,6 +318,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Vanessa)).to.be.true;
             expect(tree.contains(Person.Bella)).to.be.false;
             expect(tree.contains(Person.Lucrezia)).to.be.false;
+            expect(tree.Count).to.eq(3);
         });
     });
 

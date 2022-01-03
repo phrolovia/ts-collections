@@ -4,6 +4,11 @@ import {EqualityComparator} from "../shared/EqualityComparator";
 export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
 
     /**
+     * Returns the number of elements in this dictionary.
+     */
+    readonly Count: number;
+
+    /**
      * Adds the specified key and value to the dictionary.
      * @param key The key of the element to add.
      * @param value The value of the element to add. It can be <code>null</code>.

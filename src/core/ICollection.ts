@@ -4,6 +4,11 @@ import {IndexedAction} from "../shared/IndexedAction";
 
 export interface ICollection<TElement> extends IEnumerable<TElement> {
     /**
+     * Returns the number of element in this collection.
+     */
+    readonly Count: number;
+
+    /**
      * Adds the element to the collection.
      * @param element The element that will be added to the collection
      * @returns {boolean} true if item is added, false otherwise.

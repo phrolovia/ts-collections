@@ -13,10 +13,12 @@ import {Predicate} from "../shared/Predicate";
 import {Dictionary, IOrderedEnumerable, List, RedBlackTree} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
+import {Writable} from "../shared/Writable";
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;
     private readonly lookupTree: RedBlackTree<IGrouping<TKey, TElement>>;
+    public readonly Count: number = 0;
 
     private constructor(keyComparator?: OrderComparator<TKey>) {
         this.keyComparator = keyComparator;
@@ -45,6 +47,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
                 lookup.lookupTree.insert(new Grouping(keySelector(element), new List<TValue>([valueSelector(element)])));
             }
         }
+        lookup.updateCount();
         return lookup;
     }
 
@@ -89,8 +92,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.defaultIfEmpty(value);
     }
 
-    public distinct(comparator?: EqualityComparator<IGrouping<TKey, TElement>>): IEnumerable<IGrouping<TKey, TElement>> {
-        return this.lookupTree.distinct(comparator);
+    public distinct<TDistinctKey>(keySelector: Selector<IGrouping<TKey, TElement>, TDistinctKey>, comparator?: EqualityComparator<TDistinctKey>): IEnumerable<IGrouping<TKey, TElement>> {
+        return this.lookupTree.distinct(keySelector, comparator);
     }
 
     public elementAt(index: number): IGrouping<TKey, TElement> {
@@ -260,4 +263,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.zip(enumerable, zipper);
     }
 
+    protected updateCount(): void {
+        (this.Count as Writable<number>) = this.size();
+    }
 }

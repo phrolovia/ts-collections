@@ -30,6 +30,7 @@ describe("Dictionary", () => {
             expect(dictionary.get("Barbara")).to.eq(212121211);
             expect(dictionary.get("Noelle")).to.not.undefined;
             expect(dictionary.get("Noelle")).to.eq(1718615156);
+            expect(dictionary.Count).to.eq(3);
         });
         it("should throw error if key already exists", () => {
             expect(() => dictionary.add("Amber", 1)).to.throw();
@@ -115,6 +116,7 @@ describe("Dictionary", () => {
             expect(dictionary.size()).to.eq(4);
             expect(dictionary.get("Reina")).to.null;
             expect(dict2 === dictionary).to.eq(false);
+            expect(dict2.Count).to.eq(5);
         });
     });
 
@@ -141,6 +143,7 @@ describe("Dictionary", () => {
             expect(dictionary.size()).to.eq(0);
             expect(dictionary.get("a")).to.null;
             expect(dictionary.get("b")).to.null;
+            expect(dictionary.Count).to.eq(0);
         });
     });
 
@@ -158,6 +161,7 @@ describe("Dictionary", () => {
             expect(dict.get("Noemi")).to.not.null;
             expect(dict.get("Lucrezia")).to.not.null;
             expect(dict.get("Priscilla")).to.not.null;
+            expect(dict.Count).to.eq(4);
         });
     });
 
@@ -237,6 +241,7 @@ describe("Dictionary", () => {
             expect(dict.size()).to.eq(1);
             expect(dict.get(Person.Alice.name)).to.not.null;
             expect(single.value).to.eq(Person.Lucrezia);
+            expect(dict.Count).to.eq(1);
         });
     });
 
@@ -245,11 +250,12 @@ describe("Dictionary", () => {
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         it("should return a new dictionary which is identical to the source dictionary", () => {
-            const dict = dictionary.distinct().toDictionary<string, Person>();
+            const dict = dictionary.distinct(e => e.key).toDictionary<string, Person>();
             expect(dict === dictionary).to.eq(false);
             expect(dict.get("Alice")).to.not.null;
             expect(dict.get("Lucrezia")).to.not.null;
-            console.log("distinct operation on a dictionary has no effect since dictionary is innately distinct.");
+            expect(dict.Count).to.eq(dictionary.size());
+            // console.log("distinct operation on a dictionary has no effect since dictionary is innately distinct.");
         });
     });
 
@@ -556,6 +562,7 @@ describe("Dictionary", () => {
             expect(keySet.size()).to.eq(2);
             expect(keySet.contains(Person.Alice.age)).to.eq(true);
             expect(keySet.contains(Person.Jane.age)).to.eq(true);
+            expect(keySet.Count).to.eq(2);
         });
     });
 
@@ -711,10 +718,12 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Jane)).to.not.null;
             expect(dictionary.get(Person.Mel)).to.null;
             expect(value).to.eq(Person.Mel.name);
+            expect(dictionary.Count).to.eq(1);
         });
         it("should return the value that is mapped to the given key", () => {
             const value = dictionary.remove(Person.Jane);
             expect(value).to.eq(Person.Jane.name);
+            expect(dictionary.Count).to.eq(0);
         });
         it("should return null if key is not in the dictionary", () => {
             const value = dictionary.remove(Person.Senna);
@@ -1280,6 +1289,7 @@ describe("Dictionary", () => {
             expect(dict2.size()).to.eq(dictionary.size());
             expect(dict2.get("a")).to.not.null;
             expect(dict2.get("b")).to.not.null;
+            expect(dict2.Count).to.eq(dictionary.Count);
         });
     });
 
@@ -1293,6 +1303,7 @@ describe("Dictionary", () => {
             expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
             expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
             expect(list instanceof List).to.be.true;
+            expect(list.Count).to.eq(dictionary.Count);
         });
     });
 
@@ -1307,10 +1318,12 @@ describe("Dictionary", () => {
         it("should return true if key doesn't exist and item is added", () => {
             expect(dictionary.tryAdd(Person.Suzuha, Person.Suzuha.name)).to.eq(true);
             expect(dictionary.size()).to.eq(3);
+            expect(dictionary.Count).to.eq(3);
         });
         it("should return true if key already exists and item is not added", () => {
             expect(dictionary.tryAdd(Person.Alice, Person.Alice.name)).to.eq(false);
             expect(dictionary.size()).to.eq(3);
+            expect(dictionary.Count).to.eq(3);
         });
         it("should throw error if key is null", () => {
             expect(() => dictionary.tryAdd(null, Person.Karen.name)).to.throw(ErrorMessages.NullKey);
@@ -1350,6 +1363,7 @@ describe("Dictionary", () => {
         it("should return a list with mapped values", () => {
             const values = dictionary.values().toArray();
             expect(values).to.deep.equal([Person.Mel, Person.Senna, Person.Lenka, Person.Alice]); // sorted by age due to RedBlackTree
+            expect(dictionary.values().Count).to.eq(4);
         });
     });
 
@@ -1369,6 +1383,7 @@ describe("Dictionary", () => {
             expect(dict.get(Person.Lucrezia.name)).to.null;
             expect(dict.get(Person.Noemi.name)).to.null;
             expect(dict.get(Person.Priscilla.name)).to.not.null;
+            expect(dict.Count).to.eq(1);
         });
     });
 

@@ -15,6 +15,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
         super((e1, e2) => comparator(e1, e2) === 0);
         this.orderComparator = comparator;
         this.tree = new RedBlackTree<TElement>(comparator, iterable);
+        this.updateCount();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -27,6 +28,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
 
     public clear(): void {
         this.tree.clear();
+        this.updateCount();
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -39,19 +41,27 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
     }
 
     public remove(element: TElement): boolean {
-        return this.tree.remove(element);
+        const result = this.tree.remove(element);
+        this.updateCount();
+        return result;
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return this.tree.removeAll(collection);
+        const result = this.tree.removeAll(collection);
+        this.updateCount();
+        return result;
     }
 
     public removeIf(predicate: Predicate<TElement>): boolean {
-        return this.tree.removeIf(predicate);
+        const result = this.tree.removeIf(predicate);
+        this.updateCount();
+        return result;
     }
 
     public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
-        return this.tree.retainAll(collection);
+        const result = this.tree.retainAll(collection);
+        this.updateCount();
+        return result;
     }
 
     public size(): number {

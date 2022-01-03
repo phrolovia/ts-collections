@@ -12,9 +12,11 @@ import {Dictionary, ICollection, IEnumerable, IGrouping, IOrderedEnumerable, Lis
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {ILookup} from "../lookup/ILookup";
+import {Writable} from "../shared/Writable";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
+    public readonly Count: number = 0;
 
     protected constructor(comparator?: EqualityComparator<TElement>) {
         this.comparator = comparator ?? Comparators.equalityComparator;
@@ -25,6 +27,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         for (const element of collection) {
             this.add(element);
         }
+        this.updateCount();
         return this.size() !== oldSize;
     }
 
@@ -82,9 +85,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.defaultIfEmpty(this, value);
     }
 
-    public distinct(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
-        comparator ??= this.comparator;
-        return EnumerableStatic.distinct(this, comparator);
+    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return EnumerableStatic.distinct(this, keySelector, keyComparator);
     }
 
     public elementAt(index: number): TElement {
@@ -245,6 +247,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
+    }
+
+    protected updateCount(): void {
+        (this.Count as Writable<number>) = this.size();
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

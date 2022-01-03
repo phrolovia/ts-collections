@@ -17,6 +17,7 @@ export class List<TElement> extends AbstractList<TElement> {
                 this.add(element);
             }
         }
+        this.updateCount();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -28,11 +29,13 @@ export class List<TElement> extends AbstractList<TElement> {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
         this.data.splice(index, 0, element);
+        this.updateCount();
         return true;
     }
 
     public clear(): void {
         this.data.length = 0;
+        this.updateCount();
     }
 
     public get(index: number): TElement {
@@ -51,6 +54,7 @@ export class List<TElement> extends AbstractList<TElement> {
                 break;
             }
         }
+        this.updateCount();
         return deleted;
     }
 
@@ -60,6 +64,7 @@ export class List<TElement> extends AbstractList<TElement> {
         }
         const element = this.data[index];
         this.data.splice(index, 1);
+        this.updateCount();
         return element;
     }
 
