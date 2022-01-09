@@ -1,4 +1,4 @@
 {
-    "mode": "file",
-    "out": "./docs"
+   "entryPoints": ["./index.ts"],
+    "out": "docs"
 }

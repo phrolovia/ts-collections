@@ -1,379 +1,131 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@luminela/ts-collections</title>
-	<meta name="description" content="Documentation for @luminela/ts-collections">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">@luminela/ts-collections</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
-			<h1>@luminela/ts-collections</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<p>A simple collections library for TypeScript.</p>
-				<a href="#list" id="list" style="color: inherit; text-decoration: none;">
-					<h2>List</h2>
-				</a>
-				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-					<h3>Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">string</span>&gt;();
+<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>@luminela/ts-collections</title><meta name="description" content="Documentation for @luminela/ts-collections"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">@luminela/ts-collections</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>@luminela/ts-collections</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography"><p>A simple collections library for TypeScript.</p>
+
+<a href="#list" id="list" style="color: inherit; text-decoration: none;">
+  <h2>List</h2>
+</a>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">List</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt;();</span>
 </code></pre>
-				<p>You can pass an Iterable object to the constructor.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
-<span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> List(array);
+<p>You can pass an Iterable object to the constructor.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1"> = [</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">, </span><span class="hl-5">4</span><span class="hl-1">, </span><span class="hl-5">5</span><span class="hl-1">];</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">List</span><span class="hl-1">(</span><span class="hl-6">array</span><span class="hl-1">);</span>
 </code></pre>
-				<p>You can also pass an equality comparator that will be used instead of default equality comparator.
-				You should always define this custom equality comparator if your List contains complex objects.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> person1 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">21</span>);
-<span class="hljs-keyword">const</span> person2 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">55</span>);
-<span class="hljs-keyword">const</span> comparator: EqualityComparator = <span class="hljs-function">(<span class="hljs-params">p1, p2</span>) =&gt;</span> p1.name === p2.name &amp;&amp; p1.surname == p2.surname &amp;&amp; p1.age == p2.age;
-<span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> List([person1, person2], comparator);
+<p>You can also pass an equality comparator that will be used instead of default equality comparator.
+You should always define this custom equality comparator if your List contains complex objects.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person1</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">21</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person2</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">55</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-3">comparator</span><span class="hl-1">: </span><span class="hl-4">EqualityComparator</span><span class="hl-1"> = (</span><span class="hl-6">p1</span><span class="hl-1">, </span><span class="hl-6">p2</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1"> === </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">surname</span><span class="hl-1"> == </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">surname</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">age</span><span class="hl-1"> == </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">age</span><span class="hl-1">;</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">List</span><span class="hl-1">([</span><span class="hl-6">person1</span><span class="hl-1">, </span><span class="hl-6">person2</span><span class="hl-1">], </span><span class="hl-6">comparator</span><span class="hl-1">);</span>
 </code></pre>
-				<hr>
-				<a href="#linkedlist" id="linkedlist" style="color: inherit; text-decoration: none;">
-					<h2>LinkedList</h2>
-				</a>
-				<a href="#usage-1" id="usage-1" style="color: inherit; text-decoration: none;">
-					<h3>Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> LinkedList&lt;<span class="hljs-built_in">string</span>&gt;();
+<hr>
+
+<a href="#linkedlist" id="linkedlist" style="color: inherit; text-decoration: none;">
+  <h2>LinkedList</h2>
+</a>
+
+<a href="#usage-1" id="usage-1" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">LinkedList</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt;();</span>
 </code></pre>
-				<p>You can pass an Iterable object to the constructor.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
-<span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> LinkedList(array);
+<p>You can pass an Iterable object to the constructor.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1"> = [</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">, </span><span class="hl-5">4</span><span class="hl-1">, </span><span class="hl-5">5</span><span class="hl-1">];</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">LinkedList</span><span class="hl-1">(</span><span class="hl-6">array</span><span class="hl-1">);</span>
 </code></pre>
-				<p>You can also pass an equality comparator that will be used instead of default equality comparator.
-				You should always define this custom equality comparator if your LinkedList contains complex objects.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> person1 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">21</span>);
-<span class="hljs-keyword">const</span> person2 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">55</span>);
-<span class="hljs-keyword">const</span> comparator: EqualityComparator = <span class="hljs-function">(<span class="hljs-params">p1, p2</span>) =&gt;</span> p1.name === p2.name &amp;&amp; p1.surname == p2.surname &amp;&amp; p1.age == p2.age;
-<span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> LinkedList([person1, person2], comparator);
+<p>You can also pass an equality comparator that will be used instead of default equality comparator.
+You should always define this custom equality comparator if your LinkedList contains complex objects.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person1</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">21</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person2</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">55</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-3">comparator</span><span class="hl-1">: </span><span class="hl-4">EqualityComparator</span><span class="hl-1"> = (</span><span class="hl-6">p1</span><span class="hl-1">, </span><span class="hl-6">p2</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1"> === </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">surname</span><span class="hl-1"> == </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">surname</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">age</span><span class="hl-1"> == </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">age</span><span class="hl-1">;</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">LinkedList</span><span class="hl-1">([</span><span class="hl-6">person1</span><span class="hl-1">, </span><span class="hl-6">person2</span><span class="hl-1">], </span><span class="hl-6">comparator</span><span class="hl-1">);</span>
 </code></pre>
-				<hr>
-				<a href="#redblacktree" id="redblacktree" style="color: inherit; text-decoration: none;">
-					<h2>RedBlackTree</h2>
-				</a>
-				<a href="#usage-2" id="usage-2" style="color: inherit; text-decoration: none;">
-					<h3>Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> tree = <span class="hljs-keyword">new</span> RedBlackTree&lt;<span class="hljs-built_in">string</span>&gt;();
+<hr>
+
+<a href="#redblacktree" id="redblacktree" style="color: inherit; text-decoration: none;">
+  <h2>RedBlackTree</h2>
+</a>
+
+<a href="#usage-2" id="usage-2" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">tree</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">RedBlackTree</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt;();</span>
 </code></pre>
-				<p>You can pass an Iterable object to the constructor.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
-<span class="hljs-keyword">const</span> tree = <span class="hljs-keyword">new</span> RedBlackTree(array);
+<p>You can pass an Iterable object to the constructor.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1"> = [</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">, </span><span class="hl-5">4</span><span class="hl-1">, </span><span class="hl-5">5</span><span class="hl-1">];</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">tree</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">RedBlackTree</span><span class="hl-1">(</span><span class="hl-6">array</span><span class="hl-1">);</span>
 </code></pre>
-				<p>You can also pass an order comparator that will be used instead of default order comparator.
-				You should always define this custom order comparator if your RedBlackTree contains complex objects.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> person1 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">21</span>);
-<span class="hljs-keyword">const</span> person2 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">55</span>);
-<span class="hljs-keyword">const</span> comparator: OrderComparator = <span class="hljs-function">(<span class="hljs-params">p1, p2</span>) =&gt;</span> p1.name.localeCompare(p2.name);
-<span class="hljs-keyword">const</span> tree = <span class="hljs-keyword">new</span> RedBlackTree(comparator, [person1, person2]);
+<p>You can also pass an order comparator that will be used instead of default order comparator.
+You should always define this custom order comparator if your RedBlackTree contains complex objects.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person1</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">21</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person2</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">55</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-3">comparator</span><span class="hl-1">: </span><span class="hl-4">OrderComparator</span><span class="hl-1"> = (</span><span class="hl-6">p1</span><span class="hl-1">, </span><span class="hl-6">p2</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1">.</span><span class="hl-3">localeCompare</span><span class="hl-1">(</span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">tree</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">RedBlackTree</span><span class="hl-1">(</span><span class="hl-6">comparator</span><span class="hl-1">, [</span><span class="hl-6">person1</span><span class="hl-1">, </span><span class="hl-6">person2</span><span class="hl-1">]);</span>
 </code></pre>
-				<hr>
-				<a href="#treeset" id="treeset" style="color: inherit; text-decoration: none;">
-					<h2>TreeSet</h2>
-				</a>
-				<a href="#usage-3" id="usage-3" style="color: inherit; text-decoration: none;">
-					<h3>Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> treeSet = <span class="hljs-keyword">new</span> TreeSet&lt;<span class="hljs-built_in">string</span>&gt;();
+<hr>
+
+<a href="#treeset" id="treeset" style="color: inherit; text-decoration: none;">
+  <h2>TreeSet</h2>
+</a>
+
+<a href="#usage-3" id="usage-3" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">treeSet</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">TreeSet</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt;();</span>
 </code></pre>
-				<p>You can pass an Iterable object to the constructor.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>];
-<span class="hljs-keyword">const</span> treeSet = <span class="hljs-keyword">new</span> TreeSet(array);
+<p>You can pass an Iterable object to the constructor.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1"> = [</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">, </span><span class="hl-5">4</span><span class="hl-1">, </span><span class="hl-5">5</span><span class="hl-1">];</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">treeSet</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">TreeSet</span><span class="hl-1">(</span><span class="hl-6">array</span><span class="hl-1">);</span>
 </code></pre>
-				<p>You can also pass an order comparator that will be used instead of default order comparator.
-				You should always define this custom order comparator if your TreeSet contains complex objects.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> person1 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">21</span>);
-<span class="hljs-keyword">const</span> person2 = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">&quot;John&quot;</span>, <span class="hljs-string">&quot;Doe&quot;</span>, <span class="hljs-number">55</span>);
-<span class="hljs-keyword">const</span> comparator: OrderComparator = <span class="hljs-function">(<span class="hljs-params">p1, p2</span>) =&gt;</span> p1.name.localeCompare(p2.name);
-<span class="hljs-keyword">const</span> treeSet = <span class="hljs-keyword">new</span> TreeSet([person1, person2], comparator);
+<p>You can also pass an order comparator that will be used instead of default order comparator.
+You should always define this custom order comparator if your TreeSet contains complex objects.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person1</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">21</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">person2</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Person</span><span class="hl-1">(</span><span class="hl-7">&quot;John&quot;</span><span class="hl-1">, </span><span class="hl-7">&quot;Doe&quot;</span><span class="hl-1">, </span><span class="hl-5">55</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-3">comparator</span><span class="hl-1">: </span><span class="hl-4">OrderComparator</span><span class="hl-1"> = (</span><span class="hl-6">p1</span><span class="hl-1">, </span><span class="hl-6">p2</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1">.</span><span class="hl-3">localeCompare</span><span class="hl-1">(</span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">treeSet</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">TreeSet</span><span class="hl-1">([</span><span class="hl-6">person1</span><span class="hl-1">, </span><span class="hl-6">person2</span><span class="hl-1">], </span><span class="hl-6">comparator</span><span class="hl-1">);</span>
 </code></pre>
-				<hr>
-				<a href="#dictionary" id="dictionary" style="color: inherit; text-decoration: none;">
-					<h2>Dictionary</h2>
-				</a>
-				<p>Dictionary is implemented as a sorted dictionary by using RedBlackTree internally.</p>
-				<a href="#usage-4" id="usage-4" style="color: inherit; text-decoration: none;">
-					<h3>Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> dictionary = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-built_in">number</span>, Person&gt;();
+<hr>
+
+<a href="#dictionary" id="dictionary" style="color: inherit; text-decoration: none;">
+  <h2>Dictionary</h2>
+</a>
+<p>Dictionary is implemented as a sorted dictionary by using RedBlackTree internally.</p>
+
+<a href="#usage-4" id="usage-4" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">dictionary</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Dictionary</span><span class="hl-1">&lt;</span><span class="hl-4">number</span><span class="hl-1">, </span><span class="hl-4">Person</span><span class="hl-1">&gt;();</span>
 </code></pre>
-				<p>You can pass an Iterable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt; object to the constructor.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> array: KeyValuePair&lt;<span class="hljs-built_in">number</span>, <span class="hljs-built_in">string</span>&gt; = [
-    <span class="hljs-keyword">new</span> KeyValuePair(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;a&quot;</span>),
-    <span class="hljs-keyword">new</span> KeyValuePair(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;b&quot;</span>)
-]
-<span class="hljs-keyword">const</span> dictionary = <span class="hljs-keyword">new</span> Dictionary(<span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, array);
+<p>You can pass an Iterable&lt;KeyValuePair&lt;TKey, TValue&gt;&gt; object to the constructor.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1">: </span><span class="hl-4">KeyValuePair</span><span class="hl-1">&lt;</span><span class="hl-4">number</span><span class="hl-1">, </span><span class="hl-4">string</span><span class="hl-1">&gt; = [</span><br/><span class="hl-1">    </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">KeyValuePair</span><span class="hl-1">(</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-7">&quot;a&quot;</span><span class="hl-1">),</span><br/><span class="hl-1">    </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">KeyValuePair</span><span class="hl-1">(</span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-7">&quot;b&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">]</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">dictionary</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Dictionary</span><span class="hl-1">(</span><span class="hl-0">null</span><span class="hl-1">, </span><span class="hl-0">null</span><span class="hl-1">, </span><span class="hl-6">array</span><span class="hl-1">);</span>
 </code></pre>
-				<p>You can also pass an order comparator, and an equality comparator that will be used instead of default order and equality comparators.
-				You should always define these custom comparators if your dictionary contains complex objects.</p>
-				<p>Dictionary has two comparators.</p>
-				<ul>
-					<li>keyComparator: This is an order comparator and used to sort dictionary. It should always be provided if the key is a complex object.</li>
-					<li>valueComparator: This is an equality comparator and used to check the equality of values. It should always be provided if the value is a complex object.</li>
-				</ul>
-				<p>You can pass null to use default comparators. However, it will not work properly when the objects are complex.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> personOrderComparator: OrderComparator = <span class="hljs-function">(<span class="hljs-params">p1: Person, p2: Person</span>) =&gt;</span> p1.name.localeCompare(p2.name);
-<span class="hljs-keyword">const</span> personEqualityComparator: EqualityComparator = <span class="hljs-function">(<span class="hljs-params">p1, p2</span>) =&gt;</span> p1.name === p2.name &amp;&amp; p1.surname == p2.surname &amp;&amp; p1.age == p2.age;
-<span class="hljs-keyword">const</span> dictionary1 = <span class="hljs-keyword">new</span> Dictionary&lt;Person, <span class="hljs-built_in">string</span>&gt;(personOrderComparator);
-<span class="hljs-keyword">const</span> dictionary2 = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-built_in">string</span>, Person&gt;(<span class="hljs-literal">null</span>, personEqualityComparator);
+<p>You can also pass an order comparator, and an equality comparator that will be used instead of default order and equality comparators.
+You should always define these custom comparators if your dictionary contains complex objects.</p>
+<p>Dictionary has two comparators.</p>
+<ul>
+<li>keyComparator: This is an order comparator and used to sort dictionary. It should always be provided if the key is a complex object.</li>
+<li>valueComparator: This is an equality comparator and used to check the equality of values. It should always be provided if the value is a complex object.</li>
+</ul>
+<p>You can pass null to use default comparators. However, it will not work properly when the objects are complex.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-3">personOrderComparator</span><span class="hl-1">: </span><span class="hl-4">OrderComparator</span><span class="hl-1"> = (</span><span class="hl-6">p1</span><span class="hl-1">: </span><span class="hl-4">Person</span><span class="hl-1">, </span><span class="hl-6">p2</span><span class="hl-1">: </span><span class="hl-4">Person</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1">.</span><span class="hl-3">localeCompare</span><span class="hl-1">(</span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-3">personEqualityComparator</span><span class="hl-1">: </span><span class="hl-4">EqualityComparator</span><span class="hl-1"> = (</span><span class="hl-6">p1</span><span class="hl-1">, </span><span class="hl-6">p2</span><span class="hl-1">) </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1"> === </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">name</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">surname</span><span class="hl-1"> == </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">surname</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">p1</span><span class="hl-1">.</span><span class="hl-6">age</span><span class="hl-1"> == </span><span class="hl-6">p2</span><span class="hl-1">.</span><span class="hl-6">age</span><span class="hl-1">;</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">dictionary1</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Dictionary</span><span class="hl-1">&lt;</span><span class="hl-4">Person</span><span class="hl-1">, </span><span class="hl-4">string</span><span class="hl-1">&gt;(</span><span class="hl-6">personOrderComparator</span><span class="hl-1">);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">dictionary2</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">Dictionary</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">, </span><span class="hl-4">Person</span><span class="hl-1">&gt;(</span><span class="hl-0">null</span><span class="hl-1">, </span><span class="hl-6">personEqualityComparator</span><span class="hl-1">);</span>
 </code></pre>
-				<hr>
-				<a href="#iqueue-and-ideque-interfaces" id="iqueue-and-ideque-interfaces" style="color: inherit; text-decoration: none;">
-					<h2>IQueue and IDeque interfaces</h2>
-				</a>
-				<p>Both of these interfaces are implemented in LinkedList class.</p>
-				<a href="#usage-5" id="usage-5" style="color: inherit; text-decoration: none;">
-					<h3>Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> queue: IQueue&lt;<span class="hljs-built_in">string</span>&gt; = <span class="hljs-keyword">new</span> LinkedList&lt;<span class="hljs-built_in">string</span>&gt;();
-<span class="hljs-keyword">const</span> deque: IDeque&lt;<span class="hljs-built_in">string</span>&gt; = <span class="hljs-keyword">new</span> LinkedList&lt;<span class="hljs-built_in">string</span>&gt;();
+<hr>
+
+<a href="#iqueue-and-ideque-interfaces" id="iqueue-and-ideque-interfaces" style="color: inherit; text-decoration: none;">
+  <h2>IQueue and IDeque interfaces</h2>
+</a>
+<p>Both of these interfaces are implemented in LinkedList class.</p>
+
+<a href="#usage-5" id="usage-5" style="color: inherit; text-decoration: none;">
+  <h3>Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">queue</span><span class="hl-1">: </span><span class="hl-4">IQueue</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt; = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">LinkedList</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt;();</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">deque</span><span class="hl-1">: </span><span class="hl-4">IDeque</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt; = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">LinkedList</span><span class="hl-1">&lt;</span><span class="hl-4">string</span><span class="hl-1">&gt;();</span>
 </code></pre>
-				<hr>
-				<a href="#enumerable-support" id="enumerable-support" style="color: inherit; text-decoration: none;">
-					<h2>Enumerable Support</h2>
-				</a>
-				<p>All the provided classes in the library has integrated enumerable support.</p>
-				<a href="#example-usage" id="example-usage" style="color: inherit; text-decoration: none;">
-					<h3>Example Usage</h3>
-				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> list = <span class="hljs-keyword">new</span> List([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>]);
-<span class="hljs-keyword">const</span> list2 = list.select(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n * n).takeWhile(n &lt;= <span class="hljs-number">25</span>).skipWhile(n &lt; <span class="hljs-number">10</span>).orderByDescending(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n).toList();
-<span class="hljs-keyword">const</span> array = list.takeLast(<span class="hljs-number">5</span>).toArray();
+<hr>
+
+<a href="#enumerable-support" id="enumerable-support" style="color: inherit; text-decoration: none;">
+  <h2>Enumerable Support</h2>
+</a>
+<p>All the provided classes in the library has integrated enumerable support.</p>
+
+<a href="#example-usage" id="example-usage" style="color: inherit; text-decoration: none;">
+  <h3>Example Usage</h3>
+</a>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">List</span><span class="hl-1">([</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">, </span><span class="hl-5">4</span><span class="hl-1">, </span><span class="hl-5">5</span><span class="hl-1">, </span><span class="hl-5">6</span><span class="hl-1">, </span><span class="hl-5">7</span><span class="hl-1">, </span><span class="hl-5">8</span><span class="hl-1">, </span><span class="hl-5">9</span><span class="hl-1">, </span><span class="hl-5">10</span><span class="hl-1">]);</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">list2</span><span class="hl-1"> = </span><span class="hl-6">list</span><span class="hl-1">.</span><span class="hl-3">select</span><span class="hl-1">(</span><span class="hl-6">n</span><span class="hl-1"> </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">n</span><span class="hl-1"> * </span><span class="hl-6">n</span><span class="hl-1">).</span><span class="hl-3">takeWhile</span><span class="hl-1">(</span><span class="hl-6">n</span><span class="hl-1"> &lt;= </span><span class="hl-5">25</span><span class="hl-1">).</span><span class="hl-3">skipWhile</span><span class="hl-1">(</span><span class="hl-6">n</span><span class="hl-1"> &lt; </span><span class="hl-5">10</span><span class="hl-1">).</span><span class="hl-3">orderByDescending</span><span class="hl-1">(</span><span class="hl-6">n</span><span class="hl-1"> </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">n</span><span class="hl-1">).</span><span class="hl-3">toList</span><span class="hl-1">();</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1"> = </span><span class="hl-6">list</span><span class="hl-1">.</span><span class="hl-3">takeLast</span><span class="hl-1">(</span><span class="hl-5">5</span><span class="hl-1">).</span><span class="hl-3">toArray</span><span class="hl-1">();</span>
 </code></pre>
-				<p>You can also use Enumerable with plain arrays.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> array = Enumerable.from([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]).where(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n % <span class="hljs-number">2</span> !== <span class="hljs-number">0</span>).toArray();
+<p>You can also use Enumerable with plain arrays.</p>
+<pre><code class="language-typescript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">array</span><span class="hl-1"> = </span><span class="hl-6">Enumerable</span><span class="hl-1">.</span><span class="hl-3">from</span><span class="hl-1">([</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">, </span><span class="hl-5">4</span><span class="hl-1">, </span><span class="hl-5">5</span><span class="hl-1">]).</span><span class="hl-3">where</span><span class="hl-1">(</span><span class="hl-6">n</span><span class="hl-1"> </span><span class="hl-0">=&gt;</span><span class="hl-1"> </span><span class="hl-6">n</span><span class="hl-1"> % </span><span class="hl-5">2</span><span class="hl-1"> !== </span><span class="hl-5">0</span><span class="hl-1">).</span><span class="hl-3">toArray</span><span class="hl-1">();</span>
 </code></pre>
-				<a href="#documentation-amp-api" id="documentation-amp-api" style="color: inherit; text-decoration: none;">
-					<h2>Documentation &amp; API</h2>
-				</a>
-				<p>A simple documentation can be found at:
-				<a href="https://luminela.github.io/ts-collections/">https://luminela.github.io/ts-collections/</a></p>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-is-external">
-						<a href="enums/errormessages.html" class="tsd-kind-icon">Error<wbr>Messages</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/abstractcollection.html" class="tsd-kind-icon">Abstract<wbr>Collection</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/abstractlist.html" class="tsd-kind-icon">Abstract<wbr>List</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/abstractset.html" class="tsd-kind-icon">Abstract<wbr>Set</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/abstracttree.html" class="tsd-kind-icon">Abstract<wbr>Tree</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="classes/collections.html" class="tsd-kind-icon">Collections</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="classes/comparators.html" class="tsd-kind-icon">Comparators</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/dictionary.html" class="tsd-kind-icon">Dictionary</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/enumerable.html" class="tsd-kind-icon">Enumerable</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-external">
-						<a href="classes/enumerablestatic.html" class="tsd-kind-icon">Enumerable<wbr>Static</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/enumerator.html" class="tsd-kind-icon">Enumerator</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/grouping.html" class="tsd-kind-icon">Grouping</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/keyvaluepair.html" class="tsd-kind-icon">Key<wbr>Value<wbr>Pair</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/linkedlist.html" class="tsd-kind-icon">Linked<wbr>List</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/list.html" class="tsd-kind-icon">List</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/lookup.html" class="tsd-kind-icon">Lookup</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/node.html" class="tsd-kind-icon">Node</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/orderedenumerator.html" class="tsd-kind-icon">Ordered<wbr>Enumerator</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/recordlist.html" class="tsd-kind-icon">Record<wbr>List</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/redblacknode.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/redblacktree.html" class="tsd-kind-icon">Red<wbr>Black<wbr>Tree</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/treenode.html" class="tsd-kind-icon">Tree<wbr>Node</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="classes/treeset.html" class="tsd-kind-icon">Tree<wbr>Set</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/accumulator.html" class="tsd-kind-icon">Accumulator</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/equalitycomparator.html" class="tsd-kind-icon">Equality<wbr>Comparator</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/icollection.html" class="tsd-kind-icon">ICollection</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/ideque.html" class="tsd-kind-icon">IDeque</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/idictionary.html" class="tsd-kind-icon">IDictionary</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/ienumerable.html" class="tsd-kind-icon">IEnumerable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/igrouping.html" class="tsd-kind-icon">IGrouping</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/ilist.html" class="tsd-kind-icon">IList</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/ilookup.html" class="tsd-kind-icon">ILookup</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/inode.html" class="tsd-kind-icon">INode</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/iorderedenumerable.html" class="tsd-kind-icon">IOrdered<wbr>Enumerable</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/iqueue.html" class="tsd-kind-icon">IQueue</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/iset.html" class="tsd-kind-icon">ISet</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/itree.html" class="tsd-kind-icon">ITree</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/indexedaction.html" class="tsd-kind-icon">Indexed<wbr>Action</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/indexedpredicate.html" class="tsd-kind-icon">Indexed<wbr>Predicate</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/indexedselector.html" class="tsd-kind-icon">Indexed<wbr>Selector</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/joinselector.html" class="tsd-kind-icon">Join<wbr>Selector</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/ordercomparator.html" class="tsd-kind-icon">Order<wbr>Comparator</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/predicate.html" class="tsd-kind-icon">Predicate</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/selector.html" class="tsd-kind-icon">Selector</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-has-type-parameter tsd-is-external">
-						<a href="interfaces/zipper.html" class="tsd-kind-icon">Zipper</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-is-external">
-						<a href="globals.html#traversetype" class="tsd-kind-icon">Traverse<wbr>Type</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-external">
-						<a href="globals.html#writable" class="tsd-kind-icon">Writable</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-</body>
-</html>
+
+<a href="#documentation-amp-api" id="documentation-amp-api" style="color: inherit; text-decoration: none;">
+  <h2>Documentation &amp; API</h2>
+</a>
+<p>A simple documentation can be found at:
+<a href="https://luminela.github.io/ts-collections/">https://luminela.github.io/ts-collections/</a></p>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/AbstractCollection.html" class="tsd-kind-icon">Abstract<wbr/>Collection</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/AbstractList.html" class="tsd-kind-icon">Abstract<wbr/>List</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/AbstractSet.html" class="tsd-kind-icon">Abstract<wbr/>Set</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/AbstractTree.html" class="tsd-kind-icon">Abstract<wbr/>Tree</a></li><li class="tsd-kind-class"><a href="classes/Collections.html" class="tsd-kind-icon">Collections</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Dictionary.html" class="tsd-kind-icon">Dictionary</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Enumerable.html" class="tsd-kind-icon">Enumerable</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/Grouping.html" class="tsd-kind-icon">Grouping</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/KeyValuePair.html" class="tsd-kind-icon">Key<wbr/>Value<wbr/>Pair</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/LinkedList.html" class="tsd-kind-icon">Linked<wbr/>List</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/List.html" class="tsd-kind-icon">List</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/RecordList.html" class="tsd-kind-icon">Record<wbr/>List</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/RedBlackTree.html" class="tsd-kind-icon">Red<wbr/>Black<wbr/>Tree</a></li><li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/TreeSet.html" class="tsd-kind-icon">Tree<wbr/>Set</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/Accumulator.html" class="tsd-kind-icon">Accumulator</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/EqualityComparator.html" class="tsd-kind-icon">Equality<wbr/>Comparator</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ICollection.html" class="tsd-kind-icon">ICollection</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IDeque.html" class="tsd-kind-icon">IDeque</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IDictionary.html" class="tsd-kind-icon">IDictionary</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IEnumerable.html" class="tsd-kind-icon">IEnumerable</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IGrouping.html" class="tsd-kind-icon">IGrouping</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IList.html" class="tsd-kind-icon">IList</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ILookup.html" class="tsd-kind-icon">ILookup</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IOrderedEnumerable.html" class="tsd-kind-icon">IOrdered<wbr/>Enumerable</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IQueue.html" class="tsd-kind-icon">IQueue</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ISet.html" class="tsd-kind-icon">ISet</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/ITree.html" class="tsd-kind-icon">ITree</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IndexedAction.html" class="tsd-kind-icon">Indexed<wbr/>Action</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IndexedPredicate.html" class="tsd-kind-icon">Indexed<wbr/>Predicate</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IndexedSelector.html" class="tsd-kind-icon">Indexed<wbr/>Selector</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/JoinSelector.html" class="tsd-kind-icon">Join<wbr/>Selector</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/OrderComparator.html" class="tsd-kind-icon">Order<wbr/>Comparator</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/Predicate.html" class="tsd-kind-icon">Predicate</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/Selector.html" class="tsd-kind-icon">Selector</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/Zipper.html" class="tsd-kind-icon">Zipper</a></li><li class="tsd-kind-type-alias"><a href="modules.html#TraverseType" class="tsd-kind-icon">Traverse<wbr/>Type</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>
