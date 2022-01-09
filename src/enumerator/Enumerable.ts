@@ -1038,8 +1038,8 @@ export interface IGrouping<TKey, TElement> extends IEnumerable<TElement> {
 }
 
 export class Grouping<TKey, TElement> extends Enumerable<TElement> implements IGrouping<TKey, TElement> {
-    readonly key: TKey;
-    readonly source: IEnumerable<TElement>;
+    public readonly key: TKey;
+    public readonly source: IEnumerable<TElement>;
 
     public constructor(key: TKey, source: IEnumerable<TElement>) {
         super(source);

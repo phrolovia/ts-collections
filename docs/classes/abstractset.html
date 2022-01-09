@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AbstractSet | @discordelia/ts-collections</title>
-	<meta name="description" content="Documentation for @discordelia/ts-collections">
+	<title>AbstractSet | @luminela/ts-collections</title>
+	<meta name="description" content="Documentation for @luminela/ts-collections">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@discordelia/ts-collections</a>
+					<a href="../index.html" class="title">@luminela/ts-collections</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -109,11 +109,11 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external"><a href="abstractset.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private-protected tsd-is-external">
+						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#count" class="tsd-kind-icon">Count</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="abstractset.html#comparator" class="tsd-kind-icon">comparator</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-external"><a href="abstractset.html#ordercomparator" class="tsd-kind-icon">order<wbr>Comparator</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-external">
@@ -131,9 +131,9 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#concat" class="tsd-kind-icon">concat</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#contains" class="tsd-kind-icon">contains</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractset.html#containsall" class="tsd-kind-icon">contains<wbr>All</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#count" class="tsd-kind-icon">count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#count-1" class="tsd-kind-icon">count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#distinct" class="tsd-kind-icon">distinct</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractset.html#distinct" class="tsd-kind-icon">distinct</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#except" class="tsd-kind-icon">except</a></li>
@@ -178,6 +178,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#tolist" class="tsd-kind-icon">to<wbr>List</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractset.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#union" class="tsd-kind-icon">union</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="abstractset.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractset.html#where" class="tsd-kind-icon">where</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractset.html#zip" class="tsd-kind-icon">zip</a></li>
 							</ul>
@@ -191,20 +192,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>Set<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="abstractset.html" class="tsd-signature-type">AbstractSet</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>Set<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="abstractset.html" class="tsd-signature-type">AbstractSet</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/set/AbstractSet.ts#L6">src/set/AbstractSet.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/set/AbstractSet.ts#L6">src/set/AbstractSet.ts:6</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="abstractset.html" class="tsd-signature-type">AbstractSet</a></h4>
@@ -212,8 +213,20 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="count" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> Count</h3>
+					<div class="tsd-signature tsd-kind-icon">Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#count">Count</a></p>
+						<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#count">Count</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L19">src/core/AbstractCollection.ts:19</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
 					<a name="comparator" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> comparator</h3>
@@ -221,17 +234,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#comparator">comparator</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L17">src/core/AbstractCollection.ts:17</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-external">
-					<a name="ordercomparator" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> order<wbr>Comparator</h3>
-					<div class="tsd-signature tsd-kind-icon">order<wbr>Comparator<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/set/AbstractSet.ts#L6">src/set/AbstractSet.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L18">src/core/AbstractCollection.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -250,7 +253,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L250">src/core/AbstractCollection.ts:250</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L256">src/core/AbstractCollection.ts:256</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -269,7 +272,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#add">add</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L251">src/core/AbstractCollection.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L257">src/core/AbstractCollection.ts:257</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -294,7 +297,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#addall">addAll</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#addall">addAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L23">src/core/AbstractCollection.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L25">src/core/AbstractCollection.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -325,7 +328,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#aggregate">aggregate</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#aggregate">aggregate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L31">src/core/AbstractCollection.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L34">src/core/AbstractCollection.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -365,7 +368,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#all">all</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#all">all</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L35">src/core/AbstractCollection.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L38">src/core/AbstractCollection.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -390,7 +393,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#any">any</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#any">any</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L39">src/core/AbstractCollection.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L42">src/core/AbstractCollection.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -415,7 +418,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#append">append</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#append">append</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L43">src/core/AbstractCollection.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L46">src/core/AbstractCollection.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -440,7 +443,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#average">average</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#average">average</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L47">src/core/AbstractCollection.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L50">src/core/AbstractCollection.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -465,7 +468,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#clear">clear</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L252">src/core/AbstractCollection.ts:252</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L258">src/core/AbstractCollection.ts:258</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -484,7 +487,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#concat">concat</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#concat">concat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L51">src/core/AbstractCollection.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L54">src/core/AbstractCollection.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -509,7 +512,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#contains">contains</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L55">src/core/AbstractCollection.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L58">src/core/AbstractCollection.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -537,7 +540,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#containsall">containsAll</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#containsall">containsAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L60">src/core/AbstractCollection.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L63">src/core/AbstractCollection.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -557,7 +560,7 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-					<a name="count" class="tsd-anchor"></a>
+					<a name="count-1" class="tsd-anchor"></a>
 					<h3>count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">?: </span><a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
@@ -565,10 +568,10 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#count">count</a></p>
-								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#count">count</a></p>
+								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#count-1">count</a></p>
+								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#count-1">count</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L77">src/core/AbstractCollection.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L80">src/core/AbstractCollection.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -593,7 +596,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#defaultifempty">defaultIfEmpty</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#defaultifempty">defaultIfEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L81">src/core/AbstractCollection.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L84">src/core/AbstractCollection.ts:84</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -606,11 +609,11 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
 					<a name="distinct" class="tsd-anchor"></a>
 					<h3>distinct</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">distinct<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">distinct&lt;TKey&gt;<span class="tsd-signature-symbol">(</span>keySelector<span class="tsd-signature-symbol">?: </span><a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span>, keyComparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -618,13 +621,22 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#distinct">distinct</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#distinct">distinct</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L85">src/core/AbstractCollection.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L88">src/core/AbstractCollection.ts:88</a></li>
 								</ul>
 							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TKey</h4>
+								</li>
+							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> keySelector: <a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> keyComparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -643,7 +655,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#elementat">elementAt</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#elementat">elementAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L90">src/core/AbstractCollection.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L92">src/core/AbstractCollection.ts:92</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -668,7 +680,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#elementatordefault">elementAtOrDefault</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#elementatordefault">elementAtOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L94">src/core/AbstractCollection.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L96">src/core/AbstractCollection.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -693,7 +705,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#except">except</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#except">except</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L98">src/core/AbstractCollection.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L100">src/core/AbstractCollection.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -721,7 +733,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#first">first</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#first">first</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L103">src/core/AbstractCollection.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L105">src/core/AbstractCollection.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -746,7 +758,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#firstordefault">firstOrDefault</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#firstordefault">firstOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L107">src/core/AbstractCollection.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L109">src/core/AbstractCollection.ts:109</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -771,7 +783,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#foreach">forEach</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#foreach">forEach</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L111">src/core/AbstractCollection.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L113">src/core/AbstractCollection.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -796,7 +808,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#groupby">groupBy</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#groupby">groupBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L118">src/core/AbstractCollection.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L120">src/core/AbstractCollection.ts:120</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -830,7 +842,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#groupjoin">groupJoin</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#groupjoin">groupJoin</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L122">src/core/AbstractCollection.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L124">src/core/AbstractCollection.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -878,7 +890,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#headset">headSet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/set/AbstractSet.ts#L12">src/set/AbstractSet.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/set/AbstractSet.ts#L11">src/set/AbstractSet.ts:11</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -906,7 +918,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#intersect">intersect</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#intersect">intersect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L126">src/core/AbstractCollection.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L128">src/core/AbstractCollection.ts:128</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -934,7 +946,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#isempty">isEmpty</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L131">src/core/AbstractCollection.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L133">src/core/AbstractCollection.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -953,7 +965,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#join">join</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#join">join</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L135">src/core/AbstractCollection.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L137">src/core/AbstractCollection.ts:137</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1005,7 +1017,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#last">last</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#last">last</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L139">src/core/AbstractCollection.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L141">src/core/AbstractCollection.ts:141</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1030,7 +1042,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#lastordefault">lastOrDefault</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#lastordefault">lastOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L143">src/core/AbstractCollection.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L145">src/core/AbstractCollection.ts:145</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1055,7 +1067,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#max">max</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#max">max</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L147">src/core/AbstractCollection.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L149">src/core/AbstractCollection.ts:149</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1080,7 +1092,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#min">min</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#min">min</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L151">src/core/AbstractCollection.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L153">src/core/AbstractCollection.ts:153</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1105,7 +1117,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#orderby">orderBy</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#orderby">orderBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L155">src/core/AbstractCollection.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L157">src/core/AbstractCollection.ts:157</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1139,7 +1151,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#orderbydescending">orderByDescending</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#orderbydescending">orderByDescending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L159">src/core/AbstractCollection.ts:159</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L161">src/core/AbstractCollection.ts:161</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1173,7 +1185,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#prepend">prepend</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#prepend">prepend</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L163">src/core/AbstractCollection.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L165">src/core/AbstractCollection.ts:165</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1198,7 +1210,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#remove">remove</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L253">src/core/AbstractCollection.ts:253</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L259">src/core/AbstractCollection.ts:259</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1215,7 +1227,7 @@
 					<a name="removeall" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> remove<wbr>All</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>All&lt;TSource&gt;<span class="tsd-signature-symbol">(</span>collection<span class="tsd-signature-symbol">: </span><a href="../interfaces/icollection.html" class="tsd-signature-type">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>All&lt;TSource&gt;<span class="tsd-signature-symbol">(</span>collection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -1223,7 +1235,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#removeall">removeAll</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#removeall">removeAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L254">src/core/AbstractCollection.ts:254</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L260">src/core/AbstractCollection.ts:260</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1235,7 +1247,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>collection: <a href="../interfaces/icollection.html" class="tsd-signature-type">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>collection: <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1254,7 +1266,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#removeif">removeIf</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#removeif">removeIf</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L255">src/core/AbstractCollection.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L261">src/core/AbstractCollection.ts:261</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1279,7 +1291,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#retainall">retainAll</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#retainall">retainAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L256">src/core/AbstractCollection.ts:256</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L262">src/core/AbstractCollection.ts:262</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1310,7 +1322,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#reverse">reverse</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#reverse">reverse</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L167">src/core/AbstractCollection.ts:167</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L169">src/core/AbstractCollection.ts:169</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1329,7 +1341,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#select">select</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#select">select</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L171">src/core/AbstractCollection.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L173">src/core/AbstractCollection.ts:173</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1360,7 +1372,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#selectmany">selectMany</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#selectmany">selectMany</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L175">src/core/AbstractCollection.ts:175</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L177">src/core/AbstractCollection.ts:177</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1391,7 +1403,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#sequenceequal">sequenceEqual</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#sequenceequal">sequenceEqual</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L179">src/core/AbstractCollection.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L181">src/core/AbstractCollection.ts:181</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1419,7 +1431,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#single">single</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#single">single</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L184">src/core/AbstractCollection.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L186">src/core/AbstractCollection.ts:186</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1444,7 +1456,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#singleordefault">singleOrDefault</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#singleordefault">singleOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L188">src/core/AbstractCollection.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L190">src/core/AbstractCollection.ts:190</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1469,7 +1481,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#size">size</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L257">src/core/AbstractCollection.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L263">src/core/AbstractCollection.ts:263</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1488,7 +1500,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#skip">skip</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#skip">skip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L192">src/core/AbstractCollection.ts:192</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L194">src/core/AbstractCollection.ts:194</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1513,7 +1525,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#skiplast">skipLast</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#skiplast">skipLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L196">src/core/AbstractCollection.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L198">src/core/AbstractCollection.ts:198</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1538,7 +1550,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#skipwhile">skipWhile</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#skipwhile">skipWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L200">src/core/AbstractCollection.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L202">src/core/AbstractCollection.ts:202</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1562,7 +1574,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#subset">subSet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/set/AbstractSet.ts#L13">src/set/AbstractSet.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/set/AbstractSet.ts#L12">src/set/AbstractSet.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1596,7 +1608,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#sum">sum</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#sum">sum</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L204">src/core/AbstractCollection.ts:204</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L206">src/core/AbstractCollection.ts:206</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1620,7 +1632,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#tailset">tailSet</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/set/AbstractSet.ts#L14">src/set/AbstractSet.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/set/AbstractSet.ts#L13">src/set/AbstractSet.ts:13</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1648,7 +1660,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#take">take</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#take">take</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L208">src/core/AbstractCollection.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L210">src/core/AbstractCollection.ts:210</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1673,7 +1685,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#takelast">takeLast</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#takelast">takeLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L212">src/core/AbstractCollection.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L214">src/core/AbstractCollection.ts:214</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1698,7 +1710,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#takewhile">takeWhile</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#takewhile">takeWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L216">src/core/AbstractCollection.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L218">src/core/AbstractCollection.ts:218</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1723,7 +1735,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#toarray">toArray</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L220">src/core/AbstractCollection.ts:220</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L222">src/core/AbstractCollection.ts:222</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1742,7 +1754,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#todictionary">toDictionary</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#todictionary">toDictionary</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L224">src/core/AbstractCollection.ts:224</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L226">src/core/AbstractCollection.ts:226</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1785,7 +1797,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#tolist">toList</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#tolist">toList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L228">src/core/AbstractCollection.ts:228</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L230">src/core/AbstractCollection.ts:230</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1810,7 +1822,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#tolookup">toLookup</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#tolookup">toLookup</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L233">src/core/AbstractCollection.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L235">src/core/AbstractCollection.ts:235</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1850,7 +1862,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#union">union</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#union">union</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L237">src/core/AbstractCollection.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L239">src/core/AbstractCollection.ts:239</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1866,6 +1878,24 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
+					<a name="updatecount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> update<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#updatecount">updateCount</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L252">src/core/AbstractCollection.ts:252</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="where" class="tsd-anchor"></a>
 					<h3>where</h3>
@@ -1878,7 +1908,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#where">where</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#where">where</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L242">src/core/AbstractCollection.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L244">src/core/AbstractCollection.ts:244</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1903,7 +1933,7 @@
 								<p>Implementation of <a href="../interfaces/iset.html">ISet</a>.<a href="../interfaces/iset.html#zip">zip</a></p>
 								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#zip">zip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/core/AbstractCollection.ts#L246">src/core/AbstractCollection.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L248">src/core/AbstractCollection.ts:248</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1948,11 +1978,11 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external">
 								<a href="abstractset.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="abstractset.html#count" class="tsd-kind-icon">Count</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
 								<a href="abstractset.html#comparator" class="tsd-kind-icon">comparator</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-external">
-								<a href="abstractset.html#ordercomparator" class="tsd-kind-icon">order<wbr>Comparator</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="abstractset.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
@@ -1991,12 +2021,12 @@
 								<a href="abstractset.html#containsall" class="tsd-kind-icon">contains<wbr>All</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractset.html#count" class="tsd-kind-icon">count</a>
+								<a href="abstractset.html#count-1" class="tsd-kind-icon">count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="abstractset.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
 								<a href="abstractset.html#distinct" class="tsd-kind-icon">distinct</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -2130,6 +2160,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="abstractset.html#union" class="tsd-kind-icon">union</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
+								<a href="abstractset.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="abstractset.html#where" class="tsd-kind-icon">where</a>

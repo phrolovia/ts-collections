@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Lookup | @discordelia/ts-collections</title>
-	<meta name="description" content="Documentation for @discordelia/ts-collections">
+	<title>Lookup | @luminela/ts-collections</title>
+	<meta name="description" content="Documentation for @luminela/ts-collections">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@discordelia/ts-collections</a>
+					<a href="../index.html" class="title">@luminela/ts-collections</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -101,9 +101,10 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="lookup.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected tsd-is-external">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="lookup.html#count" class="tsd-kind-icon">Count</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="lookup.html#keycomparator" class="tsd-kind-icon">key<wbr>Comparator</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="lookup.html#lookuptree" class="tsd-kind-icon">lookup<wbr>Tree</a></li>
 							</ul>
@@ -119,9 +120,9 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#average" class="tsd-kind-icon">average</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#concat" class="tsd-kind-icon">concat</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#contains" class="tsd-kind-icon">contains</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#count" class="tsd-kind-icon">count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#count-1" class="tsd-kind-icon">count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#distinct" class="tsd-kind-icon">distinct</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="lookup.html#distinct" class="tsd-kind-icon">distinct</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#except" class="tsd-kind-icon">except</a></li>
@@ -160,6 +161,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#tolist" class="tsd-kind-icon">to<wbr>List</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="lookup.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#union" class="tsd-kind-icon">union</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external"><a href="lookup.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="lookup.html#where" class="tsd-kind-icon">where</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="lookup.html#zip" class="tsd-kind-icon">zip</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static tsd-is-external"><a href="lookup.html#create" class="tsd-kind-icon">create</a></li>
@@ -180,7 +182,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L19">src/lookup/Lookup.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L21">src/lookup/Lookup.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -194,15 +196,26 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
+					<a name="count" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> Count</h3>
+					<div class="tsd-signature tsd-kind-icon">Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#count">Count</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L21">src/lookup/Lookup.ts:21</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
 					<a name="keycomparator" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> key<wbr>Comparator</h3>
 					<div class="tsd-signature tsd-kind-icon">key<wbr>Comparator<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L18">src/lookup/Lookup.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L19">src/lookup/Lookup.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -212,7 +225,7 @@
 					<div class="tsd-signature tsd-kind-icon">lookup<wbr>Tree<span class="tsd-signature-symbol">:</span> <a href="redblacktree.html" class="tsd-signature-type">RedBlackTree</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L19">src/lookup/Lookup.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L20">src/lookup/Lookup.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -230,7 +243,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L51">src/lookup/Lookup.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L54">src/lookup/Lookup.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -248,7 +261,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#aggregate">aggregate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L55">src/lookup/Lookup.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L58">src/lookup/Lookup.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -287,7 +300,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#all">all</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L60">src/lookup/Lookup.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L63">src/lookup/Lookup.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -311,7 +324,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#any">any</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L64">src/lookup/Lookup.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L67">src/lookup/Lookup.ts:67</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -335,7 +348,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#append">append</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L68">src/lookup/Lookup.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L71">src/lookup/Lookup.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -359,7 +372,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#average">average</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L72">src/lookup/Lookup.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L75">src/lookup/Lookup.ts:75</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -383,7 +396,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#concat">concat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L76">src/lookup/Lookup.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L79">src/lookup/Lookup.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -407,7 +420,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L80">src/lookup/Lookup.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L83">src/lookup/Lookup.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -424,7 +437,7 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="count" class="tsd-anchor"></a>
+					<a name="count-1" class="tsd-anchor"></a>
 					<h3>count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">?: </span><a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
@@ -432,9 +445,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#count">count</a></p>
+								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#count-1">count</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L84">src/lookup/Lookup.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L87">src/lookup/Lookup.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -458,7 +471,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#defaultifempty">defaultIfEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L88">src/lookup/Lookup.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L91">src/lookup/Lookup.ts:91</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -471,24 +484,33 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
 					<a name="distinct" class="tsd-anchor"></a>
 					<h3>distinct</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">distinct<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">distinct&lt;TDistinctKey&gt;<span class="tsd-signature-symbol">(</span>keySelector<span class="tsd-signature-symbol">: </span><a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#distinct">distinct</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L92">src/lookup/Lookup.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L95">src/lookup/Lookup.ts:95</a></li>
 								</ul>
 							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TDistinctKey</h4>
+								</li>
+							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>keySelector: <a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -506,7 +528,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#elementat">elementAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L96">src/lookup/Lookup.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L99">src/lookup/Lookup.ts:99</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -530,7 +552,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#elementatordefault">elementAtOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L100">src/lookup/Lookup.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L103">src/lookup/Lookup.ts:103</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -554,7 +576,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#except">except</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L104">src/lookup/Lookup.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L107">src/lookup/Lookup.ts:107</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -581,7 +603,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#first">first</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L108">src/lookup/Lookup.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L111">src/lookup/Lookup.ts:111</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -605,7 +627,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#firstordefault">firstOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L112">src/lookup/Lookup.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L115">src/lookup/Lookup.ts:115</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -629,7 +651,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#foreach">forEach</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L116">src/lookup/Lookup.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L119">src/lookup/Lookup.ts:119</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -653,7 +675,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#get">get</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L120">src/lookup/Lookup.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L123">src/lookup/Lookup.ts:123</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -677,7 +699,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#groupby">groupBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L125">src/lookup/Lookup.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L128">src/lookup/Lookup.ts:128</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -710,7 +732,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#groupjoin">groupJoin</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L129">src/lookup/Lookup.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L132">src/lookup/Lookup.ts:132</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -758,7 +780,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#haskey">hasKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L135">src/lookup/Lookup.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L138">src/lookup/Lookup.ts:138</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -782,7 +804,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#intersect">intersect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L139">src/lookup/Lookup.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L142">src/lookup/Lookup.ts:142</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -809,7 +831,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#join">join</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L143">src/lookup/Lookup.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L146">src/lookup/Lookup.ts:146</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -860,7 +882,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#last">last</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L149">src/lookup/Lookup.ts:149</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L152">src/lookup/Lookup.ts:152</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -884,7 +906,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#lastordefault">lastOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L153">src/lookup/Lookup.ts:153</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L156">src/lookup/Lookup.ts:156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -908,7 +930,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#max">max</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L157">src/lookup/Lookup.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L160">src/lookup/Lookup.ts:160</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -932,7 +954,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#min">min</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L161">src/lookup/Lookup.ts:161</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L164">src/lookup/Lookup.ts:164</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -956,7 +978,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#orderby">orderBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L165">src/lookup/Lookup.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L168">src/lookup/Lookup.ts:168</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -989,7 +1011,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#orderbydescending">orderByDescending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L169">src/lookup/Lookup.ts:169</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L172">src/lookup/Lookup.ts:172</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1022,7 +1044,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#prepend">prepend</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L173">src/lookup/Lookup.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L176">src/lookup/Lookup.ts:176</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1046,7 +1068,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#reverse">reverse</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L177">src/lookup/Lookup.ts:177</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L180">src/lookup/Lookup.ts:180</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1064,7 +1086,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#select">select</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L181">src/lookup/Lookup.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L184">src/lookup/Lookup.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1094,7 +1116,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#selectmany">selectMany</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L185">src/lookup/Lookup.ts:185</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L188">src/lookup/Lookup.ts:188</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1124,7 +1146,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#sequenceequal">sequenceEqual</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L189">src/lookup/Lookup.ts:189</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L192">src/lookup/Lookup.ts:192</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1151,7 +1173,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#single">single</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L193">src/lookup/Lookup.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L196">src/lookup/Lookup.ts:196</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1175,7 +1197,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#singleordefault">singleOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L197">src/lookup/Lookup.ts:197</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L200">src/lookup/Lookup.ts:200</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1199,7 +1221,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L201">src/lookup/Lookup.ts:201</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L204">src/lookup/Lookup.ts:204</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1217,7 +1239,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#skip">skip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L205">src/lookup/Lookup.ts:205</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L208">src/lookup/Lookup.ts:208</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1241,7 +1263,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#skiplast">skipLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L209">src/lookup/Lookup.ts:209</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L212">src/lookup/Lookup.ts:212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1265,7 +1287,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#skipwhile">skipWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L213">src/lookup/Lookup.ts:213</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L216">src/lookup/Lookup.ts:216</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1289,7 +1311,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#sum">sum</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L217">src/lookup/Lookup.ts:217</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L220">src/lookup/Lookup.ts:220</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1313,7 +1335,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#take">take</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L221">src/lookup/Lookup.ts:221</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L224">src/lookup/Lookup.ts:224</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1337,7 +1359,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#takelast">takeLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L225">src/lookup/Lookup.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L228">src/lookup/Lookup.ts:228</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1361,7 +1383,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#takewhile">takeWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L229">src/lookup/Lookup.ts:229</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L232">src/lookup/Lookup.ts:232</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1385,7 +1407,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L233">src/lookup/Lookup.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L236">src/lookup/Lookup.ts:236</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/igrouping.html" class="tsd-signature-type">IGrouping</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1403,7 +1425,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#todictionary">toDictionary</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L237">src/lookup/Lookup.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L240">src/lookup/Lookup.ts:240</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1445,7 +1467,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#tolist">toList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L242">src/lookup/Lookup.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L245">src/lookup/Lookup.ts:245</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1469,7 +1491,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#tolookup">toLookup</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L246">src/lookup/Lookup.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L249">src/lookup/Lookup.ts:249</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1508,7 +1530,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#union">union</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L251">src/lookup/Lookup.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L254">src/lookup/Lookup.ts:254</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1524,6 +1546,23 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external">
+					<a name="updatecount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> update<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L266">src/lookup/Lookup.ts:266</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="where" class="tsd-anchor"></a>
 					<h3>where</h3>
@@ -1535,7 +1574,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#where">where</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L255">src/lookup/Lookup.ts:255</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L258">src/lookup/Lookup.ts:258</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1559,7 +1598,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilookup.html">ILookup</a>.<a href="../interfaces/ilookup.html#zip">zip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L259">src/lookup/Lookup.ts:259</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L262">src/lookup/Lookup.ts:262</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1594,7 +1633,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/lookup/Lookup.ts#L27">src/lookup/Lookup.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/lookup/Lookup.ts#L29">src/lookup/Lookup.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1648,6 +1687,9 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-private tsd-is-external">
 								<a href="lookup.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="lookup.html#count" class="tsd-kind-icon">Count</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
 								<a href="lookup.html#keycomparator" class="tsd-kind-icon">key<wbr>Comparator</a>
 							</li>
@@ -1679,12 +1721,12 @@
 								<a href="lookup.html#contains" class="tsd-kind-icon">contains</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="lookup.html#count" class="tsd-kind-icon">count</a>
+								<a href="lookup.html#count-1" class="tsd-kind-icon">count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="lookup.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
 								<a href="lookup.html#distinct" class="tsd-kind-icon">distinct</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -1800,6 +1842,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="lookup.html#union" class="tsd-kind-icon">union</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external">
+								<a href="lookup.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="lookup.html#where" class="tsd-kind-icon">where</a>

@@ -175,7 +175,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         if (u === null) {
             if (v === this.root) {
                 this.root = null;
-                this.updateCount();
             } else {
                 if (bothBlack) {
                     this.fixDoubleBlack(v);
@@ -190,7 +189,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
                     parent.setRight(null);
                 }
             }
-            this.updateTreeCount(-1);
             return;
         }
         if (v.getLeft() == null || v.getRight() == null) {
@@ -198,7 +196,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
                 v.setData(u.getData());
                 v.setLeft(null);
                 v.setRight(null);
-                this.updateCount();
             } else {
                 if (v.isOnLeft()) {
                     parent.setLeft(u);
@@ -211,7 +208,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
                 } else {
                     u.setColor(RedBlackNode.BLACK);
                 }
-                this.updateTreeCount(-1);
             }
             return;
         }

@@ -1,3 +1,3 @@
 export interface IndexedPredicate<T> {
-    (item: T, index?: number): boolean;
+    (item: T, index: number): boolean;
 }

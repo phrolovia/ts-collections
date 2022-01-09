@@ -10,6 +10,7 @@ export {List} from "./src/list/List";
 export {IQueue} from "./src/queue/IQueue";
 export {IDeque} from "./src/queue/IDeque";
 export {LinkedList} from "./src/list/LinkedList";
+export {RecordList} from "./src/list/RecordList";
 export {ITree, TraverseType} from "./src/tree/ITree";
 export {AbstractTree} from "./src/tree/AbstractTree";
 export {RedBlackTree} from "./src/tree/RedBlackTree";

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AbstractList | @luminela/ts-collections</title>
+	<title>RecordList | @luminela/ts-collections</title>
 	<meta name="description" content="Documentation for @luminela/ts-collections">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,16 +56,25 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="abstractlist.html">AbstractList</a>
+					<a href="recordlist.html">RecordList</a>
 				</li>
 			</ul>
-			<h1>Class AbstractList&lt;TElement&gt;</h1>
+			<h1>Class RecordList&lt;TElement&gt;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A list whose elements can be accessed via [] operator.
+							Important: Due to TypeScript limitations, assigning to an index that is greater than
+						the size of the list will break the list.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
@@ -78,21 +87,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="abstractcollection.html" class="tsd-signature-type">AbstractCollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="abstractlist.html" class="tsd-signature-type">AbstractList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">AbstractList</span>
-								<ul class="tsd-hierarchy">
-									<li>
-										<a href="list.html" class="tsd-signature-type">List</a>
-									</li>
-									<li>
-										<a href="linkedlist.html" class="tsd-signature-type">LinkedList</a>
-									</li>
-									<li>
-										<a href="recordlist.html" class="tsd-signature-type">RecordList</a>
-									</li>
-								</ul>
+								<span class="target">RecordList</span>
 							</li>
 						</ul>
 					</li>
@@ -105,126 +103,141 @@
 					<li><a href="../interfaces/ilist.html" class="tsd-signature-type">IList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
+			<section class="tsd-panel tsd-kind-class tsd-has-type-parameter tsd-is-external">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>n: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">TElement</span></div>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A list whose elements can be accessed via [] operator.
+							Important: Due to TypeScript limitations, assigning to an index that is greater than
+						the size of the list will break the list.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-private-protected tsd-is-external">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external"><a href="abstractlist.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited tsd-is-external">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#count" class="tsd-kind-icon">Count</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="abstractlist.html#comparator" class="tsd-kind-icon">comparator</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#count" class="tsd-kind-icon">Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="recordlist.html#comparator" class="tsd-kind-icon">comparator</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="recordlist.html#listsize" class="tsd-kind-icon">list<wbr>Size</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#add" class="tsd-kind-icon">add</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#addall" class="tsd-kind-icon">add<wbr>All</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#addat" class="tsd-kind-icon">add<wbr>At</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#aggregate" class="tsd-kind-icon">aggregate</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#all" class="tsd-kind-icon">all</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#any" class="tsd-kind-icon">any</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#append" class="tsd-kind-icon">append</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#average" class="tsd-kind-icon">average</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#clear" class="tsd-kind-icon">clear</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#concat" class="tsd-kind-icon">concat</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#contains" class="tsd-kind-icon">contains</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#containsall" class="tsd-kind-icon">contains<wbr>All</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#count-1" class="tsd-kind-icon">count</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#distinct" class="tsd-kind-icon">distinct</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#entries" class="tsd-kind-icon">entries</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#except" class="tsd-kind-icon">except</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#first" class="tsd-kind-icon">first</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#foreach" class="tsd-kind-icon">for<wbr>Each</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#groupby" class="tsd-kind-icon">group<wbr>By</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#indexof" class="tsd-kind-icon">index<wbr>Of</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#intersect" class="tsd-kind-icon">intersect</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#join" class="tsd-kind-icon">join</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#last" class="tsd-kind-icon">last</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#lastindexof" class="tsd-kind-icon">last<wbr>Index<wbr>Of</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#max" class="tsd-kind-icon">max</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#min" class="tsd-kind-icon">min</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#orderby" class="tsd-kind-icon">order<wbr>By</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#prepend" class="tsd-kind-icon">prepend</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#remove" class="tsd-kind-icon">remove</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#removeall" class="tsd-kind-icon">remove<wbr>All</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#removeat" class="tsd-kind-icon">remove<wbr>At</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#removeif" class="tsd-kind-icon">remove<wbr>If</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external"><a href="abstractlist.html#retainall" class="tsd-kind-icon">retain<wbr>All</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#reverse" class="tsd-kind-icon">reverse</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#select" class="tsd-kind-icon">select</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#set" class="tsd-kind-icon">set</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#single" class="tsd-kind-icon">single</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#size" class="tsd-kind-icon">size</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#skip" class="tsd-kind-icon">skip</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="abstractlist.html#sort" class="tsd-kind-icon">sort</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#sum" class="tsd-kind-icon">sum</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#take" class="tsd-kind-icon">take</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#takelast" class="tsd-kind-icon">take<wbr>Last</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#takewhile" class="tsd-kind-icon">take<wbr>While</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#todictionary" class="tsd-kind-icon">to<wbr>Dictionary</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#tolist" class="tsd-kind-icon">to<wbr>List</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#union" class="tsd-kind-icon">union</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="abstractlist.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="abstractlist.html#where" class="tsd-kind-icon">where</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="abstractlist.html#zip" class="tsd-kind-icon">zip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#addall" class="tsd-kind-icon">add<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#addat" class="tsd-kind-icon">add<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#aggregate" class="tsd-kind-icon">aggregate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#all" class="tsd-kind-icon">all</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#any" class="tsd-kind-icon">any</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#append" class="tsd-kind-icon">append</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#average" class="tsd-kind-icon">average</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#clear" class="tsd-kind-icon">clear</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#concat" class="tsd-kind-icon">concat</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordlist.html#contains" class="tsd-kind-icon">contains</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#containsall" class="tsd-kind-icon">contains<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#count-1" class="tsd-kind-icon">count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#distinct" class="tsd-kind-icon">distinct</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordlist.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordlist.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#entries" class="tsd-kind-icon">entries</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#except" class="tsd-kind-icon">except</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#first" class="tsd-kind-icon">first</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#foreach" class="tsd-kind-icon">for<wbr>Each</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#get" class="tsd-kind-icon">get</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#groupby" class="tsd-kind-icon">group<wbr>By</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#indexof" class="tsd-kind-icon">index<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#intersect" class="tsd-kind-icon">intersect</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#join" class="tsd-kind-icon">join</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#last" class="tsd-kind-icon">last</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#lastindexof" class="tsd-kind-icon">last<wbr>Index<wbr>Of</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#max" class="tsd-kind-icon">max</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#min" class="tsd-kind-icon">min</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#orderby" class="tsd-kind-icon">order<wbr>By</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#prepend" class="tsd-kind-icon">prepend</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#remove" class="tsd-kind-icon">remove</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordlist.html#removeall" class="tsd-kind-icon">remove<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#removeat" class="tsd-kind-icon">remove<wbr>At</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordlist.html#removeif" class="tsd-kind-icon">remove<wbr>If</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordlist.html#retainall" class="tsd-kind-icon">retain<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#reverse" class="tsd-kind-icon">reverse</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#select" class="tsd-kind-icon">select</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#set" class="tsd-kind-icon">set</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#single" class="tsd-kind-icon">single</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#size" class="tsd-kind-icon">size</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#skip" class="tsd-kind-icon">skip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="recordlist.html#sort" class="tsd-kind-icon">sort</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#sum" class="tsd-kind-icon">sum</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#take" class="tsd-kind-icon">take</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#takelast" class="tsd-kind-icon">take<wbr>Last</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#takewhile" class="tsd-kind-icon">take<wbr>While</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#todictionary" class="tsd-kind-icon">to<wbr>Dictionary</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#tolist" class="tsd-kind-icon">to<wbr>List</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#union" class="tsd-kind-icon">union</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external"><a href="recordlist.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="recordlist.html#where" class="tsd-kind-icon">where</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="recordlist.html#zip" class="tsd-kind-icon">zip</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="constructor" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>List<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="abstractlist.html" class="tsd-signature-type">AbstractList</a></li>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Record<wbr>List<span class="tsd-signature-symbol">(</span>iterable<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="recordlist.html" class="tsd-signature-type">RecordList</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#constructor">constructor</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L6">src/list/AbstractList.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L14">src/list/RecordList.ts:14</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> iterable: <span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = []</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = Comparators.equalityComparator</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="abstractlist.html" class="tsd-signature-type">AbstractList</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="recordlist.html" class="tsd-signature-type">RecordList</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="count" class="tsd-anchor"></a>
@@ -249,22 +262,32 @@
 						</ul>
 					</aside>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
+					<a name="listsize" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> list<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">list<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L13">src/list/RecordList.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="_symbol_iterator_" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> [<wbr>Symbol.iterator]</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<h3>[<wbr>Symbol.iterator]</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">[<wbr>Symbol.iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#_symbol_iterator_">[Symbol.iterator]</a></p>
-								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
+								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L256">src/core/AbstractCollection.ts:256</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L27">src/list/RecordList.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -281,9 +304,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#add">add</a></p>
-								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#add">add</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L12">src/list/AbstractList.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L33">src/list/RecordList.ts:33</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -327,18 +350,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="addat" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> add<wbr>At</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<h3>add<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">add<wbr>At<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#addat">addAt</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#addat">addAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L116">src/list/AbstractList.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L40">src/list/RecordList.ts:40</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -494,19 +518,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="clear" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> clear</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<h3>clear</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">clear<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#clear">clear</a></p>
-								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#clear">clear</a></p>
+								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L258">src/core/AbstractCollection.ts:258</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L62">src/list/RecordList.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -538,16 +562,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a name="contains" class="tsd-anchor"></a>
 					<h3>contains</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">contains<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#contains">contains</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#contains">contains</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#contains">contains</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L16">src/list/AbstractList.ts:16</a></li>
@@ -681,16 +706,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a name="elementat" class="tsd-anchor"></a>
 					<h3>element<wbr>At</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">element<wbr>At<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#elementat">elementAt</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#elementat">elementAt</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#elementat">elementAt</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L20">src/list/AbstractList.ts:20</a></li>
@@ -706,16 +732,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a name="elementatordefault" class="tsd-anchor"></a>
 					<h3>element<wbr>AtOr<wbr>Default</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">element<wbr>AtOr<wbr>Default<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#elementatordefault">elementAtOrDefault</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#elementatordefault">elementAtOrDefault</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#elementatordefault">elementAtOrDefault</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L24">src/list/AbstractList.ts:24</a></li>
@@ -731,16 +758,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="entries" class="tsd-anchor"></a>
 					<h3>entries</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">entries<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#entries">entries</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#entries">entries</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L31">src/list/AbstractList.ts:31</a></li>
 								</ul>
@@ -852,18 +880,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="get" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> get</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<h3>get</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#get">get</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#get">get</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L117">src/list/AbstractList.ts:117</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L70">src/list/RecordList.ts:70</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -959,16 +988,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="indexof" class="tsd-anchor"></a>
 					<h3>index<wbr>Of</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">index<wbr>Of<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#indexof">indexOf</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#indexof">indexOf</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L38">src/list/AbstractList.ts:38</a></li>
 								</ul>
@@ -1110,16 +1140,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="lastindexof" class="tsd-anchor"></a>
 					<h3>last<wbr>Index<wbr>Of</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">last<wbr>Index<wbr>Of<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#lastindexof">lastIndexOf</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#lastindexof">lastIndexOf</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L59">src/list/AbstractList.ts:59</a></li>
 								</ul>
@@ -1305,19 +1336,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="remove" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> remove</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<h3>remove</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">remove<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#remove">remove</a></p>
-								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#remove">remove</a></p>
+								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L259">src/core/AbstractCollection.ts:259</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L77">src/list/RecordList.ts:77</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1330,16 +1361,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a name="removeall" class="tsd-anchor"></a>
 					<h3>remove<wbr>All</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">remove<wbr>All&lt;TSource&gt;<span class="tsd-signature-symbol">(</span>collection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#removeall">removeAll</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#removeall">removeAll</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#removeall">removeAll</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L78">src/list/AbstractList.ts:78</a></li>
@@ -1361,18 +1393,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="removeat" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> remove<wbr>At</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<h3>remove<wbr>At</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">remove<wbr>At<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#removeat">removeAt</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#removeat">removeAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L118">src/list/AbstractList.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L102">src/list/RecordList.ts:102</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1385,16 +1418,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a name="removeif" class="tsd-anchor"></a>
 					<h3>remove<wbr>If</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">remove<wbr>If<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#removeif">removeIf</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#removeif">removeIf</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#removeif">removeIf</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L91">src/list/AbstractList.ts:91</a></li>
@@ -1410,16 +1444,17 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a name="retainall" class="tsd-anchor"></a>
 					<h3>retain<wbr>All</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">retain<wbr>All&lt;TSource&gt;<span class="tsd-signature-symbol">(</span>collection<span class="tsd-signature-symbol">: </span><a href="../interfaces/icollection.html" class="tsd-signature-type">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#retainall">retainAll</a></p>
+								<p>Inherited from <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#retainall">retainAll</a></p>
 								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#retainall">retainAll</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L102">src/list/AbstractList.ts:102</a></li>
@@ -1550,18 +1585,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="set" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> set</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<h3>set</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">set<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TElement</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#set">set</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#set">set</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L119">src/list/AbstractList.ts:119</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L116">src/list/RecordList.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1627,19 +1663,19 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="size" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> size</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<h3>size</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">size<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#size">size</a></p>
-								<p>Inherited from <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#size">size</a></p>
+								<p>Overrides <a href="abstractcollection.html">AbstractCollection</a>.<a href="abstractcollection.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/core/AbstractCollection.ts#L263">src/core/AbstractCollection.ts:263</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L125">src/list/RecordList.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1721,24 +1757,25 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<a name="sort" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> sort</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<h3>sort</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">sort<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/ilist.html">IList</a>.<a href="../interfaces/ilist.html#sort">sort</a></p>
+								<p>Overrides <a href="abstractlist.html">AbstractList</a>.<a href="abstractlist.html#sort">sort</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/AbstractList.ts#L120">src/list/AbstractList.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/list/RecordList.ts#L129">src/list/RecordList.ts:129</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> comparator: <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = Comparators.orderComparator</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -2095,217 +2132,220 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-has-type-parameter tsd-is-external">
-						<a href="abstractlist.html" class="tsd-kind-icon">Abstract<wbr>List</a>
+						<a href="recordlist.html" class="tsd-kind-icon">Record<wbr>List</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected tsd-is-external">
-								<a href="abstractlist.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#count" class="tsd-kind-icon">Count</a>
+								<a href="recordlist.html#count" class="tsd-kind-icon">Count</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
-								<a href="abstractlist.html#comparator" class="tsd-kind-icon">comparator</a>
+								<a href="recordlist.html#comparator" class="tsd-kind-icon">comparator</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#add" class="tsd-kind-icon">add</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#addall" class="tsd-kind-icon">add<wbr>All</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#addat" class="tsd-kind-icon">add<wbr>At</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#aggregate" class="tsd-kind-icon">aggregate</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#all" class="tsd-kind-icon">all</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#any" class="tsd-kind-icon">any</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#append" class="tsd-kind-icon">append</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#average" class="tsd-kind-icon">average</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#clear" class="tsd-kind-icon">clear</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#concat" class="tsd-kind-icon">concat</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
+								<a href="recordlist.html#listsize" class="tsd-kind-icon">list<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#contains" class="tsd-kind-icon">contains</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#containsall" class="tsd-kind-icon">contains<wbr>All</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#count-1" class="tsd-kind-icon">count</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#distinct" class="tsd-kind-icon">distinct</a>
+								<a href="recordlist.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#elementat" class="tsd-kind-icon">element<wbr>At</a>
+								<a href="recordlist.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#addall" class="tsd-kind-icon">add<wbr>All</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#entries" class="tsd-kind-icon">entries</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#except" class="tsd-kind-icon">except</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#first" class="tsd-kind-icon">first</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#foreach" class="tsd-kind-icon">for<wbr>Each</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#get" class="tsd-kind-icon">get</a>
+								<a href="recordlist.html#addat" class="tsd-kind-icon">add<wbr>At</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#groupby" class="tsd-kind-icon">group<wbr>By</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#indexof" class="tsd-kind-icon">index<wbr>Of</a>
+								<a href="recordlist.html#aggregate" class="tsd-kind-icon">aggregate</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#intersect" class="tsd-kind-icon">intersect</a>
+								<a href="recordlist.html#all" class="tsd-kind-icon">all</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#join" class="tsd-kind-icon">join</a>
+								<a href="recordlist.html#any" class="tsd-kind-icon">any</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#last" class="tsd-kind-icon">last</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#lastindexof" class="tsd-kind-icon">last<wbr>Index<wbr>Of</a>
+								<a href="recordlist.html#append" class="tsd-kind-icon">append</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#max" class="tsd-kind-icon">max</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#min" class="tsd-kind-icon">min</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#orderby" class="tsd-kind-icon">order<wbr>By</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#prepend" class="tsd-kind-icon">prepend</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#remove" class="tsd-kind-icon">remove</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#removeall" class="tsd-kind-icon">remove<wbr>All</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#removeat" class="tsd-kind-icon">remove<wbr>At</a>
+								<a href="recordlist.html#average" class="tsd-kind-icon">average</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#removeif" class="tsd-kind-icon">remove<wbr>If</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-external">
-								<a href="abstractlist.html#retainall" class="tsd-kind-icon">retain<wbr>All</a>
+								<a href="recordlist.html#clear" class="tsd-kind-icon">clear</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#reverse" class="tsd-kind-icon">reverse</a>
+								<a href="recordlist.html#concat" class="tsd-kind-icon">concat</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#contains" class="tsd-kind-icon">contains</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#select" class="tsd-kind-icon">select</a>
+								<a href="recordlist.html#containsall" class="tsd-kind-icon">contains<wbr>All</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#count-1" class="tsd-kind-icon">count</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a>
+								<a href="recordlist.html#distinct" class="tsd-kind-icon">distinct</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#elementat" class="tsd-kind-icon">element<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#set" class="tsd-kind-icon">set</a>
+								<a href="recordlist.html#entries" class="tsd-kind-icon">entries</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#single" class="tsd-kind-icon">single</a>
+								<a href="recordlist.html#except" class="tsd-kind-icon">except</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a>
+								<a href="recordlist.html#first" class="tsd-kind-icon">first</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#size" class="tsd-kind-icon">size</a>
+								<a href="recordlist.html#firstordefault" class="tsd-kind-icon">first<wbr>OrDefault</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#skip" class="tsd-kind-icon">skip</a>
+								<a href="recordlist.html#foreach" class="tsd-kind-icon">for<wbr>Each</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="abstractlist.html#sort" class="tsd-kind-icon">sort</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#sum" class="tsd-kind-icon">sum</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#take" class="tsd-kind-icon">take</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#takelast" class="tsd-kind-icon">take<wbr>Last</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#takewhile" class="tsd-kind-icon">take<wbr>While</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#get" class="tsd-kind-icon">get</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#todictionary" class="tsd-kind-icon">to<wbr>Dictionary</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#tolist" class="tsd-kind-icon">to<wbr>List</a>
+								<a href="recordlist.html#groupby" class="tsd-kind-icon">group<wbr>By</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a>
+								<a href="recordlist.html#groupjoin" class="tsd-kind-icon">group<wbr>Join</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#union" class="tsd-kind-icon">union</a>
+								<a href="recordlist.html#indexof" class="tsd-kind-icon">index<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#intersect" class="tsd-kind-icon">intersect</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#isempty" class="tsd-kind-icon">is<wbr>Empty</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#join" class="tsd-kind-icon">join</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#last" class="tsd-kind-icon">last</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#lastindexof" class="tsd-kind-icon">last<wbr>Index<wbr>Of</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#lastordefault" class="tsd-kind-icon">last<wbr>OrDefault</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#max" class="tsd-kind-icon">max</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#min" class="tsd-kind-icon">min</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#orderby" class="tsd-kind-icon">order<wbr>By</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#orderbydescending" class="tsd-kind-icon">order<wbr>ByDescending</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#prepend" class="tsd-kind-icon">prepend</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#remove" class="tsd-kind-icon">remove</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#removeall" class="tsd-kind-icon">remove<wbr>All</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#removeat" class="tsd-kind-icon">remove<wbr>At</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#removeif" class="tsd-kind-icon">remove<wbr>If</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-overwrite tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#retainall" class="tsd-kind-icon">retain<wbr>All</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#reverse" class="tsd-kind-icon">reverse</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#select" class="tsd-kind-icon">select</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#selectmany" class="tsd-kind-icon">select<wbr>Many</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#sequenceequal" class="tsd-kind-icon">sequence<wbr>Equal</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#set" class="tsd-kind-icon">set</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#single" class="tsd-kind-icon">single</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#singleordefault" class="tsd-kind-icon">single<wbr>OrDefault</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#size" class="tsd-kind-icon">size</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#skip" class="tsd-kind-icon">skip</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#skiplast" class="tsd-kind-icon">skip<wbr>Last</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#skipwhile" class="tsd-kind-icon">skip<wbr>While</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+								<a href="recordlist.html#sort" class="tsd-kind-icon">sort</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#sum" class="tsd-kind-icon">sum</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#take" class="tsd-kind-icon">take</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#takelast" class="tsd-kind-icon">take<wbr>Last</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#takewhile" class="tsd-kind-icon">take<wbr>While</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#todictionary" class="tsd-kind-icon">to<wbr>Dictionary</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#tolist" class="tsd-kind-icon">to<wbr>List</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="recordlist.html#union" class="tsd-kind-icon">union</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-external">
-								<a href="abstractlist.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a>
+								<a href="recordlist.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#where" class="tsd-kind-icon">where</a>
+								<a href="recordlist.html#where" class="tsd-kind-icon">where</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
-								<a href="abstractlist.html#zip" class="tsd-kind-icon">zip</a>
+								<a href="recordlist.html#zip" class="tsd-kind-icon">zip</a>
 							</li>
 						</ul>
 					</li>

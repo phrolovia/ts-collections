@@ -108,14 +108,6 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return array;
     }
 
-    /**
-     * Updates the Count property of the tree.
-     * @param countDiff 1 for increase, -1 for decrease
-     */
-    protected updateTreeCount(countDiff: 1 | -1): void {
-        (this.Count as Writable<number>) = this.Count + countDiff;
-    }
-
     protected toInorderArray(root: INode<TElement>, target: TElement[]): void {
         if (root == null) return;
         this.toInorderArray(root.getLeft(), target);

@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Dictionary | @discordelia/ts-collections</title>
-	<meta name="description" content="Documentation for @discordelia/ts-collections">
+	<title>Dictionary | @luminela/ts-collections</title>
+	<meta name="description" content="Documentation for @luminela/ts-collections">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@discordelia/ts-collections</a>
+					<a href="../index.html" class="title">@luminela/ts-collections</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -101,9 +101,10 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected tsd-is-external">
+						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#count" class="tsd-kind-icon">Count</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="dictionary.html#keycomparator" class="tsd-kind-icon">key<wbr>Comparator</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="dictionary.html#keyvaluecomparator" class="tsd-kind-icon">key<wbr>Value<wbr>Comparator</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external"><a href="dictionary.html#keyvaluetree" class="tsd-kind-icon">key<wbr>Value<wbr>Tree</a></li>
@@ -125,9 +126,9 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#contains" class="tsd-kind-icon">contains</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#containskey" class="tsd-kind-icon">contains<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#containsvalue" class="tsd-kind-icon">contains<wbr>Value</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#count" class="tsd-kind-icon">count</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#count-1" class="tsd-kind-icon">count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#distinct" class="tsd-kind-icon">distinct</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="dictionary.html#distinct" class="tsd-kind-icon">distinct</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#elementat" class="tsd-kind-icon">element<wbr>At</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#elementatordefault" class="tsd-kind-icon">element<wbr>AtOr<wbr>Default</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#entries" class="tsd-kind-icon">entries</a></li>
@@ -172,6 +173,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="dictionary.html#tolookup" class="tsd-kind-icon">to<wbr>Lookup</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#tryadd" class="tsd-kind-icon">try<wbr>Add</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#union" class="tsd-kind-icon">union</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external"><a href="dictionary.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#values" class="tsd-kind-icon">values</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="dictionary.html#where" class="tsd-kind-icon">where</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="dictionary.html#zip" class="tsd-kind-icon">zip</a></li>
@@ -192,7 +194,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L30">src/dictionary/Dictionary.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L32">src/dictionary/Dictionary.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -212,15 +214,26 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected tsd-is-external">
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
+					<a name="count" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> Count</h3>
+					<div class="tsd-signature tsd-kind-icon">Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#count">Count</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L32">src/dictionary/Dictionary.ts:32</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
 					<a name="keycomparator" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> key<wbr>Comparator</h3>
 					<div class="tsd-signature tsd-kind-icon">key<wbr>Comparator<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ordercomparator.html" class="tsd-signature-type">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L27">src/dictionary/Dictionary.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L28">src/dictionary/Dictionary.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -230,7 +243,7 @@
 					<div class="tsd-signature tsd-kind-icon">key<wbr>Value<wbr>Comparator<span class="tsd-signature-symbol">:</span> <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L28">src/dictionary/Dictionary.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L29">src/dictionary/Dictionary.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -240,7 +253,7 @@
 					<div class="tsd-signature tsd-kind-icon">key<wbr>Value<wbr>Tree<span class="tsd-signature-symbol">:</span> <a href="redblacktree.html" class="tsd-signature-type">RedBlackTree</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L29">src/dictionary/Dictionary.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L30">src/dictionary/Dictionary.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -250,7 +263,7 @@
 					<div class="tsd-signature tsd-kind-icon">value<wbr>Comparator<span class="tsd-signature-symbol">:</span> <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L30">src/dictionary/Dictionary.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L31">src/dictionary/Dictionary.ts:31</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -268,7 +281,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#_symbol_iterator_">[Symbol.iterator]</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L45">src/dictionary/Dictionary.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L48">src/dictionary/Dictionary.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -286,7 +299,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#add">add</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L49">src/dictionary/Dictionary.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L52">src/dictionary/Dictionary.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -313,7 +326,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#aggregate">aggregate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L60">src/dictionary/Dictionary.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L64">src/dictionary/Dictionary.ts:64</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -352,7 +365,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#all">all</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L64">src/dictionary/Dictionary.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L68">src/dictionary/Dictionary.ts:68</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -376,7 +389,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#any">any</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L68">src/dictionary/Dictionary.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L72">src/dictionary/Dictionary.ts:72</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -400,7 +413,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#append">append</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L72">src/dictionary/Dictionary.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L76">src/dictionary/Dictionary.ts:76</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -424,7 +437,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#average">average</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L76">src/dictionary/Dictionary.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L80">src/dictionary/Dictionary.ts:80</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -448,7 +461,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#clear">clear</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L80">src/dictionary/Dictionary.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L84">src/dictionary/Dictionary.ts:84</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -466,7 +479,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#concat">concat</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L84">src/dictionary/Dictionary.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L89">src/dictionary/Dictionary.ts:89</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -490,7 +503,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L88">src/dictionary/Dictionary.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L93">src/dictionary/Dictionary.ts:93</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -517,7 +530,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#containskey">containsKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L92">src/dictionary/Dictionary.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L97">src/dictionary/Dictionary.ts:97</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -541,7 +554,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#containsvalue">containsValue</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L96">src/dictionary/Dictionary.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L101">src/dictionary/Dictionary.ts:101</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -558,7 +571,7 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a name="count" class="tsd-anchor"></a>
+					<a name="count-1" class="tsd-anchor"></a>
 					<h3>count</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
 						<li class="tsd-signature tsd-kind-icon">count<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">?: </span><a href="../interfaces/predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
@@ -566,9 +579,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#count">count</a></p>
+								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#count-1">count</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L100">src/dictionary/Dictionary.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L105">src/dictionary/Dictionary.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -592,7 +605,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#defaultifempty">defaultIfEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L104">src/dictionary/Dictionary.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L109">src/dictionary/Dictionary.ts:109</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -605,24 +618,33 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
 					<a name="distinct" class="tsd-anchor"></a>
 					<h3>distinct</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">distinct<span class="tsd-signature-symbol">(</span>comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">distinct&lt;TDistinctKey&gt;<span class="tsd-signature-symbol">(</span>keySelector<span class="tsd-signature-symbol">?: </span><a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span>, comparator<span class="tsd-signature-symbol">?: </span><a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#distinct">distinct</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L108">src/dictionary/Dictionary.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L113">src/dictionary/Dictionary.ts:113</a></li>
 								</ul>
 							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TDistinctKey</h4>
+								</li>
+							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> keySelector: <a href="../interfaces/selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> comparator: <a href="../interfaces/equalitycomparator.html" class="tsd-signature-type">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TDistinctKey</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -640,7 +662,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#elementat">elementAt</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L112">src/dictionary/Dictionary.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L117">src/dictionary/Dictionary.ts:117</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -664,7 +686,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#elementatordefault">elementAtOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L116">src/dictionary/Dictionary.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L121">src/dictionary/Dictionary.ts:121</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -688,7 +710,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#entries">entries</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L120">src/dictionary/Dictionary.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L125">src/dictionary/Dictionary.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -706,7 +728,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#except">except</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L126">src/dictionary/Dictionary.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L131">src/dictionary/Dictionary.ts:131</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -733,7 +755,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#first">first</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L131">src/dictionary/Dictionary.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L136">src/dictionary/Dictionary.ts:136</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -757,7 +779,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#firstordefault">firstOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L135">src/dictionary/Dictionary.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L140">src/dictionary/Dictionary.ts:140</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -781,7 +803,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#foreach">forEach</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L139">src/dictionary/Dictionary.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L144">src/dictionary/Dictionary.ts:144</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -805,7 +827,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#get">get</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L143">src/dictionary/Dictionary.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L148">src/dictionary/Dictionary.ts:148</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -829,7 +851,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#groupby">groupBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L147">src/dictionary/Dictionary.ts:147</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L152">src/dictionary/Dictionary.ts:152</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -862,7 +884,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#groupjoin">groupJoin</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L151">src/dictionary/Dictionary.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L156">src/dictionary/Dictionary.ts:156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -909,7 +931,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L304">src/dictionary/Dictionary.ts:304</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L316">src/dictionary/Dictionary.ts:316</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -932,7 +954,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L308">src/dictionary/Dictionary.ts:308</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L320">src/dictionary/Dictionary.ts:320</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -959,7 +981,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#intersect">intersect</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L155">src/dictionary/Dictionary.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L160">src/dictionary/Dictionary.ts:160</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -986,7 +1008,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L160">src/dictionary/Dictionary.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L165">src/dictionary/Dictionary.ts:165</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1004,7 +1026,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#join">join</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L164">src/dictionary/Dictionary.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L169">src/dictionary/Dictionary.ts:169</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1055,7 +1077,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#keys">keys</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L168">src/dictionary/Dictionary.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L173">src/dictionary/Dictionary.ts:173</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/iset.html" class="tsd-signature-type">ISet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1073,7 +1095,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#last">last</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L172">src/dictionary/Dictionary.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L177">src/dictionary/Dictionary.ts:177</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1097,7 +1119,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#lastordefault">lastOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L176">src/dictionary/Dictionary.ts:176</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L181">src/dictionary/Dictionary.ts:181</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1121,7 +1143,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#max">max</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L180">src/dictionary/Dictionary.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L185">src/dictionary/Dictionary.ts:185</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1145,7 +1167,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#min">min</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L184">src/dictionary/Dictionary.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L189">src/dictionary/Dictionary.ts:189</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1169,7 +1191,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#orderby">orderBy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L188">src/dictionary/Dictionary.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L193">src/dictionary/Dictionary.ts:193</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1202,7 +1224,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#orderbydescending">orderByDescending</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L192">src/dictionary/Dictionary.ts:192</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L197">src/dictionary/Dictionary.ts:197</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1235,7 +1257,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#prepend">prepend</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L196">src/dictionary/Dictionary.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L201">src/dictionary/Dictionary.ts:201</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1259,7 +1281,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L200">src/dictionary/Dictionary.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L205">src/dictionary/Dictionary.ts:205</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1283,7 +1305,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#reverse">reverse</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L204">src/dictionary/Dictionary.ts:204</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L211">src/dictionary/Dictionary.ts:211</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1301,7 +1323,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#select">select</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L208">src/dictionary/Dictionary.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L215">src/dictionary/Dictionary.ts:215</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1331,7 +1353,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#selectmany">selectMany</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L212">src/dictionary/Dictionary.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L219">src/dictionary/Dictionary.ts:219</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1361,7 +1383,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#sequenceequal">sequenceEqual</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L216">src/dictionary/Dictionary.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L223">src/dictionary/Dictionary.ts:223</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1388,7 +1410,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#single">single</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L221">src/dictionary/Dictionary.ts:221</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L228">src/dictionary/Dictionary.ts:228</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1412,7 +1434,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#singleordefault">singleOrDefault</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L225">src/dictionary/Dictionary.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L232">src/dictionary/Dictionary.ts:232</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1436,7 +1458,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#size">size</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L229">src/dictionary/Dictionary.ts:229</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L236">src/dictionary/Dictionary.ts:236</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -1454,7 +1476,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#skip">skip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L233">src/dictionary/Dictionary.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L240">src/dictionary/Dictionary.ts:240</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1478,7 +1500,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#skiplast">skipLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L237">src/dictionary/Dictionary.ts:237</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L244">src/dictionary/Dictionary.ts:244</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1502,7 +1524,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#skipwhile">skipWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L241">src/dictionary/Dictionary.ts:241</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L248">src/dictionary/Dictionary.ts:248</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1526,7 +1548,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#sum">sum</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L245">src/dictionary/Dictionary.ts:245</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L252">src/dictionary/Dictionary.ts:252</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1550,7 +1572,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#take">take</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L249">src/dictionary/Dictionary.ts:249</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L256">src/dictionary/Dictionary.ts:256</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1574,7 +1596,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#takelast">takeLast</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L253">src/dictionary/Dictionary.ts:253</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L260">src/dictionary/Dictionary.ts:260</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1598,7 +1620,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#takewhile">takeWhile</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L257">src/dictionary/Dictionary.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L264">src/dictionary/Dictionary.ts:264</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1622,7 +1644,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L261">src/dictionary/Dictionary.ts:261</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L268">src/dictionary/Dictionary.ts:268</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="keyvaluepair.html" class="tsd-signature-type">KeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -1640,7 +1662,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#todictionary">toDictionary</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L265">src/dictionary/Dictionary.ts:265</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L272">src/dictionary/Dictionary.ts:272</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1682,7 +1704,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#tolist">toList</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L269">src/dictionary/Dictionary.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L276">src/dictionary/Dictionary.ts:276</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1706,7 +1728,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#tolookup">toLookup</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L273">src/dictionary/Dictionary.ts:273</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L280">src/dictionary/Dictionary.ts:280</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1745,7 +1767,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#tryadd">tryAdd</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L277">src/dictionary/Dictionary.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L284">src/dictionary/Dictionary.ts:284</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1772,7 +1794,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#union">union</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L288">src/dictionary/Dictionary.ts:288</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L296">src/dictionary/Dictionary.ts:296</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1788,6 +1810,23 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external">
+					<a name="updatecount" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> update<wbr>Count</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Count<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L312">src/dictionary/Dictionary.ts:312</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
 					<a name="values" class="tsd-anchor"></a>
 					<h3>values</h3>
@@ -1799,7 +1838,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#values">values</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L292">src/dictionary/Dictionary.ts:292</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L300">src/dictionary/Dictionary.ts:300</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="list.html" class="tsd-signature-type">List</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TValue</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1817,7 +1856,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#where">where</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L296">src/dictionary/Dictionary.ts:296</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L304">src/dictionary/Dictionary.ts:304</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1841,7 +1880,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/idictionary.html">IDictionary</a>.<a href="../interfaces/idictionary.html#zip">zip</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/discordelia/ts-collections/blob/d9f39b2/src/dictionary/Dictionary.ts#L300">src/dictionary/Dictionary.ts:300</a></li>
+									<li>Defined in <a href="https://github.com/luminela/ts-collections/blob/336683b/src/dictionary/Dictionary.ts#L308">src/dictionary/Dictionary.ts:308</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1885,6 +1924,9 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
 								<a href="dictionary.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+								<a href="dictionary.html#count" class="tsd-kind-icon">Count</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-external">
 								<a href="dictionary.html#keycomparator" class="tsd-kind-icon">key<wbr>Comparator</a>
@@ -1935,12 +1977,12 @@
 								<a href="dictionary.html#containsvalue" class="tsd-kind-icon">contains<wbr>Value</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-								<a href="dictionary.html#count" class="tsd-kind-icon">count</a>
+								<a href="dictionary.html#count-1" class="tsd-kind-icon">count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="dictionary.html#defaultifempty" class="tsd-kind-icon">default<wbr>IfEmpty</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
 								<a href="dictionary.html#distinct" class="tsd-kind-icon">distinct</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
@@ -2074,6 +2116,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="dictionary.html#union" class="tsd-kind-icon">union</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-external">
+								<a href="dictionary.html#updatecount" class="tsd-kind-icon">update<wbr>Count</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
 								<a href="dictionary.html#values" class="tsd-kind-icon">values</a>

@@ -13,6 +13,7 @@ export {
     IQueue,
     IDeque,
     LinkedList,
+    RecordList,
     IDictionary,
     KeyValuePair,
     Dictionary,
