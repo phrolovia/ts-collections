@@ -16,7 +16,7 @@ import {Writable} from "../shared/Writable";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
-    public readonly Count: number = 0;
+    public readonly length: number = 0;
 
     protected constructor(comparator?: EqualityComparator<TElement>) {
         this.comparator = comparator ?? Comparators.equalityComparator;
@@ -27,7 +27,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         for (const element of collection) {
             this.add(element);
         }
-        this.updateCount();
+        this.updateLength();
         return this.size() !== oldSize;
     }
 
@@ -249,8 +249,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.zip(this, enumerable, zipper);
     }
 
-    protected updateCount(): void {
-        (this.Count as Writable<number>) = this.size();
+    protected updateLength(): void {
+        (this.length as Writable<number>) = this.size();
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

@@ -12,7 +12,7 @@ describe("TreeSet", () => {
         it("should remove all items from the set", () => {
             set.clear();
             expect(set.size()).to.eq(0);
-            expect(set.Count).to.eq(0);
+            expect(set.length).to.eq(0);
         });
     });
     describe("#headSet()", () => {
@@ -22,12 +22,12 @@ describe("TreeSet", () => {
         it("should create head set without the toElement included", () => {
             expect(headSet.size()).to.eq(3);
             expect(headSet.toArray()).to.deep.equal([1, 2, 3]);
-            expect(headSet.Count).to.eq(3);
+            expect(headSet.length).to.eq(3);
         });
         it("should create headset with the toElement included if it is inclusive", () => {
             expect(headSetInclusive.size()).to.eq(4);
             expect(headSetInclusive.toArray()).to.deep.equal([1, 2, 3, 4]);
-            expect(headSetInclusive.Count).to.eq(4);
+            expect(headSetInclusive.length).to.eq(4);
         });
     });
     describe("#remove()", () => {
@@ -39,7 +39,7 @@ describe("TreeSet", () => {
             set.remove(Person.Amy);
             expect(set.size()).to.eq(2);
             expect(set.contains(Person.Amy)).to.be.false;
-            expect(set.Count).to.eq(2);
+            expect(set.length).to.eq(2);
         });
     });
     describe("#removeAll()", () => {
@@ -54,7 +54,7 @@ describe("TreeSet", () => {
             expect(set.contains(Person.Jisu)).to.be.false;
             expect(set.contains(Person.Amy)).to.be.false;
             expect(set.contains(Person.Bella)).to.be.true;
-            expect(set.Count).to.eq(1);
+            expect(set.length).to.eq(1);
         });
     });
     describe("#removeIf()", () => {
@@ -68,7 +68,7 @@ describe("TreeSet", () => {
             expect(set.contains(Person.Jisu)).to.be.false;
             expect(set.contains(Person.Amy)).to.be.false;
             expect(set.contains(Person.Bella)).to.be.true;
-            expect(set.Count).to.eq(1);
+            expect(set.length).to.eq(1);
         });
     });
     describe("#retainAll()", () => {
@@ -83,7 +83,7 @@ describe("TreeSet", () => {
             expect(set.contains(Person.Jisu)).to.be.true;
             expect(set.contains(Person.Amy)).to.be.true;
             expect(set.contains(Person.Bella)).to.be.false;
-            expect(set.Count).to.eq(2);
+            expect(set.length).to.eq(2);
         });
     });
     describe("#subSet()", () => {
@@ -94,19 +94,19 @@ describe("TreeSet", () => {
         const excExcSubset = set.subSet(3, 7, false, false);
         it("should create a subset including fromElement and excluding toElement", () => {
             expect(incExcSubset.toArray()).to.deep.equal([3, 4, 5, 6]);
-            expect(incExcSubset.Count).to.eq(4);
+            expect(incExcSubset.length).to.eq(4);
         });
         it("should create a subset including fromElement and including toElement", () => {
             expect(incIncSubset.toArray()).to.deep.equal([3, 4, 5, 6, 7]);
-            expect(incIncSubset.Count).to.eq(5);
+            expect(incIncSubset.length).to.eq(5);
         });
         it("should create a subset excluding and including toElement", () => {
             expect(excIncSubset.toArray()).to.deep.equal([4, 5, 6, 7]);
-            expect(excIncSubset.Count).to.eq(4);
+            expect(excIncSubset.length).to.eq(4);
         });
         it("should create a subset excluding fromElement and excluding toElement", () => {
             expect(excExcSubset.toArray()).to.deep.equal([4, 5, 6]);
-            expect(excExcSubset.Count).to.eq(3);
+            expect(excExcSubset.length).to.eq(3);
         });
     });
     describe("#tailSet()", () => {
@@ -116,12 +116,12 @@ describe("TreeSet", () => {
         it("should create tail set without the toElement included", () => {
             expect(tailSet.size()).to.eq(4);
             expect(tailSet.toArray()).to.deep.equal([5, 6, 7, 8]);
-            expect(tailSet.Count).to.eq(4);
+            expect(tailSet.length).to.eq(4);
         });
         it("should create tail set with the toElement included if it is inclusive", () => {
             expect(tailSetInclusive.size()).to.eq(5);
             expect(tailSetInclusive.toArray()).to.deep.equal([4, 5, 6, 7, 8]);
-            expect(tailSetInclusive.Count).to.eq(5);
+            expect(tailSetInclusive.length).to.eq(5);
         });
     });
 });

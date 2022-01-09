@@ -6,7 +6,7 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
     /**
      * Returns the number of elements in this dictionary.
      */
-    readonly Count: number;
+    readonly length: number;
 
     /**
      * Adds the specified key and value to the dictionary.

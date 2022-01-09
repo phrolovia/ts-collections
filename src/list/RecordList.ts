@@ -21,7 +21,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
                 this.listSize++;
             }
         }
-        this.updateCount();
+        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -33,7 +33,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
     public add(element: TElement): boolean {
         this[this.listSize] = element;
         this.listSize++;
-        this.updateCount();
+        this.updateLength();
         return true;
     }
 
@@ -44,7 +44,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
         if (index === this.size()) {
             this[index] = element;
             this.listSize++;
-            this.updateCount();
+            this.updateLength();
             return true;
         }
         let shiftedItem: TElement = this[index];
@@ -55,7 +55,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
         this[this.size()] = shiftedItem;
         this[this.size() + 1] = element;
         this.listSize++;
-        this.updateCount();
+        this.updateLength();
         return true;
     }
 
@@ -64,7 +64,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
             delete this[ex];
         }
         this.listSize = 0;
-        this.updateCount();
+        this.updateLength();
     }
 
     public get(index: number): TElement {
@@ -75,26 +75,19 @@ export class RecordList<TElement> extends AbstractList<TElement> {
     }
 
     public remove(element: TElement): boolean {
-        let copy: TElement[] = [];
-        let found: boolean = false;
-        for (const item of this) {
-            if (!found && this.comparator(item, element)) {
-                found = true;
-                continue;
-            }
-            copy.push(item);
-        }
-        const removed = copy.length !== this.size();
-        if (removed) {
-            for (let ex = 0; ex < this.size(); ++ex) {
-                if (ex < copy.length) {
-                    this[ex] = copy[ex];
-                } else {
+        let removed = false;
+        for (let ex = 0; ex < this.size(); ++ex) {
+            if (this.comparator(this[ex], element)) {
+                if (ex === this.size() - 1) {
                     delete this[ex];
                     this.listSize--;
+                    this.updateLength();
+                    return true;
                 }
+                this.removeAt(ex);
+                removed = true;
+                break;
             }
-            this.updateCount();
         }
         return removed;
     }
@@ -107,9 +100,9 @@ export class RecordList<TElement> extends AbstractList<TElement> {
         for (let ex = index; ex < this.size() - 1; ++ex) {
             this[ex] = this[ex + 1];
         }
-        delete this[this.size()];
+        delete this[this.size()-1];
         this.listSize--;
-        this.updateCount();
+        this.updateLength();
         return element;
     }
 

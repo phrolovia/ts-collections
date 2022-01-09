@@ -21,7 +21,7 @@ describe("LinkedList", () => {
             list.add(4);
             expect(list.size()).to.eq(4);
             expect(list.get(3)).to.eq(4);
-            expect(list.Count).to.eq(4);
+            expect(list.length).to.eq(4);
         });
     });
 
@@ -36,7 +36,7 @@ describe("LinkedList", () => {
             for (const element of list1) {
                 expect(element).to.eq(personArray[index++]);
             }
-            expect(list1.Count).to.eq(6);
+            expect(list1.length).to.eq(6);
         });
         it("should return true if list is changed as a result (and false if not)", () => {
             const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
@@ -46,7 +46,7 @@ describe("LinkedList", () => {
             const result2 = list1.addAll(list3);
             expect(result).to.eq(true);
             expect(result2).to.eq(false);
-            expect(list1.Count).to.eq(6);
+            expect(list1.length).to.eq(6);
         });
     });
 
@@ -56,13 +56,13 @@ describe("LinkedList", () => {
             expect(() => list.addAt(Person.Suzuha, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
             expect(() => list.addAt(Person.Suzuha, 5)).to.throw(ErrorMessages.IndexOutOfBoundsException);
             expect(() => list.addAt(Person.Bella, 2)).to.not.throw;
-            expect(list.Count).to.eq(4);
+            expect(list.length).to.eq(4);
         });
         it("should add the element to the specified index", () => {
             const list = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
             list.addAt(Person.Bella, 2);
             expect(list.get(2)).to.eq(Person.Bella);
-            expect(list.Count).to.eq(5);
+            expect(list.length).to.eq(5);
         });
         it("should not throw error and add the element if index is equal to size", () => {
             const list = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
@@ -70,7 +70,7 @@ describe("LinkedList", () => {
             list.addAt(Person.Bella, 4);
             expect(list.size()).to.eq(5);
             expect(list.get(4)).to.eq(Person.Bella);
-            expect(list.Count).to.eq(5);
+            expect(list.length).to.eq(5);
         });
         it("should add at the beginning of empty list", () => {
             const list = new LinkedList<number>();
@@ -181,7 +181,7 @@ describe("LinkedList", () => {
             expect(list.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
             expect(array).to.deep.equal([1, 2, 3, 4, 5, 9, 99]);
             expect(array2).to.deep.equal([1, 2, 3, 4, 5, 9, 777, 0]);
-            expect(enumerable.toList().Count).to.eq(6);
+            expect(enumerable.toList().length).to.eq(6);
         });
     });
 
@@ -206,7 +206,7 @@ describe("LinkedList", () => {
         it("should remove all elements from the collection", () => {
             list1.clear();
             expect(list1.size()).to.eq(0);
-            expect(list1.Count).to.eq(0);
+            expect(list1.length).to.eq(0);
         });
     });
 
@@ -219,7 +219,7 @@ describe("LinkedList", () => {
             const array2 = clist.append(-1).toArray();
             expect(array).to.deep.equal([1, 2, 3, 4, 5, 5, 6, 7, 8, 9]);
             expect(array2).to.deep.equal([1, 2, 3, 4, 5, 5, 6, 7, 8, 9, -1]);
-            expect(clist.toList().Count).to.eq(10);
+            expect(clist.toList().length).to.eq(10);
         });
     });
 
@@ -289,7 +289,7 @@ describe("LinkedList", () => {
             expect(newList.size()).to.eq(1);
             expect(newList.get(0)).to.eq(7);
             expect(single).to.eq(1);
-            expect(newList.Count).to.eq(1);
+            expect(newList.length).to.eq(1);
         });
         it("should disregard the given value if list is not empty", () => {
             const list = new LinkedList([1]);
@@ -300,7 +300,7 @@ describe("LinkedList", () => {
             expect(newList.size()).to.eq(1);
             expect(newList.get(0)).to.eq(1);
             expect(single).to.eq(1);
-            expect(newList.Count).to.eq(1);
+            expect(newList.length).to.eq(1);
         });
     });
 
@@ -309,7 +309,7 @@ describe("LinkedList", () => {
             const list = new LinkedList([Person.Alice, Person.Mel, Person.Senna, Person.Mel, Person.Alice]);
             const distinct = list.distinct(p => p.name);
             expect(distinct.toArray()).to.deep.equal([Person.Alice, Person.Mel, Person.Senna]);
-            expect(distinct.toList().Count).to.eq(3);
+            expect(distinct.toList().length).to.eq(3);
         });
         it("should use default key selector if no key selector is provided", () => {
             const list1 = new LinkedList([1, 2, 3, 1, 1, 1, 4, 5, 4, 3]);
@@ -367,7 +367,7 @@ describe("LinkedList", () => {
             const list2 = new LinkedList([4, 5, 6, 7, 8]);
             const elist = list1.except(list2).toList();
             expect(elist.toArray()).to.deep.equal([1, 2, 3]);
-            expect(elist.Count).to.eq(3);
+            expect(elist.length).to.eq(3);
         });
         it("should only have 'Alice' and 'Senna'", () => {
             const list1 = new LinkedList([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
@@ -531,7 +531,7 @@ describe("LinkedList", () => {
             const list2 = new LinkedList([4, 5, 6, 7, 8]);
             const elist = list1.intersect(list2).toList();
             expect(elist.toArray()).to.deep.equal([4, 5]);
-            expect(elist.Count).to.eq(2);
+            expect(elist.length).to.eq(2);
         });
         it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
             const list1 = new LinkedList([Person.Alice,Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
@@ -598,7 +598,7 @@ describe("LinkedList", () => {
                 ["B", "b2"]
             ];
             expect(joinList.toArray()).to.deep.equal(expectedOutput);
-            expect(joinList.toList().Count).to.eq(5);
+            expect(joinList.toList().length).to.eq(5);
         });
     });
 
@@ -723,7 +723,7 @@ describe("LinkedList", () => {
         list.add(Person.Senna);
         it("should have two elements", () => {
             expect(list.size()).to.eq(2);
-            expect(list.Count).to.eq(2);
+            expect(list.length).to.eq(2);
         });
         it("should return a new list", () => {
             const newList = list.prepend(Person.Lenka).toList();
@@ -747,13 +747,13 @@ describe("LinkedList", () => {
         it("should remove null from index 2", () => {
             list1.remove(null);
             expect(list1.get(2)).to.eq(Person.Noemi2);
-            expect(list1.Count).to.eq(4);
+            expect(list1.length).to.eq(4);
         });
         it("should remove Noemi from the list", () => {
             list1.remove(Person.Noemi);
             expect(list1.get(2)).to.eq(null);
             expect(list1.get(1)).to.eq(Person.Noemi2);
-            expect(list1.Count).to.eq(3);
+            expect(list1.length).to.eq(3);
         });
     });
 
@@ -764,7 +764,7 @@ describe("LinkedList", () => {
             list1.removeAll(list2);
             expect(list1.size()).to.eq(4);
             expect(list1.get(3)).to.eq(Person.Priscilla);
-            expect(list1.Count).to.eq(4);
+            expect(list1.length).to.eq(4);
         });
         it("should use the provided comparator for comparison", () => {
             const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola], personNameComparator);
@@ -772,7 +772,7 @@ describe("LinkedList", () => {
             list1.removeAll(list2);
             expect(list1.size()).to.eq(3);
             expect(list1.get(2)).to.eq(Person.Priscilla);
-            expect(list1.Count).to.eq(3);
+            expect(list1.length).to.eq(3);
         });
     });
 
@@ -781,7 +781,7 @@ describe("LinkedList", () => {
             const list = new LinkedList([1, 2, 3, 4, 5]);
             expect(() => list.removeAt(-1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
             expect(() => list.removeAt(44)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(list.Count).to.eq(5);
+            expect(list.length).to.eq(5);
         });
         it("should remove element from the specified index", () => {
             const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
@@ -789,7 +789,7 @@ describe("LinkedList", () => {
             expect(list1.size()).to.eq(5);
             expect(list1.get(0)).to.eq(Person.Alice);
             expect(list1.get(4)).to.eq(Person.Vanessa);
-            expect(list1.Count).to.eq(5);
+            expect(list1.length).to.eq(5);
         });
     });
 
@@ -801,7 +801,7 @@ describe("LinkedList", () => {
             expect(list1.get(0)).to.eq(Person.Alice);
             expect(list1.get(1)).to.eq(Person.Noemi);
             expect(list1.get(2)).to.eq(Person.Viola);
-            expect(list1.Count).to.eq(3);
+            expect(list1.length).to.eq(3);
         });
     });
 
@@ -813,7 +813,7 @@ describe("LinkedList", () => {
             expect(list1.size()).to.eq(2);
             expect(list1.get(0)).to.eq(4);
             expect(list1.get(1)).to.eq(5);
-            expect(list1.Count).to.eq(2);
+            expect(list1.length).to.eq(2);
         });
         it("should use the provided comparator", () => {
             const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola], personNameComparator);
@@ -823,7 +823,7 @@ describe("LinkedList", () => {
             expect(list1.get(0)).to.eq(Person.Noemi);
             expect(list1.get(1)).to.eq(Person.Vanessa);
             expect(list1.get(2)).to.eq(Person.Viola);
-            expect(list1.Count).to.eq(3);
+            expect(list1.length).to.eq(3);
         });
     });
 
@@ -863,7 +863,7 @@ describe("LinkedList", () => {
             expect(list2.get(1)).to.eq(25);
             expect(list2.get(2)).to.eq(36);
             expect(list2.get(3)).to.eq(81);
-            expect(list2.Count).to.eq(4);
+            expect(list2.length).to.eq(4);
         });
         it("should return an IEnumerable with elements [125, 729]", () => {
             const list = new LinkedList([2, 5, 6, 9]);
@@ -1380,7 +1380,7 @@ describe("LinkedList", () => {
             const dict = people.toDictionary(p => p.name, p => p);
             expect(dict.size()).to.eq(people.size());
             expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
-            expect(dict.Count).to.eq(5);
+            expect(dict.length).to.eq(5);
         });
     });
 
@@ -1412,7 +1412,7 @@ describe("LinkedList", () => {
             const list2 = new LinkedList(["Alice", "Rei", "Vanessa", "Vanessa", "Yuzuha"]);
             const union = list1.union(list2);
             expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
-            expect(union.toList().Count).to.eq(6);
+            expect(union.toList().length).to.eq(6);
         });
     });
 
@@ -1427,7 +1427,7 @@ describe("LinkedList", () => {
             expect(list2.size()).to.eq(2);
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
-            expect(list2.Count).to.eq(2);
+            expect(list2.length).to.eq(2);
         });
     });
 

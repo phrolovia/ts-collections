@@ -29,7 +29,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
     private readonly keyValueTree: RedBlackTree<KeyValuePair<TKey, TValue>>;
     private readonly valueComparator: EqualityComparator<TValue>;
-    public readonly Count: number = 0;
+    public readonly length: number = 0;
 
     public constructor(
         keyComparator?: OrderComparator<TKey>,
@@ -42,7 +42,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
             && this.valueComparator(p1.value, p2.value);
         const treeKeyComparator = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key);
         this.keyValueTree = new RedBlackTree<KeyValuePair<TKey, TValue>>(treeKeyComparator, iterable);
-        this.updateCount();
+        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
@@ -57,7 +57,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
         this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
-        this.updateCount();
+        this.updateLength();
         return value;
     }
 
@@ -83,7 +83,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
     public clear(): void {
         this.keyValueTree.clear();
-        this.updateCount();
+        this.updateLength();
     }
 
     public concat(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -204,7 +204,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
 
     public remove(key: TKey): TValue {
         const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
-        this.updateCount();
+        this.updateLength();
         return result;
     }
 
@@ -289,7 +289,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
             return false;
         }
         this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
-        this.updateCount();
+        this.updateLength();
         return true;
     }
 
@@ -309,8 +309,8 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.zip(this, enumerable, zipper);
     }
 
-    protected updateCount(): void {
-        (this.Count as Writable<number>) = this.keyValueTree.Count;
+    protected updateLength(): void {
+        (this.length as Writable<number>) = this.keyValueTree.length;
     }
 
     private hasKey(key: TKey): boolean {

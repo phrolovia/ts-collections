@@ -6,7 +6,7 @@ export interface ICollection<TElement> extends IEnumerable<TElement> {
     /**
      * Returns the number of element in this collection.
      */
-    readonly Count: number;
+    readonly length: number;
 
     /**
      * Adds the element to the collection.

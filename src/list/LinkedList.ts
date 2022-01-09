@@ -31,7 +31,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
                 this.add(element);
             }
         }
-        this.updateCount();
+        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -296,6 +296,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
 
     private set ListSize(size: number) {
         this.listSize = size;
-        this.updateCount();
+        this.updateLength();
     }
 }

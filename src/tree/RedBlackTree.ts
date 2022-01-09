@@ -51,7 +51,7 @@ class RedBlackNode<TElement> extends TreeNode<TElement> {
         return this.parent.getLeft() === this;
     }
 
-    public moveDown(p: RedBlackNode<TElement>): void { //p: parentnode
+    public moveDown(p: RedBlackNode<TElement>): void { //p: parent node
         if (this.parent != null) {
             if (this.isOnLeft()) {
                 this.parent.setLeft(p);
@@ -82,7 +82,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
                 this.add(element);
             }
         }
-        this.updateCount();
+        this.updateLength();
     }
 
     public add(element: TElement): boolean {
@@ -100,7 +100,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         const node = this.searchNode(element);
         this.deleteNode(node);
         this.treeSize--;
-        this.updateCount();
+        this.updateLength();
     }
 
     public insert(element: TElement): void {
@@ -122,7 +122,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             this.fixDoubleRed(node);
         }
         this.treeSize++;
-        this.updateCount();
+        this.updateLength();
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {

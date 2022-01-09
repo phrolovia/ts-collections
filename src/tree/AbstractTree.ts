@@ -25,7 +25,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
     public clear(): void {
         this.root = null;
         this.treeSize = 0;
-        this.updateCount();
+        this.updateLength();
     }
 
     public find(predicate: Predicate<TElement>): TElement {
