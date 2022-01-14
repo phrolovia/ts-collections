@@ -104,8 +104,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IEnumerable<IGrouping<TKey, TElement>>, comparator?: EqualityComparator<IGrouping<TKey, TElement>>): IEnumerable<IGrouping<TKey, TElement>> {
-        return this.lookupTree.except(enumerable, comparator);
+    public except(enumerable: IEnumerable<IGrouping<TKey, TElement>>, comparator?: EqualityComparator<IGrouping<TKey, TElement>>, orderComparator?: OrderComparator<IGrouping<TKey, TElement>>): IEnumerable<IGrouping<TKey, TElement>> {
+        return this.lookupTree.except(enumerable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<IGrouping<TKey, TElement>>): IGrouping<TKey, TElement> {
@@ -139,8 +139,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return !!this.lookupTree.findBy(key, g => g.key, this.keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<IGrouping<TKey, TElement>>, comparator?: EqualityComparator<IGrouping<TKey, TElement>>): IEnumerable<IGrouping<TKey, TElement>> {
-        return this.lookupTree.intersect(enumerable, comparator);
+    public intersect(enumerable: IEnumerable<IGrouping<TKey, TElement>>, comparator?: EqualityComparator<IGrouping<TKey, TElement>>, orderComparator?: OrderComparator<IGrouping<TKey, TElement>>): IEnumerable<IGrouping<TKey, TElement>> {
+        return this.lookupTree.intersect(enumerable, comparator, orderComparator);
     }
 
     public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGrouping<TKey, TElement>, TGroupKey>,

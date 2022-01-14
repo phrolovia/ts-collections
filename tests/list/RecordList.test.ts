@@ -409,6 +409,19 @@ describe("RecordList", () => {
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
         }).timeout(10000);
+        it("should use order comparator and return a set of people unique to first enumerable", () => {
+            const list1 = new RecordList<Person>();
+            const list2 = new RecordList<Person>();
+            for (let px = 0; px < 100000; ++px) {
+                const p1 = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
+                const p2 = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                list1.add(p1);
+                list2.add(p2);
+            }
+            const exceptionList = list1.except(list2, null, (p1, p2) => p1.age - p2.age);
+            const ageCount = exceptionList.count(p => p.age <= 50);
+            expect(ageCount).to.eq(0);
+        }).timeout(10000);
     });
 
     describe("#first()", () => {
@@ -618,6 +631,21 @@ describe("RecordList", () => {
                 list2.add(p);
             }
             const exceptionList = list1.intersect(list2, (p1, p2) => p1.age === p2.age);
+            const ageCount = exceptionList.count(p => p.age > 50);
+            expect(ageCount).to.eq(0);
+        }).timeout(10000);
+        it("should use order comparator and return a set of people common in both enumerables", () => {
+            const list1 = new RecordList<Person>();
+            const list2 = new RecordList<Person>();
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
+                list1.add(p);
+            }
+            for (let px = 0; px < 100000; ++px) {
+                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                list2.add(p);
+            }
+            const exceptionList = list1.intersect(list2, null, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
         }).timeout(10000);

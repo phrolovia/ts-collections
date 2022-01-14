@@ -128,9 +128,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         }
     };
 
-    public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparator;
-        return EnumerableStatic.except(this, enumerable, comparator);
+        return EnumerableStatic.except(this, enumerable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -157,9 +157,9 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparator;
-        return EnumerableStatic.intersect(this, enumerable, comparator);
+        return EnumerableStatic.intersect(this, enumerable, comparator, orderComparator);
     }
 
     public isEmpty(): boolean {

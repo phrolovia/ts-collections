@@ -97,9 +97,9 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
         comparator ??= this.comparator;
-        return EnumerableStatic.except(this, enumerable, comparator);
+        return EnumerableStatic.except(this, enumerable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
@@ -125,9 +125,9 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
         comparator ??= this.comparator;
-        return EnumerableStatic.intersect(this, enumerable, comparator);
+        return EnumerableStatic.intersect(this, enumerable, comparator, orderComparator);
     }
 
     public isEmpty(): boolean {

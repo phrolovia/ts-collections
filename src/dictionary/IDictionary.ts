@@ -4,7 +4,7 @@ import {EqualityComparator} from "../shared/EqualityComparator";
 export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
 
     /**
-     * Returns the number of elements in this dictionary.
+     * Returns the number of key-value pairs in this dictionary.
      */
     readonly length: number;
 
