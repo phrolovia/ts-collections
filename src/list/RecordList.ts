@@ -31,10 +31,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
     }
 
     public add(element: TElement): boolean {
-        this[this.listSize] = element;
-        this.listSize++;
-        this.updateLength();
-        return true;
+        return this.addAt(element, this.size());
     }
 
     public addAt(element: TElement, index: number): boolean {

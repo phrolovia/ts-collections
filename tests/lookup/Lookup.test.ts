@@ -49,7 +49,7 @@ describe("Lookup", () => {
             expect(lookup.hasKey("Suzuha")).to.eq(true);
             expect(lookup.hasKey("Hanna")).to.eq(true);
             expect(lookup.hasKey("Lucrezia")).to.eq(false);
-            expect(lookup.Count).to.eq(3);
+            expect(lookup.length).to.eq(3);
         });
     });
 
@@ -60,8 +60,8 @@ describe("Lookup", () => {
             const lookup2 = Enumerable.empty<Person>().toLookup(p => p.surname, p => p.age);
             expect(lookup.size()).to.eq(3); // Hanna, Noemi, Suzuha
             expect(lookup2.size()).to.eq(0);
-            expect(lookup.Count).to.eq(3);
-            expect(lookup2.Count).to.eq(0);
+            expect(lookup.length).to.eq(3);
+            expect(lookup2.length).to.eq(0);
         });
     });
 

@@ -18,7 +18,7 @@ import {Writable} from "../shared/Writable";
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;
     private readonly lookupTree: RedBlackTree<IGrouping<TKey, TElement>>;
-    public readonly Count: number = 0;
+    public readonly length: number = 0;
 
     private constructor(keyComparator?: OrderComparator<TKey>) {
         this.keyComparator = keyComparator;
@@ -264,6 +264,6 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     }
 
     protected updateCount(): void {
-        (this.Count as Writable<number>) = this.size();
+        (this.length as Writable<number>) = this.size();
     }
 }
