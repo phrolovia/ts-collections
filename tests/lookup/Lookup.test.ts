@@ -4,7 +4,7 @@ import {List} from "../../src/list/List";
 import {expect} from "chai";
 import {LinkedList} from "../../src/list/LinkedList";
 import {RedBlackTree} from "../../src/tree/RedBlackTree";
-import {Dictionary} from "../../src/dictionary/Dictionary";
+import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
 import {IQueue} from "../../src/queue/IQueue";
 import {Enumerable} from "../../src/enumerator/Enumerable";
 
@@ -40,7 +40,7 @@ describe("Lookup", () => {
 
     describe("#hasKey()", () => {
         it("should return true if lookup has the key", () => {
-            const dict = new Dictionary<string, Person>(
+            const dict = new SortedDictionary<string, Person>(
                 (n1, n2) => n1.localeCompare(n2),
                 (p1, p2) => personNameComparator(p1, p2) && personSurnameComparator(p1, p2) && personAgeComparator(p1, p2));
             peopleArray.forEach(p => dict.tryAdd(p.name, p));

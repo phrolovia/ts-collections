@@ -24,7 +24,7 @@ import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";
 
-export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
+export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
     private readonly keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
     private readonly keyValueTree: RedBlackTree<KeyValuePair<TKey, TValue>>;
@@ -269,8 +269,8 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return this.keyValueTree.toArray();
     }
 
-    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
-        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
+    public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {

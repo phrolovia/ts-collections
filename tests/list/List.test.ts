@@ -1473,15 +1473,6 @@ describe("List", () => {
         });
     });
 
-    describe("#toDictionary()", () => {
-        const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
-        it("should create a dictionary from the list", () => {
-            const dict = people.toDictionary(p => p.name, p => p);
-            expect(dict.size()).to.eq(people.size());
-            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
-        })
-    });
-
     describe("#toList()", () => {
         const list = new List([1, 2, 3]);
         const list2 = list.append(4).toList();
@@ -1515,6 +1506,15 @@ describe("List", () => {
             //     console.log("Null: ", lookup.get("Fujiwara"));
             // }
         });
+    });
+
+    describe("#toSortedDictionary()", () => {
+        const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        it("should create a dictionary from the list", () => {
+            const dict = people.toSortedDictionary(p => p.name, p => p);
+            expect(dict.size()).to.eq(people.size());
+            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
+        })
     });
 
     describe("#union()", () => {

@@ -16,7 +16,7 @@ export {
     RecordList,
     IDictionary,
     KeyValuePair,
-    Dictionary,
+    SortedDictionary,
     ITree,
     AbstractTree,
     RedBlackTree,

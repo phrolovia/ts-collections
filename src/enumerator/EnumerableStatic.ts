@@ -7,7 +7,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Dictionary, Enumerable, IEnumerable, IGrouping, ILookup, IOrderedEnumerable, List} from "../../imports";
+import {SortedDictionary, Enumerable, IEnumerable, IGrouping, ILookup, IOrderedEnumerable, List} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class EnumerableStatic {
@@ -178,16 +178,16 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toArray();
     }
 
-    public static toDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
-        return new Enumerable(source).toDictionary(keySelector, valueSelector, keyComparator, valueComparator);
-    }
-
     public static toList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): List<TElement> {
         return new Enumerable(source).toList(comparator);
     }
 
     public static toLookup<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
         return new Enumerable(source).toLookup(keySelector, valueSelector, keyComparator);
+    }
+
+    public static toSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+        return new Enumerable(source).toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public static union<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

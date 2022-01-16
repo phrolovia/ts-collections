@@ -6,7 +6,6 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Selector} from "../shared/Selector";
 import {INode} from "./INode";
-import {Writable} from "../shared/Writable";
 
 export abstract class AbstractTree<TElement> extends AbstractCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement> = null;
@@ -43,7 +42,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return this.findByRecursive(this.root, key, selector, comparator);
     }
 
-    public forEach(action: IndexedAction<TElement>): void {
+    public override forEach(action: IndexedAction<TElement>): void {
         if (this.root == null) {
             return;
         }
@@ -54,12 +53,12 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return this.root?.getData() ?? null;
     }
 
-    public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
         comparator ??= this.comparator;
         return this.containsRecursive(this.root, element, comparator);
     }
 
-    public isEmpty(): boolean {
+    public override isEmpty(): boolean {
         return this.root == null;
     }
 
@@ -83,7 +82,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return this.treeSize;
     }
 
-    public toArray(): TElement[] {
+    public override toArray(): TElement[] {
         const target: TElement[] = [];
         if (this.isEmpty()) {
             return target;
@@ -141,13 +140,6 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         return order < 0
             ? this.containsRecursive(root.getLeft(), element, comparator)
             : this.containsRecursive(root.getRight(), element, comparator);
-    }
-
-    private countTreeNodes(root: INode<TElement>): number {
-        if (root == null) {
-            return 0;
-        }
-        return 1 + this.countTreeNodes(root.getLeft()) + this.countTreeNodes(root.getRight());
     }
 
     private findByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement {
@@ -214,7 +206,7 @@ export abstract class AbstractTree<TElement> extends AbstractCollection<TElement
         yield* this.nextNode(node.getRight());
     }
 
-    public abstract add(element: TElement): boolean;
+    public abstract override add(element: TElement): boolean;
     public abstract delete(element: TElement): void;
     public abstract insert(element: TElement): void;
     public abstract search(element: TElement): boolean;

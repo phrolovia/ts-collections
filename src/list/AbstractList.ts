@@ -17,11 +17,11 @@ export abstract class AbstractList<TElement> extends AbstractCollection<TElement
         return this.indexOf(element, comparator) !== -1;
     }
 
-    public elementAt(index: number): TElement {
+    public override elementAt(index: number): TElement {
         return this.get(index);
     }
 
-    public elementAtOrDefault(index: number): TElement {
+    public override elementAtOrDefault(index: number): TElement {
         if (index < 0 || index >= this.size()) {
             return null;
         }

@@ -40,7 +40,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
     }
 
-    public add(element: TElement): boolean {
+    public override add(element: TElement): boolean {
         this.linkLast(element);
         return true;
     }
@@ -124,6 +124,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
                 }
             }
         }
+        return false;
     }
 
     public removeAt(index: number): TElement {

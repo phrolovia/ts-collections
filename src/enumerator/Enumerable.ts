@@ -9,7 +9,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Dictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet} from "../../imports";
+import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet} from "../../imports";
 import {Lookup} from "../lookup/Lookup";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -212,16 +212,16 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toArray();
     }
 
-    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
-        return this.enumerator.toDictionary(keySelector, valueSelector, keyComparator, valueComparator);
-    }
-
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
         return this.enumerator.toList(comparator);
     }
 
     public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
         return this.enumerator.toLookup(keySelector, valueSelector, keyComparator);
+    }
+
+    public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+        return this.enumerator.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
@@ -682,8 +682,8 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return Array.from(this);
     }
 
-    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
-        const dictionary = new Dictionary<TKey, TValue>(keyComparator, valueComparator, Enumerable.empty());
+    public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+        const dictionary = new SortedDictionary<TKey, TValue>(keyComparator, valueComparator, Enumerable.empty());
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);

@@ -1374,10 +1374,10 @@ describe("LinkedList", () => {
         });
     });
 
-    describe("#toDictionary()", () => {
+    describe("#toSortedDictionary()", () => {
         const people = new LinkedList([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
         it("should create a dictionary from the list", () => {
-            const dict = people.toDictionary(p => p.name, p => p);
+            const dict = people.toSortedDictionary(p => p.name, p => p);
             expect(dict.size()).to.eq(people.size());
             expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
             expect(dict.length).to.eq(5);

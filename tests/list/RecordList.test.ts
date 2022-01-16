@@ -1565,15 +1565,6 @@ describe("RecordList", () => {
         });
     });
 
-    describe("#toDictionary()", () => {
-        const people = new RecordList([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
-        it("should create a dictionary from the list", () => {
-            const dict = people.toDictionary(p => p.name, p => p);
-            expect(dict.size()).to.eq(people.size());
-            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
-        })
-    });
-
     describe("#toList()", () => {
         const list = new RecordList([1, 2, 3]);
         const list2 = list.append(4).toList();
@@ -1593,6 +1584,15 @@ describe("RecordList", () => {
             expect(lookup.size()).to.eq(3);
             expect(lookup.hasKey("Noemi")).to.eq(true);
         });
+    });
+
+    describe("#toSortedDictionary()", () => {
+        const people = new RecordList([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        it("should create a dictionary from the list", () => {
+            const dict = people.toSortedDictionary(p => p.name, p => p);
+            expect(dict.size()).to.eq(people.size());
+            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
+        })
     });
 
     describe("#union()", () => {

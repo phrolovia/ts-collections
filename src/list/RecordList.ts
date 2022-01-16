@@ -30,7 +30,7 @@ export class RecordList<TElement> extends AbstractList<TElement> {
         }
     }
 
-    public add(element: TElement): boolean {
+    public override add(element: TElement): boolean {
         return this.addAt(element, this.size());
     }
 
