@@ -38,13 +38,6 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
 
     /**
      * Returns an IterableIterator that yields a tuple of [key, value].
-     * <pre>
-     *     <code>
-     *          for (const [key, value] of dict.entries()) {
-     *             //
-     *          }
-     *     </code>
-     * </pre>
      */
     entries(): IterableIterator<[TKey, TValue]>;
 
@@ -72,6 +65,14 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
      * @returns The removed value or null if the key does not exist in the dictionary.
      */
     remove(key: TKey): TValue;
+
+    /**
+     * Sets the value of the given key.
+     * @param key The key whose value will be set.
+     * @param value The new value of the key
+     * @throws if the key does not exist in the dictionary.
+     */
+    set(key: TKey, value: TValue): void;
 
     /**
      * Returns the number of elements in this dictionary.

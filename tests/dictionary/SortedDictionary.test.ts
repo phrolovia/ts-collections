@@ -818,6 +818,26 @@ describe("SortedDictionary", () => {
         });
     });
 
+    describe("#set()", () => {
+        const dict = new SortedDictionary<string, number>();
+        dict.add("one", 1);
+        dict.add("two", 2);
+        it("should throw error if key is not found", () => {
+            expect(() => dict.set("three", 3)).to.throw(ErrorMessages.KeyNotFound);
+        });
+        it("should set the value of the key and not add a new key", () => {
+            dict.set("two", 22);
+            expect(dict.get("two")).to.eq(22);
+            expect(dict.size()).to.eq(2);
+            expect(dict.length).to.eq(2);
+            const expectedResults = [["one", 1], ["two", 22]];
+            let index = 0;
+            for(const [key, value] of dict.entries()) {
+                expect([key, value]).to.deep.eq(expectedResults[index++]);
+            }
+        });
+    });
+
     describe("#single", () => {
         it("should throw error if dictionary is empty", () => {
             const dict = new SortedDictionary();

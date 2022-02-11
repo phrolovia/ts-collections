@@ -2,6 +2,7 @@ export enum ErrorMessages {
     CannotConvertToNumber= "KeyValuePair cannot be converted to number type.",
     IndexOutOfBoundsException = "index is out of bounds.",
     KeyAlreadyAdded = "An item with the same key has already been added.",
+    KeyNotFound = "Key could not be found.",
     MoreThanOneElement = "Sequence contains more than one element.",
     MoreThanOneMatchingElement = "Sequence contains more than one matching element.",
     NoAccumulatorProvided = "accumulator is null.",

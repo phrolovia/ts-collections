@@ -225,6 +225,14 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
     }
 
+    public set(key: TKey, value: TValue): void {
+        const pair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
+        if (!pair) {
+            throw new Error(ErrorMessages.KeyNotFound);
+        }
+        pair.value = value;
+    }
+
     public single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.single(this, predicate);
     }
