@@ -202,6 +202,16 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return EnumerableStatic.prepend(this, element);
     }
 
+    public put(key: TKey, value: TValue): TValue | null {
+        if (this.hasKey(key)) {
+            const oldValue = this.get(key);
+            this.set(key, value);
+            return oldValue;
+        }
+        this.add(key, value);
+        return null;
+    }
+
     public remove(key: TKey): TValue {
         const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
         this.updateLength();

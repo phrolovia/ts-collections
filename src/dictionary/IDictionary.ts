@@ -4,7 +4,7 @@ import {EqualityComparator} from "../shared/EqualityComparator";
 export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
 
     /**
-     * Returns the number of key-value pairs in this dictionary.
+     * Returns the number of elements in this dictionary.
      */
     readonly length: number;
 
@@ -13,6 +13,7 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
      * @param key The key of the element to add.
      * @param value The value of the element to add. It can be <code>null</code>.
      * @returns The added value.
+     * @throws If the key is null or already exists.
      */
     add(key: TKey, value: TValue): TValue;
 
@@ -56,8 +57,19 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
 
     /**
      * Returns a set of keys of this dictionary.
+     * @returns {ISet} A set of keys of this dictionary.
      */
     keys(): ISet<TKey>;
+
+    /**
+     * Adds a value to the dictionary.
+     * If the key already exists, the value associated with the key will be replaced by the new value.
+     * @param key The key of the element to add or update.
+     * @param value The value which will be added or updated.
+     * @returns The old value of the key, or null if there was no mapping for the key.
+     * @throws If the key is null
+     */
+    put(key: TKey, value: TValue): void;
 
     /**
      * Removes the specified key and its associated value from this dictionary.
@@ -70,7 +82,7 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
      * Sets the value of the given key.
      * @param key The key whose value will be set.
      * @param value The new value of the key
-     * @throws if the key does not exist in the dictionary.
+     * @throws If the key does not exist in the dictionary.
      */
     set(key: TKey, value: TValue): void;
 

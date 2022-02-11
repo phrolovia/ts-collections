@@ -708,6 +708,35 @@ describe("SortedDictionary", () => {
         });
     });
 
+    describe("#put()", () => {
+        const dict = new SortedDictionary<number, number>();
+        dict.add(9, 80);
+        it("should add an item if key does not exists", () => {
+            dict.put(4, 16);
+            expect(dict.length).to.eq(2);
+            expect(dict.size()).to.eq(2);
+        });
+        it("should not throw an error if the key already exists", () => {
+            expect(() => dict.put(4, 1616)).to.not.throw;
+        });
+        it("should update an item if the key already exists", () => {
+            dict.put(9, 81);
+            expect(dict.size()).to.eq(2);
+            expect(dict.get(9)).to.eq(81);
+        });
+        it("should throw if the key is null", () => {
+            expect(() => dict.put(null, 99)).to.throw(ErrorMessages.NullKey);
+        });
+        it("should return null if the key added (and not updated)", () => {
+            const oldValue = dict.put(8, 64);
+            expect(oldValue).to.be.null;
+        });
+        it("should return the old value if the key is updated (and not added)", () => {
+            const oldValue = dict.put(8, 88);
+            expect(oldValue).to.eq(64);
+        });
+    });
+
     describe("#remove()", () => {
         const dictionary = new SortedDictionary<Person, string>(personNameComparator);
         dictionary.add(Person.Jane, Person.Jane.name);
