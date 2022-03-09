@@ -10,6 +10,7 @@ describe("TreeSet", () => {
         set.add(Person.Jisu);
         set.add(Person.Amy);
         it("should remove all items from the set", () => {
+            expect(set.length).to.eq(2);
             set.clear();
             expect(set.size()).to.eq(0);
             expect(set.length).to.eq(0);

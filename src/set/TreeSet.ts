@@ -23,7 +23,9 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
     }
 
     public add(element: TElement): boolean {
-        return this.tree.add(element);
+        const result = this.tree.add(element);
+        this.updateLength();
+        return result;
     }
 
     public clear(): void {
