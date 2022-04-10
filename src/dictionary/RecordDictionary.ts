@@ -1,54 +1,51 @@
+import {IDictionary} from "./IDictionary";
+import {ErrorMessages} from "../shared/ErrorMessages";
+import {KeyValuePair} from "./KeyValuePair";
 import {Accumulator} from "../shared/Accumulator";
-import {JoinSelector} from "../shared/JoinSelector";
+import {Selector} from "../shared/Selector";
+import {EnumerableStatic} from "../enumerator/EnumerableStatic";
+import {Predicate} from "../shared/Predicate";
+import {IEnumerable} from "../enumerator/IEnumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Zipper} from "../shared/Zipper";
-import {Predicate} from "../shared/Predicate";
+import {IndexedAction} from "../shared/IndexedAction";
+import {Enumerable, IGrouping} from "../enumerator/Enumerable";
+import {JoinSelector} from "../shared/JoinSelector";
+import {ISet} from "../set/ISet";
+import {TreeSet} from "../set/TreeSet";
+import {IOrderedEnumerable} from "../enumerator/IOrderedEnumerable";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Selector} from "../shared/Selector";
-import {
-    IDictionary,
-    IEnumerable,
-    IGrouping, ILookup,
-    IOrderedEnumerable,
-    ISet,
-    KeyValuePair,
-    List,
-    RedBlackTree,
-    TreeSet
-} from "../../imports";
-import {Comparators} from "../shared/Comparators";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {EnumerableStatic} from "../enumerator/EnumerableStatic";
-import {IndexedAction} from "../shared/IndexedAction";
+import {List} from "../list/List";
+import {ILookup} from "../lookup/ILookup";
+import {Zipper} from "../shared/Zipper";
 import {Writable} from "../shared/Writable";
+import {Comparators} from "../shared/Comparators";
+import {SortedDictionary} from "./SortedDictionary";
 
-export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
-    private readonly keyComparator: OrderComparator<TKey>;
+export class RecordDictionary<TKey extends string|number, TValue> implements IDictionary<TKey, TValue> {
+    private readonly dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();
+    private readonly keyComparator: EqualityComparator<TKey> = Comparators.equalityComparator;
     private readonly keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
-    private readonly keyValueTree: RedBlackTree<KeyValuePair<TKey, TValue>>;
     private readonly valueComparator: EqualityComparator<TValue>;
     public readonly length: number = 0;
 
     public constructor(
-        keyComparator?: OrderComparator<TKey>,
         valueComparator?: EqualityComparator<TValue>,
         iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>) {
-        this.keyComparator = keyComparator ?? Comparators.orderComparator;
         this.valueComparator = valueComparator ?? Comparators.equalityComparator;
         this.keyValueComparator
-            = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key) === 0
+            = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key)
             && this.valueComparator(p1.value, p2.value);
-        const treeKeyComparator = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key);
-        this.keyValueTree = new RedBlackTree<KeyValuePair<TKey, TValue>>(treeKeyComparator, []);
-        for (const pair of iterable) {
-            this.keyValueTree.add(pair);
+        for (const element of iterable) {
+            this.add(element.key, element.value);
         }
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
-        yield* this.keyValueTree;
+        for (const element of this.dictionary) {
+            yield element[1];
+        }
     }
 
     public add(key: TKey, value: TValue): TValue {
@@ -58,7 +55,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         if (this.hasKey(key)) {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
-        this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
+        this.dictionary.set(key, new KeyValuePair(key, value));
         this.updateLength();
         return value;
     }
@@ -84,7 +81,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public clear(): void {
-        this.keyValueTree.clear();
+        this.dictionary.clear();
         this.updateLength();
     }
 
@@ -125,8 +122,8 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public* entries(): IterableIterator<[TKey, TValue]> {
-        for (const pair of this) {
-            yield [pair.key, pair.value];
+        for (const item of this.dictionary) {
+            yield [item[0], item[1].value];
         }
     };
 
@@ -148,7 +145,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public get(key: TKey): TValue {
-        return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
+        return this.dictionary.get(key)?.value ?? null;
     }
 
     public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, KeyValuePair<TKey, TValue>>> {
@@ -165,7 +162,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public isEmpty(): boolean {
-        return this.keyValueTree.isEmpty();
+        return this.dictionary.size === 0;
     }
 
     public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -173,7 +170,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public keys(): ISet<TKey> {
-        return new TreeSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
+        return new TreeSet<TKey>(this.dictionary.keys());
     }
 
     public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -215,9 +212,13 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public remove(key: TKey): TValue {
-        const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
-        this.updateLength();
-        return result;
+        if (this.hasKey(key)) {
+            const oldValue = this.get(key);
+            this.dictionary.delete(key);
+            this.updateLength();
+            return oldValue;
+        }
+        return null;
     }
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -238,11 +239,11 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public set(key: TKey, value: TValue): void {
-        const pair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
+        const pair = this.get(key);
         if (!pair) {
             throw new Error(ErrorMessages.KeyNotFound);
         }
-        pair.value = value;
+        this.dictionary.set(key, new KeyValuePair(key, value));
     }
 
     public single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -254,7 +255,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public size(): number {
-        return this.keyValueTree.size();
+        return this.dictionary.size;
     }
 
     public skip(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -286,7 +287,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public toArray(): KeyValuePair<TKey, TValue>[] {
-        return this.keyValueTree.toArray();
+        return Array.from(this.dictionary.values());
     }
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
@@ -294,11 +295,11 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {
-        return this.keyValueTree.toList();
+        return new List<KeyValuePair<TKey, TValue>>(this.dictionary.values(), comparator);
     }
 
     public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TLookupKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
-        return this.keyValueTree.toLookup(keySelector, valueSelector, keyComparator);
+        return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
     }
 
     public tryAdd(key: TKey, value: TValue): boolean {
@@ -308,7 +309,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         if (this.hasKey(key)) {
             return false;
         }
-        this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
+        this.dictionary.set(key, new KeyValuePair(key, value));
         this.updateLength();
         return true;
     }
@@ -318,7 +319,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public values(): List<TValue> {
-        return this.keyValueTree.select(p => p.value).toList(this.valueComparator);
+        return new List<TValue>(Enumerable.from(this.dictionary.values()).select(x => x.value));
     }
 
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -330,11 +331,11 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     protected updateLength(): void {
-        (this.length as Writable<number>) = this.keyValueTree.length;
+        (this.length as Writable<number>) = this.dictionary.size;
     }
 
     private hasKey(key: TKey): boolean {
-        return !!this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
+        return this.dictionary.has(key);
     }
 
     private hasValue(value: TValue, comparator: EqualityComparator<TValue> = Comparators.equalityComparator): boolean {
@@ -345,5 +346,4 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         }
         return false;
     }
-
 }

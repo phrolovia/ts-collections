@@ -15,6 +15,7 @@
         "preserveConstEnums": true,
         "removeComments": false,
         "sourceMap": true,
+        "strictFunctionTypes": true,
         "outDir": "./dist"
     },
     "exclude": [
