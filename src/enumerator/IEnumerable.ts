@@ -7,7 +7,15 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, IGrouping, ILookup, IOrderedEnumerable, List} from "../../imports";
+import {
+    SortedDictionary,
+    IGrouping,
+    ILookup,
+    IOrderedEnumerable,
+    List,
+    RecordDictionary,
+    RecordList
+} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
@@ -113,6 +121,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toArray(): TElement[];
     toList(comparator?: EqualityComparator<TElement>): List<TElement>;
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue>;
+    toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue>;
+    toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement>;
     toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;

@@ -15,6 +15,7 @@ export {ITree, TraverseType} from "./src/tree/ITree";
 export {AbstractTree} from "./src/tree/AbstractTree";
 export {RedBlackTree} from "./src/tree/RedBlackTree";
 export {IDictionary} from "./src/dictionary/IDictionary";
+export {RecordDictionary} from "./src/dictionary/RecordDictionary";
 export {SortedDictionary} from "./src/dictionary/SortedDictionary";
 export {KeyValuePair} from "./src/dictionary/KeyValuePair";
 export {ISet} from "./src/set/ISet"

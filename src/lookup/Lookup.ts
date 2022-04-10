@@ -10,7 +10,7 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
-import {SortedDictionary, IOrderedEnumerable, List, RedBlackTree} from "../../imports";
+import {SortedDictionary, IOrderedEnumerable, List, RedBlackTree, RecordDictionary, RecordList} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";
@@ -21,7 +21,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     public readonly length: number = 0;
 
     private constructor(keyComparator?: OrderComparator<TKey>) {
-        this.keyComparator = keyComparator;
+        this.keyComparator = keyComparator ?? Comparators.orderComparator;
         const lookupComparator = (g1: IGrouping<TKey, TElement>, g2: IGrouping<TKey, TElement>) => this.keyComparator(g1.key, g2.key);
         this.lookupTree = new RedBlackTree<IGrouping<TKey, TElement>>(lookupComparator);
     }
@@ -244,6 +244,15 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<IGrouping<TKey, TElement>, TLookupKey>, valueSelector: Selector<IGrouping<TKey, TElement>, TLookupValue>,
                                               keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
         return this.lookupTree.toLookup(keySelector, valueSelector, keyComparator);
+    }
+
+    public toRecordDictionary<TDictKey extends string|number, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
+                                                    valueComparator?: EqualityComparator<TDictValue>): RecordDictionary<TDictKey, TDictValue> {
+        return this.lookupTree.toRecordDictionary(keySelector, valueSelector, valueComparator);
+    }
+
+    public toRecordList(comparator?: EqualityComparator<IGrouping<TKey, TElement>>): RecordList<IGrouping<TKey, TElement>> {
+        return this.lookupTree.toRecordList(comparator);
     }
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
