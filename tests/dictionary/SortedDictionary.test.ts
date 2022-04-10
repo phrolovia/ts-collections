@@ -261,11 +261,16 @@ describe("SortedDictionary", () => {
 
     describe("#elementAt()", () => {
         const dictionary = new SortedDictionary<string, Person>();
+        dictionary.add(Person.Suzuha.name, Person.Suzuha);
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         it("should return 'Lucrezia'", () => {
             const person = dictionary.elementAt(1);
             expect(person.value).to.eq(Person.Lucrezia);
+        });
+        it("should return 'Suzuha'", () => { // It's a sorted dictionary, so it should be the last element
+            const person = dictionary.elementAt(2);
+            expect(person.value).to.eq(Person.Suzuha);
         });
         it("should throw error if index is out of bounds", () => {
             expect(() => dictionary.elementAt(100)).to.throw();

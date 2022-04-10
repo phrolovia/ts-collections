@@ -8,7 +8,16 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, ICollection, IEnumerable, IGrouping, IOrderedEnumerable, List} from "../../imports";
+import {
+    SortedDictionary,
+    ICollection,
+    IEnumerable,
+    IGrouping,
+    IOrderedEnumerable,
+    List,
+    RecordDictionary,
+    RecordList
+} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {ILookup} from "../lookup/ILookup";
@@ -221,6 +230,15 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public toArray(): TElement[] {
         return EnumerableStatic.toArray(this);
+    }
+
+    public toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
+        return EnumerableStatic.toRecordDictionary(this, keySelector, valueSelector, valueComparator);
+    }
+
+    public toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement> {
+        comparator ??= this.comparator;
+        return EnumerableStatic.toRecordList(this, comparator);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

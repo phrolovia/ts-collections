@@ -9,7 +9,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet} from "../../imports";
+import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet, RecordDictionary, RecordList} from "../../imports";
 import {Lookup} from "../lookup/Lookup";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -218,6 +218,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
         return this.enumerator.toLookup(keySelector, valueSelector, keyComparator);
+    }
+
+    public toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
+        return this.enumerator.toRecordDictionary(keySelector, valueSelector, valueComparator);
+    }
+
+    public toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement> {
+        return this.enumerator.toRecordList(comparator);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
@@ -680,6 +688,23 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toArray(): TElement[] {
         return Array.from(this);
+    }
+
+    public toRecordDictionary<TKey extends string | number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
+        const dictionary = new RecordDictionary<TKey, TValue>(valueComparator, Enumerable.empty());
+        for (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            if (!dictionary.containsKey(key) || !dictionary.containsValue(value, valueComparator)) {
+                dictionary.add(key, value);
+            }
+            dictionary.add(key, value);
+        }
+        return dictionary;
+    }
+
+    public toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement> {
+        return new RecordList<TElement>(this, comparator);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

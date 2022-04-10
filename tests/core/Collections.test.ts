@@ -144,11 +144,17 @@ describe("Collections", () => {
             expect(() => Collections.swap(list, -1, 1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
             expect(() => Collections.swap(list, 4, 1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
         });
-        it("should swap elements at the given indices", () => {
+        it("should swap elements at the given indices [List]", () => {
             const list = new List([1, 2, 3, 4, 5]);
             Collections.swap(list, 1, 4);
             expect(list.get(1)).to.eq(5);
             expect(list.get(4)).to.eq(2);
-        })
+        });
+        it("should swap elements at the given indices [Array]", () => {
+            const array = [1, 2, 3, 4, 5];
+            Collections.swap(array, 1, 4);
+            expect(array[1]).to.eq(5);
+            expect(array[4]).to.eq(2);
+        });
     });
 });

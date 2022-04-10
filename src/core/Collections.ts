@@ -83,18 +83,23 @@ export abstract class Collections {
 
     /**
      * Swaps the elements of the list at the given indices.
-     * @param {IList} list The list whose two elements will be swapped
+     * @param {IList|Array} sequence The list or array whose two elements will be swapped
      * @param {number} firstIndex The first index of the swap operation
      * @param {number} secondIndex The second index of the swap operation
-     * @throws {Error} IndexOutOfBoundsException if the given indices are out of list's bounds.
+     * @throws {Error} IndexOutOfBoundsException if the given indices are out of bounds.
      */
-    public static swap<TElement>(list: IList<TElement>, firstIndex: number, secondIndex: number): void {
-        if (firstIndex < 0 || firstIndex >= list.size() || secondIndex < 0 || secondIndex >= list.size()) {
+    public static swap<TElement>(sequence: IList<TElement> | Array<TElement>, firstIndex: number, secondIndex: number): void {
+        const size = sequence instanceof Array ? sequence.length : sequence.size();
+        if (firstIndex < 0 || firstIndex >= size || secondIndex < 0 || secondIndex >= size) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
-        const temp = list.get(firstIndex);
-        list.set(firstIndex, list.get(secondIndex));
-        list.set(secondIndex, temp);
+        if (sequence instanceof Array) {
+            [sequence[firstIndex], sequence[secondIndex]] = [sequence[secondIndex], sequence[firstIndex]];
+            return;
+        }
+        const temp = sequence.get(firstIndex);
+        sequence.set(firstIndex, sequence.get(secondIndex));
+        sequence.set(secondIndex, temp);
     }
 
     private static binarySearchArray<TElement>(array: Array<TElement>, element: TElement, comparator?: OrderComparator<TElement>): number {

@@ -1,27 +1,30 @@
-import {IDictionary} from "./IDictionary";
+import {
+    IDictionary,
+    IEnumerable,
+    IGrouping, ILookup,
+    IOrderedEnumerable,
+    ISet,
+    Enumerable,
+    KeyValuePair,
+    List,
+    TreeSet,
+    SortedDictionary,
+    RecordList
+} from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {KeyValuePair} from "./KeyValuePair";
 import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {Predicate} from "../shared/Predicate";
-import {IEnumerable} from "../enumerator/IEnumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
-import {Enumerable, IGrouping} from "../enumerator/Enumerable";
 import {JoinSelector} from "../shared/JoinSelector";
-import {ISet} from "../set/ISet";
-import {TreeSet} from "../set/TreeSet";
-import {IOrderedEnumerable} from "../enumerator/IOrderedEnumerable";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {List} from "../list/List";
-import {ILookup} from "../lookup/ILookup";
 import {Zipper} from "../shared/Zipper";
 import {Writable} from "../shared/Writable";
 import {Comparators} from "../shared/Comparators";
-import {SortedDictionary} from "./SortedDictionary";
 
 export class RecordDictionary<TKey extends string|number, TValue> implements IDictionary<TKey, TValue> {
     private readonly dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();
@@ -288,6 +291,14 @@ export class RecordDictionary<TKey extends string|number, TValue> implements IDi
 
     public toArray(): KeyValuePair<TKey, TValue>[] {
         return Array.from(this.dictionary.values());
+    }
+
+    public toRecordDictionary<TDictKey extends string|number, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): RecordDictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toRecordDictionary(this, keySelector, valueSelector, valueComparator);
+    }
+
+    public toRecordList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): RecordList<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toRecordList(this, comparator);
     }
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
