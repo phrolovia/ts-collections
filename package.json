@@ -29,7 +29,13 @@
         "enumerable",
         "linq"
     ],
-    "author": "mirei",
+    "author": {
+        "name": "misamona",
+        "url": "https://github.com/misamona",
+    },
+    "repository": {
+        "url": "https://github.com/misamona/ts-collections"
+    },
     "license": "MIT",
     "files": [
         "dist",
