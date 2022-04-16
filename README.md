@@ -1,5 +1,11 @@
 A simple collections library for TypeScript.
 
+## Installation
+
+````shell
+npm i @mirei/ts-collections
+````
+
 ## List
 ### Usage
 
