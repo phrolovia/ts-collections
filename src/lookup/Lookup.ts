@@ -10,7 +10,7 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
-import {SortedDictionary, IOrderedEnumerable, List, RedBlackTree, RecordDictionary, RecordList} from "../../imports";
+import {SortedDictionary, IOrderedEnumerable, List, RedBlackTree, Dictionary, RecordList} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";
@@ -246,9 +246,9 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public toRecordDictionary<TDictKey extends string|number, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
-                                                    valueComparator?: EqualityComparator<TDictValue>): RecordDictionary<TDictKey, TDictValue> {
-        return this.lookupTree.toRecordDictionary(keySelector, valueSelector, valueComparator);
+    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
+                                                                    valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
+        return this.lookupTree.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
     public toRecordList(comparator?: EqualityComparator<IGrouping<TKey, TElement>>): RecordList<IGrouping<TKey, TElement>> {

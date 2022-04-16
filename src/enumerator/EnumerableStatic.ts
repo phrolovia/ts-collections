@@ -7,7 +7,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, Enumerable, IEnumerable, IGrouping, ILookup, IOrderedEnumerable, List, RecordDictionary, RecordList} from "../../imports";
+import {SortedDictionary, Enumerable, IEnumerable, IGrouping, ILookup, IOrderedEnumerable, List, Dictionary, RecordList} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class EnumerableStatic {
@@ -186,8 +186,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public static toRecordDictionary<TElement, TKey extends string|number, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
-        return new Enumerable(source).toRecordDictionary(keySelector, valueSelector, valueComparator);
+    public static toDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        return new Enumerable(source).toDictionary(keySelector, valueSelector, valueComparator);
     }
 
     public static toRecordList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): RecordList<TElement> {

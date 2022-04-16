@@ -13,7 +13,7 @@ import {
     ILookup,
     IOrderedEnumerable,
     List,
-    RecordDictionary,
+    Dictionary,
     RecordList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -119,9 +119,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     takeLast(count: number): IEnumerable<TElement>;
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     toArray(): TElement[];
+    toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue>;
     toList(comparator?: EqualityComparator<TElement>): List<TElement>;
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue>;
-    toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue>;
     toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement>;
     toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;

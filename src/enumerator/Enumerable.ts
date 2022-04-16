@@ -9,7 +9,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet, RecordDictionary, RecordList} from "../../imports";
+import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet, Dictionary, RecordList} from "../../imports";
 import {Lookup} from "../lookup/Lookup";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -220,8 +220,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
-        return this.enumerator.toRecordDictionary(keySelector, valueSelector, valueComparator);
+    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        return this.enumerator.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
     public toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement> {
@@ -690,8 +690,8 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return Array.from(this);
     }
 
-    public toRecordDictionary<TKey extends string | number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
-        const dictionary = new RecordDictionary<TKey, TValue>(valueComparator, Enumerable.empty());
+    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        const dictionary = new Dictionary<TKey, TValue>(valueComparator, Enumerable.empty());
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);

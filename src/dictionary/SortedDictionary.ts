@@ -17,7 +17,7 @@ import {
     List,
     RedBlackTree,
     TreeSet,
-    RecordDictionary,
+    Dictionary,
     RecordList
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
@@ -291,8 +291,8 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return this.keyValueTree.toArray();
     }
 
-    public toRecordDictionary<TDictKey extends string|number, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): RecordDictionary<TDictKey, TDictValue> {
-        return EnumerableStatic.toRecordDictionary(this, keySelector, valueSelector, valueComparator);
+    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
     public toRecordList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): RecordList<KeyValuePair<TKey, TValue>> {

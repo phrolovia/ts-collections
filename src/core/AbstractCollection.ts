@@ -15,7 +15,7 @@ import {
     IGrouping,
     IOrderedEnumerable,
     List,
-    RecordDictionary,
+    Dictionary,
     RecordList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -232,8 +232,8 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toArray(this);
     }
 
-    public toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
-        return EnumerableStatic.toRecordDictionary(this, keySelector, valueSelector, valueComparator);
+    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
     public toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement> {

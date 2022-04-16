@@ -1,5 +1,5 @@
 import {describe, it} from "mocha";
-import {RecordDictionary} from "../../src/dictionary/RecordDictionary";
+import {Dictionary} from "../../src/dictionary/Dictionary";
 import {expect} from "chai";
 import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
@@ -12,10 +12,10 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {List} from "../../src/list/List";
 
-describe("RecordDictionary", () => {
+describe("Dictionary", () => {
     describe("#add()", () => {
         it("should add values to the dictionary with a string key", () => {
-            const dictionary = new RecordDictionary<string, number>();
+            const dictionary = new Dictionary<string, number>();
             dictionary.add("Shenhe", 1);
             dictionary.add("Mona", 2);
             dictionary.add("Yae Miko", 3);
@@ -24,7 +24,7 @@ describe("RecordDictionary", () => {
             expect(dictionary.get("Yae Miko")).to.equal(3);
         });
         it("should add values to the dictionary with a number key", () => {
-            const dictionary = new RecordDictionary<number, number>();
+            const dictionary = new Dictionary<number, number>();
             dictionary.add(1, 1);
             dictionary.add(2, 2);
             dictionary.add(3, 3);
@@ -35,7 +35,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#aggregate()", () => {
-        const dictionary = new RecordDictionary<number, string>();
+        const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
         dictionary.add(2, "b");
         dictionary.add(3, "c");
@@ -59,7 +59,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#all()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -78,7 +78,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#any()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -97,7 +97,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#append()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -115,7 +115,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#average()", () => {
-        const dict = new RecordDictionary<string, number>();
+        const dict = new Dictionary<string, number>();
         dict.add("A", 1);
         dict.add("B", 101);
         it("should return 51", () => {
@@ -130,7 +130,7 @@ describe("RecordDictionary", () => {
 
     describe("#clear()", () => {
         it("should remove all elements from the dictionary", () => {
-            const dictionary = new RecordDictionary<string, number>();
+            const dictionary = new Dictionary<string, number>();
             dictionary.add("a", 1);
             dictionary.add("b", 2);
             dictionary.clear();
@@ -142,10 +142,10 @@ describe("RecordDictionary", () => {
     });
 
     describe("#concat()", () => {
-        const dictionary1 = new RecordDictionary<string, Person>();
+        const dictionary1 = new Dictionary<string, Person>();
         dictionary1.add(Person.Alice.name, Person.Alice);
         dictionary1.add(Person.Lucrezia.name, Person.Lucrezia);
-        const dictionary2 = new RecordDictionary<string, Person>();
+        const dictionary2 = new Dictionary<string, Person>();
         dictionary2.add(Person.Noemi.name, Person.Noemi);
         dictionary2.add(Person.Priscilla.name, Person.Priscilla);
         it("should return a dictionary which contains four people", () => {
@@ -162,7 +162,7 @@ describe("RecordDictionary", () => {
     describe("#contains()", () => {
         const personComparator: EqualityComparator<KeyValuePair<string, Person>>
             = (p1, p2) => p1.value.name === p2.value.name;
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -179,7 +179,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#containsKey()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -194,7 +194,7 @@ describe("RecordDictionary", () => {
 
     describe("#containsValue()", () => {
         const personComparator = (p1: Person, p2: Person) => p1.equals(p2);
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -208,7 +208,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#count()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -228,7 +228,7 @@ describe("RecordDictionary", () => {
 
     describe("#defaultIfEmpty()", () => {
         it("should return a new IEnumerable with the default value", () => {
-            const dictionary = new RecordDictionary<string, Person>();
+            const dictionary = new Dictionary<string, Person>();
             const dict = dictionary.defaultIfEmpty(new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice)).toSortedDictionary<string, Person>();
             const single = dictionary.defaultIfEmpty(new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia)).single();
             expect(dict instanceof SortedDictionary).to.eq(true);
@@ -240,7 +240,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#distinct()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         it("should return a new dictionary which is identical to the source dictionary", () => {
@@ -253,7 +253,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#elementAt()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         it("should return 'Lucrezia'", () => {
@@ -267,7 +267,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#elementAtOrDefault()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         it("should return 'Lucrezia'", () => {
@@ -281,7 +281,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#entries()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Noemi.name, Person.Noemi);
         dictionary.add(Person.Alice.name, Person.Alice);
         let index = 0;
@@ -300,8 +300,8 @@ describe("RecordDictionary", () => {
     });
 
     describe("#except()", () => {
-        const dict1 = new RecordDictionary<number, string>();
-        const dict2 = new RecordDictionary<number, string>();
+        const dict1 = new Dictionary<number, string>();
+        const dict2 = new Dictionary<number, string>();
         dict1.add(1, "a");
         dict1.add(2, "b");
         dict1.add(3, "c");
@@ -319,13 +319,13 @@ describe("RecordDictionary", () => {
     });
 
     describe("#first()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
         it("should throw error if dictionary is empty()", () => {
-            const dict = new RecordDictionary<number, number>();
+            const dict = new Dictionary<number, number>();
             expect(() => dict.first()).to.throw(ErrorMessages.NoElements);
         });
         it("should return the first element if no predicate is provided", () => {
@@ -343,13 +343,13 @@ describe("RecordDictionary", () => {
     });
 
     describe("#firstOrDefault()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
         it("should return null if dictionary is empty()", () => {
-            const dict = new RecordDictionary<number, number>();
+            const dict = new Dictionary<number, number>();
             expect(dict.firstOrDefault()).to.eq(null);
         });
         it("should return the first element if no predicate is provided", () => {
@@ -367,7 +367,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#forEach()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -380,7 +380,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#get()", () => {
-        const dictionary = new RecordDictionary<string, number>();
+        const dictionary = new Dictionary<string, number>();
         it("should get the value which belongs to the given key", () => {
             dictionary.add(Person.Alice.name, Person.Alice.age);
             dictionary.add(Person.Mel.name, Person.Mel.age);
@@ -391,7 +391,7 @@ describe("RecordDictionary", () => {
         });
         it("should get the value which belongs to the given key #2", () => {
             const numbers = Helper.generateRandomUniqueNumbers(500000);
-            const dict = new RecordDictionary<number, string>();
+            const dict = new Dictionary<number, string>();
             numbers.forEach(n => dict.add(n, n.toString()));
             for (const num of numbers) {
                 expect(dict.get(num)).to.eq(num.toString());
@@ -403,7 +403,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#groupBy()", () => {
-        const dict = new RecordDictionary<string, Person>();
+        const dict = new Dictionary<string, Person>();
         dict.add(Person.Alice.name, Person.Alice);
         dict.add(Person.Mel.name, Person.Mel);
         dict.add(Person.Senna.name, Person.Senna);
@@ -432,8 +432,8 @@ describe("RecordDictionary", () => {
     });
 
     describe("#groupJoin()", () => {
-        const schoolDict = new RecordDictionary<number, School>();
-        const studentDict = new RecordDictionary<number, Student>();
+        const schoolDict = new Dictionary<number, School>();
+        const studentDict = new Dictionary<number, Student>();
         schoolDict.add(1, new School(1, "Elementary School"));
         schoolDict.add(2, new School(2, "High School"));
         schoolDict.add(3, new School(3, "University"));
@@ -472,8 +472,8 @@ describe("RecordDictionary", () => {
     });
 
     describe("#intersect()", () => {
-        const dict1 = new RecordDictionary<number, string>();
-        const dict2 = new RecordDictionary<number, string>();
+        const dict1 = new Dictionary<number, string>();
+        const dict2 = new Dictionary<number, string>();
         dict1.add(1, "a");
         dict1.add(2, "b");
         dict1.add(3, "c");
@@ -488,7 +488,7 @@ describe("RecordDictionary", () => {
             expect(result.get(4)).to.null;
         });
         it("should return an empty dictionary", () => {
-            const dict3 = new RecordDictionary<number, string>();
+            const dict3 = new Dictionary<number, string>();
             dict3.add(2, "zz");
             dict3.add(3, "ff");
             const result = dict1.intersect(dict3).toSortedDictionary<number, string>();
@@ -498,19 +498,19 @@ describe("RecordDictionary", () => {
 
     describe("#isEmpty()", () => {
         it("should return true if dictionary is empty", () => {
-            const dictionary = new RecordDictionary<number, string>();
+            const dictionary = new Dictionary<number, string>();
             expect(dictionary.isEmpty()).to.eq(true);
         });
         it("should return false if dictionary is not empty", () => {
-            const dictionary = new RecordDictionary<number, string>();
+            const dictionary = new Dictionary<number, string>();
             dictionary.add(1, "a");
             expect(dictionary.isEmpty()).to.eq(false);
         });
     });
 
     describe("#join()", () => {
-        const schoolDict = new RecordDictionary<number, School>();
-        const studentDict = new RecordDictionary<number, Student>();
+        const schoolDict = new Dictionary<number, School>();
+        const studentDict = new Dictionary<number, Student>();
         schoolDict.add(1, new School(1, "Elementary School"));
         schoolDict.add(2, new School(2, "High School"));
         schoolDict.add(3, new School(3, "University"));
@@ -548,7 +548,7 @@ describe("RecordDictionary", () => {
 
     describe("#keys()", () => {
         it("should return a set containing keys", () => {
-            const dictionary = new RecordDictionary<number, Person>();
+            const dictionary = new Dictionary<number, Person>();
             dictionary.add(Person.Alice.age, Person.Alice);
             dictionary.add(Person.Jane.age, Person.Jane);
             const keySet = dictionary.keys();
@@ -560,13 +560,13 @@ describe("RecordDictionary", () => {
     });
 
     describe("#last()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
         dictionary.add(Person.Noemi.name, Person.Noemi);
         it("should throw error if dictionary is empty()", () => {
-            const dict = new RecordDictionary<number, number>();
+            const dict = new Dictionary<number, number>();
             expect(() => dict.last()).to.throw(ErrorMessages.NoElements);
         });
         it("should return the last element if no predicate is provided", () => {
@@ -585,13 +585,13 @@ describe("RecordDictionary", () => {
     });
 
     describe("#lastOrDefault()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
         dictionary.add(Person.Noemi.name, Person.Noemi);
         it("should return null if dictionary is empty()", () => {
-            const dict = new RecordDictionary<number, number>();
+            const dict = new Dictionary<number, number>();
             expect(dict.lastOrDefault()).to.eq(null);
         });
         it("should return the last element if no predicate is provided", () => {
@@ -610,7 +610,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#max()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -626,7 +626,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#min()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -643,7 +643,7 @@ describe("RecordDictionary", () => {
 
     describe("#orderBy()", () => {
         it("should order dictionary by key [asc]", () => {
-            const dictionary = new RecordDictionary<string, Person>();
+            const dictionary = new Dictionary<string, Person>();
             dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
             dictionary.add(Person.Alice.name, Person.Alice);
             dictionary.add(Person.Priscilla.name, Person.Priscilla);
@@ -666,7 +666,7 @@ describe("RecordDictionary", () => {
 
     describe("#orderByDescending()", () => {
         it("should order dictionary by key [desc]", () => {
-            const dictionary = new RecordDictionary<string, Person>();
+            const dictionary = new Dictionary<string, Person>();
             dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
             dictionary.add(Person.Alice.name, Person.Alice);
             dictionary.add(Person.Priscilla.name, Person.Priscilla);
@@ -689,7 +689,7 @@ describe("RecordDictionary", () => {
 
     describe("#prepend()", () => {
         it("should add item at the beginning", () => {
-            const dictionary = new RecordDictionary<string, Person>();
+            const dictionary = new Dictionary<string, Person>();
             dictionary.add(Person.Alice.name, Person.Alice);
             dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
             dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -702,7 +702,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#put()", () => {
-        const dict = new RecordDictionary<number, number>();
+        const dict = new Dictionary<number, number>();
         dict.add(9, 80);
         it("should add an item if key does not exists", () => {
             dict.put(4, 16);
@@ -731,7 +731,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#remove()", () => {
-        const dictionary = new RecordDictionary<string, string>();
+        const dictionary = new Dictionary<string, string>();
         dictionary.add(Person.Jane.name, Person.Jane.name);
         dictionary.add(Person.Mel.name, Person.Mel.name);
         it("should remove the value from dictionary", () => {
@@ -754,7 +754,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#reverse()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
@@ -766,7 +766,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#select()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
@@ -792,11 +792,11 @@ describe("RecordDictionary", () => {
 
     describe("#selectMany()", () => {
         it("should throw error if selector is undefined", () => {
-            const dictionary = new RecordDictionary<string, string>();
+            const dictionary = new Dictionary<string, string>();
             expect(() => dictionary.selectMany(null)).to.throw(ErrorMessages.NoSelectorProvided);
         });
         it("should return a flattened array of friends' ages", () => {
-            const dictionary = new RecordDictionary<string, Person>();
+            const dictionary = new Dictionary<string, Person>();
             Person.Viola.friendsArray = [Person.Rebecca];
             Person.Jisu.friendsArray = [Person.Alice, Person.Megan];
             Person.Vanessa.friendsArray = [Person.Viola, Person.Lucrezia, Person.Reika];
@@ -813,16 +813,16 @@ describe("RecordDictionary", () => {
 
     describe("#sequenceEqual()", () => {
         it("should return false for dictionaries with different sizes", () => {
-            const dict1 = new RecordDictionary<number, string>();
-            const dict2 = new RecordDictionary<number, string>();
+            const dict1 = new Dictionary<number, string>();
+            const dict2 = new Dictionary<number, string>();
             dict1.add(1, "a");
             dict2.add(1, "a");
             dict2.add(2, "b");
             expect(dict1.sequenceEqual(dict2)).to.eq(false);
         });
         it("should return true if dictionaries have members in the same order", () => {
-            const dict1 = new RecordDictionary<number, string>();
-            const dict2 = new RecordDictionary<number, string>();
+            const dict1 = new Dictionary<number, string>();
+            const dict2 = new Dictionary<number, string>();
             dict1.add(1, "a");
             dict1.add(2, "b");
             dict2.add(1, "a");
@@ -830,8 +830,8 @@ describe("RecordDictionary", () => {
             expect(dict1.sequenceEqual(dict2)).to.eq(true);
         });
         it("should return true if dictionaries have members in the same order", () => {
-            const dict1 = new RecordDictionary<number, Person>();
-            const dict2 = new RecordDictionary<number, Person>();
+            const dict1 = new Dictionary<number, Person>();
+            const dict2 = new Dictionary<number, Person>();
             dict1.add(1, Person.Alice);
             dict1.add(2, Person.Lucrezia);
             dict2.add(1, Person.Alice);
@@ -841,7 +841,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#set()", () => {
-        const dict = new RecordDictionary<string, number>();
+        const dict = new Dictionary<string, number>();
         dict.add("one", 1);
         dict.add("two", 2);
         it("should throw error if key is not found", () => {
@@ -862,30 +862,30 @@ describe("RecordDictionary", () => {
 
     describe("#single", () => {
         it("should throw error if dictionary is empty", () => {
-            const dict = new RecordDictionary();
+            const dict = new Dictionary();
             expect(() => dict.single()).to.throw(ErrorMessages.NoElements);
         });
         it("should throw error if dictionary has more than one elements and no predicate is provided", () => {
-            const dict = new RecordDictionary<number, string>();
+            const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             dict.add(2, "b");
             expect(() => dict.single()).to.throw(ErrorMessages.MoreThanOneElement);
         });
         it("should return the only element in the dictionary", () => {
-            const dict = new RecordDictionary<number, string>();
+            const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             const single = dict.single();
             expect(single.equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
         });
         it("should throw error if no matching element is found", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Hanna.name, Person.Hanna);
             dict.add(Person.Noemi.name, Person.Noemi);
             expect(() => dict.single(p => p.key === "Lenka")).to.throw(ErrorMessages.NoMatchingElement);
         });
         it("should return person with name 'Priscilla'", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -898,36 +898,36 @@ describe("RecordDictionary", () => {
 
     describe("#singleOrDefault", () => {
         it("should return null if dictionary is empty", () => {
-            const dict = new RecordDictionary();
+            const dict = new Dictionary();
             expect(dict.singleOrDefault()).to.eq(null);
         });
         it("should throw error if dictionary has more than one elements and no predicate is provided", () => {
-            const dict = new RecordDictionary<number, string>();
+            const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             dict.add(2, "b");
             expect(() => dict.singleOrDefault()).to.throw(ErrorMessages.MoreThanOneElement);
         });
         it("should return the only element in the dictionary", () => {
-            const dict = new RecordDictionary<number, string>();
+            const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             const single = dict.singleOrDefault();
             expect(single.equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
         });
         it("should throw error if there are more than one matching elements", () => {
-            const dict = new RecordDictionary<number, string>();
+            const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             dict.add(2, "a");
             expect(() => dict.singleOrDefault(p => p.value === "a")).to.throw(ErrorMessages.MoreThanOneMatchingElement);
         });
         it("should return null if no matching element is found", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Hanna.name, Person.Hanna);
             dict.add(Person.Noemi.name, Person.Noemi);
             expect(dict.singleOrDefault(p => p.key === "Lenka")).to.eq(null);
         });
         it("should return person with name 'Priscilla'", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -939,7 +939,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#size()", () => {
-        const dictionary = new RecordDictionary<string, string>();
+        const dictionary = new Dictionary<string, string>();
         dictionary.add(Person.Mel.name, Person.Mel.surname);
         dictionary.add(Person.Lenka.name, Person.Lenka.surname);
         dictionary.add(Person.Jane.name, Person.Jane.surname);
@@ -950,7 +950,7 @@ describe("RecordDictionary", () => {
 
     describe("#skip()", () => {
         it("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -963,7 +963,7 @@ describe("RecordDictionary", () => {
             expect(people).to.deep.equal(expectedResult);
         });
         it("should return an empty dictionary if dictionary contains fewer than skipped elements", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -975,7 +975,7 @@ describe("RecordDictionary", () => {
 
     describe("#skipLast()", () => {
         it("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -988,7 +988,7 @@ describe("RecordDictionary", () => {
             expect(people).to.deep.equal(expectedResult);
         });
         it("should return an empty dictionary if dictionary contains fewer than skipped elements", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -999,7 +999,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#skipWhile()", () => {
-        const dict = new RecordDictionary<number, Person>();
+        const dict = new Dictionary<number, Person>();
         dict.add(5000, Person.Alice);
         dict.add(2500, Person.Bella);
         dict.add(8000, Person.Eliza);
@@ -1021,7 +1021,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#sum()", () => {
-        const dict = new RecordDictionary<number, Person>();
+        const dict = new Dictionary<number, Person>();
         dict.add(5000, Person.Alice);
         dict.add(2500, Person.Bella);
         dict.add(9000, Person.Emily);
@@ -1038,7 +1038,7 @@ describe("RecordDictionary", () => {
 
     describe("#take()", () => {
         it("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -1051,7 +1051,7 @@ describe("RecordDictionary", () => {
             expect(people).to.deep.equal(expectedResult);
         });
         it("should return all elements if dictionary contains fewer than taken elements", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -1063,7 +1063,7 @@ describe("RecordDictionary", () => {
 
     describe("#takeLast()", () => {
         it("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -1076,7 +1076,7 @@ describe("RecordDictionary", () => {
             expect(people).to.deep.equal(expectedResult);
         });
         it("should return all elements if dictionary contains fewer than taken elements", () => {
-            const dict = new RecordDictionary<string, Person>();
+            const dict = new Dictionary<string, Person>();
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
@@ -1087,7 +1087,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#takeWhile()", () => {
-        const dict = new RecordDictionary<string, number>();
+        const dict = new Dictionary<string, number>();
         dict.add("apple", 1);
         dict.add("banana", 2);
         dict.add("mango", 3);
@@ -1107,7 +1107,7 @@ describe("RecordDictionary", () => {
 
     describe("#thenBy()", () => {
         it("should order people by age [asc] then by name [desc] then by surname [asc]", () => {
-            const dict = new RecordDictionary<number, Person>();
+            const dict = new Dictionary<number, Person>();
             dict.add(1, Person.Bella);
             dict.add(2, Person.Amy);
             dict.add(3, Person.Emily);
@@ -1155,7 +1155,7 @@ describe("RecordDictionary", () => {
             expect(returnedOrder).to.deep.equal(expectedOrder);
         });
         it("should be ignored if followed by an orderBy", () => {
-            const dict = new RecordDictionary<number, Person>();
+            const dict = new Dictionary<number, Person>();
             dict.add(1, Person.Bella);
             dict.add(2, Person.Amy);
             dict.add(3, Person.Emily);
@@ -1208,7 +1208,7 @@ describe("RecordDictionary", () => {
 
     describe("#thenByDescending()", () => {
         it("should order people by age [desc] then by name [desc] then by surname [asc]", () => {
-            const dict = new RecordDictionary<number, Person>();
+            const dict = new Dictionary<number, Person>();
             dict.add(1, Person.Bella);
             dict.add(2, Person.Amy);
             dict.add(3, Person.Emily);
@@ -1256,7 +1256,7 @@ describe("RecordDictionary", () => {
             expect(returnedOrder).to.deep.equal(expectedOrder);
         });
         it("should be ignored if followed by an orderBy", () => {
-            const dict = new RecordDictionary<number, Person>();
+            const dict = new Dictionary<number, Person>();
             dict.add(1, Person.Bella);
             dict.add(2, Person.Amy);
             dict.add(3, Person.Emily);
@@ -1308,7 +1308,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#toArray()", () => {
-        const dict = new RecordDictionary<string, Person>();
+        const dict = new Dictionary<string, Person>();
         dict.add(Person.Lucrezia.name, Person.Lucrezia);
         dict.add(Person.Vanessa.name, Person.Vanessa);
         dict.add(Person.Alice.name, Person.Alice);
@@ -1325,7 +1325,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#toList()", () => {
-        const dictionary = new RecordDictionary<number, string>();
+        const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
         dictionary.add(2, "b");
         const list = dictionary.toList();
@@ -1339,7 +1339,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#toSortedDictionary()", () => {
-        const dictionary = new RecordDictionary<number, string>();
+        const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
         dictionary.add(2, "b");
         const dict2 = dictionary.toSortedDictionary(p => p.value, p => p.key);
@@ -1352,7 +1352,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#tryAdd()", () => {
-        const dictionary = new RecordDictionary<string, string>();
+        const dictionary = new Dictionary<string, string>();
         dictionary.add(Person.Alice.name, Person.Alice.name);
         dictionary.add(Person.Hanna.name, Person.Hanna.name);
         it("should not throw if key already exists", () => {
@@ -1375,9 +1375,9 @@ describe("RecordDictionary", () => {
     });
 
     describe("#union()", () => {
-        const dict1 = new RecordDictionary<number, string>();
-        const dict2 = new RecordDictionary<number, string>();
-        const dict3 = new RecordDictionary<number, string>();
+        const dict1 = new Dictionary<number, string>();
+        const dict2 = new Dictionary<number, string>();
+        const dict3 = new Dictionary<number, string>();
         dict1.add(1, "a");
         dict1.add(2, "b");
         dict1.add(3, "c");
@@ -1399,7 +1399,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#values()", () => {
-        const dictionary = new RecordDictionary<number, Person>();
+        const dictionary = new Dictionary<number, Person>();
         dictionary.add(Person.Senna.age, Person.Senna);
         dictionary.add(Person.Alice.age, Person.Alice);
         dictionary.add(Person.Mel.age, Person.Mel);
@@ -1412,7 +1412,7 @@ describe("RecordDictionary", () => {
     });
 
     describe("#where()", () => {
-        const dictionary = new RecordDictionary<string, Person>();
+        const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
@@ -1433,8 +1433,8 @@ describe("RecordDictionary", () => {
 
     describe("#zip()", () => {
         it("should return array of key value pair tuples if predicate is null", () => {
-            const dict1 = new RecordDictionary<number, string>();
-            const dict2 = new RecordDictionary<number, string>();
+            const dict1 = new Dictionary<number, string>();
+            const dict2 = new Dictionary<number, string>();
             dict1.add(1, "a");
             dict1.add(2, "b");
             dict1.add(3, "c");
@@ -1454,8 +1454,8 @@ describe("RecordDictionary", () => {
             }
         });
         it("should return a zipped list with size of 2", () => {
-            const dict1 = new RecordDictionary<number, string>();
-            const dict2 = new RecordDictionary<string, number>();
+            const dict1 = new Dictionary<number, string>();
+            const dict2 = new Dictionary<string, number>();
             dict1.add(1, "one");
             dict1.add(2, "two");
             dict1.add(3, "three");
