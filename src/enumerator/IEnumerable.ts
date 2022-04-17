@@ -57,7 +57,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Concatenates two sequences.
      * @param enumerable The enumerable sequence that will be concatenated to the first sequence.
      */
-    // concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
+    concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
 
     /**
      * Determines where the sequence contains the specified element.
