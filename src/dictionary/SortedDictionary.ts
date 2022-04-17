@@ -292,7 +292,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return this.keyValueTree.toArray();
     }
 
-    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
+    public toDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
@@ -308,7 +308,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return this.keyValueTree.toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
+    public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
         return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 

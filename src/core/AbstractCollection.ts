@@ -232,7 +232,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toArray(this);
     }
 
-    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+    public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
@@ -241,7 +241,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toEnumerableArray(this, comparator);
     }
 
-    public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+    public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 

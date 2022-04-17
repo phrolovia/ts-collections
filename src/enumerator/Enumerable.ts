@@ -212,7 +212,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toArray();
     }
 
-    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+    public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         return this.enumerator.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
@@ -690,7 +690,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return Array.from(this);
     }
 
-    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+    public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         const dictionary = new Dictionary<TKey, TValue>(valueComparator, Enumerable.empty());
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
@@ -712,7 +712,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return Lookup.create(this, keySelector, valueSelector, keyComparator);
     }
 
-    public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+    public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         const dictionary = new SortedDictionary<TKey, TValue>(keyComparator, valueComparator, Enumerable.empty());
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
