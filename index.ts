@@ -16,6 +16,7 @@ export {
     EnumerableArray,
     IDictionary,
     KeyValuePair,
+    Dictionary,
     SortedDictionary,
     ITree,
     AbstractTree,
