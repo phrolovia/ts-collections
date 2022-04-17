@@ -8,7 +8,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
-import {Enumerable, LinkedList} from "../../imports";
+import {Enumerable} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
@@ -1473,6 +1473,21 @@ describe("List", () => {
         });
     });
 
+    describe("#toDictionary()", () => {
+        const list = new List([Person.Alice, Person.Mel, Person.Noemi, Person.Lucrezia, Person.Amy, Person.Bella, Person.Reina]);
+        it("should convert it to a dictionary", () => {
+            const dictionary = list.toDictionary(p => p.name, p => p);
+            expect(dictionary.get(Person.Alice.name)).to.equal(Person.Alice);
+            expect(dictionary.get(Person.Mel.name)).to.equal(Person.Mel);
+            expect(dictionary.get(Person.Noemi.name)).to.equal(Person.Noemi);
+            expect(dictionary.get(Person.Lucrezia.name)).to.equal(Person.Lucrezia);
+            expect(dictionary.get(Person.Amy.name)).to.equal(Person.Amy);
+            expect(dictionary.get(Person.Bella.name)).to.equal(Person.Bella);
+            expect(dictionary.get(Person.Reina.name)).to.equal(Person.Reina);
+            expect(dictionary.keys().toArray()).to.deep.equal(["Alice", "Mel", "Noemi", "Lucrezia", "Amy", "Bella", "Reina"]);
+        });
+    });
+
     describe("#toList()", () => {
         const list = new List([1, 2, 3]);
         const list2 = list.append(4).toList();
@@ -1510,7 +1525,7 @@ describe("List", () => {
 
     describe("#toSortedDictionary()", () => {
         const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
-        it("should create a dictionary from the list", () => {
+        it("should create a sorted dictionary from the list", () => {
             const dict = people.toSortedDictionary(p => p.name, p => p);
             expect(dict.size()).to.eq(people.size());
             expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);

@@ -23,7 +23,8 @@ export {
     RedBlackTree,
     ISet,
     AbstractSet,
-    TreeSet,
+    SortedSet,
+    EnumerableSet,
     TraverseType,
     Collections
 } from "./imports";

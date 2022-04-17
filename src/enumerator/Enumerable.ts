@@ -9,7 +9,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, TreeSet, Dictionary, EnumerableArray} from "../../imports";
+import {SortedDictionary, IEnumerable, ILookup, IOrderedEnumerable, KeyValuePair, List, SortedSet, Dictionary, EnumerableArray} from "../../imports";
 import {Lookup} from "../lookup/Lookup";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -228,7 +228,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+    public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return this.enumerator.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
@@ -695,9 +695,6 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
-            if (!dictionary.containsKey(key) || !dictionary.containsValue(value, valueComparator)) {
-                dictionary.add(key, value);
-            }
             dictionary.add(key, value);
         }
         return dictionary;
@@ -720,9 +717,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
-            if (!dictionary.containsKey(key) || !dictionary.containsValue(value, valueComparator)) {
-                dictionary.add(key, value);
-            }
+            dictionary.add(key, value);
         }
         return dictionary;
     }
@@ -767,7 +762,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): Iterable<TElement> {
-        const collection = orderComparator ? new TreeSet<TElement>([], orderComparator) : new List<TElement>([], comparator);
+        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : new List<TElement>([], comparator);
         for (const item of enumerable) {
             if (!collection.contains(item)) {
                 collection.add(item);
@@ -804,7 +799,7 @@ class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* intersectGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): Iterable<TElement> {
-        const collection = orderComparator ? new TreeSet<TElement>([], orderComparator) : new List<TElement>([], comparator);
+        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : new List<TElement>([], comparator);
         for (const item of enumerable) {
             if (!collection.contains(item)) {
                 collection.add(item);

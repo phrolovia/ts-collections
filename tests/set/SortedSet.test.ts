@@ -1,12 +1,12 @@
 import {describe, it} from "mocha";
 import {expect} from "chai";
-import {TreeSet} from "../../src/set/TreeSet";
+import {SortedSet} from "../../src/set/SortedSet";
 import {Person} from "../models/Person";
 import {LinkedList} from "../../imports";
 
-describe("TreeSet", () => {
+describe("SortedSet", () => {
     describe("#clear()", () => {
-        const set = new TreeSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);
         set.add(Person.Amy);
         it("should remove all items from the set", () => {
@@ -17,7 +17,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#headSet()", () => {
-        const set = new TreeSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+        const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const headSet = set.headSet(4);
         const headSetInclusive = set.headSet(4, true);
         it("should create head set without the toElement included", () => {
@@ -32,7 +32,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#remove()", () => {
-        const set = new TreeSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);
         set.add(Person.Amy);
         set.add(Person.Bella);
@@ -44,7 +44,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#removeAll()", () => {
-        const set = new TreeSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);
         set.add(Person.Amy);
         set.add(Person.Bella);
@@ -59,7 +59,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#removeIf()", () => {
-        const set = new TreeSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);
         set.add(Person.Amy);
         set.add(Person.Bella);
@@ -73,7 +73,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#retainAll()", () => {
-        const set = new TreeSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);
         set.add(Person.Amy);
         set.add(Person.Bella);
@@ -88,7 +88,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#subSet()", () => {
-        const set = new TreeSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+        const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const incExcSubset = set.subSet(3, 7, true, false);
         const incIncSubset = set.subSet(3, 7, true, true);
         const excIncSubset = set.subSet(3, 7, false, true);
@@ -111,7 +111,7 @@ describe("TreeSet", () => {
         });
     });
     describe("#tailSet()", () => {
-        const set = new TreeSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+        const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const tailSet = set.tailSet(4);
         const tailSetInclusive = set.tailSet(4, true);
         it("should create tail set without the toElement included", () => {

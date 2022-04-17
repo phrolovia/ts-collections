@@ -237,7 +237,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toArray();
     }
 
-    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
+    public toDictionary<TDictKey, TDictValue>(keySelector: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector: Selector<IGrouping<TKey, TElement>, TDictValue>,
                                               valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
         return this.lookupTree.toDictionary(keySelector, valueSelector, valueComparator);
     }
@@ -255,7 +255,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector?: Selector<IGrouping<TKey, TElement>, TDictValue>,
+    public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<IGrouping<TKey, TElement>, TDictKey>, valueSelector: Selector<IGrouping<TKey, TElement>, TDictValue>,
                                                     keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
         return this.lookupTree.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }

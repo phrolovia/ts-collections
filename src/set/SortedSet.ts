@@ -4,7 +4,7 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
-export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
+export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
     private readonly orderComparator: OrderComparator<TElement>;
     private readonly tree: ITree<TElement>;
 
@@ -39,7 +39,7 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
 
     public headSet(toElement: TElement, inclusive: boolean = false): ISet<TElement> {
         const enumerable = this.where(e => this.orderComparator(e, toElement) <= 0).skipLast(+!inclusive);
-        return new TreeSet(enumerable, this.orderComparator);
+        return new SortedSet(enumerable, this.orderComparator);
     }
 
     public remove(element: TElement): boolean {
@@ -73,11 +73,11 @@ export class TreeSet<TElement> extends AbstractSet<TElement> implements ISet<TEl
     public subSet(fromElement: TElement, toElement: TElement, fromInclusive: boolean = true, toInclusive: boolean = false): ISet<TElement> {
         const enumerable = this.where(e => this.orderComparator(e, fromElement) >= 0 && this.orderComparator(e, toElement) <= 0)
             .skip(+!fromInclusive).skipLast(+!toInclusive);
-        return new TreeSet(enumerable, this.orderComparator);
+        return new SortedSet(enumerable, this.orderComparator);
     }
 
     public tailSet(fromElement: TElement, inclusive: boolean = false): ISet<TElement> {
         const enumerable = this.where(e => this.orderComparator(e, fromElement) >= 0).skip(+!inclusive);
-        return new TreeSet(enumerable, this.orderComparator);
+        return new SortedSet(enumerable, this.orderComparator);
     }
 }

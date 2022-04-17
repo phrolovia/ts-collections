@@ -178,7 +178,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toArray();
     }
 
-    public static toDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+    public static toDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         return new Enumerable(source).toDictionary(keySelector, valueSelector, valueComparator);
     }
 
@@ -194,7 +194,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toLookup(keySelector, valueSelector, keyComparator);
     }
 
-    public static toSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
+    public static toSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return new Enumerable(source).toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 

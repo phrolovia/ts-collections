@@ -7,9 +7,8 @@ import {
     Enumerable,
     KeyValuePair,
     List,
-    TreeSet,
     SortedDictionary,
-    EnumerableArray
+    EnumerableArray, EnumerableSet
 } from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {Accumulator} from "../shared/Accumulator";
@@ -173,7 +172,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     }
 
     public keys(): ISet<TKey> {
-        return new TreeSet<TKey>(this.dictionary.keys());
+        return new EnumerableSet<TKey>(this.dictionary.keys());
     }
 
     public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {

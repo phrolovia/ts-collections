@@ -16,7 +16,7 @@ import {
     KeyValuePair,
     List,
     RedBlackTree,
-    TreeSet,
+    SortedSet,
     Dictionary,
     EnumerableArray
 } from "../../imports";
@@ -103,6 +103,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean {
+        comparator ??= this.valueComparator;
         return this.hasValue(value, comparator);
     }
 
@@ -175,7 +176,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
     }
 
     public keys(): ISet<TKey> {
-        return new TreeSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
+        return new SortedSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
     }
 
     public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -347,7 +348,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return !!this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
     }
 
-    private hasValue(value: TValue, comparator: EqualityComparator<TValue> = Comparators.equalityComparator): boolean {
+    private hasValue(value: TValue, comparator: EqualityComparator<TValue> = this.valueComparator): boolean {
         for (const pair of this) {
             if (comparator(pair.value, value)) {
                 return true;
