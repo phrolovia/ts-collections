@@ -9,7 +9,7 @@ import {
     List,
     TreeSet,
     SortedDictionary,
-    RecordList
+    EnumerableArray
 } from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {Accumulator} from "../shared/Accumulator";
@@ -26,7 +26,7 @@ import {Zipper} from "../shared/Zipper";
 import {Writable} from "../shared/Writable";
 import {Comparators} from "../shared/Comparators";
 
-export class RecordDictionary<TKey extends string|number, TValue> implements IDictionary<TKey, TValue> {
+export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     private readonly dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();
     private readonly keyComparator: EqualityComparator<TKey> = Comparators.equalityComparator;
     private readonly keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -293,16 +293,12 @@ export class RecordDictionary<TKey extends string|number, TValue> implements IDi
         return Array.from(this.dictionary.values());
     }
 
-    public toRecordDictionary<TDictKey extends string|number, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): RecordDictionary<TDictKey, TDictValue> {
-        return EnumerableStatic.toRecordDictionary(this, keySelector, valueSelector, valueComparator);
+    public toDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
-    public toRecordList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): RecordList<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toRecordList(this, comparator);
-    }
-
-    public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
-        return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
+    public toEnumerableArray(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): EnumerableArray<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toEnumerableArray(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {
@@ -311,6 +307,10 @@ export class RecordDictionary<TKey extends string|number, TValue> implements IDi
 
     public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TLookupKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
         return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
+    }
+
+    public toSortedDictionary<TDictKey, TDictValue>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector?: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public tryAdd(key: TKey, value: TValue): boolean {

@@ -15,8 +15,8 @@ import {
     IGrouping,
     IOrderedEnumerable,
     List,
-    RecordDictionary,
-    RecordList
+    Dictionary,
+    EnumerableArray
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
@@ -232,13 +232,13 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toArray(this);
     }
 
-    public toRecordDictionary<TKey extends string|number, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): RecordDictionary<TKey, TValue> {
-        return EnumerableStatic.toRecordDictionary(this, keySelector, valueSelector, valueComparator);
+    public toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
+        return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
-    public toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement> {
+    public toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement> {
         comparator ??= this.comparator;
-        return EnumerableStatic.toRecordList(this, comparator);
+        return EnumerableStatic.toEnumerableArray(this, comparator);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

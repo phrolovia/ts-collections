@@ -10,12 +10,12 @@ export {List} from "./src/list/List";
 export {IQueue} from "./src/queue/IQueue";
 export {IDeque} from "./src/queue/IDeque";
 export {LinkedList} from "./src/list/LinkedList";
-export {RecordList} from "./src/list/RecordList";
+export {EnumerableArray} from "./src/list/EnumerableArray";
 export {ITree, TraverseType} from "./src/tree/ITree";
 export {AbstractTree} from "./src/tree/AbstractTree";
 export {RedBlackTree} from "./src/tree/RedBlackTree";
 export {IDictionary} from "./src/dictionary/IDictionary";
-export {RecordDictionary} from "./src/dictionary/RecordDictionary";
+export {Dictionary} from "./src/dictionary/Dictionary";
 export {SortedDictionary} from "./src/dictionary/SortedDictionary";
 export {KeyValuePair} from "./src/dictionary/KeyValuePair";
 export {ISet} from "./src/set/ISet"
