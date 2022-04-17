@@ -38,5 +38,4 @@ describe("Enumerable", () => {
             expect(sum).to.eq(100);
         });
     });
-
 });

@@ -4,12 +4,7 @@ import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {OrderComparator} from "../shared/OrderComparator";
 
-/**
- * A list whose elements can be accessed via [] operator.
- * Important: Due to TypeScript limitations, assigning to an index that is greater than
- * the size of the list will break the list.
- */
-export class RecordList<TElement> extends AbstractList<TElement> {
+export class EnumerableArray<TElement> extends AbstractList<TElement> {
     private listSize: number = 0;
     [n: number]: TElement;
     public constructor(iterable: Iterable<TElement> = [], comparator: EqualityComparator<TElement> = Comparators.equalityComparator) {

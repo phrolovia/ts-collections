@@ -14,7 +14,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    RecordList
+    EnumerableArray
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -57,7 +57,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Concatenates two sequences.
      * @param enumerable The enumerable sequence that will be concatenated to the first sequence.
      */
-    concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
+    // concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
 
     /**
      * Determines where the sequence contains the specified element.
@@ -120,9 +120,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     toArray(): TElement[];
     toDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue>;
+    toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement>;
     toList(comparator?: EqualityComparator<TElement>): List<TElement>;
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue>;
-    toRecordList(comparator?: EqualityComparator<TElement>): RecordList<TElement>;
     toSortedDictionary<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue>;
     union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
