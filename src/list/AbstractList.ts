@@ -1,9 +1,10 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Predicate} from "../shared/Predicate";
-import {AbstractCollection, ICollection, IList, LinkedList} from "../../imports";
+import {ICollection, IList, LinkedList} from "../../imports";
 import {OrderComparator} from "../shared/OrderComparator";
+import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 
-export abstract class AbstractList<TElement> extends AbstractCollection<TElement> implements IList<TElement> {
+export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
     protected constructor(comparator?: EqualityComparator<TElement>) {
         super(comparator);

@@ -1,8 +1,8 @@
-import {ICollection} from "../../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import {IRandomAccessCollection} from "../../imports";
+import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 
-export interface IList<TElement> extends ICollection<TElement> {
+export interface IList<TElement> extends IRandomAccessCollection<TElement> {
 
     /**
      * Adds the given element to the specified index of this list.

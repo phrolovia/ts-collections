@@ -274,9 +274,5 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     abstract [Symbol.iterator](): Iterator<TElement>;
     abstract add(element: TElement): boolean;
     abstract clear(): void;
-    abstract remove(element: TElement): boolean;
-    abstract removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
-    abstract removeIf(predicate: Predicate<TElement>): boolean;
-    abstract retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
     abstract size(): number;
 }

@@ -1,4 +1,4 @@
-import {AbstractList, IDeque} from "../../imports";
+import {AbstractList} from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
@@ -16,7 +16,7 @@ class Node<TElement> {
     }
 }
 
-export class LinkedList<TElement> extends AbstractList<TElement> implements IDeque<TElement> {
+export class LinkedList<TElement> extends AbstractList<TElement> {
     private firstNode: Node<TElement> = null;
     private lastNode: Node<TElement> = null;
     private listSize: number = 0;
@@ -55,6 +55,14 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         return false;
     }
 
+    public addFirst(element: TElement): void {
+        this.linkFirst(element);
+    }
+
+    public addLast(element: TElement): void {
+        this.linkLast(element);
+    }
+
     public clear(): void {
         for (let node: Node<TElement> = this.firstNode; node != null;) {
             const next = node.next;
@@ -65,22 +73,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
         this.firstNode = this.lastNode = null;
         this.ListSize = 0;
-    }
-
-    public dequeue(): TElement {
-        return this.removeFirst();
-    }
-
-    public dequeueLast(): TElement {
-        return this.removeLast();
-    }
-
-    public enqueue(element: TElement) {
-        this.add(element);
-    }
-
-    public enqueueFirst(element: TElement) {
-        this.linkFirst(element);
     }
 
     public get(index: number): TElement {
@@ -130,6 +122,22 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
     public removeAt(index: number): TElement {
         this.checkElementIndex(index);
         return this.unlink(this.node(index));
+    }
+
+    public removeFirst(): TElement {
+        const firstNode = this.firstNode;
+        if (firstNode == null) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        return this.unlinkFirst(firstNode);
+    }
+
+    public removeLast(): TElement {
+        const lastNode = this.lastNode;
+        if (lastNode == null) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        return this.unlinkLast(lastNode);
     }
 
     public set(index: number, element: TElement): TElement {
@@ -225,21 +233,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> implements IDeq
         }
     }
 
-    private removeFirst(): TElement {
-        const firstNode = this.firstNode;
-        if (firstNode == null) {
-            throw new Error(ErrorMessages.NoElements);
-        }
-        return this.unlinkFirst(firstNode);
-    }
 
-    private removeLast(): TElement {
-        const lastNode = this.lastNode;
-        if (lastNode == null) {
-            throw new Error(ErrorMessages.NoElements);
-        }
-        return this.unlinkLast(lastNode);
-    }
 
     private unlink(node: Node<TElement>): TElement {
         const element: TElement = node.item;

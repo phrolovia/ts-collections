@@ -5,8 +5,8 @@ import {expect} from "chai";
 import {LinkedList} from "../../src/list/LinkedList";
 import {RedBlackTree} from "../../src/tree/RedBlackTree";
 import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
-import {IQueue} from "../../src/queue/IQueue";
 import {Enumerable} from "../../src/enumerator/Enumerable";
+import {Queue} from "../../src/queue/Queue";
 
 describe("Lookup", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
@@ -55,7 +55,7 @@ describe("Lookup", () => {
 
     describe("#size()", () => {
         it("should return the size of the lookup", () => {
-            const queue: IQueue<Person> = new LinkedList(peopleArray);
+            const queue: Queue<Person> = new Queue(peopleArray);
             const lookup = queue.toLookup(p => p.name, p => p);
             const lookup2 = Enumerable.empty<Person>().toLookup(p => p.surname, p => p.age);
             expect(lookup.size()).to.eq(3); // Hanna, Noemi, Suzuha

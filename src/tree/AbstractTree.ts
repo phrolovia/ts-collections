@@ -6,8 +6,9 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Selector} from "../shared/Selector";
 import {INode} from "./INode";
+import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 
-export abstract class AbstractTree<TElement> extends AbstractCollection<TElement> implements ITree<TElement> {
+export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement> = null;
     protected root: INode<TElement> = null;
     protected treeSize: number = 0;
