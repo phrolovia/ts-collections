@@ -11,7 +11,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
         this.updateLength();
     }
 
-    *[Symbol.iterator](): Iterator<TElement> {
+    * [Symbol.iterator](): Iterator<TElement> {
         yield* this.stack;
     }
 

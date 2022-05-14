@@ -1409,7 +1409,9 @@ describe("SortedDictionary", () => {
         });
 
         it("should throw error if key already exists and key value pairs are not equal", () => {
-            expect(() => dict1.union(dict3)).to.throw;
+            const dict4 = new SortedDictionary<number, string>();
+            dict4.add(1, "z");
+            expect(() => dict1.union(dict4).toDictionary(p => p.key, p => p.value)).to.throw();
         });
     });
 

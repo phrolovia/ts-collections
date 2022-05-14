@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai";
-import {Enumerable, LinkedList} from "../../imports";
+import {Enumerable, EnumerableArray, LinkedList} from "../../imports";
 import {Person} from "../models/Person";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
@@ -76,6 +76,24 @@ describe("LinkedList", () => {
             const list = new LinkedList<number>();
             list.addAt(1, 0);
             expect(list.get(0)).to.eq(1);
+        });
+    });
+
+    describe("#addFirst()", () => {
+        it("should add the element to the beginning of the list", () => {
+            const list = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            list.addFirst(Person.Bella);
+            expect(list.get(0)).to.eq(Person.Bella);
+            expect(list.length).to.eq(5);
+        });
+    });
+
+    describe("#addLast()", () => {
+        it("should add the element to the end of the list", () => {
+            const list = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            list.addLast(Person.Bella);
+            expect(list.get(4)).to.eq(Person.Bella);
+            expect(list.length).to.eq(5);
         });
     });
 
@@ -707,6 +725,7 @@ describe("LinkedList", () => {
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
         });
     });
+
     describe("#orderByDescending()", () => {
         it("should order people by age [desc]", () => {
             const people = new LinkedList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Karen, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
@@ -714,6 +733,40 @@ describe("LinkedList", () => {
             const orderedPeopleAges = orderedPeople.select(p => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#peekLast()", () => {
+        it("should return the last element", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5]);
+            expect(list.peekLast()).to.eq(5);
+        });
+        it("should return null if list is empty", () => {
+            const list = new LinkedList<number>();
+            expect(list.peekLast()).to.be.null;
+        });
+        it("should not remove the last element", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5]);
+            list.peekLast();
+            expect(list.length).to.eq(5);
+            expect(list.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+    });
+
+    describe("#pollLast()", () => {
+        it("should return the last element", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5]);
+            expect(list.pollLast()).to.eq(5);
+        });
+        it("should return null if list is empty", () => {
+            const list = new LinkedList<number>();
+            expect(list.pollLast()).to.be.null;
+        });
+        it("should remove the last element", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5]);
+            list.pollLast();
+            expect(list.length).to.eq(4);
+            expect(list.toArray()).to.deep.equal([1, 2, 3, 4]);
         });
     });
 
@@ -755,6 +808,9 @@ describe("LinkedList", () => {
             expect(list1.get(1)).to.eq(Person.Noemi2);
             expect(list1.length).to.eq(3);
         });
+        it("should return false if the item is not in the list", () => {
+            expect(list1.remove(Person.Rebecca)).to.eq(false);
+        });
     });
 
     describe("#removeAll()", () => {
@@ -793,6 +849,21 @@ describe("LinkedList", () => {
         });
     });
 
+    describe("#removeFirst()", () => {
+        it("should remove the first element from the list", () => {
+            const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+            list1.removeFirst();
+            expect(list1.size()).to.eq(5);
+            expect(list1.get(0)).to.eq(Person.Lucrezia);
+            expect(list1.length).to.eq(5);
+        });
+        it("should throw error if the list is empty", () => {
+            const list1 = new LinkedList();
+            expect(() => list1.removeFirst()).to.throw(ErrorMessages.NoElements);
+            expect(list1.length).to.eq(0);
+        });
+    });
+
     describe("#removeIf()", () => {
         it("should remove people whose names are longer than 5 characters from the list", () => {
             const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
@@ -802,6 +873,22 @@ describe("LinkedList", () => {
             expect(list1.get(1)).to.eq(Person.Noemi);
             expect(list1.get(2)).to.eq(Person.Viola);
             expect(list1.length).to.eq(3);
+        });
+    });
+
+    describe("#removeLast()", () => {
+        it("should remove the last element from the list", () => {
+            const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Viola, Person.Vanessa]);
+            list1.removeLast();
+            expect(list1.size()).to.eq(5);
+            expect(list1.get(0)).to.eq(Person.Alice);
+            expect(list1.get(4)).to.eq(Person.Viola);
+            expect(list1.length).to.eq(5);
+        });
+        it("should throw error if the list is empty", () => {
+            const list1 = new LinkedList();
+            expect(() => list1.removeLast()).to.throw(ErrorMessages.NoElements);
+            expect(list1.length).to.eq(0);
         });
     });
 
@@ -1383,6 +1470,17 @@ describe("LinkedList", () => {
             expect(dict.length).to.eq(5);
         });
     });
+
+    describe("#toEnumerableArray()", () => {
+        const people = new LinkedList([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        it("should create an array from the list", () => {
+            const array = people.toEnumerableArray();
+            expect(array.length).to.eq(people.size());
+            expect(array instanceof EnumerableArray).to.be.true;
+            expect(array.toArray()).to.deep.equal([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        });
+    });
+
 
     // describe("#toList()", () => {
     //     const list = new LinkedList([1, 2, 3]);

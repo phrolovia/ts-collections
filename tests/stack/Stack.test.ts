@@ -25,9 +25,9 @@ describe("Stack", () => {
     });
 
     describe("#peek()", () => {
-        it("should not throw error if stack is empty", () => {
+        it("should throw error if stack is empty", () => {
             const stack = new Stack<number>();
-            expect(() => stack.peek()).to.throw;
+            expect(() => stack.peek()).to.throw();
         });
         it("should return the head of the stack but not remove it", () => {
             const stack = new Stack<number>([1, 2, 3]);
@@ -42,7 +42,7 @@ describe("Stack", () => {
     describe("#pop()", () => {
         it("should throw error if stack is empty", () => {
             const stack = new Stack<number>();
-            expect(() => stack.pop()).to.throw;
+            expect(() => stack.pop()).to.throw();
         });
         it("should return the head of the stack and remove it", () => {
             const stack = new Stack<number>([1, 2, 3]);
