@@ -1,4 +1,4 @@
-import {AbstractSet, ICollection, ISet, ITree, RedBlackTree} from "../../imports";
+import {AbstractSet, ISet, ITree, RedBlackTree} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";

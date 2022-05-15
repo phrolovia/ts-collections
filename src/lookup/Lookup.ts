@@ -1,5 +1,5 @@
 import {IEnumerable} from "../enumerator/IEnumerable";
-import {Enumerable, Grouping, IGrouping} from "../enumerator/Enumerable";
+import {Enumerable} from "../enumerator/Enumerable";
 import {ILookup} from "./ILookup";
 import {Accumulator} from "../shared/Accumulator";
 import {JoinSelector} from "../shared/JoinSelector";
@@ -10,7 +10,15 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
-import {SortedDictionary, IOrderedEnumerable, List, RedBlackTree, Dictionary, EnumerableArray} from "../../imports";
+import {
+    SortedDictionary,
+    IOrderedEnumerable,
+    List,
+    RedBlackTree,
+    Dictionary,
+    EnumerableArray,
+    IGrouping, Grouping
+} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";

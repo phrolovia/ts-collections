@@ -1,4 +1,4 @@
-import {AbstractSet, EnumerableArray, ICollection} from "../../imports";
+import {AbstractSet} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {

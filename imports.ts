@@ -1,6 +1,10 @@
 export {IEnumerable} from "./src/enumerator/IEnumerable";
 export {IOrderedEnumerable} from "./src/enumerator/IOrderedEnumerable";
-export {Enumerable, Grouping, IGrouping} from "./src/enumerator/Enumerable";
+export {Enumerator} from "./src/enumerator/Enumerator";
+export {OrderedEnumerator} from "./src/enumerator/OrderedEnumerator";
+export {Enumerable} from "./src/enumerator/Enumerable";
+export {Grouping} from "./src/enumerator/Grouping";
+export {IGrouping} from "./src/enumerator/IGrouping";
 export {ILookup} from "./src/lookup/ILookup";
 export {ICollection} from "./src/core/ICollection";
 export {IRandomAccessCollection} from "./src/core/IRandomAccessCollection";
