@@ -1,3 +1,3 @@
-export interface EqualityComparator<TElement> {
-    (e1: TElement, e2: TElement): boolean;
+export interface EqualityComparator<TFirst, TSecond = TFirst> {
+    (e1: TFirst, e2: TSecond): boolean;
 }
