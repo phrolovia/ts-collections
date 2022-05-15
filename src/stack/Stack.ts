@@ -31,13 +31,13 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
     }
 
     /**
-     * Retrieves but does not remove the element at the top of the stack.
-     * @returns The element at the top of the stack.
-     * @throws {Error} If the stack is empty.
+     * Retrieves but does not remove the element at the beginning of the queue.
+     * Unlike {@link top}, this method returns null if the queue is empty.
+     * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement {
         if (this.stack.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            return null;
         }
         return this.stack.peek();
     }
@@ -64,5 +64,17 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
 
     public override size(): number {
         return this.stack.size();
+    }
+
+    /**
+     * Retrieves but does not remove the element at the beginning of the queue.
+     * Unlike {@link peek}, this method throws an error if the queue is empty.
+     * @returns {TElement} The head of the queue.
+     */
+    public top(): TElement {
+        if (this.stack.isEmpty()) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        return this.stack.peek();
     }
 }

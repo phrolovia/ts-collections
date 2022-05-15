@@ -42,20 +42,6 @@ describe("Queue", () => {
         });
     });
 
-    describe("#element()", () => {
-        it("should throw error if queue is empty", () => {
-            const queue = new Queue<number>();
-            expect(() => queue.element()).to.throw(ErrorMessages.NoElements);
-        });
-        it("should return the head of the queue", () => {
-            const queue = new Queue<number>([1, 2, 3]);
-            const head = queue.element();
-            expect(head).to.eq(1);
-            expect(queue.size()).to.eq(3);
-            expect(queue.length).to.eq(3);
-        });
-    });
-
     describe("#enqueue()", () => {
         it("should add elements at the end of the queue", () => {
             const expectedResult = [1, 2, 3];
@@ -68,6 +54,21 @@ describe("Queue", () => {
             expect(queue.length).to.eq(3);
         });
     });
+
+    describe("#front()", () => {
+        it("should throw error if queue is empty", () => {
+            const queue = new Queue<number>();
+            expect(() => queue.front()).to.throw(ErrorMessages.NoElements);
+        });
+        it("should return the head of the queue", () => {
+            const queue = new Queue<number>([1, 2, 3]);
+            const head = queue.front();
+            expect(head).to.eq(1);
+            expect(queue.size()).to.eq(3);
+            expect(queue.length).to.eq(3);
+        });
+    });
+
     describe("#peek()", () => {
         it("should not throw error if queue is empty", () => {
             const queue = new Queue<number>();

@@ -52,18 +52,6 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
     }
 
     /**
-     * Retrieves but does not remove the element at the beginning of the queue.
-     * Unlike {@link peek}, this method throws an error if the queue is empty.
-     * @returns {TElement} The head of the queue.
-     */
-    public element(): TElement {
-        if (this.queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
-        }
-        return this.queue.peek();
-    }
-
-    /**
      * Adds an element to the end of the queue.
      * @param element The element that will be added to the queue.
      */
@@ -72,13 +60,25 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         this.updateLength();
     }
 
+    /**
+     * Retrieves but does not remove the element at the beginning of the queue.
+     * Unlike {@link peek}, this method throws an error if the queue is empty.
+     * @returns {TElement} The head of the queue.
+     */
+    public front(): TElement {
+        if (this.queue.isEmpty()) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        return this.queue.peek();
+    }
+
     public override isEmpty(): boolean {
         return this.queue.isEmpty();
     }
 
     /**
      * Retrieves but does not remove the element at the beginning of the queue.
-     * Unlike {@link element}, this method returns null if the queue is empty.
+     * Unlike {@link front}, this method returns null if the queue is empty.
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement | null {

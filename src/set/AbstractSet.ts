@@ -19,7 +19,7 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
         if (other == null) {
             throw new Error(ErrorMessages.NullSequence);
         }
-        this.retainAll(other.toList());
+        this.retainAll(other);
     }
 
     public isProperSubsetOf(other: IEnumerable<TElement>): boolean {
