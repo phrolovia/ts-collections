@@ -60,7 +60,7 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         return result;
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const result = this.tree.retainAll(collection);
         this.updateLength();
         return result;

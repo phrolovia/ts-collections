@@ -1,6 +1,6 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Predicate} from "../shared/Predicate";
-import {ICollection, IList, LinkedList} from "../../imports";
+import {IList, LinkedList} from "../../imports";
 import {OrderComparator} from "../shared/OrderComparator";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 
@@ -100,16 +100,25 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return this.size() !== oldSize;
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
-        const collectionList = collection instanceof Array
-            ? new LinkedList<TSource>(collection, this.comparator)
-            : collection as ICollection<TSource>;
-        for (let index = this.size() - 1; index >= 0; --index) {
-            if (!collectionList.contains(this.get(index) as TSource, this.comparator)) {
-                this.removeAt(index);
+        const removedElements = new LinkedList<TElement>();
+        for (const element of this) {
+            const iterator = collection[Symbol.iterator]();
+            let next = iterator.next();
+            let found = false;
+            while (!next.done) {
+                if (this.comparator(element, next.value)) {
+                    found = true;
+                    break;
+                }
+                next = iterator.next();
+            }
+            if (!found) {
+                removedElements.add(element);
             }
         }
+        this.removeAll(removedElements);
         this.updateLength();
         return this.size() !== oldSize;
     }

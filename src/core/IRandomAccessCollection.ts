@@ -31,5 +31,5 @@ export interface IRandomAccessCollection<TElement> extends ICollection<TElement>
      * @param collection The collection or array whose elements will remain in this collection.
      * @returns {boolean} true if this collection is modified as a result.
      */
-    retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
+    retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
 }

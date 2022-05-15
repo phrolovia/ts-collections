@@ -1,4 +1,4 @@
-import {AbstractTree, ICollection} from "../../imports";
+import {AbstractTree} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
 import {TreeNode} from "./TreeNode";
@@ -145,18 +145,25 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         return this.size() !== oldSize;
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
         const elementsToRemove: TElement[] = [];
-        const collectionTree = collection instanceof Array
-            ? new RedBlackTree(this.orderComparator, collection)
-            : collection;
         for (const element of this) {
-            if (!collectionTree.contains(element as TSource, this.comparator)) {
+            const iterator = collection[Symbol.iterator]();
+            let next = iterator.next();
+            let found = false;
+            while (!next.done) {
+                if (this.comparator(element, next.value)) {
+                    found = true;
+                    break;
+                }
+                next = iterator.next();
+            }
+            if (!found) {
                 elementsToRemove.push(element);
             }
         }
-        elementsToRemove.forEach(e => this.delete(e));
+        this.removeAll(elementsToRemove);
         return this.size() !== oldSize;
     }
 

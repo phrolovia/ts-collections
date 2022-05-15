@@ -12,11 +12,7 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
         if (other == null) {
             throw new Error(ErrorMessages.NullSequence);
         }
-        for (const element of other) {
-            if (this.contains(element)) {
-                this.remove(element);
-            }
-        }
+        this.removeAll(other);
     }
 
     public intersectWith(other: IEnumerable<TElement>): void {

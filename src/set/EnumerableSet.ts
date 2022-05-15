@@ -58,14 +58,25 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
         return changed;
     }
 
-    public override retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public override retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         let changed = false;
-        const source = collection instanceof Array ? new EnumerableArray(collection) : collection;
+        const removedElements: TElement[] = [];
         for (const element of this.set) {
-            if (!source.contains(element as TSource)) {
-                changed = this.remove(element) || changed;
+            const iterator = collection[Symbol.iterator]();
+            let next = iterator.next();
+            let found = false;
+            while (!next.done) {
+                if (this.comparator(element, next.value)) {
+                    found = true;
+                    break;
+                }
+                next = iterator.next();
+            }
+            if (!found) {
+                removedElements.push(element);
             }
         }
+        this.removeAll(removedElements);
         this.updateLength();
         return changed;
     }

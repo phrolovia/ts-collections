@@ -1,5 +1,5 @@
 import {Predicate} from "../shared/Predicate";
-import {AbstractCollection, ITree, TraverseType} from "../../imports";
+import {ITree, TraverseType} from "./ITree";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
