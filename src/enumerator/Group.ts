@@ -1,8 +1,8 @@
 import {IEnumerable} from "./IEnumerable";
 import {Enumerable} from "./Enumerable";
-import {IGrouping} from "./IGrouping";
+import {IGroup} from "./IGroup";
 
-export class Grouping<TKey, TElement> extends Enumerable<TElement> implements IGrouping<TKey, TElement> {
+export class Group<TKey, TElement> extends Enumerable<TElement> implements IGroup<TKey, TElement> {
     public readonly key: TKey;
     public readonly source: IEnumerable<TElement>;
 

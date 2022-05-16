@@ -16,7 +16,7 @@ import {
     List,
     Dictionary,
     EnumerableArray,
-    IGrouping,
+    IGroup,
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -119,7 +119,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         this.enumerator.forEach(action);
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>> {
         return this.enumerator.groupBy(keySelector, keyComparator);
     }
 

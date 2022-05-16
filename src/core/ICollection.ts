@@ -33,7 +33,7 @@ export interface ICollection<TElement> extends IEnumerable<TElement> {
      * @param collection The collection whose element will be tested for existence against this collection.
      * @returns {boolean} true if this collection contains all the elements from the given collection, false otherwise.
      */
-    containsAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
+    containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
 
     /**
      * Iterates over the collection and runs the given action against every element.

@@ -1,7 +1,7 @@
 import {
     IDictionary,
     IEnumerable,
-    IGrouping, ILookup,
+    IGroup, ILookup,
     IOrderedEnumerable,
     ISet,
     Enumerable,
@@ -150,7 +150,7 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return this.dictionary.get(key)?.value ?? null;
     }
 
-    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, KeyValuePair<TKey, TValue>>> {
+    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGroup<TGroupKey, KeyValuePair<TKey, TValue>>> {
         return EnumerableStatic.groupBy(this, keySelector, keyComparator);
     }
 

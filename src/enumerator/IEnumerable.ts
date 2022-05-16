@@ -9,7 +9,7 @@ import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
 import {
     SortedDictionary,
-    IGrouping,
+    IGroup,
     ILookup,
     IOrderedEnumerable,
     List,
@@ -92,7 +92,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     first(predicate?: Predicate<TElement>): TElement;
     firstOrDefault(predicate?: Predicate<TElement>): TElement;
     forEach(action: IndexedAction<TElement>): void;
-    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>>;
+    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>>;
     groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
                        resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;
     intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement>;

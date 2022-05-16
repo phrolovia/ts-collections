@@ -12,7 +12,7 @@ import {
     SortedDictionary,
     ICollection,
     IEnumerable,
-    IGrouping,
+    IGroup,
     IOrderedEnumerable,
     List,
     Dictionary,
@@ -69,11 +69,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.contains(this, element, comparator);
     }
 
-    public containsAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
-        const size = collection instanceof Array ? collection.length : collection.size();
-        if (this.size() < size) {
-            return false;
-        }
+    public containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         for (const element of collection) {
             let found = false;
             for (const thisElement of this) {
@@ -126,7 +122,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>> {
         return EnumerableStatic.groupBy(this, keySelector, keyComparator);
     }
 

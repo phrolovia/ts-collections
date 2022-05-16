@@ -23,13 +23,13 @@ import {
     SortedSet,
     Dictionary,
     EnumerableArray,
-    IGrouping,
-    Grouping
+    IGroup,
+    Group
 } from "../../imports";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
-    public constructor(private readonly iterable: () => Iterable<TElement>) {
-    }
+
+    public constructor(private readonly iterable: () => Iterable<TElement>) {}
 
     * [Symbol.iterator](): Iterator<TElement> {
         yield* this.iterable();
@@ -205,7 +205,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator));
     }
@@ -558,15 +558,15 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): Iterable<IGrouping<TKey, TElement>> {
-        const groups: Array<IGrouping<TKey, TElement>> = [];
+    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): Iterable<IGroup<TKey, TElement>> {
+        const groups: Array<IGroup<TKey, TElement>> = [];
         for (const item of this) {
             const key = keySelector(item);
             const group = groups.find(g => keyComparator(g.key, key));
             if (group) {
                 (group.source as List<TElement>).add(item);
             } else {
-                const newGroup = new Grouping(key, new List([item]));
+                const newGroup = new Group(key, new List([item]));
                 groups.push(newGroup);
             }
         }

@@ -10,7 +10,7 @@ import {Selector} from "../shared/Selector";
 import {
     IDictionary,
     IEnumerable,
-    IGrouping, ILookup,
+    IGroup, ILookup,
     IOrderedEnumerable,
     ISet,
     KeyValuePair,
@@ -154,7 +154,7 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
     }
 
-    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, KeyValuePair<TKey, TValue>>> {
+    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGroup<TGroupKey, KeyValuePair<TKey, TValue>>> {
         return EnumerableStatic.groupBy(this, keySelector, keyComparator);
     }
 
