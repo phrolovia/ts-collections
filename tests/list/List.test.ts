@@ -536,8 +536,8 @@ describe("List", () => {
         const students = new List([desiree, apolline, giselle, priscilla, lucrezia]);
         it("should join and group by school id", () => {
             const joinedData = schools.groupJoin(students, sc => sc.id, st => st.schoolId,
-                (schoolId, students) => {
-                    return new SchoolStudents(schoolId, students.toList());
+                (school, students) => {
+                    return new SchoolStudents(school.id, students.toList());
                 }).orderByDescending(ss => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];

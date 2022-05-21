@@ -5,6 +5,21 @@ import {Person} from "../models/Person";
 import {LinkedList} from "../../imports";
 
 describe("SortedSet", () => {
+
+    describe("#add", () => {
+        it("should skip adding if same element is already in the dictionary", () => {
+            const set = new SortedSet<Person>([], (p1, p2) => p1.age - p2.age);
+            set.add(Person.Bella);
+            set.add(Person.Mel);
+            set.add(Person.Olga);
+            set.add(Person.Hanna);
+            set.add(Person.Lucrezia); // should be skipped since Bella is already in the set (due to same age)
+            set.add(Person.Jisu);
+            expect(set.length).to.equal(5);
+            expect(set.toArray()).to.deep.equal([Person.Mel, Person.Jisu, Person.Hanna, Person.Bella, Person.Olga]);
+        });
+    });
+
     describe("#clear()", () => {
         const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);

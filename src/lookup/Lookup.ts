@@ -138,7 +138,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     }
 
     public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGroup<TKey, TElement>, TGroupKey>,
-                                                 innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<TGroupKey, IEnumerable<TInner>, TResult>,
+                                                 innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<IGroup<TKey, TElement>, IEnumerable<TInner>, TResult>,
                                                  keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
         return this.lookupTree.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }

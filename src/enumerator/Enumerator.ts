@@ -168,6 +168,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+        if (enumerable == null) {
+            throw new Error(ErrorMessages.NullSequence);
+        }
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.exceptGenerator(enumerable, comparator, orderComparator));
     }
@@ -210,7 +213,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator));
     }
 
-    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.groupJoinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
     }
@@ -573,10 +576,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         yield* groups;
     }
 
-    private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): Iterable<TResult> {
+    private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): Iterable<TResult> {
         for (const element of this) {
             const joinedEntries = innerEnumerable.where(innerElement => keyComparator(outerKeySelector(element), innerKeySelector(innerElement)));
-            yield resultSelector(outerKeySelector(element), joinedEntries);
+            yield resultSelector(element, joinedEntries);
         }
     }
 
