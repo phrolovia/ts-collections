@@ -7,7 +7,7 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, Enumerable, IEnumerable, IGroup, ILookup, IOrderedEnumerable, List, Dictionary, EnumerableArray} from "../../imports";
+import {SortedDictionary, Enumerable, IEnumerable, IGroup, ILookup, IOrderedEnumerable, List, Dictionary, IndexableList} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class EnumerableStatic {
@@ -182,8 +182,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toDictionary(keySelector, valueSelector, valueComparator);
     }
 
-    public static toEnumerableArray<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): EnumerableArray<TElement> {
-        return new Enumerable(source).toEnumerableArray(comparator);
+    public static toIndexableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
+        return new Enumerable(source).toIndexableList(comparator);
     }
 
     public static toList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): List<TElement> {

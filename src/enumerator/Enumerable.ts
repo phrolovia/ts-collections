@@ -15,7 +15,7 @@ import {
     Enumerator,
     List,
     Dictionary,
-    EnumerableArray,
+    IndexableList,
     IGroup,
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -223,8 +223,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement> {
-        return this.enumerator.toEnumerableArray(comparator);
+    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
+        return this.enumerator.toIndexableList(comparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {

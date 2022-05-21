@@ -6,7 +6,7 @@ export {
     Collections,
     Dictionary,
     Enumerable,
-    EnumerableArray,
+    IndexableList,
     EnumerableSet,
     Group,
     ICollection,

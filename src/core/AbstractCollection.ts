@@ -16,7 +16,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    EnumerableArray
+    IndexableList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
@@ -232,9 +232,9 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement> {
+    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         comparator ??= this.comparator;
-        return EnumerableStatic.toEnumerableArray(this, comparator);
+        return EnumerableStatic.toIndexableList(this, comparator);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

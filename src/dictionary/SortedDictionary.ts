@@ -18,7 +18,7 @@ import {
     RedBlackTree,
     SortedSet,
     Dictionary,
-    EnumerableArray
+    IndexableList
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
@@ -296,8 +296,8 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): EnumerableArray<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toEnumerableArray(this, comparator);
+    public toIndexableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IndexableList<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toIndexableList(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {

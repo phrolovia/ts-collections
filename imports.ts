@@ -16,7 +16,7 @@ export {List} from "./src/list/List";
 export {Queue} from "./src/queue/Queue";
 export {Stack} from "./src/stack/Stack";
 export {LinkedList} from "./src/list/LinkedList";
-export {EnumerableArray} from "./src/list/EnumerableArray";
+export {IndexableList} from "./src/list/IndexableList";
 export {ITree, TraverseType} from "./src/tree/ITree";
 export {AbstractTree} from "./src/tree/AbstractTree";
 export {RedBlackTree} from "./src/tree/RedBlackTree";

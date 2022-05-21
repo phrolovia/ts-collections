@@ -16,7 +16,7 @@ import {
     List,
     RedBlackTree,
     Dictionary,
-    EnumerableArray,
+    IndexableList,
     IGroup, Group
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
@@ -250,8 +250,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<IGroup<TKey, TElement>>): EnumerableArray<IGroup<TKey, TElement>> {
-        return this.lookupTree.toEnumerableArray(comparator);
+    public toIndexableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): IndexableList<IGroup<TKey, TElement>> {
+        return this.lookupTree.toIndexableList(comparator);
     }
 
     public toList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): List<IGroup<TKey, TElement>> {

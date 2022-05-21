@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai";
-import {Enumerable, EnumerableArray, LinkedList} from "../../imports";
+import {Enumerable, IndexableList, LinkedList} from "../../imports";
 import {Person} from "../models/Person";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
@@ -1471,12 +1471,12 @@ describe("LinkedList", () => {
         });
     });
 
-    describe("#toEnumerableArray()", () => {
+    describe("#toIndexableList()", () => {
         const people = new LinkedList([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
         it("should create an array from the list", () => {
-            const array = people.toEnumerableArray();
+            const array = people.toIndexableList();
             expect(array.length).to.eq(people.size());
-            expect(array instanceof EnumerableArray).to.be.true;
+            expect(array instanceof IndexableList).to.be.true;
             expect(array.toArray()).to.deep.equal([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
         });
     });

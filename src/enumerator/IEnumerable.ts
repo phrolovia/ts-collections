@@ -14,7 +14,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    EnumerableArray
+    IndexableList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -338,10 +338,10 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue>;
 
     /**
-     * Creates a new enumerable array from the elements of the sequence.
+     * Creates a new indexable list from the elements of the sequence.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
-    toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement>;
+    toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement>;
 
     /**
      * Creates a new list from the elements of the sequence.

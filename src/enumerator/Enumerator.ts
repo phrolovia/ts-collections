@@ -22,7 +22,7 @@ import {
     List,
     SortedSet,
     Dictionary,
-    EnumerableArray,
+    IndexableList,
     IGroup,
     Group
 } from "../../imports";
@@ -485,8 +485,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return dictionary;
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement> {
-        return new EnumerableArray<TElement>(this, comparator);
+    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
+        return new IndexableList<TElement>(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
