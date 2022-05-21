@@ -10,16 +10,14 @@ npm i @mirei/ts-collections
 * List
   * List
   * LinkedList
-* SortedSet
+* Set
+    * EnumerableSet
+    * SortedSet
 * Dictionary
   * Dictionary
   * SortedDictionary
 * Queue
 * Stack
-* Lookup
-* EnumerableArray (list with index access)
-* Tree
-  * RedBlackTree
 
 _**To be updated with details...**_
 
