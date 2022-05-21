@@ -7,11 +7,6 @@ import {Enumerable, List, RedBlackTree} from "../../imports";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 
 describe("Collections", () => {
-    const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
-    const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
-    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
-    const peopleArray = [Person.Hanna, Person.Hanna2, Person.Noemi, Person.Noemi2, Person.Suzuha, Person.Suzuha2, Person.Suzuha3];
-
     describe("#addAll()", () => {
         it("should add the given elements to the collection", () => {
             const list = new LinkedList([1, 2]);
@@ -79,6 +74,51 @@ describe("Collections", () => {
             expect(Collections.binarySearch(source, Person.Priscilla, (p1, p2) => p1.name.localeCompare(p2.name))).to.eq(5);
         });
     });
+
+    describe("#disjoint()", () => {
+        it("should return true if two collections are disjoint", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List([4, 5, 6]);
+            expect(Collections.disjoint(list1, list2)).to.be.true;
+            expect(Collections.disjoint(list2, list1)).to.be.true;
+            expect(Collections.disjoint(list1, list1)).to.be.false;
+            expect(Collections.disjoint(list2, list2)).to.be.false;
+        });
+        it("should return true if two collections are disjoint #2", () => {
+            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Vanessa]);
+            const list2 = new List([Person.Bella, Person.Priscilla, Person.Suzuha]);
+            expect(Collections.disjoint(list1, list2, (x, y) => x === y)).to.be.true;
+            expect(Collections.disjoint(list2, list1, (x, y) => x === y)).to.be.true;
+            expect(Collections.disjoint(list1, list1, (x, y) => x === y)).to.be.false;
+            expect(Collections.disjoint(list2, list2, (x, y) => x === y)).to.be.false;
+        });
+        it("should return true if two collections are disjoint #3", () => {
+            const list1 = new List([Person.Noemi, Person.Bella]);
+            const list2 = new List([Person.Noemi2, Person.Reika]);
+            expect(Collections.disjoint(list1, list2, (x, y) => x.name.localeCompare(y.name) === 0)).to.be.false;
+            expect(Collections.disjoint(list1, list2, (x, y) => x.age === y.age)).to.be.true;
+        });
+    });
+
+    describe("#distinct()", () => {
+        it("should return an enumerable with distinct elements only", () => {
+            const list = new List([1, 2, 3, 3, 3, 4, 5, 5, 5, 5, 6, 6, 6]);
+            const distinct = Collections.distinct(list);
+            expect(distinct.count()).to.eq(6);
+            expect(distinct.toArray()).to.deep.eq([1, 2, 3, 4, 5, 6]);
+        });
+        it("should return an enumerable with distinct elements only #2", () => {
+            const list = new List([Person.Alice, Person.Alice, Person.Bella, Person.Eliza, Person.Noemi, Person.Noemi2, Person.Lenka, Person.Mel, Person.Priscilla]);
+            const distinct = Collections.distinct(list, p => p.name, (n1: string, n2: string) => n1.localeCompare(n2) === 0);
+            expect(distinct.count()).to.eq(7);
+            expect(distinct.toArray()).to.deep.eq([Person.Alice, Person.Bella, Person.Eliza, Person.Noemi, Person.Lenka, Person.Mel, Person.Priscilla]);
+        });
+        it("should throw error if iterable is null or undefined", () => {
+            expect(() => Collections.distinct(null)).to.throw();
+            expect(() => Collections.distinct(undefined)).to.throw();
+        });
+    })
+
     describe("#fill()", () => {
         it("should replace all elements in the list with the given element", () => {
             const list = new List(["a", "b", "c", "d", "e"]);
@@ -116,6 +156,49 @@ describe("Collections", () => {
             expect(frequencyP).to.eq(1);
         });
     });
+
+    describe("#max()", () => {
+        it("should return the maximum element in the list", () => {
+            const list = new List([1, 2, 3, 4, 566, 6, 7, 8, 999, 10]);
+            const max = Collections.max(list);
+            expect(max).to.eq(999);
+        });
+        it("should return the maximum element in the list #2", () => {
+            const list = new List([Person.Mel, Person.Alice, Person.Bella, Person.Eliza]);
+            const oldestPerson = Collections.max(list, p => p.age);
+            expect(oldestPerson.age).to.eq(Person.Alice.age);
+        });
+        it("should return null if the list is empty", () => {
+            const list = new LinkedList<Person>();
+            const max = Collections.max(list);
+            expect(max).to.eq(null);
+        });
+        it("should throw error if iterable is not null or undefined", () => {
+            expect(() => Collections.max(null)).to.throw();
+        });
+    });
+
+    describe("#min()", () => {
+        it("should return the minimum element in the list", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, -99, 8, 9, 10]);
+            const min = Collections.min(list);
+            expect(min).to.eq(-99);
+        });
+        it("should return the minimum element in the list #2", () => {
+            const list = new List([Person.Alice, Person.Bella, Person.Eliza]);
+            const youngestPerson = Collections.min(list, p => p.age);
+            expect(youngestPerson.age).to.eq(Person.Eliza.age);
+        });
+        it("should return null if the list is empty", () => {
+            const list = new LinkedList<Person>();
+            const min = Collections.min(list);
+            expect(min).to.eq(null);
+        });
+        it("should throw error if iterable is not null or undefined", () => {
+            expect(() => Collections.min(null)).to.throw();
+        });
+    });
+
     describe("#replaceAll()", () => {
         it("should replace old elements with new elements", () => {
             const list = new List([1, 2, 3, 3, 1, 5, 6, 7]);

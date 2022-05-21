@@ -4,6 +4,8 @@ import {Comparators} from "../shared/Comparators";
 import {ICollection} from "./ICollection";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {IEnumerable} from "../enumerator/IEnumerable";
+import {List} from "../list/List";
 
 export abstract class Collections {
     /* istanbul ignore next */
@@ -41,6 +43,56 @@ export abstract class Collections {
     }
 
     /**
+     * Returns true if the two specified iterables have no elements in common.
+     * @param iterable1 First collection of items
+     * @param iterable2 Second collection of items
+     * @param comparator The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.
+     * @return {boolean} true if the two specified iterables have no elements in common.
+     */
+    public static disjoint<TFirst, TSecond = TFirst>(iterable1: Iterable<TFirst>, iterable2: Iterable<TSecond>, comparator?: EqualityComparator<TFirst, TSecond>): boolean {
+        comparator ??= Comparators.equalityComparator;
+        for (const element1 of iterable1) {
+            for (const element2 of iterable2) {
+                if (comparator(element1, element2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns an array of distinct element from a given iterable source.
+     * @param iterable Collection of items
+     * @param selector A method that will be used to return a key which will be used to determine the distinctness. If not provided,
+     *                 then the item itself will be used as the key.
+     * @param comparator A method that will be used to compare the equality of the selector keys.
+     * @return An array of distinct items.
+     * @throws An error if the iterable is null or undefined.
+     */
+    public static distinct<TElement, TKey>(iterable: Iterable<TElement>, selector?: (item: TElement) => TKey, comparator?: (key1: TKey, key2: TKey) => boolean): IEnumerable<TElement> {
+        if (iterable == null) {
+            throw new Error("Invalid data source!");
+        }
+        selector ??= (item: TElement) => item as unknown as TKey;
+        comparator ??= (key1: TKey, key2: TKey) => Object.is(key1, key2);
+        const distinctList = new List<TElement>();
+        for (const item of iterable) {
+            let exists = false;
+            for (const distinctItem of distinctList) {
+                if (comparator(selector(item), selector(distinctItem))) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                distinctList.add(item);
+            }
+        }
+        return distinctList;
+    }
+
+    /**
      * Replaces all the elements of the list with the given element.
      * @param {IList} list The list whose elements will be replaced
      * @param {TElement} element The element which will replace the elements of the list
@@ -64,6 +116,76 @@ export abstract class Collections {
             frequency += +comparator(element, item);
         }
         return frequency;
+    }
+
+    /**
+     * Finds the maximum item in an iterable source.
+     * @param iterable The data source
+     * @param selector A selector method which will return a key that will be used for comparison.
+     * @return The item which has the maximum value according to the selector method, or null if iterable is empty.
+     * @throws An exception if iterable is null or undefined.
+     */
+    public static max<TElement>(iterable: Iterable<TElement>, selector?: (item: TElement) => number): TElement {
+        if (iterable == null) {
+            throw new Error("Invalid data source!");
+        }
+        const iterator = iterable[Symbol.iterator]();
+        let iteratorItem = iterator.next();
+        let maxItem: TElement;
+        if (iteratorItem.done) {
+            return null;
+        }
+        maxItem = iteratorItem.value;
+        while (!iteratorItem.done) {
+            if (selector) {
+                const value = selector(iteratorItem.value);
+                const maxValue = selector(maxItem);
+                if (value > maxValue) {
+                    maxItem = iteratorItem.value;
+                }
+            } else {
+                if (iteratorItem.value > maxItem) {
+                    maxItem = iteratorItem.value;
+                }
+            }
+            iteratorItem = iterator.next();
+        }
+        return maxItem;
+    }
+
+    /**
+     * Finds the minimum item in an iterable source.
+     * @param iterable The data source
+     * @param selector A selector method which will return a key that will be used for comparison.
+     * @return The item which has the minimum value according to the selector method, or null if iterable is empty.
+     * @throws An exception if iterable is null or undefined.
+     */
+    public static min<TElement>(iterable: Iterable<TElement>, selector?: (item: TElement) => number): TElement {
+        if (iterable == null) {
+            throw new Error("Invalid data source!");
+        }
+        const iterator = iterable[Symbol.iterator]();
+        let iteratorItem = iterator.next();
+        let minItem: TElement;
+        if (iteratorItem.done) {
+            return null;
+        }
+        minItem = iteratorItem.value;
+        while (!iteratorItem.done) {
+            if (selector) {
+                const value = selector(iteratorItem.value);
+                const minValue = selector(minItem);
+                if (value < minValue) {
+                    minItem = iteratorItem.value;
+                }
+            } else {
+                if (iteratorItem.value < minItem) {
+                    minItem = iteratorItem.value;
+                }
+            }
+            iteratorItem = iterator.next();
+        }
+        return minItem;
     }
 
     /**

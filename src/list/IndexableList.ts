@@ -4,7 +4,7 @@ import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {OrderComparator} from "../shared/OrderComparator";
 
-export class EnumerableArray<TElement> extends AbstractList<TElement> {
+export class IndexableList<TElement> extends AbstractList<TElement> {
     private listSize: number = 0;
     [n: number]: TElement;
     public constructor(iterable: Iterable<TElement> = [], comparator: EqualityComparator<TElement> = Comparators.equalityComparator) {

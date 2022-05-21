@@ -5,6 +5,21 @@ import {Person} from "../models/Person";
 import {LinkedList} from "../../imports";
 
 describe("SortedSet", () => {
+
+    describe("#add", () => {
+        it("should skip adding if same element is already in the dictionary", () => {
+            const set = new SortedSet<Person>([], (p1, p2) => p1.age - p2.age);
+            set.add(Person.Bella);
+            set.add(Person.Mel);
+            set.add(Person.Olga);
+            set.add(Person.Hanna);
+            set.add(Person.Lucrezia); // should be skipped since Bella is already in the set (due to same age)
+            set.add(Person.Jisu);
+            expect(set.length).to.equal(5);
+            expect(set.toArray()).to.deep.equal([Person.Mel, Person.Jisu, Person.Hanna, Person.Bella, Person.Olga]);
+        });
+    });
+
     describe("#clear()", () => {
         const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);
@@ -16,6 +31,25 @@ describe("SortedSet", () => {
             expect(set.length).to.eq(0);
         });
     });
+
+    describe("#exceptWith()", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should remove all items from the set", () => {
+            expect(set.length).to.eq(2);
+            set.exceptWith(new LinkedList([Person.Jisu]));
+            expect(set.size()).to.eq(1);
+            expect(set.length).to.eq(1);
+            expect(set.contains(Person.Jisu)).to.be.false;
+            expect(set.contains(Person.Amy)).to.be.true;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.exceptWith(null)).to.throw(Error);
+            expect(() => set.exceptWith(undefined)).to.throw(Error);
+        });
+    });
+
     describe("#headSet()", () => {
         const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const headSet = set.headSet(4);
@@ -31,6 +65,192 @@ describe("SortedSet", () => {
             expect(headSetInclusive.length).to.eq(4);
         });
     });
+
+    describe("#intersectWith()", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should remove all items from the set", () => {
+            expect(set.length).to.eq(2);
+            set.intersectWith(new LinkedList([Person.Jisu, Person.Mel]));
+            expect(set.size()).to.eq(1);
+            expect(set.length).to.eq(1);
+            expect(set.contains(Person.Jisu)).to.be.true;
+            expect(set.contains(Person.Amy)).to.be.false;
+            expect(set.contains(Person.Mel)).to.be.false;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.intersectWith(null)).to.throw(Error);
+            expect(() => set.intersectWith(undefined)).to.throw(Error);
+        });
+    });
+
+    describe("#isProperSubsetOf()", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should return true if the set is a proper subset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Amy);
+            otherSet.add(Person.Mel);
+            expect(set.isProperSubsetOf(otherSet)).to.be.true;
+        });
+        it("should return false if the set is not a proper subset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Amy);
+            expect(set.isProperSubsetOf(otherSet)).to.be.false;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.isProperSubsetOf(null)).to.throw(Error);
+            expect(() => set.isProperSubsetOf(undefined)).to.throw(Error);
+        });
+    });
+
+    describe("#isProperSupersetOf()", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should return true if the set is a proper superset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            expect(set.isProperSupersetOf(otherSet)).to.be.true;
+        });
+        it("should return false if the set is not a proper superset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Amy);
+            expect(set.isProperSupersetOf(otherSet)).to.be.false;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.isProperSupersetOf(null)).to.throw(Error);
+            expect(() => set.isProperSupersetOf(undefined)).to.throw(Error);
+        });
+    });
+
+    describe("#isSubsetOf", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should return true if the set is a subset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Amy);
+            expect(set.isSubsetOf(otherSet)).to.be.true;
+        });
+        it("should return false if the set is not a subset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            otherSet.add(Person.Senna);
+            expect(set.isSubsetOf(otherSet)).to.be.false;
+        });
+        it("should return true if set is empty", () => {
+            const firstSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            otherSet.add(Person.Senna);
+            expect(firstSet.isSubsetOf(otherSet)).to.be.true;
+        });
+        it("should return false if this set has more elements than other", () => {
+            const firstSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            firstSet.add(Person.Jisu);
+            firstSet.add(Person.Mel);
+            firstSet.add(Person.Senna);
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            expect(firstSet.isSubsetOf(otherSet)).to.be.false;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.isSubsetOf(null)).to.throw(Error);
+            expect(() => set.isSubsetOf(undefined)).to.throw(Error);
+        });
+    });
+
+    describe("#isSupersetOf", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should return true if the set is a superset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Amy);
+            expect(set.isSupersetOf(otherSet)).to.be.true;
+        });
+        it("should return false if the set is not a superset of the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            otherSet.add(Person.Senna);
+            expect(set.isSupersetOf(otherSet)).to.be.false;
+        });
+        it("should return false if the set is not a superset of the other set #2", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            expect(set.isSupersetOf(otherSet)).to.be.false;
+        });
+        it("should return false if set is empty", () => {
+            const firstSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            expect(firstSet.isSupersetOf(otherSet)).to.be.false;
+        });
+        it("should return true if other set is empty", () => {
+            const firstSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            firstSet.add(Person.Jisu);
+            firstSet.add(Person.Mel);
+            expect(firstSet.isSupersetOf(otherSet)).to.be.true;
+        });
+        it("should return false if this set has less elements than other", () => {
+            const firstSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            firstSet.add(Person.Jisu);
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            expect(firstSet.isSupersetOf(otherSet)).to.be.false;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.isSupersetOf(null)).to.throw(Error);
+            expect(() => set.isSupersetOf(undefined)).to.throw(Error);
+        });
+    });
+
+    describe("#overlaps", () => {
+        const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should return true if the set overlaps with the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            expect(set.overlaps(otherSet)).to.be.true;
+        });
+        it("should return false if the set does not overlap with the other set", () => {
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Vanessa);
+            otherSet.add(Person.Rebecca);
+            otherSet.add(Person.Megan);
+            expect(set.overlaps(otherSet)).to.be.false;
+        });
+        it("should return false if set is empty", () => {
+            const firstSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            const otherSet = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            otherSet.add(Person.Jisu);
+            otherSet.add(Person.Mel);
+            expect(firstSet.overlaps(otherSet)).to.be.false;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.overlaps(null)).to.throw(Error);
+            expect(() => set.overlaps(undefined)).to.throw(Error);
+        });
+    });
+
     describe("#remove()", () => {
         const set = new SortedSet<Person>([], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
         set.add(Person.Jisu);

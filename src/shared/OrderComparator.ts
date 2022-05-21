@@ -1,3 +1,3 @@
-export interface OrderComparator<TElement> {
-    (e1: TElement, e2: TElement): number;
+export interface OrderComparator<TFirst, TSecond = TFirst> {
+    (e1: TFirst, e2: TSecond): number;
 }

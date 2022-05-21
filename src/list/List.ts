@@ -85,4 +85,8 @@ export class List<TElement> extends AbstractList<TElement> {
         comparator ??= Comparators.orderComparator;
         this.data.sort(comparator);
     }
+
+    public override toArray(): TElement[] {
+        return [...this.data];
+    }
 }

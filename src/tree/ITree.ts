@@ -1,9 +1,9 @@
 import {Predicate} from "../shared/Predicate";
-import {ICollection} from "../../imports";
+import {IRandomAccessCollection} from "../../imports";
 
 export type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 
-export interface ITree<TElement> extends ICollection<TElement> {
+export interface ITree<TElement> extends IRandomAccessCollection<TElement> {
 
     /**
      * Deletes the given item from the tree.

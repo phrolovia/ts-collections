@@ -1,4 +1,4 @@
-import {AbstractSet, ICollection, ISet, ITree, RedBlackTree} from "../../imports";
+import {AbstractSet, ISet, ITree, RedBlackTree} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
@@ -60,7 +60,7 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         return result;
     }
 
-    public retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
+    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const result = this.tree.retainAll(collection);
         this.updateLength();
         return result;

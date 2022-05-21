@@ -10,7 +10,7 @@ import {Selector} from "../shared/Selector";
 import {
     IDictionary,
     IEnumerable,
-    IGrouping, ILookup,
+    IGroup, ILookup,
     IOrderedEnumerable,
     ISet,
     KeyValuePair,
@@ -18,7 +18,7 @@ import {
     RedBlackTree,
     SortedSet,
     Dictionary,
-    EnumerableArray
+    IndexableList
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
@@ -154,11 +154,11 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
     }
 
-    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGrouping<TGroupKey, KeyValuePair<TKey, TValue>>> {
+    public groupBy<TGroupKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<IGroup<TGroupKey, KeyValuePair<TKey, TValue>>> {
         return EnumerableStatic.groupBy(this, keySelector, keyComparator);
     }
 
-    public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<TGroupKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
+    public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
@@ -296,8 +296,8 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): EnumerableArray<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toEnumerableArray(this, comparator);
+    public toIndexableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IndexableList<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toIndexableList(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {

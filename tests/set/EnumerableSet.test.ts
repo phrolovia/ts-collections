@@ -2,6 +2,7 @@ import {describe, it} from "mocha";
 import {expect} from "chai";
 import {Person} from "../models/Person";
 import {EnumerableSet} from "../../src/set/EnumerableSet";
+import {LinkedList} from "../../src/list/LinkedList";
 
 describe("EnumerableSet", () => {
     describe("#add()", () => {
@@ -33,6 +34,26 @@ describe("EnumerableSet", () => {
             expect(set.contains(Person.Senna)).to.be.false;
         });
     });
+
+    describe("#intersectWith()", () => {
+        const set = new EnumerableSet<Person>([]);
+        set.add(Person.Jisu);
+        set.add(Person.Amy);
+        it("should remove all items from the set", () => {
+            expect(set.length).to.eq(2);
+            set.intersectWith(new LinkedList([Person.Jisu, Person.Mel]));
+            expect(set.size()).to.eq(1);
+            expect(set.length).to.eq(1);
+            expect(set.contains(Person.Amy)).to.be.false;
+            expect(set.contains(Person.Mel)).to.be.false;
+            expect(set.contains(Person.Jisu)).to.be.true;
+        });
+        it("should throw error if set is null or undefined", () => {
+            expect(() => set.intersectWith(null)).to.throw(Error);
+            expect(() => set.intersectWith(undefined)).to.throw(Error);
+        });
+    });
+
     describe("#remove()", () => {
         it("should remove the item from the set", () => {
             const set = new EnumerableSet<Person>();

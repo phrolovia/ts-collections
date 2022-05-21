@@ -457,8 +457,8 @@ describe("SortedDictionary", () => {
         studentDict.add(500, new Student(500, "Lucrezia", "Volpe", 4));
         it("should join and group by school id", () => {
             const joinedData = schoolDict.groupJoin(studentDict, sc => sc.value.id, st => st.value.schoolId,
-                (schoolId, students) => {
-                    return new SchoolStudents(schoolId, students.select(s => s.value).toList())
+                (schoolPair, students) => {
+                    return new SchoolStudents(schoolPair.key, students.select(s => s.value).toList())
                 }).orderByDescending(ss => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];
@@ -1409,7 +1409,9 @@ describe("SortedDictionary", () => {
         });
 
         it("should throw error if key already exists and key value pairs are not equal", () => {
-            expect(() => dict1.union(dict3)).to.throw;
+            const dict4 = new SortedDictionary<number, string>();
+            dict4.add(1, "z");
+            expect(() => dict1.union(dict4).toDictionary(p => p.key, p => p.value)).to.throw();
         });
     });
 

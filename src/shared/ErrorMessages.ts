@@ -12,5 +12,6 @@ export enum ErrorMessages {
     NoElements = "Sequence contains no elements.",
     NoMatchingElement = "Sequence contains no matching element.",
     NoSuchElement = "No such element exists in the sequence",
-    NullKey = "Key cannot be null."
+    NullKey = "Key cannot be null.",
+    NullSequence = "Sequence cannot be null."
 }

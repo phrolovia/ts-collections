@@ -12,11 +12,11 @@ import {
     SortedDictionary,
     ICollection,
     IEnumerable,
-    IGrouping,
+    IGroup,
     IOrderedEnumerable,
     List,
     Dictionary,
-    EnumerableArray
+    IndexableList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
@@ -69,11 +69,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.contains(this, element, comparator);
     }
 
-    public containsAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean {
-        const size = collection instanceof Array ? collection.length : collection.size();
-        if (this.size() < size) {
-            return false;
-        }
+    public containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         for (const element of collection) {
             let found = false;
             for (const thisElement of this) {
@@ -126,11 +122,11 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGrouping<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>> {
         return EnumerableStatic.groupBy(this, keySelector, keyComparator);
     }
 
-    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TKey, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+    public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
@@ -236,9 +232,9 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
-    public toEnumerableArray(comparator?: EqualityComparator<TElement>): EnumerableArray<TElement> {
+    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         comparator ??= this.comparator;
-        return EnumerableStatic.toEnumerableArray(this, comparator);
+        return EnumerableStatic.toIndexableList(this, comparator);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
@@ -274,9 +270,5 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     abstract [Symbol.iterator](): Iterator<TElement>;
     abstract add(element: TElement): boolean;
     abstract clear(): void;
-    abstract remove(element: TElement): boolean;
-    abstract removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
-    abstract removeIf(predicate: Predicate<TElement>): boolean;
-    abstract retainAll<TSource extends TElement>(collection: ICollection<TSource> | Array<TSource>): boolean;
     abstract size(): number;
 }

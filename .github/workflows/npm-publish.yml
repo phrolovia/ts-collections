@@ -4,8 +4,8 @@ on:
   release:
     types: [created]
     tags:
-      - 'v7.*'
-      - 'v8.*'
+      - 'v9.*'
+      - 'v10.*'
 
 jobs:
   build:
