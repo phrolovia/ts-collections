@@ -219,6 +219,73 @@ describe("Collections", () => {
             expect(listResult2).to.be.false;
         });
     });
+
+
+    describe("#reverse()", () => {
+        it("should reverse the list in place", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            Collections.reverse(list);
+            expect(list.toArray()).to.deep.eq([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+        });
+        it("should reverse the array in place", () => {
+            const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            Collections.reverse(array);
+            expect(array).to.deep.eq([10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+        });
+    });
+
+    describe("#rotate()", () => {
+        it("should rotate list by distance of 3", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            Collections.rotate(list, 3);
+            expect(list.toArray()).to.deep.eq([8, 9, 10, 1, 2, 3, 4, 5, 6, 7]);
+        });
+        it("should rotate list by distance of -2", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            Collections.rotate(list, -2);
+            expect(list.toArray()).to.deep.eq([3, 4, 5, 6, 7, 8, 9, 10, 1, 2]);
+        });
+        it("should not rotate list if distance is 0", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            Collections.rotate(list, 0);
+            expect(list.toArray()).to.deep.eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+
+        it("should rotate array by distance of 3", () => {
+            const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            Collections.rotate(array, 3);
+            expect(array).to.deep.eq([8, 9, 10, 1, 2, 3, 4, 5, 6, 7]);
+        });
+        it("should rotate array by distance of -2", () => {
+            const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            Collections.rotate(array, -2);
+            expect(array).to.deep.eq([3, 4, 5, 6, 7, 8, 9, 10, 1, 2]);
+        });
+        it("should not rotate array if distance is 0", () => {
+            const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            Collections.rotate(array, 0);
+            expect(array).to.deep.eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+    })
+
+    /**
+     * @todo I don't know how to test this method. Find a way to test it.
+     */
+    describe("#shuffle()", () => {
+        it("should shuffle list", () => {
+            const list = new List<number>([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            for (let i = 0; i < 10; i++) {
+                Collections.shuffle(list);
+            }
+        });
+        it("should shuffle array", () => {
+            const array = [1, 2, 3];
+            for (let i = 0; i < 10; i++) {
+                Collections.shuffle(array);
+            }
+        });
+    });
+
     describe("#swap()", () => {
         it("should throw error if indices are out of bounds", () => {
             const list = new List([1, 2]);

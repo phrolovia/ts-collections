@@ -8,6 +8,7 @@ import {IEnumerable} from "../enumerator/IEnumerable";
 import {List} from "../list/List";
 
 export abstract class Collections {
+
     /* istanbul ignore next */
     private constructor() {
     }
@@ -44,9 +45,9 @@ export abstract class Collections {
 
     /**
      * Returns true if the two specified iterables have no elements in common.
-     * @param iterable1 First collection of items
-     * @param iterable2 Second collection of items
-     * @param comparator The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.
+     * @param {Iterable} iterable1 First collection of items
+     * @param {Iterable} iterable2 Second collection of items
+     * @param {Function} comparator The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.
      * @return {boolean} true if the two specified iterables have no elements in common.
      */
     public static disjoint<TFirst, TSecond = TFirst>(iterable1: Iterable<TFirst>, iterable2: Iterable<TSecond>, comparator?: EqualityComparator<TFirst, TSecond>): boolean {
@@ -63,10 +64,10 @@ export abstract class Collections {
 
     /**
      * Returns an array of distinct element from a given iterable source.
-     * @param iterable Collection of items
-     * @param selector A method that will be used to return a key which will be used to determine the distinctness. If not provided,
+     * @param {Iterable} iterable Collection of items
+     * @param {Function} selector A method that will be used to return a key which will be used to determine the distinctness. If not provided,
      *                 then the item itself will be used as the key.
-     * @param comparator A method that will be used to compare the equality of the selector keys.
+     * @param {Function} comparator A method that will be used to compare the equality of the selector keys.
      * @return An array of distinct items.
      * @throws An error if the iterable is null or undefined.
      */
@@ -120,8 +121,8 @@ export abstract class Collections {
 
     /**
      * Finds the maximum item in an iterable source.
-     * @param iterable The data source
-     * @param selector A selector method which will return a key that will be used for comparison.
+     * @param {Iterable} iterable The data source
+     * @param {Function} selector A selector method which will return a key that will be used for comparison.
      * @return The item which has the maximum value according to the selector method, or null if iterable is empty.
      * @throws An exception if iterable is null or undefined.
      */
@@ -155,8 +156,8 @@ export abstract class Collections {
 
     /**
      * Finds the minimum item in an iterable source.
-     * @param iterable The data source
-     * @param selector A selector method which will return a key that will be used for comparison.
+     * @param {Iterable} iterable The data source
+     * @param {Function} selector A selector method which will return a key that will be used for comparison.
      * @return The item which has the minimum value according to the selector method, or null if iterable is empty.
      * @throws An exception if iterable is null or undefined.
      */
@@ -201,6 +202,49 @@ export abstract class Collections {
             return Collections.replaceAllArray(sequence, oldElement, newElement, comparator);
         }
         return Collections.replaceAllList(sequence, oldElement, newElement, comparator);
+    }
+
+    /**
+     * Reverse the order of the elements in a given sequence. Reversing is done in place.
+     * @param {IList|Array} sequence The sequence whose elements will be reversed.
+     */
+    public static reverse<TElement>(sequence: IList<TElement> | Array<TElement>): void {
+        const size = sequence instanceof Array ? sequence.length : sequence.size();
+        for (let ix = 0, mid = size >> 1, jx = size - 1; ix < mid; ++ix, --jx) {
+            Collections.swap(sequence, ix, jx);
+        }
+    }
+
+    /**
+     * Rotation of the elements in a given sequence.
+     *
+     * Example:
+     *  - If the sequence is [1, 2, 3, 4, 5] and the distance is 2, the result is [4, 5, 1, 2, 3].
+     *  - If the sequence is [1, 2, 3, 4, 5] and the distance is -2, the result is [3, 4, 5, 1, 2].
+     *
+     * @param {IList|Array} sequence The sequence whose elements will be rotated.
+     * @param {number} distance The distance of the rotation. This value can be positive or negative.
+     */
+    public static rotate<TElement>(sequence: IList<TElement> | Array<TElement>, distance: number): void {
+        if (sequence instanceof Array) {
+            Collections.rotateArray(sequence, distance);
+        } else {
+            Collections.rotateList(sequence, distance);
+        }
+    }
+
+    /**
+     * Shuffles the elements of a sequence. The elements are shuffled using the Fisher-Yates shuffle algorithm.
+     *
+     * <b>Note:</b> The result of the shuffling is not guaranteed to be different from the original sequence, especially if the size of the sequence is very small.
+     * @param {IList|Array} sequence The sequence whose elements will be shuffled.
+     */
+    public static shuffle<TElement>(sequence: IList<TElement> | Array<TElement>): void {
+        const size = sequence instanceof Array ? sequence.length : sequence.size();
+        const random = (min: number, max: number): number => Math.floor(Math.random() * (max - min)) + min;
+        for (let ix = size; ix > 1; --ix) {
+            Collections.swap(sequence, ix - 1, random(0, ix));
+        }
     }
 
     /**
@@ -308,5 +352,59 @@ export abstract class Collections {
             }
         }
         return replaced;
+    }
+
+    private static rotateArray<TElement>(sequence: Array<TElement>, distance: number): void {
+        const size = sequence.length;
+        if (size === 0) {
+            return;
+        }
+        distance %= size;
+        if (distance < 0) {
+            distance += size;
+        }
+        if (distance === 0) {
+            return;
+        }
+        for (let cycleStart = 0, moveCount = 0; moveCount !== size; cycleStart++) {
+            let displaced: TElement = sequence[cycleStart];
+            let index: number = cycleStart;
+            do {
+                index += distance;
+                if (index >= size) {
+                    index -= size;
+                }
+                let oldValue: TElement = sequence[index];
+                sequence[index] = displaced;
+                displaced = oldValue;
+                moveCount++;
+            } while (index !== cycleStart);
+        }
+    }
+
+    private static rotateList<TElement>(sequence: IList<TElement>, distance: number): void {
+        const size = sequence.size();
+        if (size === 0) {
+            return;
+        }
+        distance %= size;
+        if (distance < 0) {
+            distance += size;
+        }
+        if (distance === 0) {
+            return;
+        }
+        for (let cycleStart = 0, moveCount = 0; moveCount !== size; cycleStart++) {
+            let displaced: TElement = sequence.get(cycleStart);
+            let index: number = cycleStart;
+            do {
+                index += distance;
+                if (index >= size) {
+                    index -= size;
+                }
+                displaced = sequence.set(index, displaced);
+                moveCount++;
+            } while (index !== cycleStart);
+        }
     }
 }
