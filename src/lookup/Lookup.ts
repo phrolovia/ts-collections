@@ -84,6 +84,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.average(selector);
     }
 
+    public chunk(size: number): IEnumerable<IEnumerable<IGroup<TKey, TElement>>> {
+        return this.lookupTree.chunk(size);
+    }
+
     public concat(enumerable: IEnumerable<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.lookupTree.concat(enumerable);
     }

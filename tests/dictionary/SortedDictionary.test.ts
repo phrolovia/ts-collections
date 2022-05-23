@@ -8,7 +8,7 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
-import {Dictionary, List} from "../../imports";
+import {Dictionary, Enumerable, List} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("SortedDictionary", () => {
@@ -131,6 +131,25 @@ describe("SortedDictionary", () => {
         it("should throw error if dictionary is empty", () => {
             dict.clear();
             expect(() => dict.average(p => p.value)).to.throw(ErrorMessages.NoElements);
+        });
+    });
+
+    describe("#chunk()", () => {
+        it("should split list into chunks of size 10", () => {
+            const dictionary = Enumerable.range(1, 100).toSortedDictionary(n => n, n => n * n);
+            for (const chunk of dictionary.chunk(10)) {
+                expect(chunk.count() === 10).to.be.true;
+            }
+        });
+        it("should splits enumerable into chunks of size 7 at max", () => {
+            const enumerable = Enumerable.range(1, 79);
+            for (const chunk of enumerable.toSortedDictionary(n => n, n => n * 2).chunk(7)) {
+                expect(chunk.count() <= 7).to.be.true;
+            }
+        });
+        it("should throw error if chunk size is 0", () => {
+            const dictionary = Enumerable.range(1, 100).toSortedDictionary(n => n, n => n * n);
+            expect(() => dictionary.chunk(0)).to.throw(ErrorMessages.InvalidChunkSize);
         });
     });
 

@@ -82,6 +82,10 @@ export class Dictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
         return EnumerableStatic.average(this, selector);
     }
 
+    public chunk(size: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
+        return EnumerableStatic.chunk(this, size);
+    }
+
     public clear(): void {
         this.dictionary.clear();
         this.updateLength();

@@ -75,6 +75,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.average(selector);
     }
 
+    public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
+        return this.enumerator.chunk(size);
+    }
+
     public concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
         return this.enumerator.concat(enumerable);
     }

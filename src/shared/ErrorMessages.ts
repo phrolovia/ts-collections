@@ -1,6 +1,7 @@
 export enum ErrorMessages {
     CannotConvertToNumber= "KeyValuePair cannot be converted to number type.",
     IndexOutOfBoundsException = "Index is out of bounds.",
+    InvalidChunkSize = "Chunk size must be greater than zero.",
     InvalidKeyType = "Key is not of type string or number.",
     KeyAlreadyAdded = "An item with the same key has already been added.",
     KeyNotFound = "Key could not be found.",

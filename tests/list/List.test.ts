@@ -198,6 +198,25 @@ describe("List", () => {
         });
     });
 
+    describe("#chunk()", () => {
+        it("should split list into chunks of size 10", () => {
+            const list = Enumerable.range(1, 100).toList();
+            for (const chunk of list.chunk(10)) {
+                expect(chunk.count() === 10).to.be.true;
+            }
+        });
+        it("should splits enumerable into chunks of size 5 at max", () => {
+            const enumerable = Enumerable.range(1, 100);
+            for (const chunk of enumerable.chunk(5)) {
+                expect(chunk.count() <= 5).to.be.true;
+            }
+        });
+        it("should throw error if chunk size is 0", () => {
+            const list = Enumerable.range(1, 100);
+            expect(() => list.chunk(0)).to.throw(ErrorMessages.InvalidChunkSize);
+        });
+    });
+
     describe("#clear()", () => {
         const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
         it("should remove all elements from the collection", () => {

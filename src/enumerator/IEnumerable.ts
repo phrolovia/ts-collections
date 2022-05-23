@@ -54,6 +54,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     average(selector?: Selector<TElement, number>): number;
 
     /**
+     * Splits the elements of the sequence into chunks of size at most the specified size.
+     * @param size The maximum size of each chunk.
+     */
+    chunk(size: number): IEnumerable<IEnumerable<TElement>>;
+
+    /**
      * Concatenates two sequences.
      * @param enumerable The enumerable sequence that will be concatenated to the first sequence.
      */

@@ -60,6 +60,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.average(this, selector);
     }
 
+    public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
+        return EnumerableStatic.chunk(this, size);
+    }
+
     public concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.concat(this, enumerable);
     }

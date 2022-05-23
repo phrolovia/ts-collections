@@ -102,6 +102,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return total / count;
     }
 
+    public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
+        if (size < 1) {
+            throw new Error(ErrorMessages.InvalidChunkSize);
+        }
+        return new Enumerator(() => this.chunkGenerator(size));
+    }
+
     public concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.concatGenerator(enumerable));
     }
@@ -530,6 +537,22 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* appendGenerator(element: TElement): Iterable<TElement> {
         yield* this;
         yield element;
+    }
+
+    private* chunkGenerator(size: number): Iterable<IEnumerable<TElement>> {
+        const iterator = this[Symbol.iterator]();
+        let next = iterator.next();
+        while (!next.done) {
+            const chunk = new List<TElement>();
+            for (let index = 0; index < size; ++index) {
+                if (next.done) {
+                    break;
+                }
+                chunk.add(next.value);
+                next = iterator.next();
+            }
+            yield chunk;
+        }
     }
 
     private* concatGenerator(enumerable: IEnumerable<TElement>): Iterable<TElement> {

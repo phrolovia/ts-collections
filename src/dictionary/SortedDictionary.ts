@@ -85,6 +85,10 @@ export class SortedDictionary<TKey, TValue> implements IDictionary<TKey, TValue>
         return EnumerableStatic.average(this, selector);
     }
 
+    public chunk(size: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
+        return EnumerableStatic.chunk(this, size);
+    }
+
     public clear(): void {
         this.keyValueTree.clear();
         this.updateLength();
