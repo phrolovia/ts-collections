@@ -551,7 +551,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 chunk.add(next.value);
                 next = iterator.next();
             }
-            yield chunk;
+            yield new Enumerable(chunk);
         }
     }
 
