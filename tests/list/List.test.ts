@@ -295,6 +295,11 @@ describe("List", () => {
             const count = list.count(n => n < 5);
             expect(count).to.eq(5);
         });
+        it("should use list's size if predicate is not provided", () => {
+            const list = new List([1, 9, 2, 8, 3, 7, 4, 6, 5, 0]);
+            const count = list.count();
+            expect(count).to.eq(10);
+        });
     });
 
     describe("#defaultIfEmpty()", () => {

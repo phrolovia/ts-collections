@@ -1,4 +1,4 @@
-import {IEnumerable, ISet, KeyValuePair, List} from "../../imports";
+import {ICollection, IEnumerable, ISet, KeyValuePair} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
 export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -102,7 +102,7 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
 
     /**
      * Returns a list of values of the dictionary.
-     * @returns {List} A list of values of this dictionary.
+     * @returns {ICollection} A collection of values of this dictionary.
      */
-    values(): List<TValue>;
+    values(): ICollection<TValue>;
 }

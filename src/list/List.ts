@@ -3,6 +3,7 @@ import {AbstractList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
+import {Predicate} from "../shared/Predicate";
 
 export class List<TElement> extends AbstractList<TElement> {
     protected readonly data: TElement[] = [];

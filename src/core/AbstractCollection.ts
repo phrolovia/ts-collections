@@ -49,6 +49,9 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public any(predicate?: Predicate<TElement>): boolean {
+        if (!predicate) {
+            return !this.isEmpty();
+        }
         return EnumerableStatic.any(this, predicate);
     }
 
@@ -87,6 +90,9 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
     }
 
     public count(predicate?: Predicate<TElement>): number {
+        if (!predicate) {
+            return this.size();
+        }
         return EnumerableStatic.count(this, predicate);
     }
 

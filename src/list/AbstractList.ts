@@ -3,6 +3,7 @@ import {Predicate} from "../shared/Predicate";
 import {IList, LinkedList} from "../../imports";
 import {OrderComparator} from "../shared/OrderComparator";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
+import {ErrorMessages} from "../shared/ErrorMessages";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
@@ -34,6 +35,23 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         for (const element of this) {
             yield [index++, element];
         }
+    }
+
+    public override first(predicate?: Predicate<TElement>): TElement {
+        if (!predicate) {
+            if (this.isEmpty()) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return this.get(0);
+        }
+        return super.first(predicate);
+    }
+
+    public override firstOrDefault(predicate?: Predicate<TElement>): TElement {
+        if (!predicate) {
+            return this.isEmpty() ? null : this.get(0);
+        }
+        return super.firstOrDefault(predicate);
     }
 
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
@@ -74,6 +92,23 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
             }
         }
         return -1;
+    }
+
+    public override last(predicate?: Predicate<TElement>): TElement {
+        if (!predicate) {
+            if (this.isEmpty()) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            return this.get(this.size() - 1);
+        }
+        return super.last(predicate);
+    }
+
+    public override lastOrDefault(predicate?: Predicate<TElement>): TElement {
+        if (!predicate) {
+            return this.isEmpty() ? null : this.get(this.size() - 1);
+        }
+        return super.lastOrDefault(predicate);
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
