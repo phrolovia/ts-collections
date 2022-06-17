@@ -23,6 +23,8 @@ import {Zipper} from "../shared/Zipper";
 import {Writable} from "../shared/Writable";
 import {Dictionary} from "./Dictionary";
 import {ICollection} from "../core/ICollection";
+import {SortedSet} from "../set/SortedSet";
+import {EnumerableSet} from "../set/EnumerableSet";
 
 export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     protected keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -229,6 +231,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
         return EnumerableStatic.toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
+    public toEnumerableSet(): EnumerableSet<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toEnumerableSet(this);
+    }
+
     public toIndexableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IndexableList<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toIndexableList(this, comparator);
     }
@@ -243,6 +249,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
         return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toSortedSet(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): SortedSet<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toSortedSet(this, comparator);
     }
 
     public tryAdd(key: TKey, value: TValue): boolean {

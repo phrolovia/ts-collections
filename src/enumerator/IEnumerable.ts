@@ -14,7 +14,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList
+    IndexableList, EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -344,6 +344,11 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue>;
 
     /**
+     * Creates a new enumerable set from the elements of the sequence.
+     */
+    toEnumerableSet(): EnumerableSet<TElement>;
+
+    /**
      * Creates a new indexable list from the elements of the sequence.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
@@ -371,6 +376,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
      */
     toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue>;
+
+    /**
+     * Creates a new sorted set from the elements of the sequence.
+     * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+     */
+    toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement>;
 
     /**
      * Produces the set union of two sequences by using an equality comparer.

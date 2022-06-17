@@ -1512,6 +1512,14 @@ describe("List", () => {
         });
     });
 
+    describe("#toEnumerableSet()", () => {
+        const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
+        it("should convert it to a set", () => {
+            const set = list.toEnumerableSet();
+            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+    });
+
     describe("#toList()", () => {
         const list = new List([1, 2, 3]);
         const list2 = list.append(4).toList();
@@ -1554,6 +1562,14 @@ describe("List", () => {
             expect(dict.size()).to.eq(people.size());
             expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
         })
+    });
+
+    describe("#toSortedSet()", () => {
+        const list = new List([5, 2, 3, 4, 4, 3, 9, 7, 7, 6, 8, 1, 10]);
+        it("should create a sorted set from the list", () => {
+            const set = list.toSortedSet();
+            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
     });
 
     describe("#union()", () => {

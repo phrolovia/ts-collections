@@ -24,7 +24,7 @@ import {
     Dictionary,
     IndexableList,
     IGroup,
-    Group
+    Group, EnumerableSet
 } from "../../imports";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
@@ -492,6 +492,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return dictionary;
     }
 
+    public toEnumerableSet(): EnumerableSet<TElement> {
+        return new EnumerableSet<TElement>(this);
+    }
+
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         return new IndexableList<TElement>(this, comparator);
     }
@@ -512,6 +516,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             dictionary.add(key, value);
         }
         return dictionary;
+    }
+
+    public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
+        return new SortedSet<TElement>(this, comparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

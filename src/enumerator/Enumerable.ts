@@ -16,7 +16,7 @@ import {
     List,
     Dictionary,
     IndexableList,
-    IGroup,
+    IGroup, EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
@@ -227,6 +227,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
+    public toEnumerableSet(): EnumerableSet<TElement> {
+        return this.enumerator.toEnumerableSet();
+    }
+
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         return this.enumerator.toIndexableList(comparator);
     }
@@ -241,6 +245,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return this.enumerator.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
+        return this.enumerator.toSortedSet(comparator);
     }
 
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

@@ -1344,6 +1344,17 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#toEnumerableSet()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(2, "b");
+        dictionary.add(1, "a");
+        it("should create a new sorted set", () => {
+            const set = dictionary.select(p => p.value).toEnumerableSet();
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set.toArray()).to.deep.eq(["b", "a"]);
+        });
+    });
+
     describe("#toList()", () => {
         const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
@@ -1368,6 +1379,17 @@ describe("Dictionary", () => {
             expect(dict2.get("a")).to.not.null;
             expect(dict2.get("b")).to.not.null;
             expect(dict2.length).to.eq(dictionary.length);
+        });
+    });
+
+    describe("#toSortedSet()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        it("should create a new sorted set", () => {
+            const set = dictionary.select(p => p.value).toSortedSet();
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set.toArray()).to.deep.eq(["a", "b"]);
         });
     });
 

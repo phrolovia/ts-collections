@@ -7,7 +7,18 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 import {JoinSelector} from "../shared/JoinSelector";
 import {OrderComparator} from "../shared/OrderComparator";
-import {SortedDictionary, Enumerable, IEnumerable, IGroup, ILookup, IOrderedEnumerable, List, Dictionary, IndexableList} from "../../imports";
+import {
+    SortedDictionary,
+    Enumerable,
+    IEnumerable,
+    IGroup,
+    ILookup,
+    IOrderedEnumerable,
+    List,
+    Dictionary,
+    IndexableList,
+    EnumerableSet, SortedSet
+} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 
 export abstract class EnumerableStatic {
@@ -186,6 +197,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toDictionary(keySelector, valueSelector, valueComparator);
     }
 
+    public static toEnumerableSet(source: IEnumerable<any>): EnumerableSet<any> {
+        return new Enumerable(source).toEnumerableSet();
+    }
+
     public static toIndexableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         return new Enumerable(source).toIndexableList(comparator);
     }
@@ -200,6 +215,10 @@ export abstract class EnumerableStatic {
 
     public static toSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return new Enumerable(source).toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public static toSortedSet<TElement>(source: IEnumerable<TElement>, comparator?: OrderComparator<TElement>): SortedSet<TElement> {
+        return new Enumerable(source).toSortedSet(comparator);
     }
 
     public static union<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

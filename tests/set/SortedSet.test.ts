@@ -3,6 +3,7 @@ import {expect} from "chai";
 import {SortedSet} from "../../src/set/SortedSet";
 import {Person} from "../models/Person";
 import {LinkedList} from "../../imports";
+import {SimpleObject} from "../models/SimpleObject";
 
 describe("SortedSet", () => {
 
@@ -29,6 +30,17 @@ describe("SortedSet", () => {
             set.clear();
             expect(set.size()).to.eq(0);
             expect(set.length).to.eq(0);
+        });
+    });
+
+    describe("#contains()", () => {
+        it("should return true if the element is in the set", () => {
+            const object1 = new SimpleObject(439329);
+            const object2 = new SimpleObject(8338);
+            const sortedSet = new SortedSet<SimpleObject>([], (o1: SimpleObject, o2: SimpleObject) => o1.id - o2.id);
+            sortedSet.add(object1);
+            expect(sortedSet.contains(object1)).to.be.true;
+            expect(sortedSet.contains(object2)).to.be.false;
         });
     });
 

@@ -17,7 +17,7 @@ import {
     RedBlackTree,
     Dictionary,
     IndexableList,
-    IGroup, Group
+    IGroup, Group, EnumerableSet, SortedSet
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -254,6 +254,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
+    public toEnumerableSet(): EnumerableSet<IGroup<TKey, TElement>> {
+        return this.lookupTree.toEnumerableSet();
+    }
+
     public toIndexableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): IndexableList<IGroup<TKey, TElement>> {
         return this.lookupTree.toIndexableList(comparator);
     }
@@ -270,6 +274,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<IGroup<TKey, TElement>, TDictKey>, valueSelector: Selector<IGroup<TKey, TElement>, TDictValue>,
                                                     keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
         return this.lookupTree.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toSortedSet(comparator?: OrderComparator<IGroup<TKey, TElement>>): SortedSet<IGroup<TKey, TElement>> {
+        return this.lookupTree.toSortedSet(comparator);
     }
 
     public union(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
