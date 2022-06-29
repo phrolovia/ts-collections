@@ -17,6 +17,7 @@ import {
     IndexableList, EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -243,6 +244,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
+
+    /**
+     * Produces a tuple of the element and the following element.
+     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
+     *
+     * <br/>
+     * Example:
+     * ```
+     *    const numberList = new List([1, 2, 3, 4, 5]);
+     *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
+     * ```
+     */
+    pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
 
     /**
      * Adds a value to the beginning of the sequence.

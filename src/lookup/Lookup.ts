@@ -22,6 +22,7 @@ import {
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -183,6 +184,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public orderByDescending<TOrderKey>(keySelector: Selector<IGroup<TKey, TElement>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<IGroup<TKey, TElement>> {
         return this.lookupTree.orderByDescending(keySelector, comparator);
+    }
+
+    public pairwise(resultSelector: PairwiseSelector<IGroup<TKey, TElement>, IGroup<TKey, TElement>>): IEnumerable<[IGroup<TKey, TElement>, IGroup<TKey, TElement>]> {
+        return this.lookupTree.pairwise(resultSelector);
     }
 
     public prepend(element: IGroup<TKey, TElement>): IEnumerable<IGroup<TKey, TElement>> {

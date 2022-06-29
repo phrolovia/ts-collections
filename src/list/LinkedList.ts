@@ -233,8 +233,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         }
     }
 
-
-
     private unlink(node: Node<TElement>): TElement {
         const element: TElement = node.item;
         const next = node.next;

@@ -20,6 +20,7 @@ import {
     EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class EnumerableStatic {
     protected constructor() {
@@ -131,6 +132,10 @@ export abstract class EnumerableStatic {
 
     public static orderByDescending<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return new Enumerable(source).orderByDescending(keySelector, comparator);
+    }
+
+    public static pairwise<TElement>(source: IEnumerable<TElement>, resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+        return new Enumerable(source).pairwise(resultSelector);
     }
 
     public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {

@@ -25,6 +25,7 @@ import {Dictionary} from "./Dictionary";
 import {ICollection} from "../core/ICollection";
 import {SortedSet} from "../set/SortedSet";
 import {EnumerableSet} from "../set/EnumerableSet";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     protected keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -154,6 +155,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
 
     public orderByDescending<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
+    }
+
+    public pairwise(resultSelector?: PairwiseSelector<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): IEnumerable<[KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>]> {
+        return EnumerableStatic.pairwise(this, resultSelector);
     }
 
     public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {

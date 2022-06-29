@@ -839,6 +839,14 @@ describe("List", () => {
         });
     });
 
+    describe("#pairwise()", () => {
+        const list = new List(["a", "b", "c", "d", "e", "f"]);
+        const result = list.pairwise((prev, curr) => [`->${prev}`, `${curr}<-`]);
+        it("should create an enumerable that pairs up the values", () => {
+            expect(result.toArray()).to.deep.equal([["->a", "b<-"], ["->b", "c<-"], ["->c", "d<-"], ["->d", "e<-"], ["->e", "f<-"]]);
+        });
+    });
+
     describe("#prepend()", () => {
         const list = new List<Person>();
         list.add(Person.Mel);

@@ -26,6 +26,7 @@ import {
     IGroup,
     Group, EnumerableSet
 } from "../../imports";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
@@ -321,6 +322,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
+    }
+
+    public pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+        resultSelector ??= (first, second) => [first, second] ;
+        return new Enumerator(() => this.pairwiseGenerator(resultSelector));
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {
@@ -637,6 +643,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 for (const innerItem of innerItems) {
                     yield resultSelector(element, innerItem);
                 }
+            }
+        }
+    }
+
+    private* pairwiseGenerator(resultSelector: PairwiseSelector<TElement, TElement>): Iterable<[TElement, TElement]> {
+        const iterator = this[Symbol.iterator]();
+        let next = iterator.next();
+        while (!next.done) {
+            const previous = next;
+            next = iterator.next();
+            if (!next.done) {
+                yield resultSelector(previous.value, next.value);
             }
         }
     }

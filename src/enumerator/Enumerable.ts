@@ -19,6 +19,7 @@ import {
     IGroup, EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;
@@ -161,6 +162,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return this.enumerator.orderByDescending(keySelector, comparator);
+    }
+
+    public pairwise(resulSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+        return this.enumerator.pairwise(resulSelector);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

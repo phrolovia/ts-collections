@@ -718,6 +718,32 @@ describe("SortedDictionary", () => {
         });
     });
 
+    describe("#pairwise()", () => {
+        it("should return an array of pairs", () => {
+            const dictionary = new SortedDictionary<string, Person>();
+            dictionary.add(Person.Noemi.name, Person.Noemi);
+            dictionary.add(Person.Alice.name, Person.Alice);
+            dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+            dictionary.add(Person.Eliza.name, Person.Eliza);
+            dictionary.add(Person.Suzuha.name, Person.Suzuha);
+            const pairs = dictionary.pairwise().toArray();
+            const tuples = [];
+            for (const pair of pairs) {
+                const [p1, p2 ] = pair;
+                tuples.push([p1.key, p2.value.surname]);
+            }
+            const expectedResult = [ // values are sorted due to sorted dictionary
+                ["Alice", "Jackson"],
+                ["Eliza", "Volpe"],
+                ["Lucrezia", "Waterfox"],
+                ["Noemi", "Necci"],
+                ["Priscilla", "Suzuki"]
+            ];
+            expect(tuples).to.deep.eq(expectedResult);
+        });
+    });
+
     describe("#prepend()", () => {
         it("should add item at the beginning", () => {
             const dictionary = new SortedDictionary<string, Person>();

@@ -22,6 +22,7 @@ import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {ILookup} from "../lookup/ILookup";
 import {Writable} from "../shared/Writable";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
@@ -175,6 +176,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
+    }
+
+    public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+        return EnumerableStatic.pairwise(this, resultSelector);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {
