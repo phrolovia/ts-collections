@@ -176,6 +176,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.reverse();
     }
 
+    public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return this.enumerator.scan(accumulator, seed);
+    }
+
     public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         return this.enumerator.select(selector);
     }

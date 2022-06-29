@@ -981,6 +981,24 @@ describe("List", () => {
         });
     });
 
+    describe("#scan()", () => {
+        it("should create a list of increasing numbers starting with 1", () => {
+            const list = new List([1, 2, 3, 4]);
+            const result = list.scan((acc, n) => acc + n);
+            expect(result.toArray()).to.deep.equal([1, 3, 6, 10]);
+        });
+        it("should create a list of increasing numbers starting with 2", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = list.scan((acc, n) => acc + n, 2);
+            expect(result.toArray()).to.deep.equal([3, 5, 8, 12, 17]);
+        });
+        it("should create a list of increasing numbers starting with 0", () => {
+            const list = new List([1, 3, 12, 19, 33]);
+            const result = list.scan((acc, n) => acc + n, 0);
+            expect(result.toArray()).to.deep.equal([1, 4, 16, 35, 68]);
+        });
+    });
+
     describe("#select()", () => {
         it("should throw error if selector is undefined", () => {
             const list = new List([2, 5, 6, 99]);
@@ -1124,7 +1142,6 @@ describe("List", () => {
             expect(single.name).to.eq("Alice");
             expect(single).to.eq(Person.Alice);
         });
-
     });
     describe("#singleOrDefault()", () => {
         const list = new List<number>();

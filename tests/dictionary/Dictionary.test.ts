@@ -785,6 +785,27 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#scan()", () => {
+        it("should create a Record of name-surname pairs", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+            dictionary.add(Person.Alice.name, Person.Alice);
+            dictionary.add(Person.Noemi.name, Person.Noemi);
+            const record = dictionary.scan((acc, item) => {
+                acc[item.key] = item.value.surname;
+                return acc;
+            }, {} as Record<string, string>).last();
+            const expectedResult = {
+                "Priscilla": "Necci",
+                "Lucrezia": "Volpe",
+                "Alice": "Rivermist",
+                "Noemi": "Waterfox"
+            };
+            expect(record).to.deep.eq(expectedResult);
+        });
+    });
+
     describe("#select()", () => {
         const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);

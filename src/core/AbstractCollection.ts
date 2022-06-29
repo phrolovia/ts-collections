@@ -190,6 +190,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.reverse(this);
     }
 
+    public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return EnumerableStatic.scan(this, accumulator, seed);
+    }
+
     public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }

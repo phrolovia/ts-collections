@@ -146,6 +146,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).reverse();
     }
 
+    public static scan<TElement, TAccumulate = TElement>(source: IEnumerable<TElement>,  accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate> {
+        return new Enumerable(source).scan(accumulator, seed);
+    }
+
     public static select<TElement, TResult>(source: IEnumerable<TElement>, selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         return new Enumerable(source).select(selector);
     }

@@ -179,6 +179,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
         return EnumerableStatic.reverse(this);
     }
 
+    public scan<TAccumulate = KeyValuePair<TKey, TValue>>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return EnumerableStatic.scan(this, accumulator, seed);
+    }
+
     public select<TResult>(selector: Selector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }

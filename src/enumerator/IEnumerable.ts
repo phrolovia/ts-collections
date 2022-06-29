@@ -270,6 +270,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     reverse(): IEnumerable<TElement>;
 
     /**
+     * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
+     * If seed is specified, it is used as the initial value for the accumulator; but it is not included in the result.
+     * @param accumulator The accumulator function that will be applied over the sequence.
+     * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
+     */
+    scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate>;
+
+    /**
      * Projects each element of a sequence into a new form.
      * @param selector The selector function that will be used to project each element into a new form.
      */

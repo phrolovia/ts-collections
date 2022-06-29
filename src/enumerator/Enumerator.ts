@@ -337,6 +337,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.reverseGenerator());
     }
 
+    public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return new Enumerator(() => this.scanGenerator(accumulator, seed));
+    }
+
     public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
         if (!selector) {
             throw new Error(ErrorMessages.NoSelectorProvided);
@@ -666,6 +670,30 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* reverseGenerator(): Iterable<TElement> {
         yield* Array.from(this).reverse();
+    }
+
+    private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): Iterable<TAccumulate> {
+        if (!accumulator) {
+            throw new Error(ErrorMessages.NoAccumulatorProvided);
+        }
+        let accumulatedValue: TAccumulate;
+        if (seed == null) {
+            if (!this.any()) {
+                throw new Error(ErrorMessages.NoElements);
+            }
+            accumulatedValue = this.first() as unknown as TAccumulate;
+            yield accumulatedValue;
+            for (const element of this.skip(1)) {
+                accumulatedValue = accumulator(accumulatedValue, element);
+                yield accumulatedValue;
+            }
+        } else {
+            accumulatedValue = seed;
+            for (const element of this) {
+                accumulatedValue = accumulator(accumulatedValue, element);
+                yield accumulatedValue;
+            }
+        }
     }
 
     private* selectGenerator<TResult>(selector: Selector<TElement, TResult>): Iterable<TResult> {
