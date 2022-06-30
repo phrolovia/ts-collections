@@ -20,6 +20,7 @@ import {
     EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class EnumerableStatic {
     protected constructor() {
@@ -133,12 +134,24 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).orderByDescending(keySelector, comparator);
     }
 
+    public static pairwise<TElement>(source: IEnumerable<TElement>, resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+        return new Enumerable(source).pairwise(resultSelector);
+    }
+
+    public static partition<TElement>(source: IEnumerable<TElement>, predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+       return new Enumerable(source).partition(predicate);
+    }
+
     public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {
         return new Enumerable(source).prepend(item);
     }
 
     public static reverse<TElement>(source: IEnumerable<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).reverse();
+    }
+
+    public static scan<TElement, TAccumulate = TElement>(source: IEnumerable<TElement>,  accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate> {
+        return new Enumerable(source).scan(accumulator, seed);
     }
 
     public static select<TElement, TResult>(source: IEnumerable<TElement>, selector: Selector<TElement, TResult>): IEnumerable<TResult> {

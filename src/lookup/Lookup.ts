@@ -22,6 +22,7 @@ import {
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -63,7 +64,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         yield* this.lookupTree;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<IGroup<TKey, TElement>, TAccumulate>,
+    public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<IGroup<TKey, TElement>, TAccumulate>,
                                                          seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return this.lookupTree.aggregate(accumulator, seed, resultSelector);
     }
@@ -185,12 +186,24 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.orderByDescending(keySelector, comparator);
     }
 
+    public pairwise(resultSelector: PairwiseSelector<IGroup<TKey, TElement>, IGroup<TKey, TElement>>): IEnumerable<[IGroup<TKey, TElement>, IGroup<TKey, TElement>]> {
+        return this.lookupTree.pairwise(resultSelector);
+    }
+
+    public partition(predicate: Predicate<IGroup<TKey, TElement>>): [IEnumerable<IGroup<TKey, TElement>>, IEnumerable<IGroup<TKey, TElement>>] {
+        return this.lookupTree.partition(predicate);
+    }
+
     public prepend(element: IGroup<TKey, TElement>): IEnumerable<IGroup<TKey, TElement>> {
         return this.lookupTree.prepend(element);
     }
 
     public reverse(): IEnumerable<IGroup<TKey, TElement>> {
         return this.lookupTree.reverse();
+    }
+
+    public scan<TAccumulate = IGroup<TKey, TElement>>(accumulator: Accumulator<IGroup<TKey, TElement>, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return this.lookupTree.scan(accumulator, seed);
     }
 
     public select<TResult>(selector: Selector<IGroup<TKey, TElement>, TResult>): IEnumerable<TResult> {

@@ -17,6 +17,7 @@ import {
     IndexableList, EnumerableSet, SortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -27,7 +28,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
      * @param resultSelector The function that will be used to select the result value.
      */
-    aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
+    aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
 
     /**
      * Determines if all elements of the sequence satisfy the specified predicate.
@@ -245,6 +246,26 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
 
     /**
+     * Produces a tuple of the element and the following element.
+     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
+     *
+     * <br/>
+     * Example:
+     * ```
+     *    const numberList = new List([1, 2, 3, 4, 5]);
+     *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
+     * ```
+     */
+    pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
+
+
+    /**
+     * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
+     * @param predicate The predicate function that will be used to check each element for a condition.
+     */
+    partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+
+    /**
      * Adds a value to the beginning of the sequence.
      * @param element The element to add to the sequence.
      */
@@ -254,6 +275,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Inverts the order of the elements in the sequence.
      */
     reverse(): IEnumerable<TElement>;
+
+    /**
+     * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
+     * If seed is specified, it is used as the initial value for the accumulator; but it is not included in the result.
+     * @param accumulator The accumulator function that will be applied over the sequence.
+     * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
+     */
+    scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate>;
 
     /**
      * Projects each element of a sequence into a new form.

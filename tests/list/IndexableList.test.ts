@@ -12,7 +12,7 @@ import {Enumerable} from "../../imports";
 import {Helper} from "../helpers/Helper";
 import {IndexableList} from "../../src/list/IndexableList";
 
-describe("EnumerableArray", () => {
+describe("IndexableList", () => {
 
     const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;

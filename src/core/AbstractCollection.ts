@@ -22,6 +22,7 @@ import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {ILookup} from "../lookup/ILookup";
 import {Writable} from "../shared/Writable";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class AbstractCollection<TElement> implements ICollection<TElement> {
     protected readonly comparator: EqualityComparator<TElement>;
@@ -40,7 +41,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return this.size() !== oldSize;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
@@ -177,12 +178,24 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
     }
 
+    public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+        return EnumerableStatic.pairwise(this, resultSelector);
+    }
+
+    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        return EnumerableStatic.partition(this, predicate);
+    }
+
     public prepend(element: TElement): IEnumerable<TElement> {
         return EnumerableStatic.prepend(this, element);
     }
 
     public reverse(): IEnumerable<TElement> {
         return EnumerableStatic.reverse(this);
+    }
+
+    public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return EnumerableStatic.scan(this, accumulator, seed);
     }
 
     public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {

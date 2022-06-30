@@ -707,6 +707,20 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#partition()", () => {
+        it("should partition dictionary into two groups", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.add(Person.Alice.name, Person.Alice);
+            dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+            dictionary.add(Person.Noemi.name, Person.Noemi);
+            dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            dictionary.add(Person.Mel.name, Person.Mel);
+            const [group1, group2] = dictionary.partition(p => p.value.age > 20);
+            expect(group1.count()).to.eq(3);
+            expect(group2.count()).to.eq(2);
+        });
+    });
+
     describe("#prepend()", () => {
         it("should add item at the beginning", () => {
             const dictionary = new Dictionary<string, Person>();
@@ -782,6 +796,27 @@ describe("Dictionary", () => {
         it("should reverse the dictionary", () => {
             const dictArray = dictionary.reverse().toArray();
             expect(dictArray[dictArray.length - 1].key).to.eq(Person.Lucrezia.name);
+        });
+    });
+
+    describe("#scan()", () => {
+        it("should create a Record of name-surname pairs", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+            dictionary.add(Person.Alice.name, Person.Alice);
+            dictionary.add(Person.Noemi.name, Person.Noemi);
+            const record = dictionary.scan((acc, item) => {
+                acc[item.key] = item.value.surname;
+                return acc;
+            }, {} as Record<string, string>).last();
+            const expectedResult = {
+                "Priscilla": "Necci",
+                "Lucrezia": "Volpe",
+                "Alice": "Rivermist",
+                "Noemi": "Waterfox"
+            };
+            expect(record).to.deep.eq(expectedResult);
         });
     });
 

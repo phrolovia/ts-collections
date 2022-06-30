@@ -839,6 +839,23 @@ describe("List", () => {
         });
     });
 
+    describe("#pairwise()", () => {
+        const list = new List(["a", "b", "c", "d", "e", "f"]);
+        const result = list.pairwise((prev, curr) => [`->${prev}`, `${curr}<-`]);
+        it("should create an enumerable that pairs up the values", () => {
+            expect(result.toArray()).to.deep.equal([["->a", "b<-"], ["->b", "c<-"], ["->c", "d<-"], ["->d", "e<-"], ["->e", "f<-"]]);
+        });
+    });
+
+    describe("#partition()", () => {
+        it("should partition the list into two lists", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const [evens, odds] = list.partition(n => n % 2 === 0);
+            expect(evens.toArray()).to.deep.equal([2, 4, 6, 8, 10]);
+            expect(odds.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+        });
+    });
+
     describe("#prepend()", () => {
         const list = new List<Person>();
         list.add(Person.Mel);
@@ -970,6 +987,24 @@ describe("List", () => {
             expect(list.get(2)).to.eq(list2.get(2));
             expect(list.get(3)).to.eq(list2.get(1));
             expect(list.get(4)).to.eq(list2.get(0));
+        });
+    });
+
+    describe("#scan()", () => {
+        it("should create a list of increasing numbers starting with 1", () => {
+            const list = new List([1, 2, 3, 4]);
+            const result = list.scan((acc, n) => acc + n);
+            expect(result.toArray()).to.deep.equal([1, 3, 6, 10]);
+        });
+        it("should create a list of increasing numbers starting with 2", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = list.scan((acc, n) => acc + n, 2);
+            expect(result.toArray()).to.deep.equal([3, 5, 8, 12, 17]);
+        });
+        it("should create a list of increasing numbers starting with 0", () => {
+            const list = new List([1, 3, 12, 19, 33]);
+            const result = list.scan((acc, n) => acc + n, 0);
+            expect(result.toArray()).to.deep.equal([1, 4, 16, 35, 68]);
         });
     });
 
@@ -1116,7 +1151,6 @@ describe("List", () => {
             expect(single.name).to.eq("Alice");
             expect(single).to.eq(Person.Alice);
         });
-
     });
     describe("#singleOrDefault()", () => {
         const list = new List<number>();

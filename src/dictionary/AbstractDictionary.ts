@@ -25,6 +25,7 @@ import {Dictionary} from "./Dictionary";
 import {ICollection} from "../core/ICollection";
 import {SortedSet} from "../set/SortedSet";
 import {EnumerableSet} from "../set/EnumerableSet";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     protected keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -36,7 +37,7 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
         this.keyValueComparator = keyValueComparator;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate = KeyValuePair<TKey, TValue>, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
@@ -156,6 +157,14 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
         return EnumerableStatic.orderByDescending(this, keySelector, comparator);
     }
 
+    public pairwise(resultSelector?: PairwiseSelector<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): IEnumerable<[KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>]> {
+        return EnumerableStatic.pairwise(this, resultSelector);
+    }
+
+    public partition(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
+        return EnumerableStatic.partition(this, predicate);
+    }
+
     public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.prepend(this, element);
     }
@@ -172,6 +181,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.reverse(this);
+    }
+
+    public scan<TAccumulate = KeyValuePair<TKey, TValue>>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+        return EnumerableStatic.scan(this, accumulator, seed);
     }
 
     public select<TResult>(selector: Selector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
