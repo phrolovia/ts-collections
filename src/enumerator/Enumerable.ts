@@ -56,7 +56,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         yield* this.iterable;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return this.enumerator.aggregate(accumulator, seed, resultSelector);
     }
 
@@ -166,6 +166,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public pairwise(resulSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
         return this.enumerator.pairwise(resulSelector);
+    }
+
+    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        return this.enumerator.partition(predicate);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

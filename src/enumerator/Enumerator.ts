@@ -12,19 +12,20 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Lookup} from "../lookup/Lookup";
 import {Zipper} from "../shared/Zipper";
 import {
-    SortedDictionary,
-    IEnumerable,
-    ILookup,
-    IOrderedEnumerable,
+    Dictionary,
     Enumerable,
-    OrderedEnumerator,
+    EnumerableSet,
+    Group,
+    IEnumerable,
+    IGroup,
+    ILookup,
+    IndexableList,
+    IOrderedEnumerable,
     KeyValuePair,
     List,
-    SortedSet,
-    Dictionary,
-    IndexableList,
-    IGroup,
-    Group, EnumerableSet
+    OrderedEnumerator,
+    SortedDictionary,
+    SortedSet
 } from "../../imports";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 
@@ -36,7 +37,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         yield* this.iterable();
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         if (!accumulator) {
             throw new Error(ErrorMessages.NoAccumulatorProvided);
         }
@@ -327,6 +328,22 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
         resultSelector ??= (first, second) => [first, second] ;
         return new Enumerator(() => this.pairwiseGenerator(resultSelector));
+    }
+
+    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        if (!predicate) {
+            throw new Error(ErrorMessages.NoPredicateProvided);
+        }
+        const trueItems = new List<TElement>();
+        const falseItems = new List<TElement>();
+        for (const item of this) {
+            if (predicate(item)) {
+                trueItems.add(item);
+            } else {
+                falseItems.add(item);
+            }
+        }
+        return [new Enumerable(trueItems), new Enumerable(falseItems)];
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

@@ -37,7 +37,7 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
         this.keyValueComparator = keyValueComparator;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate = KeyValuePair<TKey, TValue>, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
@@ -159,6 +159,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
 
     public pairwise(resultSelector?: PairwiseSelector<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): IEnumerable<[KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>]> {
         return EnumerableStatic.pairwise(this, resultSelector);
+    }
+
+    public partition(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
+        return EnumerableStatic.partition(this, predicate);
     }
 
     public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {

@@ -138,6 +138,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).pairwise(resultSelector);
     }
 
+    public static partition<TElement>(source: IEnumerable<TElement>, predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+       return new Enumerable(source).partition(predicate);
+    }
+
     public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {
         return new Enumerable(source).prepend(item);
     }

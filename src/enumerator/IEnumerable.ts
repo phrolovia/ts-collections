@@ -28,7 +28,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
      * @param resultSelector The function that will be used to select the result value.
      */
-    aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
+    aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
 
     /**
      * Determines if all elements of the sequence satisfy the specified predicate.
@@ -257,6 +257,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
+
+
+    /**
+     * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
+     * @param predicate The predicate function that will be used to check each element for a condition.
+     */
+    partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
 
     /**
      * Adds a value to the beginning of the sequence.

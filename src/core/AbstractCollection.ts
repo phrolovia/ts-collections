@@ -41,7 +41,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return this.size() !== oldSize;
     }
 
-    public aggregate<TAccumulate, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
@@ -180,6 +180,10 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
         return EnumerableStatic.pairwise(this, resultSelector);
+    }
+
+    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        return EnumerableStatic.partition(this, predicate);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

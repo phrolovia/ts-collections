@@ -847,6 +847,15 @@ describe("List", () => {
         });
     });
 
+    describe("#partition()", () => {
+        it("should partition the list into two lists", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const [evens, odds] = list.partition(n => n % 2 === 0);
+            expect(evens.toArray()).to.deep.equal([2, 4, 6, 8, 10]);
+            expect(odds.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+        });
+    });
+
     describe("#prepend()", () => {
         const list = new List<Person>();
         list.add(Person.Mel);

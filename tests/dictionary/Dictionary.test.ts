@@ -707,6 +707,20 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#partition()", () => {
+        it("should partition dictionary into two groups", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.add(Person.Alice.name, Person.Alice);
+            dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+            dictionary.add(Person.Noemi.name, Person.Noemi);
+            dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            dictionary.add(Person.Mel.name, Person.Mel);
+            const [group1, group2] = dictionary.partition(p => p.value.age > 20);
+            expect(group1.count()).to.eq(3);
+            expect(group2.count()).to.eq(2);
+        });
+    });
+
     describe("#prepend()", () => {
         it("should add item at the beginning", () => {
             const dictionary = new Dictionary<string, Person>();
