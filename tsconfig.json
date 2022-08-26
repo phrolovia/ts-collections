@@ -3,8 +3,9 @@
         "esModuleInterop": true,
         "target": "es5",
         "lib": [
-            "ES2015",
-            "DOM"
+          "ES2015",
+          "DOM",
+          "es2018.asynciterable"
         ],
         "downlevelIteration": true,
         "declaration": true,

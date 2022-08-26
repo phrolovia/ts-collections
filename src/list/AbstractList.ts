@@ -37,22 +37,22 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         }
     }
 
-    public override first(predicate?: Predicate<TElement>): TElement {
-        if (!predicate) {
-            if (this.isEmpty()) {
-                throw new Error(ErrorMessages.NoElements);
-            }
-            return this.get(0);
-        }
-        return super.first(predicate);
-    }
-
-    public override firstOrDefault(predicate?: Predicate<TElement>): TElement {
-        if (!predicate) {
-            return this.isEmpty() ? null : this.get(0);
-        }
-        return super.firstOrDefault(predicate);
-    }
+    // public override first(predicate?: Predicate<TElement>): TElement {
+    //     if (!predicate) {
+    //         if (this.isEmpty()) {
+    //             throw new Error(ErrorMessages.NoElements);
+    //         }
+    //         return this.get(0);
+    //     }
+    //     return super.first(predicate);
+    // }
+    //
+    // public override firstOrDefault(predicate?: Predicate<TElement>): TElement {
+    //     if (!predicate) {
+    //         return this.isEmpty() ? null : this.get(0);
+    //     }
+    //     return super.firstOrDefault(predicate);
+    // }
 
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
         comparator ??= this.comparator;
