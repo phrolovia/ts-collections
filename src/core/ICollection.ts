@@ -1,6 +1,7 @@
 import {Predicate} from "../shared/Predicate";
 import {IEnumerable} from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
+import {Selector} from "../shared/Selector";
 
 export interface ICollection<TElement> extends IEnumerable<TElement> {
     /**
@@ -51,4 +52,22 @@ export interface ICollection<TElement> extends IEnumerable<TElement> {
      * Returns the number of elements in this collection.
      */
     size(): number;
+
+    /**
+     * Returns a string representation of this collection.
+     */
+    toString(): string;
+
+    /**
+     * Returns a string representation of this collection.
+     * @param separator The separator that will be used to separate the elements of this collection.
+     */
+    toString(separator?: string): string;
+
+    /**
+     * Returns a string representation of this collection.
+     * @param separator The separator that will be used to separate the elements of this collection.
+     * @param selector The selector that will be used to select the property that will be used to generate the string representation of this collection.
+     */
+    toString(separator?: string, selector?: Selector<TElement, string>): string;
 }

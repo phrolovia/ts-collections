@@ -5,13 +5,13 @@ import {EqualityComparator} from "../shared/EqualityComparator";
 export class Queue<TElement> extends AbstractCollection<TElement> {
     private readonly queue: LinkedList<TElement>;
 
-    public constructor( iterable: Iterable<TElement> = [] as TElement[], comparator?: EqualityComparator<TElement>) {
+    public constructor(iterable: Iterable<TElement> = [] as TElement[], comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.queue = new LinkedList<TElement>(iterable, comparator);
         this.updateLength();
     }
 
-    *[Symbol.iterator](): Iterator<TElement> {
+    * [Symbol.iterator](): Iterator<TElement> {
         yield* this.queue;
     }
 

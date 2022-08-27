@@ -1428,6 +1428,30 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#toString()", () => {
+        it("should return a string representation", () => {
+            const dictionary = new Dictionary<number, string>();
+            dictionary.add(1, "a");
+            dictionary.add(2, "b");
+            dictionary.add(3, "c");
+            expect(dictionary.toString()).to.eq("{ 1: a, 2: b, 3: c }");
+        });
+        it("should return a string representation with custom selector", () => {
+            const dictionary = new Dictionary<number, string>();
+            dictionary.add(1, "a");
+            dictionary.add(2, "b");
+            dictionary.add(3, "c");
+            expect(dictionary.toString(p => p.value)).to.eq("{ a, b, c }");
+        });
+        it("should return a string representation with custom selector #2", () => {
+            const dictionary = new Dictionary<string, Person>();
+            dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
+            dictionary.add(Person.Vanessa.name, Person.Vanessa);
+            dictionary.add(Person.Alice.name, Person.Alice);
+            expect(dictionary.toString(p => p.value.name)).to.eq("{ Lucrezia, Vanessa, Alice }");
+        });
+    });
+
     describe("#tryAdd()", () => {
         const dictionary = new Dictionary<string, string>();
         dictionary.add(Person.Alice.name, Person.Alice.name);

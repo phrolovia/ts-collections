@@ -281,6 +281,18 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
     }
 
+    public toString(): string;
+    public toString(separator?: string): string;
+    public toString(separator?: string, selector?: Selector<TElement, string>): string;
+    public toString(separator?: string, selector?: Selector<TElement, string>): string {
+        if (this.isEmpty()) {
+            return "";
+        }
+        separator ??= ", ";
+        selector ??= (e: TElement) => e.toString();
+        return this.select(selector).toArray().join(separator);
+    }
+
     public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         comparator ??= this.comparator;
         return EnumerableStatic.union(this, enumerable, comparator);

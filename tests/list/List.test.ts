@@ -1606,6 +1606,20 @@ describe("List", () => {
         });
     });
 
+    describe("#toString()", () => {
+        const list = new List([1, 2, 3]);
+        it("should return a string representation of the list", () => {
+            expect(list.toString()).to.equal("1, 2, 3");
+        });
+        it("should return a string representation of the list by using the separator", () => {
+            expect(list.toString("|")).to.equal("1|2|3");
+        });
+        it("should return a string representation of the list by using the separator and the format", () => {
+            const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+            expect(people.toString("|", p => `${p.name}`)).to.equal("Alice|Vanessa|Viola|Lenka|Senna");
+        });
+    });
+
     describe("#union()", () => {
         it("should return a set of items from two lists", () => {
             const list1 = new List([1, 2, 3, 4, 5, 5, 5]);

@@ -98,4 +98,18 @@ describe("EnumerableSet", () => {
             expect(set.contains(Person.Senna)).to.be.false;
         });
     });
+    describe("#toString()", () => {
+        it("should return empty string if set is empty", () => {
+            const set = new EnumerableSet<Person>();
+            expect(set.toString()).to.equal("");
+        });
+        it("should return the string representation of the set", () => {
+            const set = new EnumerableSet<Person>();
+            set.add(Person.Bella);
+            set.add(Person.Senna);
+            set.add(Person.Reina);
+            set.add(Person.Senna);
+            expect(set.toString()).to.equal("Bella Rivera, Senna Hikaru, Reina Karuizawa");
+        }).timeout(0);
+    });
 });
