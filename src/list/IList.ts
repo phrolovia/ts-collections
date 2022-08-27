@@ -17,9 +17,7 @@ export interface IList<TElement> extends IRandomAccessCollection<TElement> {
     /**
      * Returns an IterableIterator that yields a tuple of [index, element].
      * <pre>
-     *      for (const [index, element] of list.entries()) {
-     *         //
-     *      }
+     *      for (const [index, element] of list.entries())
      * </pre>
      */
     entries(): IterableIterator<[number, TElement]>;
