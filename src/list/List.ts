@@ -3,7 +3,7 @@ import {AbstractList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
-import {Predicate} from "../shared/Predicate";
+import {Selector} from "../shared/Selector";
 
 export class List<TElement> extends AbstractList<TElement> {
     protected readonly data: TElement[] = [];
@@ -89,5 +89,19 @@ export class List<TElement> extends AbstractList<TElement> {
 
     public override toArray(): TElement[] {
         return [...this.data];
+    }
+
+    public override toString(): string;
+    public override toString(separator?: string): string;
+    public override toString(separator?: string, selector?: Selector<TElement, string>): string;
+    public override toString(separator?: string, selector?: Selector<TElement, string>): string {
+        if (this.isEmpty()) {
+            return "";
+        }
+        const buffer = new Array<string>();
+        for (const element of this) {
+            buffer.push(selector?.(element) ?? element.toString());
+        }
+        return buffer.join(separator ?? ", ");
     }
 }

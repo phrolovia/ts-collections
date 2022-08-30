@@ -268,6 +268,16 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
         return EnumerableStatic.toSortedSet(this, comparator);
     }
 
+    public toString(): string;
+    public toString(selector?: Selector<KeyValuePair<TKey, TValue>, string>): string;
+    public toString(selector?: Selector<KeyValuePair<TKey, TValue>, string>): string {
+        const buffer = new Array<string>();
+        for (const pair of this) {
+            buffer.push(selector?.(pair) ?? `${pair.key}: ${pair.value}`);
+        }
+        return `{ ${buffer.join(", ")} }`;
+    }
+
     public tryAdd(key: TKey, value: TValue): boolean {
         if (key == null) {
             throw new Error(ErrorMessages.NullKey);

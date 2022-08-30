@@ -1,6 +1,7 @@
 import {IRandomAccessCollection} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
+import {Selector} from "../shared/Selector";
 
 export interface IList<TElement> extends IRandomAccessCollection<TElement> {
 
@@ -16,11 +17,7 @@ export interface IList<TElement> extends IRandomAccessCollection<TElement> {
     /**
      * Returns an IterableIterator that yields a tuple of [index, element].
      * <pre>
-     *     <code>
-     *          for (const [index, element] of list.entries()) {
-     *             //
-     *          }
-     *     </code>
+     *      for (const [index, element] of list.entries())
      * </pre>
      */
     entries(): IterableIterator<[number, TElement]>;

@@ -1,5 +1,6 @@
 import {ICollection, IEnumerable, ISet, KeyValuePair} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {Selector} from "../shared/Selector";
 
 export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
 
@@ -90,6 +91,17 @@ export interface IDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey
      * Returns the number of elements in this dictionary.
      */
     size(): number;
+
+    /**
+     * Returns a string representation of this dictionary.
+     */
+    toString(): string;
+
+    /**
+     * Returns a string representation of this dictionary.
+     * @param selector The selector that will be used to select the property that will be used to generate the string representation of this dictionary.
+     */
+    toString(selector?: Selector<KeyValuePair<TKey, TValue>, string>): string;
 
     /**
      * Attempts to add the specified key and value to the dictionary. Unlike `add` method,

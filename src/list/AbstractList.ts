@@ -4,6 +4,7 @@ import {IList, LinkedList} from "../../imports";
 import {OrderComparator} from "../shared/OrderComparator";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 import {ErrorMessages} from "../shared/ErrorMessages";
+import {Selector} from "../shared/Selector";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 

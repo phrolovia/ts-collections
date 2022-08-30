@@ -21,6 +21,10 @@ export class Person {
         return this.age === other.age;
     }
 
+    public toString(): string {
+        return `${this.name} ${this.surname}`;
+    }
+
     public static readonly Alice = new Person("Alice", "Rivermist", 23);
     public static readonly Amy = new Person("Amy", "Rivera", 32);
     public static readonly Bella = new Person("Bella", "Rivera", 21);
