@@ -4,6 +4,8 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
+import {IEnumerable} from "./IEnumerable";
+import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     private readonly enumerator: AsyncEnumerator<TElement>;
@@ -34,6 +36,26 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public async average(selector?: Selector<TElement, number>): Promise<number> {
         return this.enumerator.average(selector);
+    }
+
+    public chunk(count: number): IAsyncEnumerable<IEnumerable<TElement>> {
+        return this.enumerator.chunk(count);
+    }
+
+    public concat(other: IAsyncEnumerable<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.concat(other);
+    }
+
+    public contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean> {
+        return this.enumerator.contains(element);
+    }
+
+    public count(predicate?: Predicate<TElement>): Promise<number> {
+        return this.enumerator.count(predicate);
+    }
+
+    public defaultIfEmpty(defaultValue?: TElement): IAsyncEnumerable<TElement> {
+        return this.enumerator.defaultIfEmpty(defaultValue);
     }
 
     public async first(predicate?: Predicate<TElement>): Promise<TElement> {

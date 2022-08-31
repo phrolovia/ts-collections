@@ -4,6 +4,9 @@ import {ErrorMessages} from "../shared/ErrorMessages";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
+import {Enumerable, IEnumerable} from "../../imports";
+import {EqualityComparator} from "../shared/EqualityComparator";
+import {Comparators} from "../shared/Comparators";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
@@ -68,38 +71,83 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public async average(selector?: Selector<TElement, number>): Promise<number> {
-        if (!await this.any()) {
-            throw new Error(ErrorMessages.NoElements);
-        }
         let total = 0;
         let count = 0;
         for await (const element of this) {
             total += selector?.(element) ?? element as number;
             ++count;
         }
+        if (count === 0) {
+            throw new Error(ErrorMessages.NoElements);
+        }
         return total / count;
     }
 
-    public async first(predicate?: Predicate<TElement>): Promise<TElement> {
-        const item = await this.firstOrDefault(predicate);
-        if (item == null) {
-            throw new Error(ErrorMessages.NoMatchingElement);
+    public chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>> {
+        if (size < 1) {
+            throw new Error(ErrorMessages.InvalidChunkSize);
         }
-        return item;
+        return new AsyncEnumerator<IEnumerable<TElement>>(() => this.chunkGenerator(size));
     }
 
-    public async firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement> {
-        if (!predicate) {
-            return await this[Symbol.asyncIterator]().next().then(result => result.value ?? null);
-        }
-        let first: TElement | null = null;
-        for await (const element of this) {
-            if(predicate(element)) {
-                first = element;
-                break;
+    public concat(other: IAsyncEnumerable<TElement>): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.concatGenerator(other));
+    }
+
+    public async contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean> {
+        comparator ??= Comparators.equalityComparator;
+        for await (const e of this) {
+            if (comparator(e, element)) {
+                return true;
             }
         }
-        return first;
+        return false;
+    }
+
+    public async count(predicate?: Predicate<TElement>): Promise<number> {
+        if (!predicate) {
+            return this.toArray().then(array => array.length);
+        }
+        let count = 0;
+        for await (const element of this) {
+            if(predicate(element)) {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    public defaultIfEmpty(defaultValue?: TElement): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.defaultIfEmptyGenerator(defaultValue));
+    }
+
+    public async first(predicate?: Predicate<TElement>): Promise<TElement> {
+        let count = 0;
+        for await (const element of this) {
+            ++count;
+            if (!predicate) {
+                return element;
+            }
+            if(predicate(element)) {
+                return element;
+            }
+        }
+        if (count === 0) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        throw new Error(ErrorMessages.NoMatchingElement);
+    }
+
+    public async firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
+        for await (const element of this) {
+            if (!predicate) {
+                return element;
+            }
+            if(predicate(element)) {
+                return element;
+            }
+        }
+        return null;
     }
 
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
@@ -138,6 +186,36 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private async* appendGenerator(element: TElement): AsyncIterable<TElement> {
         yield* await this;
         yield element;
+    }
+
+    private async* chunkGenerator(size: number): AsyncIterable<IEnumerable<TElement>> {
+        const buffer: TElement[] = [];
+        for await (const element of this) {
+            buffer.push(element);
+            if (buffer.length === size) {
+                yield Enumerable.from([...buffer]);
+                buffer.length = 0;
+            }
+        }
+        if (buffer.length > 0) {
+            yield Enumerable.from([...buffer]);
+        }
+    }
+
+    private async* concatGenerator(other: IAsyncEnumerable<TElement>): AsyncIterable<TElement> {
+        yield* await this;
+        yield* await other;
+    }
+
+    private async* defaultIfEmptyGenerator(defaultValue?: TElement): AsyncIterable<TElement> {
+        let hasElements = false;
+        for await (const element of this) {
+            hasElements = true;
+            yield element;
+        }
+        if (!hasElements) {
+            yield defaultValue;
+        }
     }
 
     private async* prependGenerator(element: TElement): AsyncIterable<TElement> {
