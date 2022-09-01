@@ -5,6 +5,8 @@ import {AsyncEnumerable} from "../../src/enumerator/AsyncEnumerable";
 import chaiAsPromised from "chai-as-promised";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Person} from "../models/Person";
+import {Enumerable} from "../../imports";
+import {Helper} from "../helpers/Helper";
 
 describe("AsyncEnumerable", () => {
     chai.use(chaiAsPromised);
@@ -22,8 +24,10 @@ describe("AsyncEnumerable", () => {
         }
     };
 
-    const personProducer = async function* (delay: number = 50): AsyncIterable<Person> {
-        const people: Person[] = [Person.Alice, Person.Lucrezia, Person.Vanessa, Person.Emily, Person.Noemi];
+    const personProducer = async function* (peopleList: Person[] = [], delay: number = 50): AsyncIterable<Person> {
+        const people: Person[] = peopleList.length > 0
+            ? peopleList
+            : [Person.Alice, Person.Lucrezia, Person.Vanessa, Person.Emily, Person.Noemi];
         for (let ix = 0; ix < people.length; ++ix) {
             await suspend(delay);
             yield people[ix];
@@ -130,8 +134,8 @@ describe("AsyncEnumerable", () => {
             expect(result).to.eq(false);
         }).timeout(5000);
         it("should use provided equality comparer", async () => {
-            ;
             expect((await new AsyncEnumerable(personProducer()).contains(Person.Alice, (p1, p2) => p1.age === p2.age))).to.eq(true);
+            expect((await new AsyncEnumerable(personProducer()).contains(Person.Noemi, (p1, p2) => p1.age === p2.age))).to.eq(true);
             expect((await new AsyncEnumerable(personProducer()).contains(Person.Noemi2, (p1, p2) => p1.age === p2.age))).to.eq(false);
         });
     });
@@ -159,6 +163,103 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
             const result = await enumerable.defaultIfEmpty(10).toArray();
             expect(result).to.deep.equal([10]);
+        }).timeout(5000);
+    });
+
+    describe("#distinct()", () => {
+        it("should return the distinct elements in the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.distinct().toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        }).timeout(5000);
+        it("should return the distinct elements in the enumerable using a custom equality comparer", async () => {
+            const enumerable = new AsyncEnumerable(personProducer(
+                [Person.Mel, Person.Noemi, Person.Noemi2]
+            ));
+            const result = await enumerable.distinct(p => p, (p1, p2) => p1.age === p2.age).toArray();
+            expect(result).to.deep.equal([Person.Mel, Person.Noemi, Person.Noemi2]);
+        }).timeout(5000);
+        it("should return the distinct elements in the enumerable using a custom equality comparer #2", async () => {
+            const enumerable = new AsyncEnumerable(personProducer(
+                [Person.Mel, Person.Noemi, Person.Noemi2]
+            ));
+            const result = await enumerable.distinct(p => p, (p1, p2) => p1.name === p2.name).toArray();
+            expect(result).to.deep.equal([Person.Mel, Person.Noemi]);
+        }).timeout(5000);
+    });
+
+    describe("#elementAt()", () => {
+        it("should return the element at the specified index", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.elementAt(5);
+            expect(result).to.eq(5);
+        }).timeout(5000);
+        it("should throw an error if the index is out of bounds", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            expect(enumerable.elementAt(10)).to.rejectedWith(ErrorMessages.IndexOutOfBoundsException);
+        }).timeout(5000);
+    });
+
+    describe("#elementAtOrDefault()", () => {
+        it("should return the element at the specified index", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.elementAtOrDefault(5);
+            expect(result).to.eq(5);
+        }).timeout(5000);
+        it("should return the default value if the index is out of bounds", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.elementAtOrDefault(10);
+            expect(result).to.eq(null);
+        }).timeout(5000);
+    });
+
+    describe("#except()", () => {
+        it("should return the elements in the enumerable that are not in the other enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.except(new AsyncEnumerable(numberProducer(5))).toArray();
+            expect(result).to.deep.equal([5, 6, 7, 8, 9]);
+        }).timeout(5000);
+        it("should only have 'Alice', 'Noemi' and 'Senna' in the result", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer(
+                [Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]
+            ));
+            const enumerable2 = new AsyncEnumerable(personProducer(
+                [Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]
+            ));
+            const result = await enumerable1.except(enumerable2).toArray();
+            expect(result).to.deep.equal([Person.Alice, Person.Noemi, Person.Senna]);
+        });
+        it("should only have 'Alice' and 'Senna' in the result", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer(
+                [Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]
+            ));
+            const enumerable2 = new AsyncEnumerable(personProducer(
+                [Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]
+            ));
+            const result = await enumerable1.except(enumerable2, (p1, p2) => p1.name === p2.name).toArray();
+            expect(result).to.deep.equal([Person.Alice, Person.Senna]);
+        });
+        it("should return a set of people unique to first enumerable", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer(
+                Enumerable.range(0, 100).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), n+1)).toArray(),
+                1));
+            const enumerable2 = new AsyncEnumerable(personProducer(
+                Enumerable.range(0, 50).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), n+1)).toArray(),
+                1));
+            const result = await enumerable1.except(enumerable2, (p1, p2) => p1.age === p2.age).toArray();
+            const ageCount = Enumerable.from(result).count(p => p.age <= 50);
+            expect(ageCount).to.eq(0);
+        }).timeout(5000);
+        it("should use order comparator return a set of people unique to first enumerable", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer(
+                Enumerable.range(0, 100).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), n+1)).toArray(),
+                1));
+            const enumerable2 = new AsyncEnumerable(personProducer(
+                Enumerable.range(0, 50).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), n+1)).toArray(),
+                1));
+            const result = await enumerable1.except(enumerable2, null, (p1, p2) => p1.age - p2.age).toArray();
+            const ageCount = Enumerable.from(result).count(p => p.age <= 50);
+            expect(ageCount).to.eq(0);
         }).timeout(5000);
     });
 
@@ -216,6 +317,25 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.firstOrDefault(n => n > 10);
             expect(result).to.be.null;
+        }).timeout(5000);
+    });
+
+    describe("#forEach()", () => {
+        it("should iterate over the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result: number[] = [];
+            await enumerable.forEach(n => {
+                result.push(n);
+            });
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        }).timeout(5000);
+        it("should iterate over the enumerable #2", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result: number[] = [];
+            await enumerable.where(n => n % 2 === 0).skip(1).forEach(n => {
+                result.push(n);
+            });
+            expect(result).to.deep.equal([2, 4, 6, 8]);
         }).timeout(5000);
     });
 

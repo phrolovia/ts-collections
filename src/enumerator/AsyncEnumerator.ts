@@ -4,9 +4,12 @@ import {ErrorMessages} from "../shared/ErrorMessages";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
-import {Enumerable, IEnumerable} from "../../imports";
+import {Enumerable, EnumerableSet, IEnumerable, List, SortedSet} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
+import {AsyncEnumerable} from "./AsyncEnumerable";
+import {OrderComparator} from "../shared/OrderComparator";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
@@ -121,6 +124,49 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.defaultIfEmptyGenerator(defaultValue));
     }
 
+    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        keyComparator ??= Comparators.equalityComparator;
+        keySelector ??= (element: TElement) => element as unknown as TKey;
+        return new AsyncEnumerator<TElement>(() => this.unionGeneratorWithKeySelector(
+            new AsyncEnumerator(async function* () { yield* []; }), keySelector, keyComparator));
+    }
+
+    public async elementAt(index: number): Promise<TElement> {
+        if (index < 0) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        let count = 0;
+        for await (const element of this) {
+            if (count === index) {
+                return element;
+            }
+            ++count;
+        }
+        throw new Error(ErrorMessages.NoSuchElement);
+    }
+
+    public async elementAtOrDefault(index: number): Promise<TElement | null> {
+        if (index < 0) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        let count = 0;
+        for await (const element of this) {
+            if (count === index) {
+                return element;
+            }
+            ++count;
+        }
+        return null;
+    }
+
+    public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+        if (enumerable == null) {
+            throw new Error(ErrorMessages.NullSequence);
+        }
+        comparator ??= Comparators.equalityComparator;
+        return new AsyncEnumerator<TElement>(() => this.exceptGenerator(enumerable, comparator, orderComparator));
+    }
+
     public async first(predicate?: Predicate<TElement>): Promise<TElement> {
         let count = 0;
         for await (const element of this) {
@@ -148,6 +194,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         return null;
+    }
+
+    public async forEach(action: IndexedAction<TElement>): Promise<void> {
+        let index = 0;
+        for await (const element of this) {
+            action(element, index);
+            ++index;
+        }
     }
 
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
@@ -218,6 +272,21 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
+    private async* exceptGenerator(enumerable: IAsyncEnumerable<TElement>, comparator: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): AsyncIterable<TElement> {
+        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
+        for await (const element of enumerable) {
+            if (!collection.contains(element)) {
+                collection.add(element);
+            }
+        }
+        for await (const element of this) {
+            if (!collection.contains(element)) {
+                collection.add(element);
+                yield element;
+            }
+        }
+    }
+
     private async* prependGenerator(element: TElement): AsyncIterable<TElement> {
         yield element;
         yield* await this;
@@ -236,6 +305,25 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 yield d;
             }
             ++index;
+        }
+    }
+
+    private async* unionGeneratorWithKeySelector<TKey>(enumerable: IAsyncEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): AsyncIterable<TElement> {
+        const distinctList: TElement[] = [];
+        for await (const source of [this, enumerable]) {
+            for await (const element of source) {
+                let exist = false;
+                for (const existingItem of distinctList) {
+                    if (comparator(keySelector(element), keySelector(existingItem))) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    yield element;
+                    distinctList.push(element);
+                }
+            }
         }
     }
 

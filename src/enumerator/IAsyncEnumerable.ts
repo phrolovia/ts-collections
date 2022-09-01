@@ -4,6 +4,8 @@ import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
 import {IEnumerable} from "./IEnumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {OrderComparator} from "../shared/OrderComparator";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
@@ -16,8 +18,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean>;
     count(predicate?: Predicate<TElement>): Promise<number>;
     defaultIfEmpty(defaultValue?: TElement): IAsyncEnumerable<TElement>;
+    distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
+    elementAt(index: number): Promise<TElement>;
+    elementAtOrDefault(index: number): Promise<TElement | null>;
+    except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement>;
     first(predicate?: Predicate<TElement>): Promise<TElement>;
     firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement>;
+    forEach(action: IndexedAction<TElement>): Promise<void>;
     prepend(element: TElement): IAsyncEnumerable<TElement>;
     select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult>;
     skip(count: number): IAsyncEnumerable<TElement>;

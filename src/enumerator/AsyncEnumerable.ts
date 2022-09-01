@@ -6,6 +6,8 @@ import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
 import {IEnumerable} from "./IEnumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {OrderComparator} from "../shared/OrderComparator";
+import {IndexedAction} from "../shared/IndexedAction";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     private readonly enumerator: AsyncEnumerator<TElement>;
@@ -22,11 +24,11 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.aggregate(accumulator, seed, resultSelector);
     }
 
-    public async all(predicate: Predicate<TElement>): Promise<boolean> {
+    public all(predicate: Predicate<TElement>): Promise<boolean> {
         return this.enumerator.all(predicate);
     }
 
-    public async any(predicate?: Predicate<TElement>): Promise<boolean> {
+    public any(predicate?: Predicate<TElement>): Promise<boolean> {
         return this.enumerator.any(predicate);
     }
 
@@ -34,7 +36,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.append(element);
     }
 
-    public async average(selector?: Selector<TElement, number>): Promise<number> {
+    public average(selector?: Selector<TElement, number>): Promise<number> {
         return this.enumerator.average(selector);
     }
 
@@ -58,12 +60,32 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.defaultIfEmpty(defaultValue);
     }
 
-    public async first(predicate?: Predicate<TElement>): Promise<TElement> {
+    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        return this.enumerator.distinct(keySelector, keyComparator);
+    }
+
+    public elementAt(index: number): Promise<TElement> {
+        return this.enumerator.elementAt(index);
+    }
+
+    public elementAtOrDefault(index: number): Promise<TElement | null> {
+        return this.enumerator.elementAtOrDefault(index);
+    }
+
+    public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.except(enumerable, comparator, orderComparator);
+    }
+
+    public first(predicate?: Predicate<TElement>): Promise<TElement> {
         return this.enumerator.first(predicate);
     }
 
-    public async firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement> {
+    public firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement> {
         return this.enumerator.firstOrDefault(predicate);
+    }
+
+    public forEach(action: IndexedAction<TElement>): Promise<void> {
+        return this.enumerator.forEach(action);
     }
 
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
