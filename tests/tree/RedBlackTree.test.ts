@@ -352,9 +352,9 @@ describe("RedBlackTree", () => {
             expect(sortedArray).to.deep.equal(treeArray);
         });
         it("should return in-order array #3", () => {
-            const tree = new RedBlackTree(personNameComparator, [Person.Priscilla, Person.Hanna, Person.Karen, Person.Bella, Person.Megan]);
+            const tree = new RedBlackTree(personNameComparator, [Person.Priscilla, Person.Hanna, Person.Kaori, Person.Bella, Person.Megan]);
             const array = tree.toArray();
-            expect(array).to.deep.equal([Person.Bella, Person.Hanna, Person.Karen, Person.Megan, Person.Priscilla]);
+            expect(array).to.deep.equal([Person.Bella, Person.Hanna, Person.Kaori, Person.Megan, Person.Priscilla]);
         });
     });
 

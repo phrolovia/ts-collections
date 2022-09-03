@@ -1,5 +1,4 @@
 import {IAsyncEnumerable} from "./IAsyncEnumerable";
-import {AsyncEnumerator} from "./AsyncEnumerator";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
@@ -8,6 +7,9 @@ import {IEnumerable} from "./IEnumerable";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
+import {IGroup} from "./IGroup";
+import {JoinSelector} from "../shared/JoinSelector";
+import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../../imports";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     private readonly enumerator: AsyncEnumerator<TElement>;
@@ -86,6 +88,46 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public forEach(action: IndexedAction<TElement>): Promise<void> {
         return this.enumerator.forEach(action);
+    }
+
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<IGroup<TKey, TElement>> {
+        return this.enumerator.groupBy(keySelector, keyComparator);
+    }
+
+    public groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
+        return this.enumerator.groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
+    public intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.intersect(enumerable, comparator, orderComparator);
+    }
+
+    public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
+        return this.enumerator.join(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+    }
+
+    public last(predicate?: Predicate<TElement>): Promise<TElement> {
+        return this.enumerator.last(predicate);
+    }
+
+    public lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
+        return this.enumerator.lastOrDefault(predicate);
+    }
+
+    public max(selector?: Selector<TElement, number>): Promise<number> {
+        return this.enumerator.max(selector);
+    }
+
+    public min(selector?: Selector<TElement, number>): Promise<number> {
+        return this.enumerator.min(selector);
+    }
+
+    public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
+        return this.enumerator.orderBy(keySelector, comparator);
+    }
+
+    public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
+        return this.enumerator.orderByDescending(keySelector, comparator);
     }
 
     public prepend(element: TElement): IAsyncEnumerable<TElement> {

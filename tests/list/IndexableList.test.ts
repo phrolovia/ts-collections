@@ -483,7 +483,7 @@ describe("IndexableList", () => {
     });
 
     describe("#groupBy()", () => {
-        const list = new IndexableList([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Karen, Person.Reina]);
+        const list = new IndexableList([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Kaori, Person.Reina]);
         it("should group people by age", () => {
             const group = list.groupBy(p => p.age).toList();
             const ages: number[] = [];
@@ -505,7 +505,7 @@ describe("IndexableList", () => {
         it("should return people who are younger than 16", () => {
             const kids = list.groupBy(p => p.age).where(pg => pg.key < 16).selectMany(g => g.source).toArray();
             expect(kids.length).to.eq(3);
-            expect(kids).to.have.all.members([Person.Karen, Person.Mel, Person.Senna]);
+            expect(kids).to.have.all.members([Person.Kaori, Person.Mel, Person.Senna]);
         });
         it("should use provided comparator", () => {
             const shortNamedPeople = list.groupBy(p => p.name, (n1, n2) => n1 === n2).where(pg => pg.key.length < 5).selectMany(g => g.source).toArray();
@@ -515,7 +515,7 @@ describe("IndexableList", () => {
         it("should be iterable with for-of loop", () => {
             const groupedPeople = list.groupBy(p => p.name.length);
             const people: Person[] = [];
-            const expectedResult = [Person.Alice, Person.Senna, Person.Lenka, Person.Karen, Person.Reina, Person.Mel, Person.Jane];
+            const expectedResult = [Person.Alice, Person.Senna, Person.Lenka, Person.Kaori, Person.Reina, Person.Mel, Person.Jane];
             for (const group of groupedPeople) {
                 for (const person of group) {
                     people.push(person);
@@ -815,7 +815,7 @@ describe("IndexableList", () => {
 
     describe("#orderBy()", () => {
         it("should order people by age [asc]", () => {
-            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Karen, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
+            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
             const orderedPeople = people.orderBy(p => p.age);
             const orderedPeopleAges = orderedPeople.select(p => p.age);
             const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
@@ -825,7 +825,7 @@ describe("IndexableList", () => {
 
     describe("#orderByDescending()", () => {
         it("should order people by age [desc]", () => {
-            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Karen, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
+            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
             const orderedPeople = people.orderByDescending(p => p.age);
             const orderedPeopleAges = orderedPeople.select(p => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
@@ -1378,12 +1378,12 @@ describe("IndexableList", () => {
 
     describe("#thenBy()", () => {
         it("should order people by age [asc] then by name[asc]", () => {
-            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Karen, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
+            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
             const orderedPeople = people.orderBy(p => p.age, (a1, a2) => a1 - a2).thenBy(p => p.name);
             const orderedPeopleAges = orderedPeople.select(p => p.age);
             const orderedPeopleNames = orderedPeople.select(p => p.name);
             const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
-            const expectedNames = ["Mel", "Karen", "Senna", "Jisu", "Jane", "Lenka", "Rebecca", "Vanessa", "Alice", "Reina", "Viola"];
+            const expectedNames = ["Mel", "Kaori", "Senna", "Jisu", "Jane", "Lenka", "Rebecca", "Vanessa", "Alice", "Reina", "Viola"];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
             expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
         });
@@ -1456,12 +1456,12 @@ describe("IndexableList", () => {
 
     describe("#thenByDescending()", () => {
         it("should order people by age [asc] then by name[desc]", () => {
-            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Karen, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
+            const people = new IndexableList([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
             const orderedPeople = people.orderBy(p => p.age).thenByDescending(p => p.name);
             const orderedPeopleAges = orderedPeople.select(p => p.age);
             const orderedPeopleNames = orderedPeople.select(p => p.name);
             const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
-            const expectedNames = ["Mel", "Senna", "Karen", "Jisu", "Lenka", "Jane", "Rebecca", "Vanessa", "Reina", "Alice", "Viola"];
+            const expectedNames = ["Mel", "Senna", "Kaori", "Jisu", "Lenka", "Jane", "Rebecca", "Vanessa", "Reina", "Alice", "Viola"];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
             expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
         });

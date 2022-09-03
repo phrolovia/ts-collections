@@ -429,7 +429,7 @@ describe("Dictionary", () => {
         dict.add(Person.Senna.name, Person.Senna);
         dict.add(Person.Lenka.name, Person.Lenka);
         dict.add(Person.Jane.name, Person.Jane);
-        dict.add(Person.Karen.name, Person.Karen);
+        dict.add(Person.Kaori.name, Person.Kaori);
         dict.add(Person.Reina.name, Person.Reina);
         it("should group people by age", () => {
             const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g, null);
@@ -1471,7 +1471,7 @@ describe("Dictionary", () => {
             expect(dictionary.length).to.eq(3);
         });
         it("should throw error if key is null", () => {
-            expect(() => dictionary.tryAdd(null, Person.Karen.name)).to.throw(ErrorMessages.NullKey);
+            expect(() => dictionary.tryAdd(null, Person.Kaori.name)).to.throw(ErrorMessages.NullKey);
         });
     });
 
