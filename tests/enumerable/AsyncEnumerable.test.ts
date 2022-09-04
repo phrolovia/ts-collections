@@ -97,7 +97,6 @@ describe("AsyncEnumerable", () => {
         it("should return true if any element in the enumerable matches the predicate", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.any(n => n % 2 === 0);
-            console.log(result);
             expect(result).to.eq(true);
         }).timeout(5000);
         it("should return false if no element in the enumerable matches the predicate", async () => {
@@ -122,7 +121,6 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.append(10).toArray();
             expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-            console.log(result);
         }).timeout(5000);
     });
 
@@ -275,6 +273,14 @@ describe("AsyncEnumerable", () => {
         }).timeout(5000);
     });
 
+    describe("#empty()", () => {
+        it("should return an empty enumerable", async () => {
+            const enumerable = AsyncEnumerable.empty();
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal([]);
+        }).timeout(5000);
+    });
+
     describe("#except()", () => {
         it("should return the elements in the enumerable that are not in the other enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -329,19 +335,16 @@ describe("AsyncEnumerable", () => {
         it("should return the first element of the enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.first();
-            console.log(result);
             expect(result).to.eq(0);
         }).timeout(5000);
         it("should return the first element of the enumerable #2", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.prepend(-99).first();
-            console.log(result);
             expect(result).to.eq(-99);
         }).timeout(5000);
         it("should return the first element that satisfies the predicate", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.prepend(-99).skip(2).first(n => n % 5 === 0);
-            console.log(result);
             expect(result).to.eq(5);
         }).timeout(5000);
         it("should throw an error if the enumerable is empty", async () => {
@@ -399,6 +402,14 @@ describe("AsyncEnumerable", () => {
             });
             expect(result).to.deep.equal([2, 4, 6, 8]);
         }).timeout(5000);
+    });
+
+    describe("#from()", () => {
+        it("should create an enumerable from an array", async () => {
+            const enumerable = AsyncEnumerable.from(arrayProducer([1,2,3]));
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal([1, 2, 3]);
+        });
     });
 
     describe("#groupBy()", () => {
@@ -589,7 +600,6 @@ describe("AsyncEnumerable", () => {
             const joinedData = await studentsEnumerable.join(schoolsEnumerable, st => st.schoolId, sc => sc.id, (student, school) => {
                 return [student, school];
             }, (stId, scId) => stId === scId, true).toArray();
-            console.log(joinedData);
             for (const [student, school] of joinedData) {
                 if (student.id === 500) {
                     expect(school).to.be.null;
@@ -734,7 +744,6 @@ describe("AsyncEnumerable", () => {
                 Person.Reika
             ]));
             const sorted = await enumerable.orderBy(p => p.age).toArray();
-            console.log(sorted);
             expect(sorted).to.deep.equal([Person.Priscilla, Person.Lucrezia, Person.Alice, Person.Reika, Person.Olga]);
         });
 
@@ -762,10 +771,15 @@ describe("AsyncEnumerable", () => {
     describe("#pairwise()", () => {
         it("should return the pairwise elements of the enumerable", async () => {
             const enumerable = new AsyncEnumerable(stringProducer(["a", "b", "c", "d", "e", "f"]));
-            const result = await enumerable.pairwise((prev, curr) => [`->${prev}`, `${curr}<-`]);
+            const result = await enumerable.pairwise((prev, curr) => [`->${prev}`, `${curr}<-`]).toArray();
             it("should create an enumerable that pairs up the values", () => {
-                expect(result.toArray()).to.deep.equal([["->a", "b<-"], ["->b", "c<-"], ["->c", "d<-"], ["->d", "e<-"], ["->e", "f<-"]]);
+                expect(result).to.deep.equal([["->a", "b<-"], ["->b", "c<-"], ["->c", "d<-"], ["->d", "e<-"], ["->e", "f<-"]]);
             });
+        });
+        it("should return pairwise elements of the enumerable #2", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.pairwise((prev, curr) => [prev, curr]).toArray();
+            expect(result).to.deep.equal([[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9]]);
         });
     });
 
@@ -773,8 +787,8 @@ describe("AsyncEnumerable", () => {
         it("should partition the enumerable into two enumerables", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const [even, odd] = await enumerable.partition(n => n % 2 === 0);
-            expect(await even.toArray()).to.deep.equal([0, 2, 4, 6, 8]);
-            expect(await odd.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+            expect(even.toArray()).to.deep.equal([0, 2, 4, 6, 8]);
+            expect(odd.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
         });
     });
 
@@ -783,8 +797,21 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.prepend(10).toArray();
             expect(result).to.deep.equal([10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-            console.log(result);
         }).timeout(5000);
+    });
+
+    describe("#range()", () => {
+        it("should create an enumerable that contains a range of values", async () => {
+            const enumerable = AsyncEnumerable.range(0, 10);
+            expect(await enumerable.toArray()).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+    });
+
+    describe("#repeat()", () => {
+        it("should create an enumerable that repeats the value", async () => {
+            const enumerable = AsyncEnumerable.repeat("a", 10);
+            expect(await enumerable.toArray()).to.deep.equal(["a", "a", "a", "a", "a", "a", "a", "a", "a", "a"]);
+        });
     });
 
     describe("#reverse()", () => {
@@ -810,6 +837,10 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 3, 12, 19, 33]));
             const result = await enumerable.scan((acc, n) => acc + n, 0).toArray();
             expect(result).to.deep.equal([1, 4, 16, 35, 68]);
+        });
+        it("should throw error if no element is present", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            expect(enumerable.scan((prev, curr) => prev + curr).toArray()).to.be.rejectedWith(ErrorMessages.NoElements);
         });
     });
 
@@ -854,6 +885,11 @@ describe("AsyncEnumerable", () => {
             const result = await enumerable.sequenceEqual(new AsyncEnumerable(numberProducer(10)));
             expect(result).to.be.true;
         });
+        it("should return true for two equal enumerables #2", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5));
+            const result = await enumerable.sequenceEqual(new AsyncEnumerable(numberProducer(10)).take(5));
+            expect(result).to.be.true;
+        });
         it("should return false for two unequal enumerables", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.sequenceEqual(new AsyncEnumerable(numberProducer(5)));
@@ -867,6 +903,11 @@ describe("AsyncEnumerable", () => {
         it("should return false for two unequal enumerables #3", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(5));
             const result = await enumerable.sequenceEqual(new AsyncEnumerable(numberProducer(0)));
+            expect(result).to.be.false;
+        });
+        it("should return false for two unequal enumerables #4", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([0]));
+            const result = await enumerable.sequenceEqual(new AsyncEnumerable(arrayProducer([1])));
             expect(result).to.be.false;
         });
     });
@@ -926,9 +967,13 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2]));
             expect(enumerable.singleOrDefault()).to.be.rejectedWith(ErrorMessages.MoreThanOneElement);
         });
-        it("should throw error if more than one element matches the predicate", async () => {
+        it("should throw error if more than one element", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 4]));
             expect(enumerable.singleOrDefault()).to.be.rejectedWith(ErrorMessages.MoreThanOneMatchingElement);
+        });
+        it("should throw error if more than one element that matches the predicate", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            expect(enumerable.singleOrDefault(n => n % 2 === 0)).to.be.rejectedWith(ErrorMessages.MoreThanOneMatchingElement);
         });
     });
 
@@ -937,12 +982,21 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.skip(5).toArray();
             expect(result).to.deep.equal([5, 6, 7, 8, 9]);
-            console.log(result);
         }).timeout(5000);
         it("should return empty enumerable if enumerable contains fewer than skipped elements", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.skip(15).toArray();
             expect(result).to.deep.equal([]);
+        });
+        it("should return all elements if count is less than zero", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.skip(-1).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        it("should return all elements if count is zero", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.skip(0).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
         });
     });
 
@@ -956,6 +1010,16 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.skipLast(15).toArray();
             expect(result).to.deep.equal([]);
+        });
+        it("should return all elements if count is less than zero", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.skipLast(-1).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        it("should return all elements if count is zero", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.skipLast(0).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
         });
     });
 
@@ -991,6 +1055,55 @@ describe("AsyncEnumerable", () => {
         it("should return 0 for empty enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
             expect(enumerable.sum()).to.be.rejectedWith(ErrorMessages.NoElements);
+        });
+    });
+
+    describe("#take()", () => {
+        it("should take the first n elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.take(5).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4]);
+        });
+        it("should return all elements if enumerable contains fewer than taken elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.take(15).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+    });
+
+    describe("#takeLast()", () => {
+        it("should take the last n elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.takeLast(5).toArray();
+            expect(result).to.deep.equal([5, 6, 7, 8, 9]);
+        });
+        it("should return all elements if enumerable contains fewer than taken elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.takeLast(15).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        it("should return an empty enumerable if count is not positive", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.takeLast(0).toArray();
+            expect(result).to.deep.equal([]);
+        });
+    });
+
+    describe("#takeWhile()", () => {
+        it("should take elements while predicate is true", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.takeWhile(n => n < 5).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4]);
+        });
+        it("should return all elements if predicate is true for all elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.takeWhile(n => n < 15).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        it("should return an empty enumerable if predicate is false for all elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.takeWhile(n => n < 0).toArray();
+            expect(result).to.deep.equal([]);
         });
     });
 
@@ -1191,6 +1304,34 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#union", () => {
+        it("should return a set of items from two enumerables", async () => {
+            const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5, 5, 5]));
+            const enumerable2 = new AsyncEnumerable(arrayProducer([4, 5, 6, 7, 8, 9, 7]));
+            const union = enumerable1.union(enumerable2);
+            const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            expect(await union.toArray()).to.deep.equal(expected);
+        });
+        it("should return a set of items from two enumerables with a custom comparer", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi, Person.Suzuha]));
+            const enumerable2 = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi2, Person.Suzuha3, Person.Lucrezia]));
+            const union = enumerable1.union(enumerable2, (p1, p2) => p1.name === p2.name);
+            const expected = [Person.Alice, Person.Noemi, Person.Suzuha, Person.Lucrezia];
+            expect(await union.toArray()).to.deep.equal(expected);
+        });
+        it("should return union of two enumerables", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer(
+                Enumerable.range(0, 100).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90))).toArray(),
+                1));
+            const enumerable2 = new AsyncEnumerable(personProducer(
+                Enumerable.range(0, 100).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50))).toArray(),
+                1));
+            const exceptionList = enumerable1.union(enumerable2, (p1, p2) => p1.age === p2.age);
+            const ageCount = await exceptionList.select(p => p.age).distinct().count();
+            expect(ageCount).to.not.greaterThan(90);
+        }).timeout(5000);
+    });
+
     describe("#where()", () => {
         it("should select values that can be divided to 3", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(30));
@@ -1200,5 +1341,33 @@ describe("AsyncEnumerable", () => {
                 expect(num % 3 === 0).to.be.true;
             }
         }).timeout(12000);
+    });
+
+    describe("#zip()", () => {
+        it("should zip two enumerables in a tuple", async () => {
+            const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const enumerable2 = new AsyncEnumerable(arrayProducer([6, 7, 8, 9, 10]));
+            const zipped = enumerable1.zip(enumerable2);
+            const expected = [[1, 6], [2, 7], [3, 8], [4, 9], [5, 10]];
+            expect(await zipped.toArray()).to.deep.equal(expected);
+        });
+        it("should zip two enumerables with a custom selector", async () => {
+            const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const enumerable2 = new AsyncEnumerable(arrayProducer([6, 7, 8, 9, 10]));
+            const zipped = enumerable1.zip(enumerable2, (a, b) => a + b);
+            const expected = [7, 9, 11, 13, 15];
+            expect(await zipped.toArray()).to.deep.equal(expected);
+        });
+        it("should zip two enumerables with a custom selector #2", async () => {
+            const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const enumerable2 = new AsyncEnumerable(arrayProducer(["a", "b", "c", "d", "e"]));
+            const zipped = enumerable1.zip(enumerable2, (a, b) => {
+                return {
+                    [a]: b
+                }
+            });
+            const expected = [{1: "a"}, {2: "b"}, {3: "c"}, {4: "d"}, {5: "e"}];
+            expect(await zipped.toArray()).to.deep.equal(expected);
+        });
     });
 });

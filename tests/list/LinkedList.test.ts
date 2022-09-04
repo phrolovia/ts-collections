@@ -147,17 +147,6 @@ describe("LinkedList", () => {
             const all = list.all(p => p != null);
             expect(all).to.eq(false);
         });
-        it("should return true if no predicate is provided and list is not empty", () => {
-            const list2 = new LinkedList<number>();
-            list2.add(1);
-            const any = list2.all();
-            expect(any).to.eq(true);
-        });
-        it("should return false if no predicate is provided and list is empty", () => {
-            const emptyList = new LinkedList<number>();
-            const any = emptyList.all();
-            expect(any).to.eq(false);
-        });
     });
 
     describe("#any()", () => {

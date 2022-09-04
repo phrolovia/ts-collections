@@ -12,12 +12,37 @@ import {JoinSelector} from "../shared/JoinSelector";
 import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../../imports";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 import {IndexedSelector} from "../shared/IndexedSelector";
+import {Zipper} from "../shared/Zipper";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     private readonly enumerator: AsyncEnumerator<TElement>;
 
     public constructor(private readonly iterable: AsyncIterable<TElement>) {
         this.enumerator = new AsyncEnumerator<TElement>(() => iterable);
+    }
+
+    public static empty<TSource>(): IAsyncEnumerable<TSource> {
+        return new AsyncEnumerator<TSource>(async function* () {
+            yield* [];
+        });
+    }
+
+    public static from<TSource>(source: AsyncIterable<TSource>): IAsyncEnumerable<TSource> {
+        return new AsyncEnumerable<TSource>(source);
+    }
+
+    public static range(start: number, count: number): IAsyncEnumerable<number> {
+        return new AsyncEnumerator(async function* () {
+            for (let ix = 0; ix < count; ix++) {
+                yield start + ix;
+            }
+        });
+    }
+
+    public static repeat<TSource>(element: TSource, count: number): IAsyncEnumerable<TSource> {
+        return new AsyncEnumerator(async function* () {
+            yield* new Array(count).fill(element);
+        });
     }
 
     async* [Symbol.asyncIterator](): AsyncIterator<TElement> {
@@ -84,7 +109,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.first(predicate);
     }
 
-    public firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement> {
+    public firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
         return this.enumerator.firstOrDefault(predicate);
     }
 
@@ -136,7 +161,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.pairwise(resultSelector);
     }
 
-    public partition(predicate: Predicate<TElement>): Promise<[IAsyncEnumerable<TElement>, IAsyncEnumerable<TElement>]> {
+    public partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
         return this.enumerator.partition(predicate);
     }
 
@@ -188,11 +213,31 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.sum(selector);
     }
 
-    public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
-        return this.enumerator.where(predicate);
+    public take(count: number): IAsyncEnumerable<TElement> {
+        return this.enumerator.take(count);
+    }
+
+    public takeLast(count: number): IAsyncEnumerable<TElement> {
+        return this.enumerator.takeLast(count);
+    }
+
+    public takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.takeWhile(predicate);
     }
 
     public async toArray(): Promise<TElement[]> {
         return this.enumerator.toArray();
+    }
+
+    public union(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.union(enumerable, comparator);
+    }
+
+    public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.where(predicate);
+    }
+
+    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
+        return this.enumerator.zip(enumerable, zipper);
     }
 }

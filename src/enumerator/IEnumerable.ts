@@ -32,9 +32,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Determines if all elements of the sequence satisfy the specified predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.
+     * @param predicate The predicate function that will be used to check each element for a condition.
      */
-    all(predicate?: Predicate<TElement>): boolean;
+    all(predicate: Predicate<TElement>): boolean;
 
     /**
      * Determines if any element of the sequence satisfies the specified predicate.

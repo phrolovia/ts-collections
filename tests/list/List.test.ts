@@ -126,17 +126,6 @@ describe("List", () => {
             const all = list.all(p => p != null);
             expect(all).to.eq(false);
         });
-        it("should return true if no predicate is provided and list is not empty", () => {
-            const list2 = new List<number>();
-            list2.add(1);
-            const any = list2.all();
-            expect(any).to.eq(true);
-        });
-        it("should return false if no predicate is provided and list is empty", () => {
-            const emptyList = new List<number>();
-            const any = emptyList.all();
-            expect(any).to.eq(false);
-        });
     });
 
     describe("#any()", () => {
@@ -1005,6 +994,10 @@ describe("List", () => {
             const list = new List([1, 3, 12, 19, 33]);
             const result = list.scan((acc, n) => acc + n, 0);
             expect(result.toArray()).to.deep.equal([1, 4, 16, 35, 68]);
+        });
+        it("should throw error if the list is empty", () => {
+            const list = new List<number>();
+            expect(() => list.scan((acc, n) => acc + n).toArray()).to.throw(ErrorMessages.NoElements);
         });
     });
 

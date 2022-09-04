@@ -69,13 +69,6 @@ describe("Dictionary", () => {
             const all = dictionary.all(p => p.value.age > 29);
             expect(all).to.eq(false);
         });
-        it("should return true if no predicate is provided and dictionary is not empty", () => {
-            expect(dictionary.all()).to.eq(true);
-        });
-        it("should return false if no predicate is provided and dictionary is empty", () => {
-            dictionary.clear();
-            expect(dictionary.all()).to.eq(false);
-        });
     });
 
     describe("#any()", () => {

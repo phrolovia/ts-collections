@@ -30,7 +30,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);
     }
 
-    public static all<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): boolean {
+    public static all<TElement>(source: IEnumerable<TElement>, predicate: Predicate<TElement>): boolean {
         return new Enumerable(source).all(predicate);
     }
 

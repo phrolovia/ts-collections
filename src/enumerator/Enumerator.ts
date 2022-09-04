@@ -63,10 +63,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    public all(predicate?: Predicate<TElement>): boolean {
-        if (!predicate) {
-            return !this[Symbol.iterator]().next().done;
-        }
+    public all(predicate: Predicate<TElement>): boolean {
         for (const d of this) {
             if (!predicate(d)) {
                 return false;
@@ -177,9 +174,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
-        if (enumerable == null) {
-            throw new Error(ErrorMessages.NullSequence);
-        }
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.exceptGenerator(enumerable, comparator, orderComparator));
     }
@@ -331,9 +325,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
-        if (!predicate) {
-            throw new Error(ErrorMessages.NoPredicateProvided);
-        }
         const trueItems = new List<TElement>();
         const falseItems = new List<TElement>();
         for (const item of this) {
@@ -562,11 +553,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
-        if (!zipper) {
-            return new Enumerator(() => this.zipTupleGenerator(enumerable));
-        } else {
-            return new Enumerator(() => this.zipGenerator(enumerable, zipper));
-        }
+        return new Enumerator(() => this.zipGenerator(enumerable, zipper));
     }
 
     private* appendGenerator(element: TElement): Iterable<TElement> {
@@ -690,9 +677,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): Iterable<TAccumulate> {
-        if (!accumulator) {
-            throw new Error(ErrorMessages.NoAccumulatorProvided);
-        }
         let accumulatedValue: TAccumulate;
         if (seed == null) {
             if (!this.any()) {
@@ -770,6 +754,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             if (index < count) {
                 yield item;
                 index++;
+            } else {
+                break;
             }
         }
     }
@@ -848,7 +834,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* zipGenerator<TSecond, TResult>(enumerable: IEnumerable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
+    private* zipGenerator<TSecond, TResult=[TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
         const iterator = this[Symbol.iterator]();
         const otherIterator = enumerable[Symbol.iterator]();
         while (true) {
@@ -857,21 +843,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             if (first.done || second.done) {
                 break;
             } else {
-                yield zipper(first.value, second.value);
-            }
-        }
-    }
-
-    private* zipTupleGenerator<TSecond>(enumerable: IEnumerable<TSecond>): Iterable<[TElement, TSecond]> {
-        const iterator = this[Symbol.iterator]();
-        const otherIterator = enumerable[Symbol.iterator]();
-        while (true) {
-            let first = iterator.next();
-            let second = otherIterator.next();
-            if (first.done || second.done) {
-                break;
-            } else {
-                yield [first.value, second.value];
+                yield zipper?.(first.value, second.value) ?? [first.value, second.value] as TResult;
             }
         }
     }

@@ -60,7 +60,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.aggregate(accumulator, seed, resultSelector);
     }
 
-    public all(predicate?: Predicate<TElement>): boolean {
+    public all(predicate: Predicate<TElement>): boolean {
         return this.enumerator.all(predicate);
     }
 
