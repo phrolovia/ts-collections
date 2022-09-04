@@ -9,6 +9,8 @@ import {IndexedAction} from "../shared/IndexedAction";
 import {IGroup} from "./IGroup";
 import {JoinSelector} from "../shared/JoinSelector";
 import {IOrderedAsyncEnumerable} from "./IOrderedAsyncEnumerable";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
+import {IndexedSelector} from "../shared/IndexedSelector";
 
 export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
@@ -38,9 +40,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     min(selector?: Selector<TElement, number>): Promise<number>;
     orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement>;
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement>;
+    pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]>;
+    partition(predicate: Predicate<TElement>): Promise<[IAsyncEnumerable<TElement>, IAsyncEnumerable<TElement>]>;
+    scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate>;
     prepend(element: TElement): IAsyncEnumerable<TElement>;
+    reverse(): IAsyncEnumerable<TElement>;
     select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult>;
+    selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult>;
+    sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean>;
+    single(predicate?: Predicate<TElement>): Promise<TElement>;
+    singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
     skip(count: number): IAsyncEnumerable<TElement>;
+    skipLast(count: number): IAsyncEnumerable<TElement>;
+    skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    sum(selector?: Selector<TElement, number>): Promise<number>;
     where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
     toArray(): Promise<TElement[]>;
 }

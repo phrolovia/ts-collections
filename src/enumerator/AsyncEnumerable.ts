@@ -10,6 +10,8 @@ import {IndexedAction} from "../shared/IndexedAction";
 import {IGroup} from "./IGroup";
 import {JoinSelector} from "../shared/JoinSelector";
 import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../../imports";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
+import {IndexedSelector} from "../shared/IndexedSelector";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     private readonly enumerator: AsyncEnumerator<TElement>;
@@ -130,16 +132,60 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.orderByDescending(keySelector, comparator);
     }
 
+    public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]> {
+        return this.enumerator.pairwise(resultSelector);
+    }
+
+    public partition(predicate: Predicate<TElement>): Promise<[IAsyncEnumerable<TElement>, IAsyncEnumerable<TElement>]> {
+        return this.enumerator.partition(predicate);
+    }
+
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
         return this.enumerator.prepend(element);
+    }
+
+    public reverse(): IAsyncEnumerable<TElement> {
+        return this.enumerator.reverse();
+    }
+
+    public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate> {
+        return this.enumerator.scan(accumulator, seed);
     }
 
     public select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult> {
         return this.enumerator.select(selector);
     }
 
+    public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult> {
+        return this.enumerator.selectMany(selector);
+    }
+
+    public sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean> {
+        return this.enumerator.sequenceEqual(enumerable, comparator);
+    }
+
+    public single(predicate?: Predicate<TElement>): Promise<TElement> {
+        return this.enumerator.single(predicate);
+    }
+
+    public singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
+        return this.enumerator.singleOrDefault(predicate);
+    }
+
     public skip(count: number): IAsyncEnumerable<TElement> {
         return this.enumerator.skip(count);
+    }
+
+    public skipLast(count: number): IAsyncEnumerable<TElement> {
+        return this.enumerator.skipLast(count);
+    }
+
+    public skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
+        return this.enumerator.skipWhile(predicate);
+    }
+
+    public sum(selector?: Selector<TElement, number>): Promise<number> {
+        return this.enumerator.sum(selector);
     }
 
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {

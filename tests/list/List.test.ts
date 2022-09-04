@@ -1001,7 +1001,7 @@ describe("List", () => {
             const result = list.scan((acc, n) => acc + n, 2);
             expect(result.toArray()).to.deep.equal([3, 5, 8, 12, 17]);
         });
-        it("should create a list of increasing numbers starting with 0", () => {
+        it("should create a list of increasing numbers starting with 1", () => {
             const list = new List([1, 3, 12, 19, 33]);
             const result = list.scan((acc, n) => acc + n, 0);
             expect(result.toArray()).to.deep.equal([1, 4, 16, 35, 68]);
@@ -1114,7 +1114,7 @@ describe("List", () => {
             expect(() => list.single()).to.throw(ErrorMessages.NoElements);
             expect(() => list.single(n => n > 0)).to.throw(ErrorMessages.NoElements);
         });
-        it("should throw error if list has more than two elements", () => {
+        it("should throw error if list has more than one element", () => {
             const list = new List();
             list.add(Person.Alice);
             list.add(Person.Senna);
