@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>ITree | @mirei/ts-collections</title><meta name="description" content="Documentation for @mirei/ts-collections"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>IRandomAccessCollection | @mirei/ts-collections</title><meta name="description" content="Documentation for @mirei/ts-collections"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -11,8 +11,8 @@
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">@mirei/ts-collections</a></li>
-<li><a href="ITree.html">ITree</a></li></ul>
-<h1>Interface ITree&lt;TElement&gt;</h1></div>
+<li><a href="IRandomAccessCollection.html">IRandomAccessCollection</a></li></ul>
+<h1>Interface IRandomAccessCollection&lt;TElement&gt;</h1></div>
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>Represents a collection of objects whose elements can be accessed without restriction.</p>
 </div></section> 
@@ -24,17 +24,19 @@
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><a href="IRandomAccessCollection.html" class="tsd-signature-type" data-tsd-kind="Interface">IRandomAccessCollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span>
+<li><a href="ICollection.html" class="tsd-signature-type" data-tsd-kind="Interface">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><span class="target">ITree</span></li></ul></section></li></ul></section>
-<section class="tsd-panel">
-<h4>Implemented by</h4>
+<li><span class="target">IRandomAccessCollection</span>
+<section class="tsd-panel tsd-hierarchy">
+<h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><a href="../classes/AbstractTree.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTree</a></li></ul></section><aside class="tsd-sources">
+<li><a href="IList.html" class="tsd-signature-type" data-tsd-kind="Interface">IList</a></li>
+<li><a href="ISet.html" class="tsd-signature-type" data-tsd-kind="Interface">ISet</a></li>
+<li><a href="ITree.html" class="tsd-signature-type" data-tsd-kind="Interface">ITree</a></li></ul></section></li></ul></section></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/tree/ITree.ts#L6">src/tree/ITree.ts:6</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/IRandomAccessCollection.ts#L7">src/core/IRandomAccessCollection.ts:7</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -42,82 +44,77 @@
 <div class="tsd-accordion-details">
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
-<div class="tsd-index-list"><a href="ITree.html#length" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>length</span></a>
+<div class="tsd-index-list"><a href="IRandomAccessCollection.html#length" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>length</span></a>
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
-<div class="tsd-index-list"><a href="ITree.html#_iterator_" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>[iterator]</span></a>
-<a href="ITree.html#add" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>add</span></a>
-<a href="ITree.html#addAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>add<wbr/>All</span></a>
-<a href="ITree.html#aggregate" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>aggregate</span></a>
-<a href="ITree.html#all" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>all</span></a>
-<a href="ITree.html#any" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>any</span></a>
-<a href="ITree.html#append" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>append</span></a>
-<a href="ITree.html#average" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>average</span></a>
-<a href="ITree.html#chunk" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>chunk</span></a>
-<a href="ITree.html#clear" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>clear</span></a>
-<a href="ITree.html#concat" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>concat</span></a>
-<a href="ITree.html#contains" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>contains</span></a>
-<a href="ITree.html#containsAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>contains<wbr/>All</span></a>
-<a href="ITree.html#count" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>count</span></a>
-<a href="ITree.html#defaultIfEmpty" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>default<wbr/>If<wbr/>Empty</span></a>
-<a href="ITree.html#delete" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>delete</span></a>
-<a href="ITree.html#distinct" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>distinct</span></a>
-<a href="ITree.html#elementAt" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>element<wbr/>At</span></a>
-<a href="ITree.html#elementAtOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>element<wbr/>At<wbr/>Or<wbr/>Default</span></a>
-<a href="ITree.html#except" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>except</span></a>
-<a href="ITree.html#find" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>find</span></a>
-<a href="ITree.html#first" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>first</span></a>
-<a href="ITree.html#firstOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>first<wbr/>Or<wbr/>Default</span></a>
-<a href="ITree.html#forEach" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>for<wbr/>Each</span></a>
-<a href="ITree.html#getRootData" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Root<wbr/>Data</span></a>
-<a href="ITree.html#groupBy" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>group<wbr/>By</span></a>
-<a href="ITree.html#groupJoin" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>group<wbr/>Join</span></a>
-<a href="ITree.html#insert" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>insert</span></a>
-<a href="ITree.html#intersect" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>intersect</span></a>
-<a href="ITree.html#isEmpty" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>is<wbr/>Empty</span></a>
-<a href="ITree.html#join" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>join</span></a>
-<a href="ITree.html#last" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>last</span></a>
-<a href="ITree.html#lastOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>last<wbr/>Or<wbr/>Default</span></a>
-<a href="ITree.html#max" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>max</span></a>
-<a href="ITree.html#min" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>min</span></a>
-<a href="ITree.html#orderBy" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>order<wbr/>By</span></a>
-<a href="ITree.html#orderByDescending" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>order<wbr/>By<wbr/>Descending</span></a>
-<a href="ITree.html#pairwise" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>pairwise</span></a>
-<a href="ITree.html#partition" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>partition</span></a>
-<a href="ITree.html#prepend" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>prepend</span></a>
-<a href="ITree.html#remove" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove</span></a>
-<a href="ITree.html#removeAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove<wbr/>All</span></a>
-<a href="ITree.html#removeIf" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove<wbr/>If</span></a>
-<a href="ITree.html#retainAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>retain<wbr/>All</span></a>
-<a href="ITree.html#reverse" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>reverse</span></a>
-<a href="ITree.html#scan" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>scan</span></a>
-<a href="ITree.html#search" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>search</span></a>
-<a href="ITree.html#select" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>select</span></a>
-<a href="ITree.html#selectMany" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>select<wbr/>Many</span></a>
-<a href="ITree.html#sequenceEqual" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>sequence<wbr/>Equal</span></a>
-<a href="ITree.html#single" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>single</span></a>
-<a href="ITree.html#singleOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>single<wbr/>Or<wbr/>Default</span></a>
-<a href="ITree.html#size" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>size</span></a>
-<a href="ITree.html#skip" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>skip</span></a>
-<a href="ITree.html#skipLast" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>skip<wbr/>Last</span></a>
-<a href="ITree.html#skipWhile" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>skip<wbr/>While</span></a>
-<a href="ITree.html#sum" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>sum</span></a>
-<a href="ITree.html#take" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take</span></a>
-<a href="ITree.html#takeLast" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take<wbr/>Last</span></a>
-<a href="ITree.html#takeWhile" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take<wbr/>While</span></a>
-<a href="ITree.html#toArray" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Array</span></a>
-<a href="ITree.html#toDictionary" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Dictionary</span></a>
-<a href="ITree.html#toEnumerableSet" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Enumerable<wbr/>Set</span></a>
-<a href="ITree.html#toIndexableList" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Indexable<wbr/>List</span></a>
-<a href="ITree.html#toList" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>List</span></a>
-<a href="ITree.html#toLookup" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Lookup</span></a>
-<a href="ITree.html#toSortedDictionary" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Sorted<wbr/>Dictionary</span></a>
-<a href="ITree.html#toSortedSet" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Sorted<wbr/>Set</span></a>
-<a href="ITree.html#toString" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>String</span></a>
-<a href="ITree.html#union" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>union</span></a>
-<a href="ITree.html#where" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>where</span></a>
-<a href="ITree.html#zip" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>zip</span></a>
+<div class="tsd-index-list"><a href="IRandomAccessCollection.html#_iterator_" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>[iterator]</span></a>
+<a href="IRandomAccessCollection.html#add" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>add</span></a>
+<a href="IRandomAccessCollection.html#addAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>add<wbr/>All</span></a>
+<a href="IRandomAccessCollection.html#aggregate" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>aggregate</span></a>
+<a href="IRandomAccessCollection.html#all" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>all</span></a>
+<a href="IRandomAccessCollection.html#any" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>any</span></a>
+<a href="IRandomAccessCollection.html#append" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>append</span></a>
+<a href="IRandomAccessCollection.html#average" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>average</span></a>
+<a href="IRandomAccessCollection.html#chunk" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>chunk</span></a>
+<a href="IRandomAccessCollection.html#clear" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>clear</span></a>
+<a href="IRandomAccessCollection.html#concat" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>concat</span></a>
+<a href="IRandomAccessCollection.html#contains" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>contains</span></a>
+<a href="IRandomAccessCollection.html#containsAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>contains<wbr/>All</span></a>
+<a href="IRandomAccessCollection.html#count" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>count</span></a>
+<a href="IRandomAccessCollection.html#defaultIfEmpty" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>default<wbr/>If<wbr/>Empty</span></a>
+<a href="IRandomAccessCollection.html#distinct" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>distinct</span></a>
+<a href="IRandomAccessCollection.html#elementAt" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>element<wbr/>At</span></a>
+<a href="IRandomAccessCollection.html#elementAtOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>element<wbr/>At<wbr/>Or<wbr/>Default</span></a>
+<a href="IRandomAccessCollection.html#except" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>except</span></a>
+<a href="IRandomAccessCollection.html#first" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>first</span></a>
+<a href="IRandomAccessCollection.html#firstOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>first<wbr/>Or<wbr/>Default</span></a>
+<a href="IRandomAccessCollection.html#forEach" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>for<wbr/>Each</span></a>
+<a href="IRandomAccessCollection.html#groupBy" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>group<wbr/>By</span></a>
+<a href="IRandomAccessCollection.html#groupJoin" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>group<wbr/>Join</span></a>
+<a href="IRandomAccessCollection.html#intersect" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>intersect</span></a>
+<a href="IRandomAccessCollection.html#isEmpty" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>is<wbr/>Empty</span></a>
+<a href="IRandomAccessCollection.html#join" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>join</span></a>
+<a href="IRandomAccessCollection.html#last" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>last</span></a>
+<a href="IRandomAccessCollection.html#lastOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>last<wbr/>Or<wbr/>Default</span></a>
+<a href="IRandomAccessCollection.html#max" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>max</span></a>
+<a href="IRandomAccessCollection.html#min" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>min</span></a>
+<a href="IRandomAccessCollection.html#orderBy" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>order<wbr/>By</span></a>
+<a href="IRandomAccessCollection.html#orderByDescending" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>order<wbr/>By<wbr/>Descending</span></a>
+<a href="IRandomAccessCollection.html#pairwise" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>pairwise</span></a>
+<a href="IRandomAccessCollection.html#partition" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>partition</span></a>
+<a href="IRandomAccessCollection.html#prepend" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>prepend</span></a>
+<a href="IRandomAccessCollection.html#remove" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove</span></a>
+<a href="IRandomAccessCollection.html#removeAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove<wbr/>All</span></a>
+<a href="IRandomAccessCollection.html#removeIf" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove<wbr/>If</span></a>
+<a href="IRandomAccessCollection.html#retainAll" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>retain<wbr/>All</span></a>
+<a href="IRandomAccessCollection.html#reverse" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>reverse</span></a>
+<a href="IRandomAccessCollection.html#scan" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>scan</span></a>
+<a href="IRandomAccessCollection.html#select" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>select</span></a>
+<a href="IRandomAccessCollection.html#selectMany" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>select<wbr/>Many</span></a>
+<a href="IRandomAccessCollection.html#sequenceEqual" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>sequence<wbr/>Equal</span></a>
+<a href="IRandomAccessCollection.html#single" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>single</span></a>
+<a href="IRandomAccessCollection.html#singleOrDefault" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>single<wbr/>Or<wbr/>Default</span></a>
+<a href="IRandomAccessCollection.html#size" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>size</span></a>
+<a href="IRandomAccessCollection.html#skip" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>skip</span></a>
+<a href="IRandomAccessCollection.html#skipLast" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>skip<wbr/>Last</span></a>
+<a href="IRandomAccessCollection.html#skipWhile" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>skip<wbr/>While</span></a>
+<a href="IRandomAccessCollection.html#sum" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>sum</span></a>
+<a href="IRandomAccessCollection.html#take" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take</span></a>
+<a href="IRandomAccessCollection.html#takeLast" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take<wbr/>Last</span></a>
+<a href="IRandomAccessCollection.html#takeWhile" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>take<wbr/>While</span></a>
+<a href="IRandomAccessCollection.html#toArray" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Array</span></a>
+<a href="IRandomAccessCollection.html#toDictionary" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Dictionary</span></a>
+<a href="IRandomAccessCollection.html#toEnumerableSet" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Enumerable<wbr/>Set</span></a>
+<a href="IRandomAccessCollection.html#toIndexableList" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Indexable<wbr/>List</span></a>
+<a href="IRandomAccessCollection.html#toList" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>List</span></a>
+<a href="IRandomAccessCollection.html#toLookup" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Lookup</span></a>
+<a href="IRandomAccessCollection.html#toSortedDictionary" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Sorted<wbr/>Dictionary</span></a>
+<a href="IRandomAccessCollection.html#toSortedSet" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>Sorted<wbr/>Set</span></a>
+<a href="IRandomAccessCollection.html#toString" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>to<wbr/>String</span></a>
+<a href="IRandomAccessCollection.html#union" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>union</span></a>
+<a href="IRandomAccessCollection.html#where" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>where</span></a>
+<a href="IRandomAccessCollection.html#zip" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>zip</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
@@ -126,7 +123,7 @@
 <div class="tsd-signature">length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Returns the number of element in this collection.</p>
 </div><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#length">length</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#length">length</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L10">src/core/ICollection.ts:10</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
@@ -137,7 +134,7 @@
 <li class="tsd-signature tsd-anchor-link" id="_iterator_._iterator_-1">[iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><a href="#_iterator_._iterator_-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#_iterator_">[iterator]</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#_iterator_">[iterator]</a></p>
 <ul>
 <li>Defined in node_modules/typescript/lib/lib.es2015.iterable.d.ts:51</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="add" class="tsd-anchor"></a>
@@ -157,7 +154,7 @@
 <div class="tsd-comment tsd-typography"><p>The element that will be added to the collection</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#add">add</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#add">add</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L17">src/core/ICollection.ts:17</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="addAll" class="tsd-anchor"></a>
@@ -185,7 +182,7 @@
                   to this collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#addAll">addAll</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#addAll">addAll</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L25">src/core/ICollection.ts:25</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="aggregate" class="tsd-anchor"></a>
@@ -221,7 +218,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The function that will be used to select the result value.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TAccumulate</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TResult</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#aggregate">aggregate</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#aggregate">aggregate</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L31">src/enumerator/IEnumerable.ts:31</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="all" class="tsd-anchor"></a>
@@ -239,7 +236,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#all">all</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#all">all</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L37">src/enumerator/IEnumerable.ts:37</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="any" class="tsd-anchor"></a>
@@ -257,7 +254,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#any">any</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#any">any</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L43">src/enumerator/IEnumerable.ts:43</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="append" class="tsd-anchor"></a>
@@ -275,7 +272,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The element that will be appended to the end of the sequence</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#append">append</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#append">append</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L49">src/enumerator/IEnumerable.ts:49</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="average" class="tsd-anchor"></a>
@@ -293,7 +290,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The selector function that will select a numeric value from the sequence elements.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#average">average</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#average">average</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L55">src/enumerator/IEnumerable.ts:55</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="chunk" class="tsd-anchor"></a>
@@ -311,7 +308,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The maximum size of each chunk.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#chunk">chunk</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#chunk">chunk</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L61">src/enumerator/IEnumerable.ts:61</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="clear" class="tsd-anchor"></a>
@@ -322,7 +319,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>Remove all elements from this collection.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#clear">clear</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#clear">clear</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L30">src/core/ICollection.ts:30</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="concat" class="tsd-anchor"></a>
@@ -340,7 +337,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The enumerable sequence that will be concatenated to the first sequence.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#concat">concat</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#concat">concat</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L67">src/enumerator/IEnumerable.ts:67</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="contains" class="tsd-anchor"></a>
@@ -362,7 +359,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#contains">contains</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#contains">contains</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L74">src/enumerator/IEnumerable.ts:74</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="containsAll" class="tsd-anchor"></a>
@@ -389,7 +386,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The collection whose element will be tested for existence against this collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#containsAll">containsAll</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#containsAll">containsAll</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L37">src/core/ICollection.ts:37</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="count" class="tsd-anchor"></a>
@@ -408,7 +405,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#count">count</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#count">count</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L82">src/enumerator/IEnumerable.ts:82</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="defaultIfEmpty" class="tsd-anchor"></a>
@@ -426,26 +423,9 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The value to return if the sequence is empty.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#defaultIfEmpty">defaultIfEmpty</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#defaultIfEmpty">defaultIfEmpty</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L88">src/enumerator/IEnumerable.ts:88</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="delete" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>delete</span><a href="#delete" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-<li class="tsd-signature tsd-anchor-link" id="delete.delete-1">delete<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#delete.delete-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Deletes the given item from the tree.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h5>
-<div class="tsd-comment tsd-typography"><p>Item to be removed from the tree.</p>
-</div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/tree/ITree.ts#L12">src/tree/ITree.ts:12</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="distinct" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>distinct</span><a href="#distinct" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
@@ -472,7 +452,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#distinct">distinct</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#distinct">distinct</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L95">src/enumerator/IEnumerable.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="elementAt" class="tsd-anchor"></a>
@@ -492,7 +472,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The index of the element that will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#elementAt">elementAt</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#elementAt">elementAt</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L102">src/enumerator/IEnumerable.ts:102</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="elementAtOrDefault" class="tsd-anchor"></a>
@@ -510,7 +490,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The index of the element that will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#elementAtOrDefault">elementAtOrDefault</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#elementAtOrDefault">elementAtOrDefault</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L108">src/enumerator/IEnumerable.ts:108</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="except" class="tsd-anchor"></a>
@@ -548,28 +528,9 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#except">except</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#except">except</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L131">src/enumerator/IEnumerable.ts:131</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="find" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>find</span><a href="#find" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-<li class="tsd-signature tsd-anchor-link" id="find.find-1">find<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><a href="Predicate.html" class="tsd-signature-type" data-tsd-kind="Interface">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><a href="#find.find-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Returns the first occurrence of an item that satisfy the condition by the predicate.</p>
-
-<h3>Returns</h3><p>First occurrence of the item that satisfies the predicate. If no item satisfies, returns null.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>predicate: <a href="Predicate.html" class="tsd-signature-type" data-tsd-kind="Interface">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5>
-<div class="tsd-comment tsd-typography"><p>The function that will be used to find the items.</p>
-</div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/tree/ITree.ts#L19">src/tree/ITree.ts:19</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="first" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>first</span><a href="#first" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
@@ -587,7 +548,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#first">first</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#first">first</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L138">src/enumerator/IEnumerable.ts:138</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="firstOrDefault" class="tsd-anchor"></a>
@@ -607,7 +568,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#firstOrDefault">firstOrDefault</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#firstOrDefault">firstOrDefault</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L145">src/enumerator/IEnumerable.ts:145</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="forEach" class="tsd-anchor"></a>
@@ -625,21 +586,9 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The action that will be run against the elements of this collection</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#forEach">forEach</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#forEach">forEach</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L43">src/core/ICollection.ts:43</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="getRootData" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>get<wbr/>Root<wbr/>Data</span><a href="#getRootData" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-<li class="tsd-signature tsd-anchor-link" id="getRootData.getRootData-1">get<wbr/>Root<wbr/>Data<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><a href="#getRootData.getRootData-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Returns the data at the root of this tree.</p>
-
-<h3>Returns</h3><p>The data at the root of the tree.</p>
-</div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/tree/ITree.ts#L32">src/tree/ITree.ts:32</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="groupBy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>group<wbr/>By</span><a href="#groupBy" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
@@ -666,7 +615,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><a href="IGroup.html" class="tsd-signature-type" data-tsd-kind="Interface">IGroup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#groupBy">groupBy</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#groupBy">groupBy</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L158">src/enumerator/IEnumerable.ts:158</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="groupJoin" class="tsd-anchor"></a>
@@ -711,26 +660,9 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#groupJoin">groupJoin</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#groupJoin">groupJoin</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L168">src/enumerator/IEnumerable.ts:168</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="insert" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-<li class="tsd-signature tsd-anchor-link" id="insert.insert-1">insert<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Inserts an item to this tree.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h5>
-<div class="tsd-comment tsd-typography"><p>Item that is to be inserted.</p>
-</div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/tree/ITree.ts#L38">src/tree/ITree.ts:38</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="intersect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>intersect</span><a href="#intersect" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
@@ -766,7 +698,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#intersect">intersect</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#intersect">intersect</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L192">src/enumerator/IEnumerable.ts:192</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="isEmpty" class="tsd-anchor"></a>
@@ -779,7 +711,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h3>Returns</h3><p>true if collection is empty</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#isEmpty">isEmpty</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#isEmpty">isEmpty</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L49">src/core/ICollection.ts:49</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="join" class="tsd-anchor"></a>
@@ -828,7 +760,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>If true, the result sequence will have the value of null for unmatched inner elements.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#join">join</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#join">join</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L203">src/enumerator/IEnumerable.ts:203</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="last" class="tsd-anchor"></a>
@@ -848,7 +780,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#last">last</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#last">last</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L211">src/enumerator/IEnumerable.ts:211</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="lastOrDefault" class="tsd-anchor"></a>
@@ -868,7 +800,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#lastOrDefault">lastOrDefault</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#lastOrDefault">lastOrDefault</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L218">src/enumerator/IEnumerable.ts:218</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="max" class="tsd-anchor"></a>
@@ -888,7 +820,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The selector function that will be used to select the value to compare. If not specified, the value itself will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#max">max</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#max">max</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L225">src/enumerator/IEnumerable.ts:225</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="min" class="tsd-anchor"></a>
@@ -908,7 +840,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The selector function that will be used to select the value to compare. If not specified, the value itself will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#min">min</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#min">min</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L232">src/enumerator/IEnumerable.ts:232</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="orderBy" class="tsd-anchor"></a>
@@ -937,7 +869,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IOrderedEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IOrderedEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#orderBy">orderBy</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#orderBy">orderBy</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L239">src/enumerator/IEnumerable.ts:239</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="orderByDescending" class="tsd-anchor"></a>
@@ -966,7 +898,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"><p>The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IOrderedEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IOrderedEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#orderByDescending">orderByDescending</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#orderByDescending">orderByDescending</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L246">src/enumerator/IEnumerable.ts:246</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="pairwise" class="tsd-anchor"></a>
@@ -989,7 +921,7 @@ Example:
    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
 ```</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#pairwise">pairwise</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#pairwise">pairwise</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L259">src/enumerator/IEnumerable.ts:259</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="partition" class="tsd-anchor"></a>
@@ -1007,7 +939,7 @@ Example:
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">]</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#partition">partition</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#partition">partition</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L266">src/enumerator/IEnumerable.ts:266</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="prepend" class="tsd-anchor"></a>
@@ -1025,12 +957,12 @@ Example:
 <div class="tsd-comment tsd-typography"><p>The element to add to the sequence.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#prepend">prepend</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#prepend">prepend</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L272">src/enumerator/IEnumerable.ts:272</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="remove" class="tsd-anchor"></a>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="remove.remove-1">remove<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes the given element from this collection. Comparison is made by the collection&#39;s current comparator.</p>
@@ -1045,12 +977,11 @@ Example:
 <div class="tsd-comment tsd-typography"><p>The element that will be removed from the collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#remove">remove</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/IRandomAccessCollection.ts#L13">src/core/IRandomAccessCollection.ts:13</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="removeAll" class="tsd-anchor"></a>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="removeAll" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>All</span><a href="#removeAll" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="removeAll.removeAll-1">remove<wbr/>All<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>collection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#removeAll.removeAll-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes all the elements of the given collection or array from this collection.</p>
@@ -1072,12 +1003,11 @@ Example:
 <div class="tsd-comment tsd-typography"><p>The collection or array whose elements will be removed from this collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#removeAll">removeAll</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/IRandomAccessCollection.ts#L20">src/core/IRandomAccessCollection.ts:20</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="removeIf" class="tsd-anchor"></a>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="removeIf" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>If</span><a href="#removeIf" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="removeIf.removeIf-1">remove<wbr/>If<span class="tsd-signature-symbol">(</span>predicate<span class="tsd-signature-symbol">: </span><a href="Predicate.html" class="tsd-signature-type" data-tsd-kind="Interface">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#removeIf.removeIf-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes all the elements that satisfy the given predicate from this collection.</p>
@@ -1092,12 +1022,11 @@ Example:
 <div class="tsd-comment tsd-typography"><p>The predicate method against which the elements of this collection will be tested.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#removeIf">removeIf</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/IRandomAccessCollection.ts#L27">src/core/IRandomAccessCollection.ts:27</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="retainAll" class="tsd-anchor"></a>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="retainAll" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>retain<wbr/>All</span><a href="#retainAll" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="retainAll.retainAll-1">retain<wbr/>All<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>collection<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TSource</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#retainAll.retainAll-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes all the elements that do not exist in the given collection or array.</p>
@@ -1119,7 +1048,6 @@ Example:
 <div class="tsd-comment tsd-typography"><p>The collection or array whose elements will remain in this collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#retainAll">retainAll</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/IRandomAccessCollection.ts#L34">src/core/IRandomAccessCollection.ts:34</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="reverse" class="tsd-anchor"></a>
@@ -1130,7 +1058,7 @@ Example:
 <div class="tsd-comment tsd-typography"><p>Inverts the order of the elements in the sequence.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#reverse">reverse</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#reverse">reverse</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L277">src/enumerator/IEnumerable.ts:277</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="scan" class="tsd-anchor"></a>
@@ -1160,28 +1088,9 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TAccumulate</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#scan">scan</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#scan">scan</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L285">src/enumerator/IEnumerable.ts:285</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="search" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>search</span><a href="#search" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-<li class="tsd-signature tsd-anchor-link" id="search.search-1">search<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#search.search-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Searches for an item in this tree.</p>
-
-<h3>Returns</h3><p>true if the item is found, false otherwise.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>element: <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h5>
-<div class="tsd-comment tsd-typography"><p>Item to be searched.</p>
-</div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/tree/ITree.ts#L45">src/tree/ITree.ts:45</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="select" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select</span><a href="#select" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
@@ -1204,7 +1113,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The selector function that will be used to project each element into a new form.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#select">select</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#select">select</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L291">src/enumerator/IEnumerable.ts:291</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="selectMany" class="tsd-anchor"></a>
@@ -1229,7 +1138,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The selector function that will be used to project each element into a new form.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#selectMany">selectMany</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#selectMany">selectMany</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L297">src/enumerator/IEnumerable.ts:297</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="sequenceEqual" class="tsd-anchor"></a>
@@ -1251,7 +1160,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The equality comparer that will be used to compare the elements. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#sequenceEqual">sequenceEqual</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#sequenceEqual">sequenceEqual</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L304">src/enumerator/IEnumerable.ts:304</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="single" class="tsd-anchor"></a>
@@ -1271,7 +1180,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#single">single</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#single">single</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L311">src/enumerator/IEnumerable.ts:311</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="singleOrDefault" class="tsd-anchor"></a>
@@ -1291,7 +1200,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#singleOrDefault">singleOrDefault</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#singleOrDefault">singleOrDefault</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L318">src/enumerator/IEnumerable.ts:318</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="size" class="tsd-anchor"></a>
@@ -1302,7 +1211,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>Returns the number of elements in this collection.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#size">size</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#size">size</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L54">src/core/ICollection.ts:54</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="skip" class="tsd-anchor"></a>
@@ -1320,7 +1229,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The number of elements to skip before returning the remaining elements.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#skip">skip</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#skip">skip</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L324">src/enumerator/IEnumerable.ts:324</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="skipLast" class="tsd-anchor"></a>
@@ -1338,7 +1247,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The number of elements to omit from the end of the collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#skipLast">skipLast</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#skipLast">skipLast</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L330">src/enumerator/IEnumerable.ts:330</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="skipWhile" class="tsd-anchor"></a>
@@ -1356,7 +1265,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to test each element.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#skipWhile">skipWhile</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#skipWhile">skipWhile</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L336">src/enumerator/IEnumerable.ts:336</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="sum" class="tsd-anchor"></a>
@@ -1374,7 +1283,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The selector function that will be used to select the value to sum. If not specified, the value itself will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#sum">sum</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#sum">sum</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L342">src/enumerator/IEnumerable.ts:342</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="take" class="tsd-anchor"></a>
@@ -1392,7 +1301,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The number of elements to return.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#take">take</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#take">take</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L348">src/enumerator/IEnumerable.ts:348</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="takeLast" class="tsd-anchor"></a>
@@ -1410,7 +1319,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The number of elements to return.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#takeLast">takeLast</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#takeLast">takeLast</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L354">src/enumerator/IEnumerable.ts:354</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="takeWhile" class="tsd-anchor"></a>
@@ -1428,7 +1337,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to test each element.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#takeWhile">takeWhile</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#takeWhile">takeWhile</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L360">src/enumerator/IEnumerable.ts:360</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toArray" class="tsd-anchor"></a>
@@ -1439,7 +1348,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>Creates a new array from the elements of the sequence.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toArray">toArray</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toArray">toArray</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L365">src/enumerator/IEnumerable.ts:365</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toDictionary" class="tsd-anchor"></a>
@@ -1474,7 +1383,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/Dictionary.html" class="tsd-signature-type" data-tsd-kind="Class">Dictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TValue</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toDictionary">toDictionary</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toDictionary">toDictionary</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L373">src/enumerator/IEnumerable.ts:373</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toEnumerableSet" class="tsd-anchor"></a>
@@ -1485,7 +1394,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>Creates a new enumerable set from the elements of the sequence.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/EnumerableSet.html" class="tsd-signature-type" data-tsd-kind="Class">EnumerableSet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toEnumerableSet">toEnumerableSet</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toEnumerableSet">toEnumerableSet</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L378">src/enumerator/IEnumerable.ts:378</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toIndexableList" class="tsd-anchor"></a>
@@ -1503,7 +1412,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/IndexableList.html" class="tsd-signature-type" data-tsd-kind="Class">IndexableList</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toIndexableList">toIndexableList</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toIndexableList">toIndexableList</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L384">src/enumerator/IEnumerable.ts:384</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toList" class="tsd-anchor"></a>
@@ -1521,7 +1430,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/List.html" class="tsd-signature-type" data-tsd-kind="Class">List</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toList">toList</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toList">toList</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L390">src/enumerator/IEnumerable.ts:390</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toLookup" class="tsd-anchor"></a>
@@ -1556,7 +1465,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The key comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="ILookup.html" class="tsd-signature-type" data-tsd-kind="Interface">ILookup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TValue</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toLookup">toLookup</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toLookup">toLookup</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L398">src/enumerator/IEnumerable.ts:398</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toSortedDictionary" class="tsd-anchor"></a>
@@ -1595,7 +1504,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/SortedDictionary.html" class="tsd-signature-type" data-tsd-kind="Class">SortedDictionary</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TValue</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toSortedDictionary">toSortedDictionary</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toSortedDictionary">toSortedDictionary</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L407">src/enumerator/IEnumerable.ts:407</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toSortedSet" class="tsd-anchor"></a>
@@ -1613,7 +1522,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/SortedSet.html" class="tsd-signature-type" data-tsd-kind="Class">SortedSet</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toSortedSet">toSortedSet</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toSortedSet">toSortedSet</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L413">src/enumerator/IEnumerable.ts:413</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="toString" class="tsd-anchor"></a>
@@ -1624,7 +1533,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>Returns a string representation of this collection.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toString">toString</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toString">toString</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L59">src/core/ICollection.ts:59</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="toString.toString-2">to<wbr/>String<span class="tsd-signature-symbol">(</span>separator<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#toString.toString-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
@@ -1639,7 +1548,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The separator that will be used to separate the elements of this collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toString">toString</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toString">toString</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L65">src/core/ICollection.ts:65</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="toString.toString-3">to<wbr/>String<span class="tsd-signature-symbol">(</span>separator<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, selector<span class="tsd-signature-symbol">?: </span><a href="Selector.html" class="tsd-signature-type" data-tsd-kind="Interface">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#toString.toString-3" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
@@ -1658,7 +1567,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The selector that will be used to select the property that will be used to generate the string representation of this collection.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#toString">toString</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#toString">toString</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/core/ICollection.ts#L72">src/core/ICollection.ts:72</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="union" class="tsd-anchor"></a>
@@ -1680,7 +1589,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#union">union</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#union">union</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L420">src/enumerator/IEnumerable.ts:420</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="where" class="tsd-anchor"></a>
@@ -1698,7 +1607,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The predicate function that will be used to test each element.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#where">where</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#where">where</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L426">src/enumerator/IEnumerable.ts:426</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a id="zip" class="tsd-anchor"></a>
@@ -1729,7 +1638,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"><p>The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TSecond</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="IEnumerable.html" class="tsd-signature-type" data-tsd-kind="Interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<p>Inherited from <a href="IRandomAccessCollection.html">IRandomAccessCollection</a>.<a href="IRandomAccessCollection.html#zip">zip</a></p>
+<p>Inherited from <a href="ICollection.html">ICollection</a>.<a href="ICollection.html#zip">zip</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/merophise/ts-collections/blob/06d743a/src/enumerator/IEnumerable.ts#L433">src/enumerator/IEnumerable.ts:433</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -1755,81 +1664,76 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <ul></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
-<li class="current tsd-kind-interface"><a href="ITree.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>ITree</span></a>
+<li class="current tsd-kind-interface"><a href="IRandomAccessCollection.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>IRandom<wbr/>Access<wbr/>Collection</span></a>
 <ul>
-<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#length" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>length</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="ITree.html#_iterator_" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>[iterator]</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#add" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#addAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add<wbr/>All</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#aggregate" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>aggregate</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#all" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>all</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#any" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>any</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#append" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>append</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#average" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>average</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#chunk" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>chunk</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#clear" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>clear</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#concat" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>concat</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#contains" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>contains</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#containsAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>contains<wbr/>All</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#count" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>count</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#defaultIfEmpty" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>default<wbr/>If<wbr/>Empty</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="ITree.html#delete" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>delete</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#distinct" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>distinct</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#elementAt" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>element<wbr/>At</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#elementAtOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>element<wbr/>At<wbr/>Or<wbr/>Default</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#except" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>except</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="ITree.html#find" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>find</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#first" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>first</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#firstOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>first<wbr/>Or<wbr/>Default</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#forEach" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>for<wbr/>Each</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="ITree.html#getRootData" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Root<wbr/>Data</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#groupBy" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>group<wbr/>By</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#groupJoin" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>group<wbr/>Join</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="ITree.html#insert" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>insert</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#intersect" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>intersect</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#isEmpty" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>is<wbr/>Empty</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#join" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>join</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#last" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>last</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#lastOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>last<wbr/>Or<wbr/>Default</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#max" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>max</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#min" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>min</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#orderBy" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>order<wbr/>By</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#orderByDescending" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>order<wbr/>By<wbr/>Descending</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#pairwise" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>pairwise</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#partition" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>partition</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#prepend" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>prepend</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#remove" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#removeAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove<wbr/>All</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#removeIf" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove<wbr/>If</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#retainAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>retain<wbr/>All</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#reverse" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>reverse</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#scan" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>scan</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="ITree.html#search" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>search</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#select" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>select</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#selectMany" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>select<wbr/>Many</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#sequenceEqual" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>sequence<wbr/>Equal</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#single" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>single</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#singleOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>single<wbr/>Or<wbr/>Default</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#size" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>size</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#skip" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>skip</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#skipLast" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>skip<wbr/>Last</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#skipWhile" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>skip<wbr/>While</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#sum" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>sum</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#take" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>take</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#takeLast" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>take<wbr/>Last</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#takeWhile" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>take<wbr/>While</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toArray" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Array</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toDictionary" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Dictionary</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toEnumerableSet" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Enumerable<wbr/>Set</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toIndexableList" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Indexable<wbr/>List</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toList" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>List</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toLookup" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Lookup</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toSortedDictionary" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Sorted<wbr/>Dictionary</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toSortedSet" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Sorted<wbr/>Set</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>String</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#union" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>union</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#where" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>where</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="ITree.html#zip" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>zip</a></li></ul></li></ul></nav></div></div>
+<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#length" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>length</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="IRandomAccessCollection.html#_iterator_" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>[iterator]</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#add" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#addAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add<wbr/>All</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#aggregate" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>aggregate</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#all" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>all</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#any" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>any</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#append" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>append</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#average" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>average</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#chunk" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>chunk</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#clear" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>clear</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#concat" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>concat</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#contains" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>contains</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#containsAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>contains<wbr/>All</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#count" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>count</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#defaultIfEmpty" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>default<wbr/>If<wbr/>Empty</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#distinct" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>distinct</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#elementAt" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>element<wbr/>At</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#elementAtOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>element<wbr/>At<wbr/>Or<wbr/>Default</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#except" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>except</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#first" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>first</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#firstOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>first<wbr/>Or<wbr/>Default</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#forEach" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>for<wbr/>Each</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#groupBy" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>group<wbr/>By</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#groupJoin" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>group<wbr/>Join</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#intersect" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>intersect</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#isEmpty" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>is<wbr/>Empty</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#join" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>join</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#last" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>last</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#lastOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>last<wbr/>Or<wbr/>Default</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#max" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>max</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#min" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>min</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#orderBy" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>order<wbr/>By</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#orderByDescending" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>order<wbr/>By<wbr/>Descending</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#pairwise" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>pairwise</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#partition" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>partition</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#prepend" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>prepend</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="IRandomAccessCollection.html#remove" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="IRandomAccessCollection.html#removeAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove<wbr/>All</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="IRandomAccessCollection.html#removeIf" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove<wbr/>If</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="IRandomAccessCollection.html#retainAll" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>retain<wbr/>All</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#reverse" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>reverse</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#scan" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>scan</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#select" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>select</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#selectMany" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>select<wbr/>Many</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#sequenceEqual" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>sequence<wbr/>Equal</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#single" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>single</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#singleOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>single<wbr/>Or<wbr/>Default</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#size" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>size</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#skip" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>skip</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#skipLast" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>skip<wbr/>Last</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#skipWhile" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>skip<wbr/>While</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#sum" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>sum</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#take" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>take</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#takeLast" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>take<wbr/>Last</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#takeWhile" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>take<wbr/>While</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toArray" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Array</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toDictionary" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Dictionary</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toEnumerableSet" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Enumerable<wbr/>Set</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toIndexableList" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Indexable<wbr/>List</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toList" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>List</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toLookup" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Lookup</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toSortedDictionary" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Sorted<wbr/>Dictionary</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toSortedSet" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>Sorted<wbr/>Set</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#toString" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>to<wbr/>String</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#union" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>union</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#where" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>where</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="IRandomAccessCollection.html#zip" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>zip</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="../assets/main.js"></script></body></html>
