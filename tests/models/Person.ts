@@ -35,7 +35,7 @@ export class Person {
     public static readonly Jane: Person = new Person("Jane", "Green", 16);
     public static readonly Jisu = new Person("Jisu", "", 14);
     public static readonly Julia = new Person("Julia", "Watson", 44);
-    public static readonly Karen = new Person("Karen", "Furuya", 10);
+    public static readonly Kaori = new Person("Kaori", "Furuya", 10);
     public static readonly Lenka: Person = new Person("Lenka", "Polakova", 16);
     public static readonly Lucrezia = new Person("Lucrezia", "Volpe", 21);
     public static readonly Megan = new Person("Megan", "Watson", 44);

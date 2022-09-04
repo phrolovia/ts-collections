@@ -69,7 +69,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.aggregate(accumulator, seed, resultSelector);
     }
 
-    public all(predicate?: Predicate<IGroup<TKey, TElement>>): boolean {
+    public all(predicate: Predicate<IGroup<TKey, TElement>>): boolean {
         return this.lookupTree.all(predicate);
     }
 

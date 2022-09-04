@@ -74,13 +74,6 @@ describe("SortedDictionary", () => {
             const all = dictionary.all(p => p.value.age > 29);
             expect(all).to.eq(false);
         });
-        it("should return true if no predicate is provided and dictionary is not empty", () => {
-            expect(dictionary.all()).to.eq(true);
-        });
-        it("should return false if no predicate is provided and dictionary is empty", () => {
-            dictionary.clear();
-            expect(dictionary.all()).to.eq(false);
-        });
     });
 
     describe("#any()", () => {
@@ -440,7 +433,7 @@ describe("SortedDictionary", () => {
         dict.add(Person.Senna.name, Person.Senna);
         dict.add(Person.Lenka.name, Person.Lenka);
         dict.add(Person.Jane.name, Person.Jane);
-        dict.add(Person.Karen.name, Person.Karen);
+        dict.add(Person.Kaori.name, Person.Kaori);
         dict.add(Person.Reina.name, Person.Reina);
         it("should group people by age", () => {
             const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g, null);
@@ -1450,7 +1443,7 @@ describe("SortedDictionary", () => {
             expect(dictionary.length).to.eq(3);
         });
         it("should throw error if key is null", () => {
-            expect(() => dictionary.tryAdd(null, Person.Karen.name)).to.throw(ErrorMessages.NullKey);
+            expect(() => dictionary.tryAdd(null, Person.Kaori.name)).to.throw(ErrorMessages.NullKey);
         });
     });
 

@@ -45,7 +45,7 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
-    public all(predicate?: Predicate<TElement>): boolean {
+    public all(predicate: Predicate<TElement>): boolean {
         return EnumerableStatic.all(this, predicate);
     }
 
