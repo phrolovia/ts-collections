@@ -45,7 +45,6 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
             }
             return this.get(0);
         }
-        console.log("first");
         return super.first(predicate);
     }
 
