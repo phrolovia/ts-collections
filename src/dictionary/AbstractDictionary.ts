@@ -26,6 +26,7 @@ import {ICollection} from "../core/ICollection";
 import {SortedSet} from "../set/SortedSet";
 import {EnumerableSet} from "../set/EnumerableSet";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
+import {LinkedList} from "../list/LinkedList";
 
 export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     protected keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -250,6 +251,10 @@ export abstract class AbstractDictionary<TKey, TValue> implements IDictionary<TK
 
     public toIndexableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IndexableList<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toIndexableList(this, comparator);
+    }
+
+    public toLinkedList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): LinkedList<KeyValuePair<TKey, TValue>> {
+        return new LinkedList<KeyValuePair<TKey, TValue>>(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {

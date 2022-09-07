@@ -21,7 +21,7 @@ import {
     ILookup,
     IndexableList,
     IOrderedEnumerable,
-    KeyValuePair,
+    KeyValuePair, LinkedList,
     List,
     OrderedEnumerator,
     SortedDictionary,
@@ -516,6 +516,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         return new IndexableList<TElement>(this, comparator);
+    }
+
+    public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
+        return new LinkedList<TElement>(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {

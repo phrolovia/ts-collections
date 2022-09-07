@@ -20,6 +20,7 @@ export {AbstractList} from "./src/list/AbstractList";
 export {List} from "./src/list/List";
 export {Queue} from "./src/queue/Queue";
 export {Stack} from "./src/stack/Stack";
+export {CircularQueue} from "./src/queue/CircularQueue";
 export {LinkedList} from "./src/list/LinkedList";
 export {IndexableList} from "./src/list/IndexableList";
 export {ITree, TraverseType} from "./src/tree/ITree";

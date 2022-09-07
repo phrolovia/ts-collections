@@ -1,7 +1,6 @@
 import {IRandomAccessCollection} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
-import {Selector} from "../shared/Selector";
 
 export interface IList<TElement> extends IRandomAccessCollection<TElement> {
 

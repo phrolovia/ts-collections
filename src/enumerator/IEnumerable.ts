@@ -14,7 +14,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList, EnumerableSet, SortedSet
+    IndexableList, EnumerableSet, SortedSet, LinkedList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -382,6 +382,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
     toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement>;
+
+
+    /**
+     * Creates a new linked list from the elements of the sequence.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     */
+    toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement>;
 
     /**
      * Creates a new list from the elements of the sequence.

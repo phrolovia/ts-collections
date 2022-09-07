@@ -17,7 +17,7 @@ import {
     RedBlackTree,
     Dictionary,
     IndexableList,
-    IGroup, Group, EnumerableSet, SortedSet
+    IGroup, Group, EnumerableSet, SortedSet, LinkedList
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -273,6 +273,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toIndexableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): IndexableList<IGroup<TKey, TElement>> {
         return this.lookupTree.toIndexableList(comparator);
+    }
+
+    public toLinkedList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): LinkedList<IGroup<TKey, TElement>> {
+        return this.lookupTree.toLinkedList(comparator);
     }
 
     public toList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): List<IGroup<TKey, TElement>> {

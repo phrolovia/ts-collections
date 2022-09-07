@@ -26,6 +26,7 @@ export {
     LinkedList,
     List,
     Queue,
+    CircularQueue,
     RedBlackTree,
     SortedDictionary,
     SortedSet,

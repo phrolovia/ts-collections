@@ -4,6 +4,11 @@ import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {OrderComparator} from "../shared/OrderComparator";
 
+/**
+ * A list is a collection of elements that can be accessed by index.
+ * Note that adding and element to the list via index will not update the list properly.
+ * Therefore, to add a new element to the list, always use the {@link add} method.
+ */
 export class IndexableList<TElement> extends AbstractList<TElement> {
     private listSize: number = 0;
     [n: number]: TElement;

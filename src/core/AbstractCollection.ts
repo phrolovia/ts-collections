@@ -16,7 +16,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList, EnumerableSet, SortedSet
+    IndexableList, EnumerableSet, SortedSet, LinkedList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
@@ -270,6 +270,11 @@ export abstract class AbstractCollection<TElement> implements ICollection<TEleme
 
     public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
         return EnumerableStatic.toSortedSet(this, comparator);
+    }
+
+    public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
+        comparator ??= this.comparator;
+        return EnumerableStatic.toLinkedList(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {

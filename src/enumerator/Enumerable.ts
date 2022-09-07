@@ -16,7 +16,7 @@ import {
     List,
     Dictionary,
     IndexableList,
-    IGroup, EnumerableSet, SortedSet
+    IGroup, EnumerableSet, SortedSet, LinkedList
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -246,6 +246,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         return this.enumerator.toIndexableList(comparator);
+    }
+
+    public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
+        return this.enumerator.toLinkedList(comparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
