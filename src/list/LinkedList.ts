@@ -110,7 +110,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
             }
         } else {
             for (let node: Node<TElement> = this.firstNode; node != null; node = node.next) {
-                if (this.comparator(node.item, element)) {
+                if (this.comparer(node.item, element)) {
                     this.unlink(node);
                     return true;
                 }

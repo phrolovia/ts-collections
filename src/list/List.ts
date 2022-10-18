@@ -49,7 +49,7 @@ export class List<TElement> extends AbstractList<TElement> {
     public remove(element: TElement): boolean {
         let deleted = false;
         for (let index = 0; index < this.data.length; ++index) {
-            if (this.comparator(element, this.data[index])) {
+            if (this.comparer(element, this.data[index])) {
                 this.data.splice(index, 1);
                 deleted = true;
                 break;
