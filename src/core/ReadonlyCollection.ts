@@ -1,13 +1,13 @@
-import {AbstractReadonlyCollection} from "./AbstractReadonlyCollection";
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {IReadonlyCollection} from "./IReadonlyCollection";
-import {List, ReadonlyList} from "../../imports";
+import {AbstractReadonlyCollection, IReadonlyCollection, List, ReadonlyList} from "../../imports";
 
 export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TElement> {
-    public collection: IReadonlyCollection<TElement>;
+    private readonly collection: IReadonlyCollection<TElement>;
+
     public constructor(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.collection = new ReadonlyList(new List(iterable, comparator));
+        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {

@@ -1,13 +1,13 @@
-import {IReadonlyList} from "./IReadonlyList";
-import {AbstractReadonlyCollection} from "../core/AbstractReadonlyCollection";
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {IList} from "./IList";
+import {AbstractReadonlyCollection, IList, IReadonlyList} from "../../imports";
 
 export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement> implements IReadonlyList<TElement> {
     private readonly list: IList<TElement>;
+
     public constructor(list: IList<TElement>) {
         super(list.comparator);
         this.list = list;
+        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
