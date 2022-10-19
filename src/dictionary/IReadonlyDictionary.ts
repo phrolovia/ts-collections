@@ -68,4 +68,7 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
      * @returns {ICollection} A collection of values of this dictionary.
      */
     values(): ICollection<TValue>;
+
+    get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>>;
+    get valueComparator(): EqualityComparator<TValue>;
 }

@@ -12,7 +12,7 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
 
-xdescribe("AsyncEnumerable", () => {
+describe("AsyncEnumerable", () => {
     chai.use(chaiAsPromised);
     const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));
 

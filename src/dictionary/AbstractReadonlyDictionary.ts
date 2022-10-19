@@ -282,6 +282,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         (this.length as Writable<number>) = this.size();
     }
 
+    public get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>> {
+        return this.keyValueComparer;
+    }
+
+    public get valueComparator(): EqualityComparator<TValue> {
+        return this.valueComparer;
+    }
+
     abstract [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>>;
     abstract containsKey(key: TKey): boolean;
     abstract containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean;
