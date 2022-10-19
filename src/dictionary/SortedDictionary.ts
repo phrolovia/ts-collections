@@ -53,7 +53,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     }
 
     public containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean {
-        comparator ??= this.valueComparator;
+        comparator ??= this.valueComparer;
         for (const pair of this) {
             if (comparator(pair.value, value)) {
                 return true;
@@ -95,6 +95,6 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     }
 
     public values(): ICollection<TValue> {
-        return this.keyValueTree.select(p => p.value).toList(this.valueComparator);
+        return this.keyValueTree.select(p => p.value).toList(this.valueComparer);
     }
 }

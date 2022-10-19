@@ -33,6 +33,8 @@ export {AbstractTree} from "./src/tree/AbstractTree";
 export {RedBlackTree} from "./src/tree/RedBlackTree";
 export {IDictionary} from "./src/dictionary/IDictionary";
 export {IReadonlyDictionary} from "./src/dictionary/IReadonlyDictionary";
+export {AbstractDictionary} from "./src/dictionary/AbstractDictionary";
+export {AbstractReadonlyDictionary} from "./src/dictionary/AbstractReadonlyDictionary";
 export {Dictionary} from "./src/dictionary/Dictionary";
 export {SortedDictionary} from "./src/dictionary/SortedDictionary";
 export {KeyValuePair} from "./src/dictionary/KeyValuePair";
