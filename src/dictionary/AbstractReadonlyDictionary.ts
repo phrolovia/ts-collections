@@ -1,11 +1,15 @@
 import {
-    Dictionary,
-    EnumerableSet, ICollection,
+    EnumerableSet,
+    ICollection,
     IEnumerable,
-    IGroup, ILookup, IndexableList,
+    IGroup,
+    ILookup,
+    IndexableList,
     IOrderedEnumerable,
-    IReadonlyDictionary, ISet,
-    KeyValuePair, LinkedList, List, SortedDictionary, SortedSet
+    ISet,
+    LinkedList,
+    List,
+    SortedSet
 } from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
@@ -20,6 +24,10 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Zipper} from "../shared/Zipper";
 import {Writable} from "../shared/Writable";
+import {IReadonlyDictionary} from "./IReadonlyDictionary";
+import {KeyValuePair} from "./KeyValuePair";
+import {SortedDictionary} from "./SortedDictionary";
+import {Dictionary} from "./Dictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;

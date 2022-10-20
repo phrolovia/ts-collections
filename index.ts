@@ -25,7 +25,6 @@ export {
     IReadonlyList,
     ISet,
     ITree,
-    KeyValuePair,
     LinkedList,
     List,
     Queue,
@@ -38,6 +37,7 @@ export {
     Stack,
     TraverseType
 } from "./imports";
+export {KeyValuePair} from "./src/dictionary/KeyValuePair";
 export {Accumulator} from "./src/shared/Accumulator";
 export {EqualityComparator} from "./src/shared/EqualityComparator";
 export {IndexedAction} from "./src/shared/IndexedAction";

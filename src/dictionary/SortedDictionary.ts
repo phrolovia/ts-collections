@@ -1,9 +1,10 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
-import {ICollection, ISet, KeyValuePair, RedBlackTree, SortedSet} from "../../imports";
+import {ICollection, ISet, RedBlackTree, SortedSet} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {AbstractDictionary} from "./AbstractDictionary";
+import {KeyValuePair} from "./KeyValuePair";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
