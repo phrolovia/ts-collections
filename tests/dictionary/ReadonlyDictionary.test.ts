@@ -10,7 +10,6 @@ describe("ReadonlyDictionary", () => {
             for (let i = 0; i < 100; i++) {
                 expect(dictionary.containsKey(i + 1)).to.be.true;
                 expect(dictionary.containsKey(0)).to.be.false;
-                console.log(dictionary.elementAt(i));
             }
         });
     });
