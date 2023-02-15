@@ -20,4 +20,10 @@ export interface ICollection<TElement> extends IReadonlyCollection<TElement> {
      * Remove all elements from this collection.
      */
     clear(): void;
+
+    /**
+     * Returns a readonly collection that is backed by this collection.
+     * @returns {IReadonlyCollection} A readonly collection that is backed by this collection.
+     */
+    toReadonlyCollection(): IReadonlyCollection<TElement>;
 }
