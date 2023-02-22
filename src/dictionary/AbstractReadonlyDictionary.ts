@@ -31,9 +31,8 @@ import {Dictionary} from "./Dictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
+    protected readonly collectionLength: number = 0;
     protected valueComparer: EqualityComparator<TValue>;
-    public readonly length: number = 0;
-
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {
         this.valueComparer = valueComparator;
         this.keyValueComparer = keyValueComparator;
@@ -287,11 +286,15 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     protected updateLength(): void {
-        (this.length as Writable<number>) = this.size();
+        (this.collectionLength as Writable<number>) = this.size();
     }
 
     public get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>> {
         return this.keyValueComparer;
+    }
+
+    public get length(): number {
+        return this.collectionLength;
     }
 
     public get valueComparator(): EqualityComparator<TValue> {

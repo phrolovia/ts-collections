@@ -43,4 +43,8 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
     public values(): ICollection<TValue> {
         return this.dictionary.values();
     }
+
+    public override get length(): number {
+        return this.dictionary.length;
+    }
 }

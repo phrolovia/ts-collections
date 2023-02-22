@@ -1,5 +1,5 @@
 import {describe, it} from "mocha";
-import {Enumerable, ReadonlyDictionary} from "../../imports";
+import {Enumerable, ReadonlyDictionary, SortedDictionary} from "../../imports";
 import {expect} from "chai";
 
 describe("ReadonlyDictionary", () => {
@@ -61,6 +61,15 @@ describe("ReadonlyDictionary", () => {
             const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
             expect(dictionary.size()).to.equal(100);
             expect(dictionary.length).to.equal(100);
+        });
+        it("should reflect changes to the underlying collection", () => {
+            const dictionary = new SortedDictionary(null, null, Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const readonlyDictionary = new ReadonlyDictionary(dictionary);
+            expect(readonlyDictionary.size()).to.equal(100);
+            expect(readonlyDictionary.length).to.equal(100);
+            dictionary.add(101, 101);
+            expect(readonlyDictionary.size()).to.equal(101);
+            expect(readonlyDictionary.length).to.equal(101);
         });
     });
 

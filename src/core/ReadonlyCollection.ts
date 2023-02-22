@@ -1,12 +1,12 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {AbstractReadonlyCollection, IReadonlyCollection, List, ReadonlyList} from "../../imports";
+import {AbstractReadonlyCollection, ICollection, IReadonlyCollection} from "../../imports";
 
 export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TElement> {
     private readonly collection: IReadonlyCollection<TElement>;
 
-    public constructor(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
+    public constructor(collection: ICollection<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.collection = new ReadonlyList(new List(iterable, comparator));
+        this.collection = collection;
         this.updateLength();
     }
 
@@ -16,5 +16,9 @@ export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TEl
 
     public override size(): number {
         return this.collection.size();
+    }
+
+    public override get length(): number {
+        return this.collection.length;
     }
 }

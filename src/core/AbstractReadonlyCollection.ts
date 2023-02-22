@@ -27,7 +27,7 @@ import {Writable} from "../shared/Writable";
 
 export abstract class AbstractReadonlyCollection<TElement> implements IReadonlyCollection<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
-    public readonly length: number = 0;
+    protected readonly collectionLength: number = 0;
 
     protected constructor(comparator?: EqualityComparator<TElement>) {
         this.comparer = comparator ?? Comparators.equalityComparator;
@@ -304,11 +304,15 @@ export abstract class AbstractReadonlyCollection<TElement> implements IReadonlyC
     }
 
     protected updateLength(): void {
-        (this.length as Writable<number>) = this.size();
+        (this.collectionLength as Writable<number>) = this.size();
     }
 
     public get comparator(): EqualityComparator<TElement> {
         return this.comparer;
+    }
+
+    public get length(): number {
+        return this.collectionLength;
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

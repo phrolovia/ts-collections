@@ -48,5 +48,14 @@ describe("ReadonlyList", () => {
             expect(list.size()).to.equal(5);
             expect(list.length).to.equal(5);
         });
+        it("should reflect changes to the underlying collection", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const readonlyList = new ReadonlyList(list);
+            expect(readonlyList.size()).to.equal(5);
+            expect(readonlyList.length).to.equal(5);
+            list.add(6);
+            expect(readonlyList.size()).to.equal(6);
+            expect(readonlyList.length).to.equal(6);
+        });
     });
 });

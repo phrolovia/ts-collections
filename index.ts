@@ -8,6 +8,7 @@ export {
     Collections,
     Dictionary,
     Enumerable,
+    Enumerator,
     IndexableList,
     EnumerableSet,
     Group,

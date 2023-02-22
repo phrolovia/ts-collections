@@ -30,6 +30,10 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
         return this.list.lastIndexOf(element, comparator);
     }
 
+    public override get length(): number {
+        return this.list.length;
+    }
+
     public override size(): number {
         return this.list.size();
     }

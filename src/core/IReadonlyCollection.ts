@@ -7,7 +7,7 @@ export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
     /**
      * Returns the number of element in this collection.
      */
-    readonly length: number;
+    get length(): number;
 
     /**
      * Returns the current comparator used by this collection.

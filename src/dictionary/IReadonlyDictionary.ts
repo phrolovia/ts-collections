@@ -7,7 +7,7 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
     /**
      * Returns the number of elements in this dictionary.
      */
-    readonly length: number;
+    get length(): number;
 
     /**
      * Checks whether this dictionary contains the specified key.
