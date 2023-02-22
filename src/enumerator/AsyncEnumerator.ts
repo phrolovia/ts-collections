@@ -21,7 +21,6 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {JoinSelector} from "../shared/JoinSelector";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {AsyncEnumerable} from "./AsyncEnumerable";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";
 

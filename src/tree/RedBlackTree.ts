@@ -153,7 +153,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             let next = iterator.next();
             let found = false;
             while (!next.done) {
-                if (this.comparator(element, next.value)) {
+                if (this.comparer(element, next.value)) {
                     found = true;
                     break;
                 }
@@ -172,7 +172,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         if (node == null) {
             return false;
         }
-        return this.comparator(node.getData(), element);
+        return this.comparer(node.getData(), element);
     }
 
     private deleteNode(v: RedBlackNode<TElement>): void {
@@ -366,7 +366,7 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
                 } else {
                     temp = temp.getLeft() as RedBlackNode<TElement>;
                 }
-            } else if (this.comparator(element, temp.getData())) {
+            } else if (this.comparer(element, temp.getData())) {
                 break;
             } else {
                 if (temp.getRight() == null) {

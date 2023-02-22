@@ -55,7 +55,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        comparator ??= this.comparator;
+        comparator ??= this.comparer;
         return this.containsRecursive(this.root, element, comparator);
     }
 

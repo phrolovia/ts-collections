@@ -74,7 +74,7 @@ export class IndexableList<TElement> extends AbstractList<TElement> {
     public remove(element: TElement): boolean {
         let removed = false;
         for (let ex = 0; ex < this.size(); ++ex) {
-            if (this.comparator(this[ex], element)) {
+            if (this.comparer(this[ex], element)) {
                 if (ex === this.size() - 1) {
                     delete this[ex];
                     this.listSize--;

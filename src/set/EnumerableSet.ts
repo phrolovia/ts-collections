@@ -66,7 +66,7 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
             let next = iterator.next();
             let found = false;
             while (!next.done) {
-                if (this.comparator(element, next.value)) {
+                if (this.comparer(element, next.value)) {
                     found = true;
                     break;
                 }

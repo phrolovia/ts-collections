@@ -4,7 +4,6 @@ import {IList, LinkedList} from "../../imports";
 import {OrderComparator} from "../shared/OrderComparator";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {Selector} from "../shared/Selector";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
@@ -56,7 +55,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
     }
 
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
-        comparator ??= this.comparator;
+        comparator ??= this.comparer;
         let index = 0;
         if (element == null) {
             for (const e of this) {
@@ -78,7 +77,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
 
     public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
         const array = this.toArray();
-        comparator ??= this.comparator;
+        comparator ??= this.comparer;
         if (element == null) {
             for (let index = array.length - 1; index >= 0; --index) {
                 if (array[index] == null) {
@@ -144,7 +143,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
             let next = iterator.next();
             let found = false;
             while (!next.done) {
-                if (this.comparator(element, next.value)) {
+                if (this.comparer(element, next.value)) {
                     found = true;
                     break;
                 }

@@ -8,13 +8,13 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
-import {Dictionary, Enumerable, List} from "../../imports";
+import {Enumerable, List} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("SortedDictionary", () => {
 
     const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
-    const personNameComparator = (p1: Person, p2: Person) => p1.name.localeCompare(p2.name)
+    const personNameComparator = (p1: Person, p2: Person) => p1.name.localeCompare(p2.name);
     const personSurnameComparator = (p1: Person, p2: Person) => p1.surname.localeCompare(p2.surname);
 
     describe("#add()", () => {
@@ -440,7 +440,7 @@ describe("SortedDictionary", () => {
             const ages: number[] = [];
             const groupedAges: Record<number, number[]> = {};
             for (const ageGroup of group.values()) {
-                ages.push(ageGroup.key)
+                ages.push(ageGroup.key);
                 groupedAges[ageGroup.key] ??= [];
                 for (const dictItem of ageGroup.source) {
                     groupedAges[ageGroup.key].push(dictItem.value.age);
@@ -470,7 +470,7 @@ describe("SortedDictionary", () => {
         it("should join and group by school id", () => {
             const joinedData = schoolDict.groupJoin(studentDict, sc => sc.value.id, st => st.value.schoolId,
                 (schoolPair, students) => {
-                    return new SchoolStudents(schoolPair.key, students.select(s => s.value).toList())
+                    return new SchoolStudents(schoolPair.key, students.select(s => s.value).toList());
                 }).orderByDescending(ss => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];
@@ -723,7 +723,7 @@ describe("SortedDictionary", () => {
             const pairs = dictionary.pairwise().toArray();
             const tuples = [];
             for (const pair of pairs) {
-                const [p1, p2 ] = pair;
+                const [p1, p2] = pair;
                 tuples.push([p1.key, p2.value.surname]);
             }
             const expectedResult = [ // values are sorted due to sorted dictionary
@@ -904,7 +904,7 @@ describe("SortedDictionary", () => {
             expect(dict.length).to.eq(2);
             const expectedResults = [["one", 1], ["two", 22]];
             let index = 0;
-            for(const [key, value] of dict.entries()) {
+            for (const [key, value] of dict.entries()) {
                 expect([key, value]).to.deep.eq(expectedResults[index++]);
             }
         });
@@ -1083,7 +1083,7 @@ describe("SortedDictionary", () => {
             dict.clear();
             expect(() => dict.sum()).to.throw(ErrorMessages.NoElements);
         });
-    })
+    });
 
     describe("#take()", () => {
         it("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {

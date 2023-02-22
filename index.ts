@@ -1,5 +1,6 @@
 export {
     AbstractCollection,
+    AbstractReadonlyCollection,
     AbstractList,
     AbstractSet,
     AbstractTree,
@@ -7,6 +8,7 @@ export {
     Collections,
     Dictionary,
     Enumerable,
+    Enumerator,
     IndexableList,
     EnumerableSet,
     Group,
@@ -20,19 +22,23 @@ export {
     IOrderedAsyncEnumerable,
     IOrderedEnumerable,
     IRandomAccessCollection,
+    IReadonlyCollection,
+    IReadonlyList,
     ISet,
     ITree,
-    KeyValuePair,
     LinkedList,
     List,
     Queue,
     CircularQueue,
+    ReadonlyCollection,
+    ReadonlyList,
     RedBlackTree,
     SortedDictionary,
     SortedSet,
     Stack,
     TraverseType
 } from "./imports";
+export {KeyValuePair} from "./src/dictionary/KeyValuePair";
 export {Accumulator} from "./src/shared/Accumulator";
 export {EqualityComparator} from "./src/shared/EqualityComparator";
 export {IndexedAction} from "./src/shared/IndexedAction";

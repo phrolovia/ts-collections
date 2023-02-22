@@ -8,7 +8,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
-import {Enumerable} from "../../imports";
+import {Enumerable, ReadonlyCollection} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
@@ -526,12 +526,10 @@ describe("List", () => {
                 const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
                 list.add(p);
             }
-            console.time("groupBy");
             const people: Person[] = [];
             list.groupBy(p => p.age).forEach(g => {
                 g.source.orderBy(n => n).forEach(p => people.push(p));
             });
-            console.timeEnd("groupBy");
         });
     });
 
@@ -1579,6 +1577,24 @@ describe("List", () => {
             //     }
             //     console.log("Null: ", lookup.get("Fujiwara"));
             // }
+        });
+    });
+
+    describe("#toReadonlyCollection()", () => {
+        const list = new List([1, 2, 3]);
+        const readonlyCollection = list.toReadonlyCollection();
+        it("should return a new ReadonlyCollection without altering the current list", () => {
+            expect(list.size()).to.eq(3);
+            expect(readonlyCollection instanceof ReadonlyCollection).to.be.true;
+            expect(readonlyCollection.size()).to.eq(3);
+            expect(list === readonlyCollection).to.be.false;
+            expect(list.length).to.eq(3);
+            expect(readonlyCollection.length).to.eq(3);
+        });
+        it("should return a new readonly collection", () => {
+            const readonly2 = list.toReadonlyCollection();
+            expect(list === readonly2).to.be.false;
+            expect(list.toArray()).to.deep.equal(readonly2.toArray());
         });
     });
 

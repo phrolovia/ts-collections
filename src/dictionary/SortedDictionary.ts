@@ -1,9 +1,10 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
-import {ICollection, ISet, KeyValuePair, RedBlackTree, SortedSet} from "../../imports";
+import {ICollection, ISet, RedBlackTree, SortedSet} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {AbstractDictionary} from "./AbstractDictionary";
+import {KeyValuePair} from "./KeyValuePair";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     private readonly keyComparator: OrderComparator<TKey>;
@@ -53,7 +54,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     }
 
     public containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean {
-        comparator ??= this.valueComparator;
+        comparator ??= this.valueComparer;
         for (const pair of this) {
             if (comparator(pair.value, value)) {
                 return true;
@@ -95,6 +96,6 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     }
 
     public values(): ICollection<TValue> {
-        return this.keyValueTree.select(p => p.value).toList(this.valueComparator);
+        return this.keyValueTree.select(p => p.value).toList(this.valueComparer);
     }
 }

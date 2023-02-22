@@ -21,13 +21,14 @@ import {
     ILookup,
     IndexableList,
     IOrderedEnumerable,
-    KeyValuePair, LinkedList,
+    LinkedList,
     List,
     OrderedEnumerator,
     SortedDictionary,
     SortedSet
 } from "../../imports";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
+import {KeyValuePair} from "../dictionary/KeyValuePair";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
