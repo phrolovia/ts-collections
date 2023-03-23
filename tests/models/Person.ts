@@ -32,6 +32,7 @@ export class Person {
     public static readonly Emily = new Person("Emily", "Redridge", 25);
     public static readonly Hanna = new Person("Hanna", "Jackson", 20);
     public static readonly Hanna2 = new Person("Hanna", "Jackson", 19);
+    public static readonly Hanyuu = new Person("Hanyuu", "Suzuhane", 22);
     public static readonly Jane: Person = new Person("Jane", "Green", 16);
     public static readonly Jisu = new Person("Jisu", "", 14);
     public static readonly Julia = new Person("Julia", "Watson", 44);
@@ -40,6 +41,7 @@ export class Person {
     public static readonly Lucrezia = new Person("Lucrezia", "Volpe", 21);
     public static readonly Megan = new Person("Megan", "Watson", 44);
     public static readonly Mel: Person = new Person("Mel", "Bluesky", 9);
+    public static readonly Mirei: Person = new Person("Mirei", "Kurokawa", 22);
     public static readonly Noemi = new Person("Noemi", "Waterfox", 29);
     public static readonly Noemi2 = new Person("Noemi", "Waterfox", 43);
     public static readonly Olga = new Person("Olga", "Byakova", 77);
