@@ -83,4 +83,16 @@ describe("ReadonlyDictionary", () => {
             }
         });
     });
+
+    describe("for-of", () => {
+        it("should iterate over the dictionary", () => {
+            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            let index = 1;
+            for (const pair of dictionary) {
+                expect(pair.key).to.eq(index);
+                expect(pair.value).to.eq(index);
+                index++;
+            }
+        });
+    });
 });

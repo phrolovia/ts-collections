@@ -12,6 +12,7 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {List} from "../../src/list/List";
 import {Enumerable} from "../../src/enumerator/Enumerable";
+import {EnumerableSet, IndexableList, LinkedList} from "../../imports";
 
 describe("Dictionary", () => {
     describe("#add()", () => {
@@ -172,6 +173,22 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#constructor()", () => {
+        const dictionary = new Dictionary<string, Person>(
+            (p1, p2) => p1.name === p2.name,
+            [
+                new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice),
+                new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia),
+            ]
+        );
+        it("should create a dictionary with two elements", () => {
+            expect(dictionary.size()).to.eq(2);
+            expect(dictionary.get("Alice")).to.not.null;
+            expect(dictionary.get("Lucrezia")).to.not.null;
+            expect(dictionary.length).to.eq(2);
+        });
+    });
+
     describe("#contains()", () => {
         const personComparator: EqualityComparator<KeyValuePair<string, Person>>
             = (p1, p2) => p1.value.name === p2.value.name;
@@ -328,6 +345,14 @@ describe("Dictionary", () => {
             expect(result.get(3)).to.not.null;
             expect(result.get(4)).to.not.null;
             expect(result.get(2)).to.null;
+        });
+        it("should use the comparer to determine uniqueness", () => {
+            const result = dict1.except(dict2, (a, b) => a.value === b.value).toSortedDictionary<number, string>(p => p.key, p => p.value);
+            expect(result.size()).to.eq(3);
+            expect(result.get(2)).to.null; // (2, "b") is not unique, so it is not included in the result
+            expect(result.get(1)).to.not.null;
+            expect(result.get(3)).to.not.null;
+            expect(result.get(4)).to.not.null;
         });
     });
 
@@ -506,6 +531,14 @@ describe("Dictionary", () => {
             dict3.add(3, "ff");
             const result = dict1.intersect(dict3).toSortedDictionary<number, string>(p => p.key, p => p.value);
             expect(result.isEmpty()).to.eq(true);
+        });
+        it("should use the comparer to determine uniqueness", () => {
+            const result = dict1.intersect(dict2, (a, b) => a.value === b.value).toSortedDictionary<number, string>(p => p.key, p => p.value);
+            expect(result.size()).to.eq(1);
+            expect(result.get(2)).to.not.null; // (2, "b") is shared, so it should be in the result
+            expect(result.get(1)).to.null;
+            expect(result.get(3)).to.null;
+            expect(result.get(4)).to.null;
         });
     });
 
@@ -1372,14 +1405,61 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#toDictionary()", () => {
+        const dict = new Dictionary<string, Person>();
+        dict.add(Person.Lucrezia.name, Person.Lucrezia);
+        dict.add(Person.Vanessa.name, Person.Vanessa);
+        dict.add(Person.Alice.name, Person.Alice);
+        const people = dict.toDictionary(p => p.value.name, p => p);
+        it("should have the same size as dictionary", () => {
+            expect(dict.size()).to.eq(people.size());
+            expect(dict.length).to.eq(people.length);
+            expect(people instanceof Dictionary).to.be.true;
+        });
+        it("should have the same order as dictionary", () => { // ordered due to RedBlackTree
+            expect(people.get(Person.Lucrezia.name).value).to.eq(Person.Lucrezia);
+            expect(people.get(Person.Vanessa.name).value).to.eq(Person.Vanessa);
+            expect(people.get(Person.Alice.name).value).to.eq(Person.Alice);
+        });
+    });
+
     describe("#toEnumerableSet()", () => {
         const dictionary = new Dictionary<number, string>();
         dictionary.add(2, "b");
         dictionary.add(1, "a");
         it("should create a new sorted set", () => {
-            const set = dictionary.select(p => p.value).toEnumerableSet();
+            const set = dictionary.toEnumerableSet();
+            expect(set instanceof EnumerableSet).to.be.true;
             expect(set.size()).to.eq(dictionary.size());
-            expect(set.toArray()).to.deep.eq(["b", "a"]);
+            expect(set.toArray().map(p => p.value)).to.deep.eq(["b", "a"]);
+        });
+    });
+
+    describe("#toIndexableList()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const list = dictionary.toIndexableList();
+        it("should create a new KeyValuePair list", () => {
+            expect(list.size()).to.eq(dictionary.size());
+            expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
+            expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
+            expect(list instanceof IndexableList).to.be.true;
+            expect(list.length).to.eq(dictionary.length);
+        });
+    });
+
+    describe("#toLinkedList()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const list = dictionary.toLinkedList();
+        it("should create a new KeyValuePair list", () => {
+            expect(list.size()).to.eq(dictionary.size());
+            expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
+            expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
+            expect(list instanceof LinkedList).to.be.true;
+            expect(list.length).to.eq(dictionary.length);
         });
     });
 
@@ -1415,9 +1495,9 @@ describe("Dictionary", () => {
         dictionary.add(1, "a");
         dictionary.add(2, "b");
         it("should create a new sorted set", () => {
-            const set = dictionary.select(p => p.value).toSortedSet();
+            const set = dictionary.toSortedSet((a, b) => a.value.localeCompare(b.value));
             expect(set.size()).to.eq(dictionary.size());
-            expect(set.toArray()).to.deep.eq(["a", "b"]);
+            expect(set.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
         });
     });
 

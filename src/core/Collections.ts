@@ -10,8 +10,7 @@ import {List} from "../list/List";
 export abstract class Collections {
 
     /* istanbul ignore next */
-    private constructor() {
-    }
+    private constructor() {}
 
     /**
      * Add all the given elements to the collection

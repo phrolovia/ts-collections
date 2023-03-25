@@ -6,7 +6,6 @@ import {LinkedList} from "../../imports";
 import {SimpleObject} from "../models/SimpleObject";
 
 describe("SortedSet", () => {
-
     describe("#add", () => {
         it("should skip adding if same element is already in the dictionary", () => {
             const set = new SortedSet<Person>([], (p1, p2) => p1.age - p2.age);
@@ -41,6 +40,18 @@ describe("SortedSet", () => {
             sortedSet.add(object1);
             expect(sortedSet.contains(object1)).to.be.true;
             expect(sortedSet.contains(object2)).to.be.false;
+        });
+    });
+
+    describe("#constructor()", () => {
+        it("should initialize with an empty array if no elements are provided", () => {
+            const set = new SortedSet<Person>();
+            expect(set.length).to.eq(0);
+        });
+        it("should initialize with the given comparator", () => {
+            const set = new SortedSet<Person>([Person.Noemi], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
+            expect(set.length).to.eq(1);
+            expect(set.contains(Person.Noemi2)).to.be.true; // compare by name
         });
     });
 
@@ -325,6 +336,7 @@ describe("SortedSet", () => {
         const incIncSubset = set.subSet(3, 7, true, true);
         const excIncSubset = set.subSet(3, 7, false, true);
         const excExcSubset = set.subSet(3, 7, false, false);
+        const defaultSubset = set.subSet(3, 7); // same as incExcSubset
         it("should create a subset including fromElement and excluding toElement", () => {
             expect(incExcSubset.toArray()).to.deep.equal([3, 4, 5, 6]);
             expect(incExcSubset.length).to.eq(4);
@@ -340,6 +352,10 @@ describe("SortedSet", () => {
         it("should create a subset excluding fromElement and excluding toElement", () => {
             expect(excExcSubset.toArray()).to.deep.equal([4, 5, 6]);
             expect(excExcSubset.length).to.eq(3);
+        });
+        it("should create a subset including fromElement and excluding toElement by default", () => {
+            expect(defaultSubset.toArray()).to.deep.equal([3, 4, 5, 6]);
+            expect(defaultSubset.length).to.eq(4);
         });
     });
     describe("#tailSet()", () => {

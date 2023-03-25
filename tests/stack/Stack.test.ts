@@ -79,7 +79,7 @@ describe("Stack", () => {
         });
         it("should return the head of the stack but not remove it", () => {
             const stack = new Stack<number>([1, 2, 3]);
-            const head = stack.peek();
+            const head = stack.top();
             expect(head).to.eq(1);
             expect(stack.size()).to.eq(3);
             expect(stack.length).to.eq(3);

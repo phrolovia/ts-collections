@@ -23,8 +23,9 @@ import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 
 export abstract class EnumerableStatic {
-    protected constructor() {
-    }
+
+    /* istanbul ignore next */
+    private constructor() {}
 
     public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);

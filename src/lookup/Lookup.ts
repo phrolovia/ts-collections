@@ -29,8 +29,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly lookupTree: RedBlackTree<IGroup<TKey, TElement>>;
     public readonly length: number = 0;
 
-    private constructor(keyComparator?: OrderComparator<TKey>) {
-        this.keyComparator = keyComparator ?? Comparators.orderComparator;
+    private constructor(keyComparator: OrderComparator<TKey>) {
+        this.keyComparator = keyComparator;
         const lookupComparator = (g1: IGroup<TKey, TElement>, g2: IGroup<TKey, TElement>) => this.keyComparator(g1.key, g2.key);
         this.lookupTree = new RedBlackTree<IGroup<TKey, TElement>>(lookupComparator);
     }

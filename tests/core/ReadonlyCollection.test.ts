@@ -2,6 +2,8 @@ import {describe} from "mocha";
 import {expect} from "chai";
 import {ReadonlyCollection} from "../../src/core/ReadonlyCollection";
 import {SortedSet} from "../../src/set/SortedSet";
+import {List} from "../../src/list/List"
+import {Person} from "../models/Person";
 
 describe("ReadonlyCollection", () => {
     describe("#size()", () => {
@@ -19,6 +21,18 @@ describe("ReadonlyCollection", () => {
             set.add(6);
             expect(collection.size()).to.equal(6);
             expect(collection.length).to.equal(6);
+        });
+    });
+    describe("#toString()", () => {
+        const list = new List([Person.Alice, Person.Mirei, Person.Kaori]);
+        const collection = new ReadonlyCollection(list);
+        it("should return a string representation of the collection", () => {
+            const str = collection.toString("|", p => p.name);
+            expect(str).to.equal("Alice|Mirei|Kaori");
+        });
+        it("should return a string representation of the collection with default separator", () => {
+            const str = collection.toString(undefined, p => p.name);
+            expect(str).to.equal("Alice, Mirei, Kaori");
         });
     });
 });
