@@ -1627,6 +1627,10 @@ describe("List", () => {
             const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
             expect(people.toString("|", p => `${p.name}`)).to.equal("Alice|Vanessa|Viola|Lenka|Senna");
         });
+        it("should return empty string if the list is empty", () => {
+            const emptyList = new List<number>();
+            expect(emptyList.toString()).to.equal("");
+        });
     });
 
     describe("#union()", () => {
