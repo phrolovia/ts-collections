@@ -172,6 +172,22 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#constructor()", () => {
+        const dictionary = new Dictionary<string, Person>(
+            (p1, p2) => p1.name === p2.name,
+            [
+                new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice),
+                new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia),
+            ]
+        );
+        it("should create a dictionary with two elements", () => {
+            expect(dictionary.size()).to.eq(2);
+            expect(dictionary.get("Alice")).to.not.null;
+            expect(dictionary.get("Lucrezia")).to.not.null;
+            expect(dictionary.length).to.eq(2);
+        });
+    });
+
     describe("#contains()", () => {
         const personComparator: EqualityComparator<KeyValuePair<string, Person>>
             = (p1, p2) => p1.value.name === p2.value.name;

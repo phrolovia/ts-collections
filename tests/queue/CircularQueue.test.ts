@@ -32,4 +32,21 @@ describe("CircularQueue", () => {
             expect(queue.length).to.eq(3);
         });
     });
+    describe("#isFull()", () => {
+        it("should return true if the queue is full", () => {
+            const queue = new CircularQueue<number>(3);
+            expect(queue.isFull()).to.be.false;
+            queue.enqueue(1);
+            queue.enqueue(2);
+            queue.enqueue(3);
+            expect(queue.isFull()).to.be.true;
+        });
+        it("should return false if the queue is not full", () => {
+            const queue = new CircularQueue<number>(3);
+            expect(queue.isFull()).to.be.false;
+            queue.enqueue(1);
+            queue.enqueue(2);
+            expect(queue.isFull()).to.be.false;
+        });
+    });
 });

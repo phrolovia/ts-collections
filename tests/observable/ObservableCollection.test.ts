@@ -82,8 +82,51 @@ describe("ObservableCollection", () => {
         });
         it("should return false if the collection does not contain the element", () => {
             const collection = new ObservableCollection<Person>();
+            collection.add(Person.Noemi);
+            expect(collection.contains(Person.Noemi2)).to.be.false;
+        });
+        it("should use the collection's equalityComparer to determine if the collection contains the element", () => {
+            const collection = new ObservableCollection<Person>((a, b) => a.name === b.name);
+            collection.add(Person.Noemi);
+            expect(collection.contains(Person.Noemi2)).to.be.true;
+        });
+        it("should use the comparer to determine if the collection contains the element", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Noemi);
+            expect(collection.contains(Person.Noemi2, (a, b) => a.name === b.name)).to.be.true;
+        });
+    });
+    describe("#containsAll()", () => {
+        it("should return true if the collection contains all elements", () => {
+            const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
-            expect(collection.contains(Person.Mirei)).to.be.false;
+            collection.add(Person.Mirei);
+            expect(collection.containsAll([Person.Alice, Person.Mirei])).to.be.true;
+        });
+        it("should return false if the collection does not contain all elements", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Alice);
+            collection.add(Person.Mirei);
+            expect(collection.containsAll([Person.Alice, Person.Noemi])).to.be.false;
+        });
+        it("should use the collection's equalityComparer to determine if the collection contains all elements", () => {
+            const collection = new ObservableCollection<Person>((a, b) => a.name === b.name);
+            collection.add(Person.Noemi);
+            expect(collection.containsAll([Person.Noemi2])).to.be.true;
+        });
+    });
+    describe("#get()", () => {
+        it("should return the element at the specified index", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Alice);
+            collection.add(Person.Mirei);
+            expect(collection.get(0)).to.equal(Person.Alice);
+            expect(collection.get(1)).to.equal(Person.Mirei);
+        });
+        it("should throw an error if the index is out of bounds", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Alice);
+            expect(() => collection.get(1)).to.throw();
         });
     });
     describe("#insert()", () => {
@@ -119,6 +162,17 @@ describe("ObservableCollection", () => {
             };
             collection.insert(1, Person.Hanyuu);
             expect(eventRaised).to.be.true;
+        });
+    });
+    describe("#isEmpty()", () => {
+        it("should return true if the collection is empty", () => {
+            const collection = new ObservableCollection<Person>();
+            expect(collection.isEmpty()).to.be.true;
+        });
+        it("should return false if the collection is not empty", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Alice);
+            expect(collection.isEmpty()).to.be.false;
         });
     });
     describe("#move()", () => {
@@ -273,6 +327,23 @@ describe("ObservableCollection", () => {
             collection.add(Person.Mirei);
             expect(collection.size()).to.equal(2);
             expect(collection.length).to.equal(2);
+            expect(collection.count()).to.equal(2);
+        });
+    });
+    describe("#get comparator()", () => {
+        it("should return the comparator", () => {
+            const comparator = (a: Person, b: Person) => a.age === b.age;
+            const collection = new ObservableCollection<Person>(comparator);
+            expect(collection.comparator).to.equal(comparator);
+        });
+    });
+    describe("#get length", () => {
+        it("should return the number of elements in the collection", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Alice);
+            collection.add(Person.Mirei);
+            expect(collection.length).to.equal(2);
+            expect(collection.size()).to.equal(2);
             expect(collection.count()).to.equal(2);
         });
     });

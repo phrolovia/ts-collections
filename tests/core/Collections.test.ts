@@ -250,7 +250,6 @@ describe("Collections", () => {
             Collections.rotate(list, 0);
             expect(list.toArray()).to.deep.eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         });
-
         it("should rotate array by distance of 3", () => {
             const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             Collections.rotate(array, 3);
@@ -265,6 +264,16 @@ describe("Collections", () => {
             const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
             Collections.rotate(array, 0);
             expect(array).to.deep.eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+        it("should not do anything if list is empty", () => {
+            const list = new List<number>();
+            Collections.rotate(list, 3);
+            expect(list.toArray()).to.deep.eq([]);
+        });
+        it("should not do anything if array is empty", () => {
+            const array: number[] = [];
+            Collections.rotate(array, 3);
+            expect(array).to.deep.eq([]);
         });
     })
 

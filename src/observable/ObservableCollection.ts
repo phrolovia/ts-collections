@@ -1,14 +1,14 @@
-import {IObservableCollection} from "./IObservableCollection";
 import {CollectionChangedAction, ICollectionChangedEventArgs} from "./ICollectionChangedEventArgs";
 import {AbstractEnumerable, IList, List, ReadonlyList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
-export class ObservableCollection<TElement> extends AbstractEnumerable<TElement> implements IObservableCollection<TElement> {
-    readonly #list: IList<TElement> = new List<TElement>();
-    public collectionChanged?: (sender: IObservableCollection<TElement>, args: ICollectionChangedEventArgs<TElement>) => void;
+export class ObservableCollection<TElement> extends AbstractEnumerable<TElement> {
+    readonly #list: IList<TElement>;
+    public collectionChanged?: (sender: this, args: ICollectionChangedEventArgs<TElement>) => void;
 
     public constructor(comparator?: EqualityComparator<TElement>) {
         super(comparator);
+        this.#list = new List([], comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -27,8 +27,22 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         this.collectionChanged?.(this, {oldItems, action: CollectionChangedAction.Reset});
     }
 
-    public override contains(element: TElement): boolean {
-        return this.#list.contains(element);
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        comparator ??= this.comparer;
+        return this.#list.contains(element, comparator);
+    }
+
+    public containsAll<TSource extends TElement>(iterable: Iterable<TSource>): boolean {
+        for (const element of iterable) {
+            let found = false;
+            for (const thisElement of this) {
+                found ||= this.comparer(element, thisElement);
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public get(index: number): TElement {
@@ -38,6 +52,10 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
     public insert(index: number, element: TElement) {
         this.#list.addAt(element, index);
         this.collectionChanged?.(this, {newItems: new ReadonlyList(new List([element])), action: CollectionChangedAction.Add});
+    }
+
+    public isEmpty(): boolean {
+        return this.#list.isEmpty();
     }
 
     public move(oldIndex: number, newIndex: number) {
@@ -76,6 +94,10 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
 
     public size(): number {
         return this.#list.size();
+    }
+
+    public get comparator(): EqualityComparator<TElement> {
+        return this.#list.comparator;
     }
 
     public get length(): number {

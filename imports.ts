@@ -13,7 +13,6 @@ export {Group} from "./src/enumerator/Group";
 export {IGroup} from "./src/enumerator/IGroup";
 export {ILookup} from "./src/lookup/ILookup";
 export {ICollection} from "./src/core/ICollection";
-export {IObservableCollection} from "./src/observable/IObservableCollection";
 export {ICollectionChangedEventArgs, CollectionChangedAction} from "./src/observable/ICollectionChangedEventArgs";
 export {IRandomAccessCollection} from "./src/core/IRandomAccessCollection";
 export {IReadonlyCollection} from "./src/core/IReadonlyCollection";
