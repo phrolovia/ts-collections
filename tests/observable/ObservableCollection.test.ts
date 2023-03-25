@@ -3,6 +3,7 @@ import {expect} from "chai";
 import {Person} from "../models/Person";
 import {ObservableCollection} from "../../src/observable/ObservableCollection";
 import {CollectionChangedAction} from "../../src/observable/ICollectionChangedEventArgs";
+import {Enumerable} from "../../imports";
 
 describe("ObservableCollection", () => {
     describe("#add()", () => {
@@ -86,7 +87,7 @@ describe("ObservableCollection", () => {
             expect(collection.contains(Person.Noemi2)).to.be.false;
         });
         it("should use the collection's equalityComparer to determine if the collection contains the element", () => {
-            const collection = new ObservableCollection<Person>((a, b) => a.name === b.name);
+            const collection = new ObservableCollection<Person>([], (a, b) => a.name === b.name);
             collection.add(Person.Noemi);
             expect(collection.contains(Person.Noemi2)).to.be.true;
         });
@@ -110,7 +111,7 @@ describe("ObservableCollection", () => {
             expect(collection.containsAll([Person.Alice, Person.Noemi])).to.be.false;
         });
         it("should use the collection's equalityComparer to determine if the collection contains all elements", () => {
-            const collection = new ObservableCollection<Person>((a, b) => a.name === b.name);
+            const collection = new ObservableCollection<Person>([], (a, b) => a.name === b.name);
             collection.add(Person.Noemi);
             expect(collection.containsAll([Person.Noemi2])).to.be.true;
         });
@@ -333,7 +334,7 @@ describe("ObservableCollection", () => {
     describe("#get comparator()", () => {
         it("should return the comparator", () => {
             const comparator = (a: Person, b: Person) => a.age === b.age;
-            const collection = new ObservableCollection<Person>(comparator);
+            const collection = new ObservableCollection<Person>(Enumerable.empty(), comparator);
             expect(collection.comparator).to.equal(comparator);
         });
     });

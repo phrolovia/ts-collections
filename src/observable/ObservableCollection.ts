@@ -6,9 +6,12 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
     readonly #list: IList<TElement>;
     public collectionChanged?: (sender: this, args: ICollectionChangedEventArgs<TElement>) => void;
 
-    public constructor(comparator?: EqualityComparator<TElement>) {
+    public constructor();
+    public constructor(iterable?: Iterable<TElement>);
+    public constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>);
+    public constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.#list = new List([], comparator);
+        this.#list = new List(iterable ?? [], comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
