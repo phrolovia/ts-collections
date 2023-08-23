@@ -32,7 +32,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L26">src/enumerator/AbstractEnumerable.ts:26</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L28">src/enumerator/AbstractEnumerable.ts:28</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -54,6 +54,7 @@
 <a href="AbstractEnumerable.html#any" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>any</span></a>
 <a href="AbstractEnumerable.html#append" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>append</span></a>
 <a href="AbstractEnumerable.html#average" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>average</span></a>
+<a href="AbstractEnumerable.html#cast" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>cast</span></a>
 <a href="AbstractEnumerable.html#chunk" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>chunk</span></a>
 <a href="AbstractEnumerable.html#concat" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>concat</span></a>
 <a href="AbstractEnumerable.html#contains" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains</span></a>
@@ -74,6 +75,7 @@
 <a href="AbstractEnumerable.html#lastOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>last<wbr/>Or<wbr/>Default</span></a>
 <a href="AbstractEnumerable.html#max" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>max</span></a>
 <a href="AbstractEnumerable.html#min" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>min</span></a>
+<a href="AbstractEnumerable.html#ofType" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>of<wbr/>Type</span></a>
 <a href="AbstractEnumerable.html#orderBy" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By</span></a>
 <a href="AbstractEnumerable.html#orderByDescending" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By<wbr/>Descending</span></a>
 <a href="AbstractEnumerable.html#pairwise" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pairwise</span></a>
@@ -125,14 +127,14 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">comparator</span>: <a href="../interfaces/EqualityComparator.html" class="tsd-signature-type tsd-kind-interface">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="AbstractEnumerable.html" class="tsd-signature-type tsd-kind-class">AbstractEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L29">src/enumerator/AbstractEnumerable.ts:29</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L31">src/enumerator/AbstractEnumerable.ts:31</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="comparer" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>comparer</span><a href="#comparer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">comparer</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/EqualityComparator.html" class="tsd-signature-type tsd-kind-interface">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L27">src/enumerator/AbstractEnumerable.ts:27</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L29">src/enumerator/AbstractEnumerable.ts:29</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="_iterator_" class="tsd-anchor"></a>
@@ -143,7 +145,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#_iterator_">[iterator]</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L268">src/enumerator/AbstractEnumerable.ts:268</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L278">src/enumerator/AbstractEnumerable.ts:278</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="aggregate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>aggregate</span><a href="#aggregate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -181,7 +183,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#aggregate">aggregate</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L33">src/enumerator/AbstractEnumerable.ts:33</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L35">src/enumerator/AbstractEnumerable.ts:35</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="all" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>all</span><a href="#all" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -201,7 +203,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#all">all</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L37">src/enumerator/AbstractEnumerable.ts:37</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L39">src/enumerator/AbstractEnumerable.ts:39</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="any" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>any</span><a href="#any" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -221,7 +223,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#any">any</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L41">src/enumerator/AbstractEnumerable.ts:41</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L43">src/enumerator/AbstractEnumerable.ts:43</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="append" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>append</span><a href="#append" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -241,7 +243,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#append">append</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L45">src/enumerator/AbstractEnumerable.ts:45</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L47">src/enumerator/AbstractEnumerable.ts:47</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="average" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>average</span><a href="#average" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -261,7 +263,29 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#average">average</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L49">src/enumerator/AbstractEnumerable.ts:49</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L51">src/enumerator/AbstractEnumerable.ts:51</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="cast" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>cast</span><a href="#cast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="cast.cast-1"><span class="tsd-kind-call-signature">cast</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><a href="#cast.cast-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Casts the elements of the sequence to the specified type.</p>
+</div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TResult</span></h4>
+<div class="tsd-comment tsd-typography"></div></li></ul></section>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new enumerable sequence whose elements are of the specified type.</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Example</h4><pre><code class="language-ts"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">onlyNumbers</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-1">&#39;a&#39;</span><span class="hl-0">, </span><span class="hl-1">&#39;b&#39;</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-1">&#39;c&#39;</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]).</span><span class="hl-4">where</span><span class="hl-0">(</span><span class="hl-6">e</span><span class="hl-0"> </span><span class="hl-2">=&gt;</span><span class="hl-0"> </span><span class="hl-2">typeof</span><span class="hl-0"> </span><span class="hl-6">e</span><span class="hl-0"> === </span><span class="hl-1">&#39;number&#39;</span><span class="hl-0">).</span><span class="hl-4">cast</span><span class="hl-0">&lt;</span><span class="hl-7">number</span><span class="hl-0">&gt;();</span><br/><span class="hl-0">     </span><span class="hl-6">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-6">onlyNumbers</span><span class="hl-0">.</span><span class="hl-4">toArray</span><span class="hl-0">()); </span><span class="hl-8">// [1, 2, 3, 4, 5]</span>
+</code><button>Copy</button></pre>
+</div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#cast">cast</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L55">src/enumerator/AbstractEnumerable.ts:55</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="chunk" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>chunk</span><a href="#chunk" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -281,7 +305,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#chunk">chunk</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L53">src/enumerator/AbstractEnumerable.ts:53</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L59">src/enumerator/AbstractEnumerable.ts:59</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="concat" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>concat</span><a href="#concat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -301,7 +325,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#concat">concat</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L57">src/enumerator/AbstractEnumerable.ts:57</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L63">src/enumerator/AbstractEnumerable.ts:63</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="contains" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains</span><a href="#contains" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -326,7 +350,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#contains">contains</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L61">src/enumerator/AbstractEnumerable.ts:61</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L67">src/enumerator/AbstractEnumerable.ts:67</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="count" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>count</span><a href="#count" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -347,7 +371,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#count">count</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L66">src/enumerator/AbstractEnumerable.ts:66</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L72">src/enumerator/AbstractEnumerable.ts:72</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="defaultIfEmpty" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>default<wbr/>If<wbr/>Empty</span><a href="#defaultIfEmpty" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -367,7 +391,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#defaultIfEmpty">defaultIfEmpty</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L70">src/enumerator/AbstractEnumerable.ts:70</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L76">src/enumerator/AbstractEnumerable.ts:76</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="distinct" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>distinct</span><a href="#distinct" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -397,7 +421,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#distinct">distinct</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L74">src/enumerator/AbstractEnumerable.ts:74</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L80">src/enumerator/AbstractEnumerable.ts:80</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="elementAt" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>element<wbr/>At</span><a href="#elementAt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -419,7 +443,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#elementAt">elementAt</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L78">src/enumerator/AbstractEnumerable.ts:78</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L84">src/enumerator/AbstractEnumerable.ts:84</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="elementAtOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>element<wbr/>At<wbr/>Or<wbr/>Default</span><a href="#elementAtOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -439,7 +463,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#elementAtOrDefault">elementAtOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L82">src/enumerator/AbstractEnumerable.ts:82</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L88">src/enumerator/AbstractEnumerable.ts:88</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="except" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>except</span><a href="#except" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -454,7 +478,7 @@ If resultSelector function is specified, it will be used to select the result va
 </ul>
 <p>If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.</p>
 <p>Example:</p>
-<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-7">// [1, 3, 4]</span>
+<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-8">// [1, 3, 4]</span>
 </code><button>Copy</button></pre>
 </div>
 <div class="tsd-parameters">
@@ -481,7 +505,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#except">except</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L86">src/enumerator/AbstractEnumerable.ts:86</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L92">src/enumerator/AbstractEnumerable.ts:92</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="first" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>first</span><a href="#first" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -503,7 +527,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#first">first</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L91">src/enumerator/AbstractEnumerable.ts:91</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L97">src/enumerator/AbstractEnumerable.ts:97</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="firstOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>first<wbr/>Or<wbr/>Default</span><a href="#firstOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -525,7 +549,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#firstOrDefault">firstOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L95">src/enumerator/AbstractEnumerable.ts:95</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L101">src/enumerator/AbstractEnumerable.ts:101</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="forEach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>for<wbr/>Each</span><a href="#forEach" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -545,7 +569,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#forEach">forEach</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L99">src/enumerator/AbstractEnumerable.ts:99</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L105">src/enumerator/AbstractEnumerable.ts:105</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="groupBy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>group<wbr/>By</span><a href="#groupBy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -575,7 +599,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#groupBy">groupBy</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L106">src/enumerator/AbstractEnumerable.ts:106</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L112">src/enumerator/AbstractEnumerable.ts:112</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="groupJoin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>group<wbr/>Join</span><a href="#groupJoin" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -624,7 +648,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#groupJoin">groupJoin</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L110">src/enumerator/AbstractEnumerable.ts:110</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L116">src/enumerator/AbstractEnumerable.ts:116</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="intersect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>intersect</span><a href="#intersect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -639,7 +663,7 @@ If resultSelector function is specified, it will be used to select the result va
 </ul>
 <p>If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.</p>
 <p>Example:</p>
-<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-7">// [2, 5]</span>
+<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-8">// [2, 5]</span>
 </code><button>Copy</button></pre>
 </div>
 <div class="tsd-parameters">
@@ -666,7 +690,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#intersect">intersect</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L114">src/enumerator/AbstractEnumerable.ts:114</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L120">src/enumerator/AbstractEnumerable.ts:120</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="join" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>join</span><a href="#join" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -720,7 +744,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#join">join</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L119">src/enumerator/AbstractEnumerable.ts:119</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L125">src/enumerator/AbstractEnumerable.ts:125</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="last" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>last</span><a href="#last" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -742,7 +766,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#last">last</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L123">src/enumerator/AbstractEnumerable.ts:123</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L129">src/enumerator/AbstractEnumerable.ts:129</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="lastOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>last<wbr/>Or<wbr/>Default</span><a href="#lastOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -764,7 +788,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#lastOrDefault">lastOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L127">src/enumerator/AbstractEnumerable.ts:127</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L133">src/enumerator/AbstractEnumerable.ts:133</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="max" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>max</span><a href="#max" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -786,7 +810,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#max">max</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L131">src/enumerator/AbstractEnumerable.ts:131</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L137">src/enumerator/AbstractEnumerable.ts:137</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="min" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>min</span><a href="#min" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -808,7 +832,35 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#min">min</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L135">src/enumerator/AbstractEnumerable.ts:135</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L141">src/enumerator/AbstractEnumerable.ts:141</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="ofType" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>of<wbr/>Type</span><a href="#ofType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="ofType.ofType-1"><span class="tsd-kind-call-signature">of<wbr/>Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">type</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">InferredType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#ofType.ofType-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns the elements that are of the specified type.
+The type can be specified either as a constructor function or as a string.</p>
+</div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type ">ObjectType</span></h4>
+<div class="tsd-comment tsd-typography"></div></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">type</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TResult</span></h5>
+<div class="tsd-comment tsd-typography"><p>The type to filter the elements of the sequence with.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">InferredType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new enumerable sequence whose elements are of the specified type.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#ofType">ofType</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L145">src/enumerator/AbstractEnumerable.ts:145</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="orderBy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>order<wbr/>By</span><a href="#orderBy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -838,7 +890,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#orderBy">orderBy</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L139">src/enumerator/AbstractEnumerable.ts:139</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L149">src/enumerator/AbstractEnumerable.ts:149</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="orderByDescending" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>order<wbr/>By<wbr/>Descending</span><a href="#orderByDescending" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -868,7 +920,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#orderByDescending">orderByDescending</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L143">src/enumerator/AbstractEnumerable.ts:143</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L153">src/enumerator/AbstractEnumerable.ts:153</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="pairwise" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pairwise</span><a href="#pairwise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -893,7 +945,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#pairwise">pairwise</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L147">src/enumerator/AbstractEnumerable.ts:147</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L157">src/enumerator/AbstractEnumerable.ts:157</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="partition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>partition</span><a href="#partition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -913,7 +965,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#partition">partition</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L151">src/enumerator/AbstractEnumerable.ts:151</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L161">src/enumerator/AbstractEnumerable.ts:161</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="prepend" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepend</span><a href="#prepend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -933,7 +985,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#prepend">prepend</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L155">src/enumerator/AbstractEnumerable.ts:155</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L165">src/enumerator/AbstractEnumerable.ts:165</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="reverse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reverse</span><a href="#reverse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -945,7 +997,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#reverse">reverse</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L159">src/enumerator/AbstractEnumerable.ts:159</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L169">src/enumerator/AbstractEnumerable.ts:169</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="scan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scan</span><a href="#scan" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -976,7 +1028,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#scan">scan</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L163">src/enumerator/AbstractEnumerable.ts:163</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L173">src/enumerator/AbstractEnumerable.ts:173</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="select" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select</span><a href="#select" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1001,7 +1053,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#select">select</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L167">src/enumerator/AbstractEnumerable.ts:167</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L177">src/enumerator/AbstractEnumerable.ts:177</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectMany" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select<wbr/>Many</span><a href="#selectMany" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1026,7 +1078,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#selectMany">selectMany</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L171">src/enumerator/AbstractEnumerable.ts:171</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L181">src/enumerator/AbstractEnumerable.ts:181</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="sequenceEqual" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sequence<wbr/>Equal</span><a href="#sequenceEqual" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1051,7 +1103,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#sequenceEqual">sequenceEqual</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L175">src/enumerator/AbstractEnumerable.ts:175</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L185">src/enumerator/AbstractEnumerable.ts:185</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="single" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>single</span><a href="#single" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1073,7 +1125,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#single">single</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L180">src/enumerator/AbstractEnumerable.ts:180</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L190">src/enumerator/AbstractEnumerable.ts:190</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="singleOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>single<wbr/>Or<wbr/>Default</span><a href="#singleOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1095,7 +1147,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#singleOrDefault">singleOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L184">src/enumerator/AbstractEnumerable.ts:184</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L194">src/enumerator/AbstractEnumerable.ts:194</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="skip" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>skip</span><a href="#skip" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1115,7 +1167,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#skip">skip</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L188">src/enumerator/AbstractEnumerable.ts:188</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L198">src/enumerator/AbstractEnumerable.ts:198</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="skipLast" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>skip<wbr/>Last</span><a href="#skipLast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1135,7 +1187,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#skipLast">skipLast</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L192">src/enumerator/AbstractEnumerable.ts:192</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L202">src/enumerator/AbstractEnumerable.ts:202</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="skipWhile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>skip<wbr/>While</span><a href="#skipWhile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1155,7 +1207,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#skipWhile">skipWhile</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L196">src/enumerator/AbstractEnumerable.ts:196</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L206">src/enumerator/AbstractEnumerable.ts:206</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="sum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sum</span><a href="#sum" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1175,7 +1227,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#sum">sum</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L200">src/enumerator/AbstractEnumerable.ts:200</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L210">src/enumerator/AbstractEnumerable.ts:210</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="take" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>take</span><a href="#take" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1195,7 +1247,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#take">take</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L204">src/enumerator/AbstractEnumerable.ts:204</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L214">src/enumerator/AbstractEnumerable.ts:214</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="takeLast" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>take<wbr/>Last</span><a href="#takeLast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1215,7 +1267,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#takeLast">takeLast</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L208">src/enumerator/AbstractEnumerable.ts:208</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L218">src/enumerator/AbstractEnumerable.ts:218</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="takeWhile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>take<wbr/>While</span><a href="#takeWhile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1235,7 +1287,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#takeWhile">takeWhile</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L212">src/enumerator/AbstractEnumerable.ts:212</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L222">src/enumerator/AbstractEnumerable.ts:222</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Array</span><a href="#toArray" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1247,7 +1299,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toArray">toArray</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L216">src/enumerator/AbstractEnumerable.ts:216</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L226">src/enumerator/AbstractEnumerable.ts:226</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toDictionary" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Dictionary</span><a href="#toDictionary" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1284,7 +1336,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toDictionary">toDictionary</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L220">src/enumerator/AbstractEnumerable.ts:220</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L230">src/enumerator/AbstractEnumerable.ts:230</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toEnumerableSet" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Enumerable<wbr/>Set</span><a href="#toEnumerableSet" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1296,7 +1348,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toEnumerableSet">toEnumerableSet</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L224">src/enumerator/AbstractEnumerable.ts:224</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L234">src/enumerator/AbstractEnumerable.ts:234</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toIndexableList" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Indexable<wbr/>List</span><a href="#toIndexableList" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1316,7 +1368,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toIndexableList">toIndexableList</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L228">src/enumerator/AbstractEnumerable.ts:228</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L238">src/enumerator/AbstractEnumerable.ts:238</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toLinkedList" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Linked<wbr/>List</span><a href="#toLinkedList" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1336,7 +1388,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toLinkedList">toLinkedList</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L233">src/enumerator/AbstractEnumerable.ts:233</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L243">src/enumerator/AbstractEnumerable.ts:243</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toList" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>List</span><a href="#toList" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1356,7 +1408,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toList">toList</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L238">src/enumerator/AbstractEnumerable.ts:238</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L248">src/enumerator/AbstractEnumerable.ts:248</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toLookup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Lookup</span><a href="#toLookup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1393,7 +1445,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toLookup">toLookup</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L251">src/enumerator/AbstractEnumerable.ts:251</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L261">src/enumerator/AbstractEnumerable.ts:261</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toSortedDictionary" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Sorted<wbr/>Dictionary</span><a href="#toSortedDictionary" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1435,7 +1487,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toSortedDictionary">toSortedDictionary</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L243">src/enumerator/AbstractEnumerable.ts:243</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L253">src/enumerator/AbstractEnumerable.ts:253</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toSortedSet" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Sorted<wbr/>Set</span><a href="#toSortedSet" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1455,7 +1507,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#toSortedSet">toSortedSet</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L247">src/enumerator/AbstractEnumerable.ts:247</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L257">src/enumerator/AbstractEnumerable.ts:257</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="union" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>union</span><a href="#union" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1480,7 +1532,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#union">union</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L255">src/enumerator/AbstractEnumerable.ts:255</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L265">src/enumerator/AbstractEnumerable.ts:265</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="where" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>where</span><a href="#where" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1500,7 +1552,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#where">where</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L260">src/enumerator/AbstractEnumerable.ts:260</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L270">src/enumerator/AbstractEnumerable.ts:270</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="zip" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>zip</span><a href="#zip" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1532,7 +1584,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IEnumerable.html">IEnumerable</a>.<a href="../interfaces/IEnumerable.html#zip">zip</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/AbstractEnumerable.ts#L264">src/enumerator/AbstractEnumerable.ts:264</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/AbstractEnumerable.ts#L274">src/enumerator/AbstractEnumerable.ts:274</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -1560,6 +1612,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <li><a href="#any" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>any</span></a></li>
 <li><a href="#append" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>append</span></a></li>
 <li><a href="#average" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>average</span></a></li>
+<li><a href="#cast" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>cast</span></a></li>
 <li><a href="#chunk" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>chunk</span></a></li>
 <li><a href="#concat" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>concat</span></a></li>
 <li><a href="#contains" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>contains</span></a></li>
@@ -1580,6 +1633,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <li><a href="#lastOrDefault" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>last<wbr/>Or<wbr/>Default</span></a></li>
 <li><a href="#max" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>max</span></a></li>
 <li><a href="#min" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>min</span></a></li>
+<li><a href="#ofType" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>of<wbr/>Type</span></a></li>
 <li><a href="#orderBy" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By</span></a></li>
 <li><a href="#orderByDescending" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By<wbr/>Descending</span></a></li>
 <li><a href="#pairwise" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pairwise</span></a></li>

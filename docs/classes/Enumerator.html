@@ -29,7 +29,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="../interfaces/IOrderedEnumerable.html" class="tsd-signature-type tsd-kind-interface">IOrderedEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L33">src/enumerator/Enumerator.ts:33</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L35">src/enumerator/Enumerator.ts:35</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -52,6 +52,8 @@
 <a href="Enumerator.html#append" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>append</span></a>
 <a href="Enumerator.html#appendGenerator" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>append<wbr/>Generator</span></a>
 <a href="Enumerator.html#average" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>average</span></a>
+<a href="Enumerator.html#cast" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>cast</span></a>
+<a href="Enumerator.html#castGenerator" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>cast<wbr/>Generator</span></a>
 <a href="Enumerator.html#chunk" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>chunk</span></a>
 <a href="Enumerator.html#chunkGenerator" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>chunk<wbr/>Generator</span></a>
 <a href="Enumerator.html#concat" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>concat</span></a>
@@ -80,6 +82,8 @@
 <a href="Enumerator.html#lastOrDefault" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>last<wbr/>Or<wbr/>Default</span></a>
 <a href="Enumerator.html#max" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>max</span></a>
 <a href="Enumerator.html#min" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>min</span></a>
+<a href="Enumerator.html#ofType" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>of<wbr/>Type</span></a>
+<a href="Enumerator.html#ofTypeGenerator" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>of<wbr/>Type<wbr/>Generator</span></a>
 <a href="Enumerator.html#orderBy" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By</span></a>
 <a href="Enumerator.html#orderByDescending" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By<wbr/>Descending</span></a>
 <a href="Enumerator.html#pairwise" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pairwise</span></a>
@@ -155,7 +159,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Enumerator.html" class="tsd-signature-type tsd-kind-class">Enumerator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L35">src/enumerator/Enumerator.ts:35</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L37">src/enumerator/Enumerator.ts:37</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="iterable" class="tsd-anchor"></a>
@@ -170,7 +174,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L35">src/enumerator/Enumerator.ts:35</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L37">src/enumerator/Enumerator.ts:37</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="_iterator_" class="tsd-anchor"></a>
@@ -181,7 +185,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#_iterator_">[iterator]</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L37">src/enumerator/Enumerator.ts:37</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L39">src/enumerator/Enumerator.ts:39</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="aggregate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>aggregate</span><a href="#aggregate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -219,7 +223,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#aggregate">aggregate</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L41">src/enumerator/Enumerator.ts:41</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L43">src/enumerator/Enumerator.ts:43</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="all" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>all</span><a href="#all" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -239,7 +243,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#all">all</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L64">src/enumerator/Enumerator.ts:64</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L66">src/enumerator/Enumerator.ts:66</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="any" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>any</span><a href="#any" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -259,7 +263,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#any">any</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L73">src/enumerator/Enumerator.ts:73</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L75">src/enumerator/Enumerator.ts:75</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="append" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>append</span><a href="#append" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -279,7 +283,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#append">append</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L85">src/enumerator/Enumerator.ts:85</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L87">src/enumerator/Enumerator.ts:87</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="appendGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>append<wbr/>Generator</span><a href="#appendGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -292,7 +296,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><span class="tsd-kind-parameter">element</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TElement</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L545">src/enumerator/Enumerator.ts:545</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L555">src/enumerator/Enumerator.ts:555</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="average" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>average</span><a href="#average" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -312,7 +316,42 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#average">average</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L89">src/enumerator/Enumerator.ts:89</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L91">src/enumerator/Enumerator.ts:91</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="cast" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>cast</span><a href="#cast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="cast.cast-1"><span class="tsd-kind-call-signature">cast</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><a href="#cast.cast-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Casts the elements of the sequence to the specified type.</p>
+</div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TResult</span></h4>
+<div class="tsd-comment tsd-typography"></div></li></ul></section>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new enumerable sequence whose elements are of the specified type.</p>
+
+<div class="tsd-comment tsd-typography">
+<h4>Example</h4><pre><code class="language-ts"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">onlyNumbers</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-1">&#39;a&#39;</span><span class="hl-0">, </span><span class="hl-1">&#39;b&#39;</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-1">&#39;c&#39;</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]).</span><span class="hl-4">where</span><span class="hl-0">(</span><span class="hl-6">e</span><span class="hl-0"> </span><span class="hl-2">=&gt;</span><span class="hl-0"> </span><span class="hl-2">typeof</span><span class="hl-0"> </span><span class="hl-6">e</span><span class="hl-0"> === </span><span class="hl-1">&#39;number&#39;</span><span class="hl-0">).</span><span class="hl-4">cast</span><span class="hl-0">&lt;</span><span class="hl-7">number</span><span class="hl-0">&gt;();</span><br/><span class="hl-0">     </span><span class="hl-6">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-6">onlyNumbers</span><span class="hl-0">.</span><span class="hl-4">toArray</span><span class="hl-0">()); </span><span class="hl-8">// [1, 2, 3, 4, 5]</span>
+</code><button>Copy</button></pre>
+</div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#cast">cast</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L104">src/enumerator/Enumerator.ts:104</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="castGenerator" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>cast<wbr/>Generator</span><a href="#castGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-private">
+<li class="tsd-signature tsd-anchor-link" id="castGenerator.castGenerator-1"><span class="tsd-kind-call-signature">cast<wbr/>Generator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><a href="#castGenerator.castGenerator-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TResult</span></h4></li></ul></section>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L560">src/enumerator/Enumerator.ts:560</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="chunk" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>chunk</span><a href="#chunk" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -332,7 +371,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#chunk">chunk</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L102">src/enumerator/Enumerator.ts:102</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L108">src/enumerator/Enumerator.ts:108</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="chunkGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>chunk<wbr/>Generator</span><a href="#chunkGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -345,7 +384,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><span class="tsd-kind-parameter">size</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L550">src/enumerator/Enumerator.ts:550</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L566">src/enumerator/Enumerator.ts:566</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="concat" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>concat</span><a href="#concat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -365,7 +404,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#concat">concat</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L109">src/enumerator/Enumerator.ts:109</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L115">src/enumerator/Enumerator.ts:115</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="concatGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>concat<wbr/>Generator</span><a href="#concatGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -378,7 +417,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><span class="tsd-kind-parameter">enumerable</span>: <a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L566">src/enumerator/Enumerator.ts:566</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L582">src/enumerator/Enumerator.ts:582</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="contains" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>contains</span><a href="#contains" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -403,7 +442,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#contains">contains</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L113">src/enumerator/Enumerator.ts:113</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L119">src/enumerator/Enumerator.ts:119</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="count" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>count</span><a href="#count" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -424,7 +463,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#count">count</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L123">src/enumerator/Enumerator.ts:123</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L129">src/enumerator/Enumerator.ts:129</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="defaultIfEmpty" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>default<wbr/>If<wbr/>Empty</span><a href="#defaultIfEmpty" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -444,7 +483,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#defaultIfEmpty">defaultIfEmpty</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L139">src/enumerator/Enumerator.ts:139</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L145">src/enumerator/Enumerator.ts:145</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="defaultIfEmptyGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>default<wbr/>If<wbr/>Empty<wbr/>Generator</span><a href="#defaultIfEmptyGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -457,7 +496,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L571">src/enumerator/Enumerator.ts:571</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L587">src/enumerator/Enumerator.ts:587</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="distinct" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>distinct</span><a href="#distinct" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -487,7 +526,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#distinct">distinct</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L143">src/enumerator/Enumerator.ts:143</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L149">src/enumerator/Enumerator.ts:149</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="elementAt" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>element<wbr/>At</span><a href="#elementAt" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -509,7 +548,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#elementAt">elementAt</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L149">src/enumerator/Enumerator.ts:149</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L155">src/enumerator/Enumerator.ts:155</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="elementAtOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>element<wbr/>At<wbr/>Or<wbr/>Default</span><a href="#elementAtOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -529,7 +568,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#elementAtOrDefault">elementAtOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L163">src/enumerator/Enumerator.ts:163</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L169">src/enumerator/Enumerator.ts:169</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="except" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>except</span><a href="#except" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -544,7 +583,7 @@ If resultSelector function is specified, it will be used to select the result va
 </ul>
 <p>If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.</p>
 <p>Example:</p>
-<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-7">// [1, 3, 4]</span>
+<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-8">// [1, 3, 4]</span>
 </code><button>Copy</button></pre>
 </div>
 <div class="tsd-parameters">
@@ -571,7 +610,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#except">except</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L174">src/enumerator/Enumerator.ts:174</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L180">src/enumerator/Enumerator.ts:180</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="exceptGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>except<wbr/>Generator</span><a href="#exceptGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -588,7 +627,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">orderComparator</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/OrderComparator.html" class="tsd-signature-type tsd-kind-interface">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L580">src/enumerator/Enumerator.ts:580</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L596">src/enumerator/Enumerator.ts:596</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="first" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>first</span><a href="#first" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -610,7 +649,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#first">first</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L179">src/enumerator/Enumerator.ts:179</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L185">src/enumerator/Enumerator.ts:185</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="firstOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>first<wbr/>Or<wbr/>Default</span><a href="#firstOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -632,7 +671,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#firstOrDefault">firstOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L190">src/enumerator/Enumerator.ts:190</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L196">src/enumerator/Enumerator.ts:196</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="forEach" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>for<wbr/>Each</span><a href="#forEach" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -652,7 +691,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#forEach">forEach</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L205">src/enumerator/Enumerator.ts:205</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L211">src/enumerator/Enumerator.ts:211</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="groupBy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>group<wbr/>By</span><a href="#groupBy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -682,7 +721,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#groupBy">groupBy</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L212">src/enumerator/Enumerator.ts:212</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L218">src/enumerator/Enumerator.ts:218</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="groupByGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>group<wbr/>By<wbr/>Generator</span><a href="#groupByGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -702,7 +741,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">keyComparator</span>: <a href="../interfaces/EqualityComparator.html" class="tsd-signature-type tsd-kind-interface">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/IGroup.html" class="tsd-signature-type tsd-kind-interface">IGroup</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L595">src/enumerator/Enumerator.ts:595</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L611">src/enumerator/Enumerator.ts:611</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="groupJoin" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>group<wbr/>Join</span><a href="#groupJoin" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -751,7 +790,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#groupJoin">groupJoin</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L217">src/enumerator/Enumerator.ts:217</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L223">src/enumerator/Enumerator.ts:223</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="groupJoinGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>group<wbr/>Join<wbr/>Generator</span><a href="#groupJoinGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -781,7 +820,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">keyComparator</span>: <a href="../interfaces/EqualityComparator.html" class="tsd-signature-type tsd-kind-interface">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L610">src/enumerator/Enumerator.ts:610</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L626">src/enumerator/Enumerator.ts:626</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="intersect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>intersect</span><a href="#intersect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -796,7 +835,7 @@ If resultSelector function is specified, it will be used to select the result va
 </ul>
 <p>If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.</p>
 <p>Example:</p>
-<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-7">// [2, 5]</span>
+<pre><code><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList1</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">1</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">3</span><span class="hl-0">, </span><span class="hl-5">4</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">numberList2</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">List</span><span class="hl-0">([</span><span class="hl-5">2</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">5</span><span class="hl-0">, </span><span class="hl-5">6</span><span class="hl-0">, </span><span class="hl-5">7</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">, </span><span class="hl-5">8</span><span class="hl-0">]);</span><br/><span class="hl-0">    </span><span class="hl-2">var</span><span class="hl-0"> </span><span class="hl-6">result</span><span class="hl-0"> = </span><span class="hl-6">numberList1</span><span class="hl-0">.</span><span class="hl-4">except</span><span class="hl-0">(</span><span class="hl-6">numberList2</span><span class="hl-0">).</span><span class="hl-4">toArray</span><span class="hl-0">(); </span><span class="hl-8">// [2, 5]</span>
 </code><button>Copy</button></pre>
 </div>
 <div class="tsd-parameters">
@@ -823,7 +862,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#intersect">intersect</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L222">src/enumerator/Enumerator.ts:222</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L228">src/enumerator/Enumerator.ts:228</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="intersectGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>intersect<wbr/>Generator</span><a href="#intersectGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -840,7 +879,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">orderComparator</span>: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/OrderComparator.html" class="tsd-signature-type tsd-kind-interface">OrderComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L618">src/enumerator/Enumerator.ts:618</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L634">src/enumerator/Enumerator.ts:634</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="join" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>join</span><a href="#join" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -894,7 +933,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#join">join</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L227">src/enumerator/Enumerator.ts:227</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L233">src/enumerator/Enumerator.ts:233</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="joinGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>join<wbr/>Generator</span><a href="#joinGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -926,7 +965,7 @@ If resultSelector function is specified, it will be used to select the result va
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">leftJoin</span>: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L632">src/enumerator/Enumerator.ts:632</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L648">src/enumerator/Enumerator.ts:648</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="last" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>last</span><a href="#last" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -948,7 +987,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#last">last</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L232">src/enumerator/Enumerator.ts:232</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L238">src/enumerator/Enumerator.ts:238</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="lastOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>last<wbr/>Or<wbr/>Default</span><a href="#lastOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -970,7 +1009,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#lastOrDefault">lastOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L254">src/enumerator/Enumerator.ts:254</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L260">src/enumerator/Enumerator.ts:260</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="max" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>max</span><a href="#max" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -992,7 +1031,7 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#max">max</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L270">src/enumerator/Enumerator.ts:270</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L276">src/enumerator/Enumerator.ts:276</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="min" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>min</span><a href="#min" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1014,7 +1053,53 @@ If resultSelector function is specified, it will be used to select the result va
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#min">min</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L291">src/enumerator/Enumerator.ts:291</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L297">src/enumerator/Enumerator.ts:297</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="ofType" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>of<wbr/>Type</span><a href="#ofType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="ofType.ofType-1"><span class="tsd-kind-call-signature">of<wbr/>Type</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">type</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">InferredType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#ofType.ofType-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Returns the elements that are of the specified type.
+The type can be specified either as a constructor function or as a string.</p>
+</div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type ">ObjectType</span></h4>
+<div class="tsd-comment tsd-typography"></div></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">type</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TResult</span></h5>
+<div class="tsd-comment tsd-typography"><p>The type to filter the elements of the sequence with.</p>
+</div>
+<div class="tsd-comment tsd-typography"></div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/IEnumerable.html" class="tsd-signature-type tsd-kind-interface">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">InferredType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><p>A new enumerable sequence whose elements are of the specified type.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#ofType">ofType</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L318">src/enumerator/Enumerator.ts:318</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-private"><a id="ofTypeGenerator" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>of<wbr/>Type<wbr/>Generator</span><a href="#ofTypeGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-private">
+<li class="tsd-signature tsd-anchor-link" id="ofTypeGenerator.ofTypeGenerator-1"><span class="tsd-kind-call-signature">of<wbr/>Type<wbr/>Generator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">type</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">InferredType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#ofTypeGenerator.ofTypeGenerator-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type ">ObjectType</span></h4></li></ul></section>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">type</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TResult</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">InferredType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L662">src/enumerator/Enumerator.ts:662</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="orderBy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>order<wbr/>By</span><a href="#orderBy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1044,7 +1129,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#orderBy">orderBy</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L312">src/enumerator/Enumerator.ts:312</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L322">src/enumerator/Enumerator.ts:322</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="orderByDescending" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>order<wbr/>By<wbr/>Descending</span><a href="#orderByDescending" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1074,7 +1159,7 @@ If resultSelector function is specified, it will be used to select the result va
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#orderByDescending">orderByDescending</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L316">src/enumerator/Enumerator.ts:316</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L326">src/enumerator/Enumerator.ts:326</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="pairwise" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pairwise</span><a href="#pairwise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1099,7 +1184,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#pairwise">pairwise</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L320">src/enumerator/Enumerator.ts:320</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L330">src/enumerator/Enumerator.ts:330</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="pairwiseGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>pairwise<wbr/>Generator</span><a href="#pairwiseGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1112,7 +1197,7 @@ Example:
 <h5><span class="tsd-kind-parameter">resultSelector</span>: <a href="../interfaces/PairwiseSelector.html" class="tsd-signature-type tsd-kind-interface">PairwiseSelector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L646">src/enumerator/Enumerator.ts:646</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L673">src/enumerator/Enumerator.ts:673</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="partition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>partition</span><a href="#partition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1132,7 +1217,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#partition">partition</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L324">src/enumerator/Enumerator.ts:324</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L334">src/enumerator/Enumerator.ts:334</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="prepend" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepend</span><a href="#prepend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1152,7 +1237,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#prepend">prepend</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L337">src/enumerator/Enumerator.ts:337</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L347">src/enumerator/Enumerator.ts:347</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="prependGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>prepend<wbr/>Generator</span><a href="#prependGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1165,7 +1250,7 @@ Example:
 <h5><span class="tsd-kind-parameter">item</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TElement</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L658">src/enumerator/Enumerator.ts:658</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L685">src/enumerator/Enumerator.ts:685</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="reverse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>reverse</span><a href="#reverse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1177,7 +1262,7 @@ Example:
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#reverse">reverse</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L341">src/enumerator/Enumerator.ts:341</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L351">src/enumerator/Enumerator.ts:351</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="reverseGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>reverse<wbr/>Generator</span><a href="#reverseGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1185,7 +1270,7 @@ Example:
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L663">src/enumerator/Enumerator.ts:663</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L690">src/enumerator/Enumerator.ts:690</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="scan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scan</span><a href="#scan" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1216,7 +1301,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#scan">scan</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L345">src/enumerator/Enumerator.ts:345</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L355">src/enumerator/Enumerator.ts:355</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="scanGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>scan<wbr/>Generator</span><a href="#scanGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1236,7 +1321,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">seed</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TAccumulate</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TAccumulate</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L667">src/enumerator/Enumerator.ts:667</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L694">src/enumerator/Enumerator.ts:694</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="select" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select</span><a href="#select" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1261,7 +1346,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#select">select</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L349">src/enumerator/Enumerator.ts:349</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L359">src/enumerator/Enumerator.ts:359</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="selectGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>select<wbr/>Generator</span><a href="#selectGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1279,7 +1364,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">selector</span>: <a href="../interfaces/Selector.html" class="tsd-signature-type tsd-kind-interface">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L688">src/enumerator/Enumerator.ts:688</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L715">src/enumerator/Enumerator.ts:715</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="selectMany" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>select<wbr/>Many</span><a href="#selectMany" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1304,7 +1389,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#selectMany">selectMany</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L353">src/enumerator/Enumerator.ts:353</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L363">src/enumerator/Enumerator.ts:363</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="selectManyGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>select<wbr/>Many<wbr/>Generator</span><a href="#selectManyGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1322,7 +1407,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">selector</span>: <a href="../interfaces/IndexedSelector.html" class="tsd-signature-type tsd-kind-interface">IndexedSelector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L694">src/enumerator/Enumerator.ts:694</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L721">src/enumerator/Enumerator.ts:721</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="sequenceEqual" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sequence<wbr/>Equal</span><a href="#sequenceEqual" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1347,7 +1432,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#sequenceEqual">sequenceEqual</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L357">src/enumerator/Enumerator.ts:357</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L367">src/enumerator/Enumerator.ts:367</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="single" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>single</span><a href="#single" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1369,7 +1454,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#single">single</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L376">src/enumerator/Enumerator.ts:376</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L386">src/enumerator/Enumerator.ts:386</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="singleOrDefault" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>single<wbr/>Or<wbr/>Default</span><a href="#singleOrDefault" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1391,7 +1476,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#singleOrDefault">singleOrDefault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L413">src/enumerator/Enumerator.ts:413</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L423">src/enumerator/Enumerator.ts:423</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="skip" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>skip</span><a href="#skip" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1411,7 +1496,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#skip">skip</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L441">src/enumerator/Enumerator.ts:441</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L451">src/enumerator/Enumerator.ts:451</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="skipGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>skip<wbr/>Generator</span><a href="#skipGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1424,7 +1509,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">count</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L702">src/enumerator/Enumerator.ts:702</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L729">src/enumerator/Enumerator.ts:729</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="skipLast" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>skip<wbr/>Last</span><a href="#skipLast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1444,7 +1529,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#skipLast">skipLast</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L445">src/enumerator/Enumerator.ts:445</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L455">src/enumerator/Enumerator.ts:455</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="skipLastGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>skip<wbr/>Last<wbr/>Generator</span><a href="#skipLastGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1457,7 +1542,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">count</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L712">src/enumerator/Enumerator.ts:712</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L739">src/enumerator/Enumerator.ts:739</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="skipWhile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>skip<wbr/>While</span><a href="#skipWhile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1477,7 +1562,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#skipWhile">skipWhile</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L449">src/enumerator/Enumerator.ts:449</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L459">src/enumerator/Enumerator.ts:459</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="skipWhileGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>skip<wbr/>While<wbr/>Generator</span><a href="#skipWhileGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1490,7 +1575,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">predicate</span>: <a href="../interfaces/IndexedPredicate.html" class="tsd-signature-type tsd-kind-interface">IndexedPredicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L722">src/enumerator/Enumerator.ts:722</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L749">src/enumerator/Enumerator.ts:749</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="sum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sum</span><a href="#sum" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1510,7 +1595,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#sum">sum</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L453">src/enumerator/Enumerator.ts:453</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L463">src/enumerator/Enumerator.ts:463</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="take" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>take</span><a href="#take" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1530,7 +1615,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#take">take</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L464">src/enumerator/Enumerator.ts:464</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L474">src/enumerator/Enumerator.ts:474</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="takeGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>take<wbr/>Generator</span><a href="#takeGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1543,7 +1628,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">count</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L739">src/enumerator/Enumerator.ts:739</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L766">src/enumerator/Enumerator.ts:766</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="takeLast" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>take<wbr/>Last</span><a href="#takeLast" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1563,7 +1648,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#takeLast">takeLast</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L468">src/enumerator/Enumerator.ts:468</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L478">src/enumerator/Enumerator.ts:478</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="takeLastGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>take<wbr/>Last<wbr/>Generator</span><a href="#takeLastGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1576,7 +1661,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">count</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L751">src/enumerator/Enumerator.ts:751</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L778">src/enumerator/Enumerator.ts:778</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="takeWhile" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>take<wbr/>While</span><a href="#takeWhile" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1596,7 +1681,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#takeWhile">takeWhile</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L472">src/enumerator/Enumerator.ts:472</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L482">src/enumerator/Enumerator.ts:482</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="takeWhileGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>take<wbr/>While<wbr/>Generator</span><a href="#takeWhileGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1609,7 +1694,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">predicate</span>: <a href="../interfaces/IndexedPredicate.html" class="tsd-signature-type tsd-kind-interface">IndexedPredicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L762">src/enumerator/Enumerator.ts:762</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L789">src/enumerator/Enumerator.ts:789</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="thenBy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>then<wbr/>By</span><a href="#thenBy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1639,7 +1724,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#thenBy">thenBy</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L476">src/enumerator/Enumerator.ts:476</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L486">src/enumerator/Enumerator.ts:486</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="thenByDescending" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>then<wbr/>By<wbr/>Descending</span><a href="#thenByDescending" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1669,7 +1754,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#thenByDescending">thenByDescending</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L480">src/enumerator/Enumerator.ts:480</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L490">src/enumerator/Enumerator.ts:490</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toArray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Array</span><a href="#toArray" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1681,7 +1766,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toArray">toArray</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L484">src/enumerator/Enumerator.ts:484</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L494">src/enumerator/Enumerator.ts:494</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toDictionary" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Dictionary</span><a href="#toDictionary" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1718,7 +1803,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toDictionary">toDictionary</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L488">src/enumerator/Enumerator.ts:488</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L498">src/enumerator/Enumerator.ts:498</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toEnumerableSet" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Enumerable<wbr/>Set</span><a href="#toEnumerableSet" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1730,7 +1815,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toEnumerableSet">toEnumerableSet</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L498">src/enumerator/Enumerator.ts:498</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L508">src/enumerator/Enumerator.ts:508</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toIndexableList" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Indexable<wbr/>List</span><a href="#toIndexableList" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1750,7 +1835,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toIndexableList">toIndexableList</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L502">src/enumerator/Enumerator.ts:502</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L512">src/enumerator/Enumerator.ts:512</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toLinkedList" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Linked<wbr/>List</span><a href="#toLinkedList" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1770,7 +1855,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toLinkedList">toLinkedList</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L506">src/enumerator/Enumerator.ts:506</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L516">src/enumerator/Enumerator.ts:516</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toList" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>List</span><a href="#toList" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1790,7 +1875,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toList">toList</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L510">src/enumerator/Enumerator.ts:510</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L520">src/enumerator/Enumerator.ts:520</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toLookup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Lookup</span><a href="#toLookup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1827,7 +1912,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toLookup">toLookup</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L514">src/enumerator/Enumerator.ts:514</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L524">src/enumerator/Enumerator.ts:524</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toSortedDictionary" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Sorted<wbr/>Dictionary</span><a href="#toSortedDictionary" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1869,7 +1954,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toSortedDictionary">toSortedDictionary</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L518">src/enumerator/Enumerator.ts:518</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L528">src/enumerator/Enumerator.ts:528</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="toSortedSet" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>Sorted<wbr/>Set</span><a href="#toSortedSet" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1889,7 +1974,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#toSortedSet">toSortedSet</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L528">src/enumerator/Enumerator.ts:528</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L538">src/enumerator/Enumerator.ts:538</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="union" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>union</span><a href="#union" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1914,7 +1999,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#union">union</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L532">src/enumerator/Enumerator.ts:532</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L542">src/enumerator/Enumerator.ts:542</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="unionGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>union<wbr/>Generator</span><a href="#unionGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1929,7 +2014,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">comparator</span>: <a href="../interfaces/EqualityComparator.html" class="tsd-signature-type tsd-kind-interface">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L777">src/enumerator/Enumerator.ts:777</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L804">src/enumerator/Enumerator.ts:804</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="unionGeneratorWithKeySelector" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>union<wbr/>Generator<wbr/>With<wbr/>Key<wbr/>Selector</span><a href="#unionGeneratorWithKeySelector" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1951,7 +2036,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">comparator</span>: <a href="../interfaces/EqualityComparator.html" class="tsd-signature-type tsd-kind-interface">EqualityComparator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TKey</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L797">src/enumerator/Enumerator.ts:797</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L824">src/enumerator/Enumerator.ts:824</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="where" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>where</span><a href="#where" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -1971,7 +2056,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#where">where</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L537">src/enumerator/Enumerator.ts:537</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L547">src/enumerator/Enumerator.ts:547</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="whereGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>where<wbr/>Generator</span><a href="#whereGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -1984,7 +2069,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><span class="tsd-kind-parameter">predicate</span>: <a href="../interfaces/IndexedPredicate.html" class="tsd-signature-type tsd-kind-interface">IndexedPredicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L816">src/enumerator/Enumerator.ts:816</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L843">src/enumerator/Enumerator.ts:843</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="zip" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>zip</span><a href="#zip" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -2016,7 +2101,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/IOrderedEnumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/IOrderedEnumerable.html#zip">zip</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L541">src/enumerator/Enumerator.ts:541</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L551">src/enumerator/Enumerator.ts:551</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="zipGenerator" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>zip<wbr/>Generator</span><a href="#zipGenerator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -2038,7 +2123,7 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">zipper</span>: <a href="../interfaces/Zipper.html" class="tsd-signature-type tsd-kind-interface">Zipper</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TElement</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TSecond</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Iterable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TResult</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/3cbeb51/src/enumerator/Enumerator.ts#L826">src/enumerator/Enumerator.ts:826</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/hoshixlily/ts-collections/blob/ee6d9d3/src/enumerator/Enumerator.ts#L853">src/enumerator/Enumerator.ts:853</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -2067,6 +2152,8 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <li><a href="#append" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>append</span></a></li>
 <li><a href="#appendGenerator" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>append<wbr/>Generator</span></a></li>
 <li><a href="#average" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>average</span></a></li>
+<li><a href="#cast" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>cast</span></a></li>
+<li><a href="#castGenerator" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>cast<wbr/>Generator</span></a></li>
 <li><a href="#chunk" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>chunk</span></a></li>
 <li><a href="#chunkGenerator" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>chunk<wbr/>Generator</span></a></li>
 <li><a href="#concat" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>concat</span></a></li>
@@ -2095,6 +2182,8 @@ If seed is specified, it is used as the initial value for the accumulator; but i
 <li><a href="#lastOrDefault" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>last<wbr/>Or<wbr/>Default</span></a></li>
 <li><a href="#max" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>max</span></a></li>
 <li><a href="#min" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>min</span></a></li>
+<li><a href="#ofType" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>of<wbr/>Type</span></a></li>
+<li><a href="#ofTypeGenerator" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>of<wbr/>Type<wbr/>Generator</span></a></li>
 <li><a href="#orderBy" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By</span></a></li>
 <li><a href="#orderByDescending" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>order<wbr/>By<wbr/>Descending</span></a></li>
 <li><a href="#pairwise" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>pairwise</span></a></li>
