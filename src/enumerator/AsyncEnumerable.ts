@@ -1,3 +1,5 @@
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {IAsyncEnumerable} from "./IAsyncEnumerable";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Selector} from "../shared/Selector";
@@ -151,6 +153,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public min(selector?: Selector<TElement, number>): Promise<number> {
         return this.enumerator.min(selector);
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>> {
+        return this.enumerator.ofType(type);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {

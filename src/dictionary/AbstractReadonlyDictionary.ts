@@ -13,6 +13,8 @@ import {
 } from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {Predicate} from "../shared/Predicate";
@@ -152,6 +154,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.min(this, selector);
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
+        return EnumerableStatic.ofType(this, type);
     }
 
     public orderBy<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {

@@ -8,7 +8,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
-import {Enumerable, ReadonlyCollection} from "../../imports";
+import {Enumerable, LinkedList, ReadonlyCollection} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
@@ -180,6 +180,18 @@ describe("List", () => {
         it("should throw error if list is empty", () => {
             const list = new List<string>([]);
             expect(() => list.average(s => parseInt(s, 10))).to.throw(ErrorMessages.NoElements);
+        });
+    });
+
+    describe("#cast()", () => {
+        const mixedList = new List([1, 2, 3, "4", "5", "6", 7, 8, 9, "10"]);
+        const numbers = mixedList.where(n => typeof n === "number").cast<number>();
+        const strings = mixedList.where(s => typeof s === "string").cast<string>();
+        it("should return a list of numbers", () => {
+            expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9]);
+        });
+        it("should return a list of strings", () => {
+            expect(strings.toArray()).to.deep.equal(["4", "5", "6", "10"]);
         });
     });
 
@@ -800,6 +812,66 @@ describe("List", () => {
             const list = new List<number>();
             expect(() => list.min()).to.throw(ErrorMessages.NoElements);
             expect(() => list.min(n => n / 2)).to.throw(ErrorMessages.NoElements);
+        });
+    });
+
+    describe("#ofType()", () => {
+        const symbol = Symbol("test");
+        const object = new Object(100);
+        const list = new LinkedList([
+            1, 2, 3,
+            "4", "5", "6",
+            7, 8, 9, 10,
+            true, false,
+            Number(999),
+            symbol,
+            object,
+            Person.Mirei,
+            Person.Alice,
+        ]);
+        it("should return an array of numbers via Number constructor", () => {
+            const numbers = list.ofType(Number).toArray();
+            expect(numbers).to.deep.equal([1, 2, 3, 7, 8, 9, 10, 999]);
+        });
+        it("should return an array of numbers via typeof", () => {
+            const numbers = list.ofType("number").toArray();
+            expect(numbers).to.deep.equal([1, 2, 3, 7, 8, 9, 10, 999]);
+        });
+        it("should return an array of strings via String constructor", () => {
+            const strings = list.ofType(String).toArray();
+            expect(strings).to.deep.equal(["4", "5", "6"]);
+        });
+        it("should return an array of strings via typeof", () => {
+            const strings = list.ofType("string").toArray();
+            expect(strings).to.deep.equal(["4", "5", "6"]);
+        });
+        it("should return an array of booleans via Boolean constructor", () => {
+            const booleans = list.ofType(Boolean).toArray();
+            expect(booleans).to.deep.equal([true, false]);
+        });
+        it("should return an array of booleans via typeof", () => {
+            const booleans = list.ofType("boolean").toArray();
+            expect(booleans).to.deep.equal([true, false]);
+        });
+        it("should return an array of symbols", () => {
+            const symbols = list.ofType(Symbol).toArray();
+            expect(symbols).to.deep.equal([symbol]);
+        });
+        it("should return an array of symbols via typeof", () => {
+            const symbols = list.ofType("symbol").toArray();
+            expect(symbols).to.deep.equal([symbol]);
+        });
+        it("should return an array of objects", () => {
+            const objects = list.ofType(Object).toArray();
+            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice]);
+        });
+        it("should return an array of objects via typeof", () => {
+            const objects = list.ofType("object").toArray();
+            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice]);
+        });
+        it("should return an array of Person", () => {
+            const people = list.ofType(Person).toArray();
+            expect(people).to.deep.equal([Person.Mirei, Person.Alice]);
         });
     });
 

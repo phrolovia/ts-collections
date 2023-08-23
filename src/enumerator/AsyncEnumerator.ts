@@ -1,3 +1,5 @@
+import {InferredType} from "../shared/InferredType";
+import {ClassType, ObjectType} from "../shared/ObjectType";
 import {IAsyncEnumerable} from "./IAsyncEnumerable";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {ErrorMessages} from "../shared/ErrorMessages";
@@ -292,6 +294,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return min;
     }
 
+    public ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>> {
+        return new AsyncEnumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
         return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
     }
@@ -558,6 +564,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 for await (const innerElement of innerElements) {
                     yield resultSelector(element, innerElement);
                 }
+            }
+        }
+    }
+
+    private async* ofTypeGenerator<TResult extends ObjectType>(type: TResult): AsyncIterable<InferredType<TResult>> {
+        const isOfType = typeof type === "string"
+            ? ((item: unknown) => typeof item === type) as (item: unknown) => item is InferredType<TResult>
+            : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as any);
+        for await (const item of this) {
+            if (isOfType(item)) {
+                yield item;
             }
         }
     }

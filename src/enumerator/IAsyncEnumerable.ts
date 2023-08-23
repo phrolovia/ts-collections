@@ -1,4 +1,6 @@
 import {IndexedPredicate} from "../shared/IndexedPredicate";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
@@ -229,6 +231,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {Error} If the source is empty.
      */
     min(selector?: Selector<TElement, number>): Promise<number>;
+
+    /**
+     * Returns the elements that are of the specified type.
+     * The type can be specified either as a constructor function or as a string.
+     * @template TResult
+     * @param type The type to filter the elements of the sequence with.
+     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+     */
+    ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>>;
 
     /**
      * Sorts the elements of a sequence in ascending order by using a specified comparer.

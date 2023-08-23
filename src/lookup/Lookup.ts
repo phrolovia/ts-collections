@@ -1,5 +1,7 @@
 import {IEnumerable} from "../enumerator/IEnumerable";
 import {Enumerable} from "../enumerator/Enumerable";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {ILookup} from "./ILookup";
 import {Accumulator} from "../shared/Accumulator";
 import {JoinSelector} from "../shared/JoinSelector";
@@ -180,6 +182,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public min(selector?: Selector<IGroup<TKey, TElement>, number>): number {
         return this.lookupTree.min(selector);
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
+        return this.lookupTree.ofType<TResult>(type);
     }
 
     public orderBy<TOrderKey>(keySelector: Selector<IGroup<TKey, TElement>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<IGroup<TKey, TElement>> {

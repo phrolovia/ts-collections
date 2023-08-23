@@ -1,5 +1,7 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
@@ -129,6 +131,10 @@ export abstract class EnumerableStatic {
 
     public static min<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
         return new Enumerable(source).min(selector);
+    }
+
+    public static ofType<TElement, TResult extends ObjectType>(source: IEnumerable<TElement>, type: TResult): IEnumerable<InferredType<TResult>> {
+        return new Enumerable<TElement>(source).ofType<TResult>(type);
     }
 
     public static orderBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {

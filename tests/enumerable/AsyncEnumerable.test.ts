@@ -23,6 +23,13 @@ describe("AsyncEnumerable", () => {
         }
     };
 
+    const mixedProducer = async function* (list: any[], delay: number = 50): AsyncIterable<number | string> {
+        for (let ix = 0; ix < list.length; ++ix) {
+            await suspend(delay);
+            yield list[ix];
+        }
+    };
+
     const numberProducer = async function* (limit: number = 100, delay: number = 50, start: number = 0): AsyncIterable<number> {
         for (let ix = start; ix < limit; ++ix) {
             await suspend(delay);
@@ -143,6 +150,17 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numericalStringProducer(10));
             const result = await enumerable.average(n => parseInt(n, 10));
             expect(result).to.eq(4.5);
+        }).timeout(5000);
+    });
+
+    describe("#cast()", () => {
+        it("should cast the enumerable to the specified type", async () => {
+            const enumerable1 = new AsyncEnumerable(mixedProducer([1, 2, 3, "4", "5", "6", 7, 8, 9, "10"]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([1, 2, 3, "4", "5", "6", 7, 8, 9, "10"]));
+            const numbers = await enumerable1.where(i => typeof i === "number").cast<number>().toArray();
+            const strings = await enumerable2.where(i => typeof i === "string").cast<string>().toArray();
+            expect(numbers).to.deep.equal([1, 2, 3, 7, 8, 9]);
+            expect(strings).to.deep.equal(["4", "5", "6", "10"]);
         }).timeout(5000);
     });
 
@@ -731,6 +749,17 @@ describe("AsyncEnumerable", () => {
         it("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
             expect(enumerable.min()).to.be.rejectedWith(ErrorMessages.NoElements);
+        });
+    });
+
+    describe("#ofType()", () => {
+        it("should return only the elements of the specified type", async () => {
+            const enumerable1 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c"]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c"]));
+            const strings = await enumerable1.ofType("string").toArray();
+            const numbers = await enumerable2.ofType(Number).toArray();
+            expect(strings).to.deep.equal(["a", "b", "c"]);
+            expect(numbers).to.deep.equal([1, 2, 3]);
         });
     });
 
