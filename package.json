@@ -3,9 +3,8 @@
     "version": "12.0.0",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.js",
-    "module": "dist/index.es.js",
+    "module": "dist/index.js",
     "types": "dist/index.d.ts",
-    "umd:main": "dist/index.umd.js",
     "private": false,
     "scripts": {
         "build": "webpack",
