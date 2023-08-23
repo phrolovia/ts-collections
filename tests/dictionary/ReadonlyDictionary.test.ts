@@ -63,7 +63,7 @@ describe("ReadonlyDictionary", () => {
             expect(dictionary.length).to.equal(100);
         });
         it("should reflect changes to the underlying collection", () => {
-            const dictionary = new SortedDictionary(null, null, Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new SortedDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
             const readonlyDictionary = new ReadonlyDictionary(dictionary);
             expect(readonlyDictionary.size()).to.equal(100);
             expect(readonlyDictionary.length).to.equal(100);

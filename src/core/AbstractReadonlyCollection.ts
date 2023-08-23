@@ -51,7 +51,7 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
             return "";
         }
         separator ??= ", ";
-        selector ??= (e: TElement) => e.toString();
+        selector ??= (e: TElement) => String(e);
         return this.select(selector).toArray().join(separator);
     }
 

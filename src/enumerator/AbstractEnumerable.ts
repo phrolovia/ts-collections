@@ -67,8 +67,8 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.count(this, predicate);
     }
 
-    public defaultIfEmpty(value?: TElement): IEnumerable<TElement> {
-        return EnumerableStatic.defaultIfEmpty(this, value);
+    public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
+        return EnumerableStatic.defaultIfEmpty(this as IEnumerable<TElement|null>, value);
     }
 
     public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
@@ -79,20 +79,20 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.elementAt(this, index);
     }
 
-    public elementAtOrDefault(index: number): TElement {
+    public elementAtOrDefault(index: number): TElement | null {
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         comparator = orderComparator ? comparator : comparator ?? this.comparer;
-        return EnumerableStatic.except(this, enumerable, comparator, orderComparator);
+        return EnumerableStatic.except(this, enumerable, comparator ?? undefined, orderComparator ?? undefined);
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
         return EnumerableStatic.first(this, predicate);
     }
 
-    public firstOrDefault(predicate?: Predicate<TElement>): TElement {
+    public firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
         return EnumerableStatic.firstOrDefault(this, predicate);
     }
 
@@ -111,9 +111,9 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         comparator = orderComparator ? comparator : comparator ?? this.comparer;
-        return EnumerableStatic.intersect(this, enumerable, comparator, orderComparator);
+        return EnumerableStatic.intersect(this, enumerable, comparator ?? undefined, orderComparator ?? undefined);
     }
 
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -124,7 +124,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.last(this, predicate);
     }
 
-    public lastOrDefault(predicate?: Predicate<TElement>): TElement {
+    public lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
         return EnumerableStatic.lastOrDefault(this, predicate);
     }
 
@@ -181,7 +181,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.single(this, predicate);
     }
 
-    public singleOrDefault(predicate?: Predicate<TElement>): TElement {
+    public singleOrDefault(predicate?: Predicate<TElement>): TElement | null {
         return EnumerableStatic.singleOrDefault(this, predicate);
     }
 
@@ -248,7 +248,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.toSortedSet(this, comparator);
     }
 
-    public toLookup<TKey, TValue>(keySelector?: Selector<TElement, TKey>, valueSelector?: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+    public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
         return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
     }
 

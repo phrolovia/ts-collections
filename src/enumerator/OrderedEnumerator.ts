@@ -19,11 +19,11 @@ export class OrderedEnumerator<TElement> extends Enumerator<TElement> implements
             const sortedKeys = Array.from(sortMap.keys()).sort(comparator);
             if (ascending) {
                 for (const key of sortedKeys) {
-                    yield sortMap.get(key);
+                    yield sortMap.get(key) as Iterable<TElement>;
                 }
             } else {
                 for (const key of sortedKeys.reverse()) {
-                    yield sortMap.get(key);
+                    yield sortMap.get(key) as Iterable<TElement>;
                 }
             }
         }

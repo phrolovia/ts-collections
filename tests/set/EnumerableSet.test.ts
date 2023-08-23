@@ -48,10 +48,6 @@ describe("EnumerableSet", () => {
             expect(set.contains(Person.Mel)).to.be.false;
             expect(set.contains(Person.Jisu)).to.be.true;
         });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.intersectWith(null)).to.throw(Error);
-            expect(() => set.intersectWith(undefined)).to.throw(Error);
-        });
     });
 
     describe("#remove()", () => {

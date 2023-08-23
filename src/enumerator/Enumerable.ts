@@ -92,7 +92,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.count(predicate);
     }
 
-    public defaultIfEmpty(value?: TElement): IEnumerable<TElement> {
+    public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
         return this.enumerator.defaultIfEmpty(value);
     }
 
@@ -104,11 +104,11 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.elementAt(index);
     }
 
-    public elementAtOrDefault(index: number): TElement {
+    public elementAtOrDefault(index: number): TElement | null {
         return this.enumerator.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         return this.enumerator.except(enumerable, comparator, orderComparator);
     }
 
@@ -116,7 +116,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.first(predicate);
     }
 
-    public firstOrDefault(predicate?: Predicate<TElement>): TElement {
+    public firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
         return this.enumerator.firstOrDefault(predicate);
     }
 
@@ -132,7 +132,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         return this.enumerator.intersect(enumerable, comparator, orderComparator);
     }
 
@@ -144,7 +144,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.last(predicate);
     }
 
-    public lastOrDefault(predicate?: Predicate<TElement>): TElement {
+    public lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
         return this.enumerator.lastOrDefault(predicate);
     }
 
@@ -200,7 +200,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.single(predicate);
     }
 
-    public singleOrDefault(predicate?: Predicate<TElement>): TElement {
+    public singleOrDefault(predicate?: Predicate<TElement>): TElement | null {
         return this.enumerator.singleOrDefault(predicate);
     }
 

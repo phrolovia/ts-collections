@@ -32,7 +32,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private constructor(keyComparator: OrderComparator<TKey>) {
         this.keyComparator = keyComparator;
         const lookupComparator = (g1: IGroup<TKey, TElement>, g2: IGroup<TKey, TElement>) => this.keyComparator(g1.key, g2.key);
-        this.lookupTree = new RedBlackTree<IGroup<TKey, TElement>>(lookupComparator);
+        this.lookupTree = new RedBlackTree<IGroup<TKey, TElement>>([], lookupComparator);
     }
 
     public static create<TSource, TKey, TValue>(source: Iterable<TSource>, keySelector: Selector<TSource, TKey>,
@@ -65,7 +65,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     }
 
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<IGroup<TKey, TElement>, TAccumulate>,
-                                                         seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+                                                                    seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return this.lookupTree.aggregate(accumulator, seed, resultSelector);
     }
 
@@ -101,7 +101,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.count(predicate);
     }
 
-    public defaultIfEmpty(value?: IGroup<TKey, TElement>): IEnumerable<IGroup<TKey, TElement>> {
+    public defaultIfEmpty(value?: IGroup<TKey, TElement>): IEnumerable<IGroup<TKey, TElement> | null> {
         return this.lookupTree.defaultIfEmpty(value);
     }
 
@@ -113,11 +113,11 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.elementAt(index);
     }
 
-    public elementAtOrDefault(index: number): IGroup<TKey, TElement> {
+    public elementAtOrDefault(index: number): IGroup<TKey, TElement> | null {
         return this.lookupTree.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>, orderComparator?: OrderComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
+    public except(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | null, orderComparator?: OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
         return this.lookupTree.except(enumerable, comparator, orderComparator);
     }
 
@@ -125,7 +125,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.first(predicate);
     }
 
-    public firstOrDefault(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> {
+    public firstOrDefault(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> | null {
         return this.lookupTree.firstOrDefault(predicate);
     }
 
@@ -152,7 +152,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return !!this.lookupTree.findBy(key, g => g.key, this.keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>, orderComparator?: OrderComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
+    public intersect(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | null, orderComparator?: OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
         return this.lookupTree.intersect(enumerable, comparator, orderComparator);
     }
 
@@ -166,7 +166,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.last(predicate);
     }
 
-    public lastOrDefault(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> {
+    public lastOrDefault(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> | null {
         return this.lookupTree.lastOrDefault(predicate);
     }
 
@@ -222,7 +222,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.single(predicate);
     }
 
-    public singleOrDefault(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> {
+    public singleOrDefault(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> | null {
         return this.lookupTree.singleOrDefault(predicate);
     }
 

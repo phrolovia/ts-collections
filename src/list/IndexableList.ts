@@ -14,12 +14,10 @@ export class IndexableList<TElement> extends AbstractList<TElement> {
     [n: number]: TElement;
     public constructor(iterable: Iterable<TElement> = [], comparator: EqualityComparator<TElement> = Comparators.equalityComparator) {
         super(comparator);
-        if (iterable) {
-            let index: number = 0;
-            for (const element of iterable) {
-                this[index++] = element;
-                this.listSize++;
-            }
+        let index: number = 0;
+        for (const element of iterable) {
+            this[index++] = element;
+            this.listSize++;
         }
         this.updateLength();
     }

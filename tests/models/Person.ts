@@ -6,7 +6,7 @@ export class Person {
     public name: string;
     public surname: string;
     public friendsArray: Array<Person> = [];
-    public friendsList: IList<Person>;
+    public friendsList: IList<Person> = new List();
     public constructor(name: string, surname: string, age: number) {
         this.age = age;
         this.name = name;

@@ -78,14 +78,14 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean> {
-        return this.enumerator.contains(element);
+        return this.enumerator.contains(element, comparator);
     }
 
     public count(predicate?: Predicate<TElement>): Promise<number> {
         return this.enumerator.count(predicate);
     }
 
-    public defaultIfEmpty(defaultValue?: TElement): IAsyncEnumerable<TElement> {
+    public defaultIfEmpty(defaultValue?: TElement|null): IAsyncEnumerable<TElement|null> {
         return this.enumerator.defaultIfEmpty(defaultValue);
     }
 
@@ -101,7 +101,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+    public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
         return this.enumerator.except(enumerable, comparator, orderComparator);
     }
 
@@ -125,7 +125,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+    public intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
         return this.enumerator.intersect(enumerable, comparator, orderComparator);
     }
 

@@ -16,7 +16,7 @@ export interface ITree<TElement> extends IRandomAccessCollection<TElement> {
      * @param  predicate The function that will be used to find the items.
      * @return First occurrence of the item that satisfies the predicate. If no item satisfies, returns null.
      */
-    find(predicate: Predicate<TElement>): TElement;
+    find(predicate: Predicate<TElement>): TElement | null;
 
     /**
      * Traverses all the items and call the given action for each of the items.
@@ -29,7 +29,7 @@ export interface ITree<TElement> extends IRandomAccessCollection<TElement> {
      * Returns the data at the root of this tree.
      * @return The data at the root of the tree.
      */
-    getRootData(): TElement;
+    getRootData(): TElement | null;
 
     /**
      * Inserts an item to this tree.

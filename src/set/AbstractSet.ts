@@ -9,16 +9,10 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
     }
 
     public exceptWith(other: IEnumerable<TElement>): void {
-        if (other == null) {
-            throw new Error(ErrorMessages.NullSequence);
-        }
         this.removeAll(other);
     }
 
     public intersectWith(other: IEnumerable<TElement>): void {
-        if (other == null) {
-            throw new Error(ErrorMessages.NullSequence);
-        }
         this.retainAll(other);
     }
 
@@ -31,9 +25,6 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
     }
 
     public isSubsetOf(other: IEnumerable<TElement>): boolean {
-        if (other == null) {
-            throw new Error(ErrorMessages.NullSequence);
-        }
         if (this.isEmpty()) {
             return true;
         }
@@ -49,9 +40,6 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
     }
 
     public isSupersetOf(other: IEnumerable<TElement>): boolean {
-        if (other == null) {
-            throw new Error(ErrorMessages.NullSequence);
-        }
         if (!other.any()) {
             return true;
         }
@@ -67,9 +55,6 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
     }
 
     public overlaps(other: IEnumerable<TElement>): boolean {
-        if (other == null) {
-            throw new Error(ErrorMessages.NullSequence);
-        }
         for (const element of other) {
             if (this.contains(element)) {
                 return true;

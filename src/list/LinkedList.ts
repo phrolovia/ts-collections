@@ -6,10 +6,10 @@ import {Comparators} from "../shared/Comparators";
 
 class Node<TElement> {
     public item: TElement;
-    public next: Node<TElement>;
-    public prev: Node<TElement>;
+    public next: Node<TElement> | null;
+    public prev: Node<TElement> | null;
 
-    public constructor(prev: Node<TElement>, item: TElement, next: Node<TElement>) {
+    public constructor(prev: Node<TElement> | null, item: TElement, next: Node<TElement> | null) {
         this.prev = prev;
         this.item = item;
         this.next = next;
@@ -17,8 +17,8 @@ class Node<TElement> {
 }
 
 export class LinkedList<TElement> extends AbstractList<TElement> {
-    private firstNode: Node<TElement> = null;
-    private lastNode: Node<TElement> = null;
+    private firstNode: Node<TElement> | null = null;
+    private lastNode: Node<TElement> | null = null;
     private listSize: number = 0;
 
     public constructor(
@@ -26,10 +26,8 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         comparator?: EqualityComparator<TElement>
     ) {
         super(comparator);
-        if (iterable) {
-            for (const element of iterable) {
-                this.add(element);
-            }
+        for (const element of iterable) {
+            this.add(element);
         }
         this.updateLength();
     }
@@ -64,13 +62,16 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     public clear(): void {
-        for (let node: Node<TElement> = this.firstNode; node != null;) {
-            const next = node.next;
-            node.item = null;
-            node.next = null;
-            node.prev = null;
-            node = next;
+        if (this.firstNode == null) {
+            return;
         }
+        // for (let node: Node<TElement> = this.firstNode; node != null;) {
+        //     const next = node.next;
+        //     // node.item = null;
+        //     node.next = null;
+        //     node.prev = null;
+        //     node = next as Node<TElement>;
+        // }
         this.firstNode = this.lastNode = null;
         this.ListSize = 0;
     }
@@ -80,36 +81,39 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         return this.node(index).item;
     }
 
-    public peek(): TElement {
+    public peek(): TElement | null {
         const node = this.firstNode;
         return node?.item ?? null;
     }
 
-    public peekLast(): TElement {
+    public peekLast(): TElement | null {
         const node = this.lastNode;
         return node?.item ?? null;
     }
 
-    public poll(): TElement {
+    public poll(): TElement | null {
         const node = this.firstNode;
         return node == null ? null : this.unlinkFirst(node);
     }
 
-    public pollLast(): TElement {
+    public pollLast(): TElement | null {
         const node = this.lastNode;
         return node == null ? null : this.unlinkLast(node);
     }
 
     public remove(element: TElement): boolean {
+        if (this.firstNode == null) {
+            return false;
+        }
         if (element == null) {
-            for (let node: Node<TElement> = this.firstNode; node != null; node = node.next) {
+            for (let node: Node<TElement> | null = this.firstNode; node != null; node = node.next) {
                 if (node.item == null) {
                     this.unlink(node);
                     return true;
                 }
             }
         } else {
-            for (let node: Node<TElement> = this.firstNode; node != null; node = node.next) {
+            for (let node: Node<TElement> | null = this.firstNode; node != null; node = node.next) {
                 if (this.comparer(node.item, element)) {
                     this.unlink(node);
                     return true;
@@ -182,14 +186,14 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     private linkBefore(element: TElement, successor: Node<TElement>): void {
-        const predecessor: Node<TElement> = successor.prev;
+        const predecessor: Node<TElement> | null = successor.prev;
+        if (predecessor == null) {
+            this.linkFirst(element);
+            return;
+        }
         const newNode = new Node<TElement>(predecessor, element, successor);
         successor.prev = newNode;
-        if (predecessor == null) {
-            this.firstNode = newNode;
-        } else {
-            predecessor.next = newNode;
-        }
+        predecessor.next = newNode;
         this.ListSize = this.listSize + 1;
     }
 
@@ -219,17 +223,23 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
 
     private node(index: number): Node<TElement> {
         if (index < (this.listSize >> 1)) {
-            let node = this.firstNode;
+            if (this.firstNode == null) {
+                throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            }
+            let node = this.firstNode as Node<TElement>;
             for (let ix = 0; ix < index; ++ix) {
-                node = node.next;
+                node = node.next as Node<TElement>;
             }
             return node;
         } else {
+            if (this.lastNode == null) {
+                throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            }
             let node = this.lastNode;
             for (let ix = this.listSize - 1; ix > index; --ix) {
-                node = node.prev;
+                node = node.prev as Node<TElement>;
             }
-            return node;
+            return node as Node<TElement>;
         }
     }
 
@@ -252,7 +262,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
             node.next = null;
         }
 
-        node.item = null;
+        // node.item = null;
         this.ListSize = this.listSize - 1;
         return element;
     }
@@ -260,7 +270,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     private unlinkFirst(firstNode: Node<TElement>): TElement {
         const element = firstNode.item;
         const next = firstNode.next;
-        firstNode.item = null;
+        // firstNode.item = null;
         firstNode.next = null;
         this.firstNode = next;
         if (next == null) {
@@ -275,7 +285,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     private unlinkLast(lastNode: Node<TElement>): TElement {
         const element = lastNode.item;
         const prev = lastNode.prev;
-        lastNode.item = null;
+        // lastNode.item = null;
         lastNode.prev = null;
         this.lastNode = prev;
         if (prev == null) {

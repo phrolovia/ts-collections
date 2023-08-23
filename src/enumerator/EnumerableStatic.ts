@@ -27,7 +27,7 @@ export abstract class EnumerableStatic {
     /* istanbul ignore next */
     private constructor() {}
 
-    public static aggregate<TElement, TAccumulate, TResult>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
+    public static aggregate<TElement, TAccumulate = TElement, TResult = TAccumulate>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);
     }
 
@@ -63,7 +63,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).count(predicate);
     }
 
-    public static defaultIfEmpty<TElement>(source: IEnumerable<TElement>, value?: TElement): IEnumerable<TElement> {
+    public static defaultIfEmpty<TElement>(source: IEnumerable<TElement>, value?: TElement | null): IEnumerable<TElement|null> {
         return new Enumerable(source).defaultIfEmpty(value);
     }
 
@@ -75,11 +75,11 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).elementAt(index);
     }
 
-    public static elementAtOrDefault<TElement>(source: IEnumerable<TElement>, index: number): TElement {
+    public static elementAtOrDefault<TElement>(source: IEnumerable<TElement>, index: number): TElement | null {
         return new Enumerable(source).elementAtOrDefault(index);
     }
 
-    public static except<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+    public static except<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         return new Enumerable(source).except(enumerable, comparator, orderComparator);
     }
 
@@ -87,7 +87,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).first(predicate);
     }
 
-    public static firstOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
+    public static firstOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement | null {
         return new Enumerable(source).firstOrDefault(predicate);
     }
 
@@ -103,7 +103,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public static intersect<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement> {
+    public static intersect<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         return new Enumerable(source).intersect(enumerable, comparator, orderComparator);
     }
 
@@ -115,7 +115,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).last(predicate);
     }
 
-    public static lastOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
+    public static lastOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement | null {
         return new Enumerable(source).lastOrDefault(predicate);
     }
 
@@ -135,7 +135,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).orderByDescending(keySelector, comparator);
     }
 
-    public static pairwise<TElement>(source: IEnumerable<TElement>, resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
+    public static pairwise<TElement>(source: IEnumerable<TElement>, resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
         return new Enumerable(source).pairwise(resultSelector);
     }
 
@@ -151,7 +151,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).reverse();
     }
 
-    public static scan<TElement, TAccumulate = TElement>(source: IEnumerable<TElement>,  accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate> {
+    public static scan<TElement, TAccumulate = TElement>(source: IEnumerable<TElement>,  accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
         return new Enumerable(source).scan(accumulator, seed);
     }
 
@@ -171,7 +171,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).single(predicate);
     }
 
-    public static singleOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
+    public static singleOrDefault<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement | null {
         return new Enumerable(source).singleOrDefault(predicate);
     }
 
@@ -183,7 +183,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).skipLast(count);
     }
 
-    public static skipWhile<TElement>(source: IEnumerable<TElement>, predicate?: IndexedPredicate<TElement>): IEnumerable<TElement> {
+    public static skipWhile<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).skipWhile(predicate);
     }
 
@@ -199,7 +199,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).takeLast(count);
     }
 
-    public static takeWhile<TElement>(source: IEnumerable<TElement>, predicate?: IndexedPredicate<TElement>): IEnumerable<TElement> {
+    public static takeWhile<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).takeWhile(predicate);
     }
 

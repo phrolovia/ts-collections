@@ -11,9 +11,9 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     private readonly keyValueTree: RedBlackTree<KeyValuePair<TKey, TValue>>;
 
     public constructor(
+        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
         keyComparator?: OrderComparator<TKey>,
-        valueComparator?: EqualityComparator<TValue>,
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>) {
+        valueComparator?: EqualityComparator<TValue>) {
         super(
             valueComparator ?? Comparators.equalityComparator,
             (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key) === 0
@@ -21,7 +21,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         )
         this.keyComparator = keyComparator ?? Comparators.orderComparator;
         const treeKeyComparator = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key);
-        this.keyValueTree = new RedBlackTree<KeyValuePair<TKey, TValue>>(treeKeyComparator, []);
+        this.keyValueTree = new RedBlackTree<KeyValuePair<TKey, TValue>>([], treeKeyComparator);
         for (const pair of iterable) {
             this.add(pair.key, pair.value);
         }
@@ -32,9 +32,6 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     }
 
     public add(key: TKey, value: TValue): TValue {
-        if (key == null) {
-            throw new Error(ErrorMessages.NullKey);
-        }
         if (this.containsKey(key)) {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
@@ -69,7 +66,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         }
     };
 
-    public get(key: TKey): TValue {
+    public get(key: TKey): TValue | null {
         return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
     }
 
@@ -77,7 +74,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         return new SortedSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
     }
 
-    public remove(key: TKey): TValue {
+    public remove(key: TKey): TValue | null {
         const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
         this.updateLength();
         return result;

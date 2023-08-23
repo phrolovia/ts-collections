@@ -42,7 +42,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
-    public all(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+    public all(predicate: Predicate<KeyValuePair<TKey, TValue>>): boolean {
         return EnumerableStatic.all(this, predicate);
     }
 
@@ -80,7 +80,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.count(this, predicate);
     }
 
-    public defaultIfEmpty(value?: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public defaultIfEmpty(value?: KeyValuePair<TKey, TValue> | null): IEnumerable<KeyValuePair<TKey, TValue> | null> {
         return EnumerableStatic.defaultIfEmpty(this, value);
     }
 
@@ -92,11 +92,11 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.elementAt(this, index);
     }
 
-    public elementAtOrDefault(index: number): KeyValuePair<TKey, TValue> {
+    public elementAtOrDefault(index: number): KeyValuePair<TKey, TValue> | null {
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
         return EnumerableStatic.except(this, enumerable, comparator, orderComparator);
     }
@@ -105,7 +105,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.first(this, predicate);
     }
 
-    public firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null {
         return EnumerableStatic.firstOrDefault(this, predicate);
     }
 
@@ -121,7 +121,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
         return EnumerableStatic.intersect(this, enumerable, comparator, orderComparator);
     }
@@ -138,7 +138,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.last(this, predicate);
     }
 
-    public lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null {
         return EnumerableStatic.lastOrDefault(this, predicate);
     }
 
@@ -195,7 +195,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.single(this, predicate);
     }
 
-    public singleOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
+    public singleOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null {
         return EnumerableStatic.singleOrDefault(this, predicate);
     }
 
@@ -305,7 +305,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     abstract containsKey(key: TKey): boolean;
     abstract containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean;
     abstract entries(): IterableIterator<[TKey, TValue]>; // generator
-    abstract get(key: TKey): TValue;
+    abstract get(key: TKey): TValue | null;
     abstract keys(): ISet<TKey>;
     abstract size(): number;
     abstract values(): ICollection<TValue>;

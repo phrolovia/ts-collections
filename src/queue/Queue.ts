@@ -48,7 +48,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         }
         const result = this.queue.poll();
         this.updateLength();
-        return result;
+        return result as TElement;
     }
 
     /**
@@ -69,7 +69,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         if (this.queue.isEmpty()) {
             throw new Error(ErrorMessages.NoElements);
         }
-        return this.queue.peek();
+        return this.queue.peek() as TElement;
     }
 
     public override isEmpty(): boolean {

@@ -71,9 +71,6 @@ export abstract class Collections {
      * @throws An error if the iterable is null or undefined.
      */
     public static distinct<TElement, TKey>(iterable: Iterable<TElement>, selector?: (item: TElement) => TKey, comparator?: (key1: TKey, key2: TKey) => boolean): IEnumerable<TElement> {
-        if (iterable == null) {
-            throw new Error("Invalid data source!");
-        }
         selector ??= (item: TElement) => item as unknown as TKey;
         comparator ??= (key1: TKey, key2: TKey) => Object.is(key1, key2);
         const distinctList = new List<TElement>();
@@ -126,14 +123,11 @@ export abstract class Collections {
      * @throws An exception if iterable is null or undefined.
      */
     public static max<TElement>(iterable: Iterable<TElement>, selector?: (item: TElement) => number): TElement {
-        if (iterable == null) {
-            throw new Error("Invalid data source!");
-        }
         const iterator = iterable[Symbol.iterator]();
         let iteratorItem = iterator.next();
         let maxItem: TElement;
         if (iteratorItem.done) {
-            return null;
+            throw new Error(ErrorMessages.NoElements);
         }
         maxItem = iteratorItem.value;
         while (!iteratorItem.done) {
@@ -161,14 +155,11 @@ export abstract class Collections {
      * @throws An exception if iterable is null or undefined.
      */
     public static min<TElement>(iterable: Iterable<TElement>, selector?: (item: TElement) => number): TElement {
-        if (iterable == null) {
-            throw new Error("Invalid data source!");
-        }
         const iterator = iterable[Symbol.iterator]();
         let iteratorItem = iterator.next();
         let minItem: TElement;
         if (iteratorItem.done) {
-            return null;
+            throw new Error(ErrorMessages.NoElements);
         }
         minItem = iteratorItem.value;
         while (!iteratorItem.done) {

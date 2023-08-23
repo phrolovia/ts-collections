@@ -10,8 +10,8 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     private readonly keyComparator: EqualityComparator<TKey> = Comparators.equalityComparator;
 
     public constructor(
-        valueComparator?: EqualityComparator<TValue>,
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>) {
+        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
+        valueComparator?: EqualityComparator<TValue>) {
         super(
             valueComparator ?? Comparators.equalityComparator,
             (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key) && (valueComparator ?? Comparators.equalityComparator)(p1.value, p2.value)
@@ -28,9 +28,6 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     }
 
     public add(key: TKey, value: TValue): TValue {
-        if (key == null) {
-            throw new Error(ErrorMessages.NullKey);
-        }
         if (this.containsKey(key)) {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
@@ -63,7 +60,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         }
     };
 
-    public get(key: TKey): TValue {
+    public get(key: TKey): TValue | null {
         return this.dictionary.get(key)?.value ?? null;
     }
 
@@ -71,7 +68,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         return new EnumerableSet<TKey>(this.dictionary.keys());
     }
 
-    public remove(key: TKey): TValue {
+    public remove(key: TKey): TValue | null {
         if (this.containsKey(key)) {
             const oldValue = this.get(key);
             this.dictionary.delete(key);

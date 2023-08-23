@@ -28,7 +28,7 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
         yield * this.dictionary.entries();
     }
 
-    public get(key: TKey): TValue {
+    public get(key: TKey): TValue | null {
         return this.dictionary.get(key);
     }
 

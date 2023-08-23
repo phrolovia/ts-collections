@@ -175,11 +175,11 @@ describe("Dictionary", () => {
 
     describe("#constructor()", () => {
         const dictionary = new Dictionary<string, Person>(
-            (p1, p2) => p1.name === p2.name,
             [
                 new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice),
                 new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia),
-            ]
+            ],
+            (p1, p2) => p1.name === p2.name
         );
         it("should create a dictionary with two elements", () => {
             expect(dictionary.size()).to.eq(2);
@@ -259,8 +259,8 @@ describe("Dictionary", () => {
     describe("#defaultIfEmpty()", () => {
         it("should return a new IEnumerable with the default value", () => {
             const dictionary = new Dictionary<string, Person>();
-            const dict = dictionary.defaultIfEmpty(new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice)).toSortedDictionary<string, Person>(p => p.key, p => p.value);
-            const single = dictionary.defaultIfEmpty(new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia)).single();
+            const dict = dictionary.defaultIfEmpty(new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice)).toSortedDictionary(p => p!.key, p => p!.value);
+            const single = dictionary.defaultIfEmpty(new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia)).single() as KeyValuePair<string, Person>;
             expect(dict instanceof SortedDictionary).to.eq(true);
             expect(dict.size()).to.eq(1);
             expect(dict.get(Person.Alice.name)).to.not.null;
@@ -301,7 +301,7 @@ describe("Dictionary", () => {
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         it("should return 'Lucrezia'", () => {
-            const person = dictionary.elementAtOrDefault(1);
+            const person = dictionary.elementAtOrDefault(1) as KeyValuePair<string, Person>;
             expect(person.value).to.eq(Person.Lucrezia);
         });
         it("should return null if index is out of bounds", () => {
@@ -391,15 +391,15 @@ describe("Dictionary", () => {
             expect(dict.firstOrDefault()).to.eq(null);
         });
         it("should return the first element if no predicate is provided", () => {
-            const first = dictionary.firstOrDefault();
-            expect(first.key).to.eq(Person.Alice.name);
+            const first = dictionary.firstOrDefault() as KeyValuePair<string, Person>;
+            expect(first.key).to.eq(Person.Alice.name)
             expect(first.value.equals(Person.Alice)).to.be.true;
         });
         it("should return null if no matching element is found", () => {
             expect(dictionary.firstOrDefault(p => p.value.name === "Suzuha")).to.eq(null);
         });
         it("should return a person with name 'Noemi'", () => {
-            const first = dictionary.firstOrDefault(p => p.value.name === "Noemi");
+            const first = dictionary.firstOrDefault(p => p.value.name === "Noemi") as KeyValuePair<string, Person>;
             expect(first.value).to.eq(Person.Noemi);
         });
     });
@@ -450,7 +450,7 @@ describe("Dictionary", () => {
         dict.add(Person.Kaori.name, Person.Kaori);
         dict.add(Person.Reina.name, Person.Reina);
         it("should group people by age", () => {
-            const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g, null);
+            const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g );
             const ages: number[] = [];
             const groupedAges: Record<number, number[]> = {};
             for (const ageGroup of group.values()) {
@@ -484,7 +484,7 @@ describe("Dictionary", () => {
         it("should join and group by school id", () => {
             const joinedData = schoolDict.groupJoin(studentDict, sc => sc.value.id, st => st.value.schoolId,
                 (schoolPair, students) => {
-                    return new SchoolStudents(schoolPair.key, students.select(s => s.value).toList())
+                    return new SchoolStudents(schoolPair.key, students?.select(s => s.value).toList() ?? new List<Student>())
                 }).orderByDescending(ss => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];
@@ -568,7 +568,7 @@ describe("Dictionary", () => {
         studentDict.add(500, new Student(500, "Lucrezia", "Volpe", 4));
         it("should join students and schools", () => {
             const joinedData = studentDict.join(schoolDict, st => st.value.schoolId, sc => sc.value.id,
-                (student, school) => `${student.value.name} ${student.value.surname} :: ${school.value.name}`).toArray();
+                (student, school) => `${student.value.name} ${student.value.surname} :: ${school?.value.name}`).toArray();
             const expectedOutput = [
                 "Desireé Moretti :: University",
                 "Apolline Bruyere :: High School",
@@ -583,7 +583,7 @@ describe("Dictionary", () => {
                 (student, school) => [student, school],
                 (stid, scid) => stid === scid, true);
             for (const jd of joinedData) {
-                if ((jd[0].value as Student).surname === "Volpe") {
+                if ((jd[0]?.value as Student).surname === "Volpe") {
                     expect(jd[1]).to.eq(null);
                 } else {
                     expect(jd[1]).to.not.eq(null);
@@ -641,7 +641,7 @@ describe("Dictionary", () => {
             expect(dict.lastOrDefault()).to.eq(null);
         });
         it("should return the last element if no predicate is provided", () => {
-            const last = dictionary.lastOrDefault();
+            const last = dictionary.lastOrDefault() as KeyValuePair<string, Person>;
             expect(last.key).to.eq(Person.Noemi.name);
             expect(last.value.equals(Person.Noemi)).to.be.true; // it isn't Noemi since dictionary is sorted due to RedBlackTree implementation
         });
@@ -649,7 +649,7 @@ describe("Dictionary", () => {
             expect(dictionary.lastOrDefault(p => p.value.name === "Suzuha")).to.eq(null);
         });
         it("should return a person with name 'Noemi'", () => {
-            const last = dictionary.lastOrDefault(p => p.value.name === "Noemi");
+            const last = dictionary.lastOrDefault(p => p.value.name === "Noemi") as KeyValuePair<string, Person>;
             expect(last.value).to.eq(Person.Noemi);
             expect(last.value.age).to.eq(29);
         });
@@ -777,9 +777,6 @@ describe("Dictionary", () => {
             expect(dict.size()).to.eq(2);
             expect(dict.get(9)).to.eq(81);
         });
-        it("should throw if the key is null", () => {
-            expect(() => dict.put(null, 99)).to.throw(ErrorMessages.NullKey);
-        });
         it("should return null if the key added (and not updated)", () => {
             const oldValue = dict.put(8, 64);
             expect(oldValue).to.be.null;
@@ -866,16 +863,9 @@ describe("Dictionary", () => {
                 index++;
             }
         });
-        it("should throw error if selector is undefined", () => {
-            expect(() => dictionary.select(null).toList()).to.throw(ErrorMessages.NoSelectorProvided);
-        });
     });
 
     describe("#selectMany()", () => {
-        it("should throw error if selector is undefined", () => {
-            const dictionary = new Dictionary<string, string>();
-            expect(() => dictionary.selectMany(null)).to.throw(ErrorMessages.NoSelectorProvided);
-        });
         it("should return a flattened array of friends' ages", () => {
             const dictionary = new Dictionary<string, Person>();
             Person.Viola.friendsArray = [Person.Rebecca];
@@ -991,7 +981,7 @@ describe("Dictionary", () => {
         it("should return the only element in the dictionary", () => {
             const dict = new Dictionary<number, string>();
             dict.add(1, "a");
-            const single = dict.singleOrDefault();
+            const single = dict.singleOrDefault() as KeyValuePair<number, string>;
             expect(single.equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
         });
         it("should throw error if there are more than one matching elements", () => {
@@ -1013,8 +1003,8 @@ describe("Dictionary", () => {
             dict.add(Person.Noemi.name, Person.Noemi);
             dict.add(Person.Priscilla.name, Person.Priscilla);
             dict.add(Person.Vanessa.name, Person.Vanessa);
-            const single = dict.singleOrDefault(p => p.key === "Priscilla");
-            expect(single.key).eq(Person.Priscilla.name);
+            const single = dict.singleOrDefault(p => p.key === "Priscilla") as KeyValuePair<string, Person>;
+            expect(single.key).eq(Person.Priscilla.name)
             expect(single.value).to.eq(Person.Priscilla);
         });
     });
@@ -1089,9 +1079,6 @@ describe("Dictionary", () => {
         dict.add(4000, Person.Julia);
         dict.add(1500, Person.Megan);
         dict.add(5500, Person.Noemi);
-        it("should throw error if predicate is null", () => {
-            expect(() => dict.skipWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
-        });
         it("should return a dictionary with keys [8000, 9000]", () => {
             const dict2 = dict.skipWhile((p, px) => p.key <= 6500).toSortedDictionary<number, Person>(p => p.key, p => p.value);
             const keys = dict2.select(p => p.key).toArray();
@@ -1175,9 +1162,6 @@ describe("Dictionary", () => {
         dict.add("orange", 4);
         dict.add("plum", 5);
         dict.add("grape", 6);
-        it("should throw error if predicate is null", () => {
-            expect(() => dict.takeWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
-        });
         it("should return a dictionary with keys [apple, banana, mango]", () => {
             const dict2 = dict.takeWhile(p => p.key.localeCompare("orange") !== 0).toSortedDictionary<string, number>(p => p.key, p => p.value);
             expect(dict2.size()).to.eq(3);
@@ -1417,9 +1401,10 @@ describe("Dictionary", () => {
             expect(people instanceof Dictionary).to.be.true;
         });
         it("should have the same order as dictionary", () => { // ordered due to RedBlackTree
-            expect(people.get(Person.Lucrezia.name).value).to.eq(Person.Lucrezia);
-            expect(people.get(Person.Vanessa.name).value).to.eq(Person.Vanessa);
-            expect(people.get(Person.Alice.name).value).to.eq(Person.Alice);
+            const array = people.values().toArray();
+            expect(array[0].value).to.eq(Person.Lucrezia);
+            expect(array[1].value).to.eq(Person.Vanessa);
+            expect(array[2].value).to.eq(Person.Alice);
         });
     });
 
@@ -1543,9 +1528,6 @@ describe("Dictionary", () => {
             expect(dictionary.size()).to.eq(3);
             expect(dictionary.length).to.eq(3);
         });
-        it("should throw error if key is null", () => {
-            expect(() => dictionary.tryAdd(null, Person.Kaori.name)).to.throw(ErrorMessages.NullKey);
-        });
     });
 
     describe("#union()", () => {
@@ -1597,9 +1579,6 @@ describe("Dictionary", () => {
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         dictionary.add(Person.Noemi.name, Person.Noemi);
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
-        it("should throw error if predicate is undefined", () => {
-            expect(() => dictionary.where(null)).to.throw(ErrorMessages.NoPredicateProvided);
-        });
         it("should return a dictionary with people who are younger than 10", () => {
             const dict = dictionary.where(p => p.value.age < 10).toSortedDictionary<string, Person>(p => p.key, p => p.value);
             expect(dict.size()).to.eq(1);

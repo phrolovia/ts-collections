@@ -85,7 +85,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
      * @param value The value to return if the sequence is empty.
      */
-    defaultIfEmpty(value?: TElement): IEnumerable<TElement>;
+    defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null>;
 
     /**
      * Returns distinct elements from the sequence.
@@ -105,7 +105,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Returns the element at the specified index in the sequence or a default value if the index is out of range.
      * @param index The index of the element that will be returned.
      */
-    elementAtOrDefault(index: number): TElement;
+    elementAtOrDefault(index: number): TElement | null;
 
     /**
      * Produces the set difference of two sequences by using the specified equality comparer or order comparer to compare values.
@@ -128,7 +128,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement>;
+    except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
 
     /**
      * Gets the first element of the sequence.
@@ -142,7 +142,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
      * @throws {Error} If the source is null or undefined.
      */
-    firstOrDefault(predicate?: Predicate<TElement>): TElement;
+    firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
      * Iterates over the sequence and performs the specified action on each element.
@@ -189,7 +189,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IEnumerable<TElement>;
+    intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys
@@ -215,7 +215,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
      * @throws {Error} If the source is null or undefined.
      */
-    lastOrDefault(predicate?: Predicate<TElement>): TElement;
+    lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
      * Returns the maximum value in the sequence.
@@ -256,7 +256,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
      * ```
      */
-    pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
+    pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
 
 
     /**
@@ -313,9 +313,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty. This method throws an exception if there is more than one element in the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @throws {Error} If the source is contains more than one element or if predicate is specified and more than one element satisfies the condition.
+     * @throws {Error} If the source contains more than one element or if predicate is specified and more than one element satisfies the condition.
      */
-    singleOrDefault(predicate?: Predicate<TElement>): TElement;
+    singleOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
      * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
