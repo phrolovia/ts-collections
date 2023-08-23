@@ -76,6 +76,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.average(selector);
     }
 
+    public cast<TResult>(): IEnumerable<TResult> {
+        return this.enumerator.cast();
+    }
+
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
         return this.enumerator.chunk(size);
     }

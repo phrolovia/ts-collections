@@ -204,6 +204,18 @@ describe("LinkedList", () => {
         });
     });
 
+    describe("#cast()", () => {
+        const mixedList = new LinkedList([1, 2, 3, "4", "5", "6", 7, 8, 9, "10"]);
+        const numbers = mixedList.where(n => typeof n === "number").cast<number>();
+        const strings = mixedList.where(s => typeof s === "string").cast<string>();
+        it("should return a list of numbers", () => {
+            expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9]);
+        });
+        it("should return a list of strings", () => {
+            expect(strings.toArray()).to.deep.equal(["4", "5", "6", "10"]);
+        });
+    })
+
     describe("#clear()", () => {
         const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
         it("should remove all elements from the collection", () => {

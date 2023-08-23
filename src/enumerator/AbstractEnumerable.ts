@@ -50,6 +50,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.average(this, selector);
     }
 
+    public cast<TResult>(): IEnumerable<TResult> {
+        return EnumerableStatic.cast(this);
+    }
+
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
         return EnumerableStatic.chunk(this, size);
     }

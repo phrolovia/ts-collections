@@ -94,6 +94,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return total / count;
     }
 
+    public cast<TResult>(): IAsyncEnumerable<TResult> {
+        return new AsyncEnumerator<TResult>(() => this.castGenerator());
+    }
+
     public chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>> {
         if (size < 1) {
             throw new Error(ErrorMessages.InvalidChunkSize);
@@ -453,6 +457,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private async* appendGenerator(element: TElement): AsyncIterable<TElement> {
         yield* await this;
         yield element;
+    }
+
+    private async* castGenerator<TResult>(): AsyncIterable<TResult> {
+        for await (const element of this) {
+            yield element as unknown as TResult;
+        }
     }
 
     private async* chunkGenerator(size: number): AsyncIterable<IEnumerable<TElement>> {

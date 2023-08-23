@@ -55,6 +55,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     average(selector?: Selector<TElement, number>): number;
 
     /**
+     * Casts the elements of the sequence to the specified type.
+     * @template TResult
+     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+     */
+    cast<TResult>(): IEnumerable<TResult>;
+
+    /**
      * Splits the elements of the sequence into chunks of size at most the specified size.
      * @param size The maximum size of each chunk.
      */

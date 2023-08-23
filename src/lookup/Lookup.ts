@@ -85,6 +85,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.average(selector);
     }
 
+    public cast<TResult>(): IEnumerable<TResult> {
+        return this.lookupTree.cast<TResult>();
+    }
+
     public chunk(size: number): IEnumerable<IEnumerable<IGroup<TKey, TElement>>> {
         return this.lookupTree.chunk(size);
     }

@@ -99,6 +99,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return total / count;
     }
 
+    public cast<TResult>(): IEnumerable<TResult> {
+        return new Enumerator<TResult>(() => this.castGenerator());
+    }
+
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
         if (size < 1) {
             throw new Error(ErrorMessages.InvalidChunkSize);
@@ -545,6 +549,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* appendGenerator(element: TElement): Iterable<TElement> {
         yield* this;
         yield element;
+    }
+
+    private* castGenerator<TResult>(): Iterable<TResult> {
+        for (const item of this) {
+            yield item as unknown as TResult;
+        }
     }
 
     private* chunkGenerator(size: number): Iterable<IEnumerable<TElement>> {

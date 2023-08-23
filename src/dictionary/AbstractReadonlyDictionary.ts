@@ -61,6 +61,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.average(this, selector);
     }
 
+    public cast<TResult>(): IEnumerable<TResult> {
+        return EnumerableStatic.cast(this);
+    }
+
     public chunk(size: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
         return EnumerableStatic.chunk(this, size);
     }
@@ -304,7 +308,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     abstract [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>>;
     abstract containsKey(key: TKey): boolean;
     abstract containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean;
-    abstract entries(): IterableIterator<[TKey, TValue]>; // generator
+    abstract entries(): IterableIterator<[TKey, TValue]>;
     abstract get(key: TKey): TValue | null;
     abstract keys(): ISet<TKey>;
     abstract size(): number;

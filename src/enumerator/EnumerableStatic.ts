@@ -47,6 +47,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).average(selector);
     }
 
+    public static cast<TElement, TResult>(source: IEnumerable<TElement>): IEnumerable<TResult> {
+        return new Enumerable(source).cast<TResult>();
+    }
+
     public static chunk<TElement>(source: IEnumerable<TElement>, size: number): IEnumerable<IEnumerable<TElement>> {
         return new Enumerable(source).chunk(size);
     }

@@ -69,6 +69,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.average(selector);
     }
 
+    public cast<TResult>(): IAsyncEnumerable<TResult> {
+        return this.enumerator.cast();
+    }
+
     public chunk(count: number): IAsyncEnumerable<IEnumerable<TElement>> {
         return this.enumerator.chunk(count);
     }

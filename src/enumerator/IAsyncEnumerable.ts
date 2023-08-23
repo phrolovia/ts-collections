@@ -49,6 +49,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     average(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
+     * Casts the elements of the sequence to the specified type.
+     * @template TResult
+     * @returns {IAsyncEnumerable<TResult>} The elements of the sequence cast to the specified type.
+     */
+    cast<TResult>(): IAsyncEnumerable<TResult>;
+
+    /**
      * Splits the elements of the sequence into chunks of size at most the specified size.
      * @param size The maximum size of each chunk.
      */
