@@ -1,9 +1,9 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Predicate} from "../shared/Predicate";
-import {IList, LinkedList} from "../../imports";
-import {OrderComparator} from "../shared/OrderComparator";
+import {IList} from "../../imports";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
+import {EqualityComparator} from "../shared/EqualityComparator";
 import {ErrorMessages} from "../shared/ErrorMessages";
+import {OrderComparator} from "../shared/OrderComparator";
+import {Predicate} from "../shared/Predicate";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
@@ -23,7 +23,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return this.get(index);
     }
 
-    public override elementAtOrDefault(index: number): TElement {
+    public override elementAtOrDefault(index: number): TElement | null {
         if (index < 0 || index >= this.size()) {
             return null;
         }
@@ -47,7 +47,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return super.first(predicate);
     }
 
-    public override firstOrDefault(predicate?: Predicate<TElement>): TElement {
+    public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
         if (!predicate) {
             return this.isEmpty() ? null : this.get(0);
         }
@@ -104,7 +104,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return super.last(predicate);
     }
 
-    public override lastOrDefault(predicate?: Predicate<TElement>): TElement {
+    public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
         if (!predicate) {
             return this.isEmpty() ? null : this.get(this.size() - 1);
         }
@@ -135,32 +135,13 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return this.size() !== oldSize;
     }
 
-    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        const oldSize = this.size();
-        const removedElements = new LinkedList<TElement>();
-        for (const element of this) {
-            const iterator = collection[Symbol.iterator]();
-            let next = iterator.next();
-            let found = false;
-            while (!next.done) {
-                if (this.comparer(element, next.value)) {
-                    found = true;
-                    break;
-                }
-                next = iterator.next();
-            }
-            if (!found) {
-                removedElements.add(element);
-            }
-        }
-        this.removeAll(removedElements);
-        this.updateLength();
-        return this.size() !== oldSize;
-    }
-
     public abstract addAt(element: TElement, index: number): boolean;
+
     public abstract get(index: number): TElement;
+
     public abstract removeAt(index: number): TElement;
+
     public abstract set(index: number, element: TElement): TElement;
+
     public abstract sort(comparator?: OrderComparator<TElement>): void;
 }

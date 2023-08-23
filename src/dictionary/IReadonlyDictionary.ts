@@ -34,7 +34,7 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
      * @param key The key whose associated value will be returned
      * @returns The associated value of the key. If key does not exist, it will return null.
      */
-    get(key: TKey): TValue;
+    get(key: TKey): TValue | null;
 
     /**
      * Checks if the dictionary is empty or not.

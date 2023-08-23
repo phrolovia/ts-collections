@@ -1,4 +1,4 @@
-import {Queue} from "./Queue";
+import {Queue} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
 /**
@@ -31,7 +31,9 @@ export class CircularQueue<TElement> extends Queue<TElement> {
      */
     public constructor(capacity?: number, comparator?: EqualityComparator<TElement>) {
         super([], comparator);
-        this.capacity = capacity;
+        if (capacity !== undefined) {
+            this.capacity = capacity;
+        }
     }
 
     /**

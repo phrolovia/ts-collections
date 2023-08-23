@@ -19,11 +19,11 @@ export class OrderedAsyncEnumerator<TElement> extends AsyncEnumerator<TElement> 
             const sortedKeys = Array.from(sortMap.keys()).sort(comparator);
             if (ascending) {
                 for (const key of sortedKeys) {
-                    yield sortMap.get(key);
+                    yield sortMap.get(key) as AsyncIterable<TElement>;
                 }
             } else {
                 for (const key of sortedKeys.reverse()) {
-                    yield await sortMap.get(key);
+                    yield sortMap.get(key) as AsyncIterable<TElement>;
                 }
             }
         };

@@ -13,10 +13,8 @@ export class List<TElement> extends AbstractList<TElement> {
         comparator?: EqualityComparator<TElement>
     ) {
         super(comparator);
-        if (iterable) {
-            for (const element of iterable) {
-                this.add(element);
-            }
+        for (const element of iterable) {
+            this.add(element);
         }
         this.updateLength();
     }
@@ -100,7 +98,7 @@ export class List<TElement> extends AbstractList<TElement> {
         }
         const buffer = new Array<string>();
         for (const element of this) {
-            buffer.push(selector?.(element) ?? element.toString());
+            buffer.push(selector?.(element) ?? String(element));
         }
         return buffer.join(separator ?? ", ");
     }

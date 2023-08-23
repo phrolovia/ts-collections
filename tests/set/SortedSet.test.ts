@@ -6,7 +6,7 @@ import {LinkedList} from "../../imports";
 import {SimpleObject} from "../models/SimpleObject";
 
 describe("SortedSet", () => {
-    describe("#add", () => {
+    describe("#add()", () => {
         it("should skip adding if same element is already in the dictionary", () => {
             const set = new SortedSet<Person>([], (p1, p2) => p1.age - p2.age);
             set.add(Person.Bella);
@@ -48,6 +48,10 @@ describe("SortedSet", () => {
             const set = new SortedSet<Person>();
             expect(set.length).to.eq(0);
         });
+        it("should initialize with the given elements", () => {
+            const set = new SortedSet<string>(["a", "b", "c", "a", "b", "c"]);
+            expect(set.length).to.eq(3);
+        });
         it("should initialize with the given comparator", () => {
             const set = new SortedSet<Person>([Person.Noemi], (p1: Person, p2: Person) => p1.name.localeCompare(p2.name));
             expect(set.length).to.eq(1);
@@ -66,10 +70,6 @@ describe("SortedSet", () => {
             expect(set.length).to.eq(1);
             expect(set.contains(Person.Jisu)).to.be.false;
             expect(set.contains(Person.Amy)).to.be.true;
-        });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.exceptWith(null)).to.throw(Error);
-            expect(() => set.exceptWith(undefined)).to.throw(Error);
         });
     });
 
@@ -102,10 +102,6 @@ describe("SortedSet", () => {
             expect(set.contains(Person.Amy)).to.be.false;
             expect(set.contains(Person.Mel)).to.be.false;
         });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.intersectWith(null)).to.throw(Error);
-            expect(() => set.intersectWith(undefined)).to.throw(Error);
-        });
     });
 
     describe("#isProperSubsetOf()", () => {
@@ -125,10 +121,6 @@ describe("SortedSet", () => {
             otherSet.add(Person.Amy);
             expect(set.isProperSubsetOf(otherSet)).to.be.false;
         });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.isProperSubsetOf(null)).to.throw(Error);
-            expect(() => set.isProperSubsetOf(undefined)).to.throw(Error);
-        });
     });
 
     describe("#isProperSupersetOf()", () => {
@@ -145,10 +137,6 @@ describe("SortedSet", () => {
             otherSet.add(Person.Jisu);
             otherSet.add(Person.Amy);
             expect(set.isProperSupersetOf(otherSet)).to.be.false;
-        });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.isProperSupersetOf(null)).to.throw(Error);
-            expect(() => set.isProperSupersetOf(undefined)).to.throw(Error);
         });
     });
 
@@ -186,10 +174,6 @@ describe("SortedSet", () => {
             otherSet.add(Person.Jisu);
             otherSet.add(Person.Mel);
             expect(firstSet.isSubsetOf(otherSet)).to.be.false;
-        });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.isSubsetOf(null)).to.throw(Error);
-            expect(() => set.isSubsetOf(undefined)).to.throw(Error);
         });
     });
 
@@ -238,10 +222,6 @@ describe("SortedSet", () => {
             otherSet.add(Person.Mel);
             expect(firstSet.isSupersetOf(otherSet)).to.be.false;
         });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.isSupersetOf(null)).to.throw(Error);
-            expect(() => set.isSupersetOf(undefined)).to.throw(Error);
-        });
     });
 
     describe("#overlaps", () => {
@@ -267,10 +247,6 @@ describe("SortedSet", () => {
             otherSet.add(Person.Jisu);
             otherSet.add(Person.Mel);
             expect(firstSet.overlaps(otherSet)).to.be.false;
-        });
-        it("should throw error if set is null or undefined", () => {
-            expect(() => set.overlaps(null)).to.throw(Error);
-            expect(() => set.overlaps(undefined)).to.throw(Error);
         });
     });
 

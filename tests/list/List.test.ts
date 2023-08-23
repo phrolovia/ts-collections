@@ -92,10 +92,6 @@ describe("List", () => {
             const result = list.aggregate<number>((total, num) => total += num);
             expect(result).to.eq(10);
         });
-        it(`should throw if aggregator is null`, () => {
-            const list = new List([2, 5, 6, 99]);
-            expect(() => list.aggregate(null)).to.throw(ErrorMessages.NoAccumulatorProvided);
-        });
         it("should throw error if list is empty and no seed is provided", () => {
             const list = new List<number>([]);
             expect(() => list.aggregate<number>((acc, num) => acc *= num)).to.throw(ErrorMessages.NoElements);
@@ -131,11 +127,11 @@ describe("List", () => {
     describe("#any()", () => {
         const list = new List([Person.Alice, Person.Mel, Person.Senna, null, Person.Jane]);
         it("should have a person with age '9'", () => {
-            const any = list.any(p => p.age === 9);
+            const any = list.any(p => p?.age === 9);
             expect(any).to.eq(true);
         });
         it("should not have people whose names start with 'T'", () => {
-            const any = list.any(p => p?.name.startsWith("T"));
+            const any = list.any(p => p?.name.startsWith("T") === true);
             expect(any).to.eq(false);
         });
         it("should have null", () => {
@@ -461,7 +457,7 @@ describe("List", () => {
         });
         it("should return a person with name 'Alice'", () => {
             const list = new List([Person.Mel, Person.Alice, Person.Jane]);
-            const first = list.firstOrDefault(p => p.name === "Alice");
+            const first = list.firstOrDefault(p => p.name === "Alice") as Person;
             expect(first.name).to.eq("Alice");
         });
     });
@@ -548,7 +544,7 @@ describe("List", () => {
         it("should join and group by school id", () => {
             const joinedData = schools.groupJoin(students, sc => sc.id, st => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students.toList());
+                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
                 }).orderByDescending(ss => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];
@@ -582,7 +578,7 @@ describe("List", () => {
             expect(list1.indexOf(Person.Noemi)).to.eq(1);
         });
         it("should use the given comparator", () => {
-            const ageComparator = (p1: Person, p2: Person) => p1?.age === p2?.age;
+            const ageComparator = (p1: Person|null, p2: Person|null) => p1?.age === p2?.age;
             const index = list1.indexOf(Person.Noemi2, ageComparator);
             expect(index).to.eq(3);
         });
@@ -670,7 +666,7 @@ describe("List", () => {
         const students = new List([desiree, apolline, giselle, priscilla, lucrezia]);
         it("should join students and schools", () => {
             const joinedData = students.join(schools, st => st.schoolId, sc => sc.id,
-                (student, school) => `${student.name} ${student.surname} :: ${school.name}`).toList();
+                (student, school) => `${student.name} ${student.surname} :: ${school?.name}`).toList();
             const expectedOutputDataList = [
                 "Desireé Moretti :: University",
                 "Apolline Bruyere :: High School",
@@ -694,7 +690,7 @@ describe("List", () => {
         it("should join key-value pairs", () => {
             const pairList1 = new List([new Pair(1, "A"), new Pair(2, "B"), new Pair(3, "C")]);
             const pairList2 = new List([new Pair(1, "a1"), new Pair(1, "a2"), new Pair(1, "a3"), new Pair(2, "b1"), new Pair(2, "b2")]);
-            const joinList = pairList1.join(pairList2, p1 => p1.key, p2 => p2.key, (pair1, pair2) => [pair1.value, pair2.value]);
+            const joinList = pairList1.join(pairList2, p1 => p1.key, p2 => p2.key, (pair1, pair2) => [pair1.value, pair2?.value]);
             const expectedOutput = [
                 ["A", "a1"],
                 ["A", "a2"],
@@ -737,7 +733,7 @@ describe("List", () => {
             expect(list1.lastIndexOf(Person.Noemi)).to.eq(1);
         });
         it("should use the given comparator", () => {
-            const nameComparator = (p1: Person, p2: Person) => p1?.name === p2?.name;
+            const nameComparator = (p1: Person|null, p2: Person|null) => p1?.name === p2?.name;
             const index = list1.lastIndexOf(Person.Noemi, nameComparator);
             expect(index).to.eq(3);
         });
@@ -959,7 +955,6 @@ describe("List", () => {
         list.add(Person.Alice);
         list.add(Person.Lenka);
         list.add(Person.Senna);
-        list.add(null);
         list.add(Person.Mel);
         it("should have a person with the surname 'Rivermist' at the end.", () => {
             const list2 = list.reverse().toList();
@@ -1000,10 +995,6 @@ describe("List", () => {
     });
 
     describe("#select()", () => {
-        it("should throw error if selector is undefined", () => {
-            const list = new List([2, 5, 6, 99]);
-            expect(() => list.select(null)).to.throw(ErrorMessages.NoSelectorProvided);
-        });
         it("should return an IEnumerable with elements [4, 25, 36, 81]", () => {
             const list = new List([2, 5, 6, 9]);
             const list2 = list.select(n => Math.pow(n, 2)).toList();
@@ -1024,10 +1015,6 @@ describe("List", () => {
     });
 
     describe("#selectMany()", () => {
-        it("should throw error if selector is undefined", () => {
-            const list = new List([2, 5, 6, 99]);
-            expect(() => list.selectMany(null)).to.throw(ErrorMessages.NoSelectorProvided);
-        });
         it("should return a flattened array of ages #1", () => {
             const people: Person[] = [];
             Person.Viola.friendsArray = [Person.Rebecca];
@@ -1221,9 +1208,6 @@ describe("List", () => {
     });
     describe("#skipWhile()", () => {
         const list = new List([5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500]);
-        it("should throw error if predicate is null", () => {
-            expect(() => list.skipWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
-        });
         it("should return an IEnumerable with elements [4000, 1500, 5500]", () => {
             const list2 = list.skipWhile((n, nx) => n > nx * 1000).toList();
             expect(list2.get(0)).to.eq(4000);
@@ -1322,9 +1306,6 @@ describe("List", () => {
     });
     describe("#takeWhile()", () => {
         const list = new List(["apple", "banana", "mango", "orange", "plum", "grape"]);
-        it("should throw error ['predicate is null.]", () => {
-            expect(() => list.takeWhile(null)).to.throw(ErrorMessages.NoPredicateProvided);
-        });
         it("should return an IEnumerable with elements [apple, banana, mango]", () => {
             const list2 = list.takeWhile(f => f.localeCompare("orange") !== 0).toList();
             expect(list2.get(0)).to.eq("apple");
@@ -1665,10 +1646,6 @@ describe("List", () => {
     });
 
     describe("#where()", () => {
-        it("should throw error if predicate is null", () => {
-            const list = new List([2, 5, 6, 99]);
-            expect(() => list.where(null)).to.throw(ErrorMessages.NoPredicateProvided);
-        });
         it("should return an IEnumerable with elements [2,5]", () => {
             const list = new List([2, 5, 6, 99]);
             const list2 = list.where(n => n <= 5).toList();

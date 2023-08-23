@@ -132,14 +132,14 @@ describe("Lookup", () => {
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.defaultIfEmpty(new Group("Noemi", Enumerable.from([Person.Noemi])));
             expect(result.count()).to.eq(1);
-            expect(result.first().key).to.eq("Noemi");
+            expect(result.first()?.key).to.eq("Noemi");
         });
         it("should disregard the given value if lookup is not empty", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.defaultIfEmpty(new Group("Reika", Enumerable.from([Person.Reika])));
             expect(result.count()).to.eq(3);
-            expect(result.select(p => p.key).contains("Reika")).to.eq(false);
+            expect(result.select(p => p?.key).contains("Reika")).to.eq(false);
         });
     });
 
@@ -170,7 +170,7 @@ describe("Lookup", () => {
         it("should return the group at the given index", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
-            const result = lookup.elementAtOrDefault(1);
+            const result = lookup.elementAtOrDefault(1) as IGroup<string, Person>;
             expect(result.key).to.eq("Noemi");
         });
         it("should return the default value if index is out of range", () => {
@@ -209,7 +209,7 @@ describe("Lookup", () => {
         it("should return the first group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
-            const result = lookup.firstOrDefault();
+            const result = lookup.firstOrDefault() as IGroup<string, Person>;
             expect(result.key).to.eq("Hanna");
         });
         it("should return the default value if lookup is empty", () => {
@@ -238,7 +238,7 @@ describe("Lookup", () => {
             expect(noemiData.toArray()).to.have.all.members([Person.Noemi, Person.Noemi2]);
         });
         it("should return empty enumerable if key have no data", () => {
-            const tree = new RedBlackTree((p1, p2) => p1.name.localeCompare(p2.name), peopleArray);
+            const tree = new RedBlackTree(peopleArray, (p1, p2) => p1.name.localeCompare(p2.name));
             const lookup = tree.toLookup(p => p.name, p => p);
             const kaoriData = lookup.get("Kaori");
             expect(kaoriData.any()).to.eq(false);
@@ -261,6 +261,7 @@ describe("Lookup", () => {
     describe("#hasKey()", () => {
         it("should return true if lookup has the key", () => {
             const dict = new SortedDictionary<string, Person>(
+                [],
                 (n1, n2) => n1.localeCompare(n2),
                 (p1, p2) => personNameComparator(p1, p2) && personSurnameComparator(p1, p2) && personAgeComparator(p1, p2));
             peopleArray.forEach(p => dict.tryAdd(p.name, p));
@@ -306,7 +307,7 @@ describe("Lookup", () => {
         it("should return the last group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
-            const result = lookup.lastOrDefault();
+            const result = lookup.lastOrDefault() as IGroup<string, Person>;
             expect(result.key).to.eq("Suzuha");
         });
         it("should return the default value if lookup is empty", () => {
@@ -470,7 +471,7 @@ describe("Lookup", () => {
         it("should return the only element of the lookup", () => {
             const list = new LinkedList([Person.Hanna]);
             const lookup = list.toLookup(p => p.name, p => p);
-            const result = lookup.singleOrDefault();
+            const result = lookup.singleOrDefault() as IGroup<string, Person>;
             expect(result.key).to.eq("Hanna");
         });
         it("should throw an error if the lookup has more than one element", () => {

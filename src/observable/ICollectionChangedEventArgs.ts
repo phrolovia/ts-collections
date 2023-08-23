@@ -2,8 +2,8 @@ import {ReadonlyList} from "../../imports";
 
 export interface ICollectionChangedEventArgs<TElement> {
     action: CollectionChangedAction;
-    newItems?: ReadonlyList<TElement>;
-    oldItems?: ReadonlyList<TElement>;
+    newItems: ReadonlyList<TElement>;
+    oldItems: ReadonlyList<TElement>;
 }
 
 export enum CollectionChangedAction {

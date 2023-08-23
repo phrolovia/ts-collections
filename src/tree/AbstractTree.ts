@@ -9,8 +9,8 @@ import {INode} from "./INode";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 
 export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollection<TElement> implements ITree<TElement> {
-    protected readonly orderComparator: OrderComparator<TElement> = null;
-    protected root: INode<TElement> = null;
+    protected readonly orderComparator: OrderComparator<TElement>;
+    protected root: INode<TElement> | null = null;
     protected treeSize: number = 0;
 
     protected constructor(comparator?: OrderComparator<TElement>) {
@@ -28,14 +28,14 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         this.updateLength();
     }
 
-    public find(predicate: Predicate<TElement>): TElement {
+    public find(predicate: Predicate<TElement>): TElement | null {
         if (this.root == null) {
             return null;
         }
         return this.findRecursive(this.root, predicate);
     }
 
-    public findBy<TKey>(key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+    public findBy<TKey>(key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement | null {
         if (this.root == null) {
             return null;
         }
@@ -50,7 +50,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         super.forEach(action);
     }
 
-    public getRootData(): TElement {
+    public getRootData(): TElement | null {
         return this.root?.getData() ?? null;
     }
 
@@ -71,7 +71,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         return true;
     }
 
-    public removeBy<TKey>(key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+    public removeBy<TKey>(key: TKey, selector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement | null {
         if (this.root == null) {
             return null;
         }
@@ -108,28 +108,28 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         return array;
     }
 
-    protected toInorderArray(root: INode<TElement>, target: TElement[]): void {
+    protected toInorderArray(root: INode<TElement> | null, target: TElement[]): void {
         if (root == null) return;
         this.toInorderArray(root.getLeft(), target);
         target.push(root.getData());
         this.toInorderArray(root.getRight(), target);
     }
 
-    protected toPostorderArray(root: INode<TElement>, target: TElement[]): void {
+    protected toPostorderArray(root: INode<TElement> | null, target: TElement[]): void {
         if (root == null) return;
         this.toPostorderArray(root.getLeft(), target);
         this.toPostorderArray(root.getRight(), target);
         target.push(root.getData());
     }
 
-    protected toPreorderArray(root: INode<TElement>, target: TElement[]): void {
+    protected toPreorderArray(root: INode<TElement> | null, target: TElement[]): void {
         if (root == null) return;
         target.push(root.getData());
         this.toPreorderArray(root.getLeft(), target);
         this.toPreorderArray(root.getRight(), target);
     }
 
-    private containsRecursive(root: INode<TElement>, element: TElement, comparator: EqualityComparator<TElement>): boolean {
+    private containsRecursive(root: INode<TElement> | null, element: TElement, comparator: EqualityComparator<TElement>): boolean {
         if (root == null) {
             return false;
         }
@@ -143,7 +143,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
             : this.containsRecursive(root.getRight(), element, comparator);
     }
 
-    private findByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement {
+    private findByRecursive<TKey>(root: INode<TElement> | null, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement | null {
         if (root == null) {
             return null;
         }
@@ -158,21 +158,21 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         }
     }
 
-    private findRecursive(root: INode<TElement>, predicate: Predicate<TElement>): TElement {
+    private findRecursive(root: INode<TElement> | null, predicate: Predicate<TElement>): TElement | null {
         if (root == null) {
             return null;
         }
         if (predicate(root.getData())) {
             return root.getData();
         }
-        let foundItem: TElement = this.findRecursive(root.getLeft(), predicate);
+        let foundItem: TElement | null = this.findRecursive(root.getLeft(), predicate);
         if (foundItem != null) {
             return foundItem;
         }
         return this.findRecursive(root.getRight(), predicate);
     }
 
-    private removeByRecursive<TKey>(root: INode<TElement>, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement {
+    private removeByRecursive<TKey>(root: INode<TElement> | null, key: TKey, selector: Selector<TElement, TKey>, comparator: OrderComparator<TKey>): TElement | null {
         if (root == null) {
             return null;
         }
@@ -189,7 +189,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         }
     }
 
-    private toArrayRecursive(root: INode<TElement>, target: TElement[]): void {
+    private toArrayRecursive(root: INode<TElement> | null, target: TElement[]): void {
         if (root == null) {
             return;
         }
@@ -198,7 +198,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         this.toArrayRecursive(root.getRight(), target);
     }
 
-    private* nextNode(node: INode<TElement>): Iterable<TElement> {
+    private* nextNode(node: INode<TElement> | null): Iterable<TElement> {
         if (!node) {
             return this.getRootData();
         }

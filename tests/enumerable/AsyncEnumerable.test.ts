@@ -5,7 +5,7 @@ import chaiAsPromised from "chai-as-promised";
 import {AsyncEnumerable} from "../../src/enumerator/AsyncEnumerable";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Person} from "../models/Person";
-import {Enumerable} from "../../imports";
+import {Enumerable, List} from "../../imports";
 import {Helper} from "../helpers/Helper";
 import {School} from "../models/School";
 import {Student} from "../models/Student";
@@ -68,7 +68,7 @@ describe("AsyncEnumerable", () => {
             expect(result).to.be.equal(10);
         });
         it("should throw error if enumerable is empty and no seed is provided", async () => {
-            const result = new AsyncEnumerable(arrayProducer([])).aggregate((a, b) => a + b);
+            const result = new AsyncEnumerable(arrayProducer([] as number[])).aggregate((a, b) => a + b);
             expect(result).to.be.rejectedWith(ErrorMessages.NoElements);
         });
         it("should return see if enumerable is empty and seed is provided", async () => {
@@ -476,7 +476,7 @@ describe("AsyncEnumerable", () => {
             const studentsEnumerable = new AsyncEnumerable(studentProducer());
             const joinedData = schoolsEnumerable.groupJoin(studentsEnumerable, sc => sc.id, st => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students.toList());
+                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
                 }).orderByDescending(ss => ss.students.size());
             const finalData = await joinedData.toArray();
             const finalOutput: string[] = [];
@@ -582,7 +582,7 @@ describe("AsyncEnumerable", () => {
             const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
             const studentsEnumerable = new AsyncEnumerable(studentProducer());
             const joinedData = await studentsEnumerable.join(schoolsEnumerable, st => st.schoolId, sc => sc.id, (student, school) => {
-                return `${student.name} ${student.surname} :: ${school.name}`;
+                return `${student.name} ${student.surname} :: ${school?.name}`;
             }).toArray();
             const expectedOutput = [
                 "Desireé Moretti :: University",
@@ -601,7 +601,7 @@ describe("AsyncEnumerable", () => {
                 return [student, school];
             }, (stId, scId) => stId === scId, true).toArray();
             for (const [student, school] of joinedData) {
-                if (student.id === 500) {
+                if (student?.id === 500) {
                     expect(school).to.be.null;
                 } else {
                     expect(school).to.not.be.null;
@@ -635,7 +635,7 @@ describe("AsyncEnumerable", () => {
             };
             const pairsEnumerable1 = new AsyncEnumerable(pairProducer1());
             const pairsEnumerable2 = new AsyncEnumerable(pairProducer2());
-            const joinedData = await pairsEnumerable1.join(pairsEnumerable2, p1 => p1.key, p2 => p2.key, (p1, p2) => [p1.value, p2.value]).toArray();
+            const joinedData = await pairsEnumerable1.join(pairsEnumerable2, p1 => p1.key, p2 => p2.key, (p1, p2) => [p1.value, p2?.value]).toArray();
             const expectedOutput = [
                 ["A", "a1"],
                 ["A", "a2"],

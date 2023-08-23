@@ -35,7 +35,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * Unlike {@link top}, this method returns null if the queue is empty.
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
-    public peek(): TElement {
+    public peek(): TElement | null {
         if (this.stack.isEmpty()) {
             return null;
         }
@@ -75,6 +75,6 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
         if (this.stack.isEmpty()) {
             throw new Error(ErrorMessages.NoElements);
         }
-        return this.stack.peek();
+        return this.stack.peek() as TElement;
     }
 }

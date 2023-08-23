@@ -1,11 +1,10 @@
 {
     "name": "@mirei/ts-collections",
-    "version": "11.1.0",
+    "version": "12.0.0",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.js",
-    "module": "dist/index.es.js",
+    "module": "dist/index.js",
     "types": "dist/index.d.ts",
-    "umd:main": "dist/index.umd.js",
     "private": false,
     "scripts": {
         "build": "webpack",
@@ -28,7 +27,7 @@
         "linq"
     ],
     "author": {
-        "name": "Lumine [@merophise]"
+        "name": "Lumine [@hoshixlily]"
     },
     "license": "MIT",
     "files": [
@@ -36,7 +35,7 @@
         "readme.md"
     ],
     "devDependencies": {
-        "@types/chai": "^4.3.4",
+        "@types/chai": "^4.3.5",
         "@types/chai-as-promised": "^7.1.5",
         "@types/mocha": "^10.0.1",
         "braces": "^3.0.2",
@@ -45,15 +44,15 @@
         "chokidar": "^3.5.3",
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
-        "rimraf": "^4.4.1",
+        "rimraf": "^5.0.1",
         "rxjs": "~7.8.0",
         "source-map-support": "^0.5.21",
-        "ts-loader": "^9.4.2",
+        "ts-loader": "^9.4.4",
         "ts-node": "^10.9.1",
-        "typedoc": "^0.23.28",
-        "typescript": "^5.0.2",
-        "webpack": "^5.76.3",
-        "webpack-cli": "^5.0.1"
+        "typedoc": "^0.24.8",
+        "typescript": "^5.1.6",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4"
     },
     "optionalDependencies": {
         "fsevents": "*"

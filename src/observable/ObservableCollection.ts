@@ -20,14 +20,22 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
 
     public add(element: TElement): boolean {
         this.#list.add(element);
-        this.collectionChanged?.(this, {newItems: new ReadonlyList(new List([element])), action: CollectionChangedAction.Add});
+        this.collectionChanged?.(this, {
+            newItems: new ReadonlyList(new List([element])),
+            oldItems: new ReadonlyList(new List()),
+            action: CollectionChangedAction.Add});
         return true;
     }
 
     public clear() {
         const oldItems = new ReadonlyList(new List(this.#list.toArray()));
         this.#list.clear();
-        this.collectionChanged?.(this, {oldItems, action: CollectionChangedAction.Reset});
+        this.collectionChanged?.(this, {
+                oldItems,
+                newItems: new ReadonlyList(new List()),
+                action: CollectionChangedAction.Reset
+            }
+        );
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -54,7 +62,10 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
 
     public insert(index: number, element: TElement) {
         this.#list.addAt(element, index);
-        this.collectionChanged?.(this, {newItems: new ReadonlyList(new List([element])), action: CollectionChangedAction.Add});
+        this.collectionChanged?.(this, {
+            newItems: new ReadonlyList(new List([element])),
+            oldItems: new ReadonlyList(new List()),
+            action: CollectionChangedAction.Add});
     }
 
     public isEmpty(): boolean {
@@ -73,7 +84,10 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
 
     public remove(element: TElement): boolean {
         if (this.#list.remove(element)) {
-            this.collectionChanged?.(this, {oldItems: new ReadonlyList(new List([element])), action: CollectionChangedAction.Remove});
+            this.collectionChanged?.(this, {
+                oldItems: new ReadonlyList(new List([element])),
+                newItems: new ReadonlyList(new List()),
+                action: CollectionChangedAction.Remove});
             return true;
         }
         return false;
@@ -81,7 +95,10 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
 
     public removeAt(index: number): TElement {
         const element = this.#list.removeAt(index);
-        this.collectionChanged?.(this, {oldItems: new ReadonlyList(new List([element])), action: CollectionChangedAction.Remove});
+        this.collectionChanged?.(this, {
+            oldItems: new ReadonlyList(new List([element])),
+            newItems: new ReadonlyList(new List()),
+            action: CollectionChangedAction.Remove});
         return element;
     }
 

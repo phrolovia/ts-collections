@@ -17,7 +17,7 @@ describe("Collections", () => {
             }
         });
         it("should add the given elements to the collection #2", () => {
-            const tree = new RedBlackTree(null, [1, 2]);
+            const tree = new RedBlackTree([1, 2] );
             Collections.addAll(tree, 3, 4, 5);
             expect(tree.size()).to.eq(5);
             expect(tree.search(1)).to.be.true;
@@ -113,10 +113,6 @@ describe("Collections", () => {
             expect(distinct.count()).to.eq(7);
             expect(distinct.toArray()).to.deep.eq([Person.Alice, Person.Bella, Person.Eliza, Person.Noemi, Person.Lenka, Person.Mel, Person.Priscilla]);
         });
-        it("should throw error if iterable is null or undefined", () => {
-            expect(() => Collections.distinct(null)).to.throw();
-            expect(() => Collections.distinct(undefined)).to.throw();
-        });
     })
 
     describe("#fill()", () => {
@@ -168,13 +164,8 @@ describe("Collections", () => {
             const oldestPerson = Collections.max(list, p => p.age);
             expect(oldestPerson.age).to.eq(Person.Alice.age);
         });
-        it("should return null if the list is empty", () => {
-            const list = new LinkedList<Person>();
-            const max = Collections.max(list);
-            expect(max).to.eq(null);
-        });
-        it("should throw error if iterable is not null or undefined", () => {
-            expect(() => Collections.max(null)).to.throw();
+        it("should throw error if iterable is empty", () => {
+            expect(() => Collections.max([])).to.throw();
         });
     });
 
@@ -189,13 +180,8 @@ describe("Collections", () => {
             const youngestPerson = Collections.min(list, p => p.age);
             expect(youngestPerson.age).to.eq(Person.Eliza.age);
         });
-        it("should return null if the list is empty", () => {
-            const list = new LinkedList<Person>();
-            const min = Collections.min(list);
-            expect(min).to.eq(null);
-        });
-        it("should throw error if iterable is not null or undefined", () => {
-            expect(() => Collections.min(null)).to.throw();
+        it("should throw error if iterable is empty", () => {
+            expect(() => Collections.min([])).to.throw();
         });
     });
 

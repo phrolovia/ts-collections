@@ -14,7 +14,7 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
     ) {
         super((e1, e2) => comparator(e1, e2) === 0);
         this.orderComparator = comparator;
-        this.tree = new RedBlackTree<TElement>(comparator, iterable);
+        this.tree = new RedBlackTree<TElement>(iterable, comparator);
         this.updateLength();
     }
 
@@ -60,7 +60,7 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         return result;
     }
 
-    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
+    public override retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const result = this.tree.retainAll(collection);
         this.updateLength();
         return result;

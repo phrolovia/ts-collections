@@ -28,7 +28,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Determines if all elements of the sequence satisfy the specified predicate.
      * @param predicate The predicate function that will be used to check each element for a condition.
      */
-    all(predicate?: Predicate<TElement>): Promise<boolean>;
+    all(predicate: Predicate<TElement>): Promise<boolean>;
 
     /**
      * Determines if any element of the sequence satisfies the specified predicate.
@@ -79,7 +79,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
      * @param defaultValue The value to return if the sequence is empty.
      */
-    defaultIfEmpty(defaultValue?: TElement): IAsyncEnumerable<TElement>;
+    defaultIfEmpty(defaultValue?: TElement|null): IAsyncEnumerable<TElement|null>;
 
     /**
      * Returns distinct elements from the sequence.
@@ -122,7 +122,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement>;
+    except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
 
     /**
      * Gets the first element of the sequence.
@@ -182,7 +182,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>, orderComparator?: OrderComparator<TElement>): IAsyncEnumerable<TElement>;
+    intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys
@@ -304,7 +304,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty. This method throws an exception if there is more than one element in the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @throws {Error} If the source is contains more than one element or if predicate is specified and more than one element satisfies the condition.
+     * @throws {Error} If the source contains more than one element or if predicate is specified and more than one element satisfies the condition.
      */
     singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 

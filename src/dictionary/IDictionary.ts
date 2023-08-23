@@ -31,7 +31,7 @@ export interface IDictionary<TKey, TValue> extends IReadonlyDictionary<TKey, TVa
      * @param key They key whose itself and its associated value will be removed from the dictionary.
      * @returns The removed value or null if the key does not exist in the dictionary.
      */
-    remove(key: TKey): TValue;
+    remove(key: TKey): TValue | null;
 
     /**
      * Sets the value of the given key.

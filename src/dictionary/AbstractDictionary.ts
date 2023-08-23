@@ -20,9 +20,6 @@ export abstract class AbstractDictionary<TKey, TValue> extends AbstractReadonlyD
     }
 
     public tryAdd(key: TKey, value: TValue): boolean {
-        if (key == null) {
-            throw new Error(ErrorMessages.NullKey);
-        }
         if (this.containsKey(key)) {
             return false;
         }
@@ -34,6 +31,6 @@ export abstract class AbstractDictionary<TKey, TValue> extends AbstractReadonlyD
 
     abstract add(key: TKey, value: TValue): TValue;
     abstract clear(): void;
-    abstract remove(key: TKey): TValue;
+    abstract remove(key: TKey): TValue | null;
     abstract set(key: TKey, value: TValue): void;
 }
