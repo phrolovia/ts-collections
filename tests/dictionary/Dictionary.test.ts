@@ -142,6 +142,26 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#cast()", () => {
+        const dictionary = new Dictionary<string, string|number>();
+        dictionary.add("a", 1);
+        dictionary.add("b", 2);
+        dictionary.add("c", 3);
+        dictionary.add("d", "4");
+        dictionary.add("e", "5");
+        it("should cast the dictionary to a new dictionary with string values", () => {
+            const stringValues = dictionary.values().where(v => typeof v === "string").cast<string>().toArray();
+            const numberValues = dictionary.values().where(v => typeof v === "number").cast<number>().toArray();
+            expect(stringValues.length).to.eq(2);
+            expect(stringValues[0]).to.eq("4");
+            expect(stringValues[1]).to.eq("5");
+            expect(numberValues.length).to.eq(3);
+            expect(numberValues[0]).to.eq(1);
+            expect(numberValues[1]).to.eq(2);
+            expect(numberValues[2]).to.eq(3);
+        });
+    });
+
     describe("#clear()", () => {
         it("should remove all elements from the dictionary", () => {
             const dictionary = new Dictionary<string, number>();
@@ -684,6 +704,35 @@ describe("Dictionary", () => {
         it("should throw error if dictionary has no elements", () => {
             dictionary.clear();
             expect(() => dictionary.min()).to.throw(ErrorMessages.NoElements);
+        });
+    });
+
+    describe("#ofType()", () => {
+        const dict = new Dictionary<number, number|string|Person>();
+        dict.add(1, 1);
+        dict.add(2, "a");
+        dict.add(3, 3);
+        dict.add(4, "b");
+        dict.add(5, 5);
+        dict.add(6, Person.Hanyuu);
+        dict.add(7, Person.Lucrezia);
+        it("should return a new list with only numbers", () => {
+            const numbers = dict.values().ofType(Number).toList();
+            expect(numbers.size()).to.eq(3);
+            expect(numbers.length).to.eq(3);
+            expect(numbers.toArray()).to.deep.equal([1, 3, 5]);
+        });
+        it("should return a new list with only strings", () => {
+            const strings = dict.values().ofType("string").toList();
+            expect(strings.size()).to.eq(2);
+            expect(strings.length).to.eq(2);
+            expect(strings.toArray()).to.deep.equal(["a", "b"]);
+        });
+        it("should return a new list with only people", () => {
+            const people = dict.values().ofType(Person).toList();
+            expect(people.size()).to.eq(2);
+            expect(people.length).to.eq(2);
+            expect(people.toArray()).to.deep.equal([Person.Hanyuu, Person.Lucrezia]);
         });
     });
 

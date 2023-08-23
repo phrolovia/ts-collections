@@ -1,3 +1,5 @@
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {IEnumerable} from "./IEnumerable";
 import {Accumulator} from "../shared/Accumulator";
 import {Selector} from "../shared/Selector";
@@ -48,6 +50,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public average(selector?: Selector<TElement, number>): number {
         return EnumerableStatic.average(this, selector);
+    }
+
+    public cast<TResult>(): IEnumerable<TResult> {
+        return EnumerableStatic.cast(this);
     }
 
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
@@ -134,6 +140,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public min(selector?: Selector<TElement, number>): number {
         return EnumerableStatic.min(this, selector);
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
+        return EnumerableStatic.ofType(this, type);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {

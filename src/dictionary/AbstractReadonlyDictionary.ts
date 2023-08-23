@@ -13,6 +13,8 @@ import {
 } from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {EnumerableStatic} from "../enumerator/EnumerableStatic";
 import {Predicate} from "../shared/Predicate";
@@ -59,6 +61,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.average(this, selector);
+    }
+
+    public cast<TResult>(): IEnumerable<TResult> {
+        return EnumerableStatic.cast(this);
     }
 
     public chunk(size: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
@@ -148,6 +154,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.min(this, selector);
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
+        return EnumerableStatic.ofType(this, type);
     }
 
     public orderBy<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
@@ -304,7 +314,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     abstract [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>>;
     abstract containsKey(key: TKey): boolean;
     abstract containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean;
-    abstract entries(): IterableIterator<[TKey, TValue]>; // generator
+    abstract entries(): IterableIterator<[TKey, TValue]>;
     abstract get(key: TKey): TValue | null;
     abstract keys(): ISet<TKey>;
     abstract size(): number;

@@ -1,4 +1,6 @@
 import {Accumulator} from "../shared/Accumulator";
+import {InferredType} from "../shared/InferredType";
+import {ClassType, ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {Predicate} from "../shared/Predicate";
@@ -97,6 +99,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             count++;
         }
         return total / count;
+    }
+
+    public cast<TResult>(): IEnumerable<TResult> {
+        return new Enumerator<TResult>(() => this.castGenerator());
     }
 
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
@@ -307,6 +313,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
             return min;
         }
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
+        return new Enumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
@@ -547,6 +557,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         yield element;
     }
 
+    private* castGenerator<TResult>(): Iterable<TResult> {
+        for (const item of this) {
+            yield item as unknown as TResult;
+        }
+    }
+
     private* chunkGenerator(size: number): Iterable<IEnumerable<TElement>> {
         const iterator = this[Symbol.iterator]();
         let next = iterator.next();
@@ -639,6 +655,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 for (const innerItem of innerItems) {
                     yield resultSelector(element, innerItem);
                 }
+            }
+        }
+    }
+
+    private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): Iterable<InferredType<TResult>> {
+        const isOfType = typeof type === "string"
+            ? ((item: unknown) => typeof item === type) as (item: unknown) => item is InferredType<TResult>
+            : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as any);
+        for (const item of this) {
+            if (isOfType(item)) {
+                yield item;
             }
         }
     }

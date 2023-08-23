@@ -1,4 +1,6 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
@@ -74,6 +76,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public average(selector?: Selector<TElement, number>): number {
         return this.enumerator.average(selector);
+    }
+
+    public cast<TResult>(): IEnumerable<TResult> {
+        return this.enumerator.cast();
     }
 
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
@@ -154,6 +160,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public min(selector?: Selector<TElement, number>): number {
         return this.enumerator.min(selector);
+    }
+
+    public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
+        return this.enumerator.ofType(type);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {

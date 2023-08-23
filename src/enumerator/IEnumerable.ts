@@ -1,5 +1,7 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
+import {InferredType} from "../shared/InferredType";
+import {ObjectType} from "../shared/ObjectType";
 import {Selector} from "../shared/Selector";
 import {Predicate} from "../shared/Predicate";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
@@ -53,6 +55,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param selector The selector function that will select a numeric value from the sequence elements.
      */
     average(selector?: Selector<TElement, number>): number;
+
+    /**
+     * Casts the elements of the sequence to the specified type.
+     * @example
+     *      const onlyNumbers = new List([1, 2, 'a', 'b', 3, 4, 'c', 5]).where(e => typeof e === 'number').cast<number>();
+     *      console.log(onlyNumbers.toArray()); // [1, 2, 3, 4, 5]
+     * @template TResult
+     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+     */
+    cast<TResult>(): IEnumerable<TResult>;
 
     /**
      * Splits the elements of the sequence into chunks of size at most the specified size.
@@ -230,6 +242,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {Error} If the source is empty.
      */
     min(selector?: Selector<TElement, number>): number;
+
+    /**
+     * Returns the elements that are of the specified type.
+     * The type can be specified either as a constructor function or as a string.
+     * @template TResult
+     * @param type The type to filter the elements of the sequence with.
+     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+     */
+    ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>>;
 
     /**
      * Sorts the elements of a sequence in ascending order by using a specified comparer.
