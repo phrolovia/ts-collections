@@ -868,11 +868,11 @@ describe("List", () => {
         });
         it("should return an array of objects", () => {
             const objects = list.ofType(Object).toArray();
-            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice]);
+            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
         });
         it("should return an array of objects via typeof", () => {
             const objects = list.ofType("object").toArray();
-            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice]);
+            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
         });
         it("should return an array of Person", () => {
             const people = list.ofType(Person).toArray();
