@@ -4,32 +4,44 @@ on:
   release:
     types: [created]
     tags:
-      - 'v10.*'
       - 'v11.*'
+      - 'v12.*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          node-version: 16
+          node-version: 18
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+
       - name: Cache npm dependencies
-        uses: actions/cache@v1.2.0
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
+
       - name: Install dependencies
         run: npm ci
+
       - name: Create production build
         run: npm run build
+
       - name: Test production build
         run: npm run test
+
       - name: Upload artifact (dist folder)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist
@@ -38,12 +50,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           registry-url: https://registry.npmjs.org/
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: dist
           path: dist
