@@ -754,12 +754,15 @@ describe("AsyncEnumerable", () => {
 
     describe("#ofType()", () => {
         it("should return only the elements of the specified type", async () => {
-            const enumerable1 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c"]));
-            const enumerable2 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c"]));
+            const enumerable1 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c", BigInt(100)]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c", BigInt(100)]));
+            const enumerable3 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c", BigInt(100)]));
             const strings = await enumerable1.ofType("string").toArray();
             const numbers = await enumerable2.ofType(Number).toArray();
+            const bigints = await enumerable3.ofType(BigInt).toArray();
             expect(strings).to.deep.equal(["a", "b", "c"]);
             expect(numbers).to.deep.equal([1, 2, 3]);
+            expect(bigints).to.deep.equal([BigInt(100)]);
         });
     });
 

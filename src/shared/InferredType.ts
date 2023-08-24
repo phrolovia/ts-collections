@@ -10,6 +10,8 @@ export type InferredType<T> = T extends Object
                 ? Boolean : T extends "boolean" ? Boolean
                 : T extends Symbol
                     ? Symbol : T extends "symbol" ? Symbol
-                    : T extends Function
-                        ? Function : T extends "function" ? Function
-                        : T extends Class<infer R> ? R : T;
+                    : T extends BigInt
+                        ? BigInt : T extends "bigint" ? BigInt
+                        : T extends Function
+                            ? Function : T extends "function" ? Function
+                            : T extends Class<infer R> ? R : T;

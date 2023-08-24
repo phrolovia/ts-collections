@@ -818,6 +818,8 @@ describe("List", () => {
     describe("#ofType()", () => {
         const symbol = Symbol("test");
         const object = new Object(100);
+        const bigInt = BigInt(100);
+        const bigint2 = BigInt(Number.MAX_SAFE_INTEGER);
         const list = new LinkedList([
             1, 2, 3,
             "4", "5", "6",
@@ -828,6 +830,9 @@ describe("List", () => {
             object,
             Person.Mirei,
             Person.Alice,
+            bigInt,
+            bigint2,
+            ["x", "y", "z"]
         ]);
         it("should return an array of numbers via Number constructor", () => {
             const numbers = list.ofType(Number).toArray();
@@ -872,6 +877,18 @@ describe("List", () => {
         it("should return an array of Person", () => {
             const people = list.ofType(Person).toArray();
             expect(people).to.deep.equal([Person.Mirei, Person.Alice]);
+        });
+        it("should return an array of BigInt", () => {
+            const bigints = list.ofType(BigInt).toArray();
+            expect(bigints).to.deep.equal([bigInt, bigint2]);
+        });
+        it("should return an array of BigInt via typeof", () => {
+            const bigints = list.ofType("bigint").toArray();
+            expect(bigints).to.deep.equal([bigInt, bigint2]);
+        });
+        it("should return an array of arrays", () => {
+            const arrays = list.ofType(Array).toArray();
+            expect(arrays).to.deep.equal([["x", "y", "z"]]);
         });
     });
 

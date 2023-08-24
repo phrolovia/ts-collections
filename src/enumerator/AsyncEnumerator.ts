@@ -7,7 +7,6 @@ import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
 import {
-    AsyncEnumerable,
     Enumerable,
     EnumerableSet,
     Group,

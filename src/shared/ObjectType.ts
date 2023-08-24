@@ -16,6 +16,10 @@ class PrimitiveObject extends Object {
     static override readonly [Symbol.hasInstance] = (x: unknown) => typeof x === "object";
 }
 
+class PrimitiveBigInt {
+    static [Symbol.hasInstance] = (x: unknown) => typeof x === "bigint";
+}
+
 class PrimitiveSymbol {
     static [Symbol.hasInstance] = (x: unknown) => typeof x === 'symbol';
 }
@@ -25,6 +29,7 @@ export type ObjectType<T = any> =
     | PrimitiveSymbol | "symbol"
     | PrimitiveString | "string"
     | PrimitiveNumber | "number"
+    | PrimitiveBigInt | "bigint"
     | PrimitiveBoolean | "boolean"
     | Function | "function"
     | Class<T>;
@@ -37,9 +42,11 @@ export const ClassType = (type: ObjectType) => {
             ? PrimitiveString
             : name === "Boolean"
                 ? PrimitiveBoolean
-                : name === "Object"
-                    ? PrimitiveObject
-                    : name === "Symbol"
-                        ? PrimitiveSymbol
-                        : type;
+                : name === "BigInt"
+                    ? PrimitiveBigInt
+                    : name === "Object"
+                        ? PrimitiveObject
+                        : name === "Symbol"
+                            ? PrimitiveSymbol
+                            : type;
 }
