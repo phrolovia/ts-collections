@@ -820,7 +820,9 @@ describe("List", () => {
         const object = new Object(100);
         const bigInt = BigInt(100);
         const bigint2 = BigInt(Number.MAX_SAFE_INTEGER);
-        const list = new LinkedList([
+        const generator = function* () { yield 1; yield 2; yield 3; };
+        const func = () => { return 1; };
+        const list = new List([
             1, 2, 3,
             "4", "5", "6",
             7, 8, 9, 10,
@@ -832,7 +834,9 @@ describe("List", () => {
             Person.Alice,
             bigInt,
             bigint2,
-            ["x", "y", "z"]
+            ["x", "y", "z"],
+            generator,
+            func
         ]);
         it("should return an array of numbers via Number constructor", () => {
             const numbers = list.ofType(Number).toArray();
@@ -889,6 +893,18 @@ describe("List", () => {
         it("should return an array of arrays", () => {
             const arrays = list.ofType(Array).toArray();
             expect(arrays).to.deep.equal([["x", "y", "z"]]);
+        });
+        it("should return an array of functions", () => {
+            const functions = list.ofType(Function).toArray();
+            expect(functions).to.deep.equal([generator, func]);
+        });
+        it("should return an array of functions via typeof", () => {
+            const functions = list.ofType("function").toArray();
+            expect(functions).to.deep.equal([generator, func]);
+        });
+        it("should return an array of strings and numbers", () => {
+            const stringsAndNumbers = list.ofType(String).concat(list.ofType(Number)).toArray();
+            expect(stringsAndNumbers).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
         });
     });
 
