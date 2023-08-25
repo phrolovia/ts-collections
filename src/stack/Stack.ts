@@ -33,6 +33,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
     /**
      * Retrieves but does not remove the element at the beginning of the queue.
      * Unlike {@link top}, this method returns null if the queue is empty.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement | null {
@@ -44,6 +45,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
 
     /**
      * Retrieves and removes the element at the beginning of the queue.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement | null} The head of the queue, or null if the queue is empty.
      * @throws {Error} If the queue is empty.
      */
@@ -69,6 +71,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
     /**
      * Retrieves but does not remove the element at the beginning of the queue.
      * Unlike {@link peek}, this method throws an error if the queue is empty.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement} The head of the queue.
      */
     public top(): TElement {

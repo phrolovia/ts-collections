@@ -14,6 +14,7 @@ export abstract class Collections {
 
     /**
      * Add all the given elements to the collection
+     * @template TElement The type of the elements
      * @param {ICollection} collection The collection to which the elements will be added.
      * @param {TElement} elements The elements that will be added to the given collection.
      * @return {boolean} true if collection is modified, false otherwise.
@@ -29,6 +30,7 @@ export abstract class Collections {
     /**
      * Performs a binary search on the given sequence and returns the index of the element. The sequence must be sorted prior to calling this method.
      * If the searched element exists multiple times in the sequence, the returned index is arbitrary.
+     * @template TElement The type of the elements
      * @param {IList|Array} sequence The list or array in which the element will be binary-searched for. It must be sorted.
      * @param {TElement} element The element that will be searched for.
      * @param {OrderComparator} comparator The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.

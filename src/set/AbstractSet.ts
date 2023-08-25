@@ -1,7 +1,6 @@
 import {AbstractRandomAccessCollection, IEnumerable, ISet} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {ErrorMessages} from "../shared/ErrorMessages";
 
 export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollection<TElement> implements ISet<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {

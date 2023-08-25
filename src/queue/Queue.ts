@@ -39,6 +39,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * Retrieves and returns the element at the beginning of the queue.
      * Unlike {@link poll}, this method does not return null if the queue is empty.
      * Instead, it throws an exception.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement} The head of the queue.
      * @throws {Error} If the queue is empty.
      */
@@ -63,6 +64,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
     /**
      * Retrieves but does not remove the element at the beginning of the queue.
      * Unlike {@link peek}, this method throws an error if the queue is empty.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement} The head of the queue.
      */
     public front(): TElement {
@@ -79,6 +81,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
     /**
      * Retrieves but does not remove the element at the beginning of the queue.
      * Unlike {@link front}, this method returns null if the queue is empty.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement | null {
@@ -91,6 +94,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
     /**
      * Retrieves and removes the element at the beginning of the queue.
      * Unlike {@link dequeue}, this method does not throw an error if the queue is empty.
+     * @template TElement The type of elements in the queue.
      * @returns {TElement | null} The head of the queue, or null if the queue is empty.
      */
     public poll(): TElement | null {
