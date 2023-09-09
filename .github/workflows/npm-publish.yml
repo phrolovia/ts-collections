@@ -4,7 +4,6 @@ on:
   release:
     types: [created]
     tags:
-      - 'v11.*'
       - 'v12.*'
 
 jobs:
@@ -35,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Create production build
-        run: npm run build
+        run: npm run build:new
 
       - name: Test production build
         run: npm run test
