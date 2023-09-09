@@ -1,19 +1,15 @@
 {
     "name": "@mirei/ts-collections",
-    "version": "12.2.0-beta",
+    "version": "12.1.2",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.js",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "private": false,
-    "type": "module",
     "scripts": {
         "build": "webpack",
         "docs": "npx typedoc",
         "prebuild": "rimraf dist",
-        "build:new": "npm run build:esbuild && npm run build:types",
-        "build:esbuild": "node esbuild.config.mjs",
-        "build:types": "tsc --emitDeclarationOnly --declaration --project tsconfig.json",
         "test": "nyc _mocha --require ts-node/register --recursive tests/**/*.test.* --timeout 5000"
     },
     "keywords": [
@@ -31,7 +27,7 @@
         "linq"
     ],
     "author": {
-        "name": "Nanahoshi [@hoshixlily]"
+        "name": "Lumine [@hoshixlily]"
     },
     "license": "MIT",
     "files": [
@@ -46,7 +42,6 @@
         "chai": "^4.3.7",
         "chai-as-promised": "^7.1.1",
         "chokidar": "^3.5.3",
-        "esbuild": "^0.19.2",
         "mocha": "^10.2.0",
         "nyc": "^15.1.0",
         "rimraf": "^5.0.1",
