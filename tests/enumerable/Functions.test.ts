@@ -1,6 +1,7 @@
 import {expect} from "chai";
 import {describe, it} from "mocha";
 import {
+    aggregate,
     all,
     any,
     append,
@@ -11,23 +12,62 @@ import {
     contains,
     count,
     defaultIfEmpty,
+    Dictionary,
     distinct,
     elementAt,
     elementAtOrDefault,
     empty,
+    EnumerableSet,
     except,
     first,
     firstOrDefault,
     forEach,
-    groupBy, groupJoin, intersect, join, last, lastOrDefault,
-    List, max, min, orderByDescending,
+    groupBy,
+    groupJoin,
+    IndexableList,
+    intersect,
+    join,
+    last,
+    lastOrDefault,
+    LinkedList,
+    List,
+    max,
+    min,
+    ofType,
+    orderBy,
+    orderByDescending,
+    pairwise,
+    partition,
+    prepend,
     range,
     repeat,
+    reverse,
+    scan,
     select,
-    selectMany, single,
+    selectMany,
+    sequenceEqual,
+    single,
+    singleOrDefault,
+    skip,
+    skipLast,
+    skipWhile,
+    SortedDictionary,
+    SortedSet,
+    sum,
+    take,
+    takeLast,
+    takeWhile,
     toArray,
+    toDictionary,
+    toEnumerableSet,
+    toIndexableList,
+    toLinkedList,
     toList,
-    where
+    toLookup,
+    toSortedDictionary,
+    toSortedSet,
+    union,
+    where, zip
 } from "../../imports";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Helper} from "../helpers/Helper";
@@ -37,7 +77,37 @@ import {School} from "../models/School";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Student} from "../models/Student";
 
-describe("Enumerable", () => {
+describe("Enumerable Standalone Functions", () => {
+    describe("#aggregate()", () => {
+        it("should return 6", () => {
+            const sequence = [4, 8, 8, 3, 9, 0, 7, 8, 2];
+            const result = aggregate(sequence, (total, next) => next % 2 === 0 ? total + 1 : total, 0);
+            expect(result).to.eq(6);
+        });
+        it("should return pomegranate", () => {
+            const sequence = ["apple", "mango", "orange", "pomegranate", "grape"];
+            const result = aggregate(sequence, (longest, next) => next.length > longest.length ? next : longest, "banana");
+            expect(result).to.eq("pomegranate");
+        });
+        it("should return 10", () => {
+            const sequence = [1, 2, 3, 4];
+            const result = aggregate(sequence, (total, next) => total + next);
+            expect(result).to.eq(10);
+        });
+        it("should throw error if the sequence is empty and no seed is provided", () => {
+            expect(() => aggregate<number>([], (total, next) => total + next)).to.throw(ErrorMessages.NoElements);
+        });
+        it("should return the seed if the sequence is empty", () => {
+            const result = aggregate<number, number>([], (total, next) => total + next, 10);
+            expect(result).to.eq(10);
+        });
+        it("should use the result selector", () => {
+            const sequence = [1, 2, 3, 4];
+            const result = aggregate(sequence, (total, next) => total + next, 0, result => Math.pow(result, 2));
+            expect(result).to.eq(100);
+        });
+    });
+
     describe("#all()", () => {
         it("should not have any elements that are not even", () => {
             const allEven = all([2, 4, 6, 8, 10], n => n % 2 === 0);
@@ -48,6 +118,7 @@ describe("Enumerable", () => {
             expect(allEven).to.be.false;
         });
     });
+
     describe("#any()", () => {
         it("should have at least one element that is even", () => {
             const anyEven = any([1, 2, 3, 5, 7], n => n % 2 === 0);
@@ -66,13 +137,14 @@ describe("Enumerable", () => {
             expect(anyEven).to.be.false;
         });
     });
+
     describe("#append()", () => {
         it("should append an element to the end", () => {
-            const list = new List([1, 2, 3, 4, 5]);
-            const list2 = toList(append(list, 6));
+            const list2 = toList(append([1, 2, 3, 4, 5], 6));
             expect(list2.get(5)).to.eq(6);
         });
     });
+
     describe("#average()", () => {
         it("should return the average of the list", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -88,6 +160,7 @@ describe("Enumerable", () => {
             expect(() => average(list)).to.throw();
         });
     });
+
     describe("#cast()", () => {
         it("should cast the list to a new type", () => {
             const mixedSequence = [1, "2", 3, "4", 5];
@@ -97,6 +170,7 @@ describe("Enumerable", () => {
             expect(strings.toArray()).to.deep.equal(["2", "4"]);
         });
     });
+
     describe("#chunk()", () => {
         it("should split the list into groups of 10", () => {
             const sequence = range(1, 100);
@@ -113,6 +187,7 @@ describe("Enumerable", () => {
             expect(count(elementAt(chunks, 2))).to.eq(2);
         });
     });
+
     describe("#concat()", () => {
         it("should concatenate two lists", () => {
             const list1 = new List([1, 2, 3]);
@@ -121,6 +196,7 @@ describe("Enumerable", () => {
             expect(list3.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6]);
         });
     });
+
     describe("#contains()", () => {
         it("should return true if the list contains the element", () => {
             const sequence = [Person.Alice, Person.Hanyuu, Person.Mirei];
@@ -141,6 +217,7 @@ describe("Enumerable", () => {
             expect(contains(sequence, Person.Noemi2, (a, b) => a.name === b.name)).to.be.true;
         });
     });
+
     describe("#count()", () => {
         it("should return the number of elements in the list", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -155,6 +232,7 @@ describe("Enumerable", () => {
             expect(count(set, n => n % 2 === 0)).to.eq(2);
         });
     });
+
     describe("#defaultIfEmpty()", () => {
         it("should return the list if it is not empty", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -167,6 +245,7 @@ describe("Enumerable", () => {
             expect(list2.toArray()).to.deep.equal([6]);
         });
     });
+
     describe("#distinct()", () => {
         it("should return a list of unique elements", () => {
             const list = new List([1, 2, 3, 4, 5, 1, 2, 3, 4, 5]);
@@ -184,6 +263,7 @@ describe("Enumerable", () => {
             expect(uniqueSequence.toArray()).to.deep.equal([Person.Mel, Person.Noemi]);
         });
     });
+
     describe("#elementAt()", () => {
         it("should return the element at the index", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -194,22 +274,25 @@ describe("Enumerable", () => {
             expect(() => elementAt(list, 5)).to.throw();
         });
     });
+
     describe("#elementAtOrDefault()", () => {
         it("should return the element at the index", () => {
-            const list = new List([1, 2, 3, 4, 5]);
-            expect(elementAtOrDefault(list, 2)).to.eq(3);
+            const result = elementAtOrDefault([1, 2, 3, 4, 5], 2);
+            expect(result).to.eq(3);
         });
         it("should return null if the index is out of bounds", () => {
             const list = new List([1, 2, 3, 4, 5]);
             expect(elementAtOrDefault(list, 5)).to.be.null;
         });
     });
+
     describe("#empty()", () => {
         it("should create an empty enumerable", () => {
             const enumerable = empty<number>();
             expect(enumerable.count()).to.eq(0);
         });
     });
+
     describe("#except()", () => {
         it("should return [1,2,3]", () => {
             const result = except([1, 2, 3, 3, 4, 5], [4, 5, 6, 7, 8]);
@@ -249,6 +332,7 @@ describe("Enumerable", () => {
             expect(ageCount).to.eq(0);
         });
     });
+
     describe("#first()", () => {
         it("should throw error if the sequence is empty", () => {
             expect(() => first([])).to.throw(ErrorMessages.NoElements);
@@ -265,6 +349,7 @@ describe("Enumerable", () => {
             expect(() => first([1, 2, 3, 4, 5], n => n > 5)).to.throw(ErrorMessages.NoMatchingElement);
         });
     });
+
     describe("#firstOrDefault()", () => {
         it("should return null if the sequence is empty", () => {
             expect(firstOrDefault([])).to.be.null;
@@ -281,6 +366,7 @@ describe("Enumerable", () => {
             expect(firstOrDefault([1, 2, 3, 4, 5], n => n > 5)).to.be.null;
         });
     });
+
     describe("#forEach()", () => {
         it("should loop over the enumerable", () => {
             const result: number[] = [];
@@ -288,6 +374,7 @@ describe("Enumerable", () => {
             expect(result).to.deep.equal([2, 4, 6]);
         });
     });
+
     describe("#groupBy()", () => {
         const sequence = new Set([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Kaori, Person.Reina]);
         it("should group people by age", () => {
@@ -325,6 +412,7 @@ describe("Enumerable", () => {
             expect(count(elementAt(groups, 3).source)).to.eq(1);
         });
     });
+
     describe("#groupJoin()", () => {
         const school1 = new School(1, "Elementary School");
         const school2 = new School(2, "High School");
@@ -362,6 +450,7 @@ describe("Enumerable", () => {
             expect(finalOutput).to.deep.equal(expectedOutput);
         });
     });
+
     describe("#intersect()", () => {
         it("should return [4,5]", () => {
             const first = [1, 2, 3, 4, 5];
@@ -405,6 +494,7 @@ describe("Enumerable", () => {
             expect(ageCount).to.eq(0);
         });
     });
+
     describe("#join()", () => {
         const school1 = new School(1, "Elementary School");
         const school2 = new School(2, "High School");
@@ -456,6 +546,7 @@ describe("Enumerable", () => {
             expect(joinedData.toArray()).to.deep.equal(expectedOutputDataList);
         });
     });
+
     describe("#last()", () => {
         it("should throw error if the sequence is empty", () => {
             expect(() => last([])).to.throw(ErrorMessages.NoElements);
@@ -472,6 +563,7 @@ describe("Enumerable", () => {
             expect(() => last([1, 2, 3, 4, 5], n => n > 5)).to.throw(ErrorMessages.NoMatchingElement);
         });
     });
+
     describe("#lastOrDefault()", () => {
         it("should return null if the sequence is empty", () => {
             expect(lastOrDefault([])).to.be.null;
@@ -488,6 +580,7 @@ describe("Enumerable", () => {
             expect(lastOrDefault([1, 2, 3, 4, 5], n => n > 5)).to.be.null;
         });
     });
+
     describe("#max()", () => {
         it("should return the maximum value", () => {
             expect(max([1, 2, 3, 4, 5])).to.eq(5);
@@ -501,19 +594,170 @@ describe("Enumerable", () => {
             expect(() => max(list)).to.throw();
         });
     });
+
     describe("#min()", () => {
         it("should return the minimum value", () => {
             expect(min([1, 2, 3, 4, 5])).to.eq(1);
         });
         it("should return the minimum value with a selector", () => {
             const list = new List([Person.Alice, Person.Mirei, Person.Lucrezia, Person.Vanessa]);
-            expect(min(list, p => p.age)).to.eq(9);
+            expect(min(list, p => p.age)).to.eq(20);
         });
         it("should throw an error if the list is empty", () => {
             const list = new List([]);
             expect(() => min(list)).to.throw();
         });
     });
+
+    describe("#ofType()", () => {
+        const symbol = Symbol("test");
+        const object = new Object(100);
+        const bigInt = BigInt(100);
+        const bigint2 = BigInt(Number.MAX_SAFE_INTEGER);
+        const generator = function* () {
+            yield 1;
+            yield 2;
+            yield 3;
+        };
+        const func = () => {
+            return 1;
+        };
+        const collection = [
+            1, 2, 3,
+            "4", "5", "6",
+            7, 8, 9, 10,
+            true, false,
+            Number(999),
+            symbol,
+            object,
+            Person.Mirei,
+            Person.Alice,
+            bigInt,
+            bigint2,
+            ["x", "y", "z"],
+            generator,
+            func
+        ];
+        it("should retunr an array of numbers via Number constructor", () => {
+            const numbers = ofType(collection, Number);
+            expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9, 10, 999]);
+        });
+        it("should return an array of numbers via typeof", () => {
+            const numbers = ofType(collection, "number");
+            expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9, 10, 999]);
+        });
+        it("should return an array of strings via String constructor", () => {
+            const strings = ofType(collection, String);
+            expect(strings.toArray()).to.deep.equal(["4", "5", "6"]);
+        });
+        it("should return an array of strings via typeof", () => {
+            const strings = ofType(collection, "string");
+            expect(strings.toArray()).to.deep.equal(["4", "5", "6"]);
+        });
+        it("should return an array of booleans via Boolean constructor", () => {
+            const booleans = ofType(collection, Boolean);
+            expect(booleans.toArray()).to.deep.equal([true, false]);
+        });
+        it("should return an array of booleans via typeof", () => {
+            const booleans = ofType(collection, "boolean");
+            expect(booleans.toArray()).to.deep.equal([true, false]);
+        });
+        it("should return an array of symbols via Symbol constructor", () => {
+            const symbols = ofType(collection, Symbol);
+            expect(symbols.toArray()).to.deep.equal([symbol]);
+        });
+        it("should return an array of symbols via typeof", () => {
+            const symbols = ofType(collection, "symbol");
+            expect(symbols.toArray()).to.deep.equal([symbol]);
+        });
+        it("should return an array of objects via Object constructor", () => {
+            const objects = ofType(collection, Object);
+            expect(objects.toArray()).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
+        });
+        it("should return an array of objects via typeof", () => {
+            const objects = ofType(collection, "object");
+            expect(objects.toArray()).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
+        });
+        it("should return an array of bigints via BigInt constructor", () => {
+            const bigints = ofType(collection, BigInt);
+            expect(bigints.toArray()).to.deep.equal([bigInt, bigint2]);
+        });
+        it("should return an array of bigints via typeof", () => {
+            const bigints = ofType(collection, "bigint");
+            expect(bigints.toArray()).to.deep.equal([bigInt, bigint2]);
+        });
+        it("should return an array of functions via Function constructor", () => {
+            const functions = ofType(collection, Function);
+            expect(functions.toArray()).to.deep.equal([generator, func]);
+        });
+        it("should return an array of functions via typeof", () => {
+            const functions = ofType(collection, "function");
+            expect(functions.toArray()).to.deep.equal([generator, func]);
+        });
+        it("should return an array of Person objects via Person constructor", () => {
+            const people = ofType(collection, Person);
+            expect(people.toArray()).to.deep.equal([Person.Mirei, Person.Alice]);
+        });
+        it("should return an array of arrays via Array constructor", () => {
+            const arrays = ofType(collection, Array);
+            expect(arrays.toArray()).to.deep.equal([["x", "y", "z"]]);
+        });
+        it("should return an array of strings and numbers", () => {
+            const stringsAndNumbers = concat(ofType(collection, String), ofType(collection, Number));
+            expect(stringsAndNumbers.toArray()).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
+        });
+    });
+
+    describe("#orderBy()", () => {
+        const people = [Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola];
+        it("should order the list by age", () => {
+            const orderedPeople = orderBy(people, p => p.age);
+            const orderedAges = select(orderedPeople, p => p.age);
+            const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
+            expect(orderedAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#orderByDescending()", () => {
+        const people = [Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola];
+        it("should order the list by age", () => {
+            const orderedPeople = orderByDescending(people, p => p.age);
+            const orderedAges = select(orderedPeople, p => p.age);
+            const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
+            expect(orderedAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#pairwise()", () => {
+        const sequence = ["a", "b", "c", "d", "e", "f"];
+        it("should create pairs of elements", () => {
+            const result = pairwise(sequence);
+            expect(result.toArray()).to.deep.equal([["a", "b"], ["b", "c"], ["c", "d"], ["d", "e"], ["e", "f"]]);
+        });
+        it("should create pairs of elements with a selector", () => {
+            const result = pairwise(sequence, (a, b) => [`<${a}>`, `<${b}>`]);
+            expect(result.toArray()).to.deep.equal([["<a>", "<b>"], ["<b>", "<c>"], ["<c>", "<d>"], ["<d>", "<e>"], ["<e>", "<f>"]]);
+        });
+    });
+
+    describe("#partition()", () => {
+        const sequence = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        it("should partition the sequence into two", () => {
+            const result = partition(sequence, n => n % 2 === 0);
+            expect(result[0].toArray()).to.deep.equal([2, 4, 6, 8]);
+            expect(result[1].toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+        });
+    });
+
+    describe("#prepend()", () => {
+        const sequence = [1, 2, 3, 4, 5];
+        it("should prepend 0 to the sequence", () => {
+            const result = prepend(sequence, 0);
+            expect(sequence).to.deep.equal([1, 2, 3, 4, 5]);
+            expect(result.toArray()).to.deep.equal([0, 1, 2, 3, 4, 5]);
+        });
+    });
+
     describe("#range()", () => {
         const enumerable = range(1, 5);
         it("should create a list of increasing numbers starting with 1", () => {
@@ -524,6 +768,7 @@ describe("Enumerable", () => {
             expect(max).to.eq(1000);
         });
     });
+
     describe("#repeat()", () => {
         const arrayOfFives = repeat(5, 5).toArray();
         it("should create an array of 5s with the length of 5", () => {
@@ -534,6 +779,392 @@ describe("Enumerable", () => {
             expect(sum).to.eq(100);
         });
     });
+
+    describe("#reverse()", () => {
+        const sequence = [1, 2, 3, 4, 5];
+        it("should reverse the sequence", () => {
+            const result = reverse(sequence);
+            expect(sequence).to.deep.equal([1, 2, 3, 4, 5]);
+            expect(result.toArray()).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+    });
+
+    describe("#scan()", () => {
+        it("should create a sequence of increasing numbers starting with 1", () => {
+            const result = scan([1, 2, 3, 4], (acc, n) => acc + n);
+            expect(result.toArray()).to.deep.equal([1, 3, 6, 10]);
+        });
+        it("should create a sequence of increasing numbers starting with 3", () => {
+            const result = scan([1, 2, 3, 4, 5], (acc, n) => acc + n, 2);
+            expect(result.toArray()).to.deep.equal([3, 5, 8, 12, 17]);
+        });
+        it("should create a sequence of increasing numbers starting with 1 #2", () => {
+            const result = scan(new Set([1, 3, 12, 19, 33]), (acc, n) => acc + n, 0);
+            expect(result.toArray()).to.deep.equal([1, 4, 16, 35, 68]);
+        });
+        it("should throw an error if the sequence is empty", () => {
+            expect(() => scan(new List<number>(), (acc, n) => acc + n).toArray()).to.throw();
+        });
+    });
+
+    describe("#select()", () => {
+        it("should return an IEnumerable with elements [2,4,6,8,10]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = select(list, n => n * 2).toList();
+            expect(list2.size()).to.eq(5);
+            expect(list2.get(0)).to.eq(2);
+            expect(list2.get(1)).to.eq(4);
+            expect(list2.get(2)).to.eq(6);
+            expect(list2.get(3)).to.eq(8);
+            expect(list2.get(4)).to.eq(10);
+            expect(list2.length).to.eq(5);
+        });
+    });
+
+    describe("#selectMany()", () => {
+        Person.Viola.friendsArray = [Person.Rebecca];
+        Person.Jisu.friendsArray = [Person.Alice, Person.Mel];
+        Person.Vanessa.friendsArray = [Person.Viola, Person.Rebecca, Person.Jisu, Person.Alice];
+        Person.Rebecca.friendsArray = [Person.Viola];
+        const people = [Person.Viola, Person.Rebecca, Person.Jisu, Person.Vanessa];
+        const friendAges = selectMany(people, p => p.friendsArray).select(p => p.age).toArray();
+        expect(friendAges).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
+    });
+
+    describe("#sequenceEqual()", () => {
+        it("should return false if the sequence sizes are different", () => {
+            const first = [1, 2, 3, 4, 5];
+            const second = [1, 2, 3, 4];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.false;
+        });
+        it("should return false if the sequence sizes are different #2", () => {
+            const first = [1, 2, 3, 4];
+            const second = [1, 2, 3, 4, 5];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.false;
+        });
+        it("should return false if the sequence elements are different", () => {
+            const first = [1, 2, 3, 4, 5];
+            const second = [1, 2, 3, 4, 6];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.false;
+        });
+        it("should return false if the order of the sequence elements are different", () => {
+            const first = [1, 2, 3, 4, 5];
+            const second = [1, 2, 3, 5, 4];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.false;
+        });
+        it("should return true if the sequences are equal", () => {
+            const first = [1, 2, 3, 4, 5];
+            const second = [1, 2, 3, 4, 5];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.true;
+        });
+        it("should return true if the sequences are equal #2", () => {
+            const first = new List([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi]);
+            const second = new List([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi2]);
+            const resultWithComparator = sequenceEqual(first, second, (a, b) => a.name === b.name);
+            const resultWithoutComparator = sequenceEqual(first, second);
+            expect(resultWithComparator).to.be.true;
+            expect(resultWithoutComparator).to.be.false;
+        });
+    });
+
+    describe("#single()", () => {
+        it("should throw error if the sequence is empty", () => {
+            expect(() => single([])).to.throw(ErrorMessages.NoElements);
+        });
+        it("should throw error if list has more than one element", () => {
+            expect(() => single([1, 2])).to.throw(ErrorMessages.MoreThanOneElement);
+        });
+        it("should return the single element", () => {
+            expect(single([1])).to.eq(1);
+        });
+        it("should throw error if no element matches the predicate", () => {
+            expect(() => single([1, 2, 3, 4, 5], n => n === 6)).to.throw(ErrorMessages.NoMatchingElement);
+        });
+        it("should throw error if more than one element matches the predicate", () => {
+            expect(() => single([1, 2, 3, 4, 5, 4], n => n === 4)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+        });
+        it("should return the person with name 'Alice'", () => {
+            const result = single([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi], p => p.name === "Alice");
+            expect(result).to.eq(Person.Alice);
+        });
+    });
+
+    describe("#singleOrDefault()", () => {
+        it("should return null if the sequence is empty", () => {
+            expect(singleOrDefault([])).to.be.null;
+        });
+        it("should throw error if list has more than one element", () => {
+            expect(() => singleOrDefault([1, 2])).to.throw(ErrorMessages.MoreThanOneElement);
+        });
+        it("should return the single element", () => {
+            expect(singleOrDefault([1])).to.eq(1);
+        });
+        it("should return null if no element matches the predicate", () => {
+            expect(singleOrDefault([1, 2, 3, 4, 5], n => n === 6)).to.be.null;
+        });
+        it("should throw error if more than one element matches the predicate", () => {
+            expect(() => singleOrDefault([1, 2, 3, 4, 5, 4], n => n === 4)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+        });
+        it("should return the person with name 'Alice'", () => {
+            const result = singleOrDefault([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi], p => p.name === "Alice");
+            expect(result).to.eq(Person.Alice);
+        });
+    });
+
+    describe("#skip()", () => {
+        it("should return an IEnumerable with elements [4,5]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = skip(list, 3).toList();
+            expect(list2.size()).to.eq(2);
+            expect(list2.get(0)).to.eq(4);
+            expect(list2.get(1)).to.eq(5);
+            expect(list2.length).to.eq(2);
+        });
+        it("should return an empty IEnumerable if the skip count is greater than the sequence size", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = skip(list, 10).toList();
+            expect(list2.size()).to.eq(0);
+            expect(list2.length).to.eq(0);
+        });
+    });
+
+    describe("#skipLast()", () => {
+        it("should return an IEnumerable with elements [1,2,3,4]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = skipLast(list, 1).toList();
+            expect(list2.size()).to.eq(4);
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(2);
+            expect(list2.get(2)).to.eq(3);
+            expect(list2.get(3)).to.eq(4);
+            expect(list2.length).to.eq(4);
+        });
+        it("should return an empty IEnumerable if the skip count is greater than the sequence size", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = skipLast(list, 10).toList();
+            expect(list2.size()).to.eq(0);
+            expect(list2.length).to.eq(0);
+        });
+    });
+
+    describe("#skipWhile()", () => {
+        it("should return an IEnumerable with elements [4,5]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = skipWhile(list, n => n < 4).toList();
+            expect(list2.size()).to.eq(2);
+            expect(list2.get(0)).to.eq(4);
+            expect(list2.get(1)).to.eq(5);
+            expect(list2.length).to.eq(2);
+        });
+        it("should return an empty IEnumerable if the skip count is greater than the sequence size", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = skipWhile(list, n => n < 10).toList();
+            expect(list2.size()).to.eq(0);
+            expect(list2.length).to.eq(0);
+        });
+    });
+
+    describe("#sum()", () => {
+        it("should return the sum of the sequence", () => {
+            expect(sum([1, 2, 3, 4, 5])).to.eq(15);
+        });
+        it("should return the sum of the sequence with a selector", () => {
+            const list = new List([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi]);
+            expect(sum(list, p => p.age)).to.eq(77);
+        });
+        it("should throw an error if the list is empty", () => {
+            expect(() => sum([])).to.throw();
+        });
+    });
+
+    describe("#take()", () => {
+        it("should return a sequence with elements [1,2,3]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = take(list, 3).toList();
+            expect(list2.size()).to.eq(3);
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(2);
+            expect(list2.get(2)).to.eq(3);
+            expect(list2.length).to.eq(3);
+        });
+        it("should return an empty sequence", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = take(list, 0).toList();
+            expect(list2.size()).to.eq(0);
+            expect(list2.length).to.eq(0);
+        });
+        it("should return all elements if the take count is greater than the sequence size", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = take(list, 10).toList();
+            expect(list2.size()).to.eq(5);
+            expect(list2.length).to.eq(5);
+        });
+    });
+
+    describe("#takeLast()", () => {
+        it("should return a sequence with elements [3,4,5]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = takeLast(list, 3).toList();
+            expect(list2.size()).to.eq(3);
+            expect(list2.get(0)).to.eq(3);
+            expect(list2.get(1)).to.eq(4);
+            expect(list2.get(2)).to.eq(5);
+            expect(list2.length).to.eq(3);
+        });
+        it("should return an empty sequence", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = takeLast(list, 0).toList();
+            expect(list2.size()).to.eq(0);
+            expect(list2.length).to.eq(0);
+        });
+        it("should return all elements if the take count is greater than the sequence size", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = takeLast(list, 10).toList();
+            expect(list2.size()).to.eq(5);
+            expect(list2.length).to.eq(5);
+        });
+    });
+
+    describe("#takeWhile()", () => {
+        it("should return a sequence with elements [1,2,3]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = takeWhile(list, n => n < 4).toList();
+            expect(list2.size()).to.eq(3);
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(2);
+            expect(list2.get(2)).to.eq(3);
+            expect(list2.length).to.eq(3);
+        });
+        it("should return an empty sequence", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = takeWhile(list, n => n < 1).toList();
+            expect(list2.size()).to.eq(0);
+            expect(list2.length).to.eq(0);
+        });
+        it("should return all elements if the take count is greater than the sequence size", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = takeWhile(list, n => n < 10).toList();
+            expect(list2.size()).to.eq(5);
+            expect(list2.length).to.eq(5);
+        });
+    });
+
+    describe("#toArray()", () => {
+        it("should return an array of numbers", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const array = toArray(list);
+            expect(array instanceof Array).to.be.true;
+            expect(array).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+    });
+
+    describe("#toDictionary()", () => {
+        it("should return a dictionary with keys [1,2,3,4,5] and values [1,4,9,16,25]", () => {
+            const dictionary = toDictionary([1, 2, 3, 4, 5], n => n, n => n * n);
+            expect(dictionary instanceof Dictionary).to.be.true;
+            expect(dictionary.get(1)).to.eq(1);
+            expect(dictionary.get(2)).to.eq(4);
+            expect(dictionary.get(3)).to.eq(9);
+            expect(dictionary.get(4)).to.eq(16);
+            expect(dictionary.get(5)).to.eq(25);
+        });
+    });
+
+    describe("#toEnumerableSet()", () => {
+        it("should return an enumerable set", () => {
+            const enumerableSet = toEnumerableSet([1, 2, 3, 4, 5]);
+            expect(enumerableSet instanceof EnumerableSet).to.be.true;
+            expect(enumerableSet.size()).to.eq(5);
+            expect(enumerableSet.length).to.eq(5);
+        });
+    });
+
+    describe("#toIndexableList()", () => {
+        it("should return an indexable list", () => {
+            const indexableList = toIndexableList([1, 2, 3, 4, 5]);
+            expect(indexableList instanceof IndexableList).to.be.true;
+            expect(indexableList.size()).to.eq(5);
+            expect(indexableList.length).to.eq(5);
+        });
+    });
+
+    describe("#toLinkedList()", () => {
+        it("should return a linked list", () => {
+            const linkedList = toLinkedList([1, 2, 3, 4, 5]);
+            expect(linkedList instanceof LinkedList).to.be.true;
+            expect(linkedList.size()).to.eq(5);
+            expect(linkedList.length).to.eq(5);
+        });
+    });
+
+    describe("#toList()", () => {
+        it("should return a list", () => {
+            const list = toList([1, 2, 3, 4, 5]);
+            expect(list instanceof List).to.be.true;
+            expect(list.size()).to.eq(5);
+            expect(list.length).to.eq(5);
+        });
+    });
+
+    describe("#toLookup()", () => {
+        it("should return a lookup", () => {
+            const lookup = toLookup(
+                [Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2],
+                p => p.name,
+                p => p,
+                (n1, n2) => n1.localeCompare(n2)
+            );
+            expect(lookup.size()).to.eq(3);
+            expect(lookup.hasKey("Noemi")).to.be.true;
+        });
+    });
+
+    describe("#toSortedDictionary()", () => {
+        it("should return a sorted dictionary", () => {
+            const sortedDictionary = toSortedDictionary([3, 5, 4, 2, 1], n => n, n => n * n);
+            expect(sortedDictionary instanceof SortedDictionary).to.be.true;
+            expect(sortedDictionary.get(1)).to.eq(1);
+            expect(sortedDictionary.get(2)).to.eq(4);
+            expect(sortedDictionary.get(3)).to.eq(9);
+            expect(sortedDictionary.get(4)).to.eq(16);
+            expect(sortedDictionary.get(5)).to.eq(25);
+        });
+    });
+
+    describe("#toSortedSet()", () => {
+        it("should return a sorted set", () => {
+            const sortedSet = toSortedSet([3, 5, 4, 2, 1]);
+            expect(sortedSet instanceof SortedSet).to.be.true;
+            expect(sortedSet.size()).to.eq(5);
+            expect(sortedSet.length).to.eq(5);
+            expect(sortedSet.elementAt(0)).to.eq(1);
+            expect(sortedSet.elementAt(1)).to.eq(2);
+            expect(sortedSet.elementAt(2)).to.eq(3);
+            expect(sortedSet.elementAt(3)).to.eq(4);
+            expect(sortedSet.elementAt(4)).to.eq(5);
+        });
+    });
+
+    describe("#union()", () => {
+        it("should return a set of items from both sequences", () => {
+            const first = [1, 2, 3, 4, 5, 5, 5];
+            const second = [4, 5, 6, 7, 8, 9, 7];
+            const result = union(first, second);
+            expect(result.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        it("should use the comparator to determine equality", () => {
+            const first = [Person.Alice, Person.Noemi];
+            const second = [Person.Mirei, Person.Noemi2];
+            const result = union(first, second, (p1, p2) => p1.name === p2.name);
+            expect(result.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Mirei]);
+        });
+    });
+
     describe("#where()", () => {
         it("should return an IEnumerable with elements [2,5]", () => {
             const list = new List([2, 5, 6, 99]);
@@ -542,6 +1173,19 @@ describe("Enumerable", () => {
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
+        });
+    });
+
+    describe("#zip()", () => {
+        const numbers = [1, 2, 3, 4];
+        const strings = ["one", "two", "three"];
+        it("should return array of tuples if predicate is not specified", () => {
+            const zipped = zip(numbers, strings);
+            expect(zipped.toArray()).to.deep.equal([[1, "one"], [2, "two"], [3, "three"]]);
+        });
+        it("should return array of strings if predicate is specified", () => {
+            const zipped = zip(numbers, strings, (n, s) => `${n} ${s}`);
+            expect(zipped.toArray()).to.deep.equal(["1 one", "2 two", "3 three"]);
         });
     });
 });

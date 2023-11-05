@@ -268,17 +268,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Produces a tuple of the element and the following element.
-     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
-     *
      * <br/>
      * Example:
      * ```
      *    const numberList = new List([1, 2, 3, 4, 5]);
      *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
      * ```
+     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
      */
     pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
-
 
     /**
      * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
@@ -403,7 +401,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
     toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement>;
-
 
     /**
      * Creates a new linked list from the elements of the sequence.

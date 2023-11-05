@@ -1083,7 +1083,7 @@ describe("List", () => {
             const result = list.scan((acc, n) => acc + n);
             expect(result.toArray()).to.deep.equal([1, 3, 6, 10]);
         });
-        it("should create a list of increasing numbers starting with 2", () => {
+        it("should create a list of increasing numbers starting with 3", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const result = list.scan((acc, n) => acc + n, 2);
             expect(result.toArray()).to.deep.equal([3, 5, 8, 12, 17]);
