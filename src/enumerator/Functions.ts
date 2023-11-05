@@ -1,6 +1,11 @@
 import {Dictionary} from "../dictionary/Dictionary";
 import {SortedDictionary} from "../dictionary/SortedDictionary";
+import {IndexableList} from "../list/IndexableList";
+import {LinkedList} from "../list/LinkedList";
+import {List} from "../list/List";
 import {ILookup} from "../lookup/ILookup";
+import {EnumerableSet} from "../set/EnumerableSet";
+import {SortedSet} from "../set/SortedSet";
 import {Accumulator} from "../shared/Accumulator";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -29,93 +34,95 @@ export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulat
 }
 
 export const all = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate: Predicate<TElement>
 ): boolean => {
-    return EnumerableStatic.all(source, predicate);
+    return from(source).all(predicate);
 }
 
 export const any = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): boolean => {
-    return EnumerableStatic.any(source, predicate);
+    return from(source).any(predicate);
 }
 
 export const append = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     element: TElement
 ): IEnumerable<TElement> => {
-    return EnumerableStatic.append(source, element);
+    return from(source).append(element);
 }
 
 export const average = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     selector?: Selector<TElement, number>
 ): number => {
-    return EnumerableStatic.average(source, selector);
+    return from(source).average(selector);
 }
 
 export const cast = <TElement, TResult>(
-    source: IEnumerable<TElement>
+    source: Iterable<TElement>
 ): IEnumerable<TResult> => {
-    return EnumerableStatic.cast<TElement, TResult>(source);
+    return from(source).cast<TResult>();
 }
 
 export const chunk = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     size: number
 ): IEnumerable<IEnumerable<TElement>> => {
-    return EnumerableStatic.chunk(source, size);
+    return from(source).chunk(size);
 }
 
 export const concat = <TElement>(
-    source: IEnumerable<TElement>,
-    second: IEnumerable<TElement>
+    source: Iterable<TElement>,
+    second: Iterable<TElement>
 ): IEnumerable<TElement> => {
-    return EnumerableStatic.concat(source, second);
+    return from(source).concat(from(second));
 }
 
 export const contains = <TElement>(
-    source: IEnumerable<TElement>,
-    element: TElement
+    source: Iterable<TElement>,
+    element: TElement,
+    comparator?: EqualityComparator<TElement>
 ): boolean => {
-    return EnumerableStatic.contains(source, element);
+    return from(source).contains(element, comparator);
 }
 
 export const count = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): number => {
-    return EnumerableStatic.count(source, predicate);
+    return from(source).count(predicate);
 }
 
 export const defaultIfEmpty = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     defaultValue?: TElement | null
 ): IEnumerable<TElement | null> => {
-    return EnumerableStatic.defaultIfEmpty(source, defaultValue);
+    return from(source).defaultIfEmpty(defaultValue);
 }
 
-export const distinct = <TElement>(
-    source: IEnumerable<TElement>,
-    selector?: (element: TElement) => any
+export const distinct = <TElement, TKey>(
+    source: Iterable<TElement>,
+    selector?: Selector<TElement, TKey>,
+    keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TElement> => {
-    return EnumerableStatic.distinct(source, selector);
+    return from(source).distinct(selector, keyComparator);
 }
 
 export const elementAt = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     index: number
 ): TElement => {
-    return EnumerableStatic.elementAt(source, index);
+    return from(source).elementAt(index);
 }
 
 export const elementAtOrDefault = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     index: number
 ): TElement | null => {
-    return EnumerableStatic.elementAtOrDefault(source, index);
+    return from(source).elementAtOrDefault(index);
 }
 
 export const empty = <TElement>(): IEnumerable<TElement> => {
@@ -123,33 +130,33 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
 };
 
 export const except = <TElement>(
-    source: IEnumerable<TElement>,
-    second: IEnumerable<TElement>,
+    source: Iterable<TElement>,
+    second: Iterable<TElement>,
     comparator?: EqualityComparator<TElement> | null,
     orderComparator?: OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
-    return EnumerableStatic.except(source, second, comparator, orderComparator);
+    return from(source).except(from(second), comparator, orderComparator);
 }
 
 export const first = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): TElement => {
-    return EnumerableStatic.first(source, predicate);
+    return from(source).first(predicate);
 }
 
 export const firstOrDefault = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): TElement | null => {
-    return EnumerableStatic.firstOrDefault(source, predicate);
+    return from(source).firstOrDefault(predicate);
 }
 
 export const forEach = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     action: IndexedAction<TElement>
 ): void => {
-    return EnumerableStatic.forEach(source, action);
+    return from(source).forEach(action);
 }
 
 export const from = <TElement>(iterable: Iterable<TElement>): IEnumerable<TElement> => {
@@ -157,71 +164,71 @@ export const from = <TElement>(iterable: Iterable<TElement>): IEnumerable<TEleme
 };
 
 export const groupBy = <TElement, TKey>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<IGroup<TKey, TElement>> => {
-    return EnumerableStatic.groupBy(source, keySelector, keyComparator);
+    return from(source).groupBy(keySelector, keyComparator);
 }
 
 export const groupJoin = <TElement, TInner, TKey, TResult>(
-    source: IEnumerable<TElement>,
-    inner: IEnumerable<TInner>,
+    source: Iterable<TElement>,
+    inner: Iterable<TInner>,
     outerKeySelector: Selector<TElement, TKey>,
     innerKeySelector: Selector<TInner, TKey>,
     resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TResult> => {
-    return EnumerableStatic.groupJoin(source, inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    return from(source).groupJoin(from(inner), outerKeySelector, innerKeySelector, resultSelector, keyComparator);
 }
 
 export const intersect = <TElement>(
-    source: IEnumerable<TElement>,
-    second: IEnumerable<TElement>,
+    source: Iterable<TElement>,
+    second: Iterable<TElement>,
     comparator?: EqualityComparator<TElement> | null,
     orderComparator?: OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
-    return EnumerableStatic.intersect(source, second, comparator, orderComparator);
+    return from(source).intersect(from(second), comparator, orderComparator);
 }
 
 export const join = <TElement, TInner, TKey, TResult>(
-    source: IEnumerable<TElement>,
-    inner: IEnumerable<TInner>,
+    source: Iterable<TElement>,
+    inner: Iterable<TInner>,
     outerKeySelector: Selector<TElement, TKey>,
     innerKeySelector: Selector<TInner, TKey>,
     resultSelector: JoinSelector<TElement, TInner, TResult>,
     keyComparator?: EqualityComparator<TKey>,
     leftJoin?: boolean
 ): IEnumerable<TResult> => {
-    return EnumerableStatic.join(source, inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+    return from(source).join(from(inner), outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
 }
 
 export const last = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): TElement => {
-    return EnumerableStatic.last(source, predicate);
+    return from(source).last(predicate);
 }
 
 export const lastOrDefault = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): TElement | null => {
-    return EnumerableStatic.lastOrDefault(source, predicate);
+    return from(source).lastOrDefault(predicate);
 }
 
 export const max = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     selector?: Selector<TElement, number>
 ): number => {
-    return EnumerableStatic.max(source, selector);
+    return from(source).max(selector);
 }
 
 export const min = <TElement>(
-    source: IEnumerable<TElement>,
+    source: Iterable<TElement>,
     selector?: Selector<TElement, number>
 ): number => {
-    return EnumerableStatic.min(source, selector);
+    return from(source).min(selector);
 }
 
 export const ofType = <TElement, TResult extends ObjectType>(
@@ -388,28 +395,28 @@ export const toDictionary = <TElement, TKey, TValue>(
 
 export const toEnumerableSet = <TElement>(
     source: IEnumerable<TElement>,
-): IEnumerable<TElement> => {
+): EnumerableSet<TElement> => {
     return EnumerableStatic.toEnumerableSet(source);
 }
 
 export const toIndexableList = <TElement>(
     source: IEnumerable<TElement>,
     comparator?: EqualityComparator<TElement>
-): IEnumerable<TElement> => {
+): IndexableList<TElement> => {
     return EnumerableStatic.toIndexableList(source, comparator);
 }
 
 export const toLinkedList = <TElement>(
     source: IEnumerable<TElement>,
     comparator?: EqualityComparator<TElement>
-): IEnumerable<TElement> => {
+): LinkedList<TElement> => {
     return EnumerableStatic.toLinkedList(source, comparator);
 }
 
 export const toList = <TElement>(
     source: IEnumerable<TElement>,
     comparator?: EqualityComparator<TElement>
-): IEnumerable<TElement> => {
+): List<TElement> => {
     return EnumerableStatic.toList(source, comparator);
 }
 
@@ -435,7 +442,7 @@ export const toSortedDictionary = <TElement, TKey, TValue>(
 export const toSortedSet = <TElement>(
     source: IEnumerable<TElement>,
     comparator?: OrderComparator<TElement>
-): IEnumerable<TElement> => {
+): SortedSet<TElement> => {
     return EnumerableStatic.toSortedSet(source, comparator);
 }
 

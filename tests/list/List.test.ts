@@ -152,7 +152,7 @@ describe("List", () => {
     });
 
     describe("#append()", () => {
-        it("should append the given element at the end of enumerable", () => {
+        it("should append the given element to the end of enumerable", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const enumerable = list.append(9);
             const array = enumerable.append(99).toArray();
