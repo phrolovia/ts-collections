@@ -1,3 +1,4 @@
+import {from} from "../../imports";
 import {InferredType} from "../shared/InferredType";
 import {ObjectType} from "../shared/ObjectType";
 import {IEnumerable} from "./IEnumerable";
@@ -273,6 +274,22 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
+    }
+
+    protected getIterableSize(iterable: Iterable<TElement>): number {
+        if (iterable instanceof Array) {
+            return iterable.length;
+        }
+        if (iterable instanceof Set) {
+            return iterable.size;
+        }
+        if (iterable instanceof Map) {
+            return iterable.size;
+        }
+        if (iterable instanceof AbstractEnumerable) {
+            return iterable.count();
+        }
+        return from(iterable).count();
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

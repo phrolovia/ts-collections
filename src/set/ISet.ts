@@ -1,11 +1,11 @@
 import {IEnumerable, IRandomAccessCollection} from "../../imports";
 
 export interface ISet<TElement> extends IRandomAccessCollection<TElement> {
-    exceptWith(other: IEnumerable<TElement>): void;
-    intersectWith(other: IEnumerable<TElement>): void;
-    isProperSubsetOf(other: IEnumerable<TElement>): boolean;
-    isProperSupersetOf(other: IEnumerable<TElement>): boolean;
-    isSubsetOf(other: IEnumerable<TElement>): boolean;
-    isSupersetOf(other: IEnumerable<TElement>): boolean;
-    overlaps(other: IEnumerable<TElement>): boolean;
+    exceptWith(other: Iterable<TElement>): void;
+    intersectWith(other: Iterable<TElement>): void;
+    isProperSubsetOf(other: Iterable<TElement>): boolean;
+    isProperSupersetOf(other: Iterable<TElement>): boolean;
+    isSubsetOf(other: Iterable<TElement>): boolean;
+    isSupersetOf(other: Iterable<TElement>): boolean;
+    overlaps(other: Iterable<TElement>): boolean;
 }
