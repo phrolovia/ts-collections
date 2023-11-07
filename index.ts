@@ -30,6 +30,7 @@ export {
     IReadonlyList,
     ISet,
     ITree,
+    ImmutableList,
     IndexableList,
     LinkedList,
     List,
