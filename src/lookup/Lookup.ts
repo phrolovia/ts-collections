@@ -216,7 +216,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.scan(accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<IGroup<TKey, TElement>, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<IGroup<TKey, TElement>, TResult>): IEnumerable<TResult> {
         return this.lookupTree.select(selector);
     }
 

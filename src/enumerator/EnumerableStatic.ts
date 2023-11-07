@@ -165,7 +165,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).scan(accumulator, seed);
     }
 
-    public static select<TElement, TResult>(source: IEnumerable<TElement>, selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public static select<TElement, TResult>(source: IEnumerable<TElement>, selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return new Enumerable(source).select(selector);
     }
 

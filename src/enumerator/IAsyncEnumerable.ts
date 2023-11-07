@@ -297,7 +297,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Projects each element of a sequence into a new form.
      * @param selector The selector function that will be used to project each element into a new form.
      */
-    select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult>;
+    select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult>;
 
     /**
      * Projects each element of a sequence into a new form and flattens the resulting sequences into one sequence.

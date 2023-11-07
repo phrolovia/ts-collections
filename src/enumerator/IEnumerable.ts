@@ -307,7 +307,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Projects each element of a sequence into a new form.
      * @param selector The selector function that will be used to project each element into a new form.
      */
-    select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult>;
+    select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult>;
 
     /**
      * Projects each element of a sequence into a new form and flattens the resulting sequences into one sequence.

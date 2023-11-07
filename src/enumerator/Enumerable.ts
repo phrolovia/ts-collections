@@ -194,7 +194,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.scan(accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return this.enumerator.select(selector);
     }
 

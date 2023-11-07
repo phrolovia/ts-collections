@@ -334,11 +334,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TAccumulate>(() => this.scanGenerator(accumulator, seed));
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult> {
         return new AsyncEnumerator<TResult>(() => this.selectGenerator(selector));
     }
 
-    public selectMany<TResult>(selector: Selector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult> {
+    public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult> {
         return new AsyncEnumerator<TResult>(() => this.selectManyGenerator(selector));
     }
 

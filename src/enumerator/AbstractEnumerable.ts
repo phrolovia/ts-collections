@@ -174,7 +174,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.scan(this, accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }
 

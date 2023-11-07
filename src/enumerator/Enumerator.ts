@@ -356,7 +356,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.scanGenerator(accumulator, seed));
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return new Enumerator<TResult>(() => this.selectGenerator(selector));
     }
 
@@ -712,9 +712,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* selectGenerator<TResult>(selector: Selector<TElement, TResult>): Iterable<TResult> {
+    private* selectGenerator<TResult>(selector: IndexedSelector<TElement, TResult>): Iterable<TResult> {
+        let index = 0;
         for (const d of this) {
-            yield selector(d);
+            yield selector(d, index++);
         }
     }
 

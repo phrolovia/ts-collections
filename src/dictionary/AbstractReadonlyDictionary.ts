@@ -188,7 +188,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.scan(this, accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }
 
