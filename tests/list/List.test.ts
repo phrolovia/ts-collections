@@ -487,6 +487,23 @@ describe("List", () => {
         });
     });
 
+    describe("#getRange()", () => {
+        const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+        it("should throw error if index is out of bounds", () => {
+            expect(() => list1.getRange(-1, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.getRange(6, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+        });
+        it("should throw error if length is out of bounds", () => {
+            expect(() => list1.getRange(0, 7)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.getRange(0, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+        });
+        it("should return the elements at the specified index", () => {
+            const range = list1.getRange(1, 3);
+            expect(range.toArray()).to.deep.equal([Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            expect(range.length).to.eq(3);
+        });
+    });
+
     describe("#groupBy()", () => {
         const list = new List([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Kaori, Person.Reina]);
         it("should group people by age", () => {

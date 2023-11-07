@@ -1,6 +1,7 @@
+import {IReadonlyCollection} from "../core/IReadonlyCollection";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
-export interface IReadonlyList<TElement> {
+export interface IReadonlyList<TElement> extends IReadonlyCollection<TElement> {
     /**
      * Returns an IterableIterator that yields a tuple of [index, element].
      * <pre>
@@ -15,6 +16,15 @@ export interface IReadonlyList<TElement> {
      * @returns The element at the given index
      */
     get(index: number): TElement;
+
+    /**
+     * Returns a shallow copy of a range of elements in the source list.
+     * @param index The index at which the range will start.
+     * @param count The number of elements in the range.
+     * @returns A shallow copy of a range of elements in the source list.
+     * @throws {Error} If the index is out of bounds.
+     */
+    getRange(index: number, count: number): IReadonlyList<TElement>;
 
     /**
      * Finds and returns the index of the first occurrence of the given element.

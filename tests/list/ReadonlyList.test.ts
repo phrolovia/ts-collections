@@ -24,6 +24,29 @@ describe("ReadonlyList", () => {
         });
     });
 
+    describe("#getRange()", () => {
+        it("should return a new list containing the elements in the given range", () => {
+            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            for (let i = 0; i < 100; i++) {
+                const range = list.getRange(i, 100 - i);
+                expect(range.size()).to.eq(100 - i);
+                for (let j = 0; j < 100 - i; j++) {
+                    expect(range.get(j)).to.eq(i + j + 1);
+                }
+            }
+        });
+        it("should throw an error if the given index is out of bounds", () => {
+            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            expect(() => list.getRange(-1, 1)).to.throw(Error);
+            expect(() => list.getRange(100, 1)).to.throw(Error);
+        });
+        it("should throw an error if the given count is out of bounds", () => {
+            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            expect(() => list.getRange(0, -1)).to.throw(Error);
+            expect(() => list.getRange(0, 101)).to.throw(Error);
+        });
+    });
+
     describe("#indexOf()", () => {
         it("should return the index of the given element", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toList());

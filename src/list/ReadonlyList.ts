@@ -22,6 +22,10 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
         return this.list.get(index);
     }
 
+    public getRange(index: number, count: number): IReadonlyList<TElement> {
+        return this.list.getRange(index, count);
+    }
+
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
         return this.list.indexOf(element, comparator);
     }

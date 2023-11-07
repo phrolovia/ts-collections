@@ -1,4 +1,4 @@
-import {AbstractList} from "../../imports";
+import {AbstractList, IList} from "../../imports";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
@@ -79,6 +79,20 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     public get(index: number): TElement {
         this.checkElementIndex(index);
         return this.node(index).item;
+    }
+
+    public override getRange(index: number, count: number): LinkedList<TElement> {
+        if (index < 0 || index >= this.size()) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        if (count < 0 || index + count > this.size()) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        const list = new LinkedList<TElement>();
+        for (let ix = index; ix < index + count; ++ix) {
+            list.add(this.get(ix));
+        }
+        return list;
     }
 
     public peek(): TElement | null {
