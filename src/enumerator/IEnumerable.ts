@@ -16,7 +16,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList, EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet
+    IndexableList, EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet, ImmutableSortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -406,6 +406,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Creates a new immutable set from the elements of the sequence.
      */
     toImmutableSet(): ImmutableSet<TElement>;
+
+    /**
+     * Creates a new immutable sorted set from the elements of the sequence.
+     * @param comparator
+     */
+    toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
 
     /**
      * Creates a new indexable list from the elements of the sequence.

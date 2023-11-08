@@ -18,7 +18,7 @@ import {
     List,
     Dictionary,
     IndexableList,
-    IGroup, EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet
+    IGroup, EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet, ImmutableSortedSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -260,6 +260,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toImmutableSet(): ImmutableSet<TElement> {
         return this.enumerator.toImmutableSet();
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
+        return this.enumerator.toImmutableSortedSet(comparator);
     }
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {

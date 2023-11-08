@@ -1679,6 +1679,20 @@ describe("List", () => {
         });
     });
 
+    describe("#toImmutableSortedSet()", () => {
+        const list = new List([5, 2, 3, 4, 4, 3, 9, 7, 7, 6, 8, 1, 10]);
+        it("should convert it to an immutable sorted set", () => {
+            const set = list.toImmutableSortedSet();
+            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const set2 = set.toImmutableSortedSet().add(999);
+            expect(set).to.not.equal(set2);
+            expect(set.size()).to.eq(10);
+            expect(set2.size()).to.eq(11);
+            expect(set.last()).to.eq(10);
+            expect(set2.last()).to.eq(999);
+        });
+    });
+
     describe("#toList()", () => {
         const list = new List([1, 2, 3]);
         const list2 = list.append(4).toList();

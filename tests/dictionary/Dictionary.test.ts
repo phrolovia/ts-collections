@@ -12,7 +12,7 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {List} from "../../src/list/List";
 import {Enumerable} from "../../src/enumerator/Enumerable";
-import {EnumerableSet, ImmutableList, ImmutableSet, IndexableList, LinkedList} from "../../imports";
+import {EnumerableSet, ImmutableList, ImmutableSet, ImmutableSortedSet, IndexableList, LinkedList} from "../../imports";
 
 describe("Dictionary", () => {
     describe("#add()", () => {
@@ -1507,6 +1507,27 @@ describe("Dictionary", () => {
             expect(set2.size()).to.eq(dictionary.size() + 1);
             expect(set2.toArray().map(p => p.value)).to.deep.eq(["a", "b", "c"]);
             expect(set2 instanceof ImmutableSet).to.be.true;
+            expect(set2.length).to.eq(dictionary.length + 1);
+            expect(set2).to.not.eq(set);
+        });
+    });
+
+    describe("#toImmutableSortedSet()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const set = dictionary.toImmutableSortedSet((a, b) => a.value.localeCompare(b.value));
+        it("should create a new immutable sorted set", () => {
+            expect(set instanceof ImmutableSortedSet).to.be.true;
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
+        });
+        it("should be immutable", () => {
+            const set2 = set.add(new KeyValuePair<number, string>(3, "c"));
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set2.size()).to.eq(dictionary.size() + 1);
+            expect(set2.toArray().map(p => p.value)).to.deep.eq(["a", "b", "c"]);
+            expect(set2 instanceof ImmutableSortedSet).to.be.true;
             expect(set2.length).to.eq(dictionary.length + 1);
             expect(set2).to.not.eq(set);
         });

@@ -45,6 +45,7 @@ export {AbstractSet} from "./src/set/AbstractSet";
 export {SortedSet} from "./src/set/SortedSet";
 export {EnumerableSet} from "./src/set/EnumerableSet";
 export {ImmutableSet} from "./src/set/ImmutableSet";
+export {ImmutableSortedSet} from "./src/set/ImmutableSortedSet";
 export {Collections} from "./src/core/Collections";
 export {
     aggregate,

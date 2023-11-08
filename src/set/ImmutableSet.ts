@@ -33,6 +33,10 @@ export class ImmutableSet<TElement> extends AbstractEnumerable<TElement> {
         return this.#set.contains(element);
     }
 
+    public override count(predicate?: Predicate<TElement>): number {
+        return this.#set.count(predicate);
+    }
+
     public exceptWith<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
         return new ImmutableSet(this.#set.where(x => !contains(collection, x)));
     }
@@ -85,12 +89,7 @@ export class ImmutableSet<TElement> extends AbstractEnumerable<TElement> {
     public override toString(separator?: string): string;
     public override toString(separator?: string, selector?: Selector<TElement, string>): string;
     public override toString(separator?: string, selector?: Selector<TElement, string>): string {
-        if (this.isEmpty()) {
-            return "";
-        }
-        separator ??= ", ";
-        selector ??= (e: TElement) => String(e);
-        return this.select(selector).aggregate((a, b) => `${a}${separator}${b}`);
+        return this.#set.toString(separator, selector);
     }
 
     public get length(): number {

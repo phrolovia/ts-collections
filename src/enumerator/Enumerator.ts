@@ -20,7 +20,7 @@ import {
     Group,
     IEnumerable,
     IGroup,
-    ILookup, ImmutableList, ImmutableSet,
+    ILookup, ImmutableList, ImmutableSet, ImmutableSortedSet,
     IndexableList,
     IOrderedEnumerable,
     LinkedList,
@@ -515,6 +515,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableSet(): ImmutableSet<TElement> {
         return ImmutableSet.create(this);
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
+        return ImmutableSortedSet.create(this, comparator);
     }
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {

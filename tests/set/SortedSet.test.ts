@@ -338,15 +338,17 @@ describe("SortedSet", () => {
         const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const tailSet = set.tailSet(4);
         const tailSetInclusive = set.tailSet(4, true);
-        it("should create tail set without the toElement included", () => {
+        it("should create tail set without the fromElement included", () => {
             expect(tailSet.size()).to.eq(4);
             expect(tailSet.toArray()).to.deep.equal([5, 6, 7, 8]);
             expect(tailSet.length).to.eq(4);
+            expect(tailSet.contains(4)).to.be.false;
         });
-        it("should create tail set with the toElement included if it is inclusive", () => {
+        it("should create tail set with the fromElement included if it is inclusive", () => {
             expect(tailSetInclusive.size()).to.eq(5);
             expect(tailSetInclusive.toArray()).to.deep.equal([4, 5, 6, 7, 8]);
             expect(tailSetInclusive.length).to.eq(5);
+            expect(tailSetInclusive.contains(4)).to.be.true;
         });
     });
 });
