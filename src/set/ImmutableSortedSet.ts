@@ -1,12 +1,12 @@
-import {AbstractEnumerable, SortedSet, contains, ISet} from "../../imports";
+import {AbstractImmutableCollection, contains, SortedSet} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Predicate} from "../shared/Predicate";
-import {Selector} from "../shared/Selector";
 
-export class ImmutableSortedSet<TElement> extends AbstractEnumerable<TElement> {
+export class ImmutableSortedSet<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
     readonly #set: SortedSet<TElement>;
+
     private constructor(iterable: Iterable<TElement> = [] as TElement[],
                         comparator: OrderComparator<TElement> = Comparators.orderComparator) {
         super((e1, e2) => comparator(e1, e2) === 0);
@@ -58,10 +58,6 @@ export class ImmutableSortedSet<TElement> extends AbstractEnumerable<TElement> {
         const set = this.#set.toEnumerableSet();
         set.intersectWith(other);
         return new ImmutableSortedSet(set, this.#comparator);
-    }
-
-    public isEmpty(): boolean {
-        return this.#set.isEmpty();
     }
 
     public isProperSubsetOf(other: Iterable<TElement>): boolean {
@@ -116,14 +112,7 @@ export class ImmutableSortedSet<TElement> extends AbstractEnumerable<TElement> {
         return new ImmutableSortedSet(tailSet, this.#comparator);
     }
 
-    public override toString(): string;
-    public override toString(separator?: string): string;
-    public override toString(separator?: string, selector?: Selector<TElement, string>): string;
-    public override toString(separator?: string, selector?: Selector<TElement, string>): string {
-        return this.#set.toString(separator, selector);
-    }
-
-    public get length(): number {
+    public override get length(): number {
         return this.#set.length;
     }
 }

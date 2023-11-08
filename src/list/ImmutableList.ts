@@ -1,18 +1,25 @@
-import {AbstractEnumerable, contains, IReadonlyList, List, ReadonlyList} from "../../imports";
+import {
+    AbstractImmutableCollection,
+    contains,
+    IImmutableCollection,
+    IReadonlyList,
+    List,
+    ReadonlyList
+} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Predicate} from "../shared/Predicate";
-import {Selector} from "../shared/Selector";
 
-export class ImmutableList<TElement> extends AbstractEnumerable<TElement> implements IReadonlyList<TElement> {
+export class ImmutableList<TElement> extends AbstractImmutableCollection<TElement> implements IReadonlyList<TElement> {
     readonly #data: ReadonlyList<TElement>;
+
     private constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.#data = new ReadonlyList(new List(iterable, comparator));
     }
 
-    *[Symbol.iterator](): Iterator<TElement> {
+    * [Symbol.iterator](): Iterator<TElement> {
         yield* this.#data;
     }
 
@@ -36,7 +43,7 @@ export class ImmutableList<TElement> extends AbstractEnumerable<TElement> implem
         return new ImmutableList([], this.comparer);
     }
 
-    public containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
+    public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         return this.#data.containsAll(collection);
     }
 
@@ -82,10 +89,6 @@ export class ImmutableList<TElement> extends AbstractEnumerable<TElement> implem
         return this.#data.indexOf(element, comparator);
     }
 
-    public isEmpty(): boolean {
-        return this.#data.isEmpty();
-    }
-
     public override last(predicate?: Predicate<TElement>): TElement {
         return this.#data.last(predicate);
     }
@@ -117,6 +120,12 @@ export class ImmutableList<TElement> extends AbstractEnumerable<TElement> implem
         return new ImmutableList(this.#data.where(e => !predicate(e)), this.comparer);
     }
 
+    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
+        const list = this.#data.toList();
+        list.retainAll(collection);
+        return new ImmutableList(list, this.comparer);
+    }
+
     public set(index: number, element: TElement): ImmutableList<TElement> {
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
@@ -132,23 +141,11 @@ export class ImmutableList<TElement> extends AbstractEnumerable<TElement> implem
         return new ImmutableList(this.#data.toArray().sort(comparator), this.comparer);
     }
 
-    public override toString(): string;
-    public override toString(separator?: string): string;
-    public override toString(separator?: string, selector?: Selector<TElement, string>): string;
-    public override toString(separator?: string, selector?: Selector<TElement, string>): string {
-        if (this.isEmpty()) {
-            return "";
-        }
-        separator ??= ", ";
-        selector ??= (e: TElement) => String(e);
-        return this.select(selector).aggregate((a, b) => `${a}${separator}${b}`);
-    }
-
-    public get comparator(): EqualityComparator<TElement> {
+    public override get comparator(): EqualityComparator<TElement> {
         return this.comparer;
     }
 
-    public get length(): number {
+    public override get length(): number {
         return this.#data.length;
     }
 }

@@ -1,8 +1,15 @@
-import {AbstractEnumerable, EnumerableSet, contains, IEnumerable} from "../../imports";
+import {
+    AbstractEnumerable,
+    EnumerableSet,
+    contains,
+    IEnumerable,
+    AbstractImmutableCollection,
+    IImmutableCollection
+} from "../../imports";
 import {Predicate} from "../shared/Predicate";
 import {Selector} from "../shared/Selector";
 
-export class ImmutableSet<TElement> extends AbstractEnumerable<TElement> {
+export class ImmutableSet<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #set: EnumerableSet<TElement>;
     private constructor(iterable?: Iterable<TElement>) {
         super();
@@ -45,10 +52,6 @@ export class ImmutableSet<TElement> extends AbstractEnumerable<TElement> {
         return new ImmutableSet(this.#set.where(x => contains(collection, x)));
     }
 
-    public isEmpty(): boolean {
-        return this.#set.isEmpty();
-    }
-
     public isProperSubsetOf(collection: Iterable<TElement>): boolean {
         return this.#set.isProperSubsetOf(collection);
     }
@@ -81,18 +84,17 @@ export class ImmutableSet<TElement> extends AbstractEnumerable<TElement> {
         return new ImmutableSet(this.#set.where(x => !predicate(x)));
     }
 
+    public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
+        const set = this.#set.toEnumerableSet();
+        set.retainAll(collection);
+        return new ImmutableSet(set);
+    }
+
     public size(): number {
         return this.#set.size();
     }
 
-    public override toString(): string;
-    public override toString(separator?: string): string;
-    public override toString(separator?: string, selector?: Selector<TElement, string>): string;
-    public override toString(separator?: string, selector?: Selector<TElement, string>): string {
-        return this.#set.toString(separator, selector);
-    }
-
-    public get length(): number {
+    public override get length(): number {
         return this.#set.length;
     }
 }

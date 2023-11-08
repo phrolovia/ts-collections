@@ -1,6 +1,7 @@
 export {
     AbstractCollection,
     AbstractEnumerable,
+    AbstractImmutableCollection,
     AbstractRandomAccessCollection,
     AbstractReadonlyCollection,
     AbstractList,
@@ -21,6 +22,7 @@ export {
     IDictionary,
     IEnumerable,
     IGroup,
+    IImmutableCollection,
     IList,
     ILookup,
     IOrderedAsyncEnumerable,
