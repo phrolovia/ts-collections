@@ -16,7 +16,7 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList, EnumerableSet, SortedSet, LinkedList
+    IndexableList, EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -395,6 +395,17 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Creates a new enumerable set from the elements of the sequence.
      */
     toEnumerableSet(): EnumerableSet<TElement>;
+
+    /**
+     * Creates a new immutable list from the elements of the sequence.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     */
+    toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement>;
+
+    /**
+     * Creates a new immutable set from the elements of the sequence.
+     */
+    toImmutableSet(): ImmutableSet<TElement>;
 
     /**
      * Creates a new indexable list from the elements of the sequence.

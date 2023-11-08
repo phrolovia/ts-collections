@@ -19,7 +19,7 @@ import {
     List,
     Dictionary,
     IndexableList,
-    EnumerableSet, SortedSet, LinkedList
+    EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -223,6 +223,14 @@ export abstract class EnumerableStatic {
 
     public static toEnumerableSet(source: IEnumerable<any>): EnumerableSet<any> {
         return new Enumerable(source).toEnumerableSet();
+    }
+
+    public static toImmutableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
+        return new Enumerable(source).toImmutableList(comparator);
+    }
+
+    public static toImmutableSet<TElement>(source: IEnumerable<TElement>): ImmutableSet<TElement> {
+        return new Enumerable(source).toImmutableSet();
     }
 
     public static toIndexableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IndexableList<TElement> {

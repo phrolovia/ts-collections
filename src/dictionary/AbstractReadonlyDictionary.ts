@@ -3,7 +3,7 @@ import {
     ICollection,
     IEnumerable,
     IGroup,
-    ILookup,
+    ILookup, ImmutableList, ImmutableSet,
     IndexableList,
     IOrderedEnumerable,
     ISet,
@@ -247,6 +247,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toEnumerableSet(): EnumerableSet<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toEnumerableSet(this);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableList<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableList(this, comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableSet(this);
     }
 
     public toIndexableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IndexableList<KeyValuePair<TKey, TValue>> {

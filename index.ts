@@ -31,6 +31,7 @@ export {
     ISet,
     ITree,
     ImmutableList,
+    ImmutableSet,
     IndexableList,
     LinkedList,
     List,

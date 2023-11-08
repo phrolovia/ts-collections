@@ -8,7 +8,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
-import {Enumerable, LinkedList, ReadonlyCollection} from "../../imports";
+import {Enumerable, ImmutableList, LinkedList, ReadonlyCollection} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
@@ -1645,6 +1645,37 @@ describe("List", () => {
         it("should convert it to a set", () => {
             const set = list.toEnumerableSet();
             expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+    });
+
+    describe("#toImmutableList()", () => {
+        const list = new List([1, 2, 3]);
+        const immutableList = list.toImmutableList();
+        it("should return a new ImmutableList without altering the current list", () => {
+            expect(list.size()).to.eq(3);
+            expect(immutableList instanceof ImmutableList).to.be.true;
+            expect(immutableList).to.not.equal(list);
+            expect(immutableList.size()).to.eq(3);
+            expect(list.length).to.eq(3);
+            expect(immutableList.length).to.eq(3);
+        });
+        it("should return a new immutable list", () => {
+            const immutable2 = list.toImmutableList();
+            expect(list).to.not.equal(immutable2);
+            expect(list.toArray()).to.deep.equal(immutable2.toArray());
+        });
+    });
+
+    describe("#toImmutableSet()", () => {
+        const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
+        it("should convert it to an immutable set", () => {
+            const set = list.toImmutableSet();
+            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const set2 = set.toImmutableSet().add(999);
+            expect(set).to.not.equal(set2);
+            expect(set.size()).to.eq(10);
+            expect(set2.size()).to.eq(11);
+            expect(set2.last()).to.eq(999);
         });
     });
 

@@ -1,4 +1,4 @@
-import {from} from "../../imports";
+import {from, ImmutableList, ImmutableSet} from "../../imports";
 import {InferredType} from "../shared/InferredType";
 import {ObjectType} from "../shared/ObjectType";
 import {IEnumerable} from "./IEnumerable";
@@ -234,6 +234,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return EnumerableStatic.toEnumerableSet(this);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
+        return EnumerableStatic.toImmutableList(this, comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<TElement> {
+        return EnumerableStatic.toImmutableSet(this);
     }
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
