@@ -39,9 +39,12 @@ export {AbstractTree} from "./src/tree/AbstractTree";
 export {RedBlackTree} from "./src/tree/RedBlackTree";
 export {IDictionary} from "./src/dictionary/IDictionary";
 export {IReadonlyDictionary} from "./src/dictionary/IReadonlyDictionary";
+export {IImmutableDictionary} from "./src/dictionary/IImmutableDictionary";
 export {Dictionary} from "./src/dictionary/Dictionary";
 export {SortedDictionary} from "./src/dictionary/SortedDictionary";
 export {ReadonlyDictionary} from "./src/dictionary/ReadonlyDictionary";
+export {ImmutableDictionary} from "./src/dictionary/ImmutableDictionary";
+export {ImmutableSortedDictionary} from "./src/dictionary/ImmutableSortedDictionary";
 export {ISet} from "./src/set/ISet";
 export {AbstractSet} from "./src/set/AbstractSet";
 export {SortedSet} from "./src/set/SortedSet";
@@ -103,6 +106,11 @@ export {
     toArray,
     toDictionary,
     toEnumerableSet,
+    toImmutableDictionary,
+    toImmutableList,
+    toImmutableSet,
+    toImmutableSortedDictionary,
+    toImmutableSortedSet,
     toIndexableList,
     toLinkedList,
     toList,

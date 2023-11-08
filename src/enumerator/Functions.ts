@@ -1,10 +1,15 @@
 import {Dictionary} from "../dictionary/Dictionary";
+import {ImmutableDictionary} from "../dictionary/ImmutableDictionary";
+import {ImmutableSortedDictionary} from "../dictionary/ImmutableSortedDictionary";
 import {SortedDictionary} from "../dictionary/SortedDictionary";
+import {ImmutableList} from "../list/ImmutableList";
 import {IndexableList} from "../list/IndexableList";
 import {LinkedList} from "../list/LinkedList";
 import {List} from "../list/List";
 import {ILookup} from "../lookup/ILookup";
 import {EnumerableSet} from "../set/EnumerableSet";
+import {ImmutableSet} from "../set/ImmutableSet";
+import {ImmutableSortedSet} from "../set/ImmutableSortedSet";
 import {SortedSet} from "../set/SortedSet";
 import {Accumulator} from "../shared/Accumulator";
 import {EqualityComparator} from "../shared/EqualityComparator";
@@ -396,6 +401,45 @@ export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>,
 ): EnumerableSet<TElement> => {
     return from(source).toEnumerableSet();
+}
+
+export const toImmutableDictionary = <TElement, TKey, TValue>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    valueSelector: Selector<TElement, TValue>,
+    valueComparator?: EqualityComparator<TValue>
+): ImmutableDictionary<TKey, TValue> => {
+    return from(source).toImmutableDictionary(keySelector, valueSelector, valueComparator);
+}
+
+export const toImmutableList = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): ImmutableList<TElement> => {
+    return from(source).toImmutableList(comparator);
+}
+
+export const toImmutableSet = <TElement>(
+    source: Iterable<TElement>,
+): ImmutableSet<TElement> => {
+    return from(source).toImmutableSet();
+}
+
+export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    valueSelector: Selector<TElement, TValue>,
+    keyComparator?: OrderComparator<TKey>,
+    valueComparator?: EqualityComparator<TValue>
+): ImmutableSortedDictionary<TKey, TValue> => {
+    return from(source).toImmutableSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+}
+
+export const toImmutableSortedSet = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: OrderComparator<TElement>
+): ImmutableSortedSet<TElement> => {
+    return from(source).toImmutableSortedSet(comparator);
 }
 
 export const toIndexableList = <TElement>(

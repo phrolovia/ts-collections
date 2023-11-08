@@ -1,4 +1,11 @@
-import {from, ImmutableList, ImmutableSet, ImmutableSortedSet} from "../../imports";
+import {
+    from,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet
+} from "../../imports";
 import {InferredType} from "../shared/InferredType";
 import {ObjectType} from "../shared/ObjectType";
 import {IEnumerable} from "./IEnumerable";
@@ -236,12 +243,20 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.toEnumerableSet(this);
     }
 
+    public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
+        return EnumerableStatic.toImmutableDictionary(this, keySelector, valueSelector, valueComparator);
+    }
+
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return EnumerableStatic.toImmutableList(this, comparator);
     }
 
     public toImmutableSet(): ImmutableSet<TElement> {
         return EnumerableStatic.toImmutableSet(this);
+    }
+
+    public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
+        return EnumerableStatic.toImmutableSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {

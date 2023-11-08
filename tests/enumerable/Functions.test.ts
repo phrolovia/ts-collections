@@ -24,6 +24,10 @@ import {
     forEach,
     groupBy,
     groupJoin,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedDictionary, ImmutableSortedSet,
     IndexableList,
     intersect,
     join,
@@ -60,6 +64,11 @@ import {
     toArray,
     toDictionary,
     toEnumerableSet,
+    toImmutableDictionary,
+    toImmutableList,
+    toImmutableSet,
+    toImmutableSortedDictionary,
+    toImmutableSortedSet,
     toIndexableList,
     toLinkedList,
     toList,
@@ -67,7 +76,8 @@ import {
     toSortedDictionary,
     toSortedSet,
     union,
-    where, zip
+    where,
+    zip
 } from "../../imports";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Helper} from "../helpers/Helper";
@@ -1081,6 +1091,64 @@ describe("Enumerable Standalone Functions", () => {
             expect(enumerableSet instanceof EnumerableSet).to.be.true;
             expect(enumerableSet.size()).to.eq(5);
             expect(enumerableSet.length).to.eq(5);
+        });
+    });
+
+    describe("#toImmutableDictionary()", () => {
+        it("should return an immutable dictionary with keys [1,2,3,4,5] and values [1,4,9,16,25]", () => {
+            const dictionary = toImmutableDictionary([1, 2, 3, 4, 5], n => n, n => n * n);
+            expect(dictionary instanceof ImmutableDictionary).to.be.true;
+            expect(dictionary.get(1)).to.eq(1);
+            expect(dictionary.get(2)).to.eq(4);
+            expect(dictionary.get(3)).to.eq(9);
+            expect(dictionary.get(4)).to.eq(16);
+            expect(dictionary.get(5)).to.eq(25);
+        });
+    });
+
+    describe("#toImmutableList()", () => {
+        it("should return an immutable list", () => {
+            const immutableList = toImmutableList([1, 2, 3, 4, 5]);
+            expect(immutableList instanceof ImmutableList).to.be.true;
+            expect(immutableList.size()).to.eq(5);
+            expect(immutableList.length).to.eq(5);
+        });
+    });
+
+    describe("#toImmutableSet()", () => {
+        it("should return an immutable set", () => {
+            const immutableSet = toImmutableSet([1, 2, 3, 4, 5]);
+            expect(immutableSet instanceof ImmutableSet).to.be.true;
+            expect(immutableSet.size()).to.eq(5);
+            expect(immutableSet.length).to.eq(5);
+        });
+    });
+
+    describe("#toImmutableSortedDictionary()", () => {
+        it("should return an immutable sorted dictionary", () => {
+            const immutableSortedDictionary = toImmutableSortedDictionary([3, 5, 4, 2, 1], n => n, n => n * n);
+            expect(immutableSortedDictionary instanceof ImmutableSortedDictionary).to.be.true;
+            expect(immutableSortedDictionary.get(1)).to.eq(1);
+            expect(immutableSortedDictionary.get(2)).to.eq(4);
+            expect(immutableSortedDictionary.get(3)).to.eq(9);
+            expect(immutableSortedDictionary.get(4)).to.eq(16);
+            expect(immutableSortedDictionary.get(5)).to.eq(25);
+            expect(immutableSortedDictionary.keys().toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+    });
+
+    describe("#toImmutableSortedSet()", () => {
+        it("should return an immutable sorted set", () => {
+            const immutableSortedSet = toImmutableSortedSet([3, 5, 4, 2, 1]);
+            expect(immutableSortedSet instanceof ImmutableSortedSet).to.be.true;
+            expect(immutableSortedSet.size()).to.eq(5);
+            expect(immutableSortedSet.length).to.eq(5);
+            expect(immutableSortedSet.elementAt(0)).to.eq(1);
+            expect(immutableSortedSet.elementAt(1)).to.eq(2);
+            expect(immutableSortedSet.elementAt(2)).to.eq(3);
+            expect(immutableSortedSet.elementAt(3)).to.eq(4);
+            expect(immutableSortedSet.elementAt(4)).to.eq(5);
+            expect(immutableSortedSet.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
         });
     });
 

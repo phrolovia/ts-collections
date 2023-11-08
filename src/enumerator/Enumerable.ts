@@ -18,7 +18,15 @@ import {
     List,
     Dictionary,
     IndexableList,
-    IGroup, EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet, ImmutableSortedSet
+    IGroup,
+    EnumerableSet,
+    SortedSet,
+    LinkedList,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedSet,
+    ImmutableDictionary,
+    ImmutableSortedDictionary
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -254,12 +262,20 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.toEnumerableSet();
     }
 
+    public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
+        return this.enumerator.toImmutableDictionary(keySelector, valueSelector, valueComparator);
+    }
+
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return this.enumerator.toImmutableList(comparator);
     }
 
     public toImmutableSet(): ImmutableSet<TElement> {
         return this.enumerator.toImmutableSet();
+    }
+
+    public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
+        return this.enumerator.toImmutableSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {

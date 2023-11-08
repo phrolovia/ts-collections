@@ -19,7 +19,14 @@ import {
     List,
     Dictionary,
     IndexableList,
-    EnumerableSet, SortedSet, LinkedList, ImmutableList, ImmutableSet, ImmutableSortedSet
+    EnumerableSet,
+    SortedSet,
+    LinkedList,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedSet,
+    ImmutableDictionary,
+    ImmutableSortedDictionary
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -225,12 +232,20 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toEnumerableSet();
     }
 
+    public static toImmutableDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
+        return new Enumerable(source).toImmutableDictionary(keySelector, valueSelector, valueComparator);
+    }
+
     public static toImmutableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return new Enumerable(source).toImmutableList(comparator);
     }
 
     public static toImmutableSet<TElement>(source: IEnumerable<TElement>): ImmutableSet<TElement> {
         return new Enumerable(source).toImmutableSet();
+    }
+
+    public static toImmutableSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
+        return new Enumerable(source).toImmutableSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public static toImmutableSortedSet<TElement>(source: IEnumerable<TElement>, comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
