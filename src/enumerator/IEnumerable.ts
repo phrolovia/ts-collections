@@ -433,7 +433,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Creates a new immutable sorted set from the elements of the sequence.
-     * @param comparator
+     * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
      */
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
 

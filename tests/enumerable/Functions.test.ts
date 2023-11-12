@@ -174,8 +174,8 @@ describe("Enumerable Standalone Functions", () => {
     describe("#cast()", () => {
         it("should cast the list to a new type", () => {
             const mixedSequence = [1, "2", 3, "4", 5];
-            const numbers = cast<unknown, number>(where(mixedSequence, n => typeof n === "number"));
-            const strings = cast<unknown, string>(where(mixedSequence, n => typeof n === "string"));
+            const numbers = cast<number>(where(mixedSequence, n => typeof n === "number"));
+            const strings = cast<string>(where(mixedSequence, n => typeof n === "string"));
             expect(numbers.toArray()).to.deep.equal([1, 3, 5]);
             expect(strings.toArray()).to.deep.equal(["2", "4"]);
         });

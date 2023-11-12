@@ -93,6 +93,7 @@ export abstract class Collections {
 
     /**
      * Replaces all the elements of the list with the given element.
+     * @template TElement The type of the elements
      * @param {IList} list The list whose elements will be replaced
      * @param {TElement} element The element which will replace the elements of the list
      */
@@ -104,6 +105,7 @@ export abstract class Collections {
 
     /**
      * Finds the count of the given element in the source iterable.
+     * @template TElement The type of the elements
      * @param {Iterable} source The iterable source in which the given element will be counted.
      * @param {TElement} element The element that will be counted.
      * @param {EqualityComparator} comparator The comparator method that will be used to compare the equality of the elements.
@@ -183,6 +185,7 @@ export abstract class Collections {
 
     /**
      * Replaces the old element with the new element in a given sequence.
+     * @template TElement The type of the elements
      * @param {IList|Array} sequence The sequence whose old elements will be replaced.
      * @param {TElement} oldElement The element that will be replaced with the new element.
      * @param {TElement} newElement The element that will replace the old element.

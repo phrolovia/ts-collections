@@ -38,14 +38,32 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         this.enumerator = new Enumerator<TElement>(() => iterable);
     }
 
+    /**
+     * Creates an empty sequence.
+     *
+     * @template TElement The type of elements in the sequence.
+     * @returns {IEnumerable<TElement>} An empty sequence.
+     */
     public static empty<TSource>(): IEnumerable<TSource> {
         return new Enumerable<TSource>([]);
     }
 
+    /**
+     * Creates an enumerable sequence from the given source.
+     * @template TElement The type of elements in the sequence.
+     * @param source The source iterable that will be converted to an enumerable sequence.
+     * @returns {IEnumerable<TElement>} An enumerable sequence that contains the elements of the source.
+     */
     public static from<TSource>(source: Iterable<TSource>): IEnumerable<TSource> {
         return new Enumerable(source);
     }
 
+    /**
+     * Creates a range of numbers starting from the specified start value and containing the specified count of elements.
+     * @param {number} start The start value of the range.
+     * @param {number} count The number of elements in the range.
+     * @returns {IEnumerable<number>} An enumerable range of numbers.
+     */
     public static range(start: number, count: number): IEnumerable<number> {
         return new Enumerator(function* () {
             for (let ix = 0; ix < count; ++ix) {
@@ -54,6 +72,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         });
     }
 
+    /**
+     * Repeats the specified element a specified number of times.
+     *
+     * @template TElement The type of the element to repeat.
+     * @param {TElement} element The element to repeat.
+     * @param {number} count The number of times to repeat the element.
+     * @returns {IEnumerable<TElement>} An Iterable representing the repeated elements.
+     */
     public static repeat<TSource>(element: TSource, count: number): IEnumerable<TSource> {
         return new Enumerator(function* () {
             for (let ix = 0; ix < count; ++ix) {
