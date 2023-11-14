@@ -9,7 +9,15 @@ import {Enumerable} from "../../src/enumerator/Enumerable";
 import {Queue} from "../../src/queue/Queue";
 import {Group} from "../../src/enumerator/Group";
 import {IGroup} from "../../src/enumerator/IGroup";
-import {EnumerableSet, IEnumerable, IndexableList, SortedSet} from "../../imports";
+import {
+    EnumerableSet,
+    IEnumerable,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
+    IndexableList,
+    SortedSet
+} from "../../imports";
 import {Lookup} from "../../src/lookup/Lookup";
 
 describe("Lookup", () => {
@@ -68,6 +76,10 @@ describe("Lookup", () => {
             const lookup = list.toLookup(p => p.age, p => p);
             expect(lookup.average(p => p.key)).to.eq(22.5);
         });
+    });
+
+    describe("#cast()", () => {
+        // TODO
     });
 
     describe("#chunk()", () => {
@@ -344,6 +356,10 @@ describe("Lookup", () => {
             const lookup = list.toLookup(p => p.name, p => p.age);
             expect(() => lookup.min()).to.throw(Error);
         });
+    });
+
+    describe("#ofType()", () => {
+        // TODO
     });
 
     describe("#orderBy()", () => {
@@ -630,6 +646,46 @@ describe("Lookup", () => {
         });
     });
 
+    describe("#toImmutableDictionary()", () => {
+        it("should return an immutable dictionary of the lookup", () => {
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+            expect(lookup.toImmutableDictionary(p => p.key, p => p.source.first())).to.be.instanceOf(ImmutableDictionary);
+        });
+    });
+
+    describe("#toImmutableList()", () => {
+        it("should return an immutable list of the lookup", () => {
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+            expect(lookup.toImmutableList()).to.be.instanceOf(ImmutableList);
+        });
+    });
+
+    describe("#toImmutableSet()", () => {
+        it("should return an immutable set of the lookup", () => {
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+            expect(lookup.toImmutableSet()).to.be.instanceOf(ImmutableSet);
+        });
+    });
+
+    describe("#toImmutableSortedDictionary()", () => {
+        it("should return an immutable sorted dictionary of the lookup", () => {
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+            expect(lookup.toImmutableSortedDictionary(p => p.key, p => p.source.first())).to.be.instanceOf(ImmutableSortedDictionary);
+        });
+    });
+
+    describe("#toImmutableSortedSet()", () => {
+        it("should return an immutable sorted set of the lookup", () => {
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+            expect(lookup.toImmutableSortedSet()).to.be.instanceOf(ImmutableSortedSet);
+        });
+    });
+
     describe("#toIndexableList()", () => {
         it("should return an indexable list of the lookup", () => {
             const list = new LinkedList(peopleArray);
@@ -686,7 +742,6 @@ describe("Lookup", () => {
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toSortedSet((a, b) => a.key.localeCompare(b.key));
             expect(result instanceof SortedSet).to.be.true;
-            console.log(result.toArray());
             expect(result.size()).to.eq(3);
         });
     });

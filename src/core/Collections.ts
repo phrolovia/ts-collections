@@ -1,6 +1,7 @@
 import {OrderComparator} from "../shared/OrderComparator";
 import {IList} from "../list/IList";
 import {Comparators} from "../shared/Comparators";
+import {Selector} from "../shared/Selector";
 import {ICollection} from "./ICollection";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
@@ -72,7 +73,7 @@ export abstract class Collections {
      * @return An array of distinct items.
      * @throws An error if the iterable is null or undefined.
      */
-    public static distinct<TElement, TKey>(iterable: Iterable<TElement>, selector?: (item: TElement) => TKey, comparator?: (key1: TKey, key2: TKey) => boolean): IEnumerable<TElement> {
+    public static distinct<TElement, TKey>(iterable: Iterable<TElement>, selector?: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         selector ??= (item: TElement) => item as unknown as TKey;
         comparator ??= (key1: TKey, key2: TKey) => Object.is(key1, key2);
         const distinctList = new List<TElement>();
@@ -126,7 +127,7 @@ export abstract class Collections {
      * @return The item which has the maximum value according to the selector method, or null if iterable is empty.
      * @throws An exception if iterable is null or undefined.
      */
-    public static max<TElement>(iterable: Iterable<TElement>, selector?: (item: TElement) => number): TElement {
+    public static max<TElement>(iterable: Iterable<TElement>, selector?: Selector<TElement, number>): TElement {
         const iterator = iterable[Symbol.iterator]();
         let iteratorItem = iterator.next();
         let maxItem: TElement;
@@ -158,7 +159,7 @@ export abstract class Collections {
      * @return The item which has the minimum value according to the selector method, or null if iterable is empty.
      * @throws An exception if iterable is null or undefined.
      */
-    public static min<TElement>(iterable: Iterable<TElement>, selector?: (item: TElement) => number): TElement {
+    public static min<TElement>(iterable: Iterable<TElement>, selector?: Selector<TElement, number>): TElement {
         const iterator = iterable[Symbol.iterator]();
         let iteratorItem = iterator.next();
         let minItem: TElement;
