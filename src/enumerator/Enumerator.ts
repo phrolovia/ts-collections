@@ -777,13 +777,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         for (const item of this) {
             if (skipEnded) {
                 yield item;
+            } else if (predicate(item, index)) {
+                index++;
             } else {
-                if (predicate(item, index)) {
-                    index++;
-                } else {
-                    skipEnded = true;
-                    yield item;
-                }
+                skipEnded = true;
+                yield item;
             }
         }
     }

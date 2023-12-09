@@ -142,10 +142,8 @@ export abstract class Collections {
                 if (value > maxValue) {
                     maxItem = iteratorItem.value;
                 }
-            } else {
-                if (iteratorItem.value > maxItem) {
-                    maxItem = iteratorItem.value;
-                }
+            } else if (iteratorItem.value > maxItem) {
+                maxItem = iteratorItem.value;
             }
             iteratorItem = iterator.next();
         }
