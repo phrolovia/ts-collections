@@ -3,7 +3,7 @@ import {
     ICollection,
     IEnumerable,
     IGroup,
-    ILookup,
+    ILookup, ImmutableDictionary, ImmutableList, ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
     IndexableList,
     IOrderedEnumerable,
     ISet,
@@ -188,7 +188,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.scan(this, accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }
 
@@ -247,6 +247,26 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toEnumerableSet(): EnumerableSet<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toEnumerableSet(this);
+    }
+
+    public toImmutableDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): ImmutableDictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toImmutableDictionary(this, keySelector, valueSelector, valueComparator);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableList<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableList(this, comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableSet(this);
+    }
+
+    public toImmutableSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): ImmutableSortedDictionary<TDictKey, TDictValue> {
+        return EnumerableStatic.toImmutableSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): ImmutableSortedSet<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableSortedSet(this, comparator);
     }
 
     public toIndexableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IndexableList<KeyValuePair<TKey, TValue>> {

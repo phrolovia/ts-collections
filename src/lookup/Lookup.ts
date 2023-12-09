@@ -19,7 +19,15 @@ import {
     RedBlackTree,
     Dictionary,
     IndexableList,
-    IGroup, Group, EnumerableSet, SortedSet, LinkedList
+    IGroup,
+    Group,
+    EnumerableSet,
+    SortedSet,
+    LinkedList,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedSet,
+    ImmutableDictionary, ImmutableSortedDictionary
 } from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
@@ -216,7 +224,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.scan(accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<IGroup<TKey, TElement>, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<IGroup<TKey, TElement>, TResult>): IEnumerable<TResult> {
         return this.lookupTree.select(selector);
     }
 
@@ -279,6 +287,26 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toEnumerableSet(): EnumerableSet<IGroup<TKey, TElement>> {
         return this.lookupTree.toEnumerableSet();
+    }
+
+    public toImmutableDictionary<TDictKey, TDictValue>(keySelector: Selector<IGroup<TKey, TElement>, TDictKey>, valueSelector: Selector<IGroup<TKey, TElement>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): ImmutableDictionary<TDictKey, TDictValue> {
+        return this.lookupTree.toImmutableDictionary(keySelector, valueSelector, valueComparator);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): ImmutableList<IGroup<TKey, TElement>> {
+        return this.lookupTree.toImmutableList(comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<IGroup<TKey, TElement>> {
+        return this.lookupTree.toImmutableSet();
+    }
+
+    public toImmutableSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<IGroup<TKey, TElement>, TDictKey>, valueSelector: Selector<IGroup<TKey, TElement>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): ImmutableSortedDictionary<TDictKey, TDictValue> {
+        return this.lookupTree.toImmutableSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<IGroup<TKey, TElement>>): ImmutableSortedSet<IGroup<TKey, TElement>> {
+        return this.lookupTree.toImmutableSortedSet(comparator);
     }
 
     public toIndexableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): IndexableList<IGroup<TKey, TElement>> {

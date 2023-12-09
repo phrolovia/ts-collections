@@ -439,6 +439,25 @@ describe("LinkedList", () => {
         });
     });
 
+    describe("#getRange()", () => {
+        it("should return a new list with elements from the specified range", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            const range = list.getRange(2, 5);
+            expect(range.toArray()).to.deep.equal([3, 4, 5, 6, 7]);
+            expect(range.length).to.eq(5);
+        });
+        it("should throw error if index is out of bounds", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            expect(() => list.getRange(-1, 5)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list.getRange(5, 100)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+        });
+        it("should throw error if length is out of bounds", () => {
+            const list = new LinkedList([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            expect(() => list.getRange(5, 100)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list.getRange(5, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+        });
+    });
+
     describe("#groupBy()", () => {
         const list = new LinkedList([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Kaori, Person.Reina]);
         it("should group people by age", () => {

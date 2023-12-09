@@ -16,7 +16,14 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList, EnumerableSet, SortedSet, LinkedList
+    IndexableList,
+    EnumerableSet,
+    SortedSet,
+    LinkedList,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedSet,
+    ImmutableDictionary, ImmutableSortedDictionary
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -268,17 +275,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Produces a tuple of the element and the following element.
-     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
-     *
      * <br/>
      * Example:
      * ```
      *    const numberList = new List([1, 2, 3, 4, 5]);
      *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
      * ```
+     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
      */
     pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
-
 
     /**
      * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
@@ -309,7 +314,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Projects each element of a sequence into a new form.
      * @param selector The selector function that will be used to project each element into a new form.
      */
-    select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult>;
+    select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult>;
 
     /**
      * Projects each element of a sequence into a new form and flattens the resulting sequences into one sequence.
@@ -399,11 +404,44 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toEnumerableSet(): EnumerableSet<TElement>;
 
     /**
+     * Creates a new immutable dictionary from the elements of the sequence.
+     * @param keySelector The key selector function that will be used to select the key for an element.
+     * @param valueSelector The value selector function that will be used to select the value for an element.
+     * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
+     */
+    toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
+
+    /**
+     * Creates a new immutable list from the elements of the sequence.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     */
+    toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement>;
+
+    /**
+     * Creates a new immutable set from the elements of the sequence.
+     */
+    toImmutableSet(): ImmutableSet<TElement>;
+
+    /**
+     * Creates a new immutable sorted dictionary from the elements of the sequence.
+     * @param keySelector The key selector function that will be used to select the key for an element.
+     * @param valueSelector The value selector function that will be used to select the value for an element.
+     * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, default order comparer will be used.
+     * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
+     */
+    toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue>;
+
+    /**
+     * Creates a new immutable sorted set from the elements of the sequence.
+     * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+     */
+    toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
+
+    /**
      * Creates a new indexable list from the elements of the sequence.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
     toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement>;
-
 
     /**
      * Creates a new linked list from the elements of the sequence.

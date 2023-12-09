@@ -139,6 +139,8 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
 
     public abstract get(index: number): TElement;
 
+    public abstract getRange(index: number, count: number): IList<TElement>;
+
     public abstract removeAt(index: number): TElement;
 
     public abstract set(index: number, element: TElement): TElement;

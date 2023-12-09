@@ -187,7 +187,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.scan(accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult> {
         return this.enumerator.select(selector);
     }
 

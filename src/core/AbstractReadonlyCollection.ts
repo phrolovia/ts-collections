@@ -52,7 +52,7 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
         }
         separator ??= ", ";
         selector ??= (e: TElement) => String(e);
-        return this.select(selector).toArray().join(separator);
+        return this.select(selector).aggregate((a, b) => `${a}${separator}${b}`);
     }
 
     protected updateLength(): void {

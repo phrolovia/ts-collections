@@ -32,7 +32,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     async* [Symbol.asyncIterator](): AsyncIterator<TElement> {
-        yield* await this.iterable();
+        yield* this.iterable();
     }
 
     public async aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>,
@@ -334,11 +334,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TAccumulate>(() => this.scanGenerator(accumulator, seed));
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IAsyncEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult> {
         return new AsyncEnumerator<TResult>(() => this.selectGenerator(selector));
     }
 
-    public selectMany<TResult>(selector: Selector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult> {
+    public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult> {
         return new AsyncEnumerator<TResult>(() => this.selectManyGenerator(selector));
     }
 
@@ -460,7 +460,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* appendGenerator(element: TElement): AsyncIterable<TElement> {
-        yield* await this;
+        yield* this;
         yield element;
     }
 
@@ -485,8 +485,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* concatGenerator(other: IAsyncEnumerable<TElement>): AsyncIterable<TElement> {
-        yield* await this;
-        yield* await other;
+        yield* this;
+        yield* other;
     }
 
     private async* defaultIfEmptyGenerator(defaultValue?: TElement | null): AsyncIterable<TElement|null> {
@@ -579,7 +579,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* pairwiseGenerator(resultSelector: PairwiseSelector<TElement, TElement>): AsyncIterable<[TElement, TElement]> {
-        const iterator = await this[Symbol.asyncIterator]();
+        const iterator = this[Symbol.asyncIterator]();
         let next = await iterator.next();
         while (!next.done) {
             const previous = next;
@@ -592,7 +592,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     private async* prependGenerator(element: TElement): AsyncIterable<TElement> {
         yield element;
-        yield* await this;
+        yield* this;
     }
 
     private async* reverseGenerator(): AsyncIterable<TElement> {
@@ -765,8 +765,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* zipGenerator<TSecond, TResult=[TElement,TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
-        const iterator1 = await this[Symbol.asyncIterator]();
-        const iterator2 = await enumerable[Symbol.asyncIterator]();
+        const iterator1 = this[Symbol.asyncIterator]();
+        const iterator2 = enumerable[Symbol.asyncIterator]();
         let next1 = await iterator1.next();
         let next2 = await iterator2.next();
         while (!next1.done && !next2.done) {

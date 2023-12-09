@@ -1,4 +1,4 @@
-import {AbstractRandomAccessCollection, IEnumerable, ISet} from "../../imports";
+import {AbstractRandomAccessCollection, from, IEnumerable, ISet} from "../../imports";
 import {Comparators} from "../shared/Comparators";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
@@ -7,42 +7,42 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
         super((e1: TElement, e2: TElement) => (comparator ?? Comparators.equalityComparator)(e1, e2));
     }
 
-    public exceptWith(other: IEnumerable<TElement>): void {
+    public exceptWith(other: Iterable<TElement>): void {
         this.removeAll(other);
     }
 
-    public intersectWith(other: IEnumerable<TElement>): void {
+    public intersectWith(other: Iterable<TElement>): void {
         this.retainAll(other);
     }
 
-    public isProperSubsetOf(other: IEnumerable<TElement>): boolean {
-        return this.isSubsetOf(other) && this.size() < other.count();
+    public isProperSubsetOf(other: Iterable<TElement>): boolean {
+        return this.isSubsetOf(other) && this.size() < this.getIterableSize(other);
     }
 
-    public isProperSupersetOf(other: IEnumerable<TElement>): boolean {
-        return this.isSupersetOf(other) && this.size() > other.count();
+    public isProperSupersetOf(other: Iterable<TElement>): boolean {
+        return this.isSupersetOf(other) && this.size() > this.getIterableSize(other);
     }
 
-    public isSubsetOf(other: IEnumerable<TElement>): boolean {
+    public isSubsetOf(other: Iterable<TElement>): boolean {
         if (this.isEmpty()) {
             return true;
         }
-        if (this.size() > other.count()) {
+        if (this.size() > this.getIterableSize(other)) {
             return false;
         }
         for (const element of this) {
-            if (!other.contains(element)) {
+            if (!from(other).contains(element)) {
                 return false;
             }
         }
         return true;
     }
 
-    public isSupersetOf(other: IEnumerable<TElement>): boolean {
-        if (!other.any()) {
+    public isSupersetOf(other: Iterable<TElement>): boolean {
+        if (!from(other).any()) {
             return true;
         }
-        if (this.size() < other.count()) {
+        if (this.size() < this.getIterableSize(other)) {
             return false;
         }
         for (const element of other) {
@@ -53,7 +53,7 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
         return true;
     }
 
-    public overlaps(other: IEnumerable<TElement>): boolean {
+    public overlaps(other: Iterable<TElement>): boolean {
         for (const element of other) {
             if (this.contains(element)) {
                 return true;

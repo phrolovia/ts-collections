@@ -4,8 +4,8 @@ on:
   release:
     types: [created]
     tags:
-      - 'v11.*'
       - 'v12.*'
+      - 'v13.*'
 
 jobs:
   build:

@@ -8,7 +8,7 @@ import {School} from "../models/School";
 import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {Pair} from "../models/Pair";
-import {Enumerable, LinkedList, ReadonlyCollection} from "../../imports";
+import {Enumerable, ImmutableList, LinkedList, ReadonlyCollection} from "../../imports";
 import {Helper} from "../helpers/Helper";
 
 describe("List", () => {
@@ -152,7 +152,7 @@ describe("List", () => {
     });
 
     describe("#append()", () => {
-        it("should append the given element at the end of enumerable", () => {
+        it("should append the given element to the end of enumerable", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const enumerable = list.append(9);
             const array = enumerable.append(99).toArray();
@@ -484,6 +484,23 @@ describe("List", () => {
             expect(list1.get(0)).to.eq(Person.Alice);
             expect(list1.get(5)).to.eq(Person.Viola);
             expect(list1.get(2)).to.eq(Person.Noemi);
+        });
+    });
+
+    describe("#getRange()", () => {
+        const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+        it("should throw error if index is out of bounds", () => {
+            expect(() => list1.getRange(-1, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.getRange(6, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+        });
+        it("should throw error if length is out of bounds", () => {
+            expect(() => list1.getRange(0, 7)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.getRange(0, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+        });
+        it("should return the elements at the specified index", () => {
+            const range = list1.getRange(1, 3);
+            expect(range.toArray()).to.deep.equal([Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            expect(range.length).to.eq(3);
         });
     });
 
@@ -1083,7 +1100,7 @@ describe("List", () => {
             const result = list.scan((acc, n) => acc + n);
             expect(result.toArray()).to.deep.equal([1, 3, 6, 10]);
         });
-        it("should create a list of increasing numbers starting with 2", () => {
+        it("should create a list of increasing numbers starting with 3", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const result = list.scan((acc, n) => acc + n, 2);
             expect(result.toArray()).to.deep.equal([3, 5, 8, 12, 17]);
@@ -1628,6 +1645,91 @@ describe("List", () => {
         it("should convert it to a set", () => {
             const set = list.toEnumerableSet();
             expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+    });
+
+    describe("#toImmutableDictionary()", () => {
+        const list = new List([Person.Alice, Person.Mel, Person.Noemi, Person.Lucrezia, Person.Amy, Person.Bella, Person.Reina]);
+        it("should convert it to an immutable dictionary", () => {
+            const dictionary = list.toImmutableDictionary(p => p.name, p => p);
+            expect(dictionary.get(Person.Alice.name)).to.equal(Person.Alice);
+            expect(dictionary.get(Person.Mel.name)).to.equal(Person.Mel);
+            expect(dictionary.get(Person.Noemi.name)).to.equal(Person.Noemi);
+            expect(dictionary.get(Person.Lucrezia.name)).to.equal(Person.Lucrezia);
+            expect(dictionary.get(Person.Amy.name)).to.equal(Person.Amy);
+            expect(dictionary.get(Person.Bella.name)).to.equal(Person.Bella);
+            expect(dictionary.get(Person.Reina.name)).to.equal(Person.Reina);
+            expect(dictionary.keys().toArray()).to.deep.equal(["Alice", "Mel", "Noemi", "Lucrezia", "Amy", "Bella", "Reina"]);
+            const dict2 = dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            expect(dict2.size()).to.eq(8);
+            expect(dict2.get(Person.Priscilla.name)).to.eq(Person.Priscilla);
+            expect(dictionary.size()).to.eq(7);
+            expect(dictionary.get(Person.Priscilla.name)).to.be.null;
+            expect(dict2.length).to.eq(8);
+            expect(dictionary.length).to.eq(7);
+            expect(dict2.keys().toArray()).to.deep.equal(["Alice", "Mel", "Noemi", "Lucrezia", "Amy", "Bella", "Reina", "Priscilla"]);
+        });
+    });
+
+    describe("#toImmutableList()", () => {
+        const list = new List([1, 2, 3]);
+        const immutableList = list.toImmutableList();
+        it("should return a new ImmutableList without altering the current list", () => {
+            expect(list.size()).to.eq(3);
+            expect(immutableList instanceof ImmutableList).to.be.true;
+            expect(immutableList).to.not.equal(list);
+            expect(immutableList.size()).to.eq(3);
+            expect(list.length).to.eq(3);
+            expect(immutableList.length).to.eq(3);
+        });
+        it("should return a new immutable list", () => {
+            const immutable2 = list.toImmutableList();
+            expect(list).to.not.equal(immutable2);
+            expect(list.toArray()).to.deep.equal(immutable2.toArray());
+        });
+    });
+
+    describe("#toImmutableSet()", () => {
+        const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
+        it("should convert it to an immutable set", () => {
+            const set = list.toImmutableSet();
+            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const set2 = set.toImmutableSet().add(999);
+            expect(set).to.not.equal(set2);
+            expect(set.size()).to.eq(10);
+            expect(set2.size()).to.eq(11);
+            expect(set2.last()).to.eq(999);
+        });
+    });
+
+    describe("#toImmutableSortedDictionary()", () => {
+        const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        it("should create a sorted dictionary from the list", () => {
+            const dict = people.toImmutableSortedDictionary(p => p.name, p => p);
+            expect(dict.size()).to.eq(people.size());
+            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
+            const dict2 = dict.add(Person.Kaori.name, Person.Kaori);
+            expect(dict2.size()).to.eq(people.size() + 1);
+            expect(dict2.get(Person.Kaori.name)).to.eq(Person.Kaori);
+            expect(dict.size()).to.eq(people.size());
+            expect(dict.get(Person.Kaori.name)).to.be.null;
+            expect(dict2.length).to.eq(people.size() + 1);
+            expect(dict.length).to.eq(people.size());
+            expect(dict2.keys().toArray()).to.deep.equal(["Alice", "Kaori", "Lenka", "Senna", "Vanessa", "Viola"]);
+        })
+    });
+
+    describe("#toImmutableSortedSet()", () => {
+        const list = new List([5, 2, 3, 4, 4, 3, 9, 7, 7, 6, 8, 1, 10]);
+        it("should convert it to an immutable sorted set", () => {
+            const set = list.toImmutableSortedSet();
+            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const set2 = set.toImmutableSortedSet().add(999);
+            expect(set).to.not.equal(set2);
+            expect(set.size()).to.eq(10);
+            expect(set2.size()).to.eq(11);
+            expect(set.last()).to.eq(10);
+            expect(set2.last()).to.eq(999);
         });
     });
 

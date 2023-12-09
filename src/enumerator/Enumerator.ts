@@ -20,7 +20,7 @@ import {
     Group,
     IEnumerable,
     IGroup,
-    ILookup,
+    ILookup, ImmutableDictionary, ImmutableList, ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
     IndexableList,
     IOrderedEnumerable,
     LinkedList,
@@ -356,7 +356,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.scanGenerator(accumulator, seed));
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return new Enumerator<TResult>(() => this.selectGenerator(selector));
     }
 
@@ -507,6 +507,30 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return new EnumerableSet<TElement>(this);
+    }
+
+    public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
+        const dictionary = this.toDictionary(keySelector, valueSelector, valueComparator);
+        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
+        return ImmutableDictionary.create(pairs);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
+        return ImmutableList.create(this, comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<TElement> {
+        return ImmutableSet.create(this);
+    }
+
+    public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
+        const dictionary = this.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
+        return ImmutableSortedDictionary.create(pairs);
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
+        return ImmutableSortedSet.create(this, comparator);
     }
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
@@ -712,9 +736,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* selectGenerator<TResult>(selector: Selector<TElement, TResult>): Iterable<TResult> {
+    private* selectGenerator<TResult>(selector: IndexedSelector<TElement, TResult>): Iterable<TResult> {
+        let index = 0;
         for (const d of this) {
-            yield selector(d);
+            yield selector(d, index++);
         }
     }
 
@@ -752,13 +777,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         for (const item of this) {
             if (skipEnded) {
                 yield item;
+            } else if (predicate(item, index)) {
+                index++;
             } else {
-                if (predicate(item, index)) {
-                    index++;
-                } else {
-                    skipEnded = true;
-                    yield item;
-                }
+                skipEnded = true;
+                yield item;
             }
         }
     }

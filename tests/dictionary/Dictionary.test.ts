@@ -12,7 +12,15 @@ import {Student} from "../models/Student";
 import {SchoolStudents} from "../models/SchoolStudents";
 import {List} from "../../src/list/List";
 import {Enumerable} from "../../src/enumerator/Enumerable";
-import {EnumerableSet, IndexableList, LinkedList} from "../../imports";
+import {
+    EnumerableSet,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet, ImmutableSortedDictionary,
+    ImmutableSortedSet,
+    IndexableList,
+    LinkedList
+} from "../../imports";
 
 describe("Dictionary", () => {
     describe("#add()", () => {
@@ -1466,6 +1474,112 @@ describe("Dictionary", () => {
             expect(set instanceof EnumerableSet).to.be.true;
             expect(set.size()).to.eq(dictionary.size());
             expect(set.toArray().map(p => p.value)).to.deep.eq(["b", "a"]);
+        });
+    });
+
+    describe("#toImmutableDictionary()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const dict = dictionary.toImmutableDictionary(p => p.key, p => p.value);
+        it("should create a new immutable dictionary", () => {
+            expect(dict instanceof ImmutableDictionary).to.be.true;
+            expect(dict.size()).to.eq(dictionary.size());
+            expect(dict.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
+        });
+        it("should be immutable", () => {
+            const dict2 = dict.add(3, "c");
+            expect(dict.size()).to.eq(dictionary.size());
+            expect(dict2.size()).to.eq(dictionary.size() + 1);
+            expect(dict2.toArray().map(p => p.value)).to.deep.eq(["a", "b", "c"]);
+            expect(dict2 instanceof ImmutableDictionary).to.be.true;
+            expect(dict2.length).to.eq(dictionary.length + 1);
+            expect(dict2).to.not.eq(dict);
+        });
+    });
+
+    describe("#toImmutableList()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const list = dictionary.toImmutableList();
+        it("should create a new immutable KeyValuePair list", () => {
+            expect(list.size()).to.eq(dictionary.size());
+            expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
+            expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
+            expect(list instanceof ImmutableList).to.be.true;
+            expect(list.length).to.eq(dictionary.length);
+        });
+        it("should be immutable", () => {
+            const list2 = list.add(new KeyValuePair<number, string>(3, "c"));
+            expect(list2.size()).to.eq(dictionary.size() + 1);
+            expect(list2.get(2).equals(new KeyValuePair<number, string>(3, "c"))).to.eq(true);
+            expect(list2 instanceof ImmutableList).to.be.true;
+            expect(list2.length).to.eq(dictionary.length + 1);
+            expect(list2).to.not.eq(list);
+        });
+    });
+
+    describe("#toImmutableSet()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const set = dictionary.toImmutableSet();
+        it("should create a new immutable set", () => {
+            expect(set instanceof ImmutableSet).to.be.true;
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
+        });
+        it("should be immutable", () => {
+            const set2 = set.add(new KeyValuePair<number, string>(3, "c"));
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set2.size()).to.eq(dictionary.size() + 1);
+            expect(set2.toArray().map(p => p.value)).to.deep.eq(["a", "b", "c"]);
+            expect(set2 instanceof ImmutableSet).to.be.true;
+            expect(set2.length).to.eq(dictionary.length + 1);
+            expect(set2).to.not.eq(set);
+        });
+    });
+
+    describe("#toImmutableSortedDictionary()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(2, "b");
+        dictionary.add(1, "a");
+        const dict = dictionary.toImmutableSortedDictionary(p => p.key, p => p.value);
+        it("should create a new immutable sorted dictionary", () => {
+            expect(dict instanceof ImmutableSortedDictionary).to.be.true;
+            expect(dict.size()).to.eq(dictionary.size());
+            expect(dict.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
+        });
+        it("should be immutable", () => {
+            const dict2 = dict.add(3, "c");
+            expect(dict.size()).to.eq(dictionary.size());
+            expect(dict2.size()).to.eq(dictionary.size() + 1);
+            expect(dict2.toArray().map(p => p.value)).to.deep.eq(["a", "b", "c"]);
+            expect(dict2 instanceof ImmutableSortedDictionary).to.be.true;
+            expect(dict2.length).to.eq(dictionary.length + 1);
+            expect(dict2).to.not.eq(dict);
+        });
+    });
+
+    describe("#toImmutableSortedSet()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const set = dictionary.toImmutableSortedSet((a, b) => a.value.localeCompare(b.value));
+        it("should create a new immutable sorted set", () => {
+            expect(set instanceof ImmutableSortedSet).to.be.true;
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
+        });
+        it("should be immutable", () => {
+            const set2 = set.add(new KeyValuePair<number, string>(3, "c"));
+            expect(set.size()).to.eq(dictionary.size());
+            expect(set2.size()).to.eq(dictionary.size() + 1);
+            expect(set2.toArray().map(p => p.value)).to.deep.eq(["a", "b", "c"]);
+            expect(set2 instanceof ImmutableSortedSet).to.be.true;
+            expect(set2.length).to.eq(dictionary.length + 1);
+            expect(set2).to.not.eq(set);
         });
     });
 

@@ -18,7 +18,15 @@ import {
     List,
     Dictionary,
     IndexableList,
-    IGroup, EnumerableSet, SortedSet, LinkedList
+    IGroup,
+    EnumerableSet,
+    SortedSet,
+    LinkedList,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedSet,
+    ImmutableDictionary,
+    ImmutableSortedDictionary
 } from "../../imports";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
@@ -30,14 +38,32 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         this.enumerator = new Enumerator<TElement>(() => iterable);
     }
 
+    /**
+     * Creates an empty sequence.
+     *
+     * @template TElement The type of elements in the sequence.
+     * @returns {IEnumerable<TElement>} An empty sequence.
+     */
     public static empty<TSource>(): IEnumerable<TSource> {
         return new Enumerable<TSource>([]);
     }
 
+    /**
+     * Creates an enumerable sequence from the given source.
+     * @template TElement The type of elements in the sequence.
+     * @param source The source iterable that will be converted to an enumerable sequence.
+     * @returns {IEnumerable<TElement>} An enumerable sequence that contains the elements of the source.
+     */
     public static from<TSource>(source: Iterable<TSource>): IEnumerable<TSource> {
         return new Enumerable(source);
     }
 
+    /**
+     * Creates a range of numbers starting from the specified start value and containing the specified count of elements.
+     * @param {number} start The start value of the range.
+     * @param {number} count The number of elements in the range.
+     * @returns {IEnumerable<number>} An enumerable range of numbers.
+     */
     public static range(start: number, count: number): IEnumerable<number> {
         return new Enumerator(function* () {
             for (let ix = 0; ix < count; ++ix) {
@@ -46,6 +72,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         });
     }
 
+    /**
+     * Repeats the specified element a specified number of times.
+     *
+     * @template TElement The type of the element to repeat.
+     * @param {TElement} element The element to repeat.
+     * @param {number} count The number of times to repeat the element.
+     * @returns {IEnumerable<TElement>} An Iterable representing the repeated elements.
+     */
     public static repeat<TSource>(element: TSource, count: number): IEnumerable<TSource> {
         return new Enumerator(function* () {
             for (let ix = 0; ix < count; ++ix) {
@@ -194,7 +228,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.scan(accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return this.enumerator.select(selector);
     }
 
@@ -252,6 +286,26 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return this.enumerator.toEnumerableSet();
+    }
+
+    public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
+        return this.enumerator.toImmutableDictionary(keySelector, valueSelector, valueComparator);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
+        return this.enumerator.toImmutableList(comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<TElement> {
+        return this.enumerator.toImmutableSet();
+    }
+
+    public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
+        return this.enumerator.toImmutableSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
+        return this.enumerator.toImmutableSortedSet(comparator);
     }
 
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {

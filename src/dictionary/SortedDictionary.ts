@@ -7,7 +7,7 @@ import {AbstractDictionary} from "./AbstractDictionary";
 import {KeyValuePair} from "./KeyValuePair";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
-    private readonly keyComparator: OrderComparator<TKey>;
+    private readonly keyComparer: OrderComparator<TKey>;
     private readonly keyValueTree: RedBlackTree<KeyValuePair<TKey, TValue>>;
 
     public constructor(
@@ -19,7 +19,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
             (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key) === 0
                 && (valueComparator ?? Comparators.equalityComparator)(p1.value, p2.value)
         )
-        this.keyComparator = keyComparator ?? Comparators.orderComparator;
+        this.keyComparer = keyComparator ?? Comparators.orderComparator;
         const treeKeyComparator = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key);
         this.keyValueTree = new RedBlackTree<KeyValuePair<TKey, TValue>>([], treeKeyComparator);
         for (const pair of iterable) {
@@ -47,7 +47,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
 
 
     public containsKey(key: TKey): boolean {
-        return !!this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
+        return !!this.keyValueTree.findBy(key, p => p.key, this.keyComparer);
     }
 
     public containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean {
@@ -67,21 +67,21 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     };
 
     public get(key: TKey): TValue | null {
-        return this.keyValueTree.findBy(key, p => p.key, this.keyComparator)?.value ?? null;
+        return this.keyValueTree.findBy(key, p => p.key, this.keyComparer)?.value ?? null;
     }
 
     public keys(): ISet<TKey> {
-        return new SortedSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparator);
+        return new SortedSet<TKey>(this.keyValueTree.toArray().map(p => p.key), this.keyComparer);
     }
 
     public remove(key: TKey): TValue | null {
-        const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparator)?.value ?? null;
+        const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparer)?.value ?? null;
         this.updateLength();
         return result;
     }
 
     public set(key: TKey, value: TValue): void {
-        const pair = this.keyValueTree.findBy(key, p => p.key, this.keyComparator);
+        const pair = this.keyValueTree.findBy(key, p => p.key, this.keyComparer);
         if (!pair) {
             throw new Error(ErrorMessages.KeyNotFound);
         }
@@ -94,5 +94,9 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
 
     public values(): ICollection<TValue> {
         return this.keyValueTree.select(p => p.value).toList(this.valueComparer);
+    }
+
+    public get keyComparator(): OrderComparator<TKey> {
+        return this.keyComparer;
     }
 }

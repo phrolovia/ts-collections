@@ -1,3 +1,11 @@
+import {
+    from,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet
+} from "../../imports";
 import {InferredType} from "../shared/InferredType";
 import {ObjectType} from "../shared/ObjectType";
 import {IEnumerable} from "./IEnumerable";
@@ -174,7 +182,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.scan(this, accumulator, seed);
     }
 
-    public select<TResult>(selector: Selector<TElement, TResult>): IEnumerable<TResult> {
+    public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
         return EnumerableStatic.select(this, selector);
     }
 
@@ -235,6 +243,26 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.toEnumerableSet(this);
     }
 
+    public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
+        return EnumerableStatic.toImmutableDictionary(this, keySelector, valueSelector, valueComparator);
+    }
+
+    public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
+        return EnumerableStatic.toImmutableList(this, comparator);
+    }
+
+    public toImmutableSet(): ImmutableSet<TElement> {
+        return EnumerableStatic.toImmutableSet(this);
+    }
+
+    public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
+        return EnumerableStatic.toImmutableSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
+    }
+
+    public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
+        return EnumerableStatic.toImmutableSortedSet(this, comparator);
+    }
+
     public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
         comparator ??= this.comparer;
         return EnumerableStatic.toIndexableList(this, comparator);
@@ -273,6 +301,22 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, enumerable, zipper);
+    }
+
+    protected getIterableSize(iterable: Iterable<TElement>): number {
+        if (iterable instanceof Array) {
+            return iterable.length;
+        }
+        if (iterable instanceof Set) {
+            return iterable.size;
+        }
+        if (iterable instanceof Map) {
+            return iterable.size;
+        }
+        if (iterable instanceof AbstractEnumerable) {
+            return iterable.count();
+        }
+        return from(iterable).count();
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;

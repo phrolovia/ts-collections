@@ -1,4 +1,4 @@
-import {AbstractList} from "../../imports";
+import {AbstractList, IList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
@@ -67,6 +67,20 @@ export class IndexableList<TElement> extends AbstractList<TElement> {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
         return this[index];
+    }
+
+    public override getRange(index: number, count: number): IndexableList<TElement> {
+        if (index < 0 || index >= this.size()) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        if (count < 0 || index + count > this.size()) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        const list = new IndexableList<TElement>([], this.comparer);
+        for (let ex = 0; ex < count; ++ex) {
+            list.add(this[index + ex]);
+        }
+        return list;
     }
 
     public remove(element: TElement): boolean {

@@ -1,5 +1,5 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {AbstractList} from "../../imports";
+import {AbstractList, IList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
@@ -42,6 +42,16 @@ export class List<TElement> extends AbstractList<TElement> {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
         return this.data[index];
+    }
+
+    public override getRange(index: number, count: number): List<TElement> {
+        if (index < 0 || index >= this.size()) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        if (count < 0 || index + count > this.size()) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        }
+        return new List(this.data.slice(index, index + count), this.comparer);
     }
 
     public remove(element: TElement): boolean {
