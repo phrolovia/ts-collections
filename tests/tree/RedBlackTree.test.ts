@@ -1,10 +1,10 @@
-import {describe} from "mocha";
 import {expect} from "chai";
-import {Person} from "../models/Person";
-import {RedBlackTree} from "../../src/tree/RedBlackTree";
-import {ICollection} from "../../src/core/ICollection";
+import {describe, it} from "mocha";
 import {Enumerable, LinkedList} from "../../imports";
+import {ICollection} from "../../src/core/ICollection";
+import {RedBlackTree} from "../../src/tree/RedBlackTree";
 import {Pair} from "../models/Pair";
+import {Person} from "../models/Person";
 
 describe("RedBlackTree", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
@@ -36,7 +36,7 @@ describe("RedBlackTree", () => {
         const numbers: number[] = [];
         while (i > 0) {
             const int = Math.random() * Math.pow(10, 8) << 0;
-            if(!intsmap[int]){
+            if (!intsmap[int]) {
                 intsmap[int] = true;
                 numbers.push(int);
                 --i;
@@ -86,7 +86,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#clear()", () => {
-        const tree = new RedBlackTree(["a", "b", "c", "z"] );
+        const tree = new RedBlackTree(["a", "b", "c", "z"]);
         it("should remove all data from the tree", () => {
             tree.clear();
             expect(tree.size()).to.eq(0);
@@ -95,6 +95,29 @@ describe("RedBlackTree", () => {
             expect(tree.size()).to.eq(1);
             expect(tree.length).to.eq(1);
         });
+    });
+
+    describe("#contains()", () => {
+        it("should return true if element exists in the tree (and false if not)", () => {
+            const tree = new RedBlackTree([1, 2, 3, 4, 5]);
+            expect(tree.contains(1)).to.be.true;
+            expect(tree.contains(3)).to.be.true;
+            expect(tree.contains(5)).to.be.true;
+            tree.delete(5);
+            expect(tree.contains(5)).to.be.false;
+        });
+        it("should return false", () => {
+            const tree = new RedBlackTree([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+            const item = {
+                "text": "Yakisoba",
+                "value": 22,
+                "group": "Food",
+                "active": true
+            };
+            const tree2 = new RedBlackTree([item]);
+            expect(tree.contains(item as any)).to.be.false;
+            expect(tree2.contains(2 as any)).to.be.false;
+        })
     });
 
     describe("#delete()", () => {
@@ -352,7 +375,7 @@ describe("RedBlackTree", () => {
             expect(sortedArray).to.deep.equal(treeArray);
         });
         it("should return in-order array #3", () => {
-            const tree = new RedBlackTree([Person.Priscilla, Person.Hanna, Person.Kaori, Person.Bella, Person.Megan], personNameComparator );
+            const tree = new RedBlackTree([Person.Priscilla, Person.Hanna, Person.Kaori, Person.Bella, Person.Megan], personNameComparator);
             const array = tree.toArray();
             expect(array).to.deep.equal([Person.Bella, Person.Hanna, Person.Kaori, Person.Megan, Person.Priscilla]);
         });

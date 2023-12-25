@@ -67,6 +67,16 @@ describe("ImmutableSortedDictionary", () => {
             expect(dictionary.containsKey("key2")).to.be.true;
             expect(dictionary.containsKey("key3")).to.be.false;
         });
+        it("should return false", () => {
+            const dict = ImmutableSortedDictionary.create<any, any>();
+            const key1 = {a: 1};
+            const newDict = dict.add(key1, 1);
+            expect(newDict.containsKey(key1)).to.eq(true);
+            expect(newDict.contains(1 as any)).to.eq(false);
+            const dict2 = ImmutableSortedDictionary.create<any, any>();
+            const newDict2 = dict2.add(1, 1);
+            expect(newDict2.contains(key1 as any)).to.eq(false);
+        });
     });
     describe("#containsValue()", () => {
         it("should return true if the value exists in the dictionary", () => {

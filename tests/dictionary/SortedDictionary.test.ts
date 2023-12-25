@@ -191,6 +191,16 @@ describe("SortedDictionary", () => {
         it("should not contain 'Olga'", () => {
             expect(dictionary.contains(new KeyValuePair<string, Person>(Person.Olga.name, Person.Olga), personComparator)).to.eq(false);
         });
+        it("should return false", () => {
+            const dict = new SortedDictionary<any, any>();
+            const key1 = {a: 1};
+            dict.add(key1, 1);
+            expect(dict.containsKey(key1)).to.eq(true);
+            expect(dict.contains(1 as any)).to.eq(false);
+            const dict2 = new SortedDictionary<any, any>();
+            dict2.add(1, 1);
+            expect(dict2.contains(key1 as any)).to.eq(false);
+        });
     });
 
     describe("#containsKey()", () => {

@@ -2,7 +2,7 @@ import {describe, it} from "mocha";
 import {expect} from "chai";
 import {SortedSet} from "../../src/set/SortedSet";
 import {Person} from "../models/Person";
-import {LinkedList} from "../../imports";
+import {ImmutableSortedSet, LinkedList} from "../../imports";
 import {SimpleObject} from "../models/SimpleObject";
 
 describe("SortedSet", () => {
@@ -40,6 +40,18 @@ describe("SortedSet", () => {
             sortedSet.add(object1);
             expect(sortedSet.contains(object1)).to.be.true;
             expect(sortedSet.contains(object2)).to.be.false;
+        });
+        it("should return false", () => {
+            const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
+            const item = {
+                "text": "Yakisoba",
+                "value": 22,
+                "group": "Food",
+                "active": true
+            };
+            const set2 = new SortedSet([item]);
+            expect(set.contains(item as any)).to.be.false;
+            expect(set2.contains(25 as any)).to.be.false;
         });
     });
 

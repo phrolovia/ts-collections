@@ -44,6 +44,18 @@ describe("ImmutableSortedSet", () => {
             expect(set.contains(5)).to.be.false;
             expect(set.contains(6)).to.be.false;
         });
+        it("should return false", () => {
+            const set = ImmutableSortedSet.create([25]);
+            const item = {
+                "text": "Yakisoba",
+                "value": 22,
+                "group": "Food",
+                "active": true
+            };
+            const set2 = ImmutableSortedSet.create([item]);
+            expect(set.contains(item as any)).to.be.false;
+            expect(set2.contains(25 as any)).to.be.false;
+        });
     });
     describe("#count()", () => {
         it("should return the number of elements in the set", () => {

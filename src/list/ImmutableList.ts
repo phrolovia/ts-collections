@@ -1,7 +1,6 @@
 import {
     AbstractImmutableCollection,
     contains,
-    IImmutableCollection,
     IReadonlyList,
     List,
     ReadonlyList
