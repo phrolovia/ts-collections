@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {describe} from "mocha";
-import {empty, from} from "../../imports";
+import {empty, from, range} from "../../imports";
 import {ImmutableSet} from "../../src/set/ImmutableSet";
 
 describe("ImmutableSet", () => {
@@ -33,6 +33,8 @@ describe("ImmutableSet", () => {
         });
     });
     describe("#contains()", () => {
+        const setData = from(range(0, 10000000)).select(i => ({id: 1, name: i.toString()} )).toArray();
+        const set = ImmutableSet.create(setData);
         it("should return true if the set contains the given element", () => {
             const set = ImmutableSet.create([1, 2, 3]);
             expect(set.contains(1)).to.be.true;
@@ -44,6 +46,13 @@ describe("ImmutableSet", () => {
             expect(set.contains(4)).to.be.false;
             expect(set.contains(5)).to.be.false;
             expect(set.contains(6)).to.be.false;
+        });
+        it("should return true for all elements in the given collection", () => {
+            // should be fast
+            expect(set.contains(setData[142857])).to.be.true;
+            expect(set.contains(setData[666666])).to.be.true;
+            expect(set.contains(setData[0])).to.be.true;
+            expect(set.contains(setData[9999999])).to.be.true;
         });
     });
     describe("#count()", () => {

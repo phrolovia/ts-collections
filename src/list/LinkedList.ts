@@ -76,6 +76,11 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         this.ListSize = 0;
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        comparator ??= this.comparer;
+        return this.indexOf(element, comparator) >= 0;
+    }
+
     public get(index: number): TElement {
         this.checkElementIndex(index);
         return this.node(index).item;

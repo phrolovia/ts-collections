@@ -1,22 +1,15 @@
-import {
-    AbstractEnumerable,
-    EnumerableSet,
-    contains,
-    IEnumerable,
-    AbstractImmutableCollection,
-    IImmutableCollection
-} from "../../imports";
+import {AbstractImmutableCollection, contains, EnumerableSet} from "../../imports";
 import {Predicate} from "../shared/Predicate";
-import {Selector} from "../shared/Selector";
 
 export class ImmutableSet<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #set: EnumerableSet<TElement>;
+
     private constructor(iterable?: Iterable<TElement>) {
         super();
         this.#set = new EnumerableSet(iterable);
     }
 
-    *[Symbol.iterator](): Iterator<TElement> {
+    * [Symbol.iterator](): Iterator<TElement> {
         yield* this.#set;
     }
 

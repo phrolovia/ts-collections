@@ -37,6 +37,11 @@ export class List<TElement> extends AbstractList<TElement> {
         this.updateLength();
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        comparator ??= this.comparer;
+        return this.data.some(item => comparator ? comparator(element, item) : element === item);
+    }
+
     public get(index: number): TElement {
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);

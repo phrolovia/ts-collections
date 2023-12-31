@@ -1,15 +1,15 @@
-import {describe, it} from "mocha";
 import {expect} from "chai";
+import {describe, it} from "mocha";
+import {Enumerable, ImmutableList, ReadonlyCollection} from "../../imports";
 import {List} from "../../src/list/List";
-import {Person} from "../models/Person";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
-import {School} from "../models/School";
-import {Student} from "../models/Student";
-import {SchoolStudents} from "../models/SchoolStudents";
-import {Pair} from "../models/Pair";
-import {Enumerable, ImmutableList, LinkedList, ReadonlyCollection} from "../../imports";
+import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Helper} from "../helpers/Helper";
+import {Pair} from "../models/Pair";
+import {Person} from "../models/Person";
+import {School} from "../models/School";
+import {SchoolStudents} from "../models/SchoolStudents";
+import {Student} from "../models/Student";
 
 describe("List", () => {
 
@@ -607,7 +607,7 @@ describe("List", () => {
             expect(list1.indexOf(Person.Noemi)).to.eq(1);
         });
         it("should use the given comparator", () => {
-            const ageComparator = (p1: Person|null, p2: Person|null) => p1?.age === p2?.age;
+            const ageComparator = (p1: Person | null, p2: Person | null) => p1?.age === p2?.age;
             const index = list1.indexOf(Person.Noemi2, ageComparator);
             expect(index).to.eq(3);
         });
@@ -762,7 +762,7 @@ describe("List", () => {
             expect(list1.lastIndexOf(Person.Noemi)).to.eq(1);
         });
         it("should use the given comparator", () => {
-            const nameComparator = (p1: Person|null, p2: Person|null) => p1?.name === p2?.name;
+            const nameComparator = (p1: Person | null, p2: Person | null) => p1?.name === p2?.name;
             const index = list1.lastIndexOf(Person.Noemi, nameComparator);
             expect(index).to.eq(3);
         });
@@ -837,8 +837,14 @@ describe("List", () => {
         const object = new Object(100);
         const bigInt = BigInt(100);
         const bigint2 = BigInt(Number.MAX_SAFE_INTEGER);
-        const generator = function* () { yield 1; yield 2; yield 3; };
-        const func = () => { return 1; };
+        const generator = function* () {
+            yield 1;
+            yield 2;
+            yield 3;
+        };
+        const func = () => {
+            return 1;
+        };
         const list = new List([
             1, 2, 3,
             "4", "5", "6",

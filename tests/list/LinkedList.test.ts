@@ -1,13 +1,13 @@
-import {describe, it} from "mocha";
 import {expect} from "chai";
+import {describe, it} from "mocha";
 import {Enumerable, IndexableList, LinkedList} from "../../imports";
-import {Person} from "../models/Person";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
-import {School} from "../models/School";
-import {Student} from "../models/Student";
-import {SchoolStudents} from "../models/SchoolStudents";
+import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Pair} from "../models/Pair";
+import {Person} from "../models/Person";
+import {School} from "../models/School";
+import {SchoolStudents} from "../models/SchoolStudents";
+import {Student} from "../models/Student";
 
 describe("LinkedList", () => {
 
@@ -560,7 +560,7 @@ describe("LinkedList", () => {
             expect(elist.length).to.eq(2);
         });
         it("should only have 'Mel', 'Lenka' and 'Jane'", () => {
-            const list1 = new LinkedList([Person.Alice,Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
+            const list1 = new LinkedList([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
             const list2 = new LinkedList([Person.Mel, Person.Lenka, Person.Jane]);
             const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
             expect(elist.toArray()).to.deep.equal([Person.Mel, Person.Lenka, Person.Jane]);

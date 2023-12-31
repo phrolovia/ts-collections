@@ -42,6 +42,10 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
         return new ImmutableList([], this.comparer);
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.#data.contains(element, comparator);
+    }
+
     public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         return this.#data.containsAll(collection);
     }

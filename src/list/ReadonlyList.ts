@@ -14,6 +14,14 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
         yield* this.list;
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.list.contains(element, comparator);
+    }
+
+    public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
+        return this.list.containsAll(collection);
+    }
+
     public* entries(): IterableIterator<[number, TElement]> {
         yield* this.list.entries();
     }
