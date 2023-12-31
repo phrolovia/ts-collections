@@ -34,7 +34,28 @@
         "dist",
         "readme.md"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hoshixlily/ts-collections"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "release": {
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/npm",
+            "@semantic-release/git",
+            "@semantic-release/github"
+        ],
+        "branches": [
+            "main"
+        ]
+    },
     "devDependencies": {
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/git": "^10.0.1",
         "@types/chai": "^4.3.11",
         "@types/chai-as-promised": "^7.1.8",
         "@types/mocha": "^10.0.6",
@@ -46,6 +67,7 @@
         "nyc": "^15.1.0",
         "rimraf": "^5.0.5",
         "rxjs": "~7.8.1",
+        "semantic-release": "^22.0.12",
         "source-map-support": "^0.5.21",
         "ts-loader": "^9.5.1",
         "ts-node": "^10.9.2",
