@@ -370,6 +370,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const otherIterator = enumerable[Symbol.iterator]();
         let first = iterator.next();
         let second = otherIterator.next();
+        if (first.done && second.done) {
+            return true;
+        }
         while (!first.done && !second.done) {
             if (!comparator(first.value, second.value)) {
                 return false;
