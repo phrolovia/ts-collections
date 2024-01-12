@@ -880,6 +880,26 @@ describe("Enumerable Standalone Functions", () => {
             expect(resultWithComparator).to.be.true;
             expect(resultWithoutComparator).to.be.false;
         });
+        it("should return true if the sequences are empty", () => {
+            const first: number[] = [];
+            const second: number[] = [];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.true;
+        });
+        it("should return true if the sequences are empty #2", () => {
+            const first = ImmutableSet.create<number>([1]);
+            const second: number[] = [1];
+            const result = sequenceEqual(first, second);
+            expect(result).to.be.true;
+        });
+        it("should return false if one of the sequences is empty", () => {
+            const first: number[] = [];
+            const second: number[] = [1];
+            const result1 = sequenceEqual(first, second);
+            const result2 = sequenceEqual(second, first);
+            expect(result1).to.be.false;
+            expect(result2).to.be.false;
+        });
     });
 
     describe("#single()", () => {
