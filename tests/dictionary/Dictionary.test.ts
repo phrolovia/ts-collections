@@ -988,6 +988,25 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#shuffle()", () => {
+        it("should shuffle the dictionary", () => {
+            const dictionary = new Dictionary<number, string>();
+            dictionary.add(1, "a");
+            dictionary.add(2, "b");
+            dictionary.add(3, "c");
+            dictionary.add(4, "d");
+            dictionary.add(5, "e");
+            dictionary.add(6, "f");
+            dictionary.add(7, "g");
+            dictionary.add(8, "h");
+            dictionary.add(9, "i");
+            dictionary.add(10, "j");
+            const shuffled = dictionary.shuffle();
+            expect(shuffled.count()).to.eq(10);
+            expect(shuffled.sequenceEqual(dictionary)).to.eq(false);
+        });
+    });
+
     describe("#single", () => {
         it("should throw error if dictionary is empty", () => {
             const dict = new Dictionary();

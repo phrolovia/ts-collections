@@ -14,6 +14,7 @@ import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Lookup} from "../lookup/Lookup";
 import {Zipper} from "../shared/Zipper";
 import {
+    Collections,
     Dictionary,
     Enumerable,
     EnumerableSet,
@@ -386,6 +387,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return false;
     }
 
+    public shuffle(): IEnumerable<TElement> {
+        return new Enumerator(() => this.shuffleGenerator());
+    }
+
     public single(predicate?: Predicate<TElement>): TElement {
         let single: TElement | null = null;
         let index: number = 0;
@@ -752,6 +757,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             yield* selector(item, index);
             ++index;
         }
+    }
+
+    private* shuffleGenerator(): Iterable<TElement> {
+        const array = Array.from(this);
+        Collections.shuffle(array);
+        yield* array;
     }
 
     private* skipGenerator(count: number): Iterable<TElement> {

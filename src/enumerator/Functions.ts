@@ -606,6 +606,16 @@ export const sequenceEqual = <TElement>(
 }
 
 /**
+ * Returns a new enumerable sequence whose elements are shuffled.
+ * @param source The source sequence.
+ */
+export const shuffle = <TElement>(
+    source: Iterable<TElement>
+): IEnumerable<TElement> => {
+    return from(source).shuffle();
+}
+
+/**
  * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.

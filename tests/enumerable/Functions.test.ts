@@ -27,7 +27,8 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
-    ImmutableSortedDictionary, ImmutableSortedSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
     IndexableList,
     intersect,
     join,
@@ -50,6 +51,7 @@ import {
     select,
     selectMany,
     sequenceEqual,
+    shuffle,
     single,
     singleOrDefault,
     skip,
@@ -899,6 +901,14 @@ describe("Enumerable Standalone Functions", () => {
             const result2 = sequenceEqual(second, first);
             expect(result1).to.be.false;
             expect(result2).to.be.false;
+        });
+    });
+
+    describe("#shuffle()", () => {
+        it("should shuffle the sequence", () => {
+            const sequence = range(1, 40);
+            const shuffled = shuffle(sequence).toArray();
+            expect(shuffled).to.not.deep.equal(sequence.toArray());
         });
     });
 

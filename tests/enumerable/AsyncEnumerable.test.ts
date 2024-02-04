@@ -942,6 +942,19 @@ describe("AsyncEnumerable", () => {
             const result = await enumerable.sequenceEqual(new AsyncEnumerable(arrayProducer([1])));
             expect(result).to.be.false;
         });
+        it("should return true if both enumerables are empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([]));
+            const result = await enumerable.sequenceEqual(new AsyncEnumerable(arrayProducer([])));
+            expect(result).to.be.true;
+        });
+    });
+
+    describe("shuffle()", () => {
+        it("should shuffle the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.shuffle().toArray();
+            expect(result).to.not.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
     });
 
     describe("#single()", () => {

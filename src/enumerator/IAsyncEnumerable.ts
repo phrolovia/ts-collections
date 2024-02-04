@@ -313,6 +313,11 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
     /**
+     * Returns a new enumerable sequence whose elements are shuffled.
+     */
+    shuffle(): IAsyncEnumerable<TElement>;
+
+    /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
      * @throws {Error} If the source is empty or if predicate is specified and no element satisfies the condition.

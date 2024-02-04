@@ -240,6 +240,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.enumerator.sequenceEqual(enumerable, comparator);
     }
 
+    public shuffle(): IEnumerable<TElement> {
+        return this.enumerator.shuffle();
+    }
+
     public single(predicate?: Predicate<TElement>): TElement {
         return this.enumerator.single(predicate);
     }

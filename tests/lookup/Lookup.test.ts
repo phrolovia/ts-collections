@@ -464,6 +464,16 @@ describe("Lookup", () => {
         });
     });
 
+    describe("#shuffle()", () => {
+        it("should shuffle the lookup", () => {
+            type TestRecord = { name: string, age: number };
+            const list = new LinkedList<TestRecord>([{ name: 'A', age: 20 }, { name: 'B', age: 30 }, { name: 'C', age: 40 } ]);
+            const lookup = list.toLookup(p => p.name, p => p.age);
+            const result = lookup.shuffle().select(p => p.key).toArray();
+            expect(result).to.not.deep.equal(lookup.select(p => p.key).toArray());
+        });
+    });
+
     describe("#single()", () => {
         it("should return the only element of the lookup", () => {
             const list = new LinkedList([Person.Hanna]);

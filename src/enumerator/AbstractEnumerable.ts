@@ -195,6 +195,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
     }
 
+    public shuffle(): IEnumerable<TElement> {
+        return EnumerableStatic.shuffle(this);
+    }
+
     public single(predicate?: Predicate<TElement>): TElement {
         return EnumerableStatic.single(this, predicate);
     }

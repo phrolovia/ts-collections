@@ -7,6 +7,7 @@ import {Selector} from "../shared/Selector";
 import {Accumulator} from "../shared/Accumulator";
 import {Predicate} from "../shared/Predicate";
 import {
+    Collections,
     Enumerable,
     EnumerableSet,
     Group,
@@ -346,19 +347,26 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         const iterator = this[Symbol.asyncIterator]();
         const otherIterator = enumerable[Symbol.asyncIterator]();
-        let first = iterator.next();
-        let second = otherIterator.next();
-        while (!(await first).done && !(await second).done) {
-            if (!comparator((await first).value, (await second).value)) {
+        let first = await iterator.next();
+        let second = await otherIterator.next();
+        if (first.done && second.done) {
+            return true;
+        }
+        while (!first.done && !second.done) {
+            if (!comparator(first.value, second.value)) {
                 return false;
             }
-            first = iterator.next();
-            second = otherIterator.next();
-            if((await first).done && (await second).done) {
+            first = await iterator.next();
+            second = await otherIterator.next();
+            if(first.done && second.done) {
                 return true;
             }
         }
         return false;
+    }
+
+    public shuffle(): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.shuffleGenerator());
     }
 
     public async single(predicate?: Predicate<TElement>): Promise<TElement> {
@@ -636,6 +644,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         for await (const element of this) {
             yield* selector(element, index++);
         }
+    }
+
+    private async* shuffleGenerator(): AsyncIterable<TElement> {
+        const array = await this.toArray();
+        Collections.shuffle(array);
+        yield* array;
     }
 
     private async* skipGenerator(count: number): AsyncIterable<TElement> {

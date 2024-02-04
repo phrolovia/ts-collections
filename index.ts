@@ -93,6 +93,7 @@ export {
     sequenceEqual,
     single,
     singleOrDefault,
+    shuffle,
     skip,
     skipLast,
     skipWhile,
