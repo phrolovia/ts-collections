@@ -199,6 +199,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.sequenceEqual(enumerable, comparator);
     }
 
+    public shuffle(): IAsyncEnumerable<TElement> {
+        return this.enumerator.shuffle();
+    }
+
     public single(predicate?: Predicate<TElement>): Promise<TElement> {
         return this.enumerator.single(predicate);
     }

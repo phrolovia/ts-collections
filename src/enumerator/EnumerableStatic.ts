@@ -184,6 +184,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).sequenceEqual(enumerable, comparator);
     }
 
+    public static shuffle<TElement>(source: IEnumerable<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).shuffle();
+    }
+
     public static single<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
         return new Enumerable(source).single(predicate);
     }

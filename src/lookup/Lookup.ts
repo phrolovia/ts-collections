@@ -236,6 +236,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.sequenceEqual(enumerable, comparator);
     }
 
+    public shuffle(): IEnumerable<IGroup<TKey, TElement>> {
+        return this.lookupTree.shuffle();
+    }
+
     public single(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> {
         return this.lookupTree.single(predicate);
     }

@@ -1214,6 +1214,15 @@ describe("List", () => {
         })
     });
 
+    describe("#shuffle()", () => {
+        it("should shuffle the list", () => {
+            const list = new List(Enumerable.range(1, 12));
+            const shuffled = list.shuffle();
+            expect(shuffled.count()).to.eq(12);
+            expect(shuffled.toArray()).to.not.deep.eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        });
+    });
+
     describe("#single()", () => {
         it("should throw error if list is empty.", () => {
             const list = new List<number>();

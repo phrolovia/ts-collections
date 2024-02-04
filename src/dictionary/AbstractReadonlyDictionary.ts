@@ -201,6 +201,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
     }
 
+    public shuffle(): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.shuffle(this);
+    }
+
     public single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.single(this, predicate);
     }
