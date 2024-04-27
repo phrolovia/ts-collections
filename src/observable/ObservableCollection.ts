@@ -1,5 +1,5 @@
 import {CollectionChangedAction, ICollectionChangedEventArgs} from "./ICollectionChangedEventArgs";
-import {AbstractEnumerable, IList, List, ReadonlyList} from "../../imports";
+import {AbstractEnumerable, IList, List, ReadonlyList} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 
 export class ObservableCollection<TElement> extends AbstractEnumerable<TElement> {

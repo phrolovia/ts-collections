@@ -1,5 +1,5 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {AbstractReadonlyCollection, IList, IReadonlyList} from "../../imports";
+import {AbstractReadonlyCollection, IList, IReadonlyList} from "../imports.ts";
 
 export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement> implements IReadonlyList<TElement> {
     private readonly list: IList<TElement>;

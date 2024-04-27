@@ -1,4 +1,4 @@
-import {AbstractCollection, LinkedList} from "../../imports";
+import {AbstractCollection, LinkedList} from "../imports.ts";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 

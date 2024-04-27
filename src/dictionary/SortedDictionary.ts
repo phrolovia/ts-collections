@@ -1,6 +1,6 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
-import {ICollection, ISet, RedBlackTree, SortedSet} from "../../imports";
+import {ICollection, ISet, RedBlackTree, SortedSet} from "../imports.ts";
 import {Comparators} from "../shared/Comparators";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {AbstractDictionary} from "./AbstractDictionary";

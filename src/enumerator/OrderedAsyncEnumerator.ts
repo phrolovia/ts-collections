@@ -1,7 +1,7 @@
 import {OrderComparator} from "../shared/OrderComparator";
 import {Selector} from "../shared/Selector";
 import {Comparators} from "../shared/Comparators";
-import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../../imports";
+import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../imports.ts";
 
 export class OrderedAsyncEnumerator<TElement> extends AsyncEnumerator<TElement> implements IOrderedAsyncEnumerable<TElement> {
     public constructor(public readonly orderedValueGroups: () => AsyncIterable<AsyncIterable<TElement>>) {

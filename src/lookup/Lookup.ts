@@ -28,7 +28,7 @@ import {
     ImmutableSet,
     ImmutableSortedSet,
     ImmutableDictionary, ImmutableSortedDictionary
-} from "../../imports";
+} from "../imports.ts";
 import {Comparators} from "../shared/Comparators";
 import {IndexedAction} from "../shared/IndexedAction";
 import {Writable} from "../shared/Writable";

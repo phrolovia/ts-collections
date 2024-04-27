@@ -10,7 +10,7 @@ import {
     LinkedList,
     List,
     SortedSet
-} from "../../imports";
+} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Accumulator} from "../shared/Accumulator";
 import {InferredType} from "../shared/InferredType";

@@ -1,4 +1,4 @@
-import {AbstractList, IList} from "../../imports";
+import {AbstractList, IList} from "../imports.ts";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";

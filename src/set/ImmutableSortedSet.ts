@@ -1,4 +1,4 @@
-import {AbstractImmutableCollection, contains, SortedSet} from "../../imports";
+import {AbstractImmutableCollection, contains, SortedSet} from "../imports.ts";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Predicate} from "../shared/Predicate";

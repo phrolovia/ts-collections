@@ -1,4 +1,4 @@
-import {IEnumerable, IRandomAccessCollection} from "../../imports";
+import {IEnumerable, IRandomAccessCollection} from "../imports.ts";
 
 export interface ISet<TElement> extends IRandomAccessCollection<TElement> {
     exceptWith(other: Iterable<TElement>): void;

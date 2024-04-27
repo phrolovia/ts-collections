@@ -4,7 +4,7 @@ import {
     IReadonlyList,
     List,
     ReadonlyList
-} from "../../imports";
+} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {OrderComparator} from "../shared/OrderComparator";

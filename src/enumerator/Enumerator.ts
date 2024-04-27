@@ -29,7 +29,7 @@ import {
     OrderedEnumerator,
     SortedDictionary,
     SortedSet
-} from "../../imports";
+} from "../imports.ts";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 import {KeyValuePair} from "../dictionary/KeyValuePair";
 

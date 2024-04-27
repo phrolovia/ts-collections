@@ -2,7 +2,7 @@ import {AbstractReadonlyDictionary} from "./AbstractReadonlyDictionary";
 import {IDictionary} from "./IDictionary";
 import {KeyValuePair} from "./KeyValuePair";
 import {EqualityComparator} from "../shared/EqualityComparator";
-import {ISet, ICollection} from "../../imports";
+import {ISet, ICollection} from "../imports.ts";
 
 export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary<TKey, TValue> {
     private readonly dictionary: IDictionary<TKey, TValue>;

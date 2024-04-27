@@ -1,11 +1,11 @@
-import {expect} from "chai";
-import {describe, it} from "mocha";
+
+import {describe, test, expect} from "vitest";
 import {ImmutableDictionary} from "../../src/dictionary/ImmutableDictionary";
 import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
 
 describe("ImmutableDictionary", () => {
     describe("#add()", () => {
-        it("should add values to the dictionary with a string key", () => {
+        test("should add values to the dictionary with a string key", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -23,7 +23,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#clear()", () => {
-        it("should clear the dictionary", () => {
+        test("should clear the dictionary", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -38,7 +38,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#containsKey()", () => {
-        it("should return true if the key exists in the dictionary", () => {
+        test("should return true if the key exists in the dictionary", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -51,7 +51,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#containsValue()", () => {
-        it("should return true if the value exists in the dictionary", () => {
+        test("should return true if the value exists in the dictionary", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -64,7 +64,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#entries()", () => {
-        it("should return an IterableIterator of [key, value] pairs", () => {
+        test("should return an IterableIterator of [key, value] pairs", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -78,7 +78,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#get()", () => {
-        it("should return the value associated with the key", () => {
+        test("should return the value associated with the key", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -91,7 +91,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#keys()", () => {
-        it("should return a set of keys", () => {
+        test("should return a set of keys", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),
@@ -106,7 +106,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#put()", () => {
-        it("should add a value to the dictionary", () => {
+        test("should add a value to the dictionary", () => {
             const dictionary = ImmutableDictionary.create();
             const newDictionary = dictionary.put("key1", "value1");
             expect(dictionary.size()).to.equal(0);
@@ -114,7 +114,7 @@ describe("ImmutableDictionary", () => {
             expect(newDictionary.size()).to.equal(1);
             expect(newDictionary.get("key1")).to.equal("value1");
         });
-        it("should update the value of the key if the key already exists", () => {
+        test("should update the value of the key if the key already exists", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1")
@@ -128,7 +128,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#remove()", () => {
-        it("should remove the key and its associated value from the dictionary", () => {
+        test("should remove the key and its associated value from the dictionary", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1")
@@ -142,7 +142,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#set()", () => {
-        it("should set the value of the key", () => {
+        test("should set the value of the key", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1")
@@ -156,7 +156,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#size()", () => {
-        it("should return the number of elements in the dictionary", () => {
+        test("should return the number of elements in the dictionary", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1")
@@ -166,7 +166,7 @@ describe("ImmutableDictionary", () => {
         });
     });
     describe("#values()", () => {
-        it("should return a collection of values", () => {
+        test("should return a collection of values", () => {
             const dictionary = ImmutableDictionary.create(
                 [
                     new KeyValuePair("key1", "value1"),

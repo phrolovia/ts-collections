@@ -5,7 +5,7 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet
-} from "../../imports";
+} from "../imports.ts";
 import {InferredType} from "../shared/InferredType";
 import {ObjectType} from "../shared/ObjectType";
 import {IEnumerable} from "./IEnumerable";

@@ -1,4 +1,4 @@
-import {AbstractReadonlyCollection} from "../../imports";
+import {AbstractReadonlyCollection} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {IImmutableCollection} from "./IImmutableCollection";
 

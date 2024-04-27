@@ -1,4 +1,4 @@
-import {ICollection, ISet, SortedDictionary} from "../../imports";
+import {ICollection, ISet, SortedDictionary} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {AbstractImmutableDictionary} from "./AbstractImmutableDictionary";

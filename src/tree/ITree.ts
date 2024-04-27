@@ -1,5 +1,5 @@
 import {Predicate} from "../shared/Predicate";
-import {IRandomAccessCollection} from "../../imports";
+import {IRandomAccessCollection} from "../imports.ts";
 
 export type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 
