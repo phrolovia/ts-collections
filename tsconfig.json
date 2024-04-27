@@ -1,22 +1,29 @@
 {
     "compilerOptions": {
+        "allowImportingTsExtensions": true,
         "esModuleInterop": true,
-        "target": "ESNext",
+        "target": "ES2020",
         "lib": [
-            "ES2022"
+            "ES2020"
         ],
         "downlevelIteration": true,
         "declaration": true,
+        "module": "ESNext",
+        "isolatedModules": true,
+        "moduleResolution": "Bundler",
+        "noEmit": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "preserveConstEnums": true,
         "removeComments": false,
+        "resolveJsonModule": true,
         "sourceMap": true,
         "strict": true,
         "strictFunctionTypes": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "useDefineForClassFields": true
     },
     "exclude": [
         "node_modules",
