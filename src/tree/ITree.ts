@@ -1,5 +1,5 @@
-import {Predicate} from "../shared/Predicate";
-import {IRandomAccessCollection} from "../imports.ts";
+import { IRandomAccessCollection } from "../imports.ts";
+import { Predicate } from "../shared/Predicate";
 
 export type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
 
@@ -23,6 +23,7 @@ export interface ITree<TElement> extends IRandomAccessCollection<TElement> {
      * In-order traversing is used.
      * @param action The action that will be called for each item.
      */
+
     // forEach(action: Action<T>): void;
 
     /**

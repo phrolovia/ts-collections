@@ -1,37 +1,38 @@
-import {IEnumerable} from "../enumerator/IEnumerable";
-import {Enumerable} from "../enumerator/Enumerable";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {ILookup} from "./ILookup";
-import {Accumulator} from "../shared/Accumulator";
-import {JoinSelector} from "../shared/JoinSelector";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Zipper} from "../shared/Zipper";
-import {Selector} from "../shared/Selector";
-import {Predicate} from "../shared/Predicate";
+import { Enumerable } from "../enumerator/Enumerable";
+import { IEnumerable } from "../enumerator/IEnumerable";
 import {
-    SortedDictionary,
-    IOrderedEnumerable,
-    List,
-    RedBlackTree,
     Dictionary,
-    IGroup,
-    Group,
     EnumerableSet,
-    SortedSet,
-    LinkedList,
+    Group,
+    IGroup,
+    ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
+    ImmutableSortedDictionary,
     ImmutableSortedSet,
-    ImmutableDictionary, ImmutableSortedDictionary
+    IOrderedEnumerable,
+    LinkedList,
+    List,
+    RedBlackTree,
+    SortedDictionary,
+    SortedSet
 } from "../imports.ts";
-import {Comparators} from "../shared/Comparators";
-import {IndexedAction} from "../shared/IndexedAction";
-import {Writable} from "../shared/Writable";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
+import { Accumulator } from "../shared/Accumulator";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Writable } from "../shared/Writable";
+import { Zipper } from "../shared/Zipper";
+import { ILookup } from "./ILookup";
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;

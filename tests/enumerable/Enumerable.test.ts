@@ -1,6 +1,4 @@
-
-
-import {Enumerable} from "../../src/imports";
+import { Enumerable } from "../../src/imports";
 
 describe("Enumerable", () => {
     describe("#empty()", () => {

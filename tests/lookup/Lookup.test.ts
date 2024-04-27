@@ -1,23 +1,25 @@
-import {Person} from "../models/Person";
-
-import {List} from "../../src/list/List";
-
-import {LinkedList} from "../../src/list/LinkedList";
-import {RedBlackTree} from "../../src/tree/RedBlackTree";
-import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
-import {Enumerable} from "../../src/enumerator/Enumerable";
-import {Queue} from "../../src/queue/Queue";
-import {Group} from "../../src/enumerator/Group";
-import {IGroup} from "../../src/enumerator/IGroup";
+import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
+import { Enumerable } from "../../src/enumerator/Enumerable";
+import { Group } from "../../src/enumerator/Group";
+import { IGroup } from "../../src/enumerator/IGroup";
 import {
     EnumerableSet,
     IEnumerable,
     ImmutableDictionary,
     ImmutableList,
-    ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
     SortedSet
 } from "../../src/imports";
-import {Lookup} from "../../src/lookup/Lookup";
+
+import { LinkedList } from "../../src/list/LinkedList";
+
+import { List } from "../../src/list/List";
+import { Lookup } from "../../src/lookup/Lookup";
+import { Queue } from "../../src/queue/Queue";
+import { RedBlackTree } from "../../src/tree/RedBlackTree";
+import { Person } from "../models/Person";
 
 describe("Lookup", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
@@ -127,7 +129,8 @@ describe("Lookup", () => {
 
     describe("#create()", () => {
         test("should throw error if source is null", () => {
-            expect(() => Lookup.create(null as any, p => p, p => p)).to.throw(Error);expect(() => Lookup.create(null as any, p => p, p => p)).to.throw(Error);
+            expect(() => Lookup.create(null as any, p => p, p => p)).to.throw(Error);
+            expect(() => Lookup.create(null as any, p => p, p => p)).to.throw(Error);
         });
         test("should throw error if keySelector is null", () => {
             expect(() => Lookup.create(Enumerable.from([Person.Alice]), null as any, p => p)).to.throw(Error);
@@ -466,7 +469,7 @@ describe("Lookup", () => {
     describe("#shuffle()", () => {
         test("should shuffle the lookup", () => {
             type TestRecord = { name: string, age: number };
-            const list = Enumerable.range(1, 100).select<TestRecord>(i => ({ name: i.toString(), age: i })).toList();
+            const list = Enumerable.range(1, 100).select<TestRecord>(i => ({name: i.toString(), age: i})).toList();
             const lookup = list.toLookup(p => p.name, p => p.age);
             const result = lookup.shuffle().select(p => p.key).toArray();
             expect(result).to.not.deep.equal(lookup.select(p => p.key).toArray());
@@ -776,7 +779,10 @@ describe("Lookup", () => {
         test("should return a zipped lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
-            const result = lookup.zip(Enumerable.from([1, 2, 3]), (a, b) => ({ key: a.key, value: b })) as IEnumerable<{ key: string, value: number }>;
+            const result = lookup.zip(Enumerable.from([1, 2, 3]), (a, b) => ({key: a.key, value: b})) as IEnumerable<{
+                key: string,
+                value: number
+            }>;
             expect(result.count()).to.eq(3);
             expect(result.first().key).to.eq("Hanna");
             expect(result.first().value).to.eq(1);

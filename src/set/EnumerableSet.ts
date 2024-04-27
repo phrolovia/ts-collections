@@ -1,5 +1,5 @@
-import {AbstractSet} from "../imports.ts";
-import {Predicate} from "../shared/Predicate";
+import { AbstractSet } from "../imports.ts";
+import { Predicate } from "../shared/Predicate";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {
     private readonly set: Set<TElement>;
@@ -10,7 +10,7 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
         this.updateLength();
     }
 
-    *[Symbol.iterator](): Iterator<TElement> {
+    * [Symbol.iterator](): Iterator<TElement> {
         yield* this.set;
     }
 

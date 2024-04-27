@@ -1,8 +1,6 @@
-
-
-import {ReadonlyList} from "../../src/list/ReadonlyList";
-import {List} from "../../src/list/List";
-import {Enumerable} from "../../src/enumerator/Enumerable";
+import { Enumerable } from "../../src/imports";
+import { List } from "../../src/list/List";
+import { ReadonlyList } from "../../src/list/ReadonlyList";
 
 describe("ReadonlyList", () => {
     describe("#entries()", () => {

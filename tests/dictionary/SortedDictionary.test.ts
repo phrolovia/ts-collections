@@ -1,15 +1,13 @@
-
-
-import {Person} from "../models/Person";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {EqualityComparator} from "../../src/shared/EqualityComparator";
-import {School} from "../models/School";
-import {Student} from "../models/Student";
-import {SchoolStudents} from "../models/SchoolStudents";
-import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
-import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
-import {Enumerable, List} from "../../src/imports";
-import {Helper} from "../helpers/Helper";
+import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
+import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
+import { Enumerable, List } from "../../src/imports";
+import { EqualityComparator } from "../../src/shared/EqualityComparator";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { Helper } from "../helpers/Helper";
+import { Person } from "../models/Person";
+import { School } from "../models/School";
+import { SchoolStudents } from "../models/SchoolStudents";
+import { Student } from "../models/Student";
 
 describe("SortedDictionary", () => {
 
@@ -427,7 +425,7 @@ describe("SortedDictionary", () => {
             for (const num of numbers) {
                 expect(dict.get(num)).to.eq(num.toString());
             }
-        }, { timeout: 15000 });
+        }, {timeout: 15000});
         test("should return null if key is not in the dictionary", () => {
             expect(dictionary.get(Person.Jane)).to.be.null;
         });
@@ -443,7 +441,7 @@ describe("SortedDictionary", () => {
         dict.add(Person.Kaori.name, Person.Kaori);
         dict.add(Person.Reina.name, Person.Reina);
         test("should group people by age", () => {
-            const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g );
+            const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g);
             const ages: number[] = [];
             const groupedAges: Record<number, number[]> = {};
             for (const ageGroup of group.values()) {

@@ -1,8 +1,8 @@
-import {AbstractList} from "../imports.ts";
-import {Comparators} from "../shared/Comparators";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {OrderComparator} from "../shared/OrderComparator";
+import { AbstractList } from "../imports.ts";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
 
 class Node<TElement> {
     public item: TElement;

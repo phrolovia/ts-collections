@@ -1,7 +1,7 @@
-import {Dictionary, ICollection, ISet} from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {AbstractImmutableDictionary} from "./AbstractImmutableDictionary";
-import {KeyValuePair} from "./KeyValuePair";
+import { Dictionary, ICollection, ISet } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
+import { KeyValuePair } from "./KeyValuePair";
 
 export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: Dictionary<TKey, TValue>;

@@ -1,5 +1,5 @@
-import {Predicate} from "../shared/Predicate";
-import {IReadonlyCollection} from "./IReadonlyCollection";
+import { Predicate } from "../shared/Predicate";
+import { IReadonlyCollection } from "./IReadonlyCollection";
 
 export interface IImmutableCollection<TElement> extends IReadonlyCollection<TElement> {
     /**

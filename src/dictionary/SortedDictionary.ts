@@ -1,10 +1,10 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {ICollection, ISet, RedBlackTree, SortedSet} from "../imports.ts";
-import {Comparators} from "../shared/Comparators";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {AbstractDictionary} from "./AbstractDictionary";
-import {KeyValuePair} from "./KeyValuePair";
+import { ICollection, ISet, RedBlackTree, SortedSet } from "../imports.ts";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
+import { AbstractDictionary } from "./AbstractDictionary";
+import { KeyValuePair } from "./KeyValuePair";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     private readonly keyComparer: OrderComparator<TKey>;

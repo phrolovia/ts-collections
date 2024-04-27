@@ -1,34 +1,34 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {Selector} from "../shared/Selector";
-import {Accumulator} from "../shared/Accumulator";
-import {Predicate} from "../shared/Predicate";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
-import {JoinSelector} from "../shared/JoinSelector";
-import {OrderComparator} from "../shared/OrderComparator";
 import {
-    SortedDictionary,
-    IEnumerable,
-    ILookup,
-    IOrderedEnumerable,
-    Enumerator,
-    List,
     Dictionary,
-    IGroup,
     EnumerableSet,
-    SortedSet,
-    LinkedList,
+    Enumerator,
+    IEnumerable,
+    IGroup,
+    ILookup,
+    ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
+    ImmutableSortedDictionary,
     ImmutableSortedSet,
-    ImmutableDictionary,
-    ImmutableSortedDictionary
+    IOrderedEnumerable,
+    LinkedList,
+    List,
+    SortedDictionary,
+    SortedSet
 } from "../imports.ts";
-import {IndexedAction} from "../shared/IndexedAction";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     private readonly enumerator: Enumerator<TElement>;

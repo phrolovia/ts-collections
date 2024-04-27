@@ -1,7 +1,5 @@
-
-
-import {ImmutableList} from "../../src/list/ImmutableList";
-import {Comparators} from "../../src/shared/Comparators";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { Comparators } from "../../src/shared/Comparators";
 
 describe("ImmutableList", () => {
     describe("#add()", () => {

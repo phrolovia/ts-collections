@@ -1,9 +1,9 @@
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {AbstractList} from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Comparators} from "../shared/Comparators";
-import {Selector} from "../shared/Selector";
+import { AbstractList } from "../imports.ts";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Selector } from "../shared/Selector";
 
 export class List<TElement> extends AbstractList<TElement> {
     protected readonly data: TElement[] = [];

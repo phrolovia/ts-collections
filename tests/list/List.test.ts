@@ -1,13 +1,13 @@
-import {Enumerable, ImmutableList, ReadonlyCollection} from "../../src/imports";
-import {List} from "../../src/list/List";
-import {EqualityComparator} from "../../src/shared/EqualityComparator";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {Helper} from "../helpers/Helper";
-import {Pair} from "../models/Pair";
-import {Person} from "../models/Person";
-import {School} from "../models/School";
-import {SchoolStudents} from "../models/SchoolStudents";
-import {Student} from "../models/Student";
+import { Enumerable, ImmutableList, ReadonlyCollection } from "../../src/imports";
+import { List } from "../../src/list/List";
+import { EqualityComparator } from "../../src/shared/EqualityComparator";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { Helper } from "../helpers/Helper";
+import { Pair } from "../models/Pair";
+import { Person } from "../models/Person";
+import { School } from "../models/School";
+import { SchoolStudents } from "../models/SchoolStudents";
+import { Student } from "../models/Student";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
@@ -411,7 +411,7 @@ describe("List", () => {
             const exceptionList = list1.except(list2, (p1, p2) => p1.age === p2.age);
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
-        }, { timeout: 10000 });
+        }, {timeout: 10000});
         test("should use order comparator and return a set of people unique to first enumerable #2", () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
@@ -424,7 +424,7 @@ describe("List", () => {
             const exceptionList = list1.except(list2, null, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
-        }, { timeout: 10000 });
+        }, {timeout: 10000});
     });
 
     describe("#first()", () => {
@@ -648,7 +648,7 @@ describe("List", () => {
             const exceptionList = list1.intersect(list2, (p1, p2) => p1.age === p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
-        }, { timeout: 10000 });
+        }, {timeout: 10000});
         test("should use order comparator and return a set of people common in both enumerables", () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
@@ -663,7 +663,7 @@ describe("List", () => {
             const exceptionList = list1.intersect(list2, null, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
-        }, { timeout: 10000 });
+        }, {timeout: 10000});
     });
 
     describe("#isEmpty()", () => {
@@ -1859,7 +1859,7 @@ describe("List", () => {
             const exceptionList = list1.union(list2, (p1, p2) => p1.age === p2.age);
             const ageCount = exceptionList.select(p => p.age).distinct().count();
             expect(ageCount).to.not.greaterThan(90);
-        }, { timeout: 10000 });
+        }, {timeout: 10000});
     });
 
     describe("#where()", () => {

@@ -1,5 +1,4 @@
-
-import {Enumerable, ReadonlyDictionary, SortedDictionary} from "../../src/imports";
+import { Enumerable, ReadonlyDictionary, SortedDictionary } from "../../src/imports";
 
 
 describe("ReadonlyDictionary", () => {
@@ -47,7 +46,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("#keys()", () => {
         test("should return an IterableIterator of keys", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => 1/x));
+            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => 1 / x));
             let index = 1;
             for (const key of dictionary.keys()) {
                 expect(key).to.eq(index);
@@ -75,10 +74,10 @@ describe("ReadonlyDictionary", () => {
 
     describe("#values()", () => {
         test("should return an IterableIterator of values", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => 1/x));
+            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => 1 / x));
             let index = 1;
             for (const value of dictionary.values()) {
-                expect(value).to.eq(1/index);
+                expect(value).to.eq(1 / index);
                 index++;
             }
         });

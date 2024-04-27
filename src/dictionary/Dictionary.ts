@@ -1,9 +1,9 @@
-import {Enumerable, EnumerableSet, ICollection, ISet, List} from "../imports.ts";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
-import {AbstractDictionary} from "./AbstractDictionary";
-import {KeyValuePair} from "./KeyValuePair";
+import { Enumerable, EnumerableSet, ICollection, ISet, List } from "../imports.ts";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { AbstractDictionary } from "./AbstractDictionary";
+import { KeyValuePair } from "./KeyValuePair";
 
 export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     private readonly dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();

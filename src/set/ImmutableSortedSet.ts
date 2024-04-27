@@ -1,7 +1,7 @@
-import {AbstractImmutableCollection, contains, SortedSet} from "../imports.ts";
-import {Comparators} from "../shared/Comparators";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Predicate} from "../shared/Predicate";
+import { AbstractImmutableCollection, contains, SortedSet } from "../imports.ts";
+import { Comparators } from "../shared/Comparators";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
 
 export class ImmutableSortedSet<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;

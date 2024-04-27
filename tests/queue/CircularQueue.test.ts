@@ -1,6 +1,4 @@
-
-
-import {CircularQueue} from "../../src/imports";
+import { CircularQueue } from "../../src/imports";
 
 describe("CircularQueue", () => {
     describe("#addAll()", () => {

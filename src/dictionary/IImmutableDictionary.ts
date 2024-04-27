@@ -1,4 +1,4 @@
-import {IReadonlyDictionary} from "./IReadonlyDictionary";
+import { IReadonlyDictionary } from "./IReadonlyDictionary";
 
 export interface IImmutableDictionary<TKey, TValue> extends IReadonlyDictionary<TKey, TValue> {
     readonly length: number;

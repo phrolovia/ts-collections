@@ -1,9 +1,9 @@
-import {IReadonlyCollection} from "./IReadonlyCollection";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Selector} from "../shared/Selector";
-import {Writable} from "../shared/Writable";
-import {AbstractEnumerable} from "../enumerator/AbstractEnumerable";
-import {Predicate} from "../shared/Predicate";
+import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Writable } from "../shared/Writable";
+import { IReadonlyCollection } from "./IReadonlyCollection";
 
 export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {
     protected readonly collectionLength: number = 0;
@@ -68,5 +68,6 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
     }
 
     abstract [Symbol.iterator](): Iterator<TElement>;
+
     abstract size(): number;
 }

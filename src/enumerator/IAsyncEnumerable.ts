@@ -1,19 +1,19 @@
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {Selector} from "../shared/Selector";
-import {Accumulator} from "../shared/Accumulator";
-import {Predicate} from "../shared/Predicate";
-import {IEnumerable} from "./IEnumerable";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {IGroup} from "./IGroup";
-import {JoinSelector} from "../shared/JoinSelector";
-import {IOrderedAsyncEnumerable} from "./IOrderedAsyncEnumerable";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
+import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
 
 export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
 
@@ -88,7 +88,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
      * @param defaultValue The value to return if the sequence is empty.
      */
-    defaultIfEmpty(defaultValue?: TElement|null): IAsyncEnumerable<TElement|null>;
+    defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null>;
 
     /**
      * Returns distinct elements from the sequence.
@@ -396,5 +396,5 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param enumerable The enumerable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      */
-    zip<TSecond, TResult=[TElement,TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
+    zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
 }

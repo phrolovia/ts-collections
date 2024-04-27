@@ -1,39 +1,45 @@
+import { EnumerableStatic } from "../enumerator/EnumerableStatic";
 import {
     EnumerableSet,
     ICollection,
     IEnumerable,
     IGroup,
-    ILookup, ImmutableDictionary, ImmutableList, ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
+    ILookup,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
     IOrderedEnumerable,
     ISet,
     LinkedList,
     List,
     SortedSet
 } from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Accumulator} from "../shared/Accumulator";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {Selector} from "../shared/Selector";
-import {EnumerableStatic} from "../enumerator/EnumerableStatic";
-import {Predicate} from "../shared/Predicate";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {JoinSelector} from "../shared/JoinSelector";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Zipper} from "../shared/Zipper";
-import {Writable} from "../shared/Writable";
-import {IReadonlyDictionary} from "./IReadonlyDictionary";
-import {KeyValuePair} from "./KeyValuePair";
-import {SortedDictionary} from "./SortedDictionary";
-import {Dictionary} from "./Dictionary";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Writable } from "../shared/Writable";
+import { Zipper } from "../shared/Zipper";
+import { Dictionary } from "./Dictionary";
+import { IReadonlyDictionary } from "./IReadonlyDictionary";
+import { KeyValuePair } from "./KeyValuePair";
+import { SortedDictionary } from "./SortedDictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
     protected readonly collectionLength: number = 0;
     protected valueComparer: EqualityComparator<TValue>;
+
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {
         this.valueComparer = valueComparator;
         this.keyValueComparer = keyValueComparator;
@@ -331,11 +337,18 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     abstract [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>>;
+
     abstract containsKey(key: TKey): boolean;
+
     abstract containsValue(value: TValue, comparator?: EqualityComparator<TValue>): boolean;
+
     abstract entries(): IterableIterator<[TKey, TValue]>;
+
     abstract get(key: TKey): TValue | null;
+
     abstract keys(): ISet<TKey>;
+
     abstract size(): number;
+
     abstract values(): ICollection<TValue>;
 }

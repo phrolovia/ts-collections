@@ -1,5 +1,3 @@
-
-
 import {
     aggregate,
     all,
@@ -79,13 +77,13 @@ import {
     where,
     zip
 } from "../../src/imports";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {Helper} from "../helpers/Helper";
-import {Pair} from "../models/Pair";
-import {Person} from "../models/Person";
-import {School} from "../models/School";
-import {SchoolStudents} from "../models/SchoolStudents";
-import {Student} from "../models/Student";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { Helper } from "../helpers/Helper";
+import { Pair } from "../models/Pair";
+import { Person } from "../models/Person";
+import { School } from "../models/School";
+import { SchoolStudents } from "../models/SchoolStudents";
+import { Student } from "../models/Student";
 
 describe("Enumerable Standalone Functions", () => {
     describe("#aggregate()", () => {

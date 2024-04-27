@@ -1,11 +1,12 @@
-import {AbstractReadonlyDictionary} from "./AbstractReadonlyDictionary";
-import {IDictionary} from "./IDictionary";
-import {KeyValuePair} from "./KeyValuePair";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {ISet, ICollection} from "../imports.ts";
+import { ICollection, ISet } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
+import { IDictionary } from "./IDictionary";
+import { KeyValuePair } from "./KeyValuePair";
 
 export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary<TKey, TValue> {
     private readonly dictionary: IDictionary<TKey, TValue>;
+
     public constructor(dictionary: IDictionary<TKey, TValue>) {
         super(dictionary.valueComparator, dictionary.keyValueComparator);
         this.dictionary = dictionary;
@@ -13,7 +14,7 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
-        yield * this.dictionary;
+        yield* this.dictionary;
     }
 
     public containsKey(key: TKey): boolean {
@@ -25,7 +26,7 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
     }
 
     public* entries(): IterableIterator<[TKey, TValue]> {
-        yield * this.dictionary.entries();
+        yield* this.dictionary.entries();
     }
 
     public get(key: TKey): TValue | null {

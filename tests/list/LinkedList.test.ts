@@ -1,11 +1,11 @@
-import {Enumerable, LinkedList} from "../../src/imports";
-import {EqualityComparator} from "../../src/shared/EqualityComparator";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {Pair} from "../models/Pair";
-import {Person} from "../models/Person";
-import {School} from "../models/School";
-import {SchoolStudents} from "../models/SchoolStudents";
-import {Student} from "../models/Student";
+import { Enumerable, LinkedList } from "../../src/imports";
+import { EqualityComparator } from "../../src/shared/EqualityComparator";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { Pair } from "../models/Pair";
+import { Person } from "../models/Person";
+import { School } from "../models/School";
+import { SchoolStudents } from "../models/SchoolStudents";
+import { Student } from "../models/Student";
 
 describe("LinkedList", () => {
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;

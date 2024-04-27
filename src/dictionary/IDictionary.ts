@@ -1,4 +1,4 @@
-import {IReadonlyDictionary} from "../imports.ts";
+import { IReadonlyDictionary } from "../imports.ts";
 
 export interface IDictionary<TKey, TValue> extends IReadonlyDictionary<TKey, TValue> {
 

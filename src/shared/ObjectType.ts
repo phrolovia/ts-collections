@@ -1,4 +1,4 @@
-import {Class} from "./Class";
+import { Class } from "./Class";
 
 class PrimitiveNumber extends Number {
     static override readonly [Symbol.hasInstance] = (x: unknown) => typeof x === "number";

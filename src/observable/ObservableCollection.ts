@@ -1,6 +1,6 @@
-import {CollectionChangedAction, ICollectionChangedEventArgs} from "./ICollectionChangedEventArgs";
-import {AbstractEnumerable, IList, List, ReadonlyList} from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { AbstractEnumerable, IList, List, ReadonlyList } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { CollectionChangedAction, ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";
 
 export class ObservableCollection<TElement> extends AbstractEnumerable<TElement> {
     readonly #list: IList<TElement>;
@@ -23,7 +23,8 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         this.collectionChanged?.(this, {
             newItems: new ReadonlyList(new List([element])),
             oldItems: new ReadonlyList(new List()),
-            action: CollectionChangedAction.Add});
+            action: CollectionChangedAction.Add
+        });
         return true;
     }
 
@@ -65,7 +66,8 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         this.collectionChanged?.(this, {
             newItems: new ReadonlyList(new List([element])),
             oldItems: new ReadonlyList(new List()),
-            action: CollectionChangedAction.Add});
+            action: CollectionChangedAction.Add
+        });
     }
 
     public isEmpty(): boolean {
@@ -87,7 +89,8 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
             this.collectionChanged?.(this, {
                 oldItems: new ReadonlyList(new List([element])),
                 newItems: new ReadonlyList(new List()),
-                action: CollectionChangedAction.Remove});
+                action: CollectionChangedAction.Remove
+            });
             return true;
         }
         return false;
@@ -98,7 +101,8 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         this.collectionChanged?.(this, {
             oldItems: new ReadonlyList(new List([element])),
             newItems: new ReadonlyList(new List()),
-            action: CollectionChangedAction.Remove});
+            action: CollectionChangedAction.Remove
+        });
         return element;
     }
 
