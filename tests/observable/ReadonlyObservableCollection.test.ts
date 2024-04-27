@@ -1,5 +1,5 @@
-import {describe} from "mocha";
-import {expect} from "chai";
+import {describe, test, expect} from "vitest";
+
 import {Person} from "../models/Person";
 import {ReadonlyObservableCollection} from "../../src/observable/ReadonlyObservableCollection";
 import {ObservableCollection} from "../../src/observable/ObservableCollection";
@@ -7,19 +7,19 @@ import {IndexableList} from "../../src/list/IndexableList";
 
 describe("ReadonlyObservableCollection", () => {
     describe("#contains()", () => {
-        it("should return true if the collection contains the element", () => {
+        test("should return true if the collection contains the element", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.contains(Person.Alice)).to.be.true;
         });
-        it("should return false if the collection does not contain the element", () => {
+        test("should return false if the collection does not contain the element", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.contains(Person.Hanyuu)).to.be.false;
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
@@ -29,20 +29,20 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("#containsAll()", () => {
-        it("should return true if the collection contains all elements", () => {
+        test("should return true if the collection contains all elements", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             collection.add(Person.Hanyuu);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.containsAll([Person.Alice, Person.Hanyuu])).to.be.true;
         });
-        it("should return false if the collection does not contain all elements", () => {
+        test("should return false if the collection does not contain all elements", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.containsAll([Person.Alice, Person.Hanyuu])).to.be.false;
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             collection.add(Person.Hanyuu);
@@ -54,19 +54,19 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("#get()", () => {
-        it("should return the element at the specified index", () => {
+        test("should return the element at the specified index", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.get(0)).to.equal(Person.Alice);
         });
-        it("should throw an error if the index is out of bounds", () => {
+        test("should throw an error if the index is out of bounds", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(() => readonlyCollection.get(1)).to.throw();
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
@@ -76,18 +76,18 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("#isEmpty()", () => {
-        it("should return true if the collection is empty", () => {
+        test("should return true if the collection is empty", () => {
             const collection = new ObservableCollection<Person>();
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.isEmpty()).to.be.true;
         });
-        it("should return false if the collection is not empty", () => {
+        test("should return false if the collection is not empty", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.isEmpty()).to.be.false;
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const collection = new ObservableCollection<Person>();
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.isEmpty()).to.be.true;
@@ -96,7 +96,7 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("#size()", () => {
-        it("should return the number of elements in the collection", () => {
+        test("should return the number of elements in the collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             collection.add(Person.Hanyuu);
@@ -105,7 +105,7 @@ describe("ReadonlyObservableCollection", () => {
             expect(readonlyCollection.length).to.equal(2);
             expect(readonlyCollection.count()).to.equal(2);
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
@@ -119,7 +119,7 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("#get comparator()", () => {
-        it("should return the comparator", () => {
+        test("should return the comparator", () => {
             const comparator = (a: Person, b: Person) => a.age === b.age;
             const collection = new ObservableCollection<Person>(new IndexableList(), comparator);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
@@ -127,7 +127,7 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("#get length", () => {
-        it("should return the number of elements in the collection", () => {
+        test("should return the number of elements in the collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             collection.add(Person.Mirei);
@@ -136,7 +136,7 @@ describe("ReadonlyObservableCollection", () => {
             expect(readonlyCollection.size()).to.equal(2);
             expect(readonlyCollection.count()).to.equal(2);
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
@@ -150,7 +150,7 @@ describe("ReadonlyObservableCollection", () => {
         });
     });
     describe("collectionChanged event", () => {
-        it("should be emitted when the collection is changed", () => {
+        test("should be emitted when the collection is changed", () => {
             const collection = new ObservableCollection<Person>();
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             let eventCount = 0;

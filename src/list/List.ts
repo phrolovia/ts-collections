@@ -1,5 +1,5 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {AbstractList} from "../../imports";
+import {AbstractList} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";

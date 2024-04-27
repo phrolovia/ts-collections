@@ -1,7 +1,7 @@
 import {Person} from "../models/Person";
-import {describe, it} from "mocha";
+import {describe, test, expect} from "vitest";
 import {List} from "../../src/list/List";
-import {expect} from "chai";
+
 import {LinkedList} from "../../src/list/LinkedList";
 import {RedBlackTree} from "../../src/tree/RedBlackTree";
 import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
@@ -17,7 +17,7 @@ import {
     ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
     IndexableList,
     SortedSet
-} from "../../imports";
+} from "../../src/imports";
 import {Lookup} from "../../src/lookup/Lookup";
 
 describe("Lookup", () => {
@@ -27,7 +27,7 @@ describe("Lookup", () => {
     const peopleArray = [Person.Hanna, Person.Hanna2, Person.Noemi, Person.Noemi2, Person.Suzuha, Person.Suzuha2, Person.Suzuha3];
 
     describe("#aggregate()", () => {
-        it("should return 4", () => {
+        test("should return 4", () => {
             const list = new List([4, 8, 8, 3, 9, 0, 7, 8, 2]);
             const lookup = list.toLookup(n => n, n => n * 2);
             const result = lookup.aggregate((total, next) => next.key % 2 === 0 ? total + 1 : total, 0);
@@ -36,12 +36,12 @@ describe("Lookup", () => {
     });
 
     describe("#all()", () => {
-        it("should return true if all keys have data", () => {
+        test("should return true if all keys have data", () => {
             const list = new LinkedList([Person.Alice, Person.Mirei]);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.all(k => k.source.all(p => p.age > 20))).to.eq(true);
         });
-        it("should return false if any of the lookup keys does not satisfy the condition", () => {
+        test("should return false if any of the lookup keys does not satisfy the condition", () => {
             const list = new LinkedList([Person.Alice, Person.Mirei]);
             const lookup = list.toLookup(p => p.age, p => p);
             expect(lookup.all(k => k.key < 20)).to.eq(false);
@@ -49,12 +49,12 @@ describe("Lookup", () => {
     });
 
     describe("#any()", () => {
-        it("should return true if lookup has any data", () => {
+        test("should return true if lookup has any data", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.any()).to.eq(true);
         });
-        it("should return false if lookup has no data", () => {
+        test("should return false if lookup has no data", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.any()).to.eq(true);
@@ -62,7 +62,7 @@ describe("Lookup", () => {
     });
 
     describe("#append()", () => {
-        it("should append the given key and data to the lookup", () => {
+        test("should append the given key and data to the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const lookupEnumerable = lookup.append(new Group("Lucrezia", Enumerable.from([Person.Lucrezia])));
@@ -71,19 +71,19 @@ describe("Lookup", () => {
     });
 
     describe("#average()", () => {
-        it("should return the average of the lookup keys", () => {
+        test("should return the average of the lookup keys", () => {
             const list = new LinkedList([Person.Alice, Person.Mirei]);
             const lookup = list.toLookup(p => p.age, p => p);
             expect(lookup.average(p => p.key)).to.eq(22.5);
         });
     });
 
-    describe("#cast()", () => {
-        // TODO
-    });
+    // describe("#cast()", () => {
+    //     // TODO
+    // });
 
     describe("#chunk()", () => {
-        it("should return 3 chunks", () => {
+        test("should return 3 chunks", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.age, p => p);
             const chunks = lookup.chunk(2);
@@ -92,7 +92,7 @@ describe("Lookup", () => {
     });
 
     describe("#concat()", () => {
-        it("should return a new lookup with the given lookup appended", () => {
+        test("should return a new lookup with the given lookup appended", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const group: IGroup<string, Person> = new Group("Lucrezia", Enumerable.from([Person.Lucrezia]));
@@ -102,13 +102,13 @@ describe("Lookup", () => {
     });
 
     describe("#contains()", () => {
-        it("should return true if lookup contains the given key", () => {
+        test("should return true if lookup contains the given key", () => {
             const list = new LinkedList(peopleArray);
             const group: IGroup<string, Person> = new Group("Hanna", Enumerable.from([Person.Hanna, Person.Hanna2]));
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.contains(group)).to.eq(true);
         });
-        it("should return false if lookup does not contain the given key", () => {
+        test("should return false if lookup does not contain the given key", () => {
             const list = new LinkedList(peopleArray);
             const group: IGroup<string, Person> = new Group("Kaori", Enumerable.from([Person.Kaori]));
             const lookup = list.toLookup(p => p.name, p => p);
@@ -117,7 +117,7 @@ describe("Lookup", () => {
     });
 
     describe("#count()", () => {
-        it("should return the number of keys in the lookup", () => {
+        test("should return the number of keys in the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.count()).to.eq(3);
@@ -127,26 +127,26 @@ describe("Lookup", () => {
     });
 
     describe("#create()", () => {
-        it("should throw error if source is null", () => {
+        test("should throw error if source is null", () => {
             expect(() => Lookup.create(null as any, p => p, p => p)).to.throw(Error);expect(() => Lookup.create(null as any, p => p, p => p)).to.throw(Error);
         });
-        it("should throw error if keySelector is null", () => {
+        test("should throw error if keySelector is null", () => {
             expect(() => Lookup.create(Enumerable.from([Person.Alice]), null as any, p => p)).to.throw(Error);
         });
-        it("should throw error if valueSelector is null", () => {
+        test("should throw error if valueSelector is null", () => {
             expect(() => Lookup.create(Enumerable.from([Person.Alice]), p => p, null as any)).to.throw(Error);
         });
     });
 
     describe("#defaultIfEmpty()", () => {
-        it("should return the given default value if lookup is empty", () => {
+        test("should return the given default value if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.defaultIfEmpty(new Group("Noemi", Enumerable.from([Person.Noemi])));
             expect(result.count()).to.eq(1);
             expect(result.first()?.key).to.eq("Noemi");
         });
-        it("should disregard the given value if lookup is not empty", () => {
+        test("should disregard the given value if lookup is not empty", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.defaultIfEmpty(new Group("Reika", Enumerable.from([Person.Reika])));
@@ -156,7 +156,7 @@ describe("Lookup", () => {
     });
 
     describe("#distinct()", () => {
-        it("should return a lookup with only unique keys", () => {
+        test("should return a lookup with only unique keys", () => {
             const list = new LinkedList([Person.Alice, Person.Mirei, Person.Alice]);
             const lookup = list.toLookup(p => p.age, p => p);
             const result = lookup.distinct();
@@ -165,13 +165,13 @@ describe("Lookup", () => {
     });
 
     describe("#elementAt()", () => {
-        it("should return the group at the given index", () => {
+        test("should return the group at the given index", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.elementAt(1);
             expect(result.key).to.eq("Noemi");
         });
-        it("should throw an error if index is out of range", () => {
+        test("should throw an error if index is out of range", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.elementAt(5)).to.throw(Error);
@@ -179,13 +179,13 @@ describe("Lookup", () => {
     });
 
     describe("#elementAtOrDefault()", () => {
-        it("should return the group at the given index", () => {
+        test("should return the group at the given index", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.elementAtOrDefault(1) as IGroup<string, Person>;
             expect(result.key).to.eq("Noemi");
         });
-        it("should return the default value if index is out of range", () => {
+        test("should return the default value if index is out of range", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.elementAtOrDefault(5);
@@ -194,7 +194,7 @@ describe("Lookup", () => {
     });
 
     describe("#except()", () => {
-        it("should return a lookup with the given lookup removed", () => {
+        test("should return a lookup with the given lookup removed", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const group: IGroup<string, Person> = new Group("Noemi", Enumerable.from([Person.Noemi, Person.Noemi2]));
@@ -204,13 +204,13 @@ describe("Lookup", () => {
     });
 
     describe("#first()", () => {
-        it("should return the first group", () => {
+        test("should return the first group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.first();
             expect(result.key).to.eq("Hanna");
         });
-        it("should throw an error if lookup is empty", () => {
+        test("should throw an error if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.first()).to.throw(Error);
@@ -218,13 +218,13 @@ describe("Lookup", () => {
     });
 
     describe("#firstOrDefault()", () => {
-        it("should return the first group", () => {
+        test("should return the first group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.firstOrDefault() as IGroup<string, Person>;
             expect(result.key).to.eq("Hanna");
         });
-        it("should return the default value if lookup is empty", () => {
+        test("should return the default value if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.firstOrDefault();
@@ -233,7 +233,7 @@ describe("Lookup", () => {
     });
 
     describe("#forEach()", () => {
-        it("should iterate over each group", () => {
+        test("should iterate over each group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             let count = 0;
@@ -243,13 +243,13 @@ describe("Lookup", () => {
     });
 
     describe("#get()", () => {
-        it("should get the data that belongs to the given key", () => {
+        test("should get the data that belongs to the given key", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const noemiData = lookup.get("Noemi");
             expect(noemiData.toArray()).to.have.all.members([Person.Noemi, Person.Noemi2]);
         });
-        it("should return empty enumerable if key have no data", () => {
+        test("should return empty enumerable if key have no data", () => {
             const tree = new RedBlackTree(peopleArray, (p1, p2) => p1.name.localeCompare(p2.name));
             const lookup = tree.toLookup(p => p.name, p => p);
             const kaoriData = lookup.get("Kaori");
@@ -258,7 +258,7 @@ describe("Lookup", () => {
     });
 
     describe("#groupBy()", () => {
-        it("should group the data by the given key", () => {
+        test("should group the data by the given key", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.groupBy(p => p.key);
@@ -266,12 +266,12 @@ describe("Lookup", () => {
         });
     });
 
-    describe("#groupJoin()", () => {
-        // TODO
-    });
+    // describe("#groupJoin()", () => {
+    //     // TODO
+    // });
 
     describe("#hasKey()", () => {
-        it("should return true if lookup has the key", () => {
+        test("should return true if lookup has the key", () => {
             const dict = new SortedDictionary<string, Person>(
                 [],
                 (n1, n2) => n1.localeCompare(n2),
@@ -287,7 +287,7 @@ describe("Lookup", () => {
     });
 
     describe("#intersect()", () => {
-        it("should return a lookup with the intersection of the given lookup", () => {
+        test("should return a lookup with the intersection of the given lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const group: IGroup<string, Person> = new Group("Noemi", Enumerable.from([Person.Noemi, Person.Noemi2]));
@@ -297,18 +297,18 @@ describe("Lookup", () => {
         });
     });
 
-    describe("#join()", () => {
-        // TODO
-    });
+    // describe("#join()", () => {
+    //     // TODO
+    // });
 
     describe("#last()", () => {
-        it("should return the last group", () => {
+        test("should return the last group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.last();
             expect(result.key).to.eq("Suzuha");
         });
-        it("should throw an error if lookup is empty", () => {
+        test("should throw an error if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.last()).to.throw(Error);
@@ -316,13 +316,13 @@ describe("Lookup", () => {
     });
 
     describe("#lastOrDefault()", () => {
-        it("should return the last group", () => {
+        test("should return the last group", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.lastOrDefault() as IGroup<string, Person>;
             expect(result.key).to.eq("Suzuha");
         });
-        it("should return the default value if lookup is empty", () => {
+        test("should return the default value if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.lastOrDefault();
@@ -331,13 +331,13 @@ describe("Lookup", () => {
     });
 
     describe("#max()", () => {
-        it("should return the maximum value", () => {
+        test("should return the maximum value", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p.age);
             const result = lookup.max(p => p.source.max());
             expect(result).to.eq(43);
         });
-        it("should throw an error if lookup is empty", () => {
+        test("should throw an error if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p.age);
             expect(() => lookup.max()).to.throw(Error);
@@ -345,25 +345,25 @@ describe("Lookup", () => {
     });
 
     describe("#min()", () => {
-        it("should return the minimum value", () => {
+        test("should return the minimum value", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p.age);
             const result = lookup.min(p => p.source.min());
             expect(result).to.eq(19);
         });
-        it("should throw an error if lookup is empty", () => {
+        test("should throw an error if lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p.age);
             expect(() => lookup.min()).to.throw(Error);
         });
     });
 
-    describe("#ofType()", () => {
-        // TODO
-    });
+    // describe("#ofType()", () => {
+    //     // TODO
+    // });
 
     describe("#orderBy()", () => {
-        it("should order the lookup by the given key", () => {
+        test("should order the lookup by the given key", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.orderBy(p => p.key);
@@ -372,7 +372,7 @@ describe("Lookup", () => {
     });
 
     describe("#orderByDescending()", () => {
-        it("should order the lookup by the given key", () => {
+        test("should order the lookup by the given key", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.orderByDescending(p => p.key);
@@ -381,7 +381,7 @@ describe("Lookup", () => {
     });
 
     describe("#pairwise()", () => {
-        it("should return a lookup with the pairwise elements", () => {
+        test("should return a lookup with the pairwise elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.pairwise((prev, curr) => [prev, curr]);
@@ -392,7 +392,7 @@ describe("Lookup", () => {
     });
 
     describe("#partition()", () => {
-        it("should partition the lookup", () => {
+        test("should partition the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.partition(p => p.key === "Noemi");
@@ -403,7 +403,7 @@ describe("Lookup", () => {
     });
 
     describe("#prepend()", () => {
-        it("should prepend the given element", () => {
+        test("should prepend the given element", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.prepend(new Group("Lucrezia", Enumerable.from([Person.Lucrezia])));
@@ -412,7 +412,7 @@ describe("Lookup", () => {
     });
 
     describe("#reverse()", () => {
-        it("should reverse the lookup", () => {
+        test("should reverse the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.reverse();
@@ -422,7 +422,7 @@ describe("Lookup", () => {
     });
 
     describe("#scan()", () => {
-        it("should scan the lookup", () => {
+        test("should scan the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p.age);
             const result = lookup.scan((prev, curr) => prev + curr.source.sum(), 0);
@@ -434,7 +434,7 @@ describe("Lookup", () => {
     });
 
     describe("#select()", () => {
-        it("should select the lookup", () => {
+        test("should select the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.select(p => p.key);
@@ -444,7 +444,7 @@ describe("Lookup", () => {
     });
 
     describe("#selectMany()", () => {
-        it("should select the lookup", () => {
+        test("should select the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.selectMany(p => p.source);
@@ -454,7 +454,7 @@ describe("Lookup", () => {
     });
 
     describe("#sequenceEqual()", () => {
-        it("should return true if the lookup is equal to the given lookup", () => {
+        test("should return true if the lookup is equal to the given lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const lookup2 = list.toLookup(p => p.name, p => p);
@@ -465,9 +465,9 @@ describe("Lookup", () => {
     });
 
     describe("#shuffle()", () => {
-        it("should shuffle the lookup", () => {
+        test("should shuffle the lookup", () => {
             type TestRecord = { name: string, age: number };
-            const list = new LinkedList<TestRecord>([{ name: 'A', age: 20 }, { name: 'B', age: 30 }, { name: 'C', age: 40 } ]);
+            const list = Enumerable.range(1, 100).select<TestRecord>(i => ({ name: i.toString(), age: i })).toList();
             const lookup = list.toLookup(p => p.name, p => p.age);
             const result = lookup.shuffle().select(p => p.key).toArray();
             expect(result).to.not.deep.equal(lookup.select(p => p.key).toArray());
@@ -475,18 +475,18 @@ describe("Lookup", () => {
     });
 
     describe("#single()", () => {
-        it("should return the only element of the lookup", () => {
+        test("should return the only element of the lookup", () => {
             const list = new LinkedList([Person.Hanna]);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.single();
             expect(result.key).to.eq("Hanna");
         });
-        it("should throw an error if the lookup has more than one element", () => {
+        test("should throw an error if the lookup has more than one element", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.single()).to.throw(Error);
         });
-        it("should throw an error if the lookup has more than one element", () => {
+        test("should throw an error if the lookup has more than one element", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.append(new Group("Lucrezia", Enumerable.from([Person.Lucrezia]))).single()).to.throw(Error);
@@ -494,23 +494,23 @@ describe("Lookup", () => {
     });
 
     describe("#singleOrDefault()", () => {
-        it("should return the only element of the lookup", () => {
+        test("should return the only element of the lookup", () => {
             const list = new LinkedList([Person.Hanna]);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.singleOrDefault() as IGroup<string, Person>;
             expect(result.key).to.eq("Hanna");
         });
-        it("should throw an error if the lookup has more than one element", () => {
+        test("should throw an error if the lookup has more than one element", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.singleOrDefault()).to.throw(Error);
         });
-        it("should throw an error if the lookup has more than one element", () => {
+        test("should throw an error if the lookup has more than one element", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(() => lookup.append(new Group("Lucrezia", Enumerable.from([Person.Lucrezia]))).singleOrDefault()).to.throw(Error);
         });
-        it("should return the default value if the lookup is empty", () => {
+        test("should return the default value if the lookup is empty", () => {
             const list = new LinkedList<Person>();
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.singleOrDefault();
@@ -519,7 +519,7 @@ describe("Lookup", () => {
     });
 
     describe("#size()", () => {
-        it("should return the size of the lookup", () => {
+        test("should return the size of the lookup", () => {
             const queue: Queue<Person> = new Queue(peopleArray);
             const lookup = queue.toLookup(p => p.name, p => p);
             const lookup2 = Enumerable.empty<Person>().toLookup(p => p.surname, p => p.age);
@@ -531,7 +531,7 @@ describe("Lookup", () => {
     });
 
     describe("#skip()", () => {
-        it("should skip the given amount of elements", () => {
+        test("should skip the given amount of elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.skip(1);
@@ -541,7 +541,7 @@ describe("Lookup", () => {
     });
 
     describe("#skipLast()", () => {
-        it("should skip the given amount of elements", () => {
+        test("should skip the given amount of elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.skipLast(1);
@@ -551,7 +551,7 @@ describe("Lookup", () => {
     });
 
     describe("#skipWhile()", () => {
-        it("should skip the given amount of elements", () => {
+        test("should skip the given amount of elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.skipWhile(p => p.key !== "Noemi");
@@ -561,7 +561,7 @@ describe("Lookup", () => {
     });
 
     describe("#sum()", () => {
-        it("should return the sum of the lookup", () => {
+        test("should return the sum of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p.age);
             const result = lookup.sum(p => p.source.sum());
@@ -570,7 +570,7 @@ describe("Lookup", () => {
     });
 
     describe("#take()", () => {
-        it("should take the given amount of elements", () => {
+        test("should take the given amount of elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.take(1);
@@ -580,7 +580,7 @@ describe("Lookup", () => {
     });
 
     describe("#takeLast()", () => {
-        it("should take the given amount of elements", () => {
+        test("should take the given amount of elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.takeLast(1);
@@ -590,7 +590,7 @@ describe("Lookup", () => {
     });
 
     describe("#takeWhile()", () => {
-        it("should take the given amount of elements", () => {
+        test("should take the given amount of elements", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.takeWhile(p => p.key !== "Noemi");
@@ -600,7 +600,7 @@ describe("Lookup", () => {
     });
 
     describe("#thenBy()", () => {
-        it("should sort the lookup by the given key selector", () => {
+        test("should sort the lookup by the given key selector", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.orderByDescending(p => p.key).thenBy(p => p.source.first().age);
@@ -612,7 +612,7 @@ describe("Lookup", () => {
     });
 
     describe("#thenByDescending()", () => {
-        it("should sort the lookup by the given key selector", () => {
+        test("should sort the lookup by the given key selector", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.orderByDescending(p => p.key).thenByDescending(p => p.source.first().age);
@@ -623,7 +623,7 @@ describe("Lookup", () => {
     });
 
     describe("#toArray()", () => {
-        it("should return an array of the lookup", () => {
+        test("should return an array of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toArray();
@@ -635,7 +635,7 @@ describe("Lookup", () => {
     });
 
     describe("#toDictionary()", () => {
-        it("should return a dictionary of the lookup", () => {
+        test("should return a dictionary of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toDictionary(p => p.key, p => p.source.first());
@@ -647,7 +647,7 @@ describe("Lookup", () => {
     });
 
     describe("#toEnumerableSet()", () => {
-        it("should return an enumerable set of the lookup", () => {
+        test("should return an enumerable set of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toEnumerableSet();
@@ -657,7 +657,7 @@ describe("Lookup", () => {
     });
 
     describe("#toImmutableDictionary()", () => {
-        it("should return an immutable dictionary of the lookup", () => {
+        test("should return an immutable dictionary of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.toImmutableDictionary(p => p.key, p => p.source.first())).to.be.instanceOf(ImmutableDictionary);
@@ -665,7 +665,7 @@ describe("Lookup", () => {
     });
 
     describe("#toImmutableList()", () => {
-        it("should return an immutable list of the lookup", () => {
+        test("should return an immutable list of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.toImmutableList()).to.be.instanceOf(ImmutableList);
@@ -673,7 +673,7 @@ describe("Lookup", () => {
     });
 
     describe("#toImmutableSet()", () => {
-        it("should return an immutable set of the lookup", () => {
+        test("should return an immutable set of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.toImmutableSet()).to.be.instanceOf(ImmutableSet);
@@ -681,7 +681,7 @@ describe("Lookup", () => {
     });
 
     describe("#toImmutableSortedDictionary()", () => {
-        it("should return an immutable sorted dictionary of the lookup", () => {
+        test("should return an immutable sorted dictionary of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.toImmutableSortedDictionary(p => p.key, p => p.source.first())).to.be.instanceOf(ImmutableSortedDictionary);
@@ -689,7 +689,7 @@ describe("Lookup", () => {
     });
 
     describe("#toImmutableSortedSet()", () => {
-        it("should return an immutable sorted set of the lookup", () => {
+        test("should return an immutable sorted set of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.toImmutableSortedSet()).to.be.instanceOf(ImmutableSortedSet);
@@ -697,7 +697,7 @@ describe("Lookup", () => {
     });
 
     describe("#toIndexableList()", () => {
-        it("should return an indexable list of the lookup", () => {
+        test("should return an indexable list of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toIndexableList();
@@ -707,7 +707,7 @@ describe("Lookup", () => {
     });
 
     describe("#toLinkedList()", () => {
-        it("should return a linked list of the lookup", () => {
+        test("should return a linked list of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toLinkedList();
@@ -717,7 +717,7 @@ describe("Lookup", () => {
     });
 
     describe("#toList()", () => {
-        it("should return a list of the lookup", () => {
+        test("should return a list of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toList();
@@ -727,7 +727,7 @@ describe("Lookup", () => {
     });
 
     describe("#toLookup()", () => {
-        it("should return a lookup of the lookup", () => {
+        test("should return a lookup of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toLookup(p => p.key, p => p.source.first());
@@ -737,7 +737,7 @@ describe("Lookup", () => {
     });
 
     describe("#toSortedDictionary()", () => {
-        it("should return a sorted dictionary of the lookup", () => {
+        test("should return a sorted dictionary of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toSortedDictionary(p => p.key, p => p.source.first());
@@ -747,7 +747,7 @@ describe("Lookup", () => {
     });
 
     describe("#toSortedSet()", () => {
-        it("should return a sorted set of the lookup", () => {
+        test("should return a sorted set of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.toSortedSet((a, b) => a.key.localeCompare(b.key));
@@ -757,14 +757,14 @@ describe("Lookup", () => {
     });
 
     describe("#union()", () => {
-        it("should return a union of the lookup", () => {
+        test("should return a union of the lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const group: IGroup<string, Person> = new Group("TEST", Enumerable.from([Person.Alice, Person.Mirei, Person.Kaori]));
             const result = lookup.union(Enumerable.from([group]));
             expect(result.count()).to.eq(4);
         });
-        it("should return a union of the lookup and ignore duplicates", () => {
+        test("should return a union of the lookup and ignore duplicates", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const group: IGroup<string, Person> = new Group("Hanna", Enumerable.from([Person.Hanna2]));
@@ -774,7 +774,7 @@ describe("Lookup", () => {
     });
 
     describe("#where()", () => {
-        it("should return a filtered lookup", () => {
+        test("should return a filtered lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.where(p => p.key === "Hanna");
@@ -784,7 +784,7 @@ describe("Lookup", () => {
     });
 
     describe("#zip()", () => {
-        it("should return a zipped lookup", () => {
+        test("should return a zipped lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             const result = lookup.zip(Enumerable.from([1, 2, 3]), (a, b) => ({ key: a.key, value: b })) as IEnumerable<{ key: string, value: number }>;

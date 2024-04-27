@@ -1,4 +1,4 @@
-import {Enumerable, EnumerableSet, ICollection, ISet, List} from "../../imports";
+import {Enumerable, EnumerableSet, ICollection, ISet, List} from "../imports.ts";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";

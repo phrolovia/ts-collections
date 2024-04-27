@@ -1,4 +1,4 @@
-import {AbstractTree} from "../../imports";
+import {AbstractTree} from "../imports.ts";
 import {Predicate} from "../shared/Predicate";
 import {OrderComparator} from "../shared/OrderComparator";
 import {TreeNode} from "./TreeNode";

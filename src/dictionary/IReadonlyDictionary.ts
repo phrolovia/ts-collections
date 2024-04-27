@@ -1,7 +1,7 @@
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Selector} from "../shared/Selector";
 import {KeyValuePair} from "./KeyValuePair";
-import {ICollection, ISet, IEnumerable} from "../../imports";
+import {ICollection, ISet, IEnumerable} from "../imports.ts";
 
 export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
     /**

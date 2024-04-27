@@ -17,7 +17,7 @@ import {
     List,
     OrderedAsyncEnumerator,
     SortedSet
-} from "../../imports";
+} from "../imports.ts";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {Comparators} from "../shared/Comparators";
 import {OrderComparator} from "../shared/OrderComparator";
@@ -39,6 +39,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     public async aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>,
                                                                           seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult> {
         let accumulatedValue: TAccumulate | null = null;
+        let count = 0;
         if (seed == null) {
             let index = 0;
             for await (const element of this) {
@@ -48,12 +49,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     accumulatedValue = accumulator(accumulatedValue as TAccumulate, element);
                 }
                 ++index;
+                ++count;
             }
         } else {
             accumulatedValue = seed;
             for await (const element of this) {
                 accumulatedValue = accumulator(accumulatedValue, element);
+                ++count;
             }
+        }
+        if (count === 0 && accumulatedValue == null) {
+            throw new Error(ErrorMessages.NoElements);
         }
         return resultSelector?.(accumulatedValue as TAccumulate) ?? accumulatedValue as TAccumulate;
     }
@@ -158,6 +164,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 return element;
             }
             ++count;
+        }
+        if (index >= count) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
         throw new Error(ErrorMessages.NoSuchElement);
     }
@@ -370,11 +379,37 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public async single(predicate?: Predicate<TElement>): Promise<TElement> {
-        const result = await this.singleOrDefault(predicate);
-        if (result === null) {
+        let single: TElement | null = null;
+        let index = 0;
+        let count = 0;
+        if (!predicate) {
+            for await (const element of this) {
+                if (index !== 0) {
+                    throw new Error(ErrorMessages.MoreThanOneElement);
+                }
+                single = element;
+                ++index;
+                ++count;
+            }
+        } else {
+            for await (const element of this) {
+                if (predicate(element)) {
+                    if (index !== 0) {
+                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                    }
+                    single = element;
+                    ++index;
+                }
+                ++count;
+            }
+        }
+        if (count === 0) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        if (single == null) {
             throw new Error(ErrorMessages.NoMatchingElement);
         }
-        return result;
+        return single;
     }
 
     public async singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {

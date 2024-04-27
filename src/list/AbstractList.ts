@@ -1,4 +1,4 @@
-import {IList} from "../../imports";
+import {IList} from "../imports.ts";
 import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {ErrorMessages} from "../shared/ErrorMessages";

@@ -1,4 +1,4 @@
-import {AbstractCollection, IRandomAccessCollection} from "../../imports";
+import {AbstractCollection, IRandomAccessCollection} from "../imports.ts";
 import {Predicate} from "../shared/Predicate";
 
 export abstract class AbstractRandomAccessCollection<TElement> extends AbstractCollection<TElement> implements IRandomAccessCollection<TElement> {

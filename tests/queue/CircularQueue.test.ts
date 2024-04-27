@@ -1,10 +1,10 @@
-import {describe, it} from "mocha";
-import {expect} from "chai";
-import {CircularQueue} from "../../src/queue/CircularQueue";
+import {describe, test, expect} from "vitest";
+
+import {CircularQueue} from "../../src/imports";
 
 describe("CircularQueue", () => {
     describe("#addAll()", () => {
-        it("should add last n of all elements to the queue (n >= capacity)", () => {
+        test("should add last n of all elements to the queue (n >= capacity)", () => {
             const queue = new CircularQueue<number>(2);
             queue.addAll([1, 2, 3, 4, 5]);
             expect(queue.size()).to.equal(2);
@@ -12,7 +12,7 @@ describe("CircularQueue", () => {
         });
     });
     describe("#enqueue()", () => {
-        it("should add elements at the end of the queue", () => {
+        test("should add elements at the end of the queue", () => {
             const queue = new CircularQueue<number>(3);
             queue.enqueue(1);
             queue.enqueue(2);
@@ -33,7 +33,7 @@ describe("CircularQueue", () => {
         });
     });
     describe("#isFull()", () => {
-        it("should return true if the queue is full", () => {
+        test("should return true if the queue is full", () => {
             const queue = new CircularQueue<number>(3);
             expect(queue.isFull()).to.be.false;
             queue.enqueue(1);
@@ -41,7 +41,7 @@ describe("CircularQueue", () => {
             queue.enqueue(3);
             expect(queue.isFull()).to.be.true;
         });
-        it("should return false if the queue is not full", () => {
+        test("should return false if the queue is not full", () => {
             const queue = new CircularQueue<number>(3);
             expect(queue.isFull()).to.be.false;
             queue.enqueue(1);

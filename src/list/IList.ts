@@ -1,4 +1,4 @@
-import {IRandomAccessCollection, IReadonlyList} from "../../imports";
+import {IRandomAccessCollection, IReadonlyList} from "../imports.ts";
 import {OrderComparator} from "../shared/OrderComparator";
 
 export interface IList<TElement> extends IReadonlyList<TElement>, IRandomAccessCollection<TElement> {

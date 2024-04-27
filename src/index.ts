@@ -121,16 +121,16 @@ export {
     union,
     where,
     zip
-} from "./imports";
-export {KeyValuePair} from "./src/dictionary/KeyValuePair";
-export type {Accumulator} from "./src/shared/Accumulator";
-export type {EqualityComparator} from "./src/shared/EqualityComparator";
-export type {IndexedAction} from "./src/shared/IndexedAction";
-export type {IndexedPredicate} from "./src/shared/IndexedPredicate";
-export type {IndexedSelector} from "./src/shared/IndexedSelector";
-export type {JoinSelector} from "./src/shared/JoinSelector";
-export type {OrderComparator} from "./src/shared/OrderComparator";
-export type {PairwiseSelector} from "./src/shared/PairwiseSelector";
-export type {Predicate} from "./src/shared/Predicate";
-export type {Selector} from "./src/shared/Selector";
-export type {Zipper} from "./src/shared/Zipper";
+} from "./imports.ts";
+export {KeyValuePair} from "./dictionary/KeyValuePair.ts";
+export type {Accumulator} from "./shared/Accumulator.ts";
+export type {EqualityComparator} from "./shared/EqualityComparator.ts";
+export type {IndexedAction} from "./shared/IndexedAction.ts";
+export type {IndexedPredicate} from "./shared/IndexedPredicate.ts";
+export type {IndexedSelector} from "./shared/IndexedSelector.ts";
+export type {JoinSelector} from "./shared/JoinSelector.ts";
+export type {OrderComparator} from "./shared/OrderComparator.ts";
+export type {PairwiseSelector} from "./shared/PairwiseSelector.ts";
+export type {Predicate} from "./shared/Predicate.ts";
+export type {Selector} from "./shared/Selector.ts";
+export type {Zipper} from "./shared/Zipper.ts";

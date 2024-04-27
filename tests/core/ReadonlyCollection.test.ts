@@ -1,5 +1,5 @@
-import {describe} from "mocha";
-import {expect} from "chai";
+import {describe, test, expect} from "vitest";
+
 import {ReadonlyCollection} from "../../src/core/ReadonlyCollection";
 import {SortedSet} from "../../src/set/SortedSet";
 import {List} from "../../src/list/List"
@@ -7,13 +7,13 @@ import {Person} from "../models/Person";
 
 describe("ReadonlyCollection", () => {
     describe("#size()", () => {
-        it("should return the number of elements in the collection", () => {
+        test("should return the number of elements in the collection", () => {
             const set = new SortedSet([1, 2, 3, 4, 5]);
             const collection = new ReadonlyCollection(set);
             expect(collection.size()).to.equal(5);
             expect(collection.length).to.equal(5);
         });
-        it("should reflect changes in the underlying collection", () => {
+        test("should reflect changes in the underlying collection", () => {
             const set = new SortedSet([1, 2, 3, 4, 5]);
             const collection = new ReadonlyCollection(set);
             expect(collection.size()).to.equal(5);
@@ -26,11 +26,11 @@ describe("ReadonlyCollection", () => {
     describe("#toString()", () => {
         const list = new List([Person.Alice, Person.Mirei, Person.Kaori]);
         const collection = new ReadonlyCollection(list);
-        it("should return a string representation of the collection", () => {
+        test("should return a string representation of the collection", () => {
             const str = collection.toString("|", p => p.name);
             expect(str).to.equal("Alice|Mirei|Kaori");
         });
-        it("should return a string representation of the collection with default separator", () => {
+        test("should return a string representation of the collection with default separator", () => {
             const str = collection.toString(undefined, p => p.name);
             expect(str).to.equal("Alice, Mirei, Kaori");
         });

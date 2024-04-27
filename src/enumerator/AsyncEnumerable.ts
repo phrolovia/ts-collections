@@ -11,7 +11,7 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {IndexedAction} from "../shared/IndexedAction";
 import {IGroup} from "./IGroup";
 import {JoinSelector} from "../shared/JoinSelector";
-import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../../imports";
+import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../imports.ts";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 import {IndexedSelector} from "../shared/IndexedSelector";
 import {Zipper} from "../shared/Zipper";

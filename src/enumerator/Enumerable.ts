@@ -27,7 +27,7 @@ import {
     ImmutableSortedSet,
     ImmutableDictionary,
     ImmutableSortedDictionary
-} from "../../imports";
+} from "../imports.ts";
 import {IndexedAction} from "../shared/IndexedAction";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 
