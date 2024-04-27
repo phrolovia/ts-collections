@@ -18,7 +18,6 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList,
     EnumerableSet,
     SortedSet,
     LinkedList,
@@ -254,10 +253,6 @@ export abstract class EnumerableStatic {
 
     public static toImmutableSortedSet<TElement>(source: IEnumerable<TElement>, comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
         return new Enumerable(source).toImmutableSortedSet(comparator);
-    }
-
-    public static toIndexableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
-        return new Enumerable(source).toIndexableList(comparator);
     }
 
     public static toLinkedList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): LinkedList<TElement> {

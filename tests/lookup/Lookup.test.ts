@@ -15,7 +15,6 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
-    IndexableList,
     SortedSet
 } from "../../src/imports";
 import {Lookup} from "../../src/lookup/Lookup";
@@ -693,16 +692,6 @@ describe("Lookup", () => {
             const list = new LinkedList(peopleArray);
             const lookup = list.toLookup(p => p.name, p => p);
             expect(lookup.toImmutableSortedSet()).to.be.instanceOf(ImmutableSortedSet);
-        });
-    });
-
-    describe("#toIndexableList()", () => {
-        test("should return an indexable list of the lookup", () => {
-            const list = new LinkedList(peopleArray);
-            const lookup = list.toLookup(p => p.name, p => p);
-            const result = lookup.toIndexableList();
-            expect(result instanceof IndexableList).to.be.true;
-            expect(result.size()).to.eq(3);
         });
     });
 

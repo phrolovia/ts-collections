@@ -16,7 +16,6 @@ import {
     IOrderedEnumerable,
     List,
     Dictionary,
-    IndexableList,
     EnumerableSet,
     SortedSet,
     LinkedList,
@@ -441,12 +440,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
      */
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
-
-    /**
-     * Creates a new indexable list from the elements of the sequence.
-     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
-     */
-    toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement>;
 
     /**
      * Creates a new linked list from the elements of the sequence.

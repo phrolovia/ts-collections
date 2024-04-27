@@ -33,7 +33,6 @@ export {Stack} from "./stack/Stack.ts";
 export {CircularQueue} from "./queue/CircularQueue.ts";
 export {LinkedList} from "./list/LinkedList.ts";
 export {ImmutableList} from "./list/ImmutableList.ts";
-export {IndexableList} from "./list/IndexableList.ts";
 export type {ITree, TraverseType} from "./tree/ITree.ts";
 export {AbstractTree} from "./tree/AbstractTree.ts";
 export {RedBlackTree} from "./tree/RedBlackTree.ts";
@@ -112,7 +111,6 @@ export {
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
-    toIndexableList,
     toLinkedList,
     toList,
     toLookup,

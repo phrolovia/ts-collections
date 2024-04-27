@@ -17,7 +17,7 @@ describe("ReadonlyList", () => {
 
     describe("#get()", () => {
         test("should return the element at the given index", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toIndexableList());
+            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 expect(list.get(i)).to.eq(i + 1);
             }

@@ -16,7 +16,6 @@ import {
     ImmutableList,
     ImmutableSet, ImmutableSortedDictionary,
     ImmutableSortedSet,
-    IndexableList,
     LinkedList
 } from "../../src/imports";
 
@@ -1597,20 +1596,6 @@ describe("Dictionary", () => {
             expect(set2 instanceof ImmutableSortedSet).to.be.true;
             expect(set2.length).to.eq(dictionary.length + 1);
             expect(set2).to.not.eq(set);
-        });
-    });
-
-    describe("#toIndexableList()", () => {
-        const dictionary = new Dictionary<number, string>();
-        dictionary.add(1, "a");
-        dictionary.add(2, "b");
-        const list = dictionary.toIndexableList();
-        test("should create a new KeyValuePair list", () => {
-            expect(list.size()).to.eq(dictionary.size());
-            expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
-            expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
-            expect(list instanceof IndexableList).to.be.true;
-            expect(list.length).to.eq(dictionary.length);
         });
     });
 
