@@ -1,5 +1,5 @@
 import {ErrorMessages} from "../shared/ErrorMessages";
-import {AbstractList, IList} from "../../imports";
+import {AbstractList} from "../../imports";
 import {EqualityComparator} from "../shared/EqualityComparator";
 import {OrderComparator} from "../shared/OrderComparator";
 import {Comparators} from "../shared/Comparators";
