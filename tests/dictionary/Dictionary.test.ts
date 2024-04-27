@@ -1,6 +1,4 @@
-import {describe, test, expect} from "vitest";
 import {Dictionary} from "../../src/dictionary/Dictionary";
-
 import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Person} from "../models/Person";
@@ -1156,7 +1154,7 @@ describe("Dictionary", () => {
         dict.add(1500, Person.Megan);
         dict.add(5500, Person.Noemi);
         test("should return a dictionary with keys [8000, 9000]", () => {
-            const dict2 = dict.skipWhile((p, px) => p.key <= 6500).toSortedDictionary<number, Person>(p => p.key, p => p.value);
+            const dict2 = dict.skipWhile((p) => p.key <= 6500).toSortedDictionary<number, Person>(p => p.key, p => p.value);
             const keys = dict2.select(p => p.key).toArray();
             expect(keys.length).to.eq(6);
             // expect(keys).to.have.all.members([8000, 6500, 9000, 4000, 1500, 5500]);

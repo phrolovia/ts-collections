@@ -1,5 +1,5 @@
 
-import {describe, test, expect} from "vitest";
+
 import {Enumerable, IndexableList, LinkedList} from "../../src/imports";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
@@ -10,10 +10,7 @@ import {SchoolStudents} from "../models/SchoolStudents";
 import {Student} from "../models/Student";
 
 describe("LinkedList", () => {
-
-    const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
-    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
 
     describe("#add()", () => {
         const list = new LinkedList([1, 2, 3]);

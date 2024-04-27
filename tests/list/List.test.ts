@@ -1,4 +1,3 @@
-import {describe, test, expect} from "vitest";
 import {Enumerable, ImmutableList, ReadonlyCollection} from "../../src/imports";
 import {List} from "../../src/list/List";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
@@ -11,10 +10,7 @@ import {SchoolStudents} from "../models/SchoolStudents";
 import {Student} from "../models/Student";
 
 describe("List", () => {
-
-    const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
-    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
 
     describe("#add()", () => {
         const list = new List([1, 2, 3]);

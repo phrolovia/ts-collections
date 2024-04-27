@@ -5,7 +5,7 @@
         "esModuleInterop": true,
         "target": "ESNext",
         "types": [
-            "vite/client"
+            "vitest/globals"
         ],
         "lib": [
             "ES2020"

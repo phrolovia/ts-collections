@@ -1,4 +1,4 @@
-import {describe, test, expect} from "vitest";
+
 
 import {List} from "../../src/list/List";
 import {Person} from "../models/Person";
@@ -13,10 +13,7 @@ import {Helper} from "../helpers/Helper";
 import {IndexableList} from "../../src/list/IndexableList";
 
 describe("IndexableList", () => {
-
-    const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
-    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname === p2.surname;
 
     describe("#add()", () => {
         const list = new IndexableList([1, 2, 3]);
