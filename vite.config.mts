@@ -8,7 +8,7 @@ export default defineConfig({
             entry: resolve(__dirname, "./src/index.ts"),
             name: "ts-collections",
             formats: ["es"],
-            fileName: 'index',
+            fileName: ({}): string => `index.mjs`
         },
         rollupOptions: {
             external: [

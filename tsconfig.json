@@ -1,8 +1,12 @@
 {
     "compilerOptions": {
         "allowImportingTsExtensions": true,
+        "baseUrl": "./src",
         "esModuleInterop": true,
-        "target": "ES2020",
+        "target": "ESNext",
+        "types": [
+            "vite/client"
+        ],
         "lib": [
             "ES2020"
         ],
@@ -16,6 +20,8 @@
         "noImplicitOverride": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "preserveConstEnums": true,
         "removeComments": false,
         "resolveJsonModule": true,
@@ -25,8 +31,11 @@
         "outDir": "./dist",
         "useDefineForClassFields": true
     },
+    "include": [
+        "src"
+    ],
     "exclude": [
         "node_modules",
-        "tests"
+        "tests/**/*.test.ts",
     ]
 }
