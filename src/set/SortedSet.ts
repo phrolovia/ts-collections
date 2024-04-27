@@ -1,8 +1,8 @@
-import {AbstractSet, ISet, ITree, RedBlackTree} from "../imports.ts";
-import {Predicate} from "../shared/Predicate";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Comparators} from "../shared/Comparators";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { AbstractSet, ISet, ITree, RedBlackTree } from "../imports.ts";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
 
 export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
     private readonly orderComparator: OrderComparator<TElement>;

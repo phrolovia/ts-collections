@@ -1,4 +1,4 @@
-import {IEnumerable} from "./IEnumerable";
+import { IEnumerable } from "./IEnumerable";
 
 export interface IGroup<TKey, TElement> extends IEnumerable<TElement> {
     readonly key: TKey;

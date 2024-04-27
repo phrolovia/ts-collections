@@ -1,7 +1,5 @@
-
-
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {Queue} from "../../src/imports";
+import { Queue } from "../../src/imports";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
 
 describe("Queue", () => {
     describe("#add()", () => {

@@ -1,8 +1,6 @@
-
-
-import {Person} from "../models/Person";
-import {EnumerableSet} from "../../src/set/EnumerableSet";
-import {LinkedList} from "../../src/list/LinkedList";
+import { LinkedList } from "../../src/list/LinkedList";
+import { EnumerableSet } from "../../src/set/EnumerableSet";
+import { Person } from "../models/Person";
 
 describe("EnumerableSet", () => {
     describe("#add()", () => {

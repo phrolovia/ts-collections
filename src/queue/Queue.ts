@@ -1,6 +1,6 @@
-import {AbstractCollection, LinkedList} from "../imports.ts";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { AbstractCollection, LinkedList } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
 
 export class Queue<TElement> extends AbstractCollection<TElement> {
     private readonly queue: LinkedList<TElement>;

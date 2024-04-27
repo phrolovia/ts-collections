@@ -1,12 +1,12 @@
-import {Predicate} from "../shared/Predicate";
-import {ITree, TraverseType} from "./ITree";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {Selector} from "../shared/Selector";
-import {INode} from "./INode";
-import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
+import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { INode } from "./INode";
+import { ITree, TraverseType } from "./ITree";
 
 export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement>;
@@ -148,7 +148,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
             return null;
         }
         const order = comparator(key, selector(root.getData()));
-        if(order === 0) {
+        if (order === 0) {
             return root.getData();
         }
         if (order < 0) {
@@ -208,7 +208,10 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
     }
 
     public abstract override add(element: TElement): boolean;
+
     public abstract delete(element: TElement): void;
+
     public abstract insert(element: TElement): void;
+
     public abstract search(element: TElement): boolean;
 }

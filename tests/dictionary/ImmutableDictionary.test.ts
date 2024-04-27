@@ -1,5 +1,5 @@
-import {ImmutableDictionary} from "../../src/dictionary/ImmutableDictionary";
-import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
+import { ImmutableDictionary } from "../../src/dictionary/ImmutableDictionary";
+import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 
 describe("ImmutableDictionary", () => {
     describe("#add()", () => {

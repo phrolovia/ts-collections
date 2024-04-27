@@ -1,6 +1,6 @@
-import {Selector} from "../shared/Selector";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IEnumerable} from "../imports.ts";
+import { IEnumerable } from "../imports.ts";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Selector } from "../shared/Selector";
 
 export interface IOrderedEnumerable<TElement> extends IEnumerable<TElement> {
 

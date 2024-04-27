@@ -1,6 +1,5 @@
-
-import {empty, from, range} from "../../src/imports";
-import {ImmutableSet} from "../../src/set/ImmutableSet";
+import { empty, from, range } from "../../src/imports";
+import { ImmutableSet } from "../../src/set/ImmutableSet";
 
 describe("ImmutableSet", () => {
     describe("#add()", () => {
@@ -32,7 +31,7 @@ describe("ImmutableSet", () => {
         });
     });
     describe("#contains()", () => {
-        const setData = from(range(0, 10000000)).select(i => ({id: 1, name: i.toString()} )).toArray();
+        const setData = from(range(0, 10000000)).select(i => ({id: 1, name: i.toString()})).toArray();
         const set = ImmutableSet.create(setData);
         test("should return true if the set contains the given element", () => {
             const set = ImmutableSet.create([1, 2, 3]);

@@ -1,23 +1,24 @@
-import {Dictionary} from "../../src/dictionary/Dictionary";
-import {SortedDictionary} from "../../src/dictionary/SortedDictionary";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
-import {Person} from "../models/Person";
-import {KeyValuePair} from "../../src/dictionary/KeyValuePair";
-import {EqualityComparator} from "../../src/shared/EqualityComparator";
-import {Helper} from "../helpers/Helper";
-import {School} from "../models/School";
-import {Student} from "../models/Student";
-import {SchoolStudents} from "../models/SchoolStudents";
-import {List} from "../../src/list/List";
-import {Enumerable} from "../../src/enumerator/Enumerable";
+import { Dictionary } from "../../src/dictionary/Dictionary";
+import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
+import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
+import { Enumerable } from "../../src/enumerator/Enumerable";
 import {
     EnumerableSet,
     ImmutableDictionary,
     ImmutableList,
-    ImmutableSet, ImmutableSortedDictionary,
+    ImmutableSet,
+    ImmutableSortedDictionary,
     ImmutableSortedSet,
     LinkedList
 } from "../../src/imports";
+import { List } from "../../src/list/List";
+import { EqualityComparator } from "../../src/shared/EqualityComparator";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { Helper } from "../helpers/Helper";
+import { Person } from "../models/Person";
+import { School } from "../models/School";
+import { SchoolStudents } from "../models/SchoolStudents";
+import { Student } from "../models/Student";
 
 describe("Dictionary", () => {
     describe("#add()", () => {
@@ -148,7 +149,7 @@ describe("Dictionary", () => {
     });
 
     describe("#cast()", () => {
-        const dictionary = new Dictionary<string, string|number>();
+        const dictionary = new Dictionary<string, string | number>();
         dictionary.add("a", 1);
         dictionary.add("b", 2);
         dictionary.add("c", 3);
@@ -459,7 +460,7 @@ describe("Dictionary", () => {
             for (const num of numbers) {
                 expect(dict.get(num)).to.eq(num.toString());
             }
-        }, { timeout: 15000 });
+        }, {timeout: 15000});
         test("should return null if key is not in the dictionary", () => {
             expect(dictionary.get(Person.Jane.name)).to.be.null;
         });
@@ -475,7 +476,7 @@ describe("Dictionary", () => {
         dict.add(Person.Kaori.name, Person.Kaori);
         dict.add(Person.Reina.name, Person.Reina);
         test("should group people by age", () => {
-            const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g );
+            const group = dict.groupBy(p => p.value.age).toSortedDictionary(g => g.key, g => g);
             const ages: number[] = [];
             const groupedAges: Record<number, number[]> = {};
             for (const ageGroup of group.values()) {
@@ -713,7 +714,7 @@ describe("Dictionary", () => {
     });
 
     describe("#ofType()", () => {
-        const dict = new Dictionary<number, number|string|Person>();
+        const dict = new Dictionary<number, number | string | Person>();
         dict.add(1, 1);
         dict.add(2, "a");
         dict.add(3, 3);

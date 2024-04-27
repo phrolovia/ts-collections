@@ -1,12 +1,15 @@
 import {
-    AbstractEnumerable, ICollectionChangedEventArgs,
-    IReadonlyCollection, ObservableCollection
+    AbstractEnumerable,
+    ICollectionChangedEventArgs,
+    IReadonlyCollection,
+    ObservableCollection
 } from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { EqualityComparator } from "../shared/EqualityComparator";
 
 export class ReadonlyObservableCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {
     readonly #collection: ObservableCollection<TElement>;
     collectionChanged?: (sender: this, args: ICollectionChangedEventArgs<TElement>) => void;
+
     public constructor(collection: ObservableCollection<TElement>) {
         super(collection.comparator);
         this.#collection = collection;

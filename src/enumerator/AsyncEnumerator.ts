@@ -1,11 +1,3 @@
-import {InferredType} from "../shared/InferredType";
-import {ClassType, ObjectType} from "../shared/ObjectType";
-import {IAsyncEnumerable} from "./IAsyncEnumerable";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {Selector} from "../shared/Selector";
-import {Accumulator} from "../shared/Accumulator";
-import {Predicate} from "../shared/Predicate";
 import {
     Collections,
     Enumerable,
@@ -18,14 +10,22 @@ import {
     OrderedAsyncEnumerator,
     SortedSet
 } from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {JoinSelector} from "../shared/JoinSelector";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
+import { Accumulator } from "../shared/Accumulator";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ClassType, ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { IAsyncEnumerable } from "./IAsyncEnumerable";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
@@ -140,8 +140,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return count;
     }
 
-    public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement|null> {
-        return new AsyncEnumerator<TElement|null>(() => this.defaultIfEmptyGenerator(defaultValue));
+    public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null> {
+        return new AsyncEnumerator<TElement | null>(() => this.defaultIfEmptyGenerator(defaultValue));
     }
 
     public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
@@ -367,7 +367,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
             first = await iterator.next();
             second = await otherIterator.next();
-            if(first.done && second.done) {
+            if (first.done && second.done) {
                 return true;
             }
         }
@@ -532,7 +532,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         yield* other;
     }
 
-    private async* defaultIfEmptyGenerator(defaultValue?: TElement | null): AsyncIterable<TElement|null> {
+    private async* defaultIfEmptyGenerator(defaultValue?: TElement | null): AsyncIterable<TElement | null> {
         let hasElements = false;
         for await (const element of this) {
             hasElements = true;
@@ -813,7 +813,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* zipGenerator<TSecond, TResult=[TElement,TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
+    private async* zipGenerator<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
         const iterator1 = this[Symbol.asyncIterator]();
         const iterator2 = enumerable[Symbol.asyncIterator]();
         let next1 = await iterator1.next();

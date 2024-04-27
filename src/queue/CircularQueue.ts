@@ -1,5 +1,5 @@
-import {Queue} from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { Queue } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
 
 /**
  * A circular queue is a queue that uses a fixed-size queue as its underlying data structure.

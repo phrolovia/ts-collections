@@ -1,10 +1,8 @@
-
-
-import {Enumerable, LinkedList} from "../../src/imports";
-import {ICollection} from "../../src/core/ICollection";
-import {RedBlackTree} from "../../src/tree/RedBlackTree";
-import {Pair} from "../models/Pair";
-import {Person} from "../models/Person";
+import { ICollection } from "../../src/core/ICollection";
+import { Enumerable, LinkedList } from "../../src/imports";
+import { RedBlackTree } from "../../src/tree/RedBlackTree";
+import { Pair } from "../models/Pair";
+import { Person } from "../models/Person";
 
 describe("RedBlackTree", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
@@ -76,7 +74,7 @@ describe("RedBlackTree", () => {
             const tree = new RedBlackTree<number>(randomArray);
             expect(distinct.length).to.eq(tree.size());
             expect(distinct.length).to.eq(tree.length);
-        }, { timeout: 5000 });
+        }, {timeout: 5000});
         test("should not have duplicates #2", () => {
             const repeatedEnumerable = Enumerable.repeat(100, 100);
             const tree = new RedBlackTree<number>(repeatedEnumerable);

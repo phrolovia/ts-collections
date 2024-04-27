@@ -1,8 +1,7 @@
-
-import {SortedSet} from "../../src/set/SortedSet";
-import {Person} from "../models/Person";
-import {ImmutableSortedSet, LinkedList} from "../../src/imports";
-import {SimpleObject} from "../models/SimpleObject";
+import { LinkedList } from "../../src/imports";
+import { SortedSet } from "../../src/set/SortedSet";
+import { Person } from "../models/Person";
+import { SimpleObject } from "../models/SimpleObject";
 
 describe("SortedSet", () => {
     describe("#add()", () => {

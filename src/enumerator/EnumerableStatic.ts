@@ -1,39 +1,40 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Accumulator} from "../shared/Accumulator";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {Selector} from "../shared/Selector";
-import {Predicate} from "../shared/Predicate";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
-import {JoinSelector} from "../shared/JoinSelector";
-import {OrderComparator} from "../shared/OrderComparator";
 import {
-    SortedDictionary,
+    Dictionary,
     Enumerable,
+    EnumerableSet,
     IEnumerable,
     IGroup,
     ILookup,
-    IOrderedEnumerable,
-    List,
-    Dictionary,
-    EnumerableSet,
-    SortedSet,
-    LinkedList,
+    ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
+    ImmutableSortedDictionary,
     ImmutableSortedSet,
-    ImmutableDictionary,
-    ImmutableSortedDictionary
+    IOrderedEnumerable,
+    LinkedList,
+    List,
+    SortedDictionary,
+    SortedSet
 } from "../imports.ts";
-import {IndexedAction} from "../shared/IndexedAction";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
 
 export abstract class EnumerableStatic {
 
     /* istanbul ignore next */
-    private constructor() {}
+    private constructor() {
+    }
 
     public static aggregate<TElement, TAccumulate = TElement, TResult = TAccumulate>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);
@@ -75,7 +76,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).count(predicate);
     }
 
-    public static defaultIfEmpty<TElement>(source: IEnumerable<TElement>, value?: TElement | null): IEnumerable<TElement|null> {
+    public static defaultIfEmpty<TElement>(source: IEnumerable<TElement>, value?: TElement | null): IEnumerable<TElement | null> {
         return new Enumerable(source).defaultIfEmpty(value);
     }
 
@@ -156,7 +157,7 @@ export abstract class EnumerableStatic {
     }
 
     public static partition<TElement>(source: IEnumerable<TElement>, predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
-       return new Enumerable(source).partition(predicate);
+        return new Enumerable(source).partition(predicate);
     }
 
     public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {
@@ -167,7 +168,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).reverse();
     }
 
-    public static scan<TElement, TAccumulate = TElement>(source: IEnumerable<TElement>,  accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
+    public static scan<TElement, TAccumulate = TElement>(source: IEnumerable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
         return new Enumerable(source).scan(accumulator, seed);
     }
 

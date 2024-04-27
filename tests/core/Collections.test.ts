@@ -1,10 +1,8 @@
-
-
-import {Person} from "../models/Person";
-import {Collections} from "../../src/core/Collections";
-import {LinkedList} from "../../src/list/LinkedList";
-import {Enumerable, List, RedBlackTree} from "../../src/imports";
-import {ErrorMessages} from "../../src/shared/ErrorMessages";
+import { Collections } from "../../src/core/Collections";
+import { Enumerable, List, RedBlackTree } from "../../src/imports";
+import { LinkedList } from "../../src/list/LinkedList";
+import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { Person } from "../models/Person";
 
 describe("Collections", () => {
     describe("#addAll()", () => {
@@ -17,7 +15,7 @@ describe("Collections", () => {
             }
         });
         test("should add the given elements to the collection #2", () => {
-            const tree = new RedBlackTree([1, 2] );
+            const tree = new RedBlackTree([1, 2]);
             Collections.addAll(tree, 3, 4, 5);
             expect(tree.size()).to.eq(5);
             expect(tree.search(1)).to.be.true;

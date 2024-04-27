@@ -1,7 +1,7 @@
-import {AbstractTree} from "../imports.ts";
-import {Predicate} from "../shared/Predicate";
-import {OrderComparator} from "../shared/OrderComparator";
-import {TreeNode} from "./TreeNode";
+import { AbstractTree } from "../imports.ts";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
+import { TreeNode } from "./TreeNode";
 
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
 class RedBlackNode<TElement> extends TreeNode<TElement> {

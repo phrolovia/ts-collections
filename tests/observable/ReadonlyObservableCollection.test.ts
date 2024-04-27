@@ -1,7 +1,7 @@
-import {List} from "../../src/index";
-import {Person} from "../models/Person";
-import {ReadonlyObservableCollection} from "../../src/observable/ReadonlyObservableCollection";
-import {ObservableCollection} from "../../src/observable/ObservableCollection";
+import { List } from "../../src/index";
+import { ObservableCollection } from "../../src/observable/ObservableCollection";
+import { ReadonlyObservableCollection } from "../../src/observable/ReadonlyObservableCollection";
+import { Person } from "../models/Person";
 
 describe("ReadonlyObservableCollection", () => {
     describe("#contains()", () => {

@@ -1,9 +1,9 @@
-import {IList} from "../imports.ts";
-import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Predicate} from "../shared/Predicate";
+import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
+import { IList } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 

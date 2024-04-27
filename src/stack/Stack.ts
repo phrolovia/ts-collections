@@ -1,6 +1,6 @@
-import {AbstractCollection, LinkedList} from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {ErrorMessages} from "../shared/ErrorMessages";
+import { AbstractCollection, LinkedList } from "../imports.ts";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
 
 export class Stack<TElement> extends AbstractCollection<TElement> {
     private readonly stack: LinkedList<TElement>;

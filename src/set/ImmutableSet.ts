@@ -1,5 +1,5 @@
-import {AbstractImmutableCollection, contains, EnumerableSet} from "../imports.ts";
-import {Predicate} from "../shared/Predicate";
+import { AbstractImmutableCollection, contains, EnumerableSet } from "../imports.ts";
+import { Predicate } from "../shared/Predicate";
 
 export class ImmutableSet<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #set: EnumerableSet<TElement>;

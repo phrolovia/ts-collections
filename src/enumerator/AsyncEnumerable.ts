@@ -1,20 +1,20 @@
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {IAsyncEnumerable} from "./IAsyncEnumerable";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Selector} from "../shared/Selector";
-import {Accumulator} from "../shared/Accumulator";
-import {Predicate} from "../shared/Predicate";
-import {IEnumerable} from "./IEnumerable";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {IGroup} from "./IGroup";
-import {JoinSelector} from "../shared/JoinSelector";
-import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../imports.ts";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
+import { AsyncEnumerator, IOrderedAsyncEnumerable } from "../imports.ts";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { IAsyncEnumerable } from "./IAsyncEnumerable";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     private readonly enumerator: AsyncEnumerator<TElement>;
@@ -91,7 +91,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.enumerator.count(predicate);
     }
 
-    public defaultIfEmpty(defaultValue?: TElement|null): IAsyncEnumerable<TElement|null> {
+    public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null> {
         return this.enumerator.defaultIfEmpty(defaultValue);
     }
 

@@ -1,9 +1,7 @@
-
-
-import {ReadonlyCollection} from "../../src/core/ReadonlyCollection";
-import {SortedSet} from "../../src/set/SortedSet";
-import {List} from "../../src/list/List"
-import {Person} from "../models/Person";
+import { ReadonlyCollection } from "../../src/core/ReadonlyCollection";
+import { List } from "../../src/list/List"
+import { SortedSet } from "../../src/set/SortedSet";
+import { Person } from "../models/Person";
 
 describe("ReadonlyCollection", () => {
     describe("#size()", () => {

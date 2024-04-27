@@ -1,26 +1,24 @@
-
-
-import {Person} from "../models/Person";
-import {ObservableCollection} from "../../src/observable/ObservableCollection";
-import {CollectionChangedAction} from "../../src/observable/ICollectionChangedEventArgs";
-import {Enumerable} from "../../src/imports";
+import { Enumerable } from "../../src/imports";
+import { CollectionChangedAction } from "../../src/observable/ICollectionChangedEventArgs";
+import { ObservableCollection } from "../../src/observable/ObservableCollection";
+import { Person } from "../models/Person";
 
 describe("ObservableCollection", () => {
     describe("#add()", () => {
-       test("should add an element to the collection", () => {
-          const collection = new ObservableCollection<Person>();
-          collection.add(Person.Alice);
-          expect(collection.size()).to.equal(1);
-          expect(collection.length).to.equal(1);
-       });
-       test("should add multiple elements to the collection", () => {
+        test("should add an element to the collection", () => {
+            const collection = new ObservableCollection<Person>();
+            collection.add(Person.Alice);
+            expect(collection.size()).to.equal(1);
+            expect(collection.length).to.equal(1);
+        });
+        test("should add multiple elements to the collection", () => {
             const collection = new ObservableCollection<Person>();
             collection.add(Person.Alice);
             collection.add(Person.Mirei);
             expect(collection.size()).to.equal(2);
             expect(collection.length).to.equal(2);
-       });
-       test("should raise the collectionChanged event", () => {
+        });
+        test("should raise the collectionChanged event", () => {
             const collection = new ObservableCollection<Person>();
             let eventRaised = false;
             collection.collectionChanged = (sender, args) => {
@@ -28,8 +26,8 @@ describe("ObservableCollection", () => {
             };
             collection.add(Person.Alice);
             expect(eventRaised).to.be.true;
-       });
-       test("should raise the collectionChanged event with the correct arguments", () => {
+        });
+        test("should raise the collectionChanged event with the correct arguments", () => {
             const collection = new ObservableCollection<Person>();
             let eventRaised = false;
             collection.collectionChanged = (sender, args) => {
@@ -39,7 +37,7 @@ describe("ObservableCollection", () => {
             };
             collection.add(Person.Alice);
             expect(eventRaised).to.be.true;
-       });
+        });
     });
     describe("#clear()", () => {
         test("should clear the collection", () => {
