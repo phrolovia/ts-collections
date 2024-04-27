@@ -1,6 +1,6 @@
-import {AbstractList, IList} from "../imports.ts";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import {AbstractList} from "../imports.ts";
 import {Comparators} from "../shared/Comparators";
+import {EqualityComparator} from "../shared/EqualityComparator";
 import {ErrorMessages} from "../shared/ErrorMessages";
 import {OrderComparator} from "../shared/OrderComparator";
 
@@ -11,7 +11,9 @@ import {OrderComparator} from "../shared/OrderComparator";
  */
 export class IndexableList<TElement> extends AbstractList<TElement> {
     private listSize: number = 0;
+
     [n: number]: TElement;
+
     public constructor(iterable: Iterable<TElement> = [], comparator: EqualityComparator<TElement> = Comparators.equalityComparator) {
         super(comparator);
         let index: number = 0;
@@ -109,7 +111,7 @@ export class IndexableList<TElement> extends AbstractList<TElement> {
         for (let ex = index; ex < this.size() - 1; ++ex) {
             this[ex] = this[ex + 1];
         }
-        delete this[this.size()-1];
+        delete this[this.size() - 1];
         this.listSize--;
         this.updateLength();
         return element;

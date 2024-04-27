@@ -130,7 +130,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public count(predicate?: Predicate<TElement>): number {
         let count: number = 0;
         if (!predicate) {
-            for (const item of this) {
+            for (const {} of this) {
                 ++count;
             }
             return count;
