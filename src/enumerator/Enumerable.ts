@@ -17,7 +17,6 @@ import {
     Enumerator,
     List,
     Dictionary,
-    IndexableList,
     IGroup,
     EnumerableSet,
     SortedSet,
@@ -310,10 +309,6 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
         return this.enumerator.toImmutableSortedSet(comparator);
-    }
-
-    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
-        return this.enumerator.toIndexableList(comparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {

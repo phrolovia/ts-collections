@@ -18,7 +18,6 @@ import {
     List,
     RedBlackTree,
     Dictionary,
-    IndexableList,
     IGroup,
     Group,
     EnumerableSet,
@@ -311,10 +310,6 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toImmutableSortedSet(comparator?: OrderComparator<IGroup<TKey, TElement>>): ImmutableSortedSet<IGroup<TKey, TElement>> {
         return this.lookupTree.toImmutableSortedSet(comparator);
-    }
-
-    public toIndexableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): IndexableList<IGroup<TKey, TElement>> {
-        return this.lookupTree.toIndexableList(comparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): LinkedList<IGroup<TKey, TElement>> {

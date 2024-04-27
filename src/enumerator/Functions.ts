@@ -3,7 +3,6 @@ import {ImmutableDictionary} from "../dictionary/ImmutableDictionary";
 import {ImmutableSortedDictionary} from "../dictionary/ImmutableSortedDictionary";
 import {SortedDictionary} from "../dictionary/SortedDictionary";
 import {ImmutableList} from "../list/ImmutableList";
-import {IndexableList} from "../list/IndexableList";
 import {LinkedList} from "../list/LinkedList";
 import {List} from "../list/List";
 import {ILookup} from "../lookup/ILookup";
@@ -823,18 +822,6 @@ export const toImmutableSortedSet = <TElement>(
     comparator?: OrderComparator<TElement>
 ): ImmutableSortedSet<TElement> => {
     return from(source).toImmutableSortedSet(comparator);
-}
-
-/**
- * Creates a new indexable list from the elements of the sequence.
- * @param source The source sequence.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
- */
-export const toIndexableList = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-): IndexableList<TElement> => {
-    return from(source).toIndexableList(comparator);
 }
 
 /**

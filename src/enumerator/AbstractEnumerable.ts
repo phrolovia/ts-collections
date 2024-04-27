@@ -24,7 +24,6 @@ import {IndexedSelector} from "../shared/IndexedSelector";
 import {IndexedPredicate} from "../shared/IndexedPredicate";
 import {Dictionary} from "../dictionary/Dictionary";
 import {EnumerableSet} from "../set/EnumerableSet";
-import {IndexableList} from "../list/IndexableList";
 import {SortedDictionary} from "../dictionary/SortedDictionary";
 import {SortedSet} from "../set/SortedSet";
 import {LinkedList} from "../list/LinkedList";
@@ -265,11 +264,6 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
         return EnumerableStatic.toImmutableSortedSet(this, comparator);
-    }
-
-    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
-        comparator ??= this.comparer;
-        return EnumerableStatic.toIndexableList(this, comparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {

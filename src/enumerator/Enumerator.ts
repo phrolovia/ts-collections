@@ -22,7 +22,6 @@ import {
     IEnumerable,
     IGroup,
     ILookup, ImmutableDictionary, ImmutableList, ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
-    IndexableList,
     IOrderedEnumerable,
     LinkedList,
     List,
@@ -539,10 +538,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
         return ImmutableSortedSet.create(this, comparator);
-    }
-
-    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
-        return new IndexableList<TElement>(this, comparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {

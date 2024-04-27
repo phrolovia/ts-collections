@@ -1,6 +1,5 @@
 // vitest.config.mts
 import { defineConfig } from "vitest/config";
-import "vitest/config";
 
 export default defineConfig({
     test: {

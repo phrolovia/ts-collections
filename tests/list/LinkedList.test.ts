@@ -1,6 +1,4 @@
-
-
-import {Enumerable, IndexableList, LinkedList} from "../../src/imports";
+import {Enumerable, LinkedList} from "../../src/imports";
 import {EqualityComparator} from "../../src/shared/EqualityComparator";
 import {ErrorMessages} from "../../src/shared/ErrorMessages";
 import {Pair} from "../models/Pair";
@@ -1464,17 +1462,6 @@ describe("LinkedList", () => {
             expect(dict.length).to.eq(5);
         });
     });
-
-    describe("#toIndexableList()", () => {
-        const people = new LinkedList([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
-        test("should create an array from the list", () => {
-            const array = people.toIndexableList();
-            expect(array.length).to.eq(people.size());
-            expect(array instanceof IndexableList).to.be.true;
-            expect(array.toArray()).to.deep.equal([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
-        });
-    });
-
 
     // describe("#toList()", () => {
     //     const list = new LinkedList([1, 2, 3]);

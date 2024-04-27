@@ -1,9 +1,7 @@
-
-
+import {List} from "../../src/index";
 import {Person} from "../models/Person";
 import {ReadonlyObservableCollection} from "../../src/observable/ReadonlyObservableCollection";
 import {ObservableCollection} from "../../src/observable/ObservableCollection";
-import {IndexableList} from "../../src/list/IndexableList";
 
 describe("ReadonlyObservableCollection", () => {
     describe("#contains()", () => {
@@ -121,7 +119,7 @@ describe("ReadonlyObservableCollection", () => {
     describe("#get comparator()", () => {
         test("should return the comparator", () => {
             const comparator = (a: Person, b: Person) => a.age === b.age;
-            const collection = new ObservableCollection<Person>(new IndexableList(), comparator);
+            const collection = new ObservableCollection<Person>(new List(), comparator);
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             expect(readonlyCollection.comparator).to.equal(comparator);
         });
@@ -154,7 +152,7 @@ describe("ReadonlyObservableCollection", () => {
             const collection = new ObservableCollection<Person>();
             const readonlyCollection = new ReadonlyObservableCollection(collection);
             let eventCount = 0;
-            readonlyCollection.collectionChanged = (sender, args) => {
+            readonlyCollection.collectionChanged = (sender) => {
                 eventCount++;
                 expect(sender).to.equal(readonlyCollection);
             };

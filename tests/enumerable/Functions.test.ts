@@ -29,7 +29,6 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
-    IndexableList,
     intersect,
     join,
     last,
@@ -71,7 +70,6 @@ import {
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
-    toIndexableList,
     toLinkedList,
     toList,
     toLookup,
@@ -330,15 +328,15 @@ describe("Enumerable Standalone Functions", () => {
             expect(result.toArray()).to.deep.equal([Person.Alice, Person.Senna]);
         });
         test("should return a set of people unique to first sequence", () => {
-            const first = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
-            const second = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
+            const first = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
+            const second = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
             const result = except(first, second, (a, b) => a.age === b.age);
             const ageCount = count(result, p => p.age <= 50);
             expect(ageCount).to.eq(0);
         });
         test("should use the order comparator parameter and return a set of people unique to first sequence", () => {
-            const first = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
-            const second = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
+            const first = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
+            const second = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
             const result = except(first, second, null, (a, b) => a.age - b.age);
             const ageCount = count(result, p => p.age <= 50);
             expect(ageCount).to.eq(0);
@@ -492,15 +490,15 @@ describe("Enumerable Standalone Functions", () => {
             expect(result.toArray()).to.deep.equal([Person.Noemi, Person.Mel, Person.Lenka, Person.Jane]);
         });
         test("should return a set of people who are both in first and second sequence", () => {
-            const first = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
-            const second = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
+            const first = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
+            const second = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
             const intersection = intersect(first, second, (a, b) => a.age === b.age);
             const ageCount = count(intersection, p => p.age > 59);
             expect(ageCount).to.eq(0);
         });
         test("should use the order comparator parameter and return a set of people who are both in first and second sequence", () => {
-            const first = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
-            const second = select(range(1, 100000), i => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
+            const first = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
+            const second = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
             const intersection = intersect(first, second, null, (a, b) => a.age - b.age);
             const ageCount = count(intersection, p => p.age > 59);
             expect(ageCount).to.eq(0);
@@ -1181,15 +1179,6 @@ describe("Enumerable Standalone Functions", () => {
             expect(immutableSortedSet.elementAt(3)).to.eq(4);
             expect(immutableSortedSet.elementAt(4)).to.eq(5);
             expect(immutableSortedSet.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
-        });
-    });
-
-    describe("#toIndexableList()", () => {
-        test("should return an indexable list", () => {
-            const indexableList = toIndexableList([1, 2, 3, 4, 5]);
-            expect(indexableList instanceof IndexableList).to.be.true;
-            expect(indexableList.size()).to.eq(5);
-            expect(indexableList.length).to.eq(5);
         });
     });
 
