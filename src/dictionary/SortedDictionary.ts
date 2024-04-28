@@ -10,10 +10,14 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     private readonly keyComparer: OrderComparator<TKey>;
     private readonly keyValueTree: RedBlackTree<KeyValuePair<TKey, TValue>>;
 
+    public constructor();
+    public constructor(iterable: Iterable<KeyValuePair<TKey, TValue>>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>);
+    public constructor(iterable: Iterable<[TKey, TValue]>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>);
     public constructor(
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
+        iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]> = [] as Array<KeyValuePair<TKey, TValue>>,
         keyComparator?: OrderComparator<TKey>,
-        valueComparator?: EqualityComparator<TValue>) {
+        valueComparator?: EqualityComparator<TValue>
+    ) {
         super(
             valueComparator ?? Comparators.equalityComparator,
             (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key) === 0
@@ -23,7 +27,11 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         const treeKeyComparator = (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key);
         this.keyValueTree = new RedBlackTree<KeyValuePair<TKey, TValue>>([], treeKeyComparator);
         for (const pair of iterable) {
-            this.add(pair.key, pair.value);
+            if (pair instanceof KeyValuePair) {
+                this.add(pair.key, pair.value)
+            } else {
+                this.add(pair[0], pair[1]);
+            }
         }
     }
 

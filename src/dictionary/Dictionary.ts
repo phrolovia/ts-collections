@@ -9,15 +9,24 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     private readonly dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();
     private readonly keyComparator: EqualityComparator<TKey> = Comparators.equalityComparator;
 
+    public constructor();
+    public constructor(iterable: Iterable<KeyValuePair<TKey, TValue>>, valueComparator?: EqualityComparator<TValue>);
+    public constructor(iterable: Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>);
+    public constructor(iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>);
     public constructor(
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
-        valueComparator?: EqualityComparator<TValue>) {
+        iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]> = [] as Array<KeyValuePair<TKey, TValue>>,
+        valueComparator?: EqualityComparator<TValue>
+    ) {
         super(
             valueComparator ?? Comparators.equalityComparator,
             (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => this.keyComparator(p1.key, p2.key) && (valueComparator ?? Comparators.equalityComparator)(p1.value, p2.value)
         );
-        for (const element of iterable) {
-            this.add(element.key, element.value);
+        for (const pair of iterable) {
+            if (pair instanceof KeyValuePair) {
+                this.add(pair.key, pair.value);
+            } else {
+                this.add(pair[0], pair[1]);
+            }
         }
     }
 

@@ -213,6 +213,24 @@ describe("Dictionary", () => {
             expect(dictionary.get("Lucrezia")).to.not.null;
             expect(dictionary.length).to.eq(2);
         });
+        test("should create a dictionary from a tuple array", () => {
+            const dict = new Dictionary<string, number>([
+                ["a", 1],
+                ["b", 2],
+                ["c", 3]
+            ]);
+            expect(dict.size()).to.eq(3);
+            expect(dict.get("a")).to.eq(1);
+            expect(dict.get("b")).to.eq(2);
+            expect(dict.get("c")).to.eq(3);
+        });
+        test("should throw if tuple contains duplicate values", () => {
+            expect(() => new Dictionary<string, number>([
+                ["a", 1],
+                ["a", 2],
+                ["c", 3]
+            ])).to.throw(ErrorMessages.KeyAlreadyAdded);
+        });
     });
 
     describe("#contains()", () => {

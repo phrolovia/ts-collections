@@ -1,3 +1,4 @@
+import { expect } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
 import { Enumerable, List } from "../../src/imports";
@@ -10,10 +11,7 @@ import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
 
 describe("SortedDictionary", () => {
-
-    const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
     const personNameComparator = (p1: Person, p2: Person) => p1.name.localeCompare(p2.name);
-    const personSurnameComparator = (p1: Person, p2: Person) => p1.surname.localeCompare(p2.surname);
 
     describe("#add()", () => {
         const dictionary = new SortedDictionary<string, number>();
@@ -169,6 +167,45 @@ describe("SortedDictionary", () => {
             expect(dict.get("Lucrezia")).to.not.null;
             expect(dict.get("Priscilla")).to.not.null;
             expect(dict.length).to.eq(4);
+        });
+    });
+
+    describe("#constructor()", () => {
+        const dictionary = new SortedDictionary<string, Person>(
+            [
+                new KeyValuePair<string, Person>(Person.Mirei.name, Person.Mirei),
+                new KeyValuePair<string, Person>(Person.Hanyuu.name, Person.Hanyuu),
+            ],
+            (p1, p2) => p1.localeCompare(p2),
+            (p1, p2) => p1.name === p2.name
+        );
+        test("should create a sorted dictionary with two elements", () => {
+            expect(dictionary.size()).to.eq(2);
+            expect(dictionary.keys().toArray()).to.deep.equal([Person.Hanyuu.name, Person.Mirei.name]);
+            expect(dictionary.values().toArray()).to.deep.equal([Person.Hanyuu, Person.Mirei]);
+            expect(dictionary.get("Hanyuu")).to.not.null;
+            expect(dictionary.get("Mirei")).to.not.null;
+            expect(dictionary.length).to.eq(2);
+        });
+        test("should create a sorted dictionary from a tuple array", () => {
+            const dict = new SortedDictionary<string, number>([
+                ["c", 3],
+                ["a", 1],
+                ["b", 2]
+            ]);
+            expect(dict.size()).to.eq(3);
+            expect(dict.keys().toArray()).to.deep.equal(["a", "b", "c"]);
+            expect(dict.values().toArray()).to.deep.equal([1, 2, 3]);
+            expect(dict.get("a")).to.eq(1);
+            expect(dict.get("b")).to.eq(2);
+            expect(dict.get("c")).to.eq(3);
+        });
+        test("should throw if tuple contains duplicate values", () => {
+            expect(() => new SortedDictionary<string, number>([
+                ["a", 1],
+                ["a", 2],
+                ["c", 3]
+            ])).to.throw(ErrorMessages.KeyAlreadyAdded);
         });
     });
 
@@ -1054,7 +1091,7 @@ describe("SortedDictionary", () => {
         dict.add(1500, Person.Megan);
         dict.add(5500, Person.Noemi);
         test("should return a dictionary with keys [8000, 9000]", () => {
-            const dict2 = dict.skipWhile((p, px) => p.key <= 6500).toSortedDictionary<number, Person>(p => p.key, p => p.value);
+            const dict2 = dict.skipWhile((p) => p.key <= 6500).toSortedDictionary<number, Person>(p => p.key, p => p.value);
             const keys = dict2.select(p => p.key).toArray();
             expect(keys.length).to.eq(2);
             expect(keys).to.have.all.members([8000, 9000]);
