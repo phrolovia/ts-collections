@@ -162,6 +162,14 @@ describe("List", () => {
         });
     });
 
+    describe("#asEnumerable()", () => {
+        test("should return an IEnumerable", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const enumerable = list.asEnumerable();
+            expect(enumerable.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+    });
+
     describe("#average()", () => {
         test("should return 99948748093", () => {
             const list = new List(["10007", "37", "299846234235"]);

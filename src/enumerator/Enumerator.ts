@@ -94,6 +94,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.appendGenerator(element));
     }
 
+    public asEnumerable(): IEnumerable<TElement> {
+        return this;
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         if (!this.any()) {
             throw new Error(ErrorMessages.NoElements);

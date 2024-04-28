@@ -2,6 +2,7 @@ import { Dictionary } from "../dictionary/Dictionary";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
 import {
     from,
+    IEnumerable,
     ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
@@ -28,7 +29,6 @@ import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { EnumerableStatic } from "./EnumerableStatic";
-import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
@@ -53,6 +53,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public append(element: TElement): IEnumerable<TElement> {
         return EnumerableStatic.append(this, element);
+    }
+
+    public asEnumerable(): IEnumerable<TElement> {
+        return EnumerableStatic.asEnumerable(this);
     }
 
     public average(selector?: Selector<TElement, number>): number {
