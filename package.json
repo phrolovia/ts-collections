@@ -24,10 +24,12 @@
         "dictionary",
         "lookup",
         "queue",
+        "set",
         "stack",
         "tree",
         "enumerable",
-        "linq"
+        "linq",
+        "immutable"
     ],
     "author": {
         "name": "Nanahoshi"
@@ -70,12 +72,9 @@
         "@vitest/coverage-v8": "^1.5.2",
         "@vitest/ui": "^1.5.2",
         "braces": "^3.0.2",
-        "chokidar": "^3.6.0",
         "rimraf": "^5.0.5",
         "rxjs": "~7.8.1",
         "semantic-release": "^23.0.8",
-        "source-map-support": "^0.5.21",
-        "ts-loader": "^9.5.1",
         "ts-node": "^10.9.2",
         "typedoc": "^0.25.13",
         "typescript": "^5.4.5",
