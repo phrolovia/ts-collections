@@ -52,6 +52,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).append(element);
     }
 
+    public static asEnumerable<TElement>(source: IEnumerable<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).asEnumerable();
+    }
+
     public static average<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
         return new Enumerable(source).average(selector);
     }

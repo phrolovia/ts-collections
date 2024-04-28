@@ -115,6 +115,22 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#asEnumerable()", () => {
+        test("should return an IEnumerable", () => {
+            const dictionary = new Dictionary<string, number>([
+                ["a", 1],
+                ["b", 2],
+                ["c", 3]
+            ]);
+            const enumerable = dictionary.asEnumerable();
+            expect(enumerable.toArray()).to.deep.equal([
+                new KeyValuePair<string, number>("a", 1),
+                new KeyValuePair<string, number>("b", 2),
+                new KeyValuePair<string, number>("c", 3)
+            ]);
+        });
+    });
+
     describe("#average()", () => {
         const dict = new Dictionary<string, number>();
         dict.add("A", 1);
@@ -732,7 +748,8 @@ describe("Dictionary", () => {
     });
 
     describe("#ofType()", () => {
-        const dict = new Dictionary<number, number | string | Person>();
+        const dict = new Dictionary<number, number | string | Person | Set<unknown>>();
+        const set = new Set<number>([1, 2]);
         dict.add(1, 1);
         dict.add(2, "a");
         dict.add(3, 3);
@@ -740,6 +757,7 @@ describe("Dictionary", () => {
         dict.add(5, 5);
         dict.add(6, Person.Hanyuu);
         dict.add(7, Person.Lucrezia);
+        dict.add(8, set);
         test("should return a new list with only numbers", () => {
             const numbers = dict.values().ofType(Number).toList();
             expect(numbers.size()).to.eq(3);

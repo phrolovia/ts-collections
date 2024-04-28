@@ -36,17 +36,19 @@ export type ObjectType<T = any> =
 
 export const ClassType = (type: ObjectType) => {
     const name = (type as Class<ObjectType>).name;
-    return name === "Number"
-        ? PrimitiveNumber
-        : name === "String"
-            ? PrimitiveString
-            : name === "Boolean"
-                ? PrimitiveBoolean
-                : name === "BigInt"
-                    ? PrimitiveBigInt
-                    : name === "Object"
-                        ? PrimitiveObject
-                        : name === "Symbol"
-                            ? PrimitiveSymbol
-                            : type;
+    if (name === "Number") {
+        return PrimitiveNumber;
+    } else if (name === "String") {
+        return PrimitiveString;
+    } else if (name === "Boolean") {
+        return PrimitiveBoolean;
+    } else if (name === "BigInt") {
+        return PrimitiveBigInt;
+    } else if (name === "Object") {
+        return PrimitiveObject;
+    } else if (name === "Symbol") {
+        return PrimitiveSymbol;
+    } else {
+        return type;
+    }
 }

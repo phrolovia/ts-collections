@@ -58,6 +58,11 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     append(element: TElement): IEnumerable<TElement>;
 
     /**
+     * Converts the enumerable object to an IEnumerable.
+     */
+    asEnumerable(): IEnumerable<TElement>;
+
+    /**
      * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
      * @param selector The selector function that will select a numeric value from the sequence elements.
      */

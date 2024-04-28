@@ -64,6 +64,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.append(this, element);
     }
 
+    public asEnumerable(): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.asEnumerable(this);
+    }
+
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.average(this, selector);
     }

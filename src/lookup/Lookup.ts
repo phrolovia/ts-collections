@@ -91,6 +91,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.append(element);
     }
 
+    public asEnumerable(): IEnumerable<IGroup<TKey, TElement>> {
+        return this.lookupTree.asEnumerable();
+    }
+
     public average(selector?: Selector<IGroup<TKey, TElement>, number>): number {
         return this.lookupTree.average(selector);
     }
