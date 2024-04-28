@@ -16,8 +16,12 @@ export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDi
         yield* this.#dictionary;
     }
 
+    public static create<TKey, TValue>(): ImmutableSortedDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<[TKey, TValue]>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue>;
     public static create<TKey, TValue>(
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
+        iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]> = [] as Array<KeyValuePair<TKey, TValue>>,
         keyComparator?: OrderComparator<TKey>,
         valueComparator?: EqualityComparator<TValue>
     ): ImmutableSortedDictionary<TKey, TValue> {

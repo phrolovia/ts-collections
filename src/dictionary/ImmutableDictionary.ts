@@ -15,8 +15,12 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         yield* this.#dictionary;
     }
 
+    public static create<TKey, TValue>(): ImmutableDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
     public static create<TKey, TValue>(
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
+        iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]> = [] as Array<KeyValuePair<TKey, TValue>>,
         valueComparator?: EqualityComparator<TValue>
     ): ImmutableDictionary<TKey, TValue> {
         return new ImmutableDictionary(new Dictionary(iterable, valueComparator));

@@ -61,6 +61,34 @@ describe("ImmutableDictionary", () => {
             expect(dictionary.containsValue("value3")).to.be.false;
         });
     });
+    describe("#create()", () => {
+        test("should create an empty ImmutableDictionary", () => {
+            const dictionary = ImmutableDictionary.create();
+            expect(dictionary.size()).to.equal(0);
+        });
+        test("should create an ImmutableDictionary from an iterable of KeyValuePair objects", () => {
+            const dictionary = ImmutableDictionary.create(
+                [
+                    new KeyValuePair("key1", "value1"),
+                    new KeyValuePair("key2", "value2")
+                ]
+            );
+            expect(dictionary.size()).to.equal(2);
+            expect(dictionary.get("key1")).to.equal("value1");
+            expect(dictionary.get("key2")).to.equal("value2");
+        });
+        test("should create an ImmutableDictionary from an iterable of [key, value] pairs", () => {
+            const dictionary = ImmutableDictionary.create(
+                [
+                    ["key1", "value1"],
+                    ["key2", "value2"]
+                ]
+            );
+            expect(dictionary.size()).to.equal(2);
+            expect(dictionary.get("key1")).to.equal("value1");
+            expect(dictionary.get("key2")).to.equal("value2");
+        });
+    });
     describe("#entries()", () => {
         test("should return an IterableIterator of [key, value] pairs", () => {
             const dictionary = ImmutableDictionary.create(
