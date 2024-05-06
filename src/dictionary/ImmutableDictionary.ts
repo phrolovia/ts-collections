@@ -87,6 +87,6 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
     }
 
     public override get length(): number {
-        return this.#dictionary.size();
+        return this.#dictionary.length;
     }
 }

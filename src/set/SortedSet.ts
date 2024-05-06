@@ -15,7 +15,6 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         super((e1, e2) => comparator(e1, e2) === 0);
         this.orderComparator = comparator;
         this.tree = new RedBlackTree<TElement>(iterable, comparator);
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -23,14 +22,11 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
     }
 
     public add(element: TElement): boolean {
-        const result = this.tree.add(element);
-        this.updateLength();
-        return result;
+        return this.tree.add(element);
     }
 
     public clear(): void {
         this.tree.clear();
-        this.updateLength();
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -43,27 +39,19 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
     }
 
     public remove(element: TElement): boolean {
-        const result = this.tree.remove(element);
-        this.updateLength();
-        return result;
+        return this.tree.remove(element);
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        const result = this.tree.removeAll(collection);
-        this.updateLength();
-        return result;
+        return this.tree.removeAll(collection);
     }
 
     public removeIf(predicate: Predicate<TElement>): boolean {
-        const result = this.tree.removeIf(predicate);
-        this.updateLength();
-        return result;
+        return this.tree.removeIf(predicate);
     }
 
     public override retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        const result = this.tree.retainAll(collection);
-        this.updateLength();
-        return result;
+        return this.tree.retainAll(collection);
     }
 
     public size(): number {
@@ -79,5 +67,9 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
     public tailSet(fromElement: TElement, inclusive: boolean = false): ISet<TElement> {
         const enumerable = this.where(e => this.orderComparator(e, fromElement) >= 0).skip(+!inclusive);
         return new SortedSet(enumerable, this.orderComparator);
+    }
+
+    public override get length(): number {
+        return this.tree.length;
     }
 }

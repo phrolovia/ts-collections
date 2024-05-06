@@ -81,7 +81,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         for (const element of iterable) {
             this.add(element);
         }
-        this.updateLength();
     }
 
     public add(element: TElement): boolean {
@@ -99,7 +98,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         const node = this.searchNode(element);
         this.deleteNode(node);
         this.treeSize--;
-        this.updateLength();
     }
 
     public insert(element: TElement): void {
@@ -121,7 +119,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             this.fixDoubleRed(node);
         }
         this.treeSize++;
-        this.updateLength();
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {

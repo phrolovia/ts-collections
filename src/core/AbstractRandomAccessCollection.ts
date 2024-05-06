@@ -8,9 +8,7 @@ export abstract class AbstractRandomAccessCollection<TElement> extends AbstractC
 
     abstract removeIf(predicate: Predicate<TElement>): boolean;
 
-    // abstract retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        let result = false;
         const removedElements: TElement[] = [];
         for (const element of this) {
             const iterator = collection[Symbol.iterator]();
@@ -27,7 +25,6 @@ export abstract class AbstractRandomAccessCollection<TElement> extends AbstractC
                 removedElements.push(element);
             }
         }
-        this.removeAll(removedElements);
-        return result;
+        return this.removeAll(removedElements);
     }
 }

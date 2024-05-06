@@ -30,14 +30,12 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Writable } from "../shared/Writable";
 import { Zipper } from "../shared/Zipper";
 import { ILookup } from "./ILookup";
 
 export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
     private readonly keyComparator: OrderComparator<TKey>;
     private readonly lookupTree: RedBlackTree<IGroup<TKey, TElement>>;
-    public readonly length: number = 0;
 
     private constructor(keyComparator: OrderComparator<TKey>) {
         this.keyComparator = keyComparator;
@@ -66,7 +64,6 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
                 lookup.lookupTree.insert(new Group(keySelector(element), new List<TValue>([valueSelector(element)])));
             }
         }
-        lookup.updateCount();
         return lookup;
     }
 
@@ -351,7 +348,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.lookupTree.zip(enumerable, zipper);
     }
 
-    protected updateCount(): void {
-        (this.length as Writable<number>) = this.size();
+    public get length(): number {
+        return this.lookupTree.length;
     }
 }

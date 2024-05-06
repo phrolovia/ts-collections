@@ -7,7 +7,6 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
     public constructor(list: IList<TElement>) {
         super(list.comparator);
         this.list = list;
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {

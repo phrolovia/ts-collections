@@ -16,7 +16,6 @@ export class List<TElement> extends AbstractList<TElement> {
         for (const element of iterable) {
             this.add(element);
         }
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -28,13 +27,11 @@ export class List<TElement> extends AbstractList<TElement> {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
         this.data.splice(index, 0, element);
-        this.updateLength();
         return true;
     }
 
     public clear(): void {
         this.data.length = 0;
-        this.updateLength();
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -68,7 +65,6 @@ export class List<TElement> extends AbstractList<TElement> {
                 break;
             }
         }
-        this.updateLength();
         return deleted;
     }
 
@@ -78,7 +74,6 @@ export class List<TElement> extends AbstractList<TElement> {
         }
         const element = this.data[index];
         this.data.splice(index, 1);
-        this.updateLength();
         return element;
     }
 
@@ -116,5 +111,9 @@ export class List<TElement> extends AbstractList<TElement> {
             buffer.push(selector?.(element) ?? String(element));
         }
         return buffer.join(separator ?? ", ");
+    }
+
+    public override get length(): number {
+        return this.data.length;
     }
 }

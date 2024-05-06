@@ -8,7 +8,6 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
     public constructor(iterable: Iterable<TElement> = [] as TElement[], comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.queue = new LinkedList<TElement>(iterable, comparator);
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -21,14 +20,11 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @return true if the element was added to the queue, false otherwise.
      */
     public override add(element: TElement): boolean {
-        const result = this.queue.add(element);
-        this.updateLength();
-        return result;
+        return this.queue.add(element);
     }
 
     public override clear(): void {
         this.queue.clear();
-        this.updateLength();
     }
 
     public override contains(element: TElement): boolean {
@@ -48,7 +44,6 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
             throw new Error(ErrorMessages.NoElements);
         }
         const result = this.queue.poll();
-        this.updateLength();
         return result as TElement;
     }
 
@@ -58,7 +53,6 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      */
     public enqueue(element: TElement): void {
         this.queue.add(element);
-        this.updateLength();
     }
 
     /**
@@ -98,12 +92,14 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @returns {TElement | null} The head of the queue, or null if the queue is empty.
      */
     public poll(): TElement | null {
-        const result = this.queue.poll();
-        this.updateLength();
-        return result;
+        return this.queue.poll();
     }
 
     public override size(): number {
         return this.queue.size();
+    }
+
+    public override get length(): number {
+        return this.queue.length;
     }
 }

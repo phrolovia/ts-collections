@@ -7,7 +7,6 @@ export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TEl
     public constructor(collection: ICollection<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.collection = collection;
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {

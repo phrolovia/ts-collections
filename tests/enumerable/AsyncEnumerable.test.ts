@@ -11,35 +11,35 @@ import { Student } from "../models/Student";
 describe("AsyncEnumerable", () => {
     const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));
 
-    const arrayProducer = async function* <T>(numbers: T[], delay: number = 50): AsyncIterable<T> {
+    const arrayProducer = async function* <T>(numbers: T[], delay: number = 5): AsyncIterable<T> {
         for (let ix = 0; ix < numbers.length; ++ix) {
             await suspend(delay);
             yield numbers[ix];
         }
     };
 
-    const mixedProducer = async function* (list: any[], delay: number = 50): AsyncIterable<number | string> {
+    const mixedProducer = async function* (list: any[], delay: number = 5): AsyncIterable<number | string> {
         for (let ix = 0; ix < list.length; ++ix) {
             await suspend(delay);
             yield list[ix];
         }
     };
 
-    const numberProducer = async function* (limit: number = 100, delay: number = 50, start: number = 0): AsyncIterable<number> {
+    const numberProducer = async function* (limit: number = 100, delay: number = 5, start: number = 0): AsyncIterable<number> {
         for (let ix = start; ix < limit; ++ix) {
             await suspend(delay);
             yield ix;
         }
     };
 
-    const numericalStringProducer = async function* (limit: number = 100, delay: number = 50): AsyncIterable<string> {
+    const numericalStringProducer = async function* (limit: number = 100, delay: number = 5): AsyncIterable<string> {
         for (let ix = 0; ix < limit; ++ix) {
             await suspend(delay);
             yield ix.toString();
         }
     };
 
-    const personProducer = async function* (peopleList: Person[] = [], delay: number = 50): AsyncIterable<Person> {
+    const personProducer = async function* (peopleList: Person[] = [], delay: number = 5): AsyncIterable<Person> {
         const people: Person[] = peopleList.length > 0
             ? peopleList
             : [Person.Alice, Person.Lucrezia, Person.Vanessa, Person.Emily, Person.Noemi];
@@ -49,7 +49,7 @@ describe("AsyncEnumerable", () => {
         }
     };
 
-    const stringProducer = async function* (stringList: string[], delay: number = 50): AsyncIterable<string> {
+    const stringProducer = async function* (stringList: string[], delay: number = 5): AsyncIterable<string> {
         for (let ix = 0; ix < stringList.length; ++ix) {
             await suspend(delay);
             yield stringList[ix];
@@ -1359,10 +1359,10 @@ describe("AsyncEnumerable", () => {
         });
         test("should return union of two enumerables", async () => {
             const enumerable1 = new AsyncEnumerable(personProducer(
-                Enumerable.range(0, 100).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90))).toArray(),
+                Enumerable.range(0, 100).select(() => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90))).toArray(),
                 1));
             const enumerable2 = new AsyncEnumerable(personProducer(
-                Enumerable.range(0, 100).select(n => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50))).toArray(),
+                Enumerable.range(0, 100).select(() => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50))).toArray(),
                 1));
             const exceptionList = enumerable1.union(enumerable2, (p1, p2) => p1.age === p2.age);
             const ageCount = await exceptionList.select(p => p.age).distinct().count();

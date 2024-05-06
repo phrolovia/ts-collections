@@ -10,7 +10,6 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
     public constructor(dictionary: IDictionary<TKey, TValue>) {
         super(dictionary.valueComparator, dictionary.keyValueComparator);
         this.dictionary = dictionary;
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
