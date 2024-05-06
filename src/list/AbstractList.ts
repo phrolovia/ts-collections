@@ -120,7 +120,6 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
                 this.removeAt(index);
             }
         }
-        this.updateLength();
         return this.size() !== oldSize;
     }
 
@@ -131,7 +130,6 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
                 this.removeAt(index);
             }
         }
-        this.updateLength();
         return this.size() !== oldSize;
     }
 

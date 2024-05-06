@@ -13,7 +13,6 @@ export abstract class AbstractCollection<TElement> extends AbstractReadonlyColle
         for (const element of collection) {
             this.add(element);
         }
-        this.updateLength();
         return this.size() !== oldSize;
     }
 

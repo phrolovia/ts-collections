@@ -25,7 +25,6 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
     public clear(): void {
         this.root = null;
         this.treeSize = 0;
-        this.updateLength();
     }
 
     public find(predicate: Predicate<TElement>): TElement | null {
@@ -106,6 +105,10 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
                 break;
         }
         return array;
+    }
+
+    public override get length(): number {
+        return this.treeSize;
     }
 
     protected toInorderArray(root: INode<TElement> | null, target: TElement[]): void {

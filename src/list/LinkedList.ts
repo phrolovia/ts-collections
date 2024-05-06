@@ -29,7 +29,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         for (const element of iterable) {
             this.add(element);
         }
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -65,13 +64,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         if (this.firstNode == null) {
             return;
         }
-        // for (let node: Node<TElement> = this.firstNode; node != null;) {
-        //     const next = node.next;
-        //     // node.item = null;
-        //     node.next = null;
-        //     node.prev = null;
-        //     node = next as Node<TElement>;
-        // }
         this.firstNode = this.lastNode = null;
         this.ListSize = 0;
     }
@@ -184,6 +176,10 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         }
     }
 
+    public override get length(): number {
+        return this.listSize;
+    }
+
     private checkElementIndex(index: number): void {
         if (!this.isElementIndex(index)) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
@@ -281,7 +277,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
             node.next = null;
         }
 
-        // node.item = null;
         this.ListSize = this.listSize - 1;
         return element;
     }
@@ -289,7 +284,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     private unlinkFirst(firstNode: Node<TElement>): TElement {
         const element = firstNode.item;
         const next = firstNode.next;
-        // firstNode.item = null;
         firstNode.next = null;
         this.firstNode = next;
         if (next == null) {
@@ -304,7 +298,6 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     private unlinkLast(lastNode: Node<TElement>): TElement {
         const element = lastNode.item;
         const prev = lastNode.prev;
-        // lastNode.item = null;
         lastNode.prev = null;
         this.lastNode = prev;
         if (prev == null) {
@@ -318,6 +311,5 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
 
     private set ListSize(size: number) {
         this.listSize = size;
-        this.updateLength();
     }
 }

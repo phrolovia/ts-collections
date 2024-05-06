@@ -1,4 +1,4 @@
-import { Enumerable, EnumerableSet, ICollection, ISet, List } from "../imports.ts";
+import { EnumerableSet, ICollection, ISet, List, select } from "../imports.ts";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ErrorMessages } from "../shared/ErrorMessages";
@@ -41,13 +41,11 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
         this.dictionary.set(key, new KeyValuePair(key, value));
-        this.updateLength();
         return value;
     }
 
     public clear(): void {
         this.dictionary.clear();
-        this.updateLength();
     }
 
     public override containsKey(key: TKey): boolean {
@@ -81,7 +79,6 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         if (this.containsKey(key)) {
             const oldValue = this.get(key);
             this.dictionary.delete(key);
-            this.updateLength();
             return oldValue;
         }
         return null;
@@ -100,6 +97,10 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     }
 
     public values(): ICollection<TValue> {
-        return new List<TValue>(Enumerable.from(this.dictionary.values()).select(x => x.value));
+        return new List<TValue>(select(this.dictionary.values(), x => x.value));
+    }
+
+    public override get length(): number {
+        return this.dictionary.size;
     }
 }

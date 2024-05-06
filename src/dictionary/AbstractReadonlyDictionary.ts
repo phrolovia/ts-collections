@@ -28,7 +28,6 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Writable } from "../shared/Writable";
 import { Zipper } from "../shared/Zipper";
 import { Dictionary } from "./Dictionary";
 import { IReadonlyDictionary } from "./IReadonlyDictionary";
@@ -37,7 +36,6 @@ import { SortedDictionary } from "./SortedDictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
-    protected readonly collectionLength: number = 0;
     protected valueComparer: EqualityComparator<TValue>;
 
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {
@@ -324,16 +322,8 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.zip(this, enumerable, zipper);
     }
 
-    protected updateLength(): void {
-        (this.collectionLength as Writable<number>) = this.size();
-    }
-
     public get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>> {
         return this.keyValueComparer;
-    }
-
-    public get length(): number {
-        return this.collectionLength;
     }
 
     public get valueComparator(): EqualityComparator<TValue> {
@@ -355,4 +345,6 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     abstract size(): number;
 
     abstract values(): ICollection<TValue>;
+
+    abstract get length(): number;
 }

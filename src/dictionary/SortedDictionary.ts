@@ -45,13 +45,11 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
             throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
         }
         this.keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
-        this.updateLength();
         return value;
     }
 
     public clear(): void {
         this.keyValueTree.clear();
-        this.updateLength();
     }
 
 
@@ -84,9 +82,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     }
 
     public remove(key: TKey): TValue | null {
-        const result = this.keyValueTree.removeBy(key, p => p.key, this.keyComparer)?.value ?? null;
-        this.updateLength();
-        return result;
+        return this.keyValueTree.removeBy(key, p => p.key, this.keyComparer)?.value ?? null;
     }
 
     public set(key: TKey, value: TValue): void {
@@ -107,5 +103,9 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
 
     public get keyComparator(): OrderComparator<TKey> {
         return this.keyComparer;
+    }
+
+    public override get length(): number {
+        return this.keyValueTree.length;
     }
 }

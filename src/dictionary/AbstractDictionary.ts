@@ -23,7 +23,6 @@ export abstract class AbstractDictionary<TKey, TValue> extends AbstractReadonlyD
             return false;
         }
         this.add(key, value);
-        this.updateLength();
         return true;
     }
 

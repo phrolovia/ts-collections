@@ -8,7 +8,6 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
     public constructor(iterable: Iterable<TElement> = [], comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.stack = new LinkedList<TElement>(iterable, comparator);
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -21,13 +20,11 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      */
     public override add(element: TElement): boolean {
         this.stack.addFirst(element);
-        this.updateLength();
         return true;
     }
 
     public override clear() {
         this.stack.clear();
-        this.updateLength();
     }
 
     /**
@@ -50,9 +47,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * @throws {Error} If the queue is empty.
      */
     public pop(): TElement | null {
-        const result = this.stack.removeFirst();
-        this.updateLength();
-        return result;
+        return this.stack.removeFirst();
     }
 
     /**
@@ -61,7 +56,6 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      */
     public push(element: TElement): void {
         this.stack.addFirst(element);
-        this.updateLength();
     }
 
     public override size(): number {
@@ -79,5 +73,9 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
             throw new Error(ErrorMessages.NoElements);
         }
         return this.stack.peek() as TElement;
+    }
+
+    public override get length(): number {
+        return this.stack.length;
     }
 }
