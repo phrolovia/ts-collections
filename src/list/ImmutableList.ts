@@ -5,15 +5,15 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 
 export class ImmutableList<TElement> extends AbstractImmutableCollection<TElement> implements IReadonlyList<TElement> {
-    readonly #data: ReadonlyList<TElement>;
+    readonly #list: ReadonlyList<TElement>;
 
     private constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.#data = new ReadonlyList(new List(iterable, comparator));
+        this.#list = new ReadonlyList(new List(iterable, comparator));
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#data;
+        yield* this.#list;
     }
 
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
@@ -26,7 +26,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list with the added element.
      */
     public add(element: TElement): ImmutableList<TElement> {
-        return new ImmutableList([...this.#data, element], this.comparer);
+        return new ImmutableList([...this.#list, element], this.comparer);
     }
 
     /**
@@ -35,11 +35,11 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list with the added element.
      */
     public addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        return new ImmutableList([...this.#data, ...collection], this.comparer);
+        return new ImmutableList([...this.#list, ...collection], this.comparer);
     }
 
     public override any(predicate?: Predicate<TElement>): boolean {
-        return this.#data.any(predicate);
+        return this.#list.any(predicate);
     }
 
     /**
@@ -51,42 +51,42 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        return this.#data.contains(element, comparator);
+        return this.#list.contains(element, comparator);
     }
 
     public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return this.#data.containsAll(collection);
+        return this.#list.containsAll(collection);
     }
 
     public override count(predicate?: Predicate<TElement>): number {
-        return this.#data.count(predicate);
+        return this.#list.count(predicate);
     }
 
     public override elementAt(index: number): TElement {
-        return this.#data.elementAt(index);
+        return this.#list.elementAt(index);
     }
 
     public override elementAtOrDefault(index: number): TElement | null {
-        return this.#data.elementAtOrDefault(index);
+        return this.#list.elementAtOrDefault(index);
     }
 
     public* entries(): IterableIterator<[number, TElement]> {
-        yield* this.#data.entries();
+        yield* this.#list.entries();
     }
 
     public override first(predicate?: Predicate<TElement>): TElement {
-        return this.#data.first(predicate);
+        return this.#list.first(predicate);
     }
 
     public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return this.#data.firstOrDefault(predicate);
+        return this.#list.firstOrDefault(predicate);
     }
 
     public get(index: number): TElement {
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
-        return this.#data.get(index);
+        return this.#list.get(index);
     }
 
     /**
@@ -99,23 +99,23 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
-        return new ImmutableList(this.#data.getRange(index, count), this.comparer);
+        return new ImmutableList(this.#list.getRange(index, count), this.comparer);
     }
 
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
-        return this.#data.indexOf(element, comparator);
+        return this.#list.indexOf(element, comparator);
     }
 
     public override last(predicate?: Predicate<TElement>): TElement {
-        return this.#data.last(predicate);
+        return this.#list.last(predicate);
     }
 
     public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
-        return this.#data.lastIndexOf(element, comparator);
+        return this.#list.lastIndexOf(element, comparator);
     }
 
     public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return this.#data.lastOrDefault(predicate);
+        return this.#list.lastOrDefault(predicate);
     }
 
     /**
@@ -124,7 +124,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list without the specified element.
      */
     public remove(element: TElement): ImmutableList<TElement> {
-        return new ImmutableList(this.#data.where(e => !this.comparer(element, e)), this.comparer);
+        return new ImmutableList(this.#list.where(e => !this.comparer(element, e)), this.comparer);
     }
 
     /**
@@ -133,7 +133,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list without the elements in the specified collection.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        return new ImmutableList(this.#data.where(e => !contains(collection, e, this.comparer)), this.comparer);
+        return new ImmutableList(this.#list.where(e => !contains(collection, e, this.comparer)), this.comparer);
     }
 
     /**
@@ -145,7 +145,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
-        return new ImmutableList(this.#data.where((_, i) => i !== index), this.comparer);
+        return new ImmutableList(this.#list.where((_, i) => i !== index), this.comparer);
     }
 
     /**
@@ -154,7 +154,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list without the elements that satisfies the specified predicate.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutableList<TElement> {
-        return new ImmutableList(this.#data.where(e => !predicate(e)), this.comparer);
+        return new ImmutableList(this.#list.where(e => !predicate(e)), this.comparer);
     }
 
     /**
@@ -163,7 +163,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list with only the elements in the specified collection.
      */
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        const list = this.#data.toList();
+        const list = this.#list.toList();
         list.retainAll(collection);
         return new ImmutableList(list, this.comparer);
     }
@@ -178,11 +178,11 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
         if (index < 0 || index >= this.size()) {
             throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
-        return new ImmutableList(this.#data.select((e, i) => i === index ? element : e), this.comparer);
+        return new ImmutableList(this.#list.select((e, i) => i === index ? element : e), this.comparer);
     }
 
     public size(): number {
-        return this.#data.size();
+        return this.#list.size();
     }
 
     /**
@@ -191,7 +191,7 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableList} A new list that is sorted according to the specified comparator.
      */
     public sort(comparator?: OrderComparator<TElement>): ImmutableList<TElement> {
-        return new ImmutableList(this.#data.toArray().sort(comparator), this.comparer);
+        return new ImmutableList(this.#list.toArray().sort(comparator), this.comparer);
     }
 
     public override get comparator(): EqualityComparator<TElement> {
@@ -199,6 +199,6 @@ export class ImmutableList<TElement> extends AbstractImmutableCollection<TElemen
     }
 
     public override get length(): number {
-        return this.#data.length;
+        return this.#list.length;
     }
 }
