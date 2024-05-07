@@ -10,7 +10,7 @@ import { EqualityComparator } from "../shared/EqualityComparator";
  * @see https://en.wikipedia.org/wiki/Circular_buffer
  */
 export class CircularQueue<TElement> extends Queue<TElement> {
-    private readonly capacity: number = 32;
+    readonly #capacity: number = 32;
 
     /**
      * Constructs a circular queue with the default capacity of 32.
@@ -32,7 +32,7 @@ export class CircularQueue<TElement> extends Queue<TElement> {
     public constructor(capacity?: number, comparator?: EqualityComparator<TElement>) {
         super([], comparator);
         if (capacity !== undefined) {
-            this.capacity = capacity;
+            this.#capacity = capacity;
         }
     }
 
@@ -43,7 +43,7 @@ export class CircularQueue<TElement> extends Queue<TElement> {
      * @returns true if the element was added to the queue, false otherwise.
      */
     public override add(element: TElement): boolean {
-        if (this.size() === this.capacity) {
+        if (this.size() === this.#capacity) {
             this.poll();
         }
         return super.add(element);
@@ -63,6 +63,6 @@ export class CircularQueue<TElement> extends Queue<TElement> {
      * @returns true if the queue is full, false otherwise.
      */
     public isFull(): boolean {
-        return this.size() === this.capacity;
+        return this.size() === this.#capacity;
     }
 }
