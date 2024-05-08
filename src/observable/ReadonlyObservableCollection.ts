@@ -49,7 +49,7 @@ export class ReadonlyObservableCollection<TElement> extends AbstractEnumerable<T
     }
 
     private setCollectionChangedEvent(): void {
-        this.#collection.collectionChanged = (sender, args) => {
+        this.#collection.collectionChanged = (_sender, args) => {
             this.collectionChanged?.(this, args);
         }
     }

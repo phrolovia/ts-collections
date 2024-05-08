@@ -28,7 +28,7 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         return true;
     }
 
-    public clear() {
+    public clear(): void {
         const oldItems = new ReadonlyList(new List(this.#list.toArray()));
         this.#list.clear();
         this.collectionChanged?.(this, {
@@ -61,7 +61,7 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         return this.#list.get(index);
     }
 
-    public insert(index: number, element: TElement) {
+    public insert(index: number, element: TElement): void {
         this.#list.addAt(element, index);
         this.collectionChanged?.(this, {
             newItems: new ReadonlyList(new List([element])),
@@ -74,7 +74,7 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         return this.#list.isEmpty();
     }
 
-    public move(oldIndex: number, newIndex: number) {
+    public move(oldIndex: number, newIndex: number): void {
         const element = this.#list.removeAt(oldIndex);
         this.#list.addAt(element, newIndex);
         this.collectionChanged?.(this, {
