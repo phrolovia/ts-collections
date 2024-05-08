@@ -1,14 +1,14 @@
-import { Dictionary, ICollection, ISet } from "../imports.ts";
+import { Dictionary, ICollection, ISet, ReadonlyDictionary } from "../imports.ts";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 
 export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
-    readonly #dictionary: Dictionary<TKey, TValue>;
+    readonly #dictionary: ReadonlyDictionary<TKey, TValue>;
 
     private constructor(dictionary: Dictionary<TKey, TValue>) {
         super(dictionary.valueComparator, dictionary.keyValueComparator);
-        this.#dictionary = dictionary;
+        this.#dictionary = new ReadonlyDictionary(dictionary);
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
