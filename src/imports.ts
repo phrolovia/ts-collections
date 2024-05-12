@@ -50,6 +50,7 @@ export { SortedSet } from "./set/SortedSet.ts";
 export { EnumerableSet } from "./set/EnumerableSet.ts";
 export { ImmutableSet } from "./set/ImmutableSet.ts";
 export { ImmutableSortedSet } from "./set/ImmutableSortedSet.ts";
+export { Heap } from "./heap/Heap.ts";
 export { Collections } from "./core/Collections.ts";
 export {
     aggregate,

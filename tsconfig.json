@@ -25,6 +25,7 @@
         "preserveConstEnums": true,
         "removeComments": false,
         "resolveJsonModule": true,
+        "skipLibCheck": true,
         "sourceMap": true,
         "strict": true,
         "strictFunctionTypes": true,
@@ -36,6 +37,6 @@
     ],
     "exclude": [
         "node_modules",
-        "tests/**/*.test.ts",
+        "tests/**/*.test.ts"
     ]
 }
