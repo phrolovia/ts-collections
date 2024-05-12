@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { Heap } from "../../src/heap/Heap";
+import { Comparators } from "../../src/shared/Comparators";
 
 describe("Heap", () => {
     describe("#add()", () => {
@@ -35,7 +36,7 @@ describe("Heap", () => {
             expect(array).toEqual(expected);
         });
         it("should add elements in descending order", () => {
-            const heap = new Heap<number>((a, b) => b - a);
+            const heap = new Heap<number>(Comparators.reverseOrderComparator);
             heap.add(16);
             heap.add(1210);
             heap.add(1060);
@@ -96,7 +97,7 @@ describe("Heap", () => {
             expect(array).toEqual([4, 8, 26, 88, 11]);
         });
         test("should create a max heap from an iterable", () => {
-            const heap = new Heap<number>((a, b) => b - a, [88, 4, 26, 11, 8]);
+            const heap = new Heap<number>(Comparators.reverseOrderComparator, [88, 4, 26, 11, 8]);
             expect(heap.size()).toBe(5);
             const array = [...heap]; // max heap
             expect(array).toEqual([88, 11, 26, 4, 8]);
@@ -155,7 +156,7 @@ describe("Heap", () => {
 
     describe("#remove()", () => {
         test("should remove the element from the max heap", () => {
-            const heap = new Heap<number>((a, b) => b - a);
+            const heap = new Heap<number>(Comparators.reverseOrderComparator);
             heap.add(88);
             heap.add(4);
             heap.add(26);
@@ -180,7 +181,7 @@ describe("Heap", () => {
             expect(heap.toArray()).toEqual([4, 8, 11, 88]);
         });
         test("should remove the first instance of the element from the heap", () => {
-            const heap = new Heap<number>((a, b) => b - a);
+            const heap = new Heap<number>(Comparators.reverseOrderComparator);
             heap.add(88);
             heap.add(4);
             heap.add(26);
@@ -209,7 +210,7 @@ describe("Heap", () => {
     });
     describe("#removeAll()", () => {
         test("should remove all elements from the given iterable", () => {
-            const heap = new Heap<number>((a, b) => b - a, [78, 3, 16, 16, 10, 7]);
+            const heap = new Heap<number>(Comparators.reverseOrderComparator, [78, 3, 16, 16, 10, 7]);
             heap.removeAll([3, 16]);
             expect(heap.size()).toBe(3);
             expect(heap.toArray()).toEqual([78, 10, 7]);

@@ -46,6 +46,7 @@ export {
     LinkedList,
     List,
     ObservableCollection,
+    PriorityQueue,
     Queue,
     ReadonlyCollection,
     ReadonlyList,

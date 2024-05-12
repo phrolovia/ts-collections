@@ -24,6 +24,7 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
 
     /**
      * Adds an element to the heap.
+     * @template TElement The type of elements in the heap.
      * @param element The element to add.
      * @returns true
      */
@@ -54,6 +55,8 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
 
     /**
      * Retrieves the element at the root of the heap without removing it.
+     * @template TElement The type of elements in the heap.
+     * @returns {TElement} The element at the root of the heap.
      */
     public peek(): TElement {
         return this.#heap.get(0);
@@ -61,7 +64,8 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
 
     /**
      * Retrieves the element at the root of the heap and removes it.
-     * @returns The element at the root of the heap, or null if the heap is empty.
+     * @template TElement The type of elements in the heap.
+     * @returns {TElement|null} The element at the root of the heap, or null if the heap is empty.
      */
     public poll(): TElement | null {
         if (this.isEmpty()) {
@@ -79,7 +83,8 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
 
     /**
      * Removes the specified element from the heap.
-     * @param element The element to remove.
+     * @template TElement The type of elements in the heap.
+     * @param {TElement} element The element to remove.
      * @returns true if the element was removed; otherwise, false.
      */
     public remove(element: TElement): boolean {
@@ -96,7 +101,8 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
 
     /**
      * Removes all elements in the specified collection from the heap.
-     * @param collection The collection of elements to remove.
+     * @template TSource The type of elements that will be removed from the heap.
+     * @param {Iterable<TSource>} collection The collection of elements to remove.
      * @returns true if any elements were removed; otherwise, false.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
