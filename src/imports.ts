@@ -21,6 +21,7 @@ export { AbstractCollection } from "./core/AbstractCollection.ts";
 export { AbstractRandomAccessCollection } from "./core/AbstractRandomAccessCollection.ts";
 export { AbstractReadonlyCollection } from "./core/AbstractReadonlyCollection.ts";
 export { AbstractImmutableCollection } from "./core/AbstractImmutableCollection.ts";
+export { AbstractRandomAccessImmutableCollection } from "./core/AbstractRandomAccessImmutableCollection.ts";
 export { ObservableCollection } from "./observable/ObservableCollection.ts";
 export { ReadonlyCollection } from "./core/ReadonlyCollection.ts";
 export type { IList } from "./list/IList.ts";
@@ -52,6 +53,7 @@ export { ImmutableSet } from "./set/ImmutableSet.ts";
 export { ImmutableSortedSet } from "./set/ImmutableSortedSet.ts";
 export { Heap } from "./heap/Heap.ts";
 export { PriorityQueue } from "./queue/PriorityQueue.ts";
+export { ImmutableQueue } from "./queue/ImmutableQueue.ts";
 export { Collections } from "./core/Collections.ts";
 export {
     aggregate,

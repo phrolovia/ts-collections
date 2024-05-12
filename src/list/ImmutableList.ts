@@ -1,10 +1,10 @@
-import { AbstractImmutableCollection, contains, IReadonlyList, List, ReadonlyList } from "../imports.ts";
+import { AbstractRandomAccessImmutableCollection, contains, IReadonlyList, List, ReadonlyList } from "../imports.ts";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ErrorMessages } from "../shared/ErrorMessages";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 
-export class ImmutableList<TElement> extends AbstractImmutableCollection<TElement> implements IReadonlyList<TElement> {
+export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: ReadonlyList<TElement>;
 
     private constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {

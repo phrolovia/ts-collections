@@ -1,9 +1,9 @@
-import { AbstractImmutableCollection, contains, SortedSet } from "../imports.ts";
+import { AbstractRandomAccessImmutableCollection, contains, SortedSet } from "../imports.ts";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 
-export class ImmutableSortedSet<TElement> extends AbstractImmutableCollection<TElement> {
+export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
     readonly #set: SortedSet<TElement>;
 

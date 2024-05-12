@@ -1,7 +1,7 @@
-import { AbstractImmutableCollection, contains, EnumerableSet } from "../imports.ts";
+import { AbstractRandomAccessImmutableCollection, contains, EnumerableSet } from "../imports.ts";
 import { Predicate } from "../shared/Predicate";
 
-export class ImmutableSet<TElement> extends AbstractImmutableCollection<TElement> {
+export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
     readonly #set: EnumerableSet<TElement>;
 
     private constructor(iterable?: Iterable<TElement>) {

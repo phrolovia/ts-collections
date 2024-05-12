@@ -27,8 +27,8 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         this.#queue.clear();
     }
 
-    public override contains(element: TElement): boolean {
-        return this.#queue.contains(element);
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.#queue.contains(element, comparator);
     }
 
     /**
