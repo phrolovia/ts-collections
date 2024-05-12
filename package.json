@@ -1,6 +1,6 @@
 {
     "name": "@mirei/ts-collections",
-    "version": "14.0.0-beta.11",
+    "version": "14.0.0-beta.12",
     "description": "A collection of wrappers for common data structures in TypeScript",
     "main": "dist/index.mjs",
     "module": "dist/index.mjs",
