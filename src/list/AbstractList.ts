@@ -114,11 +114,19 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
         let index = 0;
-        for (const e of collection) {
-            index = this.indexOf(e);
-            if (index !== -1) {
-                this.removeAt(index);
+        const indices: number[] = [];
+        for (const element of this) {
+            for (const e of collection) {
+                if (this.comparer(element, e)) {
+                    indices.push(index);
+                    break;
+                }
             }
+            index++;
+        }
+        indices.sort((a, b) => b - a);
+        for (const i of indices) {
+            this.removeAt(i);
         }
         return this.size() !== oldSize;
     }

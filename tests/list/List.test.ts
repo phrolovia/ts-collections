@@ -1027,6 +1027,13 @@ describe("List", () => {
             expect(list1.get(2)).to.eq(Person.Priscilla);
             expect(list1.length).to.eq(3);
         });
+        test("should remove the given elements from the list", () => {
+            const list = new List([78, 3, 16, 16, 10, 7]);
+            list.removeAll([3, 16, 7]);
+            expect(list.size()).to.eq(2);
+            expect(list.get(0)).to.eq(78);
+            expect(list.get(1)).to.eq(10);
+        });
     });
 
     describe("#removeAt()", () => {
@@ -1078,6 +1085,14 @@ describe("List", () => {
             expect(list1.get(1)).to.eq(Person.Vanessa);
             expect(list1.get(2)).to.eq(Person.Viola);
             expect(list1.length).to.eq(3);
+        });
+        test("should remove the given elements from the list", () => {
+            const list = new List([78, 3, 16, 16, 10, 7]);
+            list.retainAll([3, 16]);
+            expect(list.length).to.eq(3);
+            expect(list.get(0)).to.eq(3);
+            expect(list.get(1)).to.eq(16);
+            expect(list.get(1)).to.eq(16);
         });
     });
 

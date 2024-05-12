@@ -1,3 +1,4 @@
+import { expect } from "vitest";
 import { LinkedList } from "../../src/list/LinkedList";
 import { EnumerableSet } from "../../src/set/EnumerableSet";
 import { Person } from "../models/Person";
@@ -66,6 +67,22 @@ describe("EnumerableSet", () => {
             expect(set.contains(Person.Bella)).to.be.false;
             expect(set.contains(Person.Reina)).to.be.false;
             expect(set.contains(Person.Senna)).to.be.true;
+        });
+        test("should return true if the set was modified", () => {
+            const set = new EnumerableSet<string>();
+            set.add("z");
+            set.add("c");
+            set.add("p");
+            set.add("p"); // duplicate
+            set.add("e");
+            set.add("d");
+            const result = set.removeAll(["p", "c", "d"]);
+            expect(result).to.be.true;
+            expect(set.size()).to.equal(2);
+            expect(set.contains("p")).to.be.false;
+            expect(set.contains("c")).to.be.false;
+            expect(set.contains("d")).to.be.false;
+            expect(set.toArray()).to.eql(["z", "e"]);
         });
     });
     describe("#removeIf()", () => {
