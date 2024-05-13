@@ -52,6 +52,7 @@ export {
     PriorityQueue,
     Queue,
     ReadonlyCollection,
+    ReadonlyDictionary,
     ReadonlyList,
     RedBlackTree,
     SortedDictionary,
