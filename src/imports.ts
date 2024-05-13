@@ -15,6 +15,7 @@ export type { ILookup } from "./lookup/ILookup.ts";
 export type { ICollection } from "./core/ICollection.ts";
 export type { ICollectionChangedEventArgs, CollectionChangedAction } from "./observable/ICollectionChangedEventArgs.ts";
 export type { IImmutableCollection } from "./core/IImmutableCollection.ts";
+export type { IRandomAccessImmutableCollection } from "./core/IRandomAccessImmutableCollection.ts";
 export type { IRandomAccessCollection } from "./core/IRandomAccessCollection.ts";
 export type { IReadonlyCollection } from "./core/IReadonlyCollection.ts";
 export { AbstractCollection } from "./core/AbstractCollection.ts";
@@ -54,6 +55,7 @@ export { ImmutableSortedSet } from "./set/ImmutableSortedSet.ts";
 export { Heap } from "./heap/Heap.ts";
 export { PriorityQueue } from "./queue/PriorityQueue.ts";
 export { ImmutableQueue } from "./queue/ImmutableQueue.ts";
+export { ImmutableStack } from "./stack/ImmutableStack.ts";
 export { Collections } from "./core/Collections.ts";
 export {
     aggregate,

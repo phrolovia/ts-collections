@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
+import { ImmutableQueue } from "../../src/imports.ts";
 import { ErrorMessages } from "../../src/shared/ErrorMessages";
 
 describe("ImmutableQueue", () => {
@@ -13,6 +13,20 @@ describe("ImmutableQueue", () => {
             expect(queue.size()).to.equal(0);
         });
     });
+
+    describe("#addAll()", () => {
+        test("should add all elements to the queue", () => {
+            const queue = ImmutableQueue.create<number>([55, 99]);
+            const newQueue = queue.addAll([1, 2, 3]);
+            expect(newQueue).to.be.instanceof(ImmutableQueue);
+            expect(newQueue.size()).to.equal(5);
+            expect(newQueue).not.equals(queue);
+            expect(newQueue.toArray()).to.deep.equal([55, 99, 1, 2, 3]);
+            expect(queue.size()).to.equal(2);
+            expect(queue.toArray()).to.deep.equal([55, 99]);
+        });
+    });
+
     describe("#clear()", () => {
         test("should clear the queue", () => {
             const queue = ImmutableQueue.create<number>([1, 2, 3]);
