@@ -1,21 +1,5 @@
-export {
-    AbstractCollection,
-    AbstractEnumerable,
-    AbstractImmutableCollection,
-    AbstractRandomAccessCollection,
-    AbstractReadonlyCollection,
-    AbstractList,
-    AbstractSet,
-    AbstractTree,
-    AsyncEnumerable,
-    CircularQueue,
+export type {
     CollectionChangedAction,
-    Collections,
-    Dictionary,
-    Enumerable,
-    EnumerableSet,
-    Enumerator,
-    Group,
     IAsyncEnumerable,
     ICollection,
     ICollectionChangedEventArgs,
@@ -29,27 +13,51 @@ export {
     IOrderedAsyncEnumerable,
     IOrderedEnumerable,
     IRandomAccessCollection,
+    IRandomAccessImmutableCollection,
     IReadonlyCollection,
     IReadonlyList,
     ISet,
     ITree,
+    TraverseType,
+} from "./imports"
+
+export {
+    AbstractCollection,
+    AbstractEnumerable,
+    AbstractImmutableCollection,
+    AbstractRandomAccessCollection,
+    AbstractReadonlyCollection,
+    AbstractList,
+    AbstractSet,
+    AbstractTree,
+    AsyncEnumerable,
+    CircularQueue,
+    Collections,
+    Dictionary,
+    Enumerable,
+    EnumerableSet,
+    Enumerator,
+    Group,
+    Heap,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
-    IndexableList,
+    ImmutableStack,
     LinkedList,
     List,
     ObservableCollection,
+    PriorityQueue,
     Queue,
     ReadonlyCollection,
+    ReadonlyDictionary,
     ReadonlyList,
     RedBlackTree,
     SortedDictionary,
     SortedSet,
     Stack,
-    TraverseType,
     aggregate,
     all,
     any,
@@ -109,7 +117,6 @@ export {
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
-    toIndexableList,
     toLinkedList,
     toList,
     toLookup,
@@ -119,15 +126,15 @@ export {
     where,
     zip
 } from "./imports";
-export {KeyValuePair} from "./src/dictionary/KeyValuePair";
-export {Accumulator} from "./src/shared/Accumulator";
-export {EqualityComparator} from "./src/shared/EqualityComparator";
-export {IndexedAction} from "./src/shared/IndexedAction";
-export {IndexedPredicate} from "./src/shared/IndexedPredicate";
-export {IndexedSelector} from "./src/shared/IndexedSelector";
-export {JoinSelector} from "./src/shared/JoinSelector";
-export {OrderComparator} from "./src/shared/OrderComparator";
-export {PairwiseSelector} from "./src/shared/PairwiseSelector";
-export {Predicate} from "./src/shared/Predicate";
-export {Selector} from "./src/shared/Selector";
-export {Zipper} from "./src/shared/Zipper";
+export { KeyValuePair } from "./dictionary/KeyValuePair";
+export type { Accumulator } from "./shared/Accumulator";
+export type { EqualityComparator } from "./shared/EqualityComparator";
+export type { IndexedAction } from "./shared/IndexedAction";
+export type { IndexedPredicate } from "./shared/IndexedPredicate";
+export type { IndexedSelector } from "./shared/IndexedSelector";
+export type { JoinSelector } from "./shared/JoinSelector";
+export type { OrderComparator } from "./shared/OrderComparator";
+export type { PairwiseSelector } from "./shared/PairwiseSelector";
+export type { Predicate } from "./shared/Predicate";
+export type { Selector } from "./shared/Selector";
+export type { Zipper } from "./shared/Zipper";

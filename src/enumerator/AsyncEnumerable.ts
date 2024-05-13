@@ -1,26 +1,26 @@
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {IAsyncEnumerable} from "./IAsyncEnumerable";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Selector} from "../shared/Selector";
-import {Accumulator} from "../shared/Accumulator";
-import {Predicate} from "../shared/Predicate";
-import {IEnumerable} from "./IEnumerable";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {IGroup} from "./IGroup";
-import {JoinSelector} from "../shared/JoinSelector";
-import {AsyncEnumerator, IOrderedAsyncEnumerable} from "../../imports";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
+import { AsyncEnumerator, IOrderedAsyncEnumerable } from "../imports";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { IAsyncEnumerable } from "./IAsyncEnumerable";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
-    private readonly enumerator: AsyncEnumerator<TElement>;
+    readonly #enumerator: AsyncEnumerator<TElement>;
 
     public constructor(private readonly iterable: AsyncIterable<TElement>) {
-        this.enumerator = new AsyncEnumerator<TElement>(() => iterable);
+        this.#enumerator = new AsyncEnumerator<TElement>(() => iterable);
     }
 
     public static empty<TSource>(): IAsyncEnumerable<TSource> {
@@ -52,206 +52,206 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult> {
-        return this.enumerator.aggregate(accumulator, seed, resultSelector);
+        return this.#enumerator.aggregate(accumulator, seed, resultSelector);
     }
 
     public all(predicate: Predicate<TElement>): Promise<boolean> {
-        return this.enumerator.all(predicate);
+        return this.#enumerator.all(predicate);
     }
 
     public any(predicate?: Predicate<TElement>): Promise<boolean> {
-        return this.enumerator.any(predicate);
+        return this.#enumerator.any(predicate);
     }
 
     public append(element: TElement): IAsyncEnumerable<TElement> {
-        return this.enumerator.append(element);
+        return this.#enumerator.append(element);
     }
 
     public average(selector?: Selector<TElement, number>): Promise<number> {
-        return this.enumerator.average(selector);
+        return this.#enumerator.average(selector);
     }
 
     public cast<TResult>(): IAsyncEnumerable<TResult> {
-        return this.enumerator.cast();
+        return this.#enumerator.cast();
     }
 
     public chunk(count: number): IAsyncEnumerable<IEnumerable<TElement>> {
-        return this.enumerator.chunk(count);
+        return this.#enumerator.chunk(count);
     }
 
     public concat(other: IAsyncEnumerable<TElement>): IAsyncEnumerable<TElement> {
-        return this.enumerator.concat(other);
+        return this.#enumerator.concat(other);
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean> {
-        return this.enumerator.contains(element, comparator);
+        return this.#enumerator.contains(element, comparator);
     }
 
     public count(predicate?: Predicate<TElement>): Promise<number> {
-        return this.enumerator.count(predicate);
+        return this.#enumerator.count(predicate);
     }
 
-    public defaultIfEmpty(defaultValue?: TElement|null): IAsyncEnumerable<TElement|null> {
-        return this.enumerator.defaultIfEmpty(defaultValue);
+    public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null> {
+        return this.#enumerator.defaultIfEmpty(defaultValue);
     }
 
     public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
-        return this.enumerator.distinct(keySelector, keyComparator);
+        return this.#enumerator.distinct(keySelector, keyComparator);
     }
 
     public elementAt(index: number): Promise<TElement> {
-        return this.enumerator.elementAt(index);
+        return this.#enumerator.elementAt(index);
     }
 
     public elementAtOrDefault(index: number): Promise<TElement | null> {
-        return this.enumerator.elementAtOrDefault(index);
+        return this.#enumerator.elementAtOrDefault(index);
     }
 
     public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
-        return this.enumerator.except(enumerable, comparator, orderComparator);
+        return this.#enumerator.except(enumerable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<TElement>): Promise<TElement> {
-        return this.enumerator.first(predicate);
+        return this.#enumerator.first(predicate);
     }
 
     public firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
-        return this.enumerator.firstOrDefault(predicate);
+        return this.#enumerator.firstOrDefault(predicate);
     }
 
     public forEach(action: IndexedAction<TElement>): Promise<void> {
-        return this.enumerator.forEach(action);
+        return this.#enumerator.forEach(action);
     }
 
     public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<IGroup<TKey, TElement>> {
-        return this.enumerator.groupBy(keySelector, keyComparator);
+        return this.#enumerator.groupBy(keySelector, keyComparator);
     }
 
     public groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
-        return this.enumerator.groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+        return this.#enumerator.groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
-        return this.enumerator.intersect(enumerable, comparator, orderComparator);
+        return this.#enumerator.intersect(enumerable, comparator, orderComparator);
     }
 
     public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
-        return this.enumerator.join(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+        return this.#enumerator.join(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
     public last(predicate?: Predicate<TElement>): Promise<TElement> {
-        return this.enumerator.last(predicate);
+        return this.#enumerator.last(predicate);
     }
 
     public lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
-        return this.enumerator.lastOrDefault(predicate);
+        return this.#enumerator.lastOrDefault(predicate);
     }
 
     public max(selector?: Selector<TElement, number>): Promise<number> {
-        return this.enumerator.max(selector);
+        return this.#enumerator.max(selector);
     }
 
     public min(selector?: Selector<TElement, number>): Promise<number> {
-        return this.enumerator.min(selector);
+        return this.#enumerator.min(selector);
     }
 
     public ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>> {
-        return this.enumerator.ofType(type);
+        return this.#enumerator.ofType(type);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
-        return this.enumerator.orderBy(keySelector, comparator);
+        return this.#enumerator.orderBy(keySelector, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
-        return this.enumerator.orderByDescending(keySelector, comparator);
+        return this.#enumerator.orderByDescending(keySelector, comparator);
     }
 
     public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]> {
-        return this.enumerator.pairwise(resultSelector);
+        return this.#enumerator.pairwise(resultSelector);
     }
 
     public partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
-        return this.enumerator.partition(predicate);
+        return this.#enumerator.partition(predicate);
     }
 
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
-        return this.enumerator.prepend(element);
+        return this.#enumerator.prepend(element);
     }
 
     public reverse(): IAsyncEnumerable<TElement> {
-        return this.enumerator.reverse();
+        return this.#enumerator.reverse();
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate> {
-        return this.enumerator.scan(accumulator, seed);
+        return this.#enumerator.scan(accumulator, seed);
     }
 
     public select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult> {
-        return this.enumerator.select(selector);
+        return this.#enumerator.select(selector);
     }
 
     public selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult> {
-        return this.enumerator.selectMany(selector);
+        return this.#enumerator.selectMany(selector);
     }
 
     public sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean> {
-        return this.enumerator.sequenceEqual(enumerable, comparator);
+        return this.#enumerator.sequenceEqual(enumerable, comparator);
     }
 
     public shuffle(): IAsyncEnumerable<TElement> {
-        return this.enumerator.shuffle();
+        return this.#enumerator.shuffle();
     }
 
     public single(predicate?: Predicate<TElement>): Promise<TElement> {
-        return this.enumerator.single(predicate);
+        return this.#enumerator.single(predicate);
     }
 
     public singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
-        return this.enumerator.singleOrDefault(predicate);
+        return this.#enumerator.singleOrDefault(predicate);
     }
 
     public skip(count: number): IAsyncEnumerable<TElement> {
-        return this.enumerator.skip(count);
+        return this.#enumerator.skip(count);
     }
 
     public skipLast(count: number): IAsyncEnumerable<TElement> {
-        return this.enumerator.skipLast(count);
+        return this.#enumerator.skipLast(count);
     }
 
     public skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
-        return this.enumerator.skipWhile(predicate);
+        return this.#enumerator.skipWhile(predicate);
     }
 
     public sum(selector?: Selector<TElement, number>): Promise<number> {
-        return this.enumerator.sum(selector);
+        return this.#enumerator.sum(selector);
     }
 
     public take(count: number): IAsyncEnumerable<TElement> {
-        return this.enumerator.take(count);
+        return this.#enumerator.take(count);
     }
 
     public takeLast(count: number): IAsyncEnumerable<TElement> {
-        return this.enumerator.takeLast(count);
+        return this.#enumerator.takeLast(count);
     }
 
     public takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
-        return this.enumerator.takeWhile(predicate);
+        return this.#enumerator.takeWhile(predicate);
     }
 
     public async toArray(): Promise<TElement[]> {
-        return this.enumerator.toArray();
+        return this.#enumerator.toArray();
     }
 
     public union(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
-        return this.enumerator.union(enumerable, comparator);
+        return this.#enumerator.union(enumerable, comparator);
     }
 
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
-        return this.enumerator.where(predicate);
+        return this.#enumerator.where(predicate);
     }
 
     public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
-        return this.enumerator.zip(enumerable, zipper);
+        return this.#enumerator.zip(enumerable, zipper);
     }
 }

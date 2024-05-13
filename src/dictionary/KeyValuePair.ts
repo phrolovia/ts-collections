@@ -1,5 +1,5 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
 
 export class KeyValuePair<TKey, TValue> {
     public readonly key: TKey;

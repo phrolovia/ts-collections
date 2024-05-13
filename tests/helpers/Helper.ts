@@ -1,9 +1,10 @@
-import {Person} from "../models/Person";
+import { Person } from "../models/Person";
 
 export abstract class Helper {
     public static generateRandomNumber(min: number, max: number) {
-        return Math.floor( Math.random() * ( 1 + max - min ) ) + min;
+        return Math.floor(Math.random() * (1 + max - min)) + min;
     }
+
     public static generateRandomString(length: number): string {
         let result = "";
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -13,6 +14,7 @@ export abstract class Helper {
         }
         return result;
     }
+
     public static generateRandomUniqueNumbers(count: number): number[] {
         const intsmap: { [key: number]: boolean } = {};
         let i = count;
@@ -27,6 +29,7 @@ export abstract class Helper {
         }
         return numbers;
     }
+
     public static generateRandomPerson(count: number): Person[] {
         const people: Person[] = [];
         for (let px = 0; px < count; ++px) {

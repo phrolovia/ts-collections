@@ -1,8 +1,8 @@
-import {AbstractList, IList} from "../../imports";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Comparators} from "../shared/Comparators";
+import { AbstractList } from "../imports";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
 
 class Node<TElement> {
     public item: TElement;
@@ -17,9 +17,9 @@ class Node<TElement> {
 }
 
 export class LinkedList<TElement> extends AbstractList<TElement> {
-    private firstNode: Node<TElement> | null = null;
-    private lastNode: Node<TElement> | null = null;
-    private listSize: number = 0;
+    #firstNode: Node<TElement> | null = null;
+    #lastNode: Node<TElement> | null = null;
+    #listSize: number = 0;
 
     public constructor(
         iterable: Iterable<TElement> = [] as TElement[],
@@ -29,11 +29,10 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         for (const element of iterable) {
             this.add(element);
         }
-        this.updateLength();
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        for (let node = this.firstNode; node != null; node = node.next) {
+        for (let node = this.#firstNode; node != null; node = node.next) {
             yield node.item;
         }
     }
@@ -45,7 +44,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
 
     public addAt(element: TElement, index: number): boolean {
         this.checkPositionIndex(index);
-        if (index === this.listSize) {
+        if (index === this.#listSize) {
             this.linkLast(element);
         } else {
             this.linkBefore(element, this.node(index));
@@ -62,17 +61,10 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     public clear(): void {
-        if (this.firstNode == null) {
+        if (this.#firstNode == null) {
             return;
         }
-        // for (let node: Node<TElement> = this.firstNode; node != null;) {
-        //     const next = node.next;
-        //     // node.item = null;
-        //     node.next = null;
-        //     node.prev = null;
-        //     node = next as Node<TElement>;
-        // }
-        this.firstNode = this.lastNode = null;
+        this.#firstNode = this.#lastNode = null;
         this.ListSize = 0;
     }
 
@@ -101,38 +93,38 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     public peek(): TElement | null {
-        const node = this.firstNode;
+        const node = this.#firstNode;
         return node?.item ?? null;
     }
 
     public peekLast(): TElement | null {
-        const node = this.lastNode;
+        const node = this.#lastNode;
         return node?.item ?? null;
     }
 
     public poll(): TElement | null {
-        const node = this.firstNode;
+        const node = this.#firstNode;
         return node == null ? null : this.unlinkFirst(node);
     }
 
     public pollLast(): TElement | null {
-        const node = this.lastNode;
+        const node = this.#lastNode;
         return node == null ? null : this.unlinkLast(node);
     }
 
     public remove(element: TElement): boolean {
-        if (this.firstNode == null) {
+        if (this.#firstNode == null) {
             return false;
         }
         if (element == null) {
-            for (let node: Node<TElement> | null = this.firstNode; node != null; node = node.next) {
+            for (let node: Node<TElement> | null = this.#firstNode; node != null; node = node.next) {
                 if (node.item == null) {
                     this.unlink(node);
                     return true;
                 }
             }
         } else {
-            for (let node: Node<TElement> | null = this.firstNode; node != null; node = node.next) {
+            for (let node: Node<TElement> | null = this.#firstNode; node != null; node = node.next) {
                 if (this.comparer(node.item, element)) {
                     this.unlink(node);
                     return true;
@@ -148,7 +140,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     public removeFirst(): TElement {
-        const firstNode = this.firstNode;
+        const firstNode = this.#firstNode;
         if (firstNode == null) {
             throw new Error(ErrorMessages.NoElements);
         }
@@ -156,7 +148,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     public removeLast(): TElement {
-        const lastNode = this.lastNode;
+        const lastNode = this.#lastNode;
         if (lastNode == null) {
             throw new Error(ErrorMessages.NoElements);
         }
@@ -172,7 +164,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     public size(): number {
-        return this.listSize;
+        return this.#listSize;
     }
 
     public sort(comparator?: OrderComparator<TElement>): void {
@@ -182,6 +174,10 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         for (const [index, element] of array.entries()) {
             this.set(index, element);
         }
+    }
+
+    public override get length(): number {
+        return this.#listSize;
     }
 
     private checkElementIndex(index: number): void {
@@ -197,11 +193,11 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     }
 
     private isElementIndex(index: number): boolean {
-        return index >= 0 && index < this.listSize;
+        return index >= 0 && index < this.#listSize;
     }
 
     private isPositionIndex(index: number): boolean {
-        return index >= 0 && index <= this.listSize;
+        return index >= 0 && index <= this.#listSize;
     }
 
     private linkBefore(element: TElement, successor: Node<TElement>): void {
@@ -213,49 +209,49 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         const newNode = new Node<TElement>(predecessor, element, successor);
         successor.prev = newNode;
         predecessor.next = newNode;
-        this.ListSize = this.listSize + 1;
+        this.ListSize = this.#listSize + 1;
     }
 
     private linkFirst(element: TElement): void {
-        const firstNode = this.firstNode;
+        const firstNode = this.#firstNode;
         const newNode = new Node<TElement>(null, element, firstNode);
-        this.firstNode = newNode;
+        this.#firstNode = newNode;
         if (firstNode == null) {
-            this.lastNode = newNode;
+            this.#lastNode = newNode;
         } else {
             firstNode.prev = newNode;
         }
-        this.ListSize = this.listSize + 1;
+        this.ListSize = this.#listSize + 1;
     }
 
     private linkLast(element: TElement): void {
-        const last = this.lastNode;
+        const last = this.#lastNode;
         const newNode: Node<TElement> = new Node<TElement>(last, element, null);
-        this.lastNode = newNode;
+        this.#lastNode = newNode;
         if (last == null) {
-            this.firstNode = newNode
+            this.#firstNode = newNode
         } else {
             last.next = newNode;
         }
-        this.ListSize = this.listSize + 1;
+        this.ListSize = this.#listSize + 1;
     }
 
     private node(index: number): Node<TElement> {
-        if (index < (this.listSize >> 1)) {
-            if (this.firstNode == null) {
+        if (index < (this.#listSize >> 1)) {
+            if (this.#firstNode == null) {
                 throw new Error(ErrorMessages.IndexOutOfBoundsException);
             }
-            let node = this.firstNode as Node<TElement>;
+            let node = this.#firstNode as Node<TElement>;
             for (let ix = 0; ix < index; ++ix) {
                 node = node.next as Node<TElement>;
             }
             return node;
         } else {
-            if (this.lastNode == null) {
+            if (this.#lastNode == null) {
                 throw new Error(ErrorMessages.IndexOutOfBoundsException);
             }
-            let node = this.lastNode;
-            for (let ix = this.listSize - 1; ix > index; --ix) {
+            let node = this.#lastNode;
+            for (let ix = this.#listSize - 1; ix > index; --ix) {
                 node = node.prev as Node<TElement>;
             }
             return node as Node<TElement>;
@@ -268,56 +264,52 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         const prev = node.prev;
 
         if (prev == null) {
-            this.firstNode = next;
+            this.#firstNode = next;
         } else {
             prev.next = next;
             node.prev = null;
         }
 
         if (next == null) {
-            this.lastNode = prev;
+            this.#lastNode = prev;
         } else {
             next.prev = prev;
             node.next = null;
         }
 
-        // node.item = null;
-        this.ListSize = this.listSize - 1;
+        this.ListSize = this.#listSize - 1;
         return element;
     }
 
     private unlinkFirst(firstNode: Node<TElement>): TElement {
         const element = firstNode.item;
         const next = firstNode.next;
-        // firstNode.item = null;
         firstNode.next = null;
-        this.firstNode = next;
+        this.#firstNode = next;
         if (next == null) {
-            this.lastNode = null;
+            this.#lastNode = null;
         } else {
             next.prev = null;
         }
-        this.ListSize = this.listSize - 1;
+        this.ListSize = this.#listSize - 1;
         return element;
     }
 
     private unlinkLast(lastNode: Node<TElement>): TElement {
         const element = lastNode.item;
         const prev = lastNode.prev;
-        // lastNode.item = null;
         lastNode.prev = null;
-        this.lastNode = prev;
+        this.#lastNode = prev;
         if (prev == null) {
-            this.firstNode = null;
+            this.#firstNode = null;
         } else {
             prev.next = null;
         }
-        this.ListSize = this.listSize - 1;
+        this.ListSize = this.#listSize - 1;
         return element;
     }
 
     private set ListSize(size: number) {
-        this.listSize = size;
-        this.updateLength();
+        this.#listSize = size;
     }
 }

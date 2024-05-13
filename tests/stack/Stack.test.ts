@@ -1,10 +1,8 @@
-import {describe, it} from "mocha";
-import {expect} from "chai";
-import {Stack} from "../../src/stack/Stack";
+import { Stack } from "../../src/stack/Stack";
 
 describe("Stack", () => {
     describe("#add()", () => {
-        it("should add an item to the stack", () => {
+        test("should add an item to the stack", () => {
             const stack = new Stack<number>();
             stack.add(1);
             expect(stack.size()).to.equal(1);
@@ -13,7 +11,7 @@ describe("Stack", () => {
     });
 
     describe("#clear()", () => {
-        it("should clear the stack", () => {
+        test("should clear the stack", () => {
             const stack = new Stack<number>();
             stack.add(1);
             expect(stack.size()).to.equal(1);
@@ -25,11 +23,11 @@ describe("Stack", () => {
     });
 
     describe("#peek()", () => {
-        it("should return null if stack is empty", () => {
+        test("should return null if stack is empty", () => {
             const stack = new Stack<number>();
             expect(stack.peek()).to.be.null;
         });
-        it("should return the head of the stack but not remove it", () => {
+        test("should return the head of the stack but not remove it", () => {
             const stack = new Stack<number>([1, 2, 3]);
             const head = stack.peek();
             expect(head).to.eq(1);
@@ -40,11 +38,11 @@ describe("Stack", () => {
     });
 
     describe("#pop()", () => {
-        it("should throw error if stack is empty", () => {
+        test("should throw error if stack is empty", () => {
             const stack = new Stack<number>();
             expect(() => stack.pop()).to.throw();
         });
-        it("should return the head of the stack and remove it", () => {
+        test("should return the head of the stack and remove it", () => {
             const stack = new Stack<number>([1, 2, 3]);
             const head = stack.pop();
             expect(head).to.eq(1);
@@ -56,14 +54,14 @@ describe("Stack", () => {
     });
 
     describe("#push()", () => {
-        it("should add an item to the stack", () => {
+        test("should add an item to the stack", () => {
             const stack = new Stack<number>();
             stack.push(1);
             expect(stack.size()).to.equal(1);
             expect(stack.length).to.equal(1);
             expect(stack.length).to.equal(1);
         });
-        it("should add item on top of the stack", () => {
+        test("should add item on top of the stack", () => {
             const stack = new Stack<number>([1, 2, 3]);
             stack.push(4);
             expect(stack.size()).to.equal(4);
@@ -73,11 +71,11 @@ describe("Stack", () => {
     });
 
     describe("#top()", () => {
-        it("should throw error if stack is empty", () => {
+        test("should throw error if stack is empty", () => {
             const stack = new Stack<number>();
             expect(() => stack.top()).to.throw();
         });
-        it("should return the head of the stack but not remove it", () => {
+        test("should return the head of the stack but not remove it", () => {
             const stack = new Stack<number>([1, 2, 3]);
             const head = stack.top();
             expect(head).to.eq(1);

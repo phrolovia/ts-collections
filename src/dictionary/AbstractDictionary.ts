@@ -1,7 +1,7 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {AbstractReadonlyDictionary} from "./AbstractReadonlyDictionary";
-import {IDictionary} from "./IDictionary";
-import {KeyValuePair} from "./KeyValuePair";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
+import { IDictionary } from "./IDictionary";
+import { KeyValuePair } from "./KeyValuePair";
 
 export abstract class AbstractDictionary<TKey, TValue> extends AbstractReadonlyDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {
@@ -23,13 +23,15 @@ export abstract class AbstractDictionary<TKey, TValue> extends AbstractReadonlyD
             return false;
         }
         this.add(key, value);
-        this.updateLength();
         return true;
     }
 
 
     abstract add(key: TKey, value: TValue): TValue;
+
     abstract clear(): void;
+
     abstract remove(key: TKey): TValue | null;
+
     abstract set(key: TKey, value: TValue): void;
 }

@@ -1,37 +1,36 @@
+import { Dictionary } from "../dictionary/Dictionary";
+import { SortedDictionary } from "../dictionary/SortedDictionary";
 import {
     from,
+    IEnumerable,
     ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet
-} from "../../imports";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {IEnumerable} from "./IEnumerable";
-import {Accumulator} from "../shared/Accumulator";
-import {Selector} from "../shared/Selector";
-import {EnumerableStatic} from "./EnumerableStatic";
-import {Predicate} from "../shared/Predicate";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {IGroup} from "./IGroup";
-import {JoinSelector} from "../shared/JoinSelector";
-import {IOrderedEnumerable} from "./IOrderedEnumerable";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Dictionary} from "../dictionary/Dictionary";
-import {EnumerableSet} from "../set/EnumerableSet";
-import {IndexableList} from "../list/IndexableList";
-import {SortedDictionary} from "../dictionary/SortedDictionary";
-import {SortedSet} from "../set/SortedSet";
-import {LinkedList} from "../list/LinkedList";
-import {List} from "../list/List";
-import {ILookup} from "../lookup/ILookup";
-import {Zipper} from "../shared/Zipper";
-import {Comparators} from "../shared/Comparators";
+} from "../imports";
+import { LinkedList } from "../list/LinkedList";
+import { List } from "../list/List";
+import { ILookup } from "../lookup/ILookup";
+import { EnumerableSet } from "../set/EnumerableSet";
+import { SortedSet } from "../set/SortedSet";
+import { Accumulator } from "../shared/Accumulator";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { EnumerableStatic } from "./EnumerableStatic";
+import { IGroup } from "./IGroup";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
@@ -54,6 +53,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public append(element: TElement): IEnumerable<TElement> {
         return EnumerableStatic.append(this, element);
+    }
+
+    public asEnumerable(): IEnumerable<TElement> {
+        return EnumerableStatic.asEnumerable(this);
     }
 
     public average(selector?: Selector<TElement, number>): number {
@@ -82,7 +85,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     }
 
     public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
-        return EnumerableStatic.defaultIfEmpty(this as IEnumerable<TElement|null>, value);
+        return EnumerableStatic.defaultIfEmpty(this as IEnumerable<TElement | null>, value);
     }
 
     public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
@@ -265,11 +268,6 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
         return EnumerableStatic.toImmutableSortedSet(this, comparator);
-    }
-
-    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
-        comparator ??= this.comparer;
-        return EnumerableStatic.toIndexableList(this, comparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {

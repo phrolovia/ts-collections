@@ -1,7 +1,7 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Selector} from "../shared/Selector";
-import {KeyValuePair} from "./KeyValuePair";
-import {ICollection, ISet, IEnumerable} from "../../imports";
+import { ICollection, IEnumerable, ISet } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { Selector } from "../shared/Selector";
+import { KeyValuePair } from "./KeyValuePair";
 
 export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
     /**
@@ -71,5 +71,6 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
     values(): ICollection<TValue>;
 
     get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>>;
+
     get valueComparator(): EqualityComparator<TValue>;
 }

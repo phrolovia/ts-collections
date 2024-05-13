@@ -1,13 +1,10 @@
-import {IReadonlyCollection} from "./IReadonlyCollection";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Selector} from "../shared/Selector";
-import {Writable} from "../shared/Writable";
-import {AbstractEnumerable} from "../enumerator/AbstractEnumerable";
-import {Predicate} from "../shared/Predicate";
+import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { IReadonlyCollection } from "./IReadonlyCollection";
 
 export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {
-    protected readonly collectionLength: number = 0;
-
     protected constructor(comparator?: EqualityComparator<TElement>) {
         super(comparator);
     }
@@ -55,18 +52,13 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
         return this.select(selector).aggregate((a, b) => `${a}${separator}${b}`);
     }
 
-    protected updateLength(): void {
-        (this.collectionLength as Writable<number>) = this.size();
-    }
-
     public get comparator(): EqualityComparator<TElement> {
         return this.comparer;
     }
 
-    public get length(): number {
-        return this.collectionLength;
-    }
-
     abstract [Symbol.iterator](): Iterator<TElement>;
+
     abstract size(): number;
+
+    abstract get length(): number;
 }

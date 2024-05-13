@@ -1,32 +1,32 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Accumulator} from "../shared/Accumulator";
-import {InferredType} from "../shared/InferredType";
-import {ObjectType} from "../shared/ObjectType";
-import {Selector} from "../shared/Selector";
-import {Predicate} from "../shared/Predicate";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
-import {JoinSelector} from "../shared/JoinSelector";
-import {OrderComparator} from "../shared/OrderComparator";
 import {
-    SortedDictionary,
+    Dictionary,
+    EnumerableSet,
     IGroup,
     ILookup,
-    IOrderedEnumerable,
-    List,
-    Dictionary,
-    IndexableList,
-    EnumerableSet,
-    SortedSet,
-    LinkedList,
+    ImmutableDictionary,
     ImmutableList,
     ImmutableSet,
+    ImmutableSortedDictionary,
     ImmutableSortedSet,
-    ImmutableDictionary, ImmutableSortedDictionary
-} from "../../imports";
-import {IndexedAction} from "../shared/IndexedAction";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
+    IOrderedEnumerable,
+    LinkedList,
+    List,
+    SortedDictionary,
+    SortedSet
+} from "../imports";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -56,6 +56,11 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param element The element that will be appended to the end of the sequence
      */
     append(element: TElement): IEnumerable<TElement>;
+
+    /**
+     * Converts the enumerable object to an IEnumerable.
+     */
+    asEnumerable(): IEnumerable<TElement>;
 
     /**
      * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
@@ -185,7 +190,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
      */
     groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
-                       resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;
+                                     resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;
 
     /**
      * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
@@ -220,7 +225,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param leftJoin If true, the result sequence will have the value of null for unmatched inner elements.
      */
     join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
-                  resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult>;
+                                resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult>;
 
     /**
      * Returns the last element of the sequence.
@@ -443,12 +448,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
 
     /**
-     * Creates a new indexable list from the elements of the sequence.
-     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
-     */
-    toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement>;
-
-    /**
      * Creates a new linked list from the elements of the sequence.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
@@ -501,5 +500,5 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param enumerable The enumerable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      */
-    zip<TSecond, TResult=[TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult>;
+    zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult>;
 }
