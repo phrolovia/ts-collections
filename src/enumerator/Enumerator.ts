@@ -19,7 +19,7 @@ import {
     OrderedEnumerator,
     SortedDictionary,
     SortedSet
-} from "../imports.ts";
+} from "../imports";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";

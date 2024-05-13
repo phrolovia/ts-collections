@@ -1,4 +1,4 @@
-import { AsyncEnumerator, IOrderedAsyncEnumerable } from "../imports.ts";
+import { AsyncEnumerator, IOrderedAsyncEnumerable } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";

@@ -1,5 +1,5 @@
 import { describe, expect } from "vitest";
-import { ImmutableStack } from "../../src/index";
+import { ImmutableStack } from "../../src/imports";
 
 describe("ImmutableStack", () => {
     describe("#add()", () => {

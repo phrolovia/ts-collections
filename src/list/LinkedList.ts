@@ -1,4 +1,4 @@
-import { AbstractList } from "../imports.ts";
+import { AbstractList } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ErrorMessages } from "../shared/ErrorMessages";

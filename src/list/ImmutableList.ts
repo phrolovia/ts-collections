@@ -1,4 +1,4 @@
-import { AbstractRandomAccessImmutableCollection, contains, IReadonlyList, List, ReadonlyList } from "../imports.ts";
+import { AbstractRandomAccessImmutableCollection, contains, IReadonlyList, List, ReadonlyList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ErrorMessages } from "../shared/ErrorMessages";
 import { OrderComparator } from "../shared/OrderComparator";

@@ -1,5 +1,5 @@
-import {resolve} from "path";
-import {defineConfig, UserConfig} from "vite";
+import { resolve } from "path";
+import { defineConfig, UserConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
@@ -19,7 +19,7 @@ export default defineConfig({
     },
     plugins: [
         dts({
-            insertTypesEntry: true,
+            rollupTypes: true
         })
     ], // emit TS declaration files
 } satisfies UserConfig)

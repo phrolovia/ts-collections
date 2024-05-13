@@ -1,4 +1,4 @@
-import { ICollection, ISet } from "../imports.ts";
+import { ICollection, ISet } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
 import { IDictionary } from "./IDictionary";

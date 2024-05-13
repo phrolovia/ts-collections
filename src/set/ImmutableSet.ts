@@ -1,4 +1,4 @@
-import { AbstractRandomAccessImmutableCollection, contains, EnumerableSet } from "../imports.ts";
+import { AbstractRandomAccessImmutableCollection, contains, EnumerableSet } from "../imports";
 import { Predicate } from "../shared/Predicate";
 
 export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {

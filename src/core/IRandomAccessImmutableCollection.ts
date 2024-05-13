@@ -1,5 +1,5 @@
-import { Predicate } from "../shared/Predicate.ts";
-import { IImmutableCollection } from "./IImmutableCollection.ts";
+import { Predicate } from "../shared/Predicate";
+import { IImmutableCollection } from "./IImmutableCollection";
 
 export interface IRandomAccessImmutableCollection<TElement> extends IImmutableCollection<TElement> {
     /**

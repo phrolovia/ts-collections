@@ -1,4 +1,4 @@
-import { AbstractEnumerable, IList, List, ReadonlyList } from "../imports.ts";
+import { AbstractEnumerable, IList, List, ReadonlyList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { CollectionChangedAction, ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";
 

@@ -1,7 +1,7 @@
-import { AbstractRandomAccessCollection, Collections, List } from "../imports.ts";
-import { Comparators } from "../shared/Comparators.ts";
-import { OrderComparator } from "../shared/OrderComparator.ts";
-import { Predicate } from "../shared/Predicate.ts";
+import { AbstractRandomAccessCollection, Collections, List } from "../imports";
+import { Comparators } from "../shared/Comparators";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
 
 export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
     readonly #comparator: OrderComparator<TElement> = Comparators.orderComparator;

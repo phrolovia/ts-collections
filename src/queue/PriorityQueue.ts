@@ -1,7 +1,7 @@
-import { AbstractCollection, Heap } from "../imports.ts";
-import { Comparators } from "../shared/Comparators.ts";
-import { ErrorMessages } from "../shared/ErrorMessages.ts";
-import { OrderComparator } from "../shared/OrderComparator.ts";
+import { AbstractCollection, Heap } from "../imports";
+import { Comparators } from "../shared/Comparators";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
 
 export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;

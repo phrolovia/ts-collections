@@ -1,4 +1,4 @@
-import { List } from "../../src/index";
+import { List } from "../../src/imports";
 import { ObservableCollection } from "../../src/observable/ObservableCollection";
 import { ReadonlyObservableCollection } from "../../src/observable/ReadonlyObservableCollection";
 import { Person } from "../models/Person";

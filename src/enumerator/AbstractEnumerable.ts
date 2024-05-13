@@ -8,7 +8,7 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet
-} from "../imports.ts";
+} from "../imports";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
 import { ILookup } from "../lookup/ILookup";

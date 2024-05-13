@@ -1,4 +1,4 @@
-import { ICollection, ISet, RedBlackTree, SortedSet } from "../imports.ts";
+import { ICollection, ISet, RedBlackTree, SortedSet } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ErrorMessages } from "../shared/ErrorMessages";

@@ -16,7 +16,7 @@ import {
     RedBlackTree,
     SortedDictionary,
     SortedSet
-} from "../imports.ts";
+} from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";

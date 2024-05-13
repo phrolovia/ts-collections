@@ -1,4 +1,4 @@
-import { Dictionary, ICollection, ISet, ReadonlyDictionary } from "../imports.ts";
+import { Dictionary, ICollection, ISet, ReadonlyDictionary } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";

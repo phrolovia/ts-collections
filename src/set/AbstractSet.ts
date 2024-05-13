@@ -1,4 +1,4 @@
-import { AbstractRandomAccessCollection, from, ISet } from "../imports.ts";
+import { AbstractRandomAccessCollection, from, ISet } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 
