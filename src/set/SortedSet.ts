@@ -1,4 +1,4 @@
-import { AbstractSet, ISet, ITree, RedBlackTree } from "../imports.ts";
+import { AbstractSet, ISet, ITree, RedBlackTree } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { OrderComparator } from "../shared/OrderComparator";

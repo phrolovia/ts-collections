@@ -1,4 +1,4 @@
-import { AsyncEnumerator, IOrderedAsyncEnumerable } from "../imports.ts";
+import { AsyncEnumerator, IOrderedAsyncEnumerable } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";

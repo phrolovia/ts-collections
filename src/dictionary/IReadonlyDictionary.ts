@@ -1,4 +1,4 @@
-import { ICollection, IEnumerable, ISet } from "../imports.ts";
+import { ICollection, IEnumerable, ISet } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { Selector } from "../shared/Selector";
 import { KeyValuePair } from "./KeyValuePair";

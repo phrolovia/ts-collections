@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ImmutableQueue } from "../../src/imports.ts";
+import { ImmutableQueue } from "../../src/imports";
 import { ErrorMessages } from "../../src/shared/ErrorMessages";
 
 describe("ImmutableQueue", () => {

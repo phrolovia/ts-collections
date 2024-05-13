@@ -1,6 +1,6 @@
-import { AbstractImmutableCollection, Queue } from "../imports.ts";
-import { EqualityComparator } from "../shared/EqualityComparator.ts";
-import { ErrorMessages } from "../shared/ErrorMessages.ts";
+import { AbstractImmutableCollection, Queue } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
 
 export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #queue: Queue<TElement>;

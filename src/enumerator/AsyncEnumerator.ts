@@ -9,7 +9,7 @@ import {
     List,
     OrderedAsyncEnumerator,
     SortedSet
-} from "../imports.ts";
+} from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";

@@ -1,6 +1,6 @@
-import { AbstractImmutableCollection, IImmutableCollection, reverse, Stack } from "../imports.ts";
-import { EqualityComparator } from "../shared/EqualityComparator.ts";
-import { ErrorMessages } from "../shared/ErrorMessages.ts";
+import { AbstractImmutableCollection, IImmutableCollection, reverse, Stack } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
 
 export class ImmutableStack<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #stack: Stack<TElement>;

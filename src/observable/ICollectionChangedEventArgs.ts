@@ -1,4 +1,4 @@
-import { ReadonlyList } from "../imports.ts";
+import { ReadonlyList } from "../imports";
 
 export interface ICollectionChangedEventArgs<TElement> {
     action: CollectionChangedAction;

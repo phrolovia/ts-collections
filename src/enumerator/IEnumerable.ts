@@ -13,7 +13,7 @@ import {
     List,
     SortedDictionary,
     SortedSet
-} from "../imports.ts";
+} from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";

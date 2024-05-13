@@ -1,4 +1,4 @@
-import { ICollection } from "../imports.ts";
+import { ICollection } from "../imports";
 import { Predicate } from "../shared/Predicate";
 
 /**

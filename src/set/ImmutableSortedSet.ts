@@ -1,4 +1,4 @@
-import { AbstractRandomAccessImmutableCollection, contains, SortedSet } from "../imports.ts";
+import { AbstractRandomAccessImmutableCollection, contains, SortedSet } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";

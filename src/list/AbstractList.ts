@@ -1,5 +1,5 @@
 import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
-import { IList } from "../imports.ts";
+import { IList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ErrorMessages } from "../shared/ErrorMessages";
 import { OrderComparator } from "../shared/OrderComparator";
