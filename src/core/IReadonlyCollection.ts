@@ -1,7 +1,7 @@
-import {IndexedAction} from "../shared/IndexedAction";
-import {Selector} from "../shared/Selector";
-import {IEnumerable} from "../enumerator/IEnumerable";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { IEnumerable } from "../enumerator/IEnumerable";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { Selector } from "../shared/Selector";
 
 export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
     /**

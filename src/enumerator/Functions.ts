@@ -1,32 +1,31 @@
-import {Dictionary} from "../dictionary/Dictionary";
-import {ImmutableDictionary} from "../dictionary/ImmutableDictionary";
-import {ImmutableSortedDictionary} from "../dictionary/ImmutableSortedDictionary";
-import {SortedDictionary} from "../dictionary/SortedDictionary";
-import {ImmutableList} from "../list/ImmutableList";
-import {IndexableList} from "../list/IndexableList";
-import {LinkedList} from "../list/LinkedList";
-import {List} from "../list/List";
-import {ILookup} from "../lookup/ILookup";
-import {EnumerableSet} from "../set/EnumerableSet";
-import {ImmutableSet} from "../set/ImmutableSet";
-import {ImmutableSortedSet} from "../set/ImmutableSortedSet";
-import {SortedSet} from "../set/SortedSet";
-import {Accumulator} from "../shared/Accumulator";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {InferredType} from "../shared/InferredType";
-import {JoinSelector} from "../shared/JoinSelector";
-import {ObjectType} from "../shared/ObjectType";
-import {OrderComparator} from "../shared/OrderComparator";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {Predicate} from "../shared/Predicate";
-import {Selector} from "../shared/Selector";
-import {Zipper} from "../shared/Zipper";
-import {Enumerable} from "./Enumerable";
-import {IEnumerable} from "./IEnumerable";
-import {IGroup} from "./IGroup";
-import {IOrderedEnumerable} from "./IOrderedEnumerable";
+import { Dictionary } from "../dictionary/Dictionary";
+import { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import { SortedDictionary } from "../dictionary/SortedDictionary";
+import { ImmutableList } from "../list/ImmutableList";
+import { LinkedList } from "../list/LinkedList";
+import { List } from "../list/List";
+import { ILookup } from "../lookup/ILookup";
+import { EnumerableSet } from "../set/EnumerableSet";
+import { ImmutableSet } from "../set/ImmutableSet";
+import { ImmutableSortedSet } from "../set/ImmutableSortedSet";
+import { SortedSet } from "../set/SortedSet";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { Enumerable } from "./Enumerable";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 /**
  * Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
@@ -823,18 +822,6 @@ export const toImmutableSortedSet = <TElement>(
     comparator?: OrderComparator<TElement>
 ): ImmutableSortedSet<TElement> => {
     return from(source).toImmutableSortedSet(comparator);
-}
-
-/**
- * Creates a new indexable list from the elements of the sequence.
- * @param source The source sequence.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
- */
-export const toIndexableList = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-): IndexableList<TElement> => {
-    return from(source).toIndexableList(comparator);
 }
 
 /**

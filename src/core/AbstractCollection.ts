@@ -1,9 +1,9 @@
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {AbstractReadonlyCollection} from "./AbstractReadonlyCollection";
-import {ICollection} from "./ICollection";
-import {IReadonlyCollection, ReadonlyCollection} from "../../imports";
+import { IReadonlyCollection, ReadonlyCollection } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
+import { ICollection } from "./ICollection";
 
-export abstract class AbstractCollection<TElement> extends AbstractReadonlyCollection<TElement> implements ICollection<TElement>{
+export abstract class AbstractCollection<TElement> extends AbstractReadonlyCollection<TElement> implements ICollection<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {
         super(comparator);
     }
@@ -13,7 +13,6 @@ export abstract class AbstractCollection<TElement> extends AbstractReadonlyColle
         for (const element of collection) {
             this.add(element);
         }
-        this.updateLength();
         return this.size() !== oldSize;
     }
 
@@ -22,5 +21,6 @@ export abstract class AbstractCollection<TElement> extends AbstractReadonlyColle
     }
 
     abstract add(element: TElement): boolean;
+
     abstract clear(): void;
 }

@@ -1,19 +1,18 @@
-import {describe, it} from "mocha";
-import {expect} from "chai";
-import {Person} from "../models/Person";
-import {EnumerableSet} from "../../src/set/EnumerableSet";
-import {LinkedList} from "../../src/list/LinkedList";
+import { expect } from "vitest";
+import { LinkedList } from "../../src/list/LinkedList";
+import { EnumerableSet } from "../../src/set/EnumerableSet";
+import { Person } from "../models/Person";
 
 describe("EnumerableSet", () => {
     describe("#add()", () => {
-        it("should add an item to the set", () => {
+        test("should add an item to the set", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             expect(set.contains(Person.Bella)).to.be.true;
         });
     });
     describe("#clear()", () => {
-        it("should clear the set", () => {
+        test("should clear the set", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.add(Person.Senna);
@@ -23,12 +22,12 @@ describe("EnumerableSet", () => {
         });
     });
     describe("#contains()", () => {
-        it("should return true if the set contains the item", () => {
+        test("should return true if the set contains the item", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             expect(set.contains(Person.Bella)).to.be.true;
         });
-        it("should return false if the set does not contain the item", () => {
+        test("should return false if the set does not contain the item", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             expect(set.contains(Person.Senna)).to.be.false;
@@ -39,7 +38,7 @@ describe("EnumerableSet", () => {
         const set = new EnumerableSet<Person>([]);
         set.add(Person.Jisu);
         set.add(Person.Amy);
-        it("should remove all items from the set", () => {
+        test("should remove all items from the set", () => {
             expect(set.length).to.eq(2);
             set.intersectWith(new LinkedList([Person.Jisu, Person.Mel]));
             expect(set.size()).to.eq(1);
@@ -51,7 +50,7 @@ describe("EnumerableSet", () => {
     });
 
     describe("#remove()", () => {
-        it("should remove the item from the set", () => {
+        test("should remove the item from the set", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.remove(Person.Bella);
@@ -59,7 +58,7 @@ describe("EnumerableSet", () => {
         });
     });
     describe("#removeAll()", () => {
-        it("should remove all items from the set", () => {
+        test("should remove all items from the set", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.add(Person.Senna);
@@ -69,9 +68,25 @@ describe("EnumerableSet", () => {
             expect(set.contains(Person.Reina)).to.be.false;
             expect(set.contains(Person.Senna)).to.be.true;
         });
+        test("should return true if the set was modified", () => {
+            const set = new EnumerableSet<string>();
+            set.add("z");
+            set.add("c");
+            set.add("p");
+            set.add("p"); // duplicate
+            set.add("e");
+            set.add("d");
+            const result = set.removeAll(["p", "c", "d"]);
+            expect(result).to.be.true;
+            expect(set.size()).to.equal(2);
+            expect(set.contains("p")).to.be.false;
+            expect(set.contains("c")).to.be.false;
+            expect(set.contains("d")).to.be.false;
+            expect(set.toArray()).to.eql(["z", "e"]);
+        });
     });
     describe("#removeIf()", () => {
-        it("should remove all items from the set that match the predicate", () => {
+        test("should remove all items from the set that match the predicate", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.add(Person.Senna);
@@ -83,7 +98,7 @@ describe("EnumerableSet", () => {
         });
     });
     describe("#retainAll()", () => {
-        it("should retain only the items in the set that match the predicate", () => {
+        test("should retain only the items in the set that match the predicate", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.add(Person.Senna);
@@ -95,17 +110,17 @@ describe("EnumerableSet", () => {
         });
     });
     describe("#toString()", () => {
-        it("should return empty string if set is empty", () => {
+        test("should return empty string if set is empty", () => {
             const set = new EnumerableSet<Person>();
             expect(set.toString()).to.equal("");
         });
-        it("should return the string representation of the set", () => {
+        test("should return the string representation of the set", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.add(Person.Senna);
             set.add(Person.Reina);
             set.add(Person.Senna);
             expect(set.toString()).to.equal("Bella Rivera, Senna Hikaru, Reina Karuizawa");
-        }).timeout(0);
+        });
     });
 });

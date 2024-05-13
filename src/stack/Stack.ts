@@ -1,18 +1,17 @@
-import {AbstractCollection, LinkedList} from "../../imports";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {ErrorMessages} from "../shared/ErrorMessages";
+import { AbstractCollection, LinkedList } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
 
 export class Stack<TElement> extends AbstractCollection<TElement> {
-    private readonly stack: LinkedList<TElement>;
+    readonly #stack: LinkedList<TElement>;
 
     public constructor(iterable: Iterable<TElement> = [], comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.stack = new LinkedList<TElement>(iterable, comparator);
-        this.updateLength();
+        this.#stack = new LinkedList<TElement>(iterable, comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.stack;
+        yield* this.#stack;
     }
 
     /**
@@ -20,14 +19,12 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * @param element The element to add.
      */
     public override add(element: TElement): boolean {
-        this.stack.addFirst(element);
-        this.updateLength();
+        this.#stack.addFirst(element);
         return true;
     }
 
     public override clear() {
-        this.stack.clear();
-        this.updateLength();
+        this.#stack.clear();
     }
 
     /**
@@ -37,10 +34,10 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement | null {
-        if (this.stack.isEmpty()) {
+        if (this.#stack.isEmpty()) {
             return null;
         }
-        return this.stack.peek();
+        return this.#stack.peek();
     }
 
     /**
@@ -50,9 +47,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * @throws {Error} If the queue is empty.
      */
     public pop(): TElement | null {
-        const result = this.stack.removeFirst();
-        this.updateLength();
-        return result;
+        return this.#stack.removeFirst();
     }
 
     /**
@@ -60,12 +55,11 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * @param element The element to add.
      */
     public push(element: TElement): void {
-        this.stack.addFirst(element);
-        this.updateLength();
+        this.#stack.addFirst(element);
     }
 
     public override size(): number {
-        return this.stack.size();
+        return this.#stack.size();
     }
 
     /**
@@ -75,9 +69,13 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      * @returns {TElement} The head of the queue.
      */
     public top(): TElement {
-        if (this.stack.isEmpty()) {
+        if (this.#stack.isEmpty()) {
             throw new Error(ErrorMessages.NoElements);
         }
-        return this.stack.peek() as TElement;
+        return this.#stack.peek() as TElement;
+    }
+
+    public override get length(): number {
+        return this.#stack.length;
     }
 }

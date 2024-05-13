@@ -1,17 +1,18 @@
-import {OrderComparator} from "../shared/OrderComparator";
-import {IList} from "../list/IList";
-import {Comparators} from "../shared/Comparators";
-import {Selector} from "../shared/Selector";
-import {ICollection} from "./ICollection";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {IEnumerable} from "../enumerator/IEnumerable";
-import {List} from "../list/List";
+import { IEnumerable } from "../enumerator/IEnumerable";
+import { IList } from "../list/IList";
+import { List } from "../list/List";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Selector } from "../shared/Selector";
+import { ICollection } from "./ICollection";
 
 export abstract class Collections {
 
     /* istanbul ignore next */
-    private constructor() {}
+    private constructor() {
+    }
 
     /**
      * Add all the given elements to the collection

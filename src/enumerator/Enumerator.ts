@@ -1,18 +1,4 @@
-import {Accumulator} from "../shared/Accumulator";
-import {InferredType} from "../shared/InferredType";
-import {ClassType, ObjectType} from "../shared/ObjectType";
-import {Selector} from "../shared/Selector";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {Predicate} from "../shared/Predicate";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {JoinSelector} from "../shared/JoinSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {Lookup} from "../lookup/Lookup";
-import {Zipper} from "../shared/Zipper";
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     Collections,
     Dictionary,
@@ -21,21 +7,40 @@ import {
     Group,
     IEnumerable,
     IGroup,
-    ILookup, ImmutableDictionary, ImmutableList, ImmutableSet, ImmutableSortedDictionary, ImmutableSortedSet,
-    IndexableList,
+    ILookup,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
     IOrderedEnumerable,
     LinkedList,
     List,
     OrderedEnumerator,
     SortedDictionary,
     SortedSet
-} from "../../imports";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {KeyValuePair} from "../dictionary/KeyValuePair";
+} from "../imports";
+import { Lookup } from "../lookup/Lookup";
+import { Accumulator } from "../shared/Accumulator";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ClassType, ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
-    public constructor(private readonly iterable: () => Iterable<TElement>) {}
+    public constructor(private readonly iterable: () => Iterable<TElement>) {
+    }
 
     * [Symbol.iterator](): Iterator<TElement> {
         yield* this.iterable();
@@ -89,6 +94,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.appendGenerator(element));
     }
 
+    public asEnumerable(): IEnumerable<TElement> {
+        return this;
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         if (!this.any()) {
             throw new Error(ErrorMessages.NoElements);
@@ -130,7 +139,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public count(predicate?: Predicate<TElement>): number {
         let count: number = 0;
         if (!predicate) {
-            for (const item of this) {
+            for (const {} of this) {
                 ++count;
             }
             return count;
@@ -541,10 +550,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return ImmutableSortedSet.create(this, comparator);
     }
 
-    public toIndexableList(comparator?: EqualityComparator<TElement>): IndexableList<TElement> {
-        return new IndexableList<TElement>(this, comparator);
-    }
-
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
         return new LinkedList<TElement>(this, comparator);
     }
@@ -887,7 +892,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* zipGenerator<TSecond, TResult=[TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
+    private* zipGenerator<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
         const iterator = this[Symbol.iterator]();
         const otherIterator = enumerable[Symbol.iterator]();
         while (true) {

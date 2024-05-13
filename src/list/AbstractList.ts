@@ -1,9 +1,9 @@
-import {IList} from "../../imports";
-import {AbstractRandomAccessCollection} from "../core/AbstractRandomAccessCollection";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {OrderComparator} from "../shared/OrderComparator";
-import {Predicate} from "../shared/Predicate";
+import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
+import { IList } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
@@ -114,13 +114,20 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         const oldSize = this.size();
         let index = 0;
-        for (const e of collection) {
-            index = this.indexOf(e);
-            if (index !== -1) {
-                this.removeAt(index);
+        const indices: number[] = [];
+        for (const element of this) {
+            for (const e of collection) {
+                if (this.comparer(element, e)) {
+                    indices.push(index);
+                    break;
+                }
             }
+            index++;
         }
-        this.updateLength();
+        indices.sort((a, b) => b - a);
+        for (const i of indices) {
+            this.removeAt(i);
+        }
         return this.size() !== oldSize;
     }
 
@@ -131,7 +138,6 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
                 this.removeAt(index);
             }
         }
-        this.updateLength();
         return this.size() !== oldSize;
     }
 

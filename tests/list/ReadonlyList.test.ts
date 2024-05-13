@@ -1,12 +1,10 @@
-import {describe, it} from "mocha";
-import {expect} from "chai";
-import {ReadonlyList} from "../../src/list/ReadonlyList";
-import {List} from "../../src/list/List";
-import {Enumerable} from "../../src/enumerator/Enumerable";
+import { Enumerable } from "../../src/imports";
+import { List } from "../../src/list/List";
+import { ReadonlyList } from "../../src/list/ReadonlyList";
 
 describe("ReadonlyList", () => {
     describe("#entries()", () => {
-        it("should return an indexed IterableIterator", () => {
+        test("should return an indexed IterableIterator", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             for (const [index, element] of list.entries()) {
                 expect(index + 1).to.eq(element);
@@ -16,8 +14,8 @@ describe("ReadonlyList", () => {
     });
 
     describe("#get()", () => {
-        it("should return the element at the given index", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toIndexableList());
+        test("should return the element at the given index", () => {
+            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 expect(list.get(i)).to.eq(i + 1);
             }
@@ -25,7 +23,7 @@ describe("ReadonlyList", () => {
     });
 
     describe("#getRange()", () => {
-        it("should return a new list containing the elements in the given range", () => {
+        test("should return a new list containing the elements in the given range", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 const range = list.getRange(i, 100 - i);
@@ -35,12 +33,12 @@ describe("ReadonlyList", () => {
                 }
             }
         });
-        it("should throw an error if the given index is out of bounds", () => {
+        test("should throw an error if the given index is out of bounds", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             expect(() => list.getRange(-1, 1)).to.throw(Error);
             expect(() => list.getRange(100, 1)).to.throw(Error);
         });
-        it("should throw an error if the given count is out of bounds", () => {
+        test("should throw an error if the given count is out of bounds", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             expect(() => list.getRange(0, -1)).to.throw(Error);
             expect(() => list.getRange(0, 101)).to.throw(Error);
@@ -48,7 +46,7 @@ describe("ReadonlyList", () => {
     });
 
     describe("#indexOf()", () => {
-        it("should return the index of the given element", () => {
+        test("should return the index of the given element", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 expect(list.indexOf(i + 1)).to.eq(i);
@@ -57,7 +55,7 @@ describe("ReadonlyList", () => {
     });
 
     describe("#lastIndexOf()", () => {
-        it("should return the last index of the given element", () => {
+        test("should return the last index of the given element", () => {
             const list = new ReadonlyList(Enumerable.range(1, 100).toLinkedList());
             for (let i = 0; i < 100; i++) {
                 expect(list.lastIndexOf(i + 1)).to.eq(i);
@@ -66,12 +64,12 @@ describe("ReadonlyList", () => {
     });
 
     describe("#size()", () => {
-        it("should return the number of elements in the collection", () => {
+        test("should return the number of elements in the collection", () => {
             const list = new ReadonlyList(new List([1, 2, 3, 4, 5]));
             expect(list.size()).to.equal(5);
             expect(list.length).to.equal(5);
         });
-        it("should reflect changes to the underlying collection", () => {
+        test("should reflect changes to the underlying collection", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const readonlyList = new ReadonlyList(list);
             expect(readonlyList.size()).to.equal(5);

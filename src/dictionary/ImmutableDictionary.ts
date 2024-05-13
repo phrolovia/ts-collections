@@ -1,22 +1,26 @@
-import {Dictionary, ICollection, ISet} from "../../imports";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {AbstractImmutableDictionary} from "./AbstractImmutableDictionary";
-import {KeyValuePair} from "./KeyValuePair";
+import { Dictionary, ICollection, ISet, ReadonlyDictionary } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
+import { KeyValuePair } from "./KeyValuePair";
 
 export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
-    readonly #dictionary: Dictionary<TKey, TValue>;
+    readonly #dictionary: ReadonlyDictionary<TKey, TValue>;
 
     private constructor(dictionary: Dictionary<TKey, TValue>) {
         super(dictionary.valueComparator, dictionary.keyValueComparator);
-        this.#dictionary = dictionary;
+        this.#dictionary = new ReadonlyDictionary(dictionary);
     }
 
     * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
         yield* this.#dictionary;
     }
 
+    public static create<TKey, TValue>(): ImmutableDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
+    public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
     public static create<TKey, TValue>(
-        iterable: Iterable<KeyValuePair<TKey, TValue>> = [] as Array<KeyValuePair<TKey, TValue>>,
+        iterable: Iterable<KeyValuePair<TKey, TValue>> | Iterable<[TKey, TValue]> = [] as Array<KeyValuePair<TKey, TValue>>,
         valueComparator?: EqualityComparator<TValue>
     ): ImmutableDictionary<TKey, TValue> {
         return new ImmutableDictionary(new Dictionary(iterable, valueComparator));
@@ -83,6 +87,6 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
     }
 
     public override get length(): number {
-        return this.#dictionary.size();
+        return this.#dictionary.length;
     }
 }

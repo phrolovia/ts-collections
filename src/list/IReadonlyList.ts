@@ -1,5 +1,5 @@
-import {IReadonlyCollection} from "../core/IReadonlyCollection";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { IReadonlyCollection } from "../core/IReadonlyCollection";
+import { EqualityComparator } from "../shared/EqualityComparator";
 
 export interface IReadonlyList<TElement> extends IReadonlyCollection<TElement> {
     /**

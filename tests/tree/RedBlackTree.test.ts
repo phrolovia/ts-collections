@@ -1,10 +1,8 @@
-import {expect} from "chai";
-import {describe, it} from "mocha";
-import {Enumerable, LinkedList} from "../../imports";
-import {ICollection} from "../../src/core/ICollection";
-import {RedBlackTree} from "../../src/tree/RedBlackTree";
-import {Pair} from "../models/Pair";
-import {Person} from "../models/Person";
+import { ICollection } from "../../src/core/ICollection";
+import { Enumerable, LinkedList } from "../../src/imports";
+import { RedBlackTree } from "../../src/tree/RedBlackTree";
+import { Pair } from "../models/Pair";
+import { Person } from "../models/Person";
 
 describe("RedBlackTree", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age - p2.age;
@@ -46,7 +44,7 @@ describe("RedBlackTree", () => {
     };
 
     describe("#add()", () => {
-        it("should add elements to the tree", () => {
+        test("should add elements to the tree", () => {
             const tree = new RedBlackTree<number>();
             tree.add(1);
             tree.add(2);
@@ -57,7 +55,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(3)).to.be.true;
             expect(tree.length).to.eq(3);
         });
-        it("should use provided comparator", () => {
+        test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             const noemiTest = new Person("Noemi", "Waterfox", 29);
             tree.add(Person.Alice);
@@ -70,14 +68,14 @@ describe("RedBlackTree", () => {
             expect(added).to.be.false;
             expect(tree.length).to.eq(3);
         });
-        it("should not have duplicates", () => {
+        test("should not have duplicates", () => {
             const randomArray = randomArrayGenerator(5000);
             const distinct = Enumerable.from(randomArray).distinct().toArray();
             const tree = new RedBlackTree<number>(randomArray);
             expect(distinct.length).to.eq(tree.size());
             expect(distinct.length).to.eq(tree.length);
-        }).timeout(5000);
-        it("should not have duplicates #2", () => {
+        }, {timeout: 5000});
+        test("should not have duplicates #2", () => {
             const repeatedEnumerable = Enumerable.repeat(100, 100);
             const tree = new RedBlackTree<number>(repeatedEnumerable);
             expect(tree.size()).to.eq(1);
@@ -87,7 +85,7 @@ describe("RedBlackTree", () => {
 
     describe("#clear()", () => {
         const tree = new RedBlackTree(["a", "b", "c", "z"]);
-        it("should remove all data from the tree", () => {
+        test("should remove all data from the tree", () => {
             tree.clear();
             expect(tree.size()).to.eq(0);
             expect(tree.length).to.eq(0);
@@ -98,7 +96,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#contains()", () => {
-        it("should return true if element exists in the tree (and false if not)", () => {
+        test("should return true if element exists in the tree (and false if not)", () => {
             const tree = new RedBlackTree([1, 2, 3, 4, 5]);
             expect(tree.contains(1)).to.be.true;
             expect(tree.contains(3)).to.be.true;
@@ -106,7 +104,7 @@ describe("RedBlackTree", () => {
             tree.delete(5);
             expect(tree.contains(5)).to.be.false;
         });
-        it("should return false", () => {
+        test("should return false", () => {
             const tree = new RedBlackTree([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
             const item = {
                 "text": "Yakisoba",
@@ -121,7 +119,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#delete()", () => {
-        it("should delete the element from the tree", () => {
+        test("should delete the element from the tree", () => {
             const tree = new RedBlackTree<number>();
             tree.add(1);
             tree.add(2);
@@ -132,7 +130,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(2)).to.be.false;
             expect(tree.length).to.eq(2);
         });
-        it("should use provided comparator", () => {
+        test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             tree.add(Person.Alice);
             tree.add(Person.Noemi);
@@ -142,7 +140,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Noemi2)).to.be.true; // since it is equal to Person.Noemi via personComparator
             expect(tree.length).to.eq(2);
         });
-        it("should add 1000 random number and then delete them randomly", () => {
+        test("should add 1000 random number and then delete them randomly", () => {
             const numTree = new RedBlackTree<number>();
             const randArray = randomUniqueArrayGenerator(1000);
             randArray.forEach(n => numTree.insert(n));
@@ -162,14 +160,14 @@ describe("RedBlackTree", () => {
         tree.add(Person.Alice);
         tree.add(Person.Noemi);
         tree.add(Person.Noemi2);
-        it("should find the first item in the tree", () => {
+        test("should find the first item in the tree", () => {
             const item = tree.find(p => p.name === Person.Noemi2.name && p.age === Person.Noemi2.age) as Person;
             const item2 = tree.firstOrDefault(p => p.name === Person.Noemi2.name && p.age === Person.Noemi2.age) as Person;
             expect(item).to.eq(Person.Noemi2);
             expect(item.equals(item2)).to.be.true;
         });
 
-        it("should find the first item in the tree #2", () => {
+        test("should find the first item in the tree #2", () => {
             const tree = new RedBlackTree<Pair<number, number>>([], (p1, p2) => p1.key - p2.key);
             tree.add(new Pair<number, number>(1, 2));
             tree.add(new Pair<number, number>(2, 3));
@@ -177,18 +175,18 @@ describe("RedBlackTree", () => {
             const pair1 = tree.find(p => p.key === 1) as Pair<number, number>;
             expect([pair1.key, pair1.value]).to.deep.equal([1, 2]);
         });
-        it("should return null if item does not exist in the tree", () => {
+        test("should return null if item does not exist in the tree", () => {
             const item = tree.find(p => p.name === "Suzuha");
             expect(item).to.be.null;
         });
-        it("should return null if tree is empty", () => {
+        test("should return null if tree is empty", () => {
             tree.clear();
             expect(tree.find(p => p.name.startsWith("L"))).to.be.null;
         });
     });
 
     describe("#forEach()", () => {
-        it("should loop over the tree in-orderly", () => {
+        test("should loop over the tree in-orderly", () => {
             const tree = new RedBlackTree(shuffle([1, 2, 3, 4, 5]));
             const orderedElements: number[] = [];
             const indices: number[] = [];
@@ -199,7 +197,7 @@ describe("RedBlackTree", () => {
             expect(orderedElements).to.deep.equal([2, 4, 6, 8, 10]);
             expect(indices).to.deep.equal([0, 1, 2, 3, 4]);
         });
-        it("should immediately end if tree is empty", () => {
+        test("should immediately end if tree is empty", () => {
             const tree = new RedBlackTree<string>();
             const result: string[] = [];
             let index = -1;
@@ -213,18 +211,18 @@ describe("RedBlackTree", () => {
     });
 
     describe("#getRootData()", () => {
-        it("should return null if the tree is empty", () => {
+        test("should return null if the tree is empty", () => {
             const tree = new RedBlackTree<number>();
             expect(tree.getRootData()).to.be.null;
         });
-        it("should return the root data", () => {
+        test("should return the root data", () => {
             const tree = new RedBlackTree([1, 2, 3]);
             expect(tree.getRootData()).to.eq(2);
         });
     });
 
     describe("#insert()", () => {
-        it("should add elements to the tree", () => {
+        test("should add elements to the tree", () => {
             const tree = new RedBlackTree<number>();
             tree.insert(1);
             tree.insert(2);
@@ -235,7 +233,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(3)).to.be.true;
             expect(tree.length).to.eq(3);
         });
-        it("should use provided comparator", () => {
+        test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             const noemiTest = new Person("Noemi", "Waterfox", 29);
             tree.insert(Person.Alice);
@@ -250,7 +248,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#isEmpty()", () => {
-        it("should return true if tree is empty (and false if not)", () => {
+        test("should return true if tree is empty (and false if not)", () => {
             const tree = new RedBlackTree<number>();
             expect(tree.isEmpty()).to.be.true;
             expect(tree.length).to.eq(0);
@@ -261,7 +259,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#remove()", () => {
-        it("should remove the element from the tree", () => {
+        test("should remove the element from the tree", () => {
             const tree = new RedBlackTree<number>();
             tree.add(1);
             tree.add(2);
@@ -272,7 +270,7 @@ describe("RedBlackTree", () => {
             expect(tree.length).to.eq(2);
             expect(tree.contains(2)).to.be.false;
         });
-        it("should use provided comparator", () => {
+        test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             tree.add(Person.Alice);
             tree.add(Person.Noemi);
@@ -282,7 +280,7 @@ describe("RedBlackTree", () => {
             expect(tree.length).to.eq(2);
             expect(tree.contains(Person.Noemi2)).to.be.true; // since it is equal to Person.Noemi via personComparator
         });
-        it("should add 1000 random number and then delete them randomly", () => {
+        test("should add 1000 random number and then delete them randomly", () => {
             const numTree = new RedBlackTree<number>();
             const randArray = randomUniqueArrayGenerator(1000);
             randArray.forEach(n => numTree.insert(n));
@@ -295,14 +293,14 @@ describe("RedBlackTree", () => {
             expect(numTree.size()).to.eq(0);
             expect(numTree.length).to.eq(0);
         });
-        it("should return false if element is not in the tree", () => {
+        test("should return false if element is not in the tree", () => {
             const tree = new RedBlackTree([1, 2, 3, 4]);
             expect(tree.remove(5)).to.be.false;
         })
     });
 
     describe("#removeAll()", () => {
-        it("should remove all elements of the collection from the tree", () => {
+        test("should remove all elements of the collection from the tree", () => {
             const tree = new RedBlackTree([Person.Alice, Person.Eliza, Person.Bella, Person.Lucrezia, Person.Vanessa]);
             const list = new LinkedList([Person.Alice, Person.Eliza, Person.Vanessa]);
             tree.removeAll(list);
@@ -317,7 +315,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#removeIf()", () => {
-        it("should remove all items that satisfies the predicate from the tree", () => {
+        test("should remove all items that satisfies the predicate from the tree", () => {
             const tree = new RedBlackTree([Person.Alice, Person.Eliza, Person.Bella, Person.Lucrezia, Person.Vanessa]);
             tree.removeIf(p => p.name.length === 5);
             expect(tree.size()).to.eq(2);
@@ -331,7 +329,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#retainAll()", () => {
-        it("should remove all elements of the collection from the tree", () => {
+        test("should remove all elements of the collection from the tree", () => {
             const tree = new RedBlackTree([Person.Alice, Person.Eliza, Person.Bella, Person.Lucrezia, Person.Vanessa]);
             const list = new LinkedList([Person.Alice, Person.Eliza, Person.Vanessa]);
             tree.retainAll(list);
@@ -346,7 +344,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#search()", () => {
-        it("should return true if element exists in the tree (and false if not)", () => {
+        test("should return true if element exists in the tree (and false if not)", () => {
             const tree = new RedBlackTree([1, 2, 3, 4, 5]);
             expect(tree.search(1)).to.be.true;
             expect(tree.search(3)).to.be.true;
@@ -357,24 +355,24 @@ describe("RedBlackTree", () => {
     });
 
     describe("#toArray()", () => {
-        it("should return empty array if tree is empty", () => {
+        test("should return empty array if tree is empty", () => {
             const tree = new RedBlackTree<number>();
             expect(tree.toArray()).to.be.empty;
         });
-        it("should return in-order array", () => {
+        test("should return in-order array", () => {
             const tree = new RedBlackTree([1, 2, 3, 4, 5]);
             const array = tree.toArray();
             expect(array).to.have.all.members([1, 2, 3, 4, 5]);
             expect(array).to.deep.equal([1, 2, 3, 4, 5]);
         });
-        it("should return in-order array #2", () => {
+        test("should return in-order array #2", () => {
             const array = randomUniqueArrayGenerator(1000);
             const sortedArray = Enumerable.from(array).orderBy(n => n).toArray();
             const tree = new RedBlackTree(array);
             const treeArray = tree.toArray();
             expect(sortedArray).to.deep.equal(treeArray);
         });
-        it("should return in-order array #3", () => {
+        test("should return in-order array #3", () => {
             const tree = new RedBlackTree([Person.Priscilla, Person.Hanna, Person.Kaori, Person.Bella, Person.Megan], personNameComparator);
             const array = tree.toArray();
             expect(array).to.deep.equal([Person.Bella, Person.Hanna, Person.Kaori, Person.Megan, Person.Priscilla]);
@@ -382,7 +380,7 @@ describe("RedBlackTree", () => {
     });
 
     describe("#traverseToArray()", () => {
-        it("should traverse and return an array based on the given direction", () => {
+        test("should traverse and return an array based on the given direction", () => {
             const sourceData = [4, 1, 3, 5, 2];
             const sortedSourceData = Enumerable.from(sourceData).orderBy(n => n).toArray();
             const expectedPreOrderArray = [3, 1, 2, 4, 5];

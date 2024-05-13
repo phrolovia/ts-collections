@@ -1,18 +1,17 @@
-import {AbstractCollection, LinkedList} from "../../imports";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {EqualityComparator} from "../shared/EqualityComparator";
+import { AbstractCollection, LinkedList } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
 
 export class Queue<TElement> extends AbstractCollection<TElement> {
-    private readonly queue: LinkedList<TElement>;
+    readonly #queue: LinkedList<TElement>;
 
     public constructor(iterable: Iterable<TElement> = [] as TElement[], comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.queue = new LinkedList<TElement>(iterable, comparator);
-        this.updateLength();
+        this.#queue = new LinkedList<TElement>(iterable, comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.queue;
+        yield* this.#queue;
     }
 
     /**
@@ -21,18 +20,15 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @return true if the element was added to the queue, false otherwise.
      */
     public override add(element: TElement): boolean {
-        const result = this.queue.add(element);
-        this.updateLength();
-        return result;
+        return this.#queue.add(element);
     }
 
     public override clear(): void {
-        this.queue.clear();
-        this.updateLength();
+        this.#queue.clear();
     }
 
-    public override contains(element: TElement): boolean {
-        return this.queue.contains(element);
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.#queue.contains(element, comparator);
     }
 
     /**
@@ -44,11 +40,10 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @throws {Error} If the queue is empty.
      */
     public dequeue(): TElement {
-        if (this.queue.isEmpty()) {
+        if (this.#queue.isEmpty()) {
             throw new Error(ErrorMessages.NoElements);
         }
-        const result = this.queue.poll();
-        this.updateLength();
+        const result = this.#queue.poll();
         return result as TElement;
     }
 
@@ -57,8 +52,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @param element The element that will be added to the queue.
      */
     public enqueue(element: TElement): void {
-        this.queue.add(element);
-        this.updateLength();
+        this.#queue.add(element);
     }
 
     /**
@@ -68,14 +62,14 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @returns {TElement} The head of the queue.
      */
     public front(): TElement {
-        if (this.queue.isEmpty()) {
+        if (this.#queue.isEmpty()) {
             throw new Error(ErrorMessages.NoElements);
         }
-        return this.queue.peek() as TElement;
+        return this.#queue.peek() as TElement;
     }
 
     public override isEmpty(): boolean {
-        return this.queue.isEmpty();
+        return this.#queue.isEmpty();
     }
 
     /**
@@ -85,10 +79,10 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement | null {
-        if (this.queue.isEmpty()) {
+        if (this.#queue.isEmpty()) {
             return null;
         }
-        return this.queue.peek();
+        return this.#queue.peek();
     }
 
     /**
@@ -98,12 +92,14 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      * @returns {TElement | null} The head of the queue, or null if the queue is empty.
      */
     public poll(): TElement | null {
-        const result = this.queue.poll();
-        this.updateLength();
-        return result;
+        return this.#queue.poll();
     }
 
     public override size(): number {
-        return this.queue.size();
+        return this.#queue.size();
+    }
+
+    public override get length(): number {
+        return this.#queue.length;
     }
 }

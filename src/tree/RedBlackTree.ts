@@ -1,7 +1,7 @@
-import {AbstractTree} from "../../imports";
-import {Predicate} from "../shared/Predicate";
-import {OrderComparator} from "../shared/OrderComparator";
-import {TreeNode} from "./TreeNode";
+import { AbstractTree } from "../imports";
+import { OrderComparator } from "../shared/OrderComparator";
+import { Predicate } from "../shared/Predicate";
+import { TreeNode } from "./TreeNode";
 
 // Algorithm taken from https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/
 class RedBlackNode<TElement> extends TreeNode<TElement> {
@@ -81,7 +81,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         for (const element of iterable) {
             this.add(element);
         }
-        this.updateLength();
     }
 
     public add(element: TElement): boolean {
@@ -99,7 +98,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         const node = this.searchNode(element);
         this.deleteNode(node);
         this.treeSize--;
-        this.updateLength();
     }
 
     public insert(element: TElement): void {
@@ -121,7 +119,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             this.fixDoubleRed(node);
         }
         this.treeSize++;
-        this.updateLength();
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {

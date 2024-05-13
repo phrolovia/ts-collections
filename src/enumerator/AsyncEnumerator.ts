@@ -1,11 +1,3 @@
-import {InferredType} from "../shared/InferredType";
-import {ClassType, ObjectType} from "../shared/ObjectType";
-import {IAsyncEnumerable} from "./IAsyncEnumerable";
-import {IndexedPredicate} from "../shared/IndexedPredicate";
-import {ErrorMessages} from "../shared/ErrorMessages";
-import {Selector} from "../shared/Selector";
-import {Accumulator} from "../shared/Accumulator";
-import {Predicate} from "../shared/Predicate";
 import {
     Collections,
     Enumerable,
@@ -17,15 +9,23 @@ import {
     List,
     OrderedAsyncEnumerator,
     SortedSet
-} from "../../imports";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {Comparators} from "../shared/Comparators";
-import {OrderComparator} from "../shared/OrderComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {JoinSelector} from "../shared/JoinSelector";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {Zipper} from "../shared/Zipper";
+} from "../imports";
+import { Accumulator } from "../shared/Accumulator";
+import { Comparators } from "../shared/Comparators";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { ClassType, ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { Predicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { Zipper } from "../shared/Zipper";
+import { IAsyncEnumerable } from "./IAsyncEnumerable";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
@@ -39,6 +39,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     public async aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>,
                                                                           seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult> {
         let accumulatedValue: TAccumulate | null = null;
+        let count = 0;
         if (seed == null) {
             let index = 0;
             for await (const element of this) {
@@ -48,12 +49,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     accumulatedValue = accumulator(accumulatedValue as TAccumulate, element);
                 }
                 ++index;
+                ++count;
             }
         } else {
             accumulatedValue = seed;
             for await (const element of this) {
                 accumulatedValue = accumulator(accumulatedValue, element);
+                ++count;
             }
+        }
+        if (count === 0 && accumulatedValue == null) {
+            throw new Error(ErrorMessages.NoElements);
         }
         return resultSelector?.(accumulatedValue as TAccumulate) ?? accumulatedValue as TAccumulate;
     }
@@ -134,8 +140,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return count;
     }
 
-    public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement|null> {
-        return new AsyncEnumerator<TElement|null>(() => this.defaultIfEmptyGenerator(defaultValue));
+    public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null> {
+        return new AsyncEnumerator<TElement | null>(() => this.defaultIfEmptyGenerator(defaultValue));
     }
 
     public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
@@ -158,6 +164,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 return element;
             }
             ++count;
+        }
+        if (index >= count) {
+            throw new Error(ErrorMessages.IndexOutOfBoundsException);
         }
         throw new Error(ErrorMessages.NoSuchElement);
     }
@@ -358,7 +367,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
             first = await iterator.next();
             second = await otherIterator.next();
-            if(first.done && second.done) {
+            if (first.done && second.done) {
                 return true;
             }
         }
@@ -370,11 +379,37 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public async single(predicate?: Predicate<TElement>): Promise<TElement> {
-        const result = await this.singleOrDefault(predicate);
-        if (result === null) {
+        let single: TElement | null = null;
+        let index = 0;
+        let count = 0;
+        if (!predicate) {
+            for await (const element of this) {
+                if (index !== 0) {
+                    throw new Error(ErrorMessages.MoreThanOneElement);
+                }
+                single = element;
+                ++index;
+                ++count;
+            }
+        } else {
+            for await (const element of this) {
+                if (predicate(element)) {
+                    if (index !== 0) {
+                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                    }
+                    single = element;
+                    ++index;
+                }
+                ++count;
+            }
+        }
+        if (count === 0) {
+            throw new Error(ErrorMessages.NoElements);
+        }
+        if (single == null) {
             throw new Error(ErrorMessages.NoMatchingElement);
         }
-        return result;
+        return single;
     }
 
     public async singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
@@ -497,7 +532,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         yield* other;
     }
 
-    private async* defaultIfEmptyGenerator(defaultValue?: TElement | null): AsyncIterable<TElement|null> {
+    private async* defaultIfEmptyGenerator(defaultValue?: TElement | null): AsyncIterable<TElement | null> {
         let hasElements = false;
         for await (const element of this) {
             hasElements = true;
@@ -778,7 +813,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* zipGenerator<TSecond, TResult=[TElement,TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
+    private async* zipGenerator<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
         const iterator1 = this[Symbol.asyncIterator]();
         const iterator2 = enumerable[Symbol.asyncIterator]();
         let next1 = await iterator1.next();
