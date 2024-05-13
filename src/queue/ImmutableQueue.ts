@@ -1,7 +1,6 @@
 import { AbstractImmutableCollection, Queue } from "../imports.ts";
 import { EqualityComparator } from "../shared/EqualityComparator.ts";
 import { ErrorMessages } from "../shared/ErrorMessages.ts";
-import { Predicate } from "../shared/Predicate.ts";
 
 export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #queue: Queue<TElement>;
@@ -45,18 +44,6 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
      */
     public clear(): ImmutableQueue<TElement> {
         return new ImmutableQueue([], this.comparer);
-    }
-
-    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        return this.#queue.contains(element, comparator);
-    }
-
-    public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return this.#queue.containsAll(collection);
-    }
-
-    public override count(predicate?: Predicate<TElement>): number {
-        return this.#queue.count(predicate);
     }
 
     /**
@@ -109,7 +96,7 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
     }
 
     /**
-     * Retrieves and removes the element at the beginning of the queue.
+     * Removes the element at the beginning of the queue and returns the new queue.
      * Unlike {@link dequeue}, this method does not throw an error if the queue is empty.
      * @template TElement The type of elements in the queue.
      * @returns {ImmutableQueue} A new queue with the head removed, or an empty queue if the queue is empty.

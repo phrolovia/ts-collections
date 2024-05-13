@@ -207,6 +207,16 @@ describe("Heap", () => {
             expect(heap.contains("a")).toBe(false);
             expect(heap.toArray()).toEqual(["c", "g", "n", "z"]);
         });
+        test("should return false if the element is not in the heap", () => {
+            const heap = new Heap<number>();
+            heap.add(88);
+            heap.add(4);
+            heap.add(26);
+            heap.add(11);
+            heap.add(8);
+            expect(heap.remove(100)).toBe(false);
+            expect(heap.size()).toBe(5);
+        });
     });
     describe("#removeAll()", () => {
         test("should remove all elements from the given iterable", () => {
@@ -222,6 +232,22 @@ describe("Heap", () => {
             expect(result).toBe(true);
             expect(heap.size()).toBe(4);
             expect(heap.toArray()).toEqual([1, 2, 4, 6]);
+        });
+    });
+    describe("#removeIf()", () => {
+        test("should remove elements that satisfy the predicate", () => {
+            const heap = new Heap<number>(Comparators.reverseOrderComparator, [78, 3, 16, 16, 10, 7]);
+            heap.removeIf((element) => element % 2 === 0);
+            expect(heap.size()).toBe(2);
+            expect(heap.toArray()).toEqual([7, 3]);
+        });
+        test("should return true if the heap was modified", () => {
+            const heap = new Heap<number>();
+            heap.addAll([1, 2, 3, 4, 5, 6]);
+            const result = heap.removeIf((element) => element % 2 === 0);
+            expect(result).toBe(true);
+            expect(heap.length).toBe(3);
+            expect(heap.toArray()).toEqual([1, 3, 5]);
         });
     });
 });
