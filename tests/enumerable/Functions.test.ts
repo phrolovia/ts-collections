@@ -646,7 +646,7 @@ describe("Enumerable Standalone Functions", () => {
             generator,
             func
         ];
-        test("should retunr an array of numbers via Number constructor", () => {
+        test("should return an array of numbers via Number constructor", () => {
             const numbers = ofType(collection, Number);
             expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9, 10, 999]);
         });
@@ -686,13 +686,13 @@ describe("Enumerable Standalone Functions", () => {
             const objects = ofType(collection, "object");
             expect(objects.toArray()).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
         });
-        test("should return an array of bigints via BigInt constructor", () => {
-            const bigints = ofType(collection, BigInt);
-            expect(bigints.toArray()).to.deep.equal([bigInt, bigint2]);
+        test("should return an array of big integers via BigInt constructor", () => {
+            const bigintList = ofType(collection, BigInt);
+            expect(bigintList.toArray()).to.deep.equal([bigInt, bigint2]);
         });
-        test("should return an array of bigints via typeof", () => {
-            const bigints = ofType(collection, "bigint");
-            expect(bigints.toArray()).to.deep.equal([bigInt, bigint2]);
+        test("should return an array of big integers via typeof", () => {
+            const bigintList = ofType(collection, "bigint");
+            expect(bigintList.toArray()).to.deep.equal([bigInt, bigint2]);
         });
         test("should return an array of functions via Function constructor", () => {
             const functions = ofType(collection, Function);
@@ -711,8 +711,8 @@ describe("Enumerable Standalone Functions", () => {
             expect(arrays.toArray()).to.deep.equal([["x", "y", "z"]]);
         });
         test("should return an array of strings and numbers", () => {
-            const stringsAndNumbers = concat(ofType(collection, String), ofType(collection, Number));
-            expect(stringsAndNumbers.toArray()).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
+            const stringsAndNumbers = [...ofType(collection, String), ...ofType(collection, Number)];
+            expect(stringsAndNumbers).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
         });
     });
 

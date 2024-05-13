@@ -909,12 +909,12 @@ describe("List", () => {
             expect(people).to.deep.equal([Person.Mirei, Person.Alice]);
         });
         test("should return an array of BigInt", () => {
-            const bigints = list.ofType(BigInt).toArray();
-            expect(bigints).to.deep.equal([bigInt, bigint2]);
+            const bigintList = list.ofType(BigInt).toArray();
+            expect(bigintList).to.deep.equal([bigInt, bigint2]);
         });
         test("should return an array of BigInt via typeof", () => {
-            const bigints = list.ofType("bigint").toArray();
-            expect(bigints).to.deep.equal([bigInt, bigint2]);
+            const bigintList = list.ofType("bigint").toArray();
+            expect(bigintList).to.deep.equal([bigInt, bigint2]);
         });
         test("should return an array of arrays", () => {
             const arrays = list.ofType(Array).toArray();
@@ -929,7 +929,7 @@ describe("List", () => {
             expect(functions).to.deep.equal([generator, func]);
         });
         test("should return an array of strings and numbers", () => {
-            const stringsAndNumbers = list.ofType(String).concat(list.ofType(Number)).toArray();
+            const stringsAndNumbers = [...list.ofType(String), ...list.ofType(Number)];
             expect(stringsAndNumbers).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
         });
     });

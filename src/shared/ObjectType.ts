@@ -25,14 +25,14 @@ class PrimitiveSymbol {
 }
 
 export type ObjectType<T = any> =
-    PrimitiveObject | "object"
     | PrimitiveSymbol | "symbol"
-    | PrimitiveString | "string"
+    | PrimitiveBoolean | "boolean"
     | PrimitiveNumber | "number"
     | PrimitiveBigInt | "bigint"
-    | PrimitiveBoolean | "boolean"
+    | Class<T>
     | Function | "function"
-    | Class<T>;
+    | PrimitiveObject | "object"
+    | PrimitiveString | "string";
 
 export const ClassType = (type: ObjectType) => {
     const name = (type as Class<ObjectType>).name;
