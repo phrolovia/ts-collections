@@ -1,3 +1,4 @@
+import { test } from "vitest";
 import {
     aggregate,
     all,
@@ -83,6 +84,7 @@ import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
+import { AbstractShape, Circle, Polygon, Rectangle, Square, Triangle } from "../models/Shape";
 import { Student } from "../models/Student";
 
 describe("Enumerable Standalone Functions", () => {
@@ -646,6 +648,16 @@ describe("Enumerable Standalone Functions", () => {
             generator,
             func
         ];
+        const circle1 = new Circle(1);
+        const circle2 = new Circle(2);
+        const triangle = new Triangle(10, 8);
+        const square = new Square(5);
+        const polygon = new Polygon([5, 5, 5, 5, 5]);
+        const polygon2 = new Polygon([10, 10, 10, 10, 10]);
+        const rectangle = new Rectangle(10, 5);
+        const rectangle2 = new Rectangle(20, 10);
+        const shapes = [circle1, circle2, triangle, square, polygon, polygon2, rectangle, rectangle2];
+        const shapesWithPeople = [...shapes, Person.Mirei, Person.Alice];
         test("should return an array of numbers via Number constructor", () => {
             const numbers = ofType(collection, Number);
             expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9, 10, 999]);
@@ -713,6 +725,37 @@ describe("Enumerable Standalone Functions", () => {
         test("should return an array of strings and numbers", () => {
             const stringsAndNumbers = [...ofType(collection, String), ...ofType(collection, Number)];
             expect(stringsAndNumbers).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
+        });
+        test("should return an array of circles via Circle constructor", () => {
+            const circles = ofType(shapes, Circle);
+            expect(circles.toArray()).to.deep.equal([circle1, circle2]);
+        });
+        test("should return an array of polygons via Polygon constructor", () => {
+            const polygons = ofType(shapes, Polygon);
+            // Rectangle extends Polygon, so it should be included in the result
+            expect(polygons.toArray()).to.deep.equal([polygon, polygon2, rectangle, rectangle2]);
+        });
+        test("should return an array of rectangles via Rectangle constructor", () => {
+            const rectangles = ofType(shapes, Rectangle);
+            expect(rectangles.toArray()).to.deep.equal([rectangle, rectangle2]);
+        });
+        test("should return an array of squares via Square constructor", () => {
+            const squares = ofType(shapes, Square);
+            expect(squares.toArray()).to.deep.equal([square]);
+        });
+        test("should return an array of triangles via Triangle constructor", () => {
+            const triangles = ofType(shapes, Triangle);
+            expect(triangles.toArray()).to.deep.equal([triangle]);
+        });
+        test("should return an array of shapes via AbstractShape constructor", () => {
+            const allShapes = ofType(shapes, AbstractShape);
+            expect(allShapes.toArray()).to.deep.equal(shapes);
+        });
+        test("should return respective shapes and people", () => {
+            const shapes = ofType(shapesWithPeople, AbstractShape); // return type is not IEnumerable<AbstractShape>, could not find a way to do this
+            const people = ofType(shapesWithPeople, Person);
+            expect(shapes.toArray()).to.deep.equal([circle1, circle2, triangle, square, polygon, polygon2, rectangle, rectangle2]);
+            expect(people.toArray()).to.deep.equal([Person.Mirei, Person.Alice]);
         });
     });
 

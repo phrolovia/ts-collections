@@ -440,6 +440,28 @@ export const min = <TElement>(
 /**
  * Returns the elements that are of the specified type.
  * The type can be specified either as a constructor function or as a string.
+ * @example
+ *     const list = new List([1, 2, 'a', 'b', 3, 4, 'c', 5]);
+ *     const onlyNumbers = ofType(list, 'number');
+ *     console.log(onlyNumbers.toArray()); // [1, 2, 3, 4, 5]
+ *
+ * @example
+ *    // When using a constructor function:
+ *    const list = new List([1, 2, 'a', 'b', 3, 4, 'c', 5]);
+ *    const onlyNumbers = ofType(list, Number);
+ *    console.log(onlyNumbers.toArray()); // [1, 2, 3, 4, 5]
+ *
+ * @example
+ *   // In case of an inheritance, querying the base type will also return the derived types.
+ *   class Base { }
+ *   class Derived extends Base { }
+ *   const list = new List([new Base(), new Derived(), new Base()]);
+ *   const onlyBase = ofType(list, Base);
+ *   console.log(onlyBase.toArray()); // [Base {}, Derived {}, Base {}]
+ *
+ *   const onlyDerived = ofType(list, Derived);
+ *   console.log(onlyDerived.toArray()); // [Derived {}]
+ *
  * @template TResult
  * @param source The source sequence.
  * @param type The type to filter the elements of the sequence with.
