@@ -698,7 +698,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): Iterable<InferredType<TResult>> {
         const isOfType = typeof type === "string"
-            ? ((item: unknown) => typeof item === type) as (item: unknown) => item is InferredType<TResult>
+            ? ((item: unknown): boolean => typeof item === type) as (item: unknown) => item is InferredType<TResult>
             : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as any);
         for (const item of this) {
             if (isOfType(item)) {
