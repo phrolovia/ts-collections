@@ -30,7 +30,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
     }
 
     /**
-     * Adds the given element to the specified index of this list.
+     * Adds all elements from the provided collection to this list.
      * @param collection The collection whose element will be added to this list.
      * @returns {ImmutableList} A new list with the added element.
      */
