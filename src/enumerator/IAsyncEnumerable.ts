@@ -67,7 +67,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Concatenates two sequences.
      * @param other The enumerable sequence that will be concatenated to the first sequence.
      */
-    concat(other: IAsyncEnumerable<TElement>): IAsyncEnumerable<TElement>;
+    concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement>;
 
     /**
      * Determines where the sequence contains the specified element.
@@ -131,7 +131,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
+    except(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
 
     /**
      * Gets the first element of the sequence.
@@ -191,7 +191,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
+    intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys
@@ -310,7 +310,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param enumerable The enumerable sequence to compare to the source sequence.
      * @param comparator The equality comparer that will be used to compare the elements. If not specified, default equality comparer will be used.
      */
-    sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean>;
+    sequenceEqual(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
     /**
      * Returns a new enumerable sequence whose elements are shuffled.
@@ -383,7 +383,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param enumerable The enumerable sequence whose distinct elements form the second set for the union.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
-    union(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
+    union(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
      * Filters a sequence of values based on a predicate.
@@ -393,8 +393,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
 
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
-     * @param enumerable The enumerable sequence to merge with the first sequence.
+     * @param iterable The iterable sequence to merge with the first sequence.
+     */
+    zip<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
+
+    /**
+     * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+     * @param iterable The iterable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      */
-    zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
+    zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
 }

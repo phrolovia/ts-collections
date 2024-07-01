@@ -229,8 +229,7 @@ describe("List", () => {
     describe("#concat()", () => {
         test("should return a list with [1,2,3,4,5,5,6,7,8,9]", () => {
             const list1 = new List([1, 2, 3, 4, 5]);
-            const list2 = new List([5, 6, 7, 8, 9]);
-            const clist = list1.concat(list2);
+            const clist = list1.concat([5, 6, 7, 8, 9]);
             const array = clist.toArray();
             const array2 = clist.append(-1).toArray();
             expect(array).to.deep.equal([1, 2, 3, 4, 5, 5, 6, 7, 8, 9]);

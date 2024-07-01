@@ -123,8 +123,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.chunk(size);
     }
 
-    public concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
-        return this.#enumerator.concat(enumerable);
+    public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
+        return this.#enumerator.concat(iterable);
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -151,8 +151,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return this.#enumerator.except(enumerable, comparator, orderComparator);
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return this.#enumerator.except(iterable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
@@ -175,8 +175,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return this.#enumerator.intersect(enumerable, comparator, orderComparator);
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return this.#enumerator.intersect(iterable, comparator, orderComparator);
     }
 
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -239,8 +239,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.selectMany(selector);
     }
 
-    public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
-        return this.#enumerator.sequenceEqual(enumerable, comparator);
+    public sequenceEqual(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
+        return this.#enumerator.sequenceEqual(iterable, comparator);
     }
 
     public shuffle(): IEnumerable<TElement> {
@@ -335,15 +335,15 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toSortedSet(comparator);
     }
 
-    public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
-        return this.#enumerator.union(enumerable, comparator);
+    public union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return this.#enumerator.union(iterable, comparator);
     }
 
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return this.#enumerator.where(predicate);
     }
 
-    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
-        return this.#enumerator.zip(enumerable, zipper);
+    public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        return this.#enumerator.zip(iterable, zipper);
     }
 }
