@@ -30,8 +30,9 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
         if (this.size() > this.getIterableSize(other)) {
             return false;
         }
+        const enumerable = from(other);
         for (const element of this) {
-            if (!from(other).contains(element)) {
+            if (!enumerable.contains(element)) {
                 return false;
             }
         }

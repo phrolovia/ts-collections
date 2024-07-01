@@ -113,7 +113,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<IEnumerable<TElement>>(() => this.chunkGenerator(size));
     }
 
-    public concat(other: IAsyncEnumerable<TElement>): IAsyncEnumerable<TElement> {
+    public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.concatGenerator(other));
     }
 
@@ -185,9 +185,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return null;
     }
 
-    public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
+    public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new AsyncEnumerator<TElement>(() => this.exceptGenerator(enumerable, comparator, orderComparator));
+        return new AsyncEnumerator<TElement>(() => this.exceptGenerator(iterable, comparator, orderComparator));
     }
 
     public async first(predicate?: Predicate<TElement>): Promise<TElement> {
@@ -237,9 +237,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TResult>(() => this.groupJoinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare));
     }
 
-    public intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
         const compare = comparator ?? Comparators.equalityComparator;
-        return new AsyncEnumerator<TElement>(() => this.intersectGenerator(enumerable, compare, orderComparator));
+        return new AsyncEnumerator<TElement>(() => this.intersectGenerator(iterable, compare, orderComparator));
     }
 
     public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
@@ -352,10 +352,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TResult>(() => this.selectManyGenerator(selector));
     }
 
-    public async sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean> {
+    public async sequenceEqual(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean> {
         comparator ??= Comparators.equalityComparator;
         const iterator = this[Symbol.asyncIterator]();
-        const otherIterator = enumerable[Symbol.asyncIterator]();
+        const otherIterator = iterable[Symbol.asyncIterator]();
         let first = await iterator.next();
         let second = await otherIterator.next();
         if (first.done && second.done) {
@@ -490,16 +490,16 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return result;
     }
 
-    public union(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
-        return new AsyncEnumerator<TElement>(() => this.unionGenerator(enumerable, comparator));
+    public union(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.unionGenerator(iterable, comparator));
     }
 
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.whereGenerator(predicate));
     }
 
-    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, resultSelector?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
-        return new AsyncEnumerator<TResult>(() => this.zipGenerator(enumerable, resultSelector));
+    public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, resultSelector?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
+        return new AsyncEnumerator<TResult>(() => this.zipGenerator(iterable, resultSelector));
     }
 
     private async* appendGenerator(element: TElement): AsyncIterable<TElement> {
@@ -527,7 +527,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* concatGenerator(other: IAsyncEnumerable<TElement>): AsyncIterable<TElement> {
+    private async* concatGenerator(other: AsyncIterable<TElement>): AsyncIterable<TElement> {
         yield* this;
         yield* other;
     }
@@ -543,9 +543,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* exceptGenerator(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): AsyncIterable<TElement> {
+    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): AsyncIterable<TElement> {
         const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
-        for await (const element of enumerable) {
+        for await (const element of iterable) {
             if (!collection.contains(element)) {
                 collection.add(element);
             }
@@ -582,9 +582,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* intersectGenerator(enumerable: IAsyncEnumerable<TElement>, comparator: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): AsyncIterable<TElement> {
+    private async* intersectGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): AsyncIterable<TElement> {
         const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
-        for await (const element of enumerable) {
+        for await (const element of iterable) {
             if (!collection.contains(element)) {
                 collection.add(element);
             }
@@ -767,7 +767,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* unionGenerator(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): AsyncIterable<TElement> {
+    private async* unionGenerator(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): AsyncIterable<TElement> {
         const collection = comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
         for await (const element of this) {
             if (!collection.contains(element)) {
@@ -775,7 +775,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 yield element;
             }
         }
-        for await (const element of enumerable) {
+        for await (const element of iterable) {
             if (!collection.contains(element)) {
                 collection.add(element);
                 yield element;
@@ -813,9 +813,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* zipGenerator<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
+    private async* zipGenerator<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): AsyncIterable<TResult> {
         const iterator1 = this[Symbol.asyncIterator]();
-        const iterator2 = enumerable[Symbol.asyncIterator]();
+        const iterator2 = iterable[Symbol.asyncIterator]();
         let next1 = await iterator1.next();
         let next2 = await iterator2.next();
         while (!next1.done && !next2.done) {

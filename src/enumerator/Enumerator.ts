@@ -122,8 +122,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.chunkGenerator(size));
     }
 
-    public concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
-        return new Enumerator(() => this.concatGenerator(enumerable));
+    public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
+        return new Enumerator(() => this.concatGenerator(iterable));
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -187,9 +187,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return null;
     }
 
-    public except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.exceptGenerator(enumerable, comparator, orderComparator));
+        return new Enumerator(() => this.exceptGenerator(iterable, comparator, orderComparator));
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
@@ -235,9 +235,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.groupJoinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
     }
 
-    public intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.intersectGenerator(enumerable, comparator, orderComparator));
+        return new Enumerator(() => this.intersectGenerator(iterable, comparator, orderComparator));
     }
 
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -374,10 +374,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.selectManyGenerator(selector));
     }
 
-    public sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
+    public sequenceEqual(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
         comparator ??= Comparators.equalityComparator;
         const iterator = this[Symbol.iterator]();
-        const otherIterator = enumerable[Symbol.iterator]();
+        const otherIterator = iterable[Symbol.iterator]();
         let first = iterator.next();
         let second = otherIterator.next();
         if (first.done && second.done) {
@@ -576,17 +576,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new SortedSet<TElement>(this, comparator);
     }
 
-    public union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+    public union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.unionGenerator(enumerable, comparator));
+        return new Enumerator(() => this.unionGenerator(iterable, comparator));
     }
 
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerator<TElement>(() => this.whereGenerator(predicate));
     }
 
-    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
-        return new Enumerator(() => this.zipGenerator(enumerable, zipper));
+    public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        return new Enumerator(() => this.zipGenerator(iterable, zipper));
     }
 
     private* appendGenerator(element: TElement): Iterable<TElement> {
@@ -616,7 +616,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* concatGenerator(enumerable: IEnumerable<TElement>): Iterable<TElement> {
+    private* concatGenerator(enumerable: Iterable<TElement>): Iterable<TElement> {
         yield* this;
         yield* enumerable;
     }
@@ -630,7 +630,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* exceptGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): Iterable<TElement> {
+    private* exceptGenerator(enumerable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): Iterable<TElement> {
         const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : new List<TElement>([], comparator ?? Comparators.equalityComparator);
         for (const item of enumerable) {
             if (!collection.contains(item)) {
@@ -668,9 +668,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* intersectGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): Iterable<TElement> {
+    private* intersectGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): Iterable<TElement> {
         const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : new List<TElement>([], comparator ?? Comparators.equalityComparator);
-        for (const item of enumerable) {
+        for (const item of iterable) {
             if (!collection.contains(item)) {
                 collection.add(item);
             }
@@ -843,10 +843,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* unionGenerator(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
+    private* unionGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
         const distinctList: Array<TElement> = [];
         comparator ??= Comparators.equalityComparator;
-        for (const source of [this, enumerable]) {
+        for (const source of [this, iterable]) {
             for (const item of source) {
                 let exists = false;
                 for (const existingItem of distinctList) {
@@ -892,9 +892,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* zipGenerator<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
+    private* zipGenerator<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
         const iterator = this[Symbol.iterator]();
-        const otherIterator = enumerable[Symbol.iterator]();
+        const otherIterator = iterable[Symbol.iterator]();
         while (true) {
             let first = iterator.next();
             let second = otherIterator.next();

@@ -79,7 +79,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.chunk(count);
     }
 
-    public concat(other: IAsyncEnumerable<TElement>): IAsyncEnumerable<TElement> {
+    public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.concat(other);
     }
 
@@ -107,8 +107,8 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
-        return this.#enumerator.except(enumerable, comparator, orderComparator);
+    public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
+        return this.#enumerator.except(iterable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<TElement>): Promise<TElement> {
@@ -131,8 +131,8 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
-        return this.#enumerator.intersect(enumerable, comparator, orderComparator);
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
+        return this.#enumerator.intersect(iterable, comparator, orderComparator);
     }
 
     public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
@@ -195,8 +195,8 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.selectMany(selector);
     }
 
-    public sequenceEqual(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean> {
-        return this.#enumerator.sequenceEqual(enumerable, comparator);
+    public sequenceEqual(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean> {
+        return this.#enumerator.sequenceEqual(iterable, comparator);
     }
 
     public shuffle(): IAsyncEnumerable<TElement> {
@@ -243,15 +243,15 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.toArray();
     }
 
-    public union(enumerable: IAsyncEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
-        return this.#enumerator.union(enumerable, comparator);
+    public union(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.union(iterable, comparator);
     }
 
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.where(predicate);
     }
 
-    public zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IAsyncEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
-        return this.#enumerator.zip(enumerable, zipper);
+    public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
+        return this.#enumerator.zip(iterable, zipper);
     }
 }

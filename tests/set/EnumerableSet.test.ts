@@ -98,7 +98,7 @@ describe("EnumerableSet", () => {
         });
     });
     describe("#retainAll()", () => {
-        test("should retain only the items in the set that match the predicate", () => {
+        test("should retain only the items in the given iterable", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             set.add(Person.Senna);

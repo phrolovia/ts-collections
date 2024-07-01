@@ -86,9 +86,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Concatenates two sequences.
-     * @param enumerable The enumerable sequence that will be concatenated to the first sequence.
+     * @param iterable The iterable sequence that will be concatenated to the first sequence.
      */
-    concat(enumerable: IEnumerable<TElement>): IEnumerable<TElement>;
+    concat(iterable: Iterable<TElement>): IEnumerable<TElement>;
 
     /**
      * Determines where the sequence contains the specified element.
@@ -139,20 +139,20 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
      * - If no comparator is specified, it will use the <b>default equality</b> comparer.
      *
-     * If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.
+     * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
      *
      * Example:
-     * ```
+     * ```typescript
      *     var numberList1 = new List([1, 2, 2, 3, 3, 3, 4, 5]);
      *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
      *     var result = numberList1.except(numberList2).toArray(); // [1, 3, 4]
      * ```
-     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be removed.
+     * @param iterable The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
      * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
-     * @throws {Error} If the enumerable is null or undefined.
+     * @throws {Error} If the iterable is null or undefined.
      */
-    except(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
+    except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
 
     /**
      * Gets the first element of the sequence.
@@ -200,20 +200,20 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
      * - If no comparator is specified, it will use the <b>default equality</b> comparer.
      *
-     * If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.
+     * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
      *
      * Example:
-     * ```
+     * ```typescript
      *     var numberList1 = new List([1, 2, 2, 3, 3, 3, 4, 5]);
      *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
      *     var result = numberList1.except(numberList2).toArray(); // [2, 5]
      * ```
-     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be returned.
+     * @param iterable The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
      * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
      * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
-     * @throws {Error} If the enumerable is null or undefined.
+     * @throws {Error} If the iterable is null or undefined.
      */
-    intersect(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
+    intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys
@@ -350,10 +350,10 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Determines whether two sequences are equal by comparing the elements by using an equality comparer for their type.
-     * @param enumerable The enumerable sequence to compare to the source sequence.
+     * @param iterable The iterable sequence to compare to the source sequence.
      * @param comparator The equality comparer that will be used to compare the elements. If not specified, default equality comparer will be used.
      */
-    sequenceEqual(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean;
+    sequenceEqual(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): boolean;
 
     /**
      * Returns a new enumerable sequence whose elements are shuffled.
@@ -505,10 +505,10 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Produces the set union of two sequences by using an equality comparer.
-     * @param enumerable The enumerable sequence whose distinct elements form the second set for the union.
+     * @param iterable The iterable sequence whose distinct elements form the second set for the union.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
      */
-    union(enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
+    union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
     /**
      * Filters a sequence of values based on a predicate.
@@ -518,8 +518,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
-     * @param enumerable The enumerable sequence to merge with the first sequence.
+     * @param iterable The iterable sequence to merge with the first sequence.
+     */
+    zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
+
+    /**
+     * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+     * @param iterable The iterable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      */
-    zip<TSecond, TResult = [TElement, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult>;
+    zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
 }

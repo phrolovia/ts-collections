@@ -78,8 +78,8 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.chunk(this, size);
     }
 
-    public concat(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.concat(this, enumerable);
+    public concat(iterable: Iterable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.concat(this, iterable);
     }
 
     public contains(element: KeyValuePair<TKey, TValue>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
@@ -109,9 +109,9 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public except(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
-        return EnumerableStatic.except(this, enumerable, comparator, orderComparator);
+        return EnumerableStatic.except(this, iterable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -134,9 +134,9 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
-        return EnumerableStatic.intersect(this, enumerable, comparator, orderComparator);
+        return EnumerableStatic.intersect(this, iterable, comparator, orderComparator);
     }
 
     public isEmpty(): boolean {
@@ -203,9 +203,9 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.selectMany(this, selector);
     }
 
-    public sequenceEqual(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
+    public sequenceEqual(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
         comparator ??= this.keyValueComparer;
-        return EnumerableStatic.sequenceEqual(this, enumerable, comparator);
+        return EnumerableStatic.sequenceEqual(this, iterable, comparator);
     }
 
     public shuffle(): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -310,16 +310,16 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return `{ ${buffer.join(", ")} }`;
     }
 
-    public union(enumerable: IEnumerable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.union(this, enumerable, comparator);
+    public union(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.union(this, iterable, comparator);
     }
 
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.where(this, predicate);
     }
 
-    public zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {
-        return EnumerableStatic.zip(this, enumerable, zipper);
+    public zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {
+        return EnumerableStatic.zip(this, iterable, zipper);
     }
 
     public get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>> {

@@ -68,8 +68,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).chunk(size);
     }
 
-    public static concat<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>): IEnumerable<TElement> {
-        return new Enumerable(source).concat(enumerable);
+    public static concat<TElement>(source: Iterable<TElement>, other: Iterable<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).concat(other);
     }
 
     public static contains<TElement>(source: IEnumerable<TElement>, element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -96,8 +96,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).elementAtOrDefault(index);
     }
 
-    public static except<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return new Enumerable(source).except(enumerable, comparator, orderComparator);
+    public static except<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return new Enumerable(source).except(other, comparator, orderComparator);
     }
 
     public static first<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
@@ -120,8 +120,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public static intersect<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return new Enumerable(source).intersect(enumerable, comparator, orderComparator);
+    public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return new Enumerable(source).intersect(other, comparator, orderComparator);
     }
 
     public static join<TOuter, TInner, TKey, TResult>(source: IEnumerable<TOuter>, innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TOuter, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TOuter, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -184,8 +184,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).selectMany(selector);
     }
 
-    public static sequenceEqual<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
-        return new Enumerable(source).sequenceEqual(enumerable, comparator);
+    public static sequenceEqual<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement>): boolean {
+        return new Enumerable(source).sequenceEqual(other, comparator);
     }
 
     public static shuffle<TElement>(source: IEnumerable<TElement>): IEnumerable<TElement> {
@@ -280,15 +280,15 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toSortedSet(comparator);
     }
 
-    public static union<TElement>(source: IEnumerable<TElement>, enumerable: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
-        return new Enumerable(source).union(enumerable, comparator);
+    public static union<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return new Enumerable(source).union(other, comparator);
     }
 
     public static where<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).where(predicate);
     }
 
-    public static zip<TElement, TSecond, TResult = [TElement, TSecond]>(source: IEnumerable<TElement>, enumerable: IEnumerable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
-        return new Enumerable(source).zip(enumerable, zipper);
+    public static zip<TElement, TSecond, TResult = [TElement, TSecond]>(source: IEnumerable<TElement>, other: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
+        return new Enumerable(source).zip(other, zipper);
     }
 }

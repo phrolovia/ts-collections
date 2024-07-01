@@ -227,27 +227,27 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
  * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
  * - If no comparator is specified, it will use the <b>default equality</b> comparer.
  *
- * If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.
+ * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
  *
  * Example:
- * ```
+ * ```typescript
  *     var numberList1 = new List([1, 2, 2, 3, 3, 3, 4, 5]);
  *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
  *     var result = numberList1.except(numberList2).toArray(); // [1, 3, 4]
  * ```
  * @param source The source sequence.
- * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be removed.
+ * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
  * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
  * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
- * @throws {Error} If the enumerable is null or undefined.
+ * @throws {Error} If the iterable is null or undefined.
  */
 export const except = <TElement>(
     source: Iterable<TElement>,
-    enumerable: Iterable<TElement>,
+    other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement> | null,
     orderComparator?: OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
-    return from(source).except(from(enumerable), comparator, orderComparator);
+    return from(source).except(other, comparator, orderComparator);
 }
 
 /**
@@ -340,27 +340,27 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
  * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
  * - If no comparator is specified, it will use the <b>default equality</b> comparer.
  *
- * If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.
+ * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
  *
  * Example:
- * ```
+ * ```typescript
  *     var numberList1 = new List([1, 2, 2, 3, 3, 3, 4, 5]);
  *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
  *     var result = numberList1.except(numberList2).toArray(); // [2, 5]
  * ```
  * @param source The source sequence.
- * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be returned.
+ * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
  * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
  * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
- * @throws {Error} If the enumerable is null or undefined.
+ * @throws {Error} If the iterable is null or undefined.
  */
 export const intersect = <TElement>(
     source: Iterable<TElement>,
-    enumerable: Iterable<TElement>,
+    other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement> | null,
     orderComparator?: OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
-    return from(source).intersect(from(enumerable), comparator, orderComparator);
+    return from(source).intersect(other, comparator, orderComparator);
 }
 
 /**
@@ -615,15 +615,15 @@ export const selectMany = <TElement, TResult>(
 /**
  * Determines whether two sequences are equal by comparing the elements by using an equality comparer for their type.
  * @param source The source sequence.
- * @param enumerable The enumerable sequence to compare to the source sequence.
+ * @param other The iterable sequence to compare to the source sequence.
  * @param comparator The equality comparer that will be used to compare the elements. If not specified, default equality comparer will be used.
  */
 export const sequenceEqual = <TElement>(
     source: Iterable<TElement>,
-    enumerable: Iterable<TElement>,
+    other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
 ): boolean => {
-    return from(source).sequenceEqual(from(enumerable), comparator);
+    return from(source).sequenceEqual(other, comparator);
 }
 
 /**
@@ -919,15 +919,15 @@ export const toSortedSet = <TElement>(
 /**
  * Produces the set union of two sequences by using an equality comparer.
  * @param source The source sequence.
- * @param enumerable The enumerable sequence whose distinct elements form the second set for the union.
+ * @param other The iterable sequence whose distinct elements form the second set for the union.
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
  */
 export const union = <TElement>(
     source: Iterable<TElement>,
-    enumerable: Iterable<TElement>,
+    other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).union(from(enumerable), comparator);
+    return from(source).union(other, comparator);
 }
 
 /**
@@ -945,13 +945,13 @@ export const where = <TElement>(
 /**
  * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
  * @param source The first source sequence.
- * @param enumerable The enumerable sequence to merge with the first sequence.
+ * @param other The iterable sequence to merge with the first sequence.
  * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
  */
 export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
     source: Iterable<TElement>,
-    enumerable: Iterable<TSecond>,
+    other: Iterable<TSecond>,
     zipper?: Zipper<TElement, TSecond, TResult>
 ): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> => {
-    return from(source).zip(from(enumerable), zipper);
+    return from(source).zip(other, zipper);
 }

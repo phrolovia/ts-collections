@@ -104,8 +104,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.chunk(size);
     }
 
-    public concat(enumerable: IEnumerable<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
-        return this.#lookupTree.concat(enumerable);
+    public concat(iterable: Iterable<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.concat(iterable);
     }
 
     public contains(element: IGroup<TKey, TElement>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): boolean {
@@ -132,8 +132,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.elementAtOrDefault(index);
     }
 
-    public except(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | null, orderComparator?: OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
-        return this.#lookupTree.except(enumerable, comparator, orderComparator);
+    public except(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | null, orderComparator?: OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.except(iterable, comparator, orderComparator);
     }
 
     public first(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> {
@@ -167,8 +167,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return !!this.#lookupTree.findBy(key, g => g.key, this.#keyComparator);
     }
 
-    public intersect(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | null, orderComparator?: OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
-        return this.#lookupTree.intersect(enumerable, comparator, orderComparator);
+    public intersect(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | null, orderComparator?: OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.intersect(iterable, comparator, orderComparator);
     }
 
     public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGroup<TKey, TElement>, TGroupKey>,
@@ -233,8 +233,8 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.selectMany(selector);
     }
 
-    public sequenceEqual(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): boolean {
-        return this.#lookupTree.sequenceEqual(enumerable, comparator);
+    public sequenceEqual(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): boolean {
+        return this.#lookupTree.sequenceEqual(iterable, comparator);
     }
 
     public shuffle(): IEnumerable<IGroup<TKey, TElement>> {
@@ -336,16 +336,16 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.toSortedSet(comparator);
     }
 
-    public union(enumerable: IEnumerable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
-        return this.#lookupTree.union(enumerable, comparator);
+    public union(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.union(iterable, comparator);
     }
 
     public where(predicate: IndexedPredicate<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.where(predicate);
     }
 
-    public zip<TSecond, TResult = [IGroup<TKey, TElement>, TSecond]>(enumerable: IEnumerable<TSecond>, zipper?: Zipper<IGroup<TKey, TElement>, TSecond, TResult>): IEnumerable<[IGroup<TKey, TElement>, TSecond]> | IEnumerable<TResult> {
-        return this.#lookupTree.zip(enumerable, zipper);
+    public zip<TSecond, TResult = [IGroup<TKey, TElement>, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<IGroup<TKey, TElement>, TSecond, TResult>): IEnumerable<[IGroup<TKey, TElement>, TSecond]> | IEnumerable<TResult> {
+        return this.#lookupTree.zip(iterable, zipper);
     }
 
     public get length(): number {
