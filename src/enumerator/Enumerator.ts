@@ -187,9 +187,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return null;
     }
 
-    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.exceptGenerator(iterable, comparator, orderComparator));
+        return new Enumerator(() => this.exceptGenerator(iterable, comparator));
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
@@ -235,9 +235,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.groupJoinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
     }
 
-    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.intersectGenerator(iterable, comparator, orderComparator));
+        return new Enumerator(() => this.intersectGenerator(iterable, comparator));
     }
 
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -630,17 +630,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* exceptGenerator(enumerable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): Iterable<TElement> {
-        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : new List<TElement>([], comparator ?? Comparators.equalityComparator);
-        for (const item of enumerable) {
-            if (!collection.contains(item)) {
-                collection.add(item);
+    private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
+        const set = new SortedSet(iterable, comparator as OrderComparator<TElement>);
+        const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
+        const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
+        if (!firstOrDefault) {
+            yield* this;
+        } else {
+            const collection = typeof comparator(firstOrDefault, firstOrDefault) === "number" ? set : list;
+            for (const item of iterable) {
+                if (!collection.contains(item)) {
+                    collection.add(item);
+                }
             }
-        }
-        for (const item of this) {
-            if (!collection.contains(item)) {
-                collection.add(item);
-                yield item;
+            for (const item of this) {
+                if (!collection.contains(item)) {
+                    collection.add(item);
+                    yield item;
+                }
             }
         }
     }
@@ -668,16 +675,23 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* intersectGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): Iterable<TElement> {
-        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : new List<TElement>([], comparator ?? Comparators.equalityComparator);
-        for (const item of iterable) {
-            if (!collection.contains(item)) {
-                collection.add(item);
+    private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
+        const set = new SortedSet(iterable, comparator as OrderComparator<TElement>);
+        const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
+        const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
+        if (!firstOrDefault) {
+            yield* this;
+        } else {
+            const collection = typeof comparator(firstOrDefault, firstOrDefault) === "number" ? set : list;
+            for (const item of iterable) {
+                if (!collection.contains(item)) {
+                    collection.add(item);
+                }
             }
-        }
-        for (const item of this) {
-            if (collection.remove(item)) {
-                yield item;
+            for (const item of this) {
+                if (collection.remove(item)) {
+                    yield item;
+                }
             }
         }
     }

@@ -406,7 +406,7 @@ describe("List", () => {
             const elist = list1.except(list2, (p1, p2) => p1.name === p2.name);
             expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Senna]);
         });
-        test("should return a set of people unique to first enumerable", () => {
+        test("should return a set of people unique to first enumerable", {timeout: 10000}, () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
             for (let px = 0; px < 100000; ++px) {
@@ -418,8 +418,8 @@ describe("List", () => {
             const exceptionList = list1.except(list2, (p1, p2) => p1.age === p2.age);
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
-        }, {timeout: 10000});
-        test("should use order comparator and return a set of people unique to first enumerable #2", () => {
+        });
+        test("should use order comparator and return a set of people unique to first enumerable #2", {timeout: 10000}, () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
             for (let px = 0; px < 100000; ++px) {
@@ -428,10 +428,10 @@ describe("List", () => {
                 list1.add(p1);
                 list2.add(p2);
             }
-            const exceptionList = list1.except(list2, null, (p1, p2) => p1.age - p2.age);
+            const exceptionList = list1.except(list2, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
-        }, {timeout: 10000});
+        });
     });
 
     describe("#first()", () => {
@@ -641,7 +641,7 @@ describe("List", () => {
             const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
             expect(elist.toArray()).to.deep.equal([Person.Noemi, Person.Mel, Person.Lenka, Person.Jane]);
         });
-        test("should return a set of people common in both enumerables", () => {
+        test("should return a set of people common in both enumerables", {timeout: 10000}, () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
             for (let px = 0; px < 100000; ++px) {
@@ -655,8 +655,8 @@ describe("List", () => {
             const exceptionList = list1.intersect(list2, (p1, p2) => p1.age === p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
-        }, {timeout: 10000});
-        test("should use order comparator and return a set of people common in both enumerables", () => {
+        });
+        test("should use order comparator and return a set of people common in both enumerables", {timeout: 10000}, () => {
             const list1 = new List<Person>();
             const list2 = new List<Person>();
             for (let px = 0; px < 100000; ++px) {
@@ -667,10 +667,10 @@ describe("List", () => {
                 const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
                 list2.add(p);
             }
-            const exceptionList = list1.intersect(list2, null, (p1, p2) => p1.age - p2.age);
+            const exceptionList = list1.intersect(list2, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
-        }, {timeout: 10000});
+        });
     });
 
     describe("#isEmpty()", () => {

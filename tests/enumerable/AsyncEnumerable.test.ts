@@ -1382,21 +1382,21 @@ describe("AsyncEnumerable", () => {
     });
 
     describe("#zip()", () => {
-        test("should zip two enumerables in a tuple", async () => {
+        test("should zip two enumerable sequence in a tuple", async () => {
             const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
             const enumerable2 = new AsyncEnumerable(arrayProducer([6, 7, 8, 9, 10]));
             const zipped = enumerable1.zip(enumerable2);
             const expected = [[1, 6], [2, 7], [3, 8], [4, 9], [5, 10]];
             expect(await zipped.toArray()).to.deep.equal(expected);
         });
-        test("should zip two enumerables with a custom selector", async () => {
+        test("should zip two enumerable sequence with a custom selector", async () => {
             const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
             const enumerable2 = new AsyncEnumerable(arrayProducer([6, 7, 8, 9, 10]));
             const zipped = enumerable1.zip(enumerable2, (a, b) => a + b);
             const expected = [7, 9, 11, 13, 15];
             expect(await zipped.toArray()).to.deep.equal(expected);
         });
-        test("should zip two enumerables with a custom selector #2", async () => {
+        test("should zip two enumerable sequence with a custom selector #2", async () => {
             const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
             const enumerable2 = new AsyncEnumerable(arrayProducer(["a", "b", "c", "d", "e"]));
             const zipped = enumerable1.zip(enumerable2, (a, b) => {

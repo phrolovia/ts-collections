@@ -337,7 +337,7 @@ describe("Enumerable Standalone Functions", () => {
         test("should use the order comparator parameter and return a set of people unique to first sequence", () => {
             const first = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
             const second = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
-            const result = except(first, second, null, (a, b) => a.age - b.age);
+            const result = except(first, second, (a, b) => a.age - b.age);
             const ageCount = count(result, p => p.age <= 50);
             expect(ageCount).to.eq(0);
         });

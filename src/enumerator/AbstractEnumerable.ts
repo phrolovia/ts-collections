@@ -100,9 +100,9 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        comparator = orderComparator ? comparator : comparator ?? this.comparer;
-        return EnumerableStatic.except(this, iterable, comparator ?? undefined, orderComparator ?? undefined);
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+        comparator = comparator ?? this.comparer;
+        return EnumerableStatic.except(this, iterable, comparator);
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
@@ -128,9 +128,9 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        comparator = orderComparator ? comparator : comparator ?? this.comparer;
-        return EnumerableStatic.intersect(this, iterable, comparator ?? undefined, orderComparator ?? undefined);
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+        comparator = comparator ?? this.comparer;
+        return EnumerableStatic.intersect(this, iterable, comparator);
     }
 
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -301,6 +301,8 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.where(this, predicate);
     }
 
+    public zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
+    public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return EnumerableStatic.zip(this, iterable, zipper);
     }

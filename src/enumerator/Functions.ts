@@ -244,10 +244,9 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
 export const except = <TElement>(
     source: Iterable<TElement>,
     other: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement> | null,
-    orderComparator?: OrderComparator<TElement> | null
+    comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
-    return from(source).except(other, comparator, orderComparator);
+    return from(source).except(other, comparator);
 }
 
 /**
@@ -357,10 +356,9 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
 export const intersect = <TElement>(
     source: Iterable<TElement>,
     other: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement> | null,
-    orderComparator?: OrderComparator<TElement> | null
+    comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
-    return from(source).intersect(other, comparator, orderComparator);
+    return from(source).intersect(other, comparator);
 }
 
 /**
