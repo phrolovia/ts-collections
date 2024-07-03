@@ -109,9 +109,9 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public except(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
-        return EnumerableStatic.except(this, iterable, comparator, orderComparator);
+        return EnumerableStatic.except(this, iterable, comparator);
     }
 
     public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
@@ -134,9 +134,9 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | null, orderComparator?: OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
+    public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
-        return EnumerableStatic.intersect(this, iterable, comparator, orderComparator);
+        return EnumerableStatic.intersect(this, iterable, comparator);
     }
 
     public isEmpty(): boolean {

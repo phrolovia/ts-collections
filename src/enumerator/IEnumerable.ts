@@ -133,13 +133,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Produces the set difference of two sequences by using the specified equality comparer or order comparer to compare values.
-     *
-     * About the difference between comparator and orderComparator:
-     * - If both comparator and orderComparator are specified, the order comparator will be used for internal operations.
-     * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
-     * - If no comparator is specified, it will use the <b>default equality</b> comparer.
-     *
-     * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
+     * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
      *
      * Example:
      * ```typescript
@@ -148,11 +142,10 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *     var result = numberList1.except(numberList2).toArray(); // [1, 3, 4]
      * ```
      * @param iterable The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
+     * @param comparator The comparator function that will be used for item comparison. If not provided, default equality comparison is used.
      * @throws {Error} If the iterable is null or undefined.
      */
-    except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
+    except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement>;
 
     /**
      * Gets the first element of the sequence.
@@ -194,13 +187,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
-     *
-     * About the difference between comparator and orderComparator:
-     * - If both comparator and orderComparator are specified, the order comparator will be used for internal operations.
-     * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
-     * - If no comparator is specified, it will use the <b>default equality</b> comparer.
-     *
-     * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
+     * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
      *
      * Example:
      * ```typescript
@@ -209,11 +196,10 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *     var result = numberList1.except(numberList2).toArray(); // [2, 5]
      * ```
      * @param iterable The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
+     * @param comparator The comparator function that will be used for item comparison. If not provided, default equality comparison is used.
      * @throws {Error} If the iterable is null or undefined.
      */
-    intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement>;
+    intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement>;
 
     /**
      * Correlates the elements of two sequences based on equality of keys
@@ -516,13 +502,18 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
+
+    zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
+
+    zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
+
     /**
+     * @overload
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      * @param iterable The iterable sequence to merge with the first sequence.
      */
-    zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
-
     /**
+     * @overload
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      * @param iterable The iterable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.

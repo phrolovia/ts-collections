@@ -96,8 +96,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).elementAtOrDefault(index);
     }
 
-    public static except<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return new Enumerable(source).except(other, comparator, orderComparator);
+    public static except<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return new Enumerable(source).except(other, comparator);
     }
 
     public static first<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
@@ -120,8 +120,8 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return new Enumerable(source).intersect(other, comparator, orderComparator);
+    public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return new Enumerable(source).intersect(other, comparator);
     }
 
     public static join<TOuter, TInner, TKey, TResult>(source: IEnumerable<TOuter>, innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TOuter, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TOuter, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {

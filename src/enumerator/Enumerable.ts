@@ -151,8 +151,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.elementAtOrDefault(index);
     }
 
-    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return this.#enumerator.except(iterable, comparator, orderComparator);
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return this.#enumerator.except(iterable, comparator);
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
@@ -175,8 +175,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
-    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IEnumerable<TElement> {
-        return this.#enumerator.intersect(iterable, comparator, orderComparator);
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+        return this.#enumerator.intersect(iterable, comparator);
     }
 
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
