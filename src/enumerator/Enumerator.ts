@@ -24,12 +24,17 @@ import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InferredType } from "../shared/InferredType";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MoreThanOneElementException } from "../shared/MoreThanOneElementException";
+import { MoreThanOneMatchingElementException } from "../shared/MoreThanOneMatchingElementException";
+import { NoElementsException } from "../shared/NoElementsException";
+import { NoMatchingElementException } from "../shared/NoMatchingElementException";
 import { ClassType, ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
@@ -50,7 +55,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         let accumulatedValue: TAccumulate;
         if (seed == null) {
             if (!this.any()) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             accumulatedValue = this.first() as unknown as TAccumulate;
             for (const element of this.skip(1)) {
@@ -100,7 +105,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public average(selector?: Selector<TElement, number>): number {
         if (!this.any()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         let total: number = 0;
         let count: number = 0;
@@ -117,7 +122,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
         if (size < 1) {
-            throw new Error(ErrorMessages.InvalidChunkSize);
+            throw new InvalidArgumentException("Size must be greater than 0.", "size");
         }
         return new Enumerator(() => this.chunkGenerator(size));
     }
@@ -164,7 +169,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public elementAt(index: number): TElement {
         if (index < 0) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         let ix: number = 0;
         for (const item of this) {
@@ -173,7 +178,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
             ++ix;
         }
-        throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        throw new IndexOutOfBoundsException(index);
     }
 
     public elementAtOrDefault(index: number): TElement | null {
@@ -194,11 +199,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public first(predicate?: Predicate<TElement>): TElement {
         if (!this.any()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         const item = this.firstOrDefault(predicate);
         if (!item) {
-            throw new Error(ErrorMessages.NoMatchingElement);
+            throw new NoMatchingElementException();
         }
         return item;
     }
@@ -252,7 +257,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 last = item;
             }
             if (!last) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return last;
         }
@@ -262,7 +267,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         if (!last) {
-            throw new Error(ErrorMessages.NoMatchingElement);
+            throw new NoMatchingElementException();
         }
         return last;
     }
@@ -290,7 +295,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 max = Math.max(max ?? Number.NEGATIVE_INFINITY, item as unknown as number);
             }
             if (max == null) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return max;
         } else {
@@ -298,7 +303,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 max = Math.max(max ?? Number.NEGATIVE_INFINITY, selector(item));
             }
             if (max == null) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return max;
         }
@@ -311,7 +316,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 min = Math.min(min ?? Number.POSITIVE_INFINITY, item as unknown as number);
             }
             if (min == null) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return min;
         } else {
@@ -319,7 +324,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 min = Math.min(min ?? Number.POSITIVE_INFINITY, selector(item));
             }
             if (min == null) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return min;
         }
@@ -406,11 +411,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
         if (!predicate) {
             if (!this.any()) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             for (const item of this) {
                 if (index !== 0) {
-                    throw new Error(ErrorMessages.MoreThanOneElement);
+                    throw new MoreThanOneElementException();
                 } else {
                     single = item;
                     index++;
@@ -418,12 +423,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         } else {
             if (!this.any()) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             for (const item of this) {
                 if (predicate(item)) {
                     if (index !== 0) {
-                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                        throw new MoreThanOneMatchingElementException();
                     } else {
                         single = item;
                         index++;
@@ -432,7 +437,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         if (index === 0 || single == null) {
-            throw new Error(ErrorMessages.NoMatchingElement);
+            throw new NoMatchingElementException();
         }
         return single;
     }
@@ -443,7 +448,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         if (!predicate) {
             for (const item of this) {
                 if (index !== 0) {
-                    throw new Error(ErrorMessages.MoreThanOneElement);
+                    throw new MoreThanOneElementException();
                 } else {
                     single = item;
                     index++;
@@ -454,7 +459,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             for (const item of this) {
                 if (predicate(item)) {
                     if (index !== 0) {
-                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                        throw new MoreThanOneMatchingElementException();
                     } else {
                         single = item;
                         index++;
@@ -479,7 +484,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public sum(selector?: Selector<TElement, number>): number {
         if (!this.any()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         let total: number = 0;
         for (const d of this) {
@@ -612,7 +617,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 chunk.add(next.value);
                 next = iterator.next();
             }
-            yield new Enumerable(chunk);
+            yield chunk;
         }
     }
 
@@ -635,7 +640,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
         const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
         if (!firstOrDefault) {
-            yield* this;
+            return yield* this;
         } else {
             const collection = typeof comparator(firstOrDefault, firstOrDefault) === "number" ? set : list;
             for (const item of iterable) {
@@ -680,7 +685,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
         const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
         if (!firstOrDefault) {
-            yield* this;
+            return yield* this;
         } else {
             const collection = typeof comparator(firstOrDefault, firstOrDefault) === "number" ? set : list;
             for (const item of iterable) {
@@ -746,7 +751,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         let accumulatedValue: TAccumulate;
         if (seed == null) {
             if (!this.any()) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             accumulatedValue = this.first() as unknown as TAccumulate;
             yield accumulatedValue;

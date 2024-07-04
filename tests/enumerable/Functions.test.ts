@@ -78,7 +78,10 @@ import {
     where,
     zip
 } from "../../src/imports";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
+import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOneMatchingElementException";
+import { NoElementsException } from "../../src/shared/NoElementsException";
+import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
@@ -105,7 +108,7 @@ describe("Enumerable Standalone Functions", () => {
             expect(result).to.eq(10);
         });
         test("should throw error if the sequence is empty and no seed is provided", () => {
-            expect(() => aggregate<number>([], (total, next) => total + next)).to.throw(ErrorMessages.NoElements);
+            expect(() => aggregate<number>([], (total, next) => total + next)).toThrow(new NoElementsException());
         });
         test("should return the seed if the sequence is empty", () => {
             const result = aggregate<number, number>([], (total, next) => total + next, 10);
@@ -345,7 +348,7 @@ describe("Enumerable Standalone Functions", () => {
 
     describe("#first()", () => {
         test("should throw error if the sequence is empty", () => {
-            expect(() => first([])).to.throw(ErrorMessages.NoElements);
+            expect(() => first([])).toThrow(new NoElementsException());
         });
         test("should return the first element if no predicate is provided", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -356,7 +359,7 @@ describe("Enumerable Standalone Functions", () => {
             expect(first(list, n => n % 2 === 0)).to.eq(2);
         });
         test("should throw error if no element matches the predicate", () => {
-            expect(() => first([1, 2, 3, 4, 5], n => n > 5)).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => first([1, 2, 3, 4, 5], n => n > 5)).toThrowError(new NoMatchingElementException());
         });
     });
 
@@ -499,7 +502,7 @@ describe("Enumerable Standalone Functions", () => {
         test("should use the order comparator parameter and return a set of people who are both in first and second sequence", () => {
             const first = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90)));
             const second = select(range(1, 100000), _ => new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50)));
-            const intersection = intersect(first, second, null, (a, b) => a.age - b.age);
+            const intersection = intersect(first, second, (a, b) => a.age - b.age);
             const ageCount = count(intersection, p => p.age > 59);
             expect(ageCount).to.eq(0);
         });
@@ -559,7 +562,7 @@ describe("Enumerable Standalone Functions", () => {
 
     describe("#last()", () => {
         test("should throw error if the sequence is empty", () => {
-            expect(() => last([])).to.throw(ErrorMessages.NoElements);
+            expect(() => last([])).toThrow(new NoElementsException());
         });
         test("should return the last element if no predicate is provided", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -570,7 +573,7 @@ describe("Enumerable Standalone Functions", () => {
             expect(last(list, n => n % 2 === 0)).to.eq(4);
         });
         test("should throw error if no element matches the predicate", () => {
-            expect(() => last([1, 2, 3, 4, 5], n => n > 5)).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => last([1, 2, 3, 4, 5], n => n > 5)).toThrowError(new NoMatchingElementException());
         });
     });
 
@@ -955,19 +958,19 @@ describe("Enumerable Standalone Functions", () => {
 
     describe("#single()", () => {
         test("should throw error if the sequence is empty", () => {
-            expect(() => single([])).to.throw(ErrorMessages.NoElements);
+            expect(() => single([])).toThrow(new NoElementsException());
         });
         test("should throw error if list has more than one element", () => {
-            expect(() => single([1, 2])).to.throw(ErrorMessages.MoreThanOneElement);
+            expect(() => single([1, 2])).toThrowError(new MoreThanOneElementException());
         });
         test("should return the single element", () => {
             expect(single([1])).to.eq(1);
         });
         test("should throw error if no element matches the predicate", () => {
-            expect(() => single([1, 2, 3, 4, 5], n => n === 6)).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => single([1, 2, 3, 4, 5], n => n === 6)).toThrowError(new NoMatchingElementException());
         });
         test("should throw error if more than one element matches the predicate", () => {
-            expect(() => single([1, 2, 3, 4, 5, 4], n => n === 4)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+            expect(() => single([1, 2, 3, 4, 5, 4], n => n === 4)).toThrowError(new MoreThanOneMatchingElementException());
         });
         test("should return the person with name 'Alice'", () => {
             const result = single([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi], p => p.name === "Alice");
@@ -980,7 +983,7 @@ describe("Enumerable Standalone Functions", () => {
             expect(singleOrDefault([])).to.be.null;
         });
         test("should throw error if list has more than one element", () => {
-            expect(() => singleOrDefault([1, 2])).to.throw(ErrorMessages.MoreThanOneElement);
+            expect(() => singleOrDefault([1, 2])).toThrowError(new MoreThanOneElementException());
         });
         test("should return the single element", () => {
             expect(singleOrDefault([1])).to.eq(1);
@@ -989,7 +992,7 @@ describe("Enumerable Standalone Functions", () => {
             expect(singleOrDefault([1, 2, 3, 4, 5], n => n === 6)).to.be.null;
         });
         test("should throw error if more than one element matches the predicate", () => {
-            expect(() => singleOrDefault([1, 2, 3, 4, 5, 4], n => n === 4)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+            expect(() => singleOrDefault([1, 2, 3, 4, 5, 4], n => n === 4)).toThrowError(new MoreThanOneMatchingElementException());
         });
         test("should return the person with name 'Alice'", () => {
             const result = singleOrDefault([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi], p => p.name === "Alice");

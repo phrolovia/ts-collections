@@ -13,7 +13,12 @@ import {
 } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
+import { KeyNotFoundException } from "../../src/shared/KeyNotFoundException";
+import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
+import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOneMatchingElementException";
+import { NoElementsException } from "../../src/shared/NoElementsException";
+import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
@@ -62,7 +67,7 @@ describe("Dictionary", () => {
             expect(result).to.eq(99);
         });
         test("should throw error if dictionary is empty and no seed is provided", () => {
-            expect(() => dictionary.aggregate<number>((total, next) => total + next.key)).to.throw(ErrorMessages.NoElements);
+            expect(() => dictionary.aggregate<number>((total, next) => total + next.key)).toThrow(new NoElementsException());
         });
     });
 
@@ -141,7 +146,7 @@ describe("Dictionary", () => {
         });
         test("should throw error if dictionary is empty", () => {
             dict.clear();
-            expect(() => dict.average(p => p.value)).to.throw(ErrorMessages.NoElements);
+            expect(() => dict.average(p => p.value)).toThrow(new NoElementsException());
         });
     });
 
@@ -160,7 +165,7 @@ describe("Dictionary", () => {
         });
         test("should throw error if chunk size is 0", () => {
             const dictionary = Enumerable.range(1, 100).toDictionary(n => n, n => n * n);
-            expect(() => dictionary.chunk(0)).to.throw(ErrorMessages.InvalidChunkSize);
+            expect(() => dictionary.chunk(0)).toThrowError(new InvalidArgumentException(`Invalid argument: size. Size must be greater than 0.`));
         });
     });
 
@@ -245,7 +250,7 @@ describe("Dictionary", () => {
                 ["a", 1],
                 ["a", 2],
                 ["c", 3]
-            ])).to.throw(ErrorMessages.KeyAlreadyAdded);
+            ])).toThrowError(new InvalidArgumentException(`Key already exists: a`));
         });
     });
 
@@ -424,7 +429,7 @@ describe("Dictionary", () => {
         dictionary.add(Person.Priscilla.name, Person.Priscilla);
         test("should throw error if dictionary is empty()", () => {
             const dict = new Dictionary<number, number>();
-            expect(() => dict.first()).to.throw(ErrorMessages.NoElements);
+            expect(() => dict.first()).toThrow(new NoElementsException());
         });
         test("should return the first element if no predicate is provided", () => {
             const first = dictionary.first();
@@ -432,7 +437,7 @@ describe("Dictionary", () => {
             expect(first.value.equals(Person.Alice)).to.be.true;
         });
         test("should throw an error if no matching element is found", () => {
-            expect(() => dictionary.first(p => p.value.name === "Suzuha")).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => dictionary.first(p => p.value.name === "Suzuha")).toThrowError(new NoMatchingElementException());
         });
         test("should return a person with name 'Noemi'", () => {
             const first = dictionary.first(p => p.value.name === "Noemi");
@@ -673,7 +678,7 @@ describe("Dictionary", () => {
         dictionary.add(Person.Noemi.name, Person.Noemi);
         test("should throw error if dictionary is empty()", () => {
             const dict = new Dictionary<number, number>();
-            expect(() => dict.last()).to.throw(ErrorMessages.NoElements);
+            expect(() => dict.last()).toThrow(new NoElementsException());
         });
         test("should return the last element if no predicate is provided", () => {
             const last = dictionary.last();
@@ -681,7 +686,7 @@ describe("Dictionary", () => {
             expect(last.value.equals(Person.Noemi)).to.be.true; // it isn't Noemi since dictionary is sorted due to RedBlackTree implementation
         });
         test("should throw an error if no matching element is found", () => {
-            expect(() => dictionary.last(p => p.value.name === "Suzuha")).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => dictionary.last(p => p.value.name === "Suzuha")).toThrowError(new NoMatchingElementException());
         });
         test("should return a person with name 'Noemi' with age 29", () => {
             const last = dictionary.last(p => p.value.name === "Noemi");
@@ -727,7 +732,7 @@ describe("Dictionary", () => {
         });
         test("should throw error if dictionary has no elements", () => {
             dictionary.clear();
-            expect(() => dictionary.max()).to.throw(ErrorMessages.NoElements);
+            expect(() => dictionary.max()).toThrow(new NoElementsException());
         });
     });
 
@@ -743,7 +748,7 @@ describe("Dictionary", () => {
         });
         test("should throw error if dictionary has no elements", () => {
             dictionary.clear();
-            expect(() => dictionary.min()).to.throw(ErrorMessages.NoElements);
+            expect(() => dictionary.min()).toThrow(new NoElementsException());
         });
     });
 
@@ -1007,7 +1012,7 @@ describe("Dictionary", () => {
         dict.add("one", 1);
         dict.add("two", 2);
         test("should throw error if key is not found", () => {
-            expect(() => dict.set("three", 3)).to.throw(ErrorMessages.KeyNotFound);
+            expect(() => dict.set("three", 3)).toThrowError(new KeyNotFoundException("three"));
         });
         test("should set the value of the key and not add a new key", () => {
             dict.set("two", 22);
@@ -1044,13 +1049,13 @@ describe("Dictionary", () => {
     describe("#single", () => {
         test("should throw error if dictionary is empty", () => {
             const dict = new Dictionary();
-            expect(() => dict.single()).to.throw(ErrorMessages.NoElements);
+            expect(() => dict.single()).toThrow(new NoElementsException());
         });
         test("should throw error if dictionary has more than one elements and no predicate is provided", () => {
             const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             dict.add(2, "b");
-            expect(() => dict.single()).to.throw(ErrorMessages.MoreThanOneElement);
+            expect(() => dict.single()).toThrowError(new MoreThanOneElementException());
         });
         test("should return the only element in the dictionary", () => {
             const dict = new Dictionary<number, string>();
@@ -1063,7 +1068,7 @@ describe("Dictionary", () => {
             dict.add(Person.Alice.name, Person.Alice);
             dict.add(Person.Hanna.name, Person.Hanna);
             dict.add(Person.Noemi.name, Person.Noemi);
-            expect(() => dict.single(p => p.key === "Lenka")).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => dict.single(p => p.key === "Lenka")).toThrowError(new NoMatchingElementException());
         });
         test("should return person with name 'Priscilla'", () => {
             const dict = new Dictionary<string, Person>();
@@ -1086,7 +1091,7 @@ describe("Dictionary", () => {
             const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             dict.add(2, "b");
-            expect(() => dict.singleOrDefault()).to.throw(ErrorMessages.MoreThanOneElement);
+            expect(() => dict.singleOrDefault()).toThrowError(new MoreThanOneElementException());
         });
         test("should return the only element in the dictionary", () => {
             const dict = new Dictionary<number, string>();
@@ -1098,7 +1103,7 @@ describe("Dictionary", () => {
             const dict = new Dictionary<number, string>();
             dict.add(1, "a");
             dict.add(2, "a");
-            expect(() => dict.singleOrDefault(p => p.value === "a")).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+            expect(() => dict.singleOrDefault(p => p.value === "a")).toThrowError(new MoreThanOneMatchingElementException());
         });
         test("should return null if no matching element is found", () => {
             const dict = new Dictionary<string, Person>();
@@ -1210,7 +1215,7 @@ describe("Dictionary", () => {
         });
         test("should throw error if dictionary is empty", () => {
             dict.clear();
-            expect(() => dict.sum()).to.throw(ErrorMessages.NoElements);
+            expect(() => dict.sum()).toThrow(new NoElementsException());
         });
     })
 
@@ -1717,7 +1722,7 @@ describe("Dictionary", () => {
         dictionary.add(Person.Alice.name, Person.Alice.name);
         dictionary.add(Person.Hanna.name, Person.Hanna.name);
         test("should not throw if key already exists", () => {
-            expect(() => dictionary.add(Person.Alice.name, "Alicia")).to.throw(ErrorMessages.KeyAlreadyAdded);
+            expect(() => dictionary.add(Person.Alice.name, "Alicia")).toThrowError(new InvalidArgumentException(`Key already exists: ${Person.Alice.name}`));
             expect(() => dictionary.tryAdd(Person.Alice.name, "Alicia")).to.not.throw;
         });
         test("should return true if key doesn't exist and item is added", () => {
@@ -1747,7 +1752,7 @@ describe("Dictionary", () => {
         dict3.add(6, "f");
         dict3.add(7, "g");
         test("should throw error when keys are duplicate", () => {
-            expect(() => dict1.union(dict2).toDictionary<number, string>(p => p.key, p => p.value)).to.throw(ErrorMessages.KeyAlreadyAdded);
+            expect(() => dict1.union(dict2).toDictionary<number, string>(p => p.key, p => p.value)).toThrowError(new InvalidArgumentException(`Key already exists: 2`));
         });
 
         test("should return a dictionary with unique key value pairs", () => {

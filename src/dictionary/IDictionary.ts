@@ -7,7 +7,7 @@ export interface IDictionary<TKey, TValue> extends IReadonlyDictionary<TKey, TVa
      * @param key The key of the element to add.
      * @param value The value of the element to add. It can be <code>null</code>.
      * @returns The added value.
-     * @throws If the key is null or already exists.
+     * @throws {InvalidArgumentException} If the key already exists in the dictionary.
      */
     add(key: TKey, value: TValue): TValue;
 
@@ -22,7 +22,7 @@ export interface IDictionary<TKey, TValue> extends IReadonlyDictionary<TKey, TVa
      * @param key The key of the element to add or update.
      * @param value The value which will be added or updated.
      * @returns The old value of the key, or null if there was no mapping for the key.
-     * @throws If the key is null
+     * @throws {Error} If the key is null
      */
     put(key: TKey, value: TValue): void;
 
@@ -37,7 +37,7 @@ export interface IDictionary<TKey, TValue> extends IReadonlyDictionary<TKey, TVa
      * Sets the value of the given key.
      * @param key The key whose value will be set.
      * @param value The new value of the key
-     * @throws If the key does not exist in the dictionary.
+     * @throws {KeyNotFoundException} If the key does not exist in the dictionary.
      */
     set(key: TKey, value: TValue): void;
 

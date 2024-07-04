@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { ImmutableQueue } from "../../src/imports";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { NoElementsException } from "../../src/shared/NoElementsException";
 
 describe("ImmutableQueue", () => {
     describe("#add()", () => {
@@ -47,7 +47,7 @@ describe("ImmutableQueue", () => {
         });
         test("should throw error if queue is empty", () => {
             const queue = ImmutableQueue.create<number>([]);
-            expect(() => queue.dequeue()).to.throw(ErrorMessages.NoElements);
+            expect(() => queue.dequeue()).toThrow(new NoElementsException());
         });
     });
     describe("#enqueue()", () => {
@@ -68,7 +68,7 @@ describe("ImmutableQueue", () => {
         });
         test("should throw error if queue is empty", () => {
             const queue = ImmutableQueue.create<number>([]);
-            expect(() => queue.front()).to.throw(ErrorMessages.NoElements);
+            expect(() => queue.front()).toThrow(new NoElementsException());
         });
     });
     describe("#isEmpty()", () => {

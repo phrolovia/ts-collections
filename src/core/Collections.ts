@@ -3,7 +3,8 @@ import { IList } from "../list/IList";
 import { List } from "../list/List";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
+import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
 import { ICollection } from "./ICollection";
@@ -72,7 +73,6 @@ export abstract class Collections {
      *                 then the item itself will be used as the key.
      * @param {Function} comparator A method that will be used to compare the equality of the selector keys.
      * @return An array of distinct items.
-     * @throws An error if the iterable is null or undefined.
      */
     public static distinct<TElement, TKey>(iterable: Iterable<TElement>, selector?: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         selector ??= (item: TElement) => item as unknown as TKey;
@@ -126,14 +126,14 @@ export abstract class Collections {
      * @param {Iterable} iterable The data source
      * @param {Function} selector A selector method which will return a key that will be used for comparison.
      * @return The item which has the maximum value according to the selector method, or null if iterable is empty.
-     * @throws An exception if iterable is null or undefined.
+     * @throws {NoElementsException} If the iterable is empty.
      */
     public static max<TElement>(iterable: Iterable<TElement>, selector?: Selector<TElement, number>): TElement {
         const iterator = iterable[Symbol.iterator]();
         let iteratorItem = iterator.next();
         let maxItem: TElement;
         if (iteratorItem.done) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         maxItem = iteratorItem.value;
         while (!iteratorItem.done) {
@@ -156,14 +156,14 @@ export abstract class Collections {
      * @param {Iterable} iterable The data source
      * @param {Function} selector A selector method which will return a key that will be used for comparison.
      * @return The item which has the minimum value according to the selector method, or null if iterable is empty.
-     * @throws An exception if iterable is null or undefined.
+     * @throws {NoElementsException} If the iterable is empty.
      */
     public static min<TElement>(iterable: Iterable<TElement>, selector?: Selector<TElement, number>): TElement {
         const iterator = iterable[Symbol.iterator]();
         let iteratorItem = iterator.next();
         let minItem: TElement;
         if (iteratorItem.done) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         minItem = iteratorItem.value;
         while (!iteratorItem.done) {
@@ -247,12 +247,14 @@ export abstract class Collections {
      * @param {IList|Array} sequence The list or array whose two elements will be swapped
      * @param {number} firstIndex The first index of the swap operation
      * @param {number} secondIndex The second index of the swap operation
-     * @throws {Error} IndexOutOfBoundsException if the given indices are out of bounds.
+     * @throws {IndexOutOfBoundsException} If the given indices are out of bounds.
      */
     public static swap<TElement>(sequence: IList<TElement> | Array<TElement>, firstIndex: number, secondIndex: number): void {
         const size = sequence instanceof Array ? sequence.length : sequence.size();
-        if (firstIndex < 0 || firstIndex >= size || secondIndex < 0 || secondIndex >= size) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        if (firstIndex < 0 || firstIndex >= size) {
+            throw new IndexOutOfBoundsException(firstIndex);
+        } else if (secondIndex < 0 || secondIndex >= size) {
+            throw new IndexOutOfBoundsException(secondIndex);
         }
         if (sequence instanceof Array) {
             [sequence[firstIndex], sequence[secondIndex]] = [sequence[secondIndex], sequence[firstIndex]];

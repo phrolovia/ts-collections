@@ -23,6 +23,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param accumulator The accumulator function that will be applied over the sequence.
      * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
      * @param resultSelector The function that will be used to select the result value.
+     * @throws {NoElementsException} If the source is empty and seed is not provided.
      */
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
 
@@ -47,6 +48,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
      * @param selector The selector function that will select a numeric value from the sequence elements.
+     * @throws {NoElementsException} If the source is empty.
      */
     average(selector?: Selector<TElement, number>): Promise<number>;
 
@@ -60,6 +62,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Splits the elements of the sequence into chunks of size at most the specified size.
      * @param size The maximum size of each chunk.
+     * @throws {InvalidArgumentException} If size is less than or equal to 0.
      */
     chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
@@ -100,7 +103,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns the element at the specified index in the sequence.
      * @param index The index of the element that will be returned.
-     * @throws {Error} If index is less than 0 or greater than or equal to the number of elements in the sequence.
+     * @throws {IndexOutOfBoundsException} If index is less than 0 or greater than or equal to the number of elements in the sequence.
+     * @throws {NoSuchElementException} If the source is empty.
      */
     elementAt(index: number): Promise<TElement>;
 
@@ -136,14 +140,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Gets the first element of the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
-     * @throws {Error} If the source is null or undefined, or if predicate is specified and no element satisfies the condition.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {NoMatchingElementException} If no element satisfies the condition.
      */
     first(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
      * Gets the first element of the sequence or a default value if the no element satisfies the condition.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
-     * @throws {Error} If the source is null or undefined.
      */
     firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
@@ -207,7 +211,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns the last element of the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
-     * @throws {Error} If the source is null or undefined, or if predicate is specified and no element satisfies the condition.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {NoMatchingElementException} If no element satisfies the condition.
      */
     last(predicate?: Predicate<TElement>): Promise<TElement>;
 
@@ -221,14 +226,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns the maximum value in the sequence.
      * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
-     * @throws {Error} If the source is empty.
+     * @throws {NoElementsException} If the source is empty.
      */
     max(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
      * Returns the minimum value in the sequence.
      * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
-     * @throws {Error} If the source is empty.
+     * @throws {NoElementsException} If the source is empty.
      */
     min(selector?: Selector<TElement, number>): Promise<number>;
 
@@ -290,6 +295,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * If seed is specified, it is used as the initial value for the accumulator; but it is not included in the result.
      * @param accumulator The accumulator function that will be applied over the sequence.
      * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
+     * @throws {NoElementsException} If the source is empty and seed is not provided.
      */
     scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate>;
 
@@ -320,14 +326,18 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @throws {Error} If the source is empty or if predicate is specified and no element satisfies the condition.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {MoreThanOneElementException} If the source contains more than one element.
+     * @throws {NoMatchingElementException} If no element satisfies the condition.
+     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the condition.
      */
     single(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
      * Returns the only element of a sequence, or a default value if the sequence is empty. This method throws an exception if there is more than one element in the sequence.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @throws {Error} If the source contains more than one element or if predicate is specified and more than one element satisfies the condition.
+     * @throws {MoreThanOneElementException} If the source contains more than one element.
+     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the condition.
      */
     singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
@@ -352,6 +362,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns the sum of the values in the sequence.
      * @param selector The selector function that will be used to select the value to sum. If not specified, the value itself will be used.
+     * @throws {NoElementsException} If the source is empty.
      */
     sum(selector?: Selector<TElement, number>): Promise<number>;
 

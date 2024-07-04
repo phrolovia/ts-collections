@@ -1,6 +1,6 @@
 import { AbstractImmutableCollection, IImmutableCollection, reverse, Stack } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { NoElementsException } from "../shared/NoElementsException";
 
 export class ImmutableStack<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #stack: Stack<TElement>;
@@ -90,7 +90,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      */
     public top(): TElement {
         if (this.#stack.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.#stack.peek() as TElement;
     }

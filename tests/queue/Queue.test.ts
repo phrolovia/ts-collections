@@ -1,5 +1,5 @@
 import { Queue } from "../../src/imports";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { NoElementsException } from "../../src/shared/NoElementsException";
 
 describe("Queue", () => {
     describe("#add()", () => {
@@ -27,7 +27,7 @@ describe("Queue", () => {
     describe("#dequeue()", () => {
         test("should throw error if queue is empty", () => {
             const queue = new Queue<number>();
-            expect(() => queue.dequeue()).to.throw(ErrorMessages.NoElements);
+            expect(() => queue.dequeue()).toThrow(new NoElementsException());
         });
         test("should remove the head of the queue and return it", () => {
             const queue = new Queue<number>([1, 2, 3]);
@@ -56,7 +56,7 @@ describe("Queue", () => {
     describe("#front()", () => {
         test("should throw error if queue is empty", () => {
             const queue = new Queue<number>();
-            expect(() => queue.front()).to.throw(ErrorMessages.NoElements);
+            expect(() => queue.front()).toThrow(new NoElementsException());
         });
         test("should return the head of the queue", () => {
             const queue = new Queue<number>([1, 2, 3]);
