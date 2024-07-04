@@ -221,13 +221,7 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
 
 /**
  * Produces the set difference of two sequences by using the specified equality comparer or order comparer to compare values.
- *
- * About the difference between comparator and orderComparator:
- * - If both comparator and orderComparator are specified, the order comparator will be used for internal operations.
- * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
- * - If no comparator is specified, it will use the <b>default equality</b> comparer.
- *
- * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
+ * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
  *
  * Example:
  * ```typescript
@@ -237,8 +231,7 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
  * ```
  * @param source The source sequence.
  * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
- * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
- * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
+ * @param comparator The comparator function that will be used for item comparison. If not provided, default equality comparison is used.
  * @throws {Error} If the iterable is null or undefined.
  */
 export const except = <TElement>(
@@ -333,13 +326,7 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
 
 /**
  * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
- *
- * About the difference between comparator and orderComparator:
- * - If both comparator and orderComparator are specified, the order comparator will be used for internal operations.
- * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
- * - If no comparator is specified, it will use the <b>default equality</b> comparer.
- *
- * If the elements of the iterable can be sorted, it is advised to use the orderComparator due to its better performance.
+ * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
  *
  * Example:
  * ```typescript
@@ -349,8 +336,7 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
  * ```
  * @param source The source sequence.
  * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
- * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
- * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
+ * @param comparator The comparator function that will be used for item comparison. If not provided, default equality comparison is used.
  * @throws {Error} If the iterable is null or undefined.
  */
 export const intersect = <TElement>(
