@@ -1,7 +1,9 @@
 import { AbstractList } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
+import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
 
 class Node<TElement> {
@@ -80,10 +82,13 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
 
     public override getRange(index: number, count: number): LinkedList<TElement> {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
-        if (count < 0 || index + count > this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+        if (count < 0) {
+            throw new InvalidArgumentException("count must be greater than or equal to zero.", "count");
+        }
+        if (index + count > this.size()) {
+            throw new IndexOutOfBoundsException(index + count);
         }
         const list = new LinkedList<TElement>();
         for (let ix = index; ix < index + count; ++ix) {
@@ -142,7 +147,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     public removeFirst(): TElement {
         const firstNode = this.#firstNode;
         if (firstNode == null) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.unlinkFirst(firstNode);
     }
@@ -150,7 +155,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     public removeLast(): TElement {
         const lastNode = this.#lastNode;
         if (lastNode == null) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.unlinkLast(lastNode);
     }
@@ -182,13 +187,13 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
 
     private checkElementIndex(index: number): void {
         if (!this.isElementIndex(index)) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
     }
 
     private checkPositionIndex(index: number): void {
         if (!this.isPositionIndex(index)) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
     }
 
@@ -239,7 +244,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
     private node(index: number): Node<TElement> {
         if (index < (this.#listSize >> 1)) {
             if (this.#firstNode == null) {
-                throw new Error(ErrorMessages.IndexOutOfBoundsException);
+                throw new IndexOutOfBoundsException(index);
             }
             let node = this.#firstNode as Node<TElement>;
             for (let ix = 0; ix < index; ++ix) {
@@ -248,7 +253,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
             return node;
         } else {
             if (this.#lastNode == null) {
-                throw new Error(ErrorMessages.IndexOutOfBoundsException);
+                throw new IndexOutOfBoundsException(index);
             }
             let node = this.#lastNode;
             for (let ix = this.#listSize - 1; ix > index; --ix) {

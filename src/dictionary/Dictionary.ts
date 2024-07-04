@@ -1,7 +1,8 @@
 import { EnumerableSet, ICollection, ISet, List, select } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
+import { KeyNotFoundException } from "../shared/KeyNotFoundException";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 
@@ -38,7 +39,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
 
     public add(key: TKey, value: TValue): TValue {
         if (this.containsKey(key)) {
-            throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
+            throw new InvalidArgumentException(`Key already exists: ${key}`);
         }
         this.#dictionary.set(key, new KeyValuePair(key, value));
         return value;
@@ -87,7 +88,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     public set(key: TKey, value: TValue): void {
         const pair = this.get(key);
         if (!pair) {
-            throw new Error(ErrorMessages.KeyNotFound);
+            throw new KeyNotFoundException(String(key));
         }
         this.#dictionary.set(key, new KeyValuePair(key, value));
     }

@@ -1,7 +1,7 @@
 import { Collections } from "../../src/core/Collections";
 import { Enumerable, List, RedBlackTree } from "../../src/imports";
 import { LinkedList } from "../../src/list/LinkedList";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
 import { Person } from "../models/Person";
 
 describe("Collections", () => {
@@ -282,10 +282,10 @@ describe("Collections", () => {
     describe("#swap()", () => {
         test("should throw error if indices are out of bounds", () => {
             const list = new List([1, 2]);
-            expect(() => Collections.swap(list, 0, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => Collections.swap(list, 0, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => Collections.swap(list, -1, 1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => Collections.swap(list, 4, 1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => Collections.swap(list, 0, 3)).toThrow(new IndexOutOfBoundsException(3));
+            expect(() => Collections.swap(list, 0, -1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => Collections.swap(list, -1, 1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => Collections.swap(list, 4, 1)).toThrow(new IndexOutOfBoundsException(4));
         });
         test("should swap elements at the given indices [List]", () => {
             const list = new List([1, 2, 3, 4, 5]);

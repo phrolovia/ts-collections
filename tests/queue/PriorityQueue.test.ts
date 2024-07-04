@@ -1,7 +1,7 @@
 import { describe, test } from "vitest";
 import { PriorityQueue } from "../../src/imports";
 import { Comparators } from "../../src/shared/Comparators";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { NoElementsException } from "../../src/shared/NoElementsException";
 
 describe("PriorityQueue", () => {
     describe("#add()", () => {
@@ -34,11 +34,11 @@ describe("PriorityQueue", () => {
             expect(queue.length).toBe(0);
         });
     });
-    
+
     describe("#dequeue()", () => {
         test("should throw error if queue is empty", () => {
             const queue = new PriorityQueue<number>();
-            expect(() => queue.dequeue()).toThrow(ErrorMessages.NoElements);
+            expect(() => queue.dequeue()).toThrow(new NoElementsException());
         });
         test("should remove the head of the queue and return it", () => {
             const queue = new PriorityQueue<number>();
@@ -68,7 +68,7 @@ describe("PriorityQueue", () => {
     describe("#front()", () => {
         test("should throw error if queue is empty", () => {
             const queue = new PriorityQueue<number>();
-            expect(() => queue.front()).toThrow(ErrorMessages.NoElements);
+            expect(() => queue.front()).toThrow(new NoElementsException());
         });
         test("should return the head of the queue", () => {
             const queue = new PriorityQueue<number>();
@@ -92,7 +92,7 @@ describe("PriorityQueue", () => {
     describe("#peek()", () => {
         test("should not throw error if queue is empty", () => {
             const queue = new PriorityQueue<number>();
-            expect(() => queue.peek()).not.toThrow(ErrorMessages.NoElements);
+            expect(() => queue.peek()).not.toThrow(new NoElementsException());
         });
         test("should return the head of the queue", () => {
             const queue = new PriorityQueue<number>();

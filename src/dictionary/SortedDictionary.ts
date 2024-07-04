@@ -1,7 +1,8 @@
 import { ICollection, ISet, RedBlackTree, SortedSet } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
+import { KeyNotFoundException } from "../shared/KeyNotFoundException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
@@ -42,7 +43,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
 
     public add(key: TKey, value: TValue): TValue {
         if (this.containsKey(key)) {
-            throw new Error(`${ErrorMessages.KeyAlreadyAdded} Key: ${key}`);
+            throw new InvalidArgumentException(`Key already exists: ${key}`);
         }
         this.#keyValueTree.insert(new KeyValuePair<TKey, TValue>(key, value));
         return value;
@@ -88,7 +89,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
     public set(key: TKey, value: TValue): void {
         const pair = this.#keyValueTree.findBy(key, p => p.key, this.#keyComparer);
         if (!pair) {
-            throw new Error(ErrorMessages.KeyNotFound);
+            throw new KeyNotFoundException(String(key));
         }
         pair.value = value;
     }

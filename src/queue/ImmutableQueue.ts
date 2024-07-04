@@ -1,6 +1,6 @@
 import { AbstractImmutableCollection, Queue } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { NoElementsException } from "../shared/NoElementsException";
 
 export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #queue: Queue<TElement>;
@@ -53,7 +53,7 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
      */
     public dequeue(): ImmutableQueue<TElement> {
         if (this.#queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return new ImmutableQueue(this.#queue.skip(1), this.comparer);
     }
@@ -76,7 +76,7 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
      */
     public front(): TElement {
         if (this.#queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.#queue.peek() as TElement;
     }

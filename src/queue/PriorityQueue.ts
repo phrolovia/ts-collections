@@ -1,6 +1,6 @@
 import { AbstractCollection, Heap } from "../imports";
 import { Comparators } from "../shared/Comparators";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
 
 export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
@@ -47,7 +47,7 @@ export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
      */
     public dequeue(): TElement {
         if (this.#queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.#queue.poll() as TElement;
     }
@@ -70,7 +70,7 @@ export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
      */
     public front(): TElement {
         if (this.#queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.#queue.peek() as TElement;
     }

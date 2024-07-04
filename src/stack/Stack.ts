@@ -1,6 +1,6 @@
 import { AbstractCollection, LinkedList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { NoElementsException } from "../shared/NoElementsException";
 
 export class Stack<TElement> extends AbstractCollection<TElement> {
     readonly #stack: LinkedList<TElement>;
@@ -70,7 +70,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
      */
     public top(): TElement {
         if (this.#stack.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.#stack.peek() as TElement;
     }

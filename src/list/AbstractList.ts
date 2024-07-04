@@ -1,7 +1,7 @@
 import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
 import { IList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 
@@ -40,7 +40,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
     public override first(predicate?: Predicate<TElement>): TElement {
         if (!predicate) {
             if (this.isEmpty()) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return this.get(0);
         }
@@ -97,7 +97,7 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
     public override last(predicate?: Predicate<TElement>): TElement {
         if (!predicate) {
             if (this.isEmpty()) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
             return this.get(this.size() - 1);
         }

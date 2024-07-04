@@ -13,12 +13,18 @@ import {
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InferredType } from "../shared/InferredType";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MoreThanOneElementException } from "../shared/MoreThanOneElementException";
+import { MoreThanOneMatchingElementException } from "../shared/MoreThanOneMatchingElementException";
+import { NoElementsException } from "../shared/NoElementsException";
+import { NoMatchingElementException } from "../shared/NoMatchingElementException";
+import { NoSuchElementException } from "../shared/NoSuchElementException";
 import { ClassType, ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
@@ -59,7 +65,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (count === 0 && accumulatedValue == null) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return resultSelector?.(accumulatedValue as TAccumulate) ?? accumulatedValue as TAccumulate;
     }
@@ -97,7 +103,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             ++count;
         }
         if (count === 0) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return total / count;
     }
@@ -108,7 +114,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>> {
         if (size < 1) {
-            throw new Error(ErrorMessages.InvalidChunkSize);
+            throw new InvalidArgumentException("Size must be greater than 0.", "size");
         }
         return new AsyncEnumerator<IEnumerable<TElement>>(() => this.chunkGenerator(size));
     }
@@ -156,7 +162,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async elementAt(index: number): Promise<TElement> {
         if (index < 0) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         let count = 0;
         for await (const element of this) {
@@ -166,9 +172,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             ++count;
         }
         if (index >= count) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
-        throw new Error(ErrorMessages.NoSuchElement);
+        throw new NoSuchElementException();
     }
 
     public async elementAtOrDefault(index: number): Promise<TElement | null> {
@@ -202,9 +208,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (count === 0) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
-        throw new Error(ErrorMessages.NoMatchingElement);
+        throw new NoMatchingElementException();
     }
 
     public async firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
@@ -259,10 +265,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (count === 0) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         if (last == null) {
-            throw new Error(ErrorMessages.NoMatchingElement);
+            throw new NoMatchingElementException();
         }
         return last;
     }
@@ -286,7 +292,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             max = Math.max(max ?? Number.NEGATIVE_INFINITY, value);
         }
         if (max == null) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return max;
     }
@@ -298,7 +304,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             min = Math.min(min ?? Number.POSITIVE_INFINITY, value);
         }
         if (min == null) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return min;
     }
@@ -385,7 +391,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         if (!predicate) {
             for await (const element of this) {
                 if (index !== 0) {
-                    throw new Error(ErrorMessages.MoreThanOneElement);
+                    throw new MoreThanOneElementException();
                 }
                 single = element;
                 ++index;
@@ -395,7 +401,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             for await (const element of this) {
                 if (predicate(element)) {
                     if (index !== 0) {
-                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                        throw new MoreThanOneMatchingElementException();
                     }
                     single = element;
                     ++index;
@@ -404,10 +410,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (count === 0) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         if (single == null) {
-            throw new Error(ErrorMessages.NoMatchingElement);
+            throw new NoMatchingElementException();
         }
         return single;
     }
@@ -418,7 +424,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         if (!predicate) {
             for await (const element of this) {
                 if (index !== 0) {
-                    throw new Error(ErrorMessages.MoreThanOneElement);
+                    throw new MoreThanOneElementException();
                 }
                 single = element;
                 ++index;
@@ -427,7 +433,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             for await (const element of this) {
                 if (predicate(element)) {
                     if (index !== 0) {
-                        throw new Error(ErrorMessages.MoreThanOneMatchingElement);
+                        throw new MoreThanOneMatchingElementException();
                     }
                     single = element;
                     ++index;
@@ -457,7 +463,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             ++count;
         }
         if (count === 0) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return sum;
     }
@@ -657,7 +663,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 ++index;
             }
             if (index === 0) {
-                throw new Error(ErrorMessages.NoElements);
+                throw new NoElementsException();
             }
         } else {
             accumulatedValue = seed;

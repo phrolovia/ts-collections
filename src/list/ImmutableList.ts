@@ -1,6 +1,6 @@
 import { AbstractRandomAccessImmutableCollection, contains, IReadonlyList, List, ReadonlyList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 
@@ -84,7 +84,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
 
     public get(index: number): TElement {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         return this.#list.get(index);
     }
@@ -97,7 +97,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      */
     public getRange(index: number, count: number): ImmutableList<TElement> {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         return new ImmutableList(this.#list.getRange(index, count), this.comparer);
     }
@@ -143,7 +143,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      */
     public removeAt(index: number): ImmutableList<TElement> {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         return new ImmutableList(this.#list.where((_, i) => i !== index), this.comparer);
     }
@@ -176,7 +176,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      */
     public set(index: number, element: TElement): ImmutableList<TElement> {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         return new ImmutableList(this.#list.select((e, i) => i === index ? element : e), this.comparer);
     }

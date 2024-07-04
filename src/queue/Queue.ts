@@ -1,6 +1,6 @@
 import { AbstractCollection, LinkedList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { NoElementsException } from "../shared/NoElementsException";
 
 export class Queue<TElement> extends AbstractCollection<TElement> {
     readonly #queue: LinkedList<TElement>;
@@ -41,7 +41,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      */
     public dequeue(): TElement {
         if (this.#queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         const result = this.#queue.poll();
         return result as TElement;
@@ -63,7 +63,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
      */
     public front(): TElement {
         if (this.#queue.isEmpty()) {
-            throw new Error(ErrorMessages.NoElements);
+            throw new NoElementsException();
         }
         return this.#queue.peek() as TElement;
     }

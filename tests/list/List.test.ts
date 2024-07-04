@@ -1,7 +1,12 @@
 import { Enumerable, ImmutableList, ReadonlyCollection } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
-import { ErrorMessages } from "../../src/shared/ErrorMessages";
+import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
+import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
+import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
+import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOneMatchingElementException";
+import { NoElementsException } from "../../src/shared/NoElementsException";
+import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
@@ -50,8 +55,8 @@ describe("List", () => {
     describe("#addAt()", () => {
         test("should throw error if index is out of bounds", () => {
             const list = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
-            expect(() => list.addAt(Person.Suzuha, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => list.addAt(Person.Suzuha, 5)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list.addAt(Person.Suzuha, -1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => list.addAt(Person.Suzuha, 5)).toThrow(new IndexOutOfBoundsException(5));
             expect(() => list.addAt(Person.Bella, 2)).to.not.throw;
             expect(list.length).to.eq(4);
         });
@@ -89,7 +94,7 @@ describe("List", () => {
         });
         test("should throw error if list is empty and no seed is provided", () => {
             const list = new List<number>([]);
-            expect(() => list.aggregate<number>((acc, num) => acc *= num)).to.throw(ErrorMessages.NoElements);
+            expect(() => list.aggregate<number>((acc, num) => acc *= num)).toThrow(new NoElementsException());
         });
         test("should return the seed if list is empty", () => {
             const list = new List<number>([]);
@@ -182,7 +187,7 @@ describe("List", () => {
         });
         test("should throw error if list is empty", () => {
             const list = new List<string>([]);
-            expect(() => list.average(s => parseInt(s, 10))).to.throw(ErrorMessages.NoElements);
+            expect(() => list.average(s => parseInt(s, 10))).toThrow(new NoElementsException());
         });
     });
 
@@ -213,7 +218,7 @@ describe("List", () => {
         });
         test("should throw error if chunk size is 0", () => {
             const list = Enumerable.range(1, 100);
-            expect(() => list.chunk(0)).to.throw(ErrorMessages.InvalidChunkSize);
+            expect(() => list.chunk(0)).toThrowError(new InvalidArgumentException(`Invalid argument: size. Size must be greater than 0.`));
         });
     });
 
@@ -437,7 +442,7 @@ describe("List", () => {
     describe("#first()", () => {
         test("should throw error if list is empty()", () => {
             const list = new List<number>();
-            expect(() => list.first()).to.throw(ErrorMessages.NoElements);
+            expect(() => list.first()).toThrow(new NoElementsException());
         });
         test("should return the first element if no predicate is provided.", () => {
             const list = new List([99, 2, 3, 4, 5]);
@@ -446,7 +451,7 @@ describe("List", () => {
         });
         test("should throw an error if no matching element is found.", () => {
             const list = new List([99, 2, 3, 4, 5]);
-            expect(() => list.first(n => n < 0)).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => list.first(n => n < 0)).toThrowError(new NoMatchingElementException());
         });
         test("should return a person with name 'Alice'", () => {
             const list = new List([Person.Mel, Person.Alice, Person.Jane]);
@@ -479,8 +484,8 @@ describe("List", () => {
     describe("#get()", () => {
         const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
         test("should throw error if index is out of bounds", () => {
-            expect(() => list1.get(-1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => list1.get(6)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.get(-1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => list1.get(6)).toThrow(new IndexOutOfBoundsException(6));
         });
         test("should return the element at the specified index", () => {
             expect(list1.get(0)).to.eq(Person.Alice);
@@ -492,12 +497,12 @@ describe("List", () => {
     describe("#getRange()", () => {
         const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
         test("should throw error if index is out of bounds", () => {
-            expect(() => list1.getRange(-1, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => list1.getRange(6, 3)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.getRange(-1, 3)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => list1.getRange(6, 3)).toThrow(new IndexOutOfBoundsException(6));
         });
         test("should throw error if length is out of bounds", () => {
-            expect(() => list1.getRange(0, 7)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => list1.getRange(0, -1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list1.getRange(0, 7)).toThrow(new IndexOutOfBoundsException(7));
+            expect(() => list1.getRange(0, -1)).toThrow(new InvalidArgumentException(`Invalid argument: count. count must be greater than or equal to zero.`));
         });
         test("should return the elements at the specified index", () => {
             const range = list1.getRange(1, 3);
@@ -737,7 +742,7 @@ describe("List", () => {
     describe("#last()", () => {
         test("should throw error if list is empty()", () => {
             const list = new List<number>();
-            expect(() => list.last()).to.throw(ErrorMessages.NoElements);
+            expect(() => list.last()).toThrow(new NoElementsException());
         });
         test("should return the last element if no predicate is provided.", () => {
             const list = new List([99, 2, 3, 4, 5]);
@@ -746,7 +751,7 @@ describe("List", () => {
         });
         test("should throw an error if no matching element is found.", () => {
             const list = new List([99, 2, 3, 4, 5]);
-            expect(() => list.last(n => n < 0)).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => list.last(n => n < 0)).toThrowError(new NoMatchingElementException());
         });
         test("should return 87", () => {
             const list = new List([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
@@ -810,8 +815,8 @@ describe("List", () => {
         });
         test("should throw if list has no elements", () => {
             const list = new List<number>();
-            expect(() => list.max()).to.throw(ErrorMessages.NoElements);
-            expect(() => list.max(n => n * 2)).to.throw(ErrorMessages.NoElements);
+            expect(() => list.max()).toThrow(new NoElementsException());
+            expect(() => list.max(n => n * 2)).toThrow(new NoElementsException());
         });
     });
     describe("#min()", () => {
@@ -829,8 +834,8 @@ describe("List", () => {
         });
         test("should throw if list has no elements", () => {
             const list = new List<number>();
-            expect(() => list.min()).to.throw(ErrorMessages.NoElements);
-            expect(() => list.min(n => n / 2)).to.throw(ErrorMessages.NoElements);
+            expect(() => list.min()).toThrow(new NoElementsException());
+            expect(() => list.min(n => n / 2)).toThrow(new NoElementsException());
         });
     });
 
@@ -1038,8 +1043,8 @@ describe("List", () => {
     describe("#removeAt()", () => {
         test("should throw error if index is out of bounds", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            expect(() => list.removeAt(-1)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => list.removeAt(44)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list.removeAt(-1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => list.removeAt(44)).toThrow(new IndexOutOfBoundsException(44));
             expect(list.length).to.eq(5);
         });
         test("should remove element from the specified index", () => {
@@ -1135,7 +1140,7 @@ describe("List", () => {
         });
         test("should throw error if the list is empty", () => {
             const list = new List<number>();
-            expect(() => list.scan((acc, n) => acc + n).toArray()).to.throw(ErrorMessages.NoElements);
+            expect(() => list.scan((acc, n) => acc + n).toArray()).toThrow(new NoElementsException());
         });
     });
 
@@ -1217,10 +1222,10 @@ describe("List", () => {
     describe("#set", () => {
         test("should throw error if index is out of bounds", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            expect(() => list.set(-1, 111)).to.throw(ErrorMessages.IndexOutOfBoundsException);
-            expect(() => list.set(44, 111)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list.set(-1, 111)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => list.set(44, 111)).toThrow(new IndexOutOfBoundsException(44));
             list.clear();
-            expect(() => list.set(0, 111)).to.throw(ErrorMessages.IndexOutOfBoundsException);
+            expect(() => list.set(0, 111)).toThrow(new IndexOutOfBoundsException(0));
         })
         test("should change the element at the specified index with the provided element", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -1243,15 +1248,15 @@ describe("List", () => {
     describe("#single()", () => {
         test("should throw error if list is empty.", () => {
             const list = new List<number>();
-            expect(() => list.single()).to.throw(ErrorMessages.NoElements);
-            expect(() => list.single(n => n > 0)).to.throw(ErrorMessages.NoElements);
+            expect(() => list.single()).toThrow(new NoElementsException());
+            expect(() => list.single(n => n > 0)).toThrow(new NoElementsException());
         });
         test("should throw error if list has more than one element", () => {
             const list = new List();
             list.add(Person.Alice);
             list.add(Person.Senna);
             list.add(Person.Jane);
-            expect(() => list.single()).to.throw(ErrorMessages.MoreThanOneElement);
+            expect(() => list.single()).toThrowError(new MoreThanOneElementException());
         });
         test("should return the only element in the list", () => {
             const list = new List();
@@ -1264,7 +1269,7 @@ describe("List", () => {
             list.add(Person.Alice);
             list.add(Person.Senna);
             list.add(Person.Jane);
-            expect(() => list.single(p => p.name === "Lenka")).to.throw(ErrorMessages.NoMatchingElement);
+            expect(() => list.single(p => p.name === "Lenka")).toThrowError(new NoMatchingElementException());
         });
         test("should throw error if more than one matching element is found.", () => {
             const list = new List<Person>();
@@ -1272,7 +1277,7 @@ describe("List", () => {
             list.add(Person.Senna);
             list.add(Person.Jane);
             list.add(Person.Senna);
-            expect(() => list.single(p => p.name === "Senna")).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+            expect(() => list.single(p => p.name === "Senna")).toThrowError(new MoreThanOneMatchingElementException());
         });
         test("should return person with name 'Alice'.", () => {
             const list = new List<Person>();
@@ -1300,9 +1305,9 @@ describe("List", () => {
             const item = list.singleOrDefault(n => n === 3);
             expect(item).to.eq(3);
         });
-        test(`should throw error [${ErrorMessages.MoreThanOneMatchingElement}]`, () => {
+        test(`should throw error`, () => {
             list.add(3);
-            expect(() => list.singleOrDefault(n => n === 3)).to.throw(ErrorMessages.MoreThanOneMatchingElement);
+            expect(() => list.singleOrDefault(n => n === 3)).toThrowError(new MoreThanOneMatchingElementException());
         });
         test("should return the only element in the list", () => {
             const list2 = new List<string>();
@@ -1310,11 +1315,11 @@ describe("List", () => {
             const sod = list2.singleOrDefault();
             expect(sod).to.eq("Suzuha");
         });
-        test(`should throw error [${ErrorMessages.MoreThanOneElement}]`, () => {
+        test(`should throw error`, () => {
             const list2 = new List<string>();
             list2.add("Suzuha");
             list2.add("Suzuri");
-            expect(() => list2.singleOrDefault()).to.throw(ErrorMessages.MoreThanOneElement);
+            expect(() => list2.singleOrDefault()).toThrowError(new MoreThanOneElementException());
         });
         test("should return default value [null] if no matching element is found.", () => {
             const sod = list.singleOrDefault(n => n < 0);

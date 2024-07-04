@@ -1,7 +1,8 @@
 import { AbstractList } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { ErrorMessages } from "../shared/ErrorMessages";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
 
@@ -24,7 +25,7 @@ export class List<TElement> extends AbstractList<TElement> {
 
     public addAt(element: TElement, index: number): boolean {
         if (index < 0 || index > this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         this.#data.splice(index, 0, element);
         return true;
@@ -41,17 +42,20 @@ export class List<TElement> extends AbstractList<TElement> {
 
     public get(index: number): TElement {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         return this.#data[index];
     }
 
     public override getRange(index: number, count: number): List<TElement> {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
+        }
+        if (count < 0) {
+            throw new InvalidArgumentException("count must be greater than or equal to zero.", "count");
         }
         if (count < 0 || index + count > this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index + count);
         }
         return new List(this.#data.slice(index, index + count), this.comparer);
     }
@@ -70,7 +74,7 @@ export class List<TElement> extends AbstractList<TElement> {
 
     public removeAt(index: number): TElement {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         const element = this.#data[index];
         this.#data.splice(index, 1);
@@ -79,7 +83,7 @@ export class List<TElement> extends AbstractList<TElement> {
 
     public set(index: number, element: TElement): TElement {
         if (index < 0 || index >= this.size()) {
-            throw new Error(ErrorMessages.IndexOutOfBoundsException);
+            throw new IndexOutOfBoundsException(index);
         }
         const oldElement = this.#data[index];
         this.#data[index] = element;
