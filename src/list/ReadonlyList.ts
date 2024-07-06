@@ -5,7 +5,7 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
     readonly #list: IList<TElement>;
 
     public constructor(list: IList<TElement>) {
-        super(list.comparator);
+        super(list.comparator as EqualityComparator<TElement>);
         this.#list = list;
     }
 

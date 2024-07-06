@@ -130,6 +130,10 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
         return this.#heap.size();
     }
 
+    public override get comparator(): OrderComparator<TElement> {
+        return this.#comparator;
+    }
+
     /**
      * Returns the number of elements in the heap.
      * @returns The number of elements in the heap.

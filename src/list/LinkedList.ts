@@ -181,6 +181,10 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         }
     }
 
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.comparer;
+    }
+
     public override get length(): number {
         return this.#listSize;
     }

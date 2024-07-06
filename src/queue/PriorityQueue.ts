@@ -103,6 +103,10 @@ export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
         return this.#queue.size();
     }
 
+    public override get comparator(): OrderComparator<TElement> {
+        return this.#comparator;
+    }
+
     public override get length(): number {
         return this.#queue.size();
     }

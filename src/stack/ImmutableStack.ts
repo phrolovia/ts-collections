@@ -95,6 +95,10 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
         return this.#stack.peek() as TElement;
     }
 
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.comparer;
+    }
+
     public override get length(): number {
         return this.#stack.length;
     }

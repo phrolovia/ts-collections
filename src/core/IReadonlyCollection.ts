@@ -1,6 +1,7 @@
 import { IEnumerable } from "../enumerator/IEnumerable";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
+import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
 
 export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
@@ -12,7 +13,7 @@ export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
     /**
      * Returns the current comparator used by this collection.
      */
-    get comparator(): EqualityComparator<TElement>;
+    get comparator(): EqualityComparator<TElement> | OrderComparator<TElement>;
 
     /**
      * Check if this collection contains all the elements of the given collection.

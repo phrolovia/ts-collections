@@ -348,6 +348,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.zip(iterable, zipper);
     }
 
+    public get comparator(): EqualityComparator<IGroup<TKey, TElement>> {
+        return this.#lookupTree.comparator as EqualityComparator<IGroup<TKey, TElement>>;
+    }
+
     public get length(): number {
         return this.#lookupTree.length;
     }

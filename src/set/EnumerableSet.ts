@@ -1,4 +1,5 @@
 import { AbstractSet } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
 import { Predicate } from "../shared/Predicate";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {
@@ -57,6 +58,10 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
 
     public override size(): number {
         return this.#set.size;
+    }
+
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.comparer;
     }
 
     public override get length(): number {
