@@ -1,5 +1,6 @@
 import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
 import { EqualityComparator } from "../shared/EqualityComparator";
+import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { IReadonlyCollection } from "./IReadonlyCollection";
@@ -52,7 +53,7 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
         return this.select(selector).aggregate((a, b) => `${a}${separator}${b}`);
     }
 
-    public get comparator(): EqualityComparator<TElement> {
+    public get comparator(): EqualityComparator<TElement> | OrderComparator<TElement> {
         return this.comparer;
     }
 

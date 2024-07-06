@@ -121,7 +121,7 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
     }
 
     public get comparator(): EqualityComparator<TElement> {
-        return this.#list.comparator;
+        return this.#list.comparator as EqualityComparator<TElement>;
     }
 
     public get length(): number {

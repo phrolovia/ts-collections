@@ -69,6 +69,10 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         return new SortedSet(enumerable, this.#orderComparator);
     }
 
+    public override get comparator(): OrderComparator<TElement> {
+        return this.#orderComparator;
+    }
+
     public override get length(): number {
         return this.#tree.length;
     }

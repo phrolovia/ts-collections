@@ -112,6 +112,10 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
         return this.#queue.size();
     }
 
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.comparer;
+    }
+
     public override get length(): number {
         return this.#queue.length;
     }

@@ -1,4 +1,5 @@
 import { AbstractRandomAccessImmutableCollection, contains, EnumerableSet } from "../imports";
+import { EqualityComparator } from "../shared/EqualityComparator";
 import { Predicate } from "../shared/Predicate";
 
 export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
@@ -129,6 +130,10 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
 
     public size(): number {
         return this.#set.size();
+    }
+
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.#set.comparator;
     }
 
     public override get length(): number {

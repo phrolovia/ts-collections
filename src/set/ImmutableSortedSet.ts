@@ -173,6 +173,10 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
         return new ImmutableSortedSet(tailSet, this.#comparator);
     }
 
+    public override get comparator(): OrderComparator<TElement> {
+        return this.#comparator;
+    }
+
     public override get length(): number {
         return this.#set.length;
     }

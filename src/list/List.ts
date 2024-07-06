@@ -117,6 +117,10 @@ export class List<TElement> extends AbstractList<TElement> {
         return buffer.join(separator ?? ", ");
     }
 
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.comparer;
+    }
+
     public override get length(): number {
         return this.#data.length;
     }

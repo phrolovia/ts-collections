@@ -65,4 +65,8 @@ export class CircularQueue<TElement> extends Queue<TElement> {
     public isFull(): boolean {
         return this.size() === this.#capacity;
     }
+
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.comparer;
+    }
 }

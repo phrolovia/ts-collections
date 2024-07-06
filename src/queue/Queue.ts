@@ -99,6 +99,10 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         return this.#queue.size();
     }
 
+    public override get comparator(): EqualityComparator<TElement> {
+        return this.#queue.comparator
+    }
+
     public override get length(): number {
         return this.#queue.length;
     }
