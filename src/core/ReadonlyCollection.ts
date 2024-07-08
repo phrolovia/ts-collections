@@ -13,6 +13,10 @@ export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TEl
         yield* this.#collection;
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        return this.#collection.contains(element, comparator);
+    }
+
     public override size(): number {
         return this.#collection.size();
     }

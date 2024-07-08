@@ -858,6 +858,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 } else {
                     takeEnded = true;
                 }
+            } else {
+                break;
             }
         }
     }
