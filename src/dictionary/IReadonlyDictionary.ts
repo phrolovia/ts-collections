@@ -18,7 +18,7 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
 
     /**
      * Checks whether this dictionary contains the specified value.
-     * @param value The key to locate in this dictionary.
+     * @param value The value to locate in this dictionary.
      * @param comparator The comparator function which will be used to compare the equality of the values.
      * @returns {boolean} true if this dictionary contains an element with the specified value; false otherwise.
      */
