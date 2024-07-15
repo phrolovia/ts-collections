@@ -12,7 +12,7 @@ export interface ICollection<TElement> extends IReadonlyCollection<TElement> {
      * Add all items from the provided collection to this collection
      * @param collection The collection whose element will be added
      *                   to this collection.
-     * @returns {boolean} Returns true if this collection is changed.
+     * @returns {boolean} true if this collection is changed.
      */
     addAll<TSource extends TElement>(collection: Iterable<TSource>): boolean;
 

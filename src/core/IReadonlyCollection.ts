@@ -7,11 +7,14 @@ import { Selector } from "../shared/Selector";
 export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
     /**
      * Returns the number of element in this collection.
+     * @returns {number} The number of elements in this collection.
      */
     get length(): number;
 
     /**
      * Returns the current comparator used by this collection.
+     * @template TElement The type of the elements in the collection.
+     * @returns {EqualityComparator<TElement> | OrderComparator<TElement>} The current comparator used by this collection.
      */
     get comparator(): EqualityComparator<TElement> | OrderComparator<TElement>;
 
@@ -36,17 +39,20 @@ export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
 
     /**
      * Returns the number of elements in this collection.
+     * @returns {number} The number of elements in this collection.
      */
     size(): number;
 
     /**
      * Returns a string representation of this collection.
+     * @returns {string} A string representation of this collection.
      */
     toString(): string;
 
     /**
      * Returns a string representation of this collection.
      * @param separator The separator that will be used to separate the elements of this collection.
+     * @returns {string} A string representation of this collection.
      */
     toString(separator?: string): string;
 
@@ -54,6 +60,7 @@ export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
      * Returns a string representation of this collection.
      * @param separator The separator that will be used to separate the elements of this collection.
      * @param selector The selector that will be used to select the property that will be used to generate the string representation of this collection.
+     * @returns {string} A string representation of this collection.
      */
     toString(separator?: string, selector?: Selector<TElement, string>): string;
 }

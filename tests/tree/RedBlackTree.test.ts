@@ -26,7 +26,7 @@ describe("RedBlackTree", () => {
         return array;
     };
     const randomArrayGenerator = (length: number) => {
-        return [...Array(length)].map(e => ~~(Math.random() * length));
+        return [...Array(length)].map(() => ~~(Math.random() * length));
     };
     const randomUniqueArrayGenerator = (length: number) => {
         const intsmap: { [key: number]: boolean } = {};

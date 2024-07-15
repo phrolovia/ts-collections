@@ -14,7 +14,6 @@ export class CircularQueue<TElement> extends Queue<TElement> {
 
     /**
      * Constructs a circular queue with the default capacity of 32.
-     *
      */
     public constructor();
 
