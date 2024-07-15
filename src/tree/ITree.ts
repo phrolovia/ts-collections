@@ -19,14 +19,6 @@ export interface ITree<TElement> extends IRandomAccessCollection<TElement> {
     find(predicate: Predicate<TElement>): TElement | null;
 
     /**
-     * Traverses all the items and call the given action for each of the items.
-     * In-order traversing is used.
-     * @param action The action that will be called for each item.
-     */
-
-    // forEach(action: Action<T>): void;
-
-    /**
      * Returns the data at the root of this tree.
      * @return The data at the root of the tree.
      */

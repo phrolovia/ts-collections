@@ -1,4 +1,4 @@
-import { expect } from "vitest";
+import { describe, expect, test } from "vitest";
 import { LinkedList } from "../../src/list/LinkedList";
 import { EnumerableSet } from "../../src/set/EnumerableSet";
 import { Person } from "../models/Person";
@@ -31,6 +31,72 @@ describe("EnumerableSet", () => {
             const set = new EnumerableSet<Person>();
             set.add(Person.Bella);
             expect(set.contains(Person.Senna)).to.be.false;
+        });
+    });
+
+    describe("#except()", () => {
+        test("should return a new set with the elements that are not in the provided collection", () => {
+            const set = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Reina]);
+            const result = set.except([Person.Bella, Person.Mel]);
+            expect(result.toArray()).to.eql([Person.Senna, Person.Reina]);
+        });
+        test("should return a new set with the elements that are not in the provided collection #2", () => {
+            const set = new EnumerableSet(new Set([1, 3, 5, 7, 9]));
+            const result = set.except(new Set([1, 4, 9]));
+            expect(result.toArray()).to.eql([3, 5, 7]);
+        });
+        test("should return an empty set if the provided collection contains all elements", () => {
+            const set = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Reina]);
+            const result = set.except([Person.Bella, Person.Senna, Person.Reina]);
+            expect(result.toArray()).to.eql([]);
+        });
+        test("should return an empty set if the provided collection is empty", () => {
+            const set = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Reina]);
+            const result = set.except([]);
+            expect(result.toArray()).to.eql([Person.Bella, Person.Senna, Person.Reina]);
+        });
+        test("should return an empty set if the set is empty", () => {
+            const set = new EnumerableSet<Person>();
+            const result = set.except([Person.Bella, Person.Senna, Person.Reina]);
+            expect(result.toArray()).to.eql([]);
+        });
+        test("should use the provided comparator to determine equality", () => {
+            const set = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Noemi]);
+            const result = set.except([Person.Mel, Person.Noemi2], (a, b) => a.name === b.name);
+            expect(result.toArray()).to.eql([Person.Bella, Person.Senna]);
+        });
+    });
+
+    describe("#intersect()", () => {
+        test("should return a new set with the intersection of the two sets", () => {
+            const set1 = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Reina]);
+            const set2 = new EnumerableSet<Person>([Person.Senna, Person.Reina, Person.Mel]);
+            const result = set1.intersect(set2);
+            expect(result.toArray()).to.eql([Person.Senna, Person.Reina]);
+        });
+        test("should return a new set with the intersection of the two sets #2", () => {
+            const set1 = new EnumerableSet([1, 3, 5, 7, 9]);
+            const set2 = new EnumerableSet([1, 4, 9]);
+            const result = set1.intersect(set2);
+            expect(result.toArray()).to.eql([1, 9]);
+        });
+        test("should return an empty set if there is no intersection", () => {
+            const set1 = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Reina]);
+            const set2 = new EnumerableSet<Person>([Person.Mel, Person.Jisu]);
+            const result = set1.intersect(set2);
+            expect(result.toArray()).to.eql([]);
+        });
+        test("should use the provided comparator to determine equality", () => {
+            const set1 = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Noemi]);
+            const set2 = new EnumerableSet<Person>([Person.Mel, Person.Noemi2]);
+
+            const set3 = new EnumerableSet<Person>([Person.Bella, Person.Senna, Person.Noemi]);
+            const set4 = new EnumerableSet<Person>([Person.Mel, Person.Noemi2]);
+
+            const result1 = set1.intersect(set2, (a, b) => a.name === b.name);
+            const result2 = set3.intersect(set4);
+            expect(result1.toArray()).to.eql([Person.Noemi]);
+            expect(result2.toArray()).to.eql([]);
         });
     });
 
