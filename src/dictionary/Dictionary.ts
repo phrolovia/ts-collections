@@ -86,8 +86,8 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     }
 
     public set(key: TKey, value: TValue): void {
-        const pair = this.get(key);
-        if (!pair) {
+        const oldValue = this.get(key);
+        if (oldValue == null) {
             throw new KeyNotFoundException(String(key));
         }
         this.#dictionary.set(key, new KeyValuePair(key, value));

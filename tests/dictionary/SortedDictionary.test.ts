@@ -1,7 +1,7 @@
 import { expect } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
-import { Enumerable, List } from "../../src/imports";
+import { Dictionary, Enumerable, List } from "../../src/imports";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
 import { KeyNotFoundException } from "../../src/shared/KeyNotFoundException";
@@ -822,6 +822,20 @@ describe("SortedDictionary", () => {
             const oldValue = dict.put(8, 88);
             expect(oldValue).to.eq(64);
         });
+        test("should work properly with boolean values", () => {
+            const dict2 = new SortedDictionary<string, boolean>();
+            dict2.put("first", true);
+            dict2.put("second", false);
+
+            expect(dict2.get("first")).to.eq(true);
+            expect(dict2.get("second")).to.eq(false);
+
+            dict2.put("first", false);
+            dict2.put("second", true);
+
+            expect(dict2.get("first")).to.eq(false);
+            expect(dict2.get("second")).to.eq(true);
+        });
     });
 
     describe("#remove()", () => {
@@ -944,6 +958,17 @@ describe("SortedDictionary", () => {
             for (const [key, value] of dict.entries()) {
                 expect([key, value]).to.deep.eq(expectedResults[index++]);
             }
+        });
+        test("should work properly with boolean values", () => {
+            const boolDict = new Dictionary<string, boolean>();
+            boolDict.add("a", true);
+            boolDict.add("b", false);
+
+            boolDict.set("a", false);
+            expect(boolDict.get("a")).to.eq(false);
+
+            boolDict.set("b", true);
+            expect(boolDict.get("b")).to.eq(true);
         });
     });
 
