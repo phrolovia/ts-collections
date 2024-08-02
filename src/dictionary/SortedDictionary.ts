@@ -88,7 +88,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
 
     public set(key: TKey, value: TValue): void {
         const pair = this.#keyValueTree.findBy(key, p => p.key, this.#keyComparer);
-        if (!pair) {
+        if (pair == null) {
             throw new KeyNotFoundException(String(key));
         }
         pair.value = value;

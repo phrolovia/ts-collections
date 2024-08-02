@@ -881,6 +881,20 @@ describe("Dictionary", () => {
             const oldValue = dict.put(8, 88);
             expect(oldValue).to.eq(64);
         });
+        test("should work properly with boolean values", () => {
+            const dict2 = new Dictionary<string, boolean>();
+            dict2.put("a", true);
+            dict2.put("b", false);
+
+            expect(dict2.get("a")).to.eq(true);
+            expect(dict2.get("b")).to.eq(false);
+
+            dict2.put("a", false);
+            dict2.put("b", true);
+
+            expect(dict2.get("a")).to.eq(false);
+            expect(dict2.get("b")).to.eq(true);
+        });
     });
 
     describe("#remove()", () => {
@@ -1024,6 +1038,17 @@ describe("Dictionary", () => {
             for (const [key, value] of dict.entries()) {
                 expect([key, value]).to.deep.eq(expectedResults[index++]);
             }
+        });
+        test("should work properly with boolean values", () => {
+            const boolDict = new Dictionary<string, boolean>();
+            boolDict.add("first", true);
+            boolDict.add("second", false);
+
+            boolDict.set("first", false);
+            expect(boolDict.get("first")).to.eq(false);
+
+            boolDict.set("second", true);
+            expect(boolDict.get("second")).to.eq(true);
         });
     });
 
