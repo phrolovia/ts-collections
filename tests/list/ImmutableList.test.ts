@@ -1,3 +1,4 @@
+import { expect } from "chai";
 import { ImmutableList } from "../../src/list/ImmutableList";
 import { Comparators } from "../../src/shared/Comparators";
 
@@ -24,6 +25,24 @@ describe("ImmutableList", () => {
             expect(newList.get(5)).to.eq(6);
             expect(list.size()).to.eq(3);
             expect(list.toArray()).to.deep.eq([1, 2, 3]);
+        });
+    });
+    describe("#addAt()", () => {
+        it("should return a new list with the element added at the given index", () => {
+            const list = ImmutableList.create([1, 2, 3]);
+            const newList = list.addAt(4, 1);
+            expect(newList).not.to.eq(list);
+            expect(newList.size()).to.eq(4);
+            expect(newList.get(0)).to.eq(1);
+            expect(newList.get(1)).to.eq(4);
+            expect(newList.get(2)).to.eq(2);
+            expect(newList.get(3)).to.eq(3);
+            expect(list.size()).to.eq(3);
+            expect(list.toArray()).to.deep.eq([1, 2, 3]);
+        });
+        it("should throw an error if the index is out of bounds", () => {
+            const list = ImmutableList.create([1, 2, 3]);
+            expect(() => list.addAt(4, 4)).to.throw(Error);
         });
     });
     describe("#any()", () => {

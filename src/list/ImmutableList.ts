@@ -38,6 +38,15 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         return new ImmutableList([...this.#list, ...collection], this.comparer);
     }
 
+    public addAt(element: TElement, index: number): ImmutableList<TElement> {
+        if (index < 0 || index > this.size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        const list = this.#list.toList();
+        list.addAt(element, index);
+        return new ImmutableList([...list], this.comparer);
+    }
+
     public override any(predicate?: Predicate<TElement>): boolean {
         return this.#list.any(predicate);
     }
