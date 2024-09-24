@@ -69,7 +69,11 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     };
 
     public get(key: TKey): TValue | null {
-        return this.#dictionary.get(key)?.value ?? null;
+        const pair = this.#dictionary.get(key);
+        if (pair) {
+            return pair.value;
+        }
+        return null;
     }
 
     public keys(): ISet<TKey> {
@@ -87,7 +91,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
 
     public set(key: TKey, value: TValue): void {
         const oldValue = this.get(key);
-        if (oldValue == null) {
+        if (oldValue === null) {
             throw new KeyNotFoundException(String(key));
         }
         this.#dictionary.set(key, new KeyValuePair(key, value));
