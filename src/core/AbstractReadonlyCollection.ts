@@ -57,8 +57,6 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
         return this.comparer;
     }
 
-    abstract [Symbol.iterator](): Iterator<TElement>;
-
     abstract size(): number;
 
     abstract get length(): number;

@@ -1,5 +1,6 @@
 import { ImmutableDictionary } from "../../src/dictionary/ImmutableDictionary";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
+import { test } from "vitest";
 
 describe("ImmutableDictionary", () => {
     describe("#add()", () => {
@@ -151,6 +152,15 @@ describe("ImmutableDictionary", () => {
             expect(dictionary.get("key1")).to.equal("value1");
             expect(newDictionary.size()).to.equal(1);
             expect(newDictionary.get("key1")).to.equal("value2");
+        });
+        test("should put the value in the dictionary if the key does not exist", () => {
+            type KeyType = "K1" | "K2" | "K3";
+            const dictionary = ImmutableDictionary.create<KeyType, boolean>();
+            const newDictionary = dictionary.put("K1", false);
+            expect(dictionary.size()).to.equal(0);
+            expect(dictionary.get("K1")).to.be.null;
+            expect(newDictionary.size()).to.equal(1);
+            expect(newDictionary.get("K1")).to.be.false;
         });
     });
     describe("#remove()", () => {
