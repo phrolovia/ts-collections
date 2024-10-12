@@ -136,6 +136,35 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#asObject()", () => {
+        test("should return an object representation of the dictionary", () => {
+            const dictionary = new Dictionary<string, number>([
+                ["a", 1],
+                ["b", 2],
+                ["c", 3]
+            ]);
+            const obj = dictionary.asObject();
+            expect(obj).to.deep.equal({
+                a: 1,
+                b: 2,
+                c: 3
+            });
+        });
+        test("should return an object representation of the dictionary with an object key type", () => {
+            const dictionary = new Dictionary<Person, Person>([
+                [Person.Ayana, Person.Ayana],
+                [Person.Rui, Person.Rui],
+                [Person.Setsuna, Person.Setsuna]
+            ]);
+            const obj = dictionary.asObject();
+            expect(obj).to.deep.equal({
+                "Ayana Suzukawa": Person.Ayana,
+                "Rui Kazehaya": Person.Rui,
+                "Setsuna Hoshinami": Person.Setsuna
+            });
+        });
+    });
+
     describe("#average()", () => {
         const dict = new Dictionary<string, number>();
         dict.add("A", 1);
@@ -1691,6 +1720,29 @@ describe("Dictionary", () => {
             expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
             expect(list instanceof List).to.be.true;
             expect(list.length).to.eq(dictionary.length);
+        });
+    });
+
+    describe("#toMap()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const map = dictionary.toMap(p => Math.pow(p.key, 2), p => p.value + p.value);
+        test("should create a new Map", () => {
+            expect(map instanceof Map).to.be.true;
+            expect(map.size).to.eq(dictionary.size());
+            expect(map.get(1)).to.eq("aa");
+            expect(map.get(4)).to.eq("bb");
+        });
+    });
+
+    describe("#toObject()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const obj = dictionary.toObject(p => p.key * 10, p => p.value);
+        test("should create a new object", () => {
+            expect(obj).to.deep.equal({ 10: "a", 20: "b" });
         });
     });
 

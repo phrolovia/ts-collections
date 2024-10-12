@@ -567,6 +567,25 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return Lookup.create(this, keySelector, valueSelector, keyComparator);
     }
 
+    public toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue> {
+        const map = new Map<TKey, TValue>();
+        for (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            map.set(key, value);
+        }
+        return map;
+    }
+
+    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+        const obj: Record<TKey, TValue> = {} as Record<TKey, TValue>;
+        for (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            obj[key] = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+        }
+        return obj;
+    }
+
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         const dictionary = new SortedDictionary<TKey, TValue>([], keyComparator, valueComparator);
         for (const item of this) {

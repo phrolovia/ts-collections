@@ -1,3 +1,4 @@
+import { describe } from "vitest";
 import { Enumerable, ImmutableList, ReadonlyCollection } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
@@ -1794,14 +1795,30 @@ describe("List", () => {
         test("should create a lookup with name being the key", () => {
             expect(lookup.size()).to.eq(3);
             expect(lookup.hasKey("Noemi")).to.eq(true);
-            // for (const item of lookup) {
-            //     console.log("Key: ", item.key);
-            //     const value = lookup.get(item.key);
-            //     for (const p of value) {
-            //         console.log("Person Value: ", p);
-            //     }
-            //     console.log("Null: ", lookup.get("Fujiwara"));
-            // }
+        });
+    });
+
+    describe("#toMap()", () => {
+        const list = new List([Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2]);
+        const map = list.toMap(p => p.name, p => p);
+        /**
+         * Duplicate keys are not allowed in a map, so the last element with the same key will be the one stored in the map.
+         */
+        test("should create a map with name being the key", () => {
+            expect(map.size).to.eq(3);
+            expect(map.get("Noemi")).to.eq(Person.Noemi2);
+            expect(map.get("Suzuha")).to.eq(Person.Suzuha3);
+            expect(map.get("Hanna")).to.eq(Person.Hanna2);
+        });
+    });
+
+    describe("#toObject()", () => {
+        const list = new List([Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2]);
+        const obj = list.toObject(p => p.name, p => p);
+        test("should create an object with name being the key", () => {
+            expect(obj["Noemi"]).to.eq(Person.Noemi2);
+            expect(obj["Suzuha"]).to.eq(Person.Suzuha3);
+            expect(obj["Hanna"]).to.eq(Person.Hanna2);
         });
     });
 

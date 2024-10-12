@@ -587,6 +587,22 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue>;
 
     /**
+     * Converts this dictionary to a JavaScript Map.
+     * @param keySelector The selector that will be used to select the property that will be used as the key of the map.
+     * @param valueSelector The selector that will be used to select the property that will be used as the value of the map.
+     * @returns {Map} A Map representation of this dictionary.
+     */
+    toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue>;
+
+    /**
+     * Converts this dictionary to an object.
+     * @param keySelector The selector that will be used to select the property that will be used as the key of the object. Can only be a string, number or symbol.
+     * @param valueSelector The selector that will be used to select the property that will be used as the value of the object.
+     * @returns {Record} An object representation of this dictionary.
+     */
+    toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue>;
+
+    /**
      * Creates a new dictionary from the elements of the sequence.
      * @template TKey, TValue
      * @param keySelector The key selector function that will be used to select the key for an element.

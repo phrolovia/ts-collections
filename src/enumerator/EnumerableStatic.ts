@@ -272,6 +272,14 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toLookup(keySelector, valueSelector, keyComparator);
     }
 
+    public static toMap<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue> {
+        return new Enumerable(source).toMap(keySelector, valueSelector);
+    }
+
+    public static toObject<TElement, TKey extends string | number | symbol, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+        return new Enumerable(source).toObject(keySelector, valueSelector);
+    }
+
     public static toSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return new Enumerable(source).toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
     }
