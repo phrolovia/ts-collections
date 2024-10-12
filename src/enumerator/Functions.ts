@@ -871,6 +871,34 @@ export const toLookup = <TElement, TKey, TValue>(
 }
 
 /**
+ * Creates a new map from the elements of the sequence.
+ * @param source The source sequence.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param valueSelector The value selector function that will be used to select the value for an element.
+ */
+export const toMap = <TElement, TKey, TValue>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    valueSelector: Selector<TElement, TValue>
+): Map<TKey, TValue> => {
+    return from(source).toMap(keySelector, valueSelector);
+}
+
+/**
+ * Creates a new object from the elements of the sequence.
+ * @param source The source sequence.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param valueSelector The value selector function that will be used to select the value for an element.
+ */
+export const toObject = <TElement, TKey extends string | number | symbol, TValue>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    valueSelector: Selector<TElement, TValue>
+): Record<TKey, TValue> => {
+    return from(source).toObject(keySelector, valueSelector);
+}
+
+/**
  * Creates a new dictionary from the elements of the sequence.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.

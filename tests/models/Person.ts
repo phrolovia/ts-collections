@@ -28,6 +28,7 @@ export class Person {
 
     public static readonly Alice = new Person("Alice", "Rivermist", 23);
     public static readonly Amy = new Person("Amy", "Rivera", 32);
+    public static readonly Ayana = new Person("Ayana", "Suzukawa", 26);
     public static readonly Bella = new Person("Bella", "Rivera", 21);
     public static readonly Eliza = new Person("Eliza", "Jackson", 19);
     public static readonly Emily = new Person("Emily", "Redridge", 25);
@@ -50,7 +51,9 @@ export class Person {
     public static readonly Rebecca = new Person("Rebecca", "Ringale", 17);
     public static readonly Reika = new Person("Reika", "Kurohana", 37);
     public static readonly Reina = new Person("Reina", "Karuizawa", 23);
+    public static readonly Rui = new Person("Rui", "Kazehaya", 27);
     public static readonly Senna: Person = new Person("Senna", "Hikaru", 10);
+    public static readonly Setsuna = new Person("Setsuna", "Hoshinami", 19);
     public static readonly Suzuha = new Person("Suzuha", "Suzuki", 22);
     public static readonly Suzuha2 = new Person("Suzuha", "Mizuki", 22);
     public static readonly Suzuha3 = new Person("Suzuha", "Mizuki", 26);

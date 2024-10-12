@@ -10,6 +10,15 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
     get length(): number;
 
     /**
+     * Returns an object representation of this dictionary.
+     * {@link toObject} is a more versatile version of this method, as it allows you to select the key and value properties
+     * that will be used to generate the object representation.
+     * @template TValue The type of the values of the dictionary.
+     * @returns {Record<string|number|symbol, TValue>} An object representation of this dictionary.
+     */
+    asObject<TObjectKey extends string | number | symbol>(): Record<TObjectKey, TValue>;
+
+    /**
      * Checks whether this dictionary contains the specified key.
      * @param key The key to locate in this dictionary.
      * @returns {boolean} true if this dictionary contains an element with the specified key; false otherwise.

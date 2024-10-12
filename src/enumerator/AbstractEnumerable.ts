@@ -280,16 +280,24 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.toList(this, comparator);
     }
 
+    public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
+        return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
+    }
+
+    public toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue> {
+        return EnumerableStatic.toMap(this, keySelector, valueSelector);
+    }
+
+    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+        return EnumerableStatic.toObject(this, keySelector, valueSelector);
+    }
+
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
         return EnumerableStatic.toSortedDictionary(this, keySelector, valueSelector, keyComparator, valueComparator);
     }
 
     public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
         return EnumerableStatic.toSortedSet(this, comparator);
-    }
-
-    public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
-        return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
     }
 
     public union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

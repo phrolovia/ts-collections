@@ -327,6 +327,14 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.toLookup(keySelector, valueSelector, keyComparator);
     }
 
+    public toMap<TMapKey, TMapValue>(keySelector: Selector<IGroup<TKey, TElement>, TMapKey>, valueSelector: Selector<IGroup<TKey, TElement>, TMapValue>): Map<TMapKey, TMapValue> {
+        return this.#lookupTree.toMap(keySelector, valueSelector);
+    }
+
+    public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<IGroup<TKey, TElement>, TObjectKey>, valueSelector: Selector<IGroup<TKey, TElement>, TObjectValue>): Record<TObjectKey, TObjectValue> {
+        return this.#lookupTree.toObject(keySelector, valueSelector);
+    }
+
     public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<IGroup<TKey, TElement>, TDictKey>, valueSelector: Selector<IGroup<TKey, TElement>, TDictValue>,
                                                     keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
         return this.#lookupTree.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);

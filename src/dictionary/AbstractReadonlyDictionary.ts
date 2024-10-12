@@ -66,6 +66,17 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.asEnumerable(this);
     }
 
+    public asObject<TObjectKey extends string | number | symbol>(): Record<TObjectKey, TValue> {
+        const keySelector = ((pair: KeyValuePair<TKey, TValue>) => {
+            if (typeof pair.key === 'string' || typeof pair.key === 'number' || typeof pair.key === 'symbol') {
+                return pair.key as string | number | symbol;
+            }
+            return String(pair.key);
+        });
+        const valueSelector = ((pair: KeyValuePair<TKey, TValue>) => pair.value);
+        return this.toObject(keySelector, valueSelector);
+    }
+
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.average(this, selector);
     }
@@ -290,6 +301,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TLookupKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
         return EnumerableStatic.toLookup(this, keySelector, valueSelector, keyComparator);
+    }
+
+    public toMap<TMapKey, TMapValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMapKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TMapValue>): Map<TMapKey, TMapValue> {
+        return EnumerableStatic.toMap(this, keySelector, valueSelector);
+    }
+
+    public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TObjectKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TObjectValue>): Record<TObjectKey, TObjectValue> {
+        return EnumerableStatic.toObject(this, keySelector, valueSelector);
     }
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {
