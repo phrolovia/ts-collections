@@ -9,12 +9,14 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     IOrderedEnumerable,
     LinkedList,
     List,
     Queue,
     SortedDictionary,
-    SortedSet
+    SortedSet,
+    Stack
 } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
@@ -571,6 +573,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
 
     /**
+     * Creates a new immutable stack from the elements of the sequence.
+     * @template TElement
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     * @returns {ImmutableStack<TElement>} A new immutable stack that contains the elements from the input sequence.
+     */
+    toImmutableStack(comparator?: EqualityComparator<TElement>): ImmutableStack<TElement>;
+
+    /**
      * Creates a new linked list from the elements of the sequence.
      * @template TElement
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
@@ -645,6 +655,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {SortedSet<TElement>} A new sorted set that contains the elements from the input sequence.
      */
     toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement>;
+
+    /**
+     * Creates a new stack from the elements of the sequence.
+     * @template TElement
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     * @returns {Stack<TElement>} A new stack that contains the elements from the input sequence.
+     */
+    toStack(comparator?: EqualityComparator<TElement>): Stack<TElement>;
 
     /**
      * Produces the set union of two sequences by using an equality comparer.

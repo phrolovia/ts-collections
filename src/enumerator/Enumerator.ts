@@ -14,13 +14,15 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     IOrderedEnumerable,
     LinkedList,
     List,
     OrderedEnumerator,
     Queue,
     SortedDictionary,
-    SortedSet
+    SortedSet,
+    Stack
 } from "../imports";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
@@ -561,6 +563,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return ImmutableSortedSet.create(this, comparator);
     }
 
+    public toImmutableStack(comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
+        return ImmutableStack.create(this, comparator);
+    }
+
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
         return new LinkedList<TElement>(this, comparator);
     }
@@ -612,6 +618,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
         return new SortedSet<TElement>(this, comparator);
+    }
+
+    public toStack(comparator?: EqualityComparator<TElement>): Stack<TElement> {
+        return new Stack<TElement>(this, comparator);
     }
 
     public union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

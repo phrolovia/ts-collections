@@ -11,13 +11,15 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     IOrderedEnumerable,
     LinkedList,
     List,
     Queue,
     RedBlackTree,
     SortedDictionary,
-    SortedSet
+    SortedSet,
+    Stack
 } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
@@ -320,6 +322,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.toImmutableSortedSet(comparator);
     }
 
+    public toImmutableStack(comparator?: EqualityComparator<IGroup<TKey, TElement>>): ImmutableStack<IGroup<TKey, TElement>> {
+        return this.#lookupTree.toImmutableStack(comparator);
+    }
+
     public toLinkedList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): LinkedList<IGroup<TKey, TElement>> {
         return this.#lookupTree.toLinkedList(comparator);
     }
@@ -356,6 +362,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toSortedSet(comparator?: OrderComparator<IGroup<TKey, TElement>>): SortedSet<IGroup<TKey, TElement>> {
         return this.#lookupTree.toSortedSet(comparator);
+    }
+
+    public toStack(comparator?: EqualityComparator<IGroup<TKey, TElement>>): Stack<IGroup<TKey, TElement>> {
+        return this.#lookupTree.toStack(comparator);
     }
 
     public union(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
