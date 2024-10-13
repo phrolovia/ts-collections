@@ -11,12 +11,14 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     IOrderedEnumerable,
     LinkedList,
     List,
     Queue,
     SortedDictionary,
-    SortedSet
+    SortedSet,
+    Stack
 } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
@@ -266,6 +268,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toImmutableSortedSet(comparator);
     }
 
+    public static toImmutableStack<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
+        return new Enumerable(source).toImmutableStack(comparator);
+    }
+
     public static toLinkedList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
         return new Enumerable(source).toLinkedList(comparator);
     }
@@ -300,6 +306,10 @@ export abstract class EnumerableStatic {
 
     public static toSortedSet<TElement>(source: IEnumerable<TElement>, comparator?: OrderComparator<TElement>): SortedSet<TElement> {
         return new Enumerable(source).toSortedSet(comparator);
+    }
+
+    public static toStack<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Stack<TElement> {
+        return new Enumerable(source).toStack(comparator);
     }
 
     public static union<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

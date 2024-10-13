@@ -11,12 +11,14 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     IOrderedEnumerable,
     ISet,
     LinkedList,
     List,
     Queue,
-    SortedSet
+    SortedSet,
+    Stack
 } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
@@ -297,6 +299,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.toImmutableSortedSet(this, comparator);
     }
 
+    public toImmutableStack(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableStack<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableStack(this, comparator);
+    }
+
     public toLinkedList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): LinkedList<KeyValuePair<TKey, TValue>> {
         return new LinkedList<KeyValuePair<TKey, TValue>>(this, comparator);
     }
@@ -331,6 +337,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toSortedSet(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): SortedSet<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toSortedSet(this, comparator);
+    }
+
+    public toStack(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): Stack<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toStack(this, comparator);
     }
 
     public toString(): string;

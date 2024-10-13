@@ -1,5 +1,5 @@
 import { describe } from "vitest";
-import { Enumerable, ImmutableList, ReadonlyCollection } from "../../src/imports";
+import { Enumerable, ImmutableList, ReadonlyCollection, Stack } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -1787,6 +1787,22 @@ describe("List", () => {
         });
     });
 
+    describe("#toImmutableStack()", () => {
+        const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        test("should convert it to an immutable stack", () => {
+            const stack = list.toImmutableStack();
+            expect(stack.size()).to.eq(10);
+            expect(stack.peek()).to.eq(1);
+            const stack2 = stack.push(999);
+            expect(stack2 !== stack).to.be.true;
+            expect(stack.size()).to.eq(10);
+            expect(stack2.size()).to.eq(11);
+            expect(stack.peek()).to.eq(1);
+            expect(stack2.peek()).to.eq(999);
+            expect(stack2.last()).to.eq(10);
+        });
+    });
+
     describe("#toList()", () => {
         const list = new List([1, 2, 3]);
         const list2 = list.append(4).toList();
@@ -1886,6 +1902,15 @@ describe("List", () => {
         test("should create a sorted set from the list", () => {
             const set = list.toSortedSet();
             expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+    });
+
+    describe("#toStack()", () => {
+        const list = new List([1, 2, 3]);
+        const stack = list.toStack();
+        test("should return a new Stack without altering the current list", () => {
+            expect(stack instanceof Stack).to.be.true;
+            expect(list.toArray()).to.deep.equal(stack.toArray());
         });
     });
 

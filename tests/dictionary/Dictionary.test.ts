@@ -11,8 +11,10 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     LinkedList,
-    Queue
+    Queue,
+    Stack
 } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
@@ -1727,6 +1729,35 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#toImmutableStack()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const stack = dictionary.toImmutableStack();
+        const expectedStackItems = [
+            new KeyValuePair(1, "a"),
+            new KeyValuePair(2, "b")
+        ];
+        test("should create a new immutable stack", () => {
+            expect(stack instanceof ImmutableStack).to.be.true;
+            expect(stack.size()).to.eq(dictionary.size());
+            expect(stack.toArray()).to.deep.eq(expectedStackItems);
+        });
+        test("should be immutable", () => {
+            const stack2 = stack.push(new KeyValuePair<number, string>(3, "c"));
+            expect(stack.size()).to.eq(dictionary.size());
+            expect(stack2.size()).to.eq(dictionary.size() + 1);
+            expect(stack2 instanceof ImmutableStack).to.be.true;
+            expect(stack2.length).to.eq(dictionary.length + 1);
+            expect(stack2).to.not.eq(stack);
+            const expectedStackItems2 = [
+                new KeyValuePair(3, "c"), // reversed
+                ...expectedStackItems
+            ];
+            expect(stack2.toArray()).to.deep.eq(expectedStackItems2);
+        });
+    });
+
     describe("#toLinkedList()", () => {
         const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
@@ -1832,6 +1863,22 @@ describe("Dictionary", () => {
             const set = dictionary.toSortedSet((a, b) => a.value.localeCompare(b.value));
             expect(set.size()).to.eq(dictionary.size());
             expect(set.toArray().map(p => p.value)).to.deep.eq(["a", "b"]);
+        });
+    });
+
+    describe("#toStack()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const stack = dictionary.toStack();
+        const expectedStackItems = [
+            new KeyValuePair(1, "a"),
+            new KeyValuePair(2, "b")
+        ];
+        test("should create a new stack", () => {
+            expect(stack instanceof Stack).to.be.true;
+            expect(stack.size()).to.eq(dictionary.size());
+            expect(stack.toArray()).to.deep.eq(expectedStackItems);
         });
     });
 

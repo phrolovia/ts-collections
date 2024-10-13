@@ -9,7 +9,9 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
-    Queue
+    ImmutableStack,
+    Queue,
+    Stack
 } from "../imports";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
@@ -276,6 +278,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.toImmutableSortedSet(this, comparator);
     }
 
+    public toImmutableStack(comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
+        return EnumerableStatic.toImmutableStack(this, comparator);
+    }
+
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
         comparator ??= this.comparer;
         return EnumerableStatic.toLinkedList(this, comparator);
@@ -313,6 +319,11 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
         return EnumerableStatic.toSortedSet(this, comparator);
+    }
+
+    public toStack(comparator?: EqualityComparator<TElement>): Stack<TElement> {
+        comparator ??= this.comparer;
+        return EnumerableStatic.toStack(this, comparator);
     }
 
     public union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
