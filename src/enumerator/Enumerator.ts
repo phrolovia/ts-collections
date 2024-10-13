@@ -10,6 +10,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -540,6 +541,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return ImmutableList.create(this, comparator);
+    }
+
+    public toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {
+        return ImmutableQueue.create(this, comparator);
     }
 
     public toImmutableSet(): ImmutableSet<TElement> {

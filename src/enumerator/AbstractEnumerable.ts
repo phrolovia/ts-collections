@@ -5,6 +5,7 @@ import {
     IEnumerable,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -257,6 +258,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return EnumerableStatic.toImmutableList(this, comparator);
+    }
+
+    public toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {
+        return EnumerableStatic.toImmutableQueue(this, comparator);
     }
 
     public toImmutableSet(): ImmutableSet<TElement> {

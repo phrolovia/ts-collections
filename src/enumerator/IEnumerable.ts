@@ -5,6 +5,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -534,6 +535,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableList<TElement>} A new immutable list that contains the elements from the input sequence.
      */
     toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement>;
+
+    /**
+     * Creates a new immutable queue from the elements of the sequence.
+     * @template TElement
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     * @returns {ImmutableQueue<TElement>} A new immutable queue that contains the elements from the input sequence.
+     */
+    toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement>;
 
     /**
      * Creates a new immutable set from the elements of the sequence.
