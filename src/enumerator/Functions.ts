@@ -53,6 +53,7 @@ export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulat
  * Determines if all elements of the sequence satisfy the specified predicate.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition.
+ * @returns {boolean} True if all elements satisfy the condition, otherwise false.
  */
 export const all = <TElement>(
     source: Iterable<TElement>,
@@ -65,6 +66,7 @@ export const all = <TElement>(
  * Determines if any element of the sequence satisfies the specified predicate.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.
+ * @returns {boolean} True if any element satisfies the condition, otherwise false.
  */
 export const any = <TElement>(
     source: Iterable<TElement>,
@@ -75,8 +77,10 @@ export const any = <TElement>(
 
 /**
  * Appends the specified element to the end of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param element The element that will be appended to the end of the sequence
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that ends with the specified element.
  */
 export const append = <TElement>(
     source: Iterable<TElement>,
@@ -87,8 +91,10 @@ export const append = <TElement>(
 
 /**
  * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param selector The selector function that will select a numeric value from the sequence elements.
+ * @returns {number} The average of the sequence.
  */
 export const average = <TElement>(
     source: Iterable<TElement>,
@@ -113,8 +119,10 @@ export const cast = <TResult, TElement = unknown>(
 
 /**
  * Splits the elements of the sequence into chunks of size at most the specified size.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param size The maximum size of each chunk.
+ * @returns {IEnumerable<IEnumerable<TElement>>} An enumerable sequence of chunks.
  */
 export const chunk = <TElement>(
     source: Iterable<TElement>,
@@ -125,8 +133,10 @@ export const chunk = <TElement>(
 
 /**
  * Concatenates two sequences.
+ * @template TElement The type of elements in the sequence.
  * @param source The first sequence.
  * @param enumerable The enumerable sequence that will be concatenated to the first sequence.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements of both sequences.
  */
 export const concat = <TElement>(
     source: Iterable<TElement>,
@@ -137,9 +147,11 @@ export const concat = <TElement>(
 
 /**
  * Determines where the sequence contains the specified element.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param element The element whose existence will be checked.
  * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+ * @returns {boolean} True if the sequence contains the element, otherwise false.
  */
 export const contains = <TElement>(
     source: Iterable<TElement>,
@@ -153,8 +165,10 @@ export const contains = <TElement>(
  * Returns the number of elements in the sequence.
  *
  * <b>Note:</b> If you want to check whether a sequence contains any elements, do not use <code>sequence.count() > 0</code>. Use <code>sequence.any()</code> instead.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition.
+ * @returns {number} The number of elements in the sequence.
  */
 export const count = <TElement>(
     source: Iterable<TElement>,
@@ -165,8 +179,10 @@ export const count = <TElement>(
 
 /**
  * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param value The value to return if the sequence is empty.
+ * @returns {IEnumerable<TElement>} The source sequence or a singleton collection that contains the specified value.
  */
 export const defaultIfEmpty = <TElement>(
     source: Iterable<TElement>,
@@ -177,9 +193,11 @@ export const defaultIfEmpty = <TElement>(
 
 /**
  * Returns distinct elements from the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison. If not provided, the item itself will be used.
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
  */
 export const distinct = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -191,8 +209,10 @@ export const distinct = <TElement, TKey>(
 
 /**
  * Returns the element at the specified index in the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param index The index of the element that will be returned.
+ * @returns {TElement} The element at the specified index in the sequence.
  * @throws {Error} If index is less than 0 or greater than or equal to the number of elements in the sequence.
  */
 export const elementAt = <TElement>(
@@ -204,8 +224,10 @@ export const elementAt = <TElement>(
 
 /**
  * Returns the element at the specified index in the sequence or a default value if the index is out of range.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param index The index of the element that will be returned.
+ * @returns {TElement | null} The element at the specified index in the sequence or a default value if the index is out of range.
  */
 export const elementAtOrDefault = <TElement>(
     source: Iterable<TElement>,
@@ -234,9 +256,11 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
  *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
  *     var result = numberList1.except(numberList2).toArray(); // [1, 3, 4]
  * ```
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
  * @param comparator The comparator function that will be used for item comparison. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the set difference of the elements of the two sequences.
  * @throws {Error} If the iterable is null or undefined.
  */
 export const except = <TElement>(
@@ -249,8 +273,10 @@ export const except = <TElement>(
 
 /**
  * Gets the first element of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
+ * @returns {TElement} The first element of the sequence.
  * @throws {Error} If the source is null or undefined, or if predicate is specified and no element satisfies the condition.
  */
 export const first = <TElement>(
@@ -262,8 +288,10 @@ export const first = <TElement>(
 
 /**
  * Gets the first element of the sequence or a default value if the no element satisfies the condition.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
+ * @returns {TElement | null} The first element of the sequence or a default value if the no element satisfies the condition.
  * @throws {Error} If the source is null or undefined.
  */
 export const firstOrDefault = <TElement>(
@@ -297,9 +325,12 @@ export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement
 
 /**
  * Groups the elements of the sequence according to a specified key selector function.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for grouping.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used for grouping.
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<IGroup<TKey, TElement>>} An enumerable sequence of groups.
  */
 export const groupBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -311,12 +342,17 @@ export const groupBy = <TElement, TKey>(
 
 /**
  * Correlates the elements of two sequences based on equality of keys and groups the results.
+ * @template TElement The type of elements in the source sequence.
+ * @template TInner The type of elements in the inner sequence.
+ * @template TKey The type of the key that will be used for joining.
+ * @template TResult The type of the result elements.
  * @param source The source sequence.
  * @param innerEnumerable The enumerable sequence to join to the first sequence.
  * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
  * @param innerKeySelector The key selector function that will be used for selecting the key for an element from the second sequence.
  * @param resultSelector The result selector function that will be used to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TResult>} An enumerable sequence of result elements.
  */
 export const groupJoin = <TElement, TInner, TKey, TResult>(
     source: Iterable<TElement>,
@@ -339,9 +375,11 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
  *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
  *     var result = numberList1.except(numberList2).toArray(); // [2, 5]
  * ```
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
  * @param comparator The comparator function that will be used for item comparison. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the set intersection of the elements of the two sequences.
  * @throws {Error} If the iterable is null or undefined.
  */
 export const intersect = <TElement>(
@@ -354,6 +392,10 @@ export const intersect = <TElement>(
 
 /**
  * Correlates the elements of two sequences based on equality of keys
+ * @template TElement The type of elements in the source sequence.
+ * @template TInner The type of elements in the inner sequence.
+ * @template TKey The type of the key that will be used for joining.
+ * @template TResult The type of the result elements.
  * @param source The source sequence.
  * @param innerEnumerable The enumerable sequence to join to the first sequence.
  * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
@@ -361,6 +403,7 @@ export const intersect = <TElement>(
  * @param resultSelector The result selector function that will be used to create a result element from two matching elements.
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
  * @param leftJoin If true, the result sequence will have the value of null for unmatched inner elements.
+ * @returns {IEnumerable<TResult>} An enumerable sequence of result elements.
  */
 export const join = <TElement, TInner, TKey, TResult>(
     source: Iterable<TElement>,
@@ -376,8 +419,10 @@ export const join = <TElement, TInner, TKey, TResult>(
 
 /**
  * Returns the last element of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
+ * @returns {TElement} The last element of the sequence.
  * @throws {Error} If the source is null or undefined, or if predicate is specified and no element satisfies the condition.
  */
 export const last = <TElement>(
@@ -389,8 +434,10 @@ export const last = <TElement>(
 
 /**
  * Returns the last element of the sequence or a default value if the no element satisfies the condition.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
+ * @returns {TElement | null} The last element of the sequence or a default value if the no element satisfies the condition.
  * @throws {Error} If the source is null or undefined.
  */
 export const lastOrDefault = <TElement>(
@@ -402,8 +449,10 @@ export const lastOrDefault = <TElement>(
 
 /**
  * Returns the maximum value in the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
+ * @returns {number} The maximum value in the sequence.
  * @throws {Error} If the source is empty.
  */
 export const max = <TElement>(
@@ -415,8 +464,10 @@ export const max = <TElement>(
 
 /**
  * Returns the minimum value in the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
+ * @returns {number} The minimum value in the sequence.
  * @throws {Error} If the source is empty.
  */
 export const min = <TElement>(
@@ -465,9 +516,12 @@ export const ofType = <TElement, TResult extends ObjectType>(
 
 /**
  * Sorts the elements of a sequence in ascending order by using a specified comparer.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for sorting.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used for selecting the key for an element.
  * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+ * @returns {IOrderedEnumerable<TElement>} An ordered enumerable sequence.
  */
 export const orderBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -479,9 +533,12 @@ export const orderBy = <TElement, TKey>(
 
 /**
  * Sorts the elements of a sequence in descending order by using a specified comparer.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for sorting.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used for selecting the key for an element.
  * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+ * @returns {IOrderedEnumerable<TElement>} An ordered enumerable sequence in descending order.
  */
 export const orderByDescending = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -499,8 +556,10 @@ export const orderByDescending = <TElement, TKey>(
  *    const numberList = new List([1, 2, 3, 4, 5]);
  *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
  * ```
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
+ * @returns {IEnumerable<[TElement, TElement]>} An enumerable sequence of tuples.
  */
 export const pairwise = <TElement>(
     source: Iterable<TElement>,
@@ -511,8 +570,10 @@ export const pairwise = <TElement>(
 
 /**
  * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition.
+ * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple of two enumerable sequences.
  */
 export const partition = <TElement>(
     source: Iterable<TElement>,
@@ -523,8 +584,10 @@ export const partition = <TElement>(
 
 /**
  * Adds a value to the beginning of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param element The element to add to the sequence.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that starts with the specified element.
  */
 export const prepend = <TElement>(
     source: Iterable<TElement>,
@@ -557,6 +620,9 @@ export const repeat = <TElement>(element: TElement, count: number): IEnumerable<
 
 /**
  * Inverts the order of the elements in the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are in reverse order.
  */
 export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
     return from(source).reverse();
@@ -565,9 +631,12 @@ export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElem
 /**
  * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
  * If seed is specified, it is used as the initial value for the accumulator; but it is not included in the result.
+ * @template TElement The type of elements in the sequence.
+ * @template TAccumulate The type of the accumulated value.
  * @param source The source sequence.
  * @param accumulator The accumulator function that will be applied over the sequence.
  * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
+ * @returns {IEnumerable<TAccumulate>} An enumerable sequence of intermediate accumulated values.
  */
 export const scan = <TElement, TAccumulate = TElement>(
     source: Iterable<TElement>,
@@ -579,8 +648,11 @@ export const scan = <TElement, TAccumulate = TElement>(
 
 /**
  * Projects each element of a sequence into a new form.
+ * @template TElement The type of elements in the sequence.
+ * @template TResult The type of the result elements.
  * @param source The source sequence.
  * @param selector The selector function that will be used to project each element into a new form.
+ * @returns {IEnumerable<TResult>} A new enumerable sequence that contains the projected elements.
  */
 export const select = <TElement, TResult>(
     source: Iterable<TElement>,
@@ -591,8 +663,11 @@ export const select = <TElement, TResult>(
 
 /**
  * Projects each element of a sequence into a new form and flattens the resulting sequences into one sequence.
+ * @template TElement The type of elements in the source sequence.
+ * @template TResult The type of the result elements.
  * @param source The source sequence.
  * @param selector The selector function that will be used to project each element into a new form.
+ * @returns {IEnumerable<TResult>} A new enumerable sequence that contains the projected elements.
  */
 export const selectMany = <TElement, TResult>(
     source: Iterable<TElement>,
@@ -603,9 +678,11 @@ export const selectMany = <TElement, TResult>(
 
 /**
  * Determines whether two sequences are equal by comparing the elements by using an equality comparer for their type.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param other The iterable sequence to compare to the source sequence.
  * @param comparator The equality comparer that will be used to compare the elements. If not specified, default equality comparer will be used.
+ * @returns {boolean} True if the two sequences are equal, otherwise false.
  */
 export const sequenceEqual = <TElement>(
     source: Iterable<TElement>,
@@ -617,7 +694,9 @@ export const sequenceEqual = <TElement>(
 
 /**
  * Returns a new enumerable sequence whose elements are shuffled.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are shuffled.
  */
 export const shuffle = <TElement>(
     source: Iterable<TElement>
@@ -627,8 +706,10 @@ export const shuffle = <TElement>(
 
 /**
  * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
+ * @returns {TElement} The only element of the sequence.
  * @throws {Error} If the source is empty or if predicate is specified and no element satisfies the condition.
  */
 export const single = <TElement>(
@@ -640,8 +721,10 @@ export const single = <TElement>(
 
 /**
  * Returns the only element of a sequence, or a default value if the sequence is empty. This method throws an exception if there is more than one element in the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
+ * @returns {TElement | null} The only element of the sequence or a default value if the sequence is empty.
  * @throws {Error} If the source contains more than one element or if predicate is specified and more than one element satisfies the condition.
  */
 export const singleOrDefault = <TElement>(
@@ -653,8 +736,10 @@ export const singleOrDefault = <TElement>(
 
 /**
  * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param count The number of elements to skip before returning the remaining elements.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements that occur after the specified index in the input sequence.
  */
 export const skip = <TElement>(
     source: Iterable<TElement>,
@@ -665,8 +750,10 @@ export const skip = <TElement>(
 
 /**
  * Returns a new enumerable sequence that contains the elements from source with the last count elements of the source sequence omitted.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param count The number of elements to omit from the end of the collection.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from source with the last count elements omitted.
  */
 export const skipLast = <TElement>(
     source: Iterable<TElement>,
@@ -677,8 +764,10 @@ export const skipLast = <TElement>(
 
 /**
  * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to test each element.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
  */
 export const skipWhile = <TElement>(
     source: Iterable<TElement>,
@@ -689,8 +778,10 @@ export const skipWhile = <TElement>(
 
 /**
  * Returns the sum of the values in the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param selector The selector function that will be used to select the value to sum. If not specified, the value itself will be used.
+ * @returns {number} The sum of the values in the sequence.
  */
 export const sum = <TElement>(
     source: Iterable<TElement>,
@@ -701,8 +792,10 @@ export const sum = <TElement>(
 
 /**
  * Returns a specified number of contiguous elements from the start of a sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param count The number of elements to return.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the specified number of elements from the start of the input sequence.
  */
 export const take = <TElement>(
     source: Iterable<TElement>,
@@ -713,8 +806,10 @@ export const take = <TElement>(
 
 /**
  * Returns a specified number of contiguous elements from the end of a sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param count The number of elements to return.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the specified number of elements from the end of the input sequence.
  */
 export const takeLast = <TElement>(
     source: Iterable<TElement>,
@@ -725,8 +820,10 @@ export const takeLast = <TElement>(
 
 /**
  * Returns elements from a sequence as long as a specified condition is true and then skips the remaining elements.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to test each element.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
  */
 export const takeWhile = <TElement>(
     source: Iterable<TElement>,
@@ -737,6 +834,9 @@ export const takeWhile = <TElement>(
 
 /**
  * Creates a new array from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @returns {TElement[]} A new array that contains the elements of the source.
  */
 export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
     return from(source).toArray();
@@ -744,10 +844,14 @@ export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
 
 /**
  * Creates a new dictionary from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for the dictionary.
+ * @template TValue The type of the value that will be used for the dictionary.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
  * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
+ * @returns {Dictionary<TKey, TValue>} A new dictionary that contains the elements of the source.
  */
 export const toDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -760,6 +864,9 @@ export const toDictionary = <TElement, TKey, TValue>(
 
 /**
  * Creates a new enumerable set from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @returns {EnumerableSet<TElement>} A new enumerable set that contains the elements of the source.
  */
 export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>,
@@ -769,10 +876,14 @@ export const toEnumerableSet = <TElement>(
 
 /**
  * Creates a new immutable dictionary from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for the dictionary.
+ * @template TValue The type of the value that will be used for the dictionary.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
  * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
+ * @returns {ImmutableDictionary<TKey, TValue>} A new immutable dictionary that contains the elements of the source.
  */
 export const toImmutableDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -785,8 +896,10 @@ export const toImmutableDictionary = <TElement, TKey, TValue>(
 
 /**
  * Creates a new immutable list from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {ImmutableList<TElement>} A new immutable list that contains the elements of the source.
  */
 export const toImmutableList = <TElement>(
     source: Iterable<TElement>,
@@ -811,7 +924,9 @@ export const toImmutableQueue = <TElement>(
 
 /**
  * Creates a new immutable set from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
+ * @returns {ImmutableSet<TElement>} A new immutable set that contains the elements of the source.
  */
 export const toImmutableSet = <TElement>(
     source: Iterable<TElement>,
@@ -821,11 +936,15 @@ export const toImmutableSet = <TElement>(
 
 /**
  * Creates a new immutable sorted dictionary from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for the dictionary.
+ * @template TValue The type of the value that will be used for the dictionary.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
  * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, default order comparer will be used.
  * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
+ * @returns {ImmutableSortedDictionary<TKey, TValue>} A new immutable sorted dictionary that contains the elements of the source.
  */
 export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -839,8 +958,10 @@ export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
 
 /**
  * Creates a new immutable sorted set from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+ * @returns {ImmutableSortedSet<TElement>} A new immutable sorted set that contains the elements of the source.
  */
 export const toImmutableSortedSet = <TElement>(
     source: Iterable<TElement>,
@@ -865,8 +986,10 @@ export const toImmutableStack = <TElement>(
 
 /**
  * Creates a new linked list from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {LinkedList<TElement>} A new linked list that contains the elements of the source.
  */
 export const toLinkedList = <TElement>(
     source: Iterable<TElement>,
@@ -877,8 +1000,10 @@ export const toLinkedList = <TElement>(
 
 /**
  * Creates a new list from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {List<TElement>} A new list that contains the elements of the source.
  */
 export const toList = <TElement>(
     source: Iterable<TElement>,
@@ -889,10 +1014,14 @@ export const toList = <TElement>(
 
 /**
  * Creates a new lookup from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of keys in the lookup.
+ * @template TValue The type of values in the lookup.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
  * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.
+ * @returns {ILookup<TKey, TValue>} A new lookup that contains the elements of the source.
  */
 export const toLookup = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -981,11 +1110,15 @@ export const toSet = <TElement>(
 
 /**
  * Creates a new dictionary from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of the key that will be used for the dictionary.
+ * @template TValue The type of the value that will be used for the dictionary.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
  * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, default order comparer will be used.
  * @param valueComparator The value comparator function that will be used to compare two values. If not specified, default equality comparer will be used.
+ * @returns {SortedDictionary<TKey, TValue>} A new dictionary that contains the elements of the source.
  */
 export const toSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -999,8 +1132,10 @@ export const toSortedDictionary = <TElement, TKey, TValue>(
 
 /**
  * Creates a new sorted set from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+ * @returns {SortedSet<TElement>} A new sorted set that contains the elements of the source.
  */
 export const toSortedSet = <TElement>(
     source: Iterable<TElement>,
@@ -1025,9 +1160,11 @@ export const toStack = <TElement>(
 
 /**
  * Produces the set union of two sequences by using an equality comparer.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param other The iterable sequence whose distinct elements form the second set for the union.
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {IEnumerable<TElement>} An enumerable sequence that contains the elements from both input sequences, excluding duplicates.
  */
 export const union = <TElement>(
     source: Iterable<TElement>,
@@ -1039,8 +1176,10 @@ export const union = <TElement>(
 
 /**
  * Filters a sequence of values based on a predicate.
+ * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
  * @param predicate The predicate function that will be used to test each element.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence that satisfy the condition.
  */
 export const where = <TElement>(
     source: Iterable<TElement>,
@@ -1051,9 +1190,12 @@ export const where = <TElement>(
 
 /**
  * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+ * @template TElement The type of elements in the first sequence.
+ * @template TSecond The type of elements in the second sequence.
  * @param source The first source sequence.
  * @param other The iterable sequence to merge with the first sequence.
  * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
+ * @returns {IEnumerable<[TElement, TSecond]>} An enumerable sequence that contains merged elements of two input sequences.
  */
 export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
     source: Iterable<TElement>,

@@ -11,6 +11,7 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
 
     /**
      * Returns an object representation of this dictionary.
+     *
      * {@link toObject} is a more versatile version of this method, as it allows you to select the key and value properties
      * that will be used to generate the object representation.
      * @template TValue The type of the values of the dictionary.

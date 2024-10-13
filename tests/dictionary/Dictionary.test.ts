@@ -378,7 +378,6 @@ describe("Dictionary", () => {
             expect(dict.get("Alice")).to.not.null;
             expect(dict.get("Lucrezia")).to.not.null;
             expect(dict.length).to.eq(dictionary.size());
-            // console.log("distinct operation on a dictionary has no effect since dictionary is innately distinct.");
         });
     });
 
@@ -1883,7 +1882,6 @@ describe("Dictionary", () => {
             expect(set instanceof Set).to.be.true;
             expect(set.size).to.eq(dictionary.size());
             expect(Array.from(set)).to.deep.eq(expectedSetItems);
-            console.log(set);
         });
     });
 
