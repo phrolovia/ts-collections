@@ -17,6 +17,7 @@ import {
     LinkedList,
     List,
     OrderedEnumerator,
+    Queue,
     SortedDictionary,
     SortedSet
 } from "../imports";
@@ -584,6 +585,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             obj[key] = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
         }
         return obj;
+    }
+
+    public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {
+        return new Queue<TElement>(this, comparator);
+    }
+
+    public toSet(): Set<TElement> {
+        return new Set(this);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

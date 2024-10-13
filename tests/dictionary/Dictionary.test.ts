@@ -1,3 +1,4 @@
+import { describe } from "vitest";
 import { Dictionary } from "../../src/dictionary/Dictionary";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
@@ -9,7 +10,8 @@ import {
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
-    LinkedList
+    LinkedList,
+    Queue
 } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
@@ -1743,6 +1745,39 @@ describe("Dictionary", () => {
         const obj = dictionary.toObject(p => p.key * 10, p => p.value);
         test("should create a new object", () => {
             expect(obj).to.deep.equal({ 10: "a", 20: "b" });
+        });
+    });
+
+    describe("#toQueue()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const queue = dictionary.toQueue();
+        const expectedQueueItems = [
+            new KeyValuePair(1, "a"),
+            new KeyValuePair(2, "b")
+        ];
+        test("should create a new queue", () => {
+            expect(queue instanceof Queue).to.be.true;
+            expect(queue.size()).to.eq(dictionary.size());
+            expect(queue.toArray()).to.deep.eq(expectedQueueItems);
+        });
+    });
+
+    describe("#toSet()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const set = dictionary.toSet();
+        test("should create a new set", () => {
+            const expectedSetItems = [
+                new KeyValuePair(1, "a"),
+                new KeyValuePair(2, "b")
+            ];
+            expect(set instanceof Set).to.be.true;
+            expect(set.size).to.eq(dictionary.size());
+            expect(Array.from(set)).to.deep.eq(expectedSetItems);
+            console.log(set);
         });
     });
 

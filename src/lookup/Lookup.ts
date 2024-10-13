@@ -13,6 +13,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    Queue,
     RedBlackTree,
     SortedDictionary,
     SortedSet
@@ -333,6 +334,14 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<IGroup<TKey, TElement>, TObjectKey>, valueSelector: Selector<IGroup<TKey, TElement>, TObjectValue>): Record<TObjectKey, TObjectValue> {
         return this.#lookupTree.toObject(keySelector, valueSelector);
+    }
+
+    public toQueue(comparator?: EqualityComparator<IGroup<TKey, TElement>>): Queue<IGroup<TKey, TElement>> {
+        return this.#lookupTree.toQueue(comparator);
+    }
+
+    public toSet(): Set<IGroup<TKey, TElement>> {
+        return this.#lookupTree.toSet();
     }
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<IGroup<TKey, TElement>, TDictKey>, valueSelector: Selector<IGroup<TKey, TElement>, TDictValue>,

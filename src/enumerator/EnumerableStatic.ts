@@ -13,6 +13,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    Queue,
     SortedDictionary,
     SortedSet
 } from "../imports";
@@ -278,6 +279,14 @@ export abstract class EnumerableStatic {
 
     public static toObject<TElement, TKey extends string | number | symbol, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return new Enumerable(source).toObject(keySelector, valueSelector);
+    }
+
+    public static toQueue<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Queue<TElement> {
+        return new Enumerable(source).toQueue(comparator);
+    }
+
+    public static toSet<TElement>(source: IEnumerable<TElement>): Set<TElement> {
+        return new Enumerable(source).toSet();
     }
 
     public static toSortedDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

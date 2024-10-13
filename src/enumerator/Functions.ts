@@ -6,6 +6,7 @@ import { ImmutableList } from "../list/ImmutableList";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
 import { ILookup } from "../lookup/ILookup";
+import { Queue } from "../queue/Queue";
 import { EnumerableSet } from "../set/EnumerableSet";
 import { ImmutableSet } from "../set/ImmutableSet";
 import { ImmutableSortedSet } from "../set/ImmutableSortedSet";
@@ -872,9 +873,13 @@ export const toLookup = <TElement, TKey, TValue>(
 
 /**
  * Creates a new map from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of keys in the map.
+ * @template TValue The type of values in the map.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
+ * @returns {Map<TKey, TValue>} A new map that contains the elements of the source.
  */
 export const toMap = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -886,9 +891,13 @@ export const toMap = <TElement, TKey, TValue>(
 
 /**
  * Creates a new object from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @template TKey The type of keys in the object.
+ * @template TValue The type of values in the object.
  * @param source The source sequence.
  * @param keySelector The key selector function that will be used to select the key for an element.
  * @param valueSelector The value selector function that will be used to select the value for an element.
+ * @returns {Record<TKey, TValue>} A new object that contains the elements of the source.
  */
 export const toObject = <TElement, TKey extends string | number | symbol, TValue>(
     source: Iterable<TElement>,
@@ -896,6 +905,32 @@ export const toObject = <TElement, TKey extends string | number | symbol, TValue
     valueSelector: Selector<TElement, TValue>
 ): Record<TKey, TValue> => {
     return from(source).toObject(keySelector, valueSelector);
+}
+
+/**
+ * Creates a new queue from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {Queue<TElement>} A new queue that contains the elements of the source.
+ */
+export const toQueue = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): Queue<TElement> => {
+    return from(source).toQueue(comparator);
+}
+
+/**
+ * Creates a new set from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @returns {Set<TElement>} A new set that contains the elements of the source.
+ */
+export const toSet = <TElement>(
+    source: Iterable<TElement>
+): Set<TElement> => {
+    return from(source).toSet();
 }
 
 /**

@@ -11,6 +11,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    Queue,
     SortedDictionary,
     SortedSet
 } from "../imports";
@@ -601,6 +602,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {Record} An object representation of this dictionary.
      */
     toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue>;
+
+    /**
+     * Creates a new queue from the elements of the sequence.
+     * @template TElement
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     * @returns {Queue<TElement>} A new queue that contains the elements from the input sequence.
+     */
+    toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement>;
+
+    /**
+     * Creates a new set from the elements of the sequence.
+     * @template TElement
+     * @returns {Set<TElement>} A new set that contains the elements from the input sequence.
+     */
+    toSet(): Set<TElement>;
 
     /**
      * Creates a new dictionary from the elements of the sequence.
