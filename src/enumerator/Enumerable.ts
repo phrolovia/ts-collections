@@ -13,6 +13,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    Queue,
     SortedDictionary,
     SortedSet
 } from "../imports";
@@ -333,6 +334,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return this.#enumerator.toObject(keySelector, valueSelector);
+    }
+
+    public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {
+        return this.#enumerator.toQueue(comparator);
+    }
+
+    public toSet(): Set<TElement> {
+        return this.#enumerator.toSet();
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

@@ -7,7 +7,8 @@ import {
     ImmutableList,
     ImmutableSet,
     ImmutableSortedDictionary,
-    ImmutableSortedSet
+    ImmutableSortedSet,
+    Queue
 } from "../imports";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
@@ -290,6 +291,15 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return EnumerableStatic.toObject(this, keySelector, valueSelector);
+    }
+
+    public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {
+        comparator ??= this.comparer;
+        return EnumerableStatic.toQueue(this, comparator);
+    }
+
+    public toSet(): Set<TElement> {
+        return EnumerableStatic.toSet(this);
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {

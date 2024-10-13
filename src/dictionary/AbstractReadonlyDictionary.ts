@@ -14,6 +14,7 @@ import {
     ISet,
     LinkedList,
     List,
+    Queue,
     SortedSet
 } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
@@ -309,6 +310,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TObjectKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TObjectValue>): Record<TObjectKey, TObjectValue> {
         return EnumerableStatic.toObject(this, keySelector, valueSelector);
+    }
+
+    public toQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): Queue<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toQueue(this, comparator);
+    }
+
+    public toSet(): Set<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toSet(this);
     }
 
     public toSortedDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, keyComparator?: OrderComparator<TDictKey>, valueComparator?: EqualityComparator<TDictValue>): SortedDictionary<TDictKey, TDictValue> {

@@ -1822,6 +1822,14 @@ describe("List", () => {
         });
     });
 
+    describe("#toQueue()", () => {
+        const list = new List([1, 2, 3]);
+        const queue = list.toQueue();
+        test("should return a new Queue without altering the current list", () => {
+            expect(list.toArray()).to.deep.equal(queue.toArray());
+        });
+    });
+
     describe("#toReadonlyCollection()", () => {
         const list = new List([1, 2, 3]);
         const readonlyCollection = list.toReadonlyCollection();
@@ -1837,6 +1845,14 @@ describe("List", () => {
             const readonly2 = list.toReadonlyCollection();
             expect(list === readonly2).to.be.false;
             expect(list.toArray()).to.deep.equal(readonly2.toArray());
+        });
+    });
+
+    describe("#toSet()", () => {
+        const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
+        test("should convert it to a set", () => {
+            const set = list.toSet();
+            expect(Array.from(set)).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         });
     });
 
