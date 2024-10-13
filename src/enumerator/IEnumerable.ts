@@ -701,15 +701,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      * @template TElement
      * @template TSecond
-     * @param iterable The iterable sequence to merge with the first sequence.
+     * @param {Iterable<TElement>} iterable The iterable sequence to merge with the first sequence.
      * @returns {IEnumerable<[TElement, TSecond]>} A new enumerable sequence that contains the elements of both sequences.
      */
     zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
 
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+     * @template TElement
      * @template TResult
-     * @param iterable The iterable sequence to merge with the first sequence.
+     * @param iterable {Iterable<TElement>} The iterable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      * @returns {IEnumerable<TResult>} A new enumerable sequence that contains the elements of both sequences.
      */

@@ -394,9 +394,6 @@ describe("RedBlackTree", () => {
             expect(inOrderArray).to.deep.equal(array);
             expect(postOrderArray).to.deep.equal(expectedPostOrderArray);
             expect(preOrderArray).to.deep.equal(expectedPreOrderArray);
-            // console.log("IN: ", inOrderArray);
-            // console.log("POST: ", postOrderArray);
-            // console.log("PRE: ", preOrderArray);
         });
     });
 });

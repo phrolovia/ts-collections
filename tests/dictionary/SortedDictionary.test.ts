@@ -314,7 +314,6 @@ describe("SortedDictionary", () => {
             expect(dict.get("Alice")).to.not.null;
             expect(dict.get("Lucrezia")).to.not.null;
             expect(dict.length).to.eq(dictionary.size());
-            // console.log("distinct operation on a dictionary has no effect since dictionary is innately distinct.");
         });
     });
 
