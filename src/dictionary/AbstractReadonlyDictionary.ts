@@ -16,6 +16,7 @@ import {
     ISet,
     LinkedList,
     List,
+    PriorityQueue,
     Queue,
     SortedSet,
     Stack
@@ -321,6 +322,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TObjectKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TObjectValue>): Record<TObjectKey, TObjectValue> {
         return EnumerableStatic.toObject(this, keySelector, valueSelector);
+    }
+
+    public toPriorityQueue(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): PriorityQueue<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toPriorityQueue(this, comparator);
     }
 
     public toQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): Queue<KeyValuePair<TKey, TValue>> {

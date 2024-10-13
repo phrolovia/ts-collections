@@ -13,6 +13,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     LinkedList,
+    PriorityQueue,
     Queue,
     Stack
 } from "../../src/imports";
@@ -1735,8 +1736,8 @@ describe("Dictionary", () => {
         dictionary.add(2, "b");
         const stack = dictionary.toImmutableStack();
         const expectedStackItems = [
-            new KeyValuePair(1, "a"),
-            new KeyValuePair(2, "b")
+            new KeyValuePair(2, "b"),
+            new KeyValuePair(1, "a")
         ];
         test("should create a new immutable stack", () => {
             expect(stack instanceof ImmutableStack).to.be.true;
@@ -1809,6 +1810,50 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#toPriorityQueue()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(70, "a");
+        dictionary.add(5, "b");
+        dictionary.add(0, "c");
+        dictionary.add(14, "d");
+        dictionary.add(20, "e");
+        dictionary.add(65, "f");
+        dictionary.add(12, "g");
+        dictionary.add(37, "h");
+        const queue = dictionary.toPriorityQueue((a,b) => a.key - b.key);
+        test("should create a new min priority queue", () => {
+            const expectedQueueItems = [
+                new KeyValuePair(0, "c"),
+                new KeyValuePair(14, "d"),
+                new KeyValuePair(5, "b"),
+                new KeyValuePair(37, "h"),
+                new KeyValuePair(20, "e"),
+                new KeyValuePair(65, "f"),
+                new KeyValuePair(12, "g"),
+                new KeyValuePair(70, "a")
+            ];
+            expect(queue instanceof PriorityQueue).to.be.true;
+            expect(queue.size()).to.eq(dictionary.size());
+            expect(queue.toArray()).to.deep.eq(expectedQueueItems);
+        });
+        test("should create a new max priority queue", () => {
+            const queue = dictionary.toPriorityQueue((a,b) => b.key - a.key);
+            const expectedQueueItems = [
+                new KeyValuePair(70, "a"),
+                new KeyValuePair(37, "h"),
+                new KeyValuePair(65, "f"),
+                new KeyValuePair(20, "e"),
+                new KeyValuePair(14, "d"),
+                new KeyValuePair(0, "c"),
+                new KeyValuePair(12, "g"),
+                new KeyValuePair(5, "b"),
+            ];
+            expect(queue instanceof PriorityQueue).to.be.true;
+            expect(queue.size()).to.eq(dictionary.size());
+            expect(queue.toArray()).to.deep.eq(expectedQueueItems);
+        });
+    });
+
     describe("#toQueue()", () => {
         const dictionary = new Dictionary<number, string>();
         dictionary.add(1, "a");
@@ -1872,8 +1917,8 @@ describe("Dictionary", () => {
         dictionary.add(2, "b");
         const stack = dictionary.toStack();
         const expectedStackItems = [
-            new KeyValuePair(1, "a"),
-            new KeyValuePair(2, "b")
+            new KeyValuePair(2, "b"),
+            new KeyValuePair(1, "a")
         ];
         test("should create a new stack", () => {
             expect(stack instanceof Stack).to.be.true;

@@ -7,6 +7,7 @@ import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
 import { ILookup } from "../lookup/ILookup";
 import { ImmutableQueue } from "../queue/ImmutableQueue";
+import { PriorityQueue } from "../queue/PriorityQueue";
 import { Queue } from "../queue/Queue";
 import { EnumerableSet } from "../set/EnumerableSet";
 import { ImmutableSet } from "../set/ImmutableSet";
@@ -24,6 +25,8 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
+import { ImmutableStack } from "../stack/ImmutableStack";
+import { Stack } from "../stack/Stack";
 import { Enumerable } from "./Enumerable";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
@@ -847,6 +850,20 @@ export const toImmutableSortedSet = <TElement>(
 }
 
 /**
+ * Creates a new immutable stack from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {ImmutableStack<TElement>} A new immutable stack that contains the elements of the source.
+ */
+export const toImmutableStack = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): ImmutableStack<TElement> => {
+    return from(source).toImmutableStack(comparator);
+}
+
+/**
  * Creates a new linked list from the elements of the sequence.
  * @param source The source sequence.
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
@@ -923,6 +940,20 @@ export const toObject = <TElement, TKey extends string | number | symbol, TValue
 }
 
 /**
+ * Creates a new priority queue from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+ * @returns {PriorityQueue<TElement>} A new priority queue that contains the elements of the source.
+ */
+export const toPriorityQueue = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: OrderComparator<TElement>
+): PriorityQueue<TElement> => {
+    return from(source).toPriorityQueue(comparator);
+}
+
+/**
  * Creates a new queue from the elements of the sequence.
  * @template TElement The type of elements in the sequence.
  * @param source The source sequence.
@@ -979,6 +1010,20 @@ export const toSortedSet = <TElement>(
 }
 
 /**
+ * Creates a new stack from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {Stack<TElement>} A new stack that contains the elements of the source.
+ */
+export const toStack = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): Stack<TElement> => {
+    return from(source).toStack(comparator);
+}
+
+/**
  * Produces the set union of two sequences by using an equality comparer.
  * @param source The source sequence.
  * @param other The iterable sequence whose distinct elements form the second set for the union.
@@ -1015,5 +1060,9 @@ export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
     other: Iterable<TSecond>,
     zipper?: Zipper<TElement, TSecond, TResult>
 ): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> => {
-    return from(source).zip(other, zipper);
+    if (zipper) {
+        return from(source).zip(other, zipper);
+    } else {
+        return from(source).zip(other);
+    }
 }

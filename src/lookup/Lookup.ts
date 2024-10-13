@@ -15,6 +15,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    PriorityQueue,
     Queue,
     RedBlackTree,
     SortedDictionary,
@@ -345,6 +346,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<IGroup<TKey, TElement>, TObjectKey>, valueSelector: Selector<IGroup<TKey, TElement>, TObjectValue>): Record<TObjectKey, TObjectValue> {
         return this.#lookupTree.toObject(keySelector, valueSelector);
+    }
+
+    public toPriorityQueue(comparator?: OrderComparator<IGroup<TKey, TElement>>): PriorityQueue<IGroup<TKey, TElement>> {
+        return this.#lookupTree.toPriorityQueue(comparator);
     }
 
     public toQueue(comparator?: EqualityComparator<IGroup<TKey, TElement>>): Queue<IGroup<TKey, TElement>> {

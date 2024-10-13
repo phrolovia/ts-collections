@@ -13,6 +13,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    PriorityQueue,
     Queue,
     SortedDictionary,
     SortedSet,
@@ -37,7 +38,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
      * If resultSelector function is specified, it will be used to select the result value.
-     * @template TAccumulate, TResult
+     * @template TAccumulate
+     * @template TResult
      * @param accumulator The accumulator function that will be applied over the sequence.
      * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
      * @param resultSelector The function that will be used to select the result value.
@@ -598,7 +600,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Creates a new lookup from the elements of the sequence.
-     * @template TKey, TValue
+     * @template TKey
+     * @template TValue
      * @param keySelector The key selector function that will be used to select the key for an element.
      * @param valueSelector The value selector function that will be used to select the value for an element.
      * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.
@@ -608,19 +611,31 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Converts this dictionary to a JavaScript Map.
+     * @template TKey
+     * @template TValue
      * @param keySelector The selector that will be used to select the property that will be used as the key of the map.
      * @param valueSelector The selector that will be used to select the property that will be used as the value of the map.
-     * @returns {Map} A Map representation of this dictionary.
+     * @returns {Map<TKey, TValue>} A Map representation of this dictionary.
      */
     toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue>;
 
     /**
      * Converts this dictionary to an object.
+     * @template TKey
+     * @template TValue
      * @param keySelector The selector that will be used to select the property that will be used as the key of the object. Can only be a string, number or symbol.
      * @param valueSelector The selector that will be used to select the property that will be used as the value of the object.
-     * @returns {Record} An object representation of this dictionary.
+     * @returns {Record<TKey, TValue>} An object representation of this dictionary.
      */
     toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue>;
+
+    /**
+     * Creates a new priority queue from the elements of the sequence.
+     * @template TElement
+     * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+     * @returns {PriorityQueue<TElement>} A new priority queue that contains the elements from the input sequence.
+     */
+    toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement>;
 
     /**
      * Creates a new queue from the elements of the sequence.
@@ -639,7 +654,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
 
     /**
      * Creates a new dictionary from the elements of the sequence.
-     * @template TKey, TValue
+     * @template TKey
+     * @template TValue
      * @param keySelector The key selector function that will be used to select the key for an element.
      * @param valueSelector The value selector function that will be used to select the value for an element.
      * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, default order comparer will be used.
@@ -681,25 +697,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
-
-    zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
-
-    zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
-
     /**
-     * @overload
-     * @template TElement, TSecond
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+     * @template TElement
+     * @template TSecond
      * @param iterable The iterable sequence to merge with the first sequence.
      * @returns {IEnumerable<[TElement, TSecond]>} A new enumerable sequence that contains the elements of both sequences.
      */
+    zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
+
     /**
-     * @overload
-     * @template TResult
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
+     * @template TResult
      * @param iterable The iterable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      * @returns {IEnumerable<TResult>} A new enumerable sequence that contains the elements of both sequences.
      */
-    zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
+    zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
 }

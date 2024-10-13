@@ -1,5 +1,5 @@
 import { describe } from "vitest";
-import { Enumerable, ImmutableList, ReadonlyCollection, Stack } from "../../src/imports";
+import { Enumerable, ImmutableList, PriorityQueue, ReadonlyCollection, Stack } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -1792,14 +1792,14 @@ describe("List", () => {
         test("should convert it to an immutable stack", () => {
             const stack = list.toImmutableStack();
             expect(stack.size()).to.eq(10);
-            expect(stack.peek()).to.eq(1);
+            expect(stack.peek()).to.eq(10);
             const stack2 = stack.push(999);
             expect(stack2 !== stack).to.be.true;
             expect(stack.size()).to.eq(10);
             expect(stack2.size()).to.eq(11);
-            expect(stack.peek()).to.eq(1);
+            expect(stack.peek()).to.eq(10);
             expect(stack2.peek()).to.eq(999);
-            expect(stack2.last()).to.eq(10);
+            expect(stack2.last()).to.eq(1);
         });
     });
 
@@ -1851,6 +1851,21 @@ describe("List", () => {
             expect(obj["Noemi"]).to.eq(Person.Noemi2);
             expect(obj["Suzuha"]).to.eq(Person.Suzuha3);
             expect(obj["Hanna"]).to.eq(Person.Hanna2);
+        });
+    });
+
+    describe("#toPriorityQueue()", () => {
+        const list = new List([70, 5, 0, 14, 20, 65, 12, 37]);
+        const queue = list.toPriorityQueue();
+        test("should return a new min PriorityQueue", () => {
+            const expected = [0, 14, 5, 37, 20, 65, 12, 70];
+            expect(queue instanceof PriorityQueue).to.be.true;
+            expect(queue.toArray()).to.deep.equal(expected);
+        });
+        test("should return a new max PriorityQueue", () => {
+            const queue = list.toPriorityQueue((a, b) => b - a);
+            const expected = [70, 37, 65, 20, 14, 0, 12, 5];
+            expect(queue.toArray()).to.deep.equal(expected);
         });
     });
 
@@ -1910,7 +1925,7 @@ describe("List", () => {
         const stack = list.toStack();
         test("should return a new Stack without altering the current list", () => {
             expect(stack instanceof Stack).to.be.true;
-            expect(list.toArray()).to.deep.equal(stack.toArray());
+            expect(stack.toArray()).to.deep.equal(list.reverse().toArray());
         });
     });
 

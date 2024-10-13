@@ -7,10 +7,11 @@ export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
     readonly #queue: Heap<TElement>;
 
-    public constructor(comparator?: OrderComparator<TElement>) {
+    public constructor(iterable: Iterable<TElement> = [], comparator?: OrderComparator<TElement>) {
         super();
         this.#comparator = comparator ?? Comparators.orderComparator;
         this.#queue = new Heap(this.#comparator);
+        this.addAll(iterable);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {

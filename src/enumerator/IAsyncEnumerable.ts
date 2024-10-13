@@ -402,20 +402,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
-    zip<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
-
-    zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
-
     /**
-     * @overload
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      * @param iterable The iterable sequence to merge with the first sequence.
      */
+    zip<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
+
     /**
-     * @overload
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
      * @param iterable The iterable sequence to merge with the first sequence.
      * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
      */
-    zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
+    zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
 }

@@ -1,4 +1,4 @@
-import { AbstractImmutableCollection, IImmutableCollection, reverse, Stack } from "../imports";
+import { AbstractImmutableCollection, IImmutableCollection, Stack } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 
@@ -37,7 +37,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} A new stack with the added elements.
      */
     public override addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableStack<TElement> {
-        return new ImmutableStack([...reverse(collection), ...this.#stack], this.comparer);
+        return new ImmutableStack([...this.#stack, ...collection], this.comparer);
     }
 
     /**
@@ -64,7 +64,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} A new stack with the top element removed.
      */
     public pop(): ImmutableStack<TElement> {
-        return new ImmutableStack(this.#stack.skip(1), this.comparer);
+        return new ImmutableStack(this.#stack.reverse().skipLast(1), this.comparer);
     }
 
     /**
@@ -74,7 +74,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} A new stack with the added element.
      */
     public push(element: TElement): ImmutableStack<TElement> {
-        return new ImmutableStack(this.#stack.prepend(element), this.comparer);
+        return new ImmutableStack(this.#stack.reverse().append(element), this.comparer);
     }
 
     public override size(): number {

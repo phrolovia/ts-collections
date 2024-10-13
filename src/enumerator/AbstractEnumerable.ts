@@ -10,6 +10,7 @@ import {
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
+    PriorityQueue,
     Queue,
     Stack
 } from "../imports";
@@ -302,6 +303,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return EnumerableStatic.toObject(this, keySelector, valueSelector);
+    }
+
+    public toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement> {
+        return EnumerableStatic.toPriorityQueue(this, comparator);
     }
 
     public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {

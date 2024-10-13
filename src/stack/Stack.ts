@@ -1,4 +1,4 @@
-import { AbstractCollection, LinkedList } from "../imports";
+import { AbstractCollection, LinkedList, reverse } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 
@@ -7,7 +7,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
 
     public constructor(iterable: Iterable<TElement> = [], comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.#stack = new LinkedList<TElement>(iterable, comparator);
+        this.#stack = new LinkedList<TElement>(reverse(iterable), comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {

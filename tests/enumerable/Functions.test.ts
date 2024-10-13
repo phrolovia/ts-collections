@@ -1,4 +1,4 @@
-import { test } from "vitest";
+import { describe, test } from "vitest";
 import {
     aggregate,
     all,
@@ -25,9 +25,11 @@ import {
     groupJoin,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
+    ImmutableStack,
     intersect,
     join,
     last,
@@ -42,6 +44,8 @@ import {
     pairwise,
     partition,
     prepend,
+    PriorityQueue,
+    Queue,
     range,
     repeat,
     reverse,
@@ -57,6 +61,7 @@ import {
     skipWhile,
     SortedDictionary,
     SortedSet,
+    Stack,
     sum,
     take,
     takeLast,
@@ -66,14 +71,22 @@ import {
     toEnumerableSet,
     toImmutableDictionary,
     toImmutableList,
+    toImmutableQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
+    toImmutableStack,
     toLinkedList,
     toList,
     toLookup,
+    toMap,
+    toObject,
+    toPriorityQueue,
+    toQueue,
+    toSet,
     toSortedDictionary,
     toSortedSet,
+    toStack,
     union,
     where,
     zip
@@ -1189,6 +1202,15 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#toImmutableQueue()", () => {
+        test("should return an immutable queue", () => {
+            const immutableQueue = toImmutableQueue([1, 2, 3, 4, 5]);
+            expect(immutableQueue instanceof ImmutableQueue).to.be.true;
+            expect(immutableQueue.size()).to.eq(5);
+            expect(immutableQueue.length).to.eq(5);
+        });
+    });
+
     describe("#toImmutableSet()", () => {
         test("should return an immutable set", () => {
             const immutableSet = toImmutableSet([1, 2, 3, 4, 5]);
@@ -1226,6 +1248,15 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#toImmutableStack()", () => {
+        test("should return an immutable stack", () => {
+            const immutableStack = toImmutableStack([1, 2, 3, 4, 5]);
+            expect(immutableStack instanceof ImmutableStack).to.be.true;
+            expect(immutableStack.size()).to.eq(5);
+            expect(immutableStack.length).to.eq(5);
+        });
+    });
+
     describe("#toLinkedList()", () => {
         test("should return a linked list", () => {
             const linkedList = toLinkedList([1, 2, 3, 4, 5]);
@@ -1257,6 +1288,64 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#toMap()", () => {
+        test("should return a map", () => {
+            const map = toMap([["a", 1], ["b", 2], ["c", 3]], t => t[0], t => t[1]);
+            expect(map instanceof Map).to.be.true;
+            expect(map.size).to.eq(3);
+            expect(map.get("a")).to.eq(1);
+            expect(map.get("b")).to.eq(2);
+            expect(map.get("c")).to.eq(3);
+        });
+    });
+
+    describe("#toPriorityQueue()", () => {
+        test("should return a min priority queue", () => {
+            const priorityQueue = toPriorityQueue([70, 5, 0, 14, 20, 65, 12, 37]);
+            expect(priorityQueue instanceof PriorityQueue).to.be.true;
+            expect(priorityQueue.size()).to.eq(8);
+            expect(priorityQueue.length).to.eq(8);
+            expect(priorityQueue.toArray()).toEqual([0, 14, 5, 37, 20, 65, 12, 70]);
+        });
+        test("should return a max priority queue", () => {
+            const priorityQueue = toPriorityQueue([70, 5, 0, 14, 20, 65, 12, 37], (a, b) => b - a);
+            expect(priorityQueue instanceof PriorityQueue).to.be.true;
+            expect(priorityQueue.size()).to.eq(8);
+            expect(priorityQueue.length).to.eq(8);
+            expect(priorityQueue.toArray()).toEqual([70, 37, 65, 20, 14, 0, 12, 5]);
+        });
+    });
+
+    describe("#toObject()", () => {
+        test("should return an object", () => {
+            const obj = toObject([["a", 1], ["b", 2], ["c", 3]], t => t[0], t => t[1]);
+            expect(obj).to.deep.equal({ a: 1, b: 2, c: 3 });
+        });
+    });
+
+    describe("#toQueue()", () => {
+        test("should return a queue", () => {
+            const queue = toQueue([1, 2, 3, 4, 5]);
+            expect(queue instanceof Queue).to.be.true;
+            expect(queue.size()).to.eq(5);
+            expect(queue.length).to.eq(5);
+            expect(queue.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+    });
+
+    describe("#toSet()", () => {
+        test("should return a set", () => {
+            const set = toSet([1, 2, 3, 4, 5]);
+            expect(set instanceof Set).to.be.true;
+            expect(set.size).to.eq(5);
+            expect(set.has(1)).to.be.true;
+            expect(set.has(2)).to.be.true;
+            expect(set.has(3)).to.be.true;
+            expect(set.has(4)).to.be.true;
+            expect(set.has(5)).to.be.true;
+        });
+    });
+
     describe("#toSortedDictionary()", () => {
         test("should return a sorted dictionary", () => {
             const sortedDictionary = toSortedDictionary([3, 5, 4, 2, 1], n => n, n => n * n);
@@ -1280,6 +1369,16 @@ describe("Enumerable Standalone Functions", () => {
             expect(sortedSet.elementAt(2)).to.eq(3);
             expect(sortedSet.elementAt(3)).to.eq(4);
             expect(sortedSet.elementAt(4)).to.eq(5);
+        });
+    });
+
+    describe("#toStack()", () => {
+        test("should return a stack", () => {
+            const stack = toStack([1, 2, 3, 4, 5]);
+            expect(stack instanceof Stack).to.be.true;
+            expect(stack.size()).to.eq(5);
+            expect(stack.length).to.eq(5);
+            expect(stack.toArray()).to.deep.equal([5, 4, 3, 2, 1]);
         });
     });
 
