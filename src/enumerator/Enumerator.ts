@@ -19,6 +19,7 @@ import {
     LinkedList,
     List,
     OrderedEnumerator,
+    PriorityQueue,
     Queue,
     SortedDictionary,
     SortedSet,
@@ -596,6 +597,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             obj[key] = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
         }
         return obj;
+    }
+
+    public toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement> {
+        return new PriorityQueue<TElement>(this, comparator);
     }
 
     public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {

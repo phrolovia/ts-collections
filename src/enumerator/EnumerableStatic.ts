@@ -15,6 +15,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    PriorityQueue,
     Queue,
     SortedDictionary,
     SortedSet,
@@ -290,6 +291,10 @@ export abstract class EnumerableStatic {
 
     public static toObject<TElement, TKey extends string | number | symbol, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return new Enumerable(source).toObject(keySelector, valueSelector);
+    }
+
+    public static toPriorityQueue<TElement>(source: IEnumerable<TElement>, comparator?: OrderComparator<TElement>): PriorityQueue<TElement> {
+        return new Enumerable(source).toPriorityQueue(comparator);
     }
 
     public static toQueue<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): Queue<TElement> {

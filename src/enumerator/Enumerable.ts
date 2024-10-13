@@ -15,6 +15,7 @@ import {
     IOrderedEnumerable,
     LinkedList,
     List,
+    PriorityQueue,
     Queue,
     SortedDictionary,
     SortedSet,
@@ -345,6 +346,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return this.#enumerator.toObject(keySelector, valueSelector);
+    }
+
+    public toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement> {
+        return this.#enumerator.toPriorityQueue(comparator);
     }
 
     public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {

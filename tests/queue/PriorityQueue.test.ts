@@ -17,8 +17,7 @@ describe("PriorityQueue", () => {
             expect(queue.toArray()).toEqual([0, 14, 5, 37, 20, 65, 12, 70]);
         });
         test("should form a max priority queue", () => {
-            const queue = new PriorityQueue<number>(Comparators.reverseOrderComparator);
-            queue.addAll([70, 5, 0, 14, 20, 65, 12, 37]);
+            const queue = new PriorityQueue<number>([70, 5, 0, 14, 20, 65, 12, 37], Comparators.reverseOrderComparator);
             expect(queue.toArray()).toEqual([70, 37, 65, 20, 14, 0, 12, 5]);
         });
     });
