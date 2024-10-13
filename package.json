@@ -69,19 +69,19 @@
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
-        "@types/node": "^22.6.1",
-        "@vitest/coverage-v8": "^2.1.1",
-        "@vitest/ui": "^2.1.1",
+        "@types/node": "^22.7.5",
+        "@vitest/coverage-v8": "^2.1.2",
+        "@vitest/ui": "^2.1.2",
         "braces": "^3.0.3",
         "rimraf": "^6.0.1",
         "rxjs": "~7.8.1",
-        "semantic-release": "^24.1.1",
+        "semantic-release": "^24.1.2",
         "ts-node": "^10.9.2",
-        "typedoc": "^0.26.7",
-        "typescript": "^5.6.2",
-        "vite": "^5.4.7",
-        "vite-plugin-dts": "^4.2.2",
-        "vitest": "^2.1.1"
+        "typedoc": "^0.26.9",
+        "typescript": "^5.6.3",
+        "vite": "^5.4.8",
+        "vite-plugin-dts": "^4.2.4",
+        "vitest": "^2.1.2"
     },
     "optionalDependencies": {
         "fsevents": "*"
