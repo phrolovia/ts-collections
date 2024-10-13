@@ -7,6 +7,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -247,6 +248,10 @@ export abstract class EnumerableStatic {
 
     public static toImmutableList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return new Enumerable(source).toImmutableList(comparator);
+    }
+
+    public static toImmutableQueue<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {
+        return new Enumerable(source).toImmutableQueue(comparator);
     }
 
     public static toImmutableSet<TElement>(source: IEnumerable<TElement>): ImmutableSet<TElement> {

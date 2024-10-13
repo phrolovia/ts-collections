@@ -6,6 +6,7 @@ import { ImmutableList } from "../list/ImmutableList";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
 import { ILookup } from "../lookup/ILookup";
+import { ImmutableQueue } from "../queue/ImmutableQueue";
 import { Queue } from "../queue/Queue";
 import { EnumerableSet } from "../set/EnumerableSet";
 import { ImmutableSet } from "../set/ImmutableSet";
@@ -789,6 +790,20 @@ export const toImmutableList = <TElement>(
     comparator?: EqualityComparator<TElement>
 ): ImmutableList<TElement> => {
     return from(source).toImmutableList(comparator);
+}
+
+/**
+ * Creates a new immutable queue from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source sequence.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {ImmutableQueue<TElement>} A new immutable queue that contains the elements of the source.
+ */
+export const toImmutableQueue = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): ImmutableQueue<TElement> => {
+    return from(source).toImmutableQueue(comparator);
 }
 
 /**

@@ -7,6 +7,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -278,6 +279,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toImmutableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableList<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toImmutableList(this, comparator);
+    }
+
+    public toImmutableQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableQueue<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutableQueue(this, comparator);
     }
 
     public toImmutableSet(): ImmutableSet<KeyValuePair<TKey, TValue>> {

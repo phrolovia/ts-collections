@@ -7,6 +7,7 @@ import {
     EnumerableSet,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -1631,6 +1632,35 @@ describe("Dictionary", () => {
             expect(list2 instanceof ImmutableList).to.be.true;
             expect(list2.length).to.eq(dictionary.length + 1);
             expect(list2).to.not.eq(list);
+        });
+    });
+
+    describe("#toImmutableQueue()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const queue = dictionary.toImmutableQueue();
+        const expectedQueueItems = [
+            new KeyValuePair(1, "a"),
+            new KeyValuePair(2, "b")
+        ]
+        test("should create a new immutable queue", () => {
+            expect(queue instanceof ImmutableQueue).to.be.true;
+            expect(queue.size()).to.eq(dictionary.size());
+            expect(queue.toArray()).to.deep.eq(expectedQueueItems);
+        });
+        test("should be immutable", () => {
+            const queue2 = queue.enqueue(new KeyValuePair<number, string>(3, "c"));
+            expect(queue.size()).to.eq(dictionary.size());
+            expect(queue2.size()).to.eq(dictionary.size() + 1);
+            expect(queue2 instanceof ImmutableQueue).to.be.true;
+            expect(queue2.length).to.eq(dictionary.length + 1);
+            expect(queue2).to.not.eq(queue);
+            const expectedQueueItems2 = [
+                ...expectedQueueItems,
+                new KeyValuePair(3, "c")
+            ];
+            expect(queue2.toArray()).to.deep.eq(expectedQueueItems2);
         });
     });
 

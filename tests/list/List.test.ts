@@ -1727,6 +1727,22 @@ describe("List", () => {
         });
     });
 
+    describe("#toImmutableQueue()", () => {
+        const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        test("should convert it to an immutable queue", () => {
+            const queue = list.toImmutableQueue();
+            expect(queue.size()).to.eq(10);
+            expect(queue.peek()).to.eq(1);
+            const queue2 = queue.enqueue(999);
+            expect(queue2 !== queue).to.be.true;
+            expect(queue.size()).to.eq(10);
+            expect(queue2.size()).to.eq(11);
+            expect(queue.peek()).to.eq(1);
+            expect(queue2.peek()).to.eq(1);
+            expect(queue2.last()).to.eq(999);
+        });
+    });
+
     describe("#toImmutableSet()", () => {
         const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
         test("should convert it to an immutable set", () => {

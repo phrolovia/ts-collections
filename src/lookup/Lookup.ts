@@ -7,6 +7,7 @@ import {
     IGroup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
@@ -301,6 +302,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public toImmutableList(comparator?: EqualityComparator<IGroup<TKey, TElement>>): ImmutableList<IGroup<TKey, TElement>> {
         return this.#lookupTree.toImmutableList(comparator);
+    }
+
+    public toImmutableQueue(comparator?: EqualityComparator<IGroup<TKey, TElement>>): ImmutableQueue<IGroup<TKey, TElement>> {
+        return this.#lookupTree.toImmutableQueue(comparator);
     }
 
     public toImmutableSet(): ImmutableSet<IGroup<TKey, TElement>> {
