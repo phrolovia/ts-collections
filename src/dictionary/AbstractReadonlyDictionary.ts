@@ -41,7 +41,7 @@ import { SortedDictionary } from "./SortedDictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
-    protected valueComparer: EqualityComparator<TValue>;
+    protected readonly valueComparer: EqualityComparator<TValue>;
 
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {
         this.valueComparer = valueComparator;
@@ -94,6 +94,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.chunk(this, size);
     }
 
+    public combinations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
+        return EnumerableStatic.combinations(this, size);
+    }
+
     public concat(iterable: Iterable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.concat(this, iterable);
     }
@@ -107,6 +111,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
             return this.size();
         }
         return EnumerableStatic.count(this, predicate);
+    }
+
+    public cycle(count?: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.cycle(this, count);
     }
 
     public defaultIfEmpty(value?: KeyValuePair<TKey, TValue> | null): IEnumerable<KeyValuePair<TKey, TValue> | null> {
@@ -155,6 +163,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.intersect(this, iterable, comparator);
     }
 
+    public intersperse<TSeparator = KeyValuePair<TKey, TValue>>(separator: TSeparator): IEnumerable<KeyValuePair<TKey, TValue> | TSeparator> {
+        return EnumerableStatic.intersperse(this, separator);
+    }
+
     public isEmpty(): boolean {
         return this.size() === 0;
     }
@@ -179,6 +191,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.min(this, selector);
     }
 
+    public none(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return EnumerableStatic.none(this, predicate);
+    }
+
     public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
         return EnumerableStatic.ofType(this, type);
     }
@@ -199,8 +215,16 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.partition(this, predicate);
     }
 
+    public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
+        return EnumerableStatic.permutations(this, size);
+    }
+
     public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.prepend(this, element);
+    }
+
+    public product(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
+        return EnumerableStatic.product(this, selector);
     }
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -246,6 +270,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public skipWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.skipWhile(this, predicate);
+    }
+
+    public span(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
+        return EnumerableStatic.span(this, predicate);
+    }
+
+    public step(step: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.step(this, step);
     }
 
     public sum(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
@@ -364,6 +396,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.where(this, predicate);
+    }
+
+    public windows(size: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
+        return EnumerableStatic.windows(this, size);
     }
 
     public zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {

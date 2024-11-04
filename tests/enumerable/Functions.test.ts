@@ -7,9 +7,11 @@ import {
     average,
     cast,
     chunk,
+    combinations,
     concat,
     contains,
     count,
+    cycle,
     defaultIfEmpty,
     Dictionary,
     distinct,
@@ -31,6 +33,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     intersect,
+    intersperse,
     join,
     last,
     lastOrDefault,
@@ -38,13 +41,16 @@ import {
     List,
     max,
     min,
+    none,
     ofType,
     orderBy,
     orderByDescending,
     pairwise,
     partition,
+    permutations,
     prepend,
     PriorityQueue,
+    product,
     Queue,
     range,
     repeat,
@@ -61,7 +67,9 @@ import {
     skipWhile,
     SortedDictionary,
     SortedSet,
+    span,
     Stack,
+    step,
     sum,
     take,
     takeLast,
@@ -89,6 +97,7 @@ import {
     toStack,
     union,
     where,
+    windows,
     zip
 } from "../../src/imports";
 import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
@@ -214,6 +223,57 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#combinations()", () => {
+        test("should return all combinations of the string", () => {
+            const sequence = "AYANA";
+            const cmb = combinations(sequence);
+            const combinationsArray = cmb.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(24);
+        });
+        test("should return all combinations of the string with a length of 1", () => {
+            const sequence = "AYANA";
+            const cmb = combinations(sequence, 1);
+            const combinationsArray = cmb.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(3);
+        });
+        test("should return all combinations of the string with a length of 2", () => {
+            const sequence = "AYANA";
+            const combinationsEnum = combinations(sequence, 2);
+            const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(6);
+        });
+        test("should return all combinations of the string with a length of 3", () => {
+            const sequence = "AYANA";
+            const combinationsEnum = combinations(sequence, 3);
+            const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(8);
+        });
+        it("should return all combinations of the string with a length of 4", () => {
+            const sequence = "AYANA";
+            const combinationsEnum = combinations(sequence, 4);
+            const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(5);
+        });
+        it("should return all combinations of the string with a length of 5", () => {
+            const sequence = "AYANA";
+            const combinationsEnum = combinations(sequence, 5);
+            const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(1);
+        });
+        it("should return all combinations of the string with a length of 6", () => {
+            const sequence = "AYANA";
+            const combinationsEnum = combinations(sequence, 6);
+            const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(0);
+        });
+        it("should return all combinations of the string #2", () => {
+            const sequence = "ALICE";
+            const combinationsEnum = combinations(sequence);
+            const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
+            expect(combinationsArray.length).to.eq(32);
+        });
+    });
+
     describe("#concat()", () => {
         test("should concatenate two lists", () => {
             const list1 = new List([1, 2, 3]);
@@ -256,6 +316,18 @@ describe("Enumerable Standalone Functions", () => {
         test("should return the number of elements in the set with a predicate", () => {
             const set = new Set([1, 2, 3, 4, 5]);
             expect(count(set, n => n % 2 === 0)).to.eq(2);
+        });
+    });
+
+    describe("#cycle()", () => {
+        test("should cycle through the list 3 times", () => {
+            const list = cycle([1,2,3], 3);
+            expect(count(list)).to.eq(9);
+            expect(list.toArray()).to.deep.equal([1, 2, 3, 1, 2, 3, 1, 2, 3]);
+        });
+        test("should cycle through string 2 times", () => {
+            const list = cycle("abc", 2);
+            expect(list.toArray()).to.deep.equal(["a", "b", "c", "a", "b", "c"]);
         });
     });
 
@@ -521,6 +593,14 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#intersperse()", () => {
+        test("should intersperse the list with a separator", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = intersperse(list, 0);
+            expect(result.toArray()).to.deep.equal([1, 0, 2, 0, 3, 0, 4, 0, 5]);
+        });
+    });
+
     describe("#join()", () => {
         const school1 = new School(1, "Elementary School");
         const school2 = new School(2, "High School");
@@ -632,6 +712,21 @@ describe("Enumerable Standalone Functions", () => {
         test("should throw an error if the list is empty", () => {
             const list = new List([]);
             expect(() => min(list)).to.throw();
+        });
+    });
+
+    describe("#none()", () => {
+        test("should not have any elements that are not even", () => {
+            const noneEven = none([1, 3, 5, 7, 9], n => n % 2 === 0);
+            expect(noneEven).to.be.true;
+        });
+        test("should have at least one element that is not even", () => {
+            const noneEven = none([1, 2, 3, 5, 7], n => n % 2 === 0);
+            expect(noneEven).to.be.false;
+        });
+        test("should return true if sequence is empty", () => {
+            const noneEven = none([]);
+            expect(noneEven).to.be.true;
         });
     });
 
@@ -816,12 +911,38 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#permutations()", () => {
+        test("should return all permutations of the sequence", () => {
+            const result = permutations([1, 2, 3]);
+            expect(result.select(p => p.toArray()).toArray()).to.deep.equal([[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]);
+        });
+        test("should return all permutations of the string", () => {
+            const result = permutations("RUI");
+            const perms = result.select(p => p.toArray().join(""));
+            expect(perms.toArray()).to.deep.equal(["RUI", "RIU", "URI", "UIR", "IRU", "IUR"]);
+        });
+    });
+
     describe("#prepend()", () => {
         const sequence = [1, 2, 3, 4, 5];
         test("should prepend 0 to the sequence", () => {
             const result = prepend(sequence, 0);
             expect(sequence).to.deep.equal([1, 2, 3, 4, 5]);
             expect(result.toArray()).to.deep.equal([0, 1, 2, 3, 4, 5]);
+        });
+    });
+
+    describe("#product()", () => {
+        test("should return the product of the sequence", () => {
+            const result = product([1, 2, 3, 4, 5]);
+            expect(result).to.eq(120);
+        });
+        test("should return the product of the sequence with a selector", () => {
+            const result = product([1, 2, 3, 4, 5], n => n * 2);
+            expect(result).to.eq(3840);
+        });
+        test("should throw error if the sequence is empty", () => {
+            expect(() => product([])).to.throw();
         });
     });
 
@@ -1063,6 +1184,33 @@ describe("Enumerable Standalone Functions", () => {
             const list2 = skipWhile(list, n => n < 10).toList();
             expect(list2.size()).to.eq(0);
             expect(list2.length).to.eq(0);
+        });
+    });
+
+    describe("#span", () => {
+        test("should return two lists", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = span(list, n => n < 3);
+            expect(result[0].toArray()).to.deep.equal([1, 2]);
+            expect(result[1].toArray()).to.deep.equal([3, 4, 5]);
+        });
+    });
+
+    describe("#step()", () => {
+        test("should return an IEnumerable with elements [1,3,5]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = step(list, 2).toList();
+            expect(list2.size()).to.eq(3);
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(3);
+            expect(list2.get(2)).to.eq(5);
+            expect(list2.length).to.eq(3);
+        });
+        test("should return an IEnumerable with only the first element", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = step(list, 10).toList();
+            expect(list2.size()).to.eq(1);
+            expect(list2.get(0)).to.eq(1);
         });
     });
 
@@ -1405,6 +1553,14 @@ describe("Enumerable Standalone Functions", () => {
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
+        });
+    });
+
+    describe("#windows()", () => {
+        test("should return a sequence of windows", () => {
+            const sequence = [1, 2, 3, 4, 5];
+            const windowsList = windows(sequence, 3).select(w => w.toArray()).toArray();
+            expect(windowsList).to.deep.equal([[1, 2, 3], [2, 3, 4], [3, 4, 5]]);
         });
     });
 

@@ -132,6 +132,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.chunkGenerator(size));
     }
 
+    public combinations(size?: number): IEnumerable<IEnumerable<TElement>> {
+        if (size != null && size < 0) {
+            throw new InvalidArgumentException("Size must be greater than or equal to 0.", "size");
+        }
+        return new Enumerator(() => this.combinationsGenerator(size));
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.concatGenerator(iterable));
     }
@@ -160,6 +167,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         return count;
+    }
+
+    public cycle(count?: number): IEnumerable<TElement> {
+        return new Enumerator(() => this.cycleGenerator(count));
     }
 
     public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
@@ -250,6 +261,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.intersectGenerator(iterable, comparator));
     }
 
+    public intersperse<TSeparator = TElement>(separator: TSeparator): IEnumerable<TElement | TSeparator> {
+        return new Enumerator(() => this.intersperseGenerator(separator));
+    }
+
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin));
@@ -335,6 +350,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    public none(predicate?: Predicate<TElement>): boolean {
+        if (!predicate) {
+            return !!this[Symbol.iterator]().next().done;
+        }
+        for (const d of this) {
+            if (predicate(d)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
         return new Enumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
     }
@@ -364,8 +391,26 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return [new Enumerable(trueItems), new Enumerable(falseItems)];
     }
 
+    public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
+        if (size != null && size < 1) {
+            throw new InvalidArgumentException("Size must be greater than 0.", "size");
+        }
+        return new Enumerator(() => this.permutationsGenerator(size));
+    }
+
     public prepend(element: TElement): IEnumerable<TElement> {
         return new Enumerator(() => this.prependGenerator(element));
+    }
+
+    public product(selector?: Selector<TElement, number>): number {
+        if (!this.any()) {
+            throw new NoElementsException();
+        }
+        let total: number = 1;
+        for (const d of this) {
+            total *= selector?.(d) ?? d as unknown as number;
+        }
+        return total;
     }
 
     public reverse(): IEnumerable<TElement> {
@@ -485,6 +530,30 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.skipWhileGenerator(predicate));
+    }
+
+    public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        const span = new List<TElement>();
+        const rest = new List<TElement>();
+        let found = false;
+        for (const item of this) {
+            if (found) {
+                rest.add(item);
+            } else if (predicate(item)) {
+                span.add(item);
+            } else {
+                found = true;
+                rest.add(item);
+            }
+        }
+        return [new Enumerable(span), new Enumerable(rest)];
+    }
+
+    public step(step: number): IEnumerable<TElement> {
+        if (step < 1) {
+            throw new InvalidArgumentException("Step must be greater than 0.", "step");
+        }
+        return new Enumerator(() => this.stepGenerator(step));
     }
 
     public sum(selector?: Selector<TElement, number>): number {
@@ -638,6 +707,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<TElement>(() => this.whereGenerator(predicate));
     }
 
+    public windows(size: number): IEnumerable<IEnumerable<TElement>> {
+        if (size < 1) {
+            throw new InvalidArgumentException("Size must be greater than 0.", "size");
+        }
+        return new Enumerator<IEnumerable<TElement>>(() => this.windowsGenerator(size));
+    }
+
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return new Enumerator(() => this.zipGenerator(iterable, zipper));
     }
@@ -669,9 +745,58 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* combinationsGenerator(size?: number): Iterable<IEnumerable<TElement>> {
+        const iterator = this[Symbol.iterator]();
+
+        let next = iterator.next();
+        if (next.done) {
+            return yield* [];
+        }
+
+        const items = new List<TElement>();
+        while (!next.done) {
+            items.add(next.value);
+            next = iterator.next();
+        }
+
+        const combinationCount = 1 << items.length;
+        const seen = new Set<string>();
+
+        for (let cx = 0; cx < combinationCount; ++cx) {
+            const combination = new List<TElement>();
+            for (let vx = 0; vx < items.length; ++vx) {
+                if ((cx & (1 << vx)) !== 0) {
+                    combination.add(items.elementAt(vx));
+                }
+            }
+            if (size == null || combination.length === size) {
+                const key = combination.aggregate((acc, cur) => acc + cur, ",");
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    yield combination;
+                }
+            }
+        }
+    }
+
     private* concatGenerator(enumerable: Iterable<TElement>): Iterable<TElement> {
         yield* this;
         yield* enumerable;
+    }
+
+    private* cycleGenerator(count?: number): Iterable<TElement> {
+        if (this.none()) {
+            throw new NoElementsException();
+        }
+        if (count == null) {
+            while (true) {
+                yield* this;
+            }
+        } else {
+            for (let i = 0; i < count; ++i) {
+                yield* this;
+            }
+        }
     }
 
     private* defaultIfEmptyGenerator(value?: TElement | null): Iterable<TElement | null> {
@@ -749,6 +874,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* intersperseGenerator<TSeparator = TElement>(separator: TSeparator): Iterable<TElement | TSeparator> {
+        let index = 0;
+        for (const item of this) {
+            if (index !== 0) {
+                yield separator;
+            }
+            yield item;
+            ++index;
+        }
+    }
+
     private* joinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): Iterable<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         for (const element of this) {
@@ -782,6 +918,29 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             next = iterator.next();
             if (!next.done) {
                 yield resultSelector(previous.value, next.value);
+            }
+        }
+    }
+
+    private* permutationsGenerator(size?: number): Iterable<IEnumerable<TElement>> {
+        type Permutation = { processed: EnumerableSet<TElement>, remaining: EnumerableSet<TElement> };
+        const elements = this.distinct();
+        const queue = new Queue<Permutation>();
+        queue.add({processed: new EnumerableSet<TElement>(), remaining: new EnumerableSet<TElement>(elements)});
+        while (queue.length > 0) {
+            const current = queue.poll() as Permutation;
+            if (size != null && current.processed.length === size) {
+                yield current.processed;
+                continue;
+            }
+            if (size == null && current.remaining.length === 0) {
+                yield current.processed;
+                continue;
+            }
+            for (let ix = 0; ix < current.remaining.length; ++ix) {
+                const newCurrent = new EnumerableSet([...current.processed, current.remaining.elementAt(ix)]);
+                const newRemaining = new EnumerableSet([...current.remaining.take(ix), ...current.remaining.skip(ix + 1)]);
+                queue.add({processed: newCurrent, remaining: newRemaining});
             }
         }
     }
@@ -872,6 +1031,16 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* stepGenerator(step: number): Iterable<TElement> {
+        let index = 0;
+        for (const item of this) {
+            if (index % step === 0) {
+                yield item;
+            }
+            ++index;
+        }
+    }
+
     private* takeGenerator(count: number): IterableIterator<TElement> {
         let index = 0;
         for (const item of this) {
@@ -958,6 +1127,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 yield d;
             }
             ++index;
+        }
+    }
+
+    private* windowsGenerator(size: number): Iterable<IEnumerable<TElement>> {
+        const iterator = this[Symbol.iterator]();
+        const window = new List<TElement>();
+        for (let item = iterator.next(); !item.done; item = iterator.next()) {
+            window.add(item.value);
+            if (window.size() === size) {
+                yield window.toImmutableList();
+                window.removeAt(0);
+            }
         }
     }
 

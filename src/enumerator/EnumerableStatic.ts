@@ -73,6 +73,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).chunk(size);
     }
 
+    public static combinations<TElement>(source: IEnumerable<TElement>, size?: number): IEnumerable<IEnumerable<TElement>> {
+        return new Enumerable(source).combinations(size);
+    }
+
     public static concat<TElement>(source: Iterable<TElement>, other: Iterable<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).concat(other);
     }
@@ -83,6 +87,10 @@ export abstract class EnumerableStatic {
 
     public static count<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): number {
         return new Enumerable(source).count(predicate);
+    }
+
+    public static cycle<TElement>(source: IEnumerable<TElement>, count?: number): IEnumerable<TElement> {
+        return new Enumerable(source).cycle(count);
     }
 
     public static defaultIfEmpty<TElement>(source: IEnumerable<TElement>, value?: TElement | null): IEnumerable<TElement | null> {
@@ -129,6 +137,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).intersect(other, comparator);
     }
 
+    public static intersperse<TElement, TSeparator = TElement>(source: IEnumerable<TElement>, separator: TSeparator): IEnumerable<TElement | TSeparator> {
+        return new Enumerable(source).intersperse(separator);
+    }
+
     public static join<TOuter, TInner, TKey, TResult>(source: IEnumerable<TOuter>, innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TOuter, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TOuter, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
         return new Enumerable(source).join(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
@@ -147,6 +159,10 @@ export abstract class EnumerableStatic {
 
     public static min<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
         return new Enumerable(source).min(selector);
+    }
+
+    public static none<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): boolean {
+        return new Enumerable(source).none(predicate);
     }
 
     public static ofType<TElement, TResult extends ObjectType>(source: IEnumerable<TElement>, type: TResult): IEnumerable<InferredType<TResult>> {
@@ -169,8 +185,16 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).partition(predicate);
     }
 
+    public static permutations<TElement>(source: IEnumerable<TElement>, size?: number): IEnumerable<IEnumerable<TElement>> {
+        return new Enumerable(source).permutations(size);
+    }
+
     public static prepend<TElement>(source: IEnumerable<TElement>, item: TElement): IEnumerable<TElement> {
         return new Enumerable(source).prepend(item);
+    }
+
+    public static product<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
+        return new Enumerable(source).product(selector);
     }
 
     public static reverse<TElement>(source: IEnumerable<TElement>): IEnumerable<TElement> {
@@ -215,6 +239,14 @@ export abstract class EnumerableStatic {
 
     public static skipWhile<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).skipWhile(predicate);
+    }
+
+    public static span<TElement>(source: IEnumerable<TElement>, predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        return new Enumerable(source).span(predicate);
+    }
+
+    public static step<TElement>(source: IEnumerable<TElement>, step: number): IEnumerable<TElement> {
+        return new Enumerable(source).step(step);
     }
 
     public static sum<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
@@ -323,6 +355,10 @@ export abstract class EnumerableStatic {
 
     public static where<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).where(predicate);
+    }
+
+    public static windows<TElement>(source: IEnumerable<TElement>, size: number): IEnumerable<IEnumerable<TElement>> {
+        return new Enumerable(source).windows(size);
     }
 
     public static zip<TElement, TSecond, TResult = [TElement, TSecond]>(source: IEnumerable<TElement>, other: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {

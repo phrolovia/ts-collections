@@ -3,11 +3,13 @@ import {
     Enumerable,
     EnumerableSet,
     Group,
+    IAsyncEnumerable,
     IEnumerable,
     IGroup,
     IOrderedAsyncEnumerable,
     List,
     OrderedAsyncEnumerator,
+    Queue,
     SortedSet
 } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
@@ -31,7 +33,6 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
-import { IAsyncEnumerable } from "./IAsyncEnumerable";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
@@ -119,6 +120,13 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<IEnumerable<TElement>>(() => this.chunkGenerator(size));
     }
 
+    public combinations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
+        if (size != null && size < 0) {
+            throw new InvalidArgumentException("Size must be greater than or equal to 0.", "size");
+        }
+        return new AsyncEnumerator<IEnumerable<TElement>>(() => this.combinationsGenerator(size));
+    }
+
     public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.concatGenerator(other));
     }
@@ -144,6 +152,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         return count;
+    }
+
+    public cycle(count?: number): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.cycleGenerator(count));
     }
 
     public defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null> {
@@ -248,6 +260,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.intersectGenerator(iterable, compare, orderComparator));
     }
 
+    public intersperse<TSeparator = TElement>(separator: TSeparator): IAsyncEnumerable<TElement | TSeparator> {
+        return new AsyncEnumerator<TElement | TSeparator>(() => this.intersperseGenerator(separator));
+    }
+
     public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         return new AsyncEnumerator<TResult>(() => this.joinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare, leftJoin ?? false));
@@ -309,6 +325,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return min;
     }
 
+    public async none(predicate?: Predicate<TElement>): Promise<boolean> {
+        return !await this.any(predicate);
+    }
+
     public ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>> {
         return new AsyncEnumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
     }
@@ -338,8 +358,34 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return [Enumerable.from(trueElements), Enumerable.from(falseElements)];
     }
 
+    public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
+        if (size != null && size < 1) {
+            throw new InvalidArgumentException("Size must be greater than 0.", "size");
+        }
+        return new AsyncEnumerator<IEnumerable<TElement>>(() => this.permutationsGenerator(size));
+    }
+
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.prependGenerator(element));
+    }
+
+    public async product(selector?: Selector<TElement, number>): Promise<number> {
+        const elements: TElement[] = [];
+
+        for await (const element of this) {
+            elements.push(element);
+        }
+
+        if (elements.length === 0) {
+            throw new NoElementsException();
+        }
+
+        let product = 1;
+        for (const element of elements) {
+            product *= selector?.(element) ?? element as unknown as number;
+        }
+
+        return product;
     }
 
     public reverse(): IAsyncEnumerable<TElement> {
@@ -455,6 +501,29 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.skipWhileGenerator(predicate));
     }
 
+    public async span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
+        const span = new List<TElement>();
+        const rest = new List<TElement>();
+        let found = false;
+
+        for await (const item of this) {
+            if (!found && predicate(item)) {
+                span.add(item);
+            } else {
+                found = true;
+                rest.add(item);
+            }
+        }
+        return [new Enumerable(span), new Enumerable(rest)];
+    }
+
+    public step(step: number): IAsyncEnumerable<TElement> {
+        if (step < 1) {
+            throw new InvalidArgumentException("Step must be greater than 0.", "step");
+        }
+        return new AsyncEnumerator<TElement>(() => this.stepGenerator(step));
+    }
+
     public async sum(selector?: Selector<TElement, number>): Promise<number> {
         let count = 0;
         let sum = 0;
@@ -504,6 +573,13 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.whereGenerator(predicate));
     }
 
+    public windows(size: number): IAsyncEnumerable<IEnumerable<TElement>> {
+        if (size < 1) {
+            throw new InvalidArgumentException("Size must be greater than 0.", "size");
+        }
+        return new AsyncEnumerator<IEnumerable<TElement>>(() => this.windowsGenerator(size));
+    }
+
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, resultSelector?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
         return new AsyncEnumerator<TResult>(() => this.zipGenerator(iterable, resultSelector));
     }
@@ -533,9 +609,64 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
+    private async* combinationsGenerator(size?: number): AsyncIterable<IEnumerable<TElement>> {
+        const items: TElement[] = [];
+
+        for await (const item of this) {
+            items.push(item);
+        }
+
+        const n = items.length;
+        const totalCombinations = 1 << n;
+        const seen = new Set<string>();
+
+        for (let cx = 0; cx < totalCombinations; cx++) {
+            const combination = new List<TElement>();
+
+            for (let jx = 0; jx < n; jx++) {
+                if (cx & (1 << jx)) {
+                    combination.add(items[jx]);
+                }
+            }
+
+            if (size === undefined || combination.length === size) {
+                const key = combination.aggregate((acc, cur) => acc + cur, ","); // Join elements to create a string key
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    yield combination;
+                }
+            }
+        }
+    }
+
     private async* concatGenerator(other: AsyncIterable<TElement>): AsyncIterable<TElement> {
         yield* this;
         yield* other;
+    }
+
+    private async* cycleGenerator(count?: number): AsyncIterable<TElement> {
+        const elements = [];
+        for await (const item of this) {
+            elements.push(item);
+        }
+
+        if (elements.length === 0) {
+            throw new NoElementsException();
+        }
+
+        if (count == null) {
+            while (true) {
+                for (const element of elements) {
+                    yield element;
+                }
+            }
+        } else {
+            for (let i = 0; i < count; ++i) {
+                for (const element of elements) {
+                    yield element;
+                }
+            }
+        }
     }
 
     private async* defaultIfEmptyGenerator(defaultValue?: TElement | null): AsyncIterable<TElement | null> {
@@ -602,6 +733,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
+    private async* intersperseGenerator<TSeparator = TElement>(separator: TSeparator): AsyncIterable<TElement | TSeparator> {
+        let index = 0;
+        for await (const element of this) {
+            if (index > 0) {
+                yield separator;
+            }
+            yield element;
+            ++index;
+        }
+    }
+
     private async* joinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator: EqualityComparator<TKey>, leftJoin: boolean): AsyncIterable<TResult> {
         const innerArrayEnumerable = Enumerable.from(await inner.toArray());
         for await (const element of this) {
@@ -635,6 +777,33 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             next = await iterator.next();
             if (!next.done) {
                 yield resultSelector(previous.value, next.value);
+            }
+        }
+    }
+
+    private async* permutationsGenerator(size?: number): AsyncIterable<IEnumerable<TElement>> {
+        type Permutation = { created: EnumerableSet<TElement>, remaining: EnumerableSet<TElement> };
+        const elements = await this.distinct().toArray();
+        const queue = new Queue<Permutation>();
+        queue.add({ created: new EnumerableSet<TElement>(), remaining: new EnumerableSet<TElement>(elements) });
+
+        while (queue.length > 0) {
+            const current = queue.poll() as Permutation;
+
+            if (size != null && current.created.length === size) {
+                yield current.created;
+                continue;
+            }
+
+            if (size == null && current.remaining.length === 0) {
+                yield current.created;
+                continue;
+            }
+
+            for (let ix = 0; ix < current.remaining.length; ++ix) {
+                const newCurrent = new EnumerableSet([...current.created, current.remaining.elementAt(ix)]);
+                const newRemaining = new EnumerableSet([...current.remaining.take(ix), ...current.remaining.skip(ix + 1)]);
+                queue.add({ created: newCurrent, remaining: newRemaining });
             }
         }
     }
@@ -727,14 +896,22 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         for await (const element of this) {
             if (skipEnded) {
                 yield element;
+            } else if (predicate(element, index)) {
+                ++index;
             } else {
-                if (predicate(element, index)) {
-                    ++index;
-                } else {
-                    skipEnded = true;
-                    yield element;
-                }
+                skipEnded = true;
+                yield element;
             }
+        }
+    }
+
+    public async* stepGenerator(step: number): AsyncIterable<TElement> {
+        let index = 0;
+        for await (const element of this) {
+            if (index % step === 0) {
+                yield element;
+            }
+            ++index;
         }
     }
 
@@ -816,6 +993,18 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 yield d;
             }
             ++index;
+        }
+    }
+
+    private async* windowsGenerator(size: number): AsyncIterable<IEnumerable<TElement>> {
+        const iterator = this[Symbol.asyncIterator]();
+        const window = new List<TElement>();
+        for (let item = await iterator.next(); !item.done; item = await iterator.next()) {
+            window.add(item.value);
+            if (window.length === size) {
+                yield Enumerable.from([...window]);
+                window.removeAt(0);
+            }
         }
     }
 

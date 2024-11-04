@@ -1,4 +1,4 @@
-import { describe } from "vitest";
+import { describe, test } from "vitest";
 import { Enumerable, ImmutableList, PriorityQueue, ReadonlyCollection, Stack } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
@@ -232,6 +232,48 @@ describe("List", () => {
         });
     });
 
+    describe("#combinations()", () => {
+        const list = new List([1, 2, 3]);
+        test("should return all combinations", () => {
+            const combinations = list.combinations();
+            const array = combinations.select(c => c.toArray()).toArray();
+            expect(array).to.deep.equal([[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]);
+        });
+        test("should return all combinations of length 2", () => {
+            const combinations = list.combinations(2);
+            const array = combinations.select(c => c.toArray()).toArray();
+            expect(array).to.deep.equal([[1, 2], [1, 3], [2, 3]]);
+        });
+        test("should return all combinations of length 3", () => {
+            const combinations = list.combinations(3);
+            const array = combinations.select(c => c.toArray()).toArray();
+            expect(array).to.deep.equal([[1, 2, 3]]);
+        });
+        test("should return all combinations of length 4", () => {
+            const combinations = list.combinations(4);
+            const array = combinations.select(c => c.toArray()).toArray();
+            expect(array).to.deep.equal([]);
+        });
+        test("should return all combinations of length 0", () => {
+            const combinations = list.combinations(0);
+            const array = combinations.select(c => c.toArray()).toArray();
+            expect(array).to.deep.equal([[]]);
+        });
+        test("it should return all combinations of length 1", () => {
+            const combinations = list.combinations(1);
+            const array = combinations.select(c => c.toArray()).toArray();
+            expect(array).to.deep.equal([[1], [2], [3]]);
+        });
+        test("should return an empty list if source list is empty", () => {
+            const list = new List<number>();
+            const combinations = list.combinations();
+            expect(combinations.toArray()).to.deep.equal([]);
+        });
+        it("should throw error if length is less than 0", () => {
+            expect(() => list.combinations(-1)).toThrowError("Size must be greater than or equal to 0.");
+        });
+    });
+
     describe("#concat()", () => {
         test("should return a list with [1,2,3,4,5,5,6,7,8,9]", () => {
             const list1 = new List([1, 2, 3, 4, 5]);
@@ -304,6 +346,41 @@ describe("List", () => {
             const list = new List([1, 9, 2, 8, 3, 7, 4, 6, 5, 0]);
             const count = list.count();
             expect(count).to.eq(10);
+        });
+    });
+
+    describe("#cycle()", () => {
+        test("should return an infinite iterable", () => {
+            const list = new List([1, 2, 3]);
+            const cycle = list.cycle();
+            const iterator = cycle[Symbol.iterator]();
+            for (let i = 0; i < 100; ++i) {
+                const value = iterator.next().value;
+                expect(value).to.eq(i % 3 + 1);
+            }
+        });
+        test("should return an iterable with 10 elements", () => {
+            const list = new List([1, 2, 3]);
+            const cycle = list.cycle(3);
+            const cycle2 = list.cycle(4);
+            const array = cycle.toArray();
+            const array2 = cycle2.toArray();
+            expect(array).to.deep.equal([1, 2, 3, 1, 2, 3, 1, 2, 3]);
+            expect(array2).to.deep.equal([1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]);
+        });
+        test("should return an iterable with 0 elements", () => {
+            const list = new List([1, 2, 3]);
+            const cycle = list.cycle(0);
+            expect(cycle.toArray()).to.deep.equal([]);
+        });
+        it("should return an empty iterable if count is less than 0", () => {
+            const list = new List([1, 2, 3]);
+            const cycle = list.cycle(-1);
+            expect(cycle.toArray()).to.deep.equal([]);
+        });
+        test("should throw error if source list is empty", () => {
+            const list = new List<number>();
+            expect(() => list.cycle().toList()).toThrowError("Sequence contains no elements.");
         });
     });
 
@@ -606,7 +683,7 @@ describe("List", () => {
         });
     });
 
-    describe("#indexOf", () => {
+    describe("#indexOf()", () => {
         const list1 = new List([Person.Alice, Person.Noemi, null, Person.Noemi2, null]);
         test("should return 2", () => {
             expect(list1.indexOf(null)).to.eq(2);
@@ -676,6 +753,21 @@ describe("List", () => {
             const exceptionList = list1.intersect(list2, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
+        });
+    });
+
+    describe("#intersperse()", () => {
+        test("should return [1, 'a', 2, 'a', 3, 'a', 4, 'a', 5]", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const interspersed = list.intersperse("a").toList();
+            expect(interspersed.toArray()).to.deep.equal([1, "a", 2, "a", 3, "a", 4, "a", 5]);
+            expect(interspersed.length).to.eq(9);
+        });
+        test("should return empty list if list is empty", () => {
+            const list = new List<number>();
+            const interspersed = list.intersperse(0).toList();
+            expect(interspersed.toArray()).to.deep.equal([]);
+            expect(interspersed.length).to.eq(0);
         });
     });
 
@@ -840,6 +932,29 @@ describe("List", () => {
         });
     });
 
+    describe("#none()", () => {
+        test("should return true if list is empty", () => {
+            const list = new List<number>();
+            expect(list.none(n => n > 1)).to.true;
+        });
+        test("should return true if no element matches the predicate", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.none(n => n > 5)).to.true;
+        });
+        test("should return false if an element matches the predicate", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.none(n => n === 3)).to.false;
+        });
+        test("should return true if list is empty and no predicate is provided", () => {
+            const list = new List<number>();
+            expect(list.none()).to.true;
+        });
+        test("should return false if list is not empty and no predicate is provided", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.none()).to.false;
+        });
+    });
+
     describe("#ofType()", () => {
         const symbol = Symbol("test");
         const object = new Object(100);
@@ -975,6 +1090,51 @@ describe("List", () => {
         });
     });
 
+    describe("#permutations()", () => {
+        test("should return all permutations of the list", () => {
+            const list = new List([1, 2, 3]);
+            const perms = list.permutations().select(p => p.toArray()).toArray();
+            const expected = [
+                [1, 2, 3],
+                [1, 3, 2],
+                [2, 1, 3],
+                [2, 3, 1],
+                [3, 1, 2],
+                [3, 2, 1]
+            ];
+            expect(perms).to.deep.equal(expected);
+        });
+        test("should return all permutations that have the length of 2", () => {
+            const list = new List(["a", "b", "c", "d"]);
+            const perms = list.permutations(2).select(p => p.toArray()).toArray();
+            const expected = [
+                ["a", "b"],
+                ["a", "c"],
+                ["a", "d"],
+                ["b", "a"],
+                ["b", "c"],
+                ["b", "d"],
+                ["c", "a"],
+                ["c", "b"],
+                ["c", "d"],
+                ["d", "a"],
+                ["d", "b"],
+                ["d", "c"]
+            ];
+            expect(perms).to.deep.equal(expected);
+        })
+        test("should throw error if size is less than 1", () => {
+            const list = new List([1, 2, 3]);
+            expect(() => list.permutations(0)).toThrow("Size must be greater than 0.");
+            expect(() => list.permutations(-1)).toThrow("Size must be greater than 0.");
+        });
+        test("should return empty list if source list is empty", () => {
+            const list = new List<number>();
+            const perms = list.permutations().select(p => p.toArray()).toArray();
+            expect(perms).to.deep.equal([[]]);
+        });
+    });
+
     describe("#prepend()", () => {
         const list = new List<Person>();
         list.add(Person.Mel);
@@ -997,6 +1157,31 @@ describe("List", () => {
             const newList = list.prepend(Person.Lenka).toList();
             expect(newList.contains(Person.Lenka)).to.eq(true);
             expect(list.contains(Person.Lenka)).to.eq(false);
+        });
+    });
+
+    describe("#product()", () => {
+        test("should return the product of all elements", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const product = list.product();
+            expect(product).to.eq(120);
+        });
+        test("should return the product of all elements", () => {
+            const list1 = new List([1, 2, 3, 4, 5, 0]);
+            const list2 = new List([-1, -2, -3, -4, -5]);
+            const product1 = list1.product();
+            const product2 = list2.product();
+            expect(product1).to.eq(0);
+            expect(product2).to.eq(-120);
+        });
+        test("it should use the provided selector", () => {
+            const list = new List([Person.Alice, Person.Reina, Person.Mirei]);
+            const product = list.product(p => p.age);
+            expect(product).to.eq(Person.Alice.age * Person.Reina.age * Person.Mirei.age);
+        });
+        test("should throw error if list is empty", () => {
+            const list = new List<number>();
+            expect(() => list.product()).toThrow(new NoElementsException());
         });
     });
 
@@ -1398,6 +1583,70 @@ describe("List", () => {
             expect(list.get(4)).to.eq(8);
             expect(list.get(5)).to.eq(10);
         })
+    });
+
+    describe("#span()", () => {
+        test("should return two lists", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 6, 5, 3]);
+            const [first, second] = list.span(n => n < 6);
+            expect(first.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+            expect(second.toArray()).to.deep.equal([6, 7, 8, 9, 10, 6, 5, 3]);
+        });
+        test("should have empty list for first part and full list for second part", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const [first, second] = list.span(n => n > 100);
+            expect(second.toArray()).to.deep.equal([1,2,3,4,5]);
+            expect(first.none()).to.eq(true);
+            expect(second.none()).to.eq(false);
+        });
+        test("should have full list for first part and empty list for second part", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const [first, second] = list.span(n => n < 100);
+            expect(first.toArray()).to.deep.equal([1,2,3,4,5]);
+            expect(first.none()).to.eq(false);
+            expect(second.none()).to.eq(true);
+        });
+        test("should have empty list for both parts", () => {
+            const list = new List<number>();
+            const [first, second] = list.span(n => n < 100);
+            expect(first.none()).to.eq(true);
+            expect(second.none()).to.eq(true);
+        });
+    });
+
+    describe("#step()", () => {
+        test("should return an IEnumerable with elements [1,3,5,7,9]", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const list2 = list.step(2).toList();
+            expect(list2.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+            expect(list2.count()).to.eq(5);
+        });
+        test("should return an IEnumerable with elements [1,4,7,10]", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const list2 = list.step(3).toList();
+            expect(list2.toArray()).to.deep.equal([1, 4, 7, 10]);
+            expect(list2.count()).to.eq(4);
+        });
+        test("should return an IEnumerable with elements [1,5,9]", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const list2 = list.step(4).toList();
+            expect(list2.toArray()).to.deep.equal([1, 5, 9]);
+            expect(list2.count()).to.eq(3);
+        });
+        test("should return an IEnumerable with only the first element", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            const list2 = list.step(10).toList();
+            const list3 = list.step(100).toList();
+            expect(list2.toArray()).to.deep.equal([1]);
+            expect(list2.count()).to.eq(1);
+            expect(list3.toArray()).to.deep.equal([1]);
+            expect(list3.count()).to.eq(1);
+        });
+        test("should throw error if step is less than 1", () => {
+            const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(() => list.step(0)).toThrow("Step must be greater than 0.");
+            expect(() => list.step(-1)).toThrow("Step must be greater than 0.");
+        });
     });
 
     describe("#sum()", () => {
@@ -1986,6 +2235,39 @@ describe("List", () => {
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
+        });
+    });
+
+    describe("#windows()", () => {
+        const list = new List([1, 2, 3, 4, 5]);
+        test("should return a list of windows of size 3", () => {
+            const windows = list.windows(3).toList();
+            expect(windows.size()).to.eq(3);
+            expect(windows.get(0).toArray()).to.deep.equal([1, 2, 3]);
+            expect(windows.get(1).toArray()).to.deep.equal([2, 3, 4]);
+            expect(windows.get(2).toArray()).to.deep.equal([3, 4, 5]);
+        });
+        test("should return a list of windows of size 1", () => {
+            const windows = list.windows(1).toList();
+            expect(windows.size()).to.eq(5);
+            expect(windows.get(0).toArray()).to.deep.equal([1]);
+            expect(windows.get(1).toArray()).to.deep.equal([2]);
+            expect(windows.get(2).toArray()).to.deep.equal([3]);
+            expect(windows.get(3).toArray()).to.deep.equal([4]);
+            expect(windows.get(4).toArray()).to.deep.equal([5]);
+        });
+        test("should return a list of windows of size 5", () => {
+            const windows = list.windows(5).toList();
+            expect(windows.size()).to.eq(1);
+            expect(windows.get(0).toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+        test("should return an empty list if size is greater than source size", () => {
+            const windows = list.windows(6).toList();
+            expect(windows.size()).to.eq(0);
+        });
+        it("should throw an error if size is less than 1", () => {
+            expect(() => list.windows(0)).to.throw("Size must be greater than 0.");
+            expect(() => list.windows(-1)).to.throw("Size must be greater than 0.");
         });
     });
 

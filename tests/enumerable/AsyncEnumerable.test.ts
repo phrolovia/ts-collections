@@ -1,3 +1,4 @@
+import { describe } from "vitest";
 import { AsyncEnumerable } from "../../src/enumerator/AsyncEnumerable";
 import { Enumerable, List } from "../../src/imports";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -183,6 +184,43 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#combinations()", () => {
+        test("should return all combinations of the enumerable", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(4));
+            const result = await enumerable.combinations(2).select(c => c.toArray()).toArray();
+            console.log(result)
+            expect(result).to.deep.equal([
+                [0, 1], [0, 2], [1, 2], [0, 3], [1, 3], [2, 3]
+            ]);
+        });
+        test("should return all combinations of the enumerable #2", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(4));
+            const result = await enumerable.combinations(3).select(c => c.toArray()).toArray();
+            expect(result).to.deep.equal([
+                [0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]
+            ]);
+        });
+        test("should return all combinations of the enumerable #3", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(4));
+            const result = await enumerable.combinations(4).select(c => c.toArray()).toArray();
+            expect(result).to.deep.equal([
+                [0, 1, 2, 3]
+            ]);
+        });
+        test("should return all combinations of the enumerable #4", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(4));
+            const result = await enumerable.combinations(1).select(c => c.toArray()).toArray();
+            expect(result).to.deep.equal([
+                [0], [1], [2], [3]
+            ]);
+        });
+        test("should return all combinations of the enumerable #5", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(4));
+            const result = await enumerable.combinations(0).select(c => c.toArray()).toArray();
+            expect(result).to.deep.equal([[]]);
+        });
+    });
+
     describe("#concat()", () => {
         test("should concatenate two enumerables", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -219,6 +257,29 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.count(n => n % 2 === 0);
             expect(result).to.eq(5);
+        });
+    });
+
+    describe("#cycle()", () => {
+        test("should cycle through the enumerable", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.cycle(1).toArray();
+            console.log(result)
+            expect(result).to.deep.equal([0, 1, 2]);
+        });
+        test("should cycle through the enumerable #2", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.cycle(2).toArray();
+            expect(result).to.deep.equal([0, 1, 2, 0, 1, 2]);
+        });
+        test("should return an empty enumerable", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.cycle(0).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should throw an error if source is empty", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            expect(enumerable.cycle().toArray()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -570,6 +631,19 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#intersperse()", () => {
+        test("should intersperse the enumerable with the specified element", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.intersperse(99).toArray();
+            expect(result).to.deep.equal([0, 99, 1, 99, 2, 99, 3, 99, 4, 99, 5, 99, 6, 99, 7, 99, 8, 99, 9]);
+        });
+        test("should return empty enumerable if source is empty", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            const result = await enumerable.intersperse(99).toArray();
+            expect(result).to.deep.equal([]);
+        });
+    });
+
     describe("#join()", () => {
         const schools: School[] = [
             new School(1, "Elementary School"),
@@ -752,6 +826,19 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#none()", () => {
+        test("should return true if no elements satisfy the predicate", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.none(n => n > 10);
+            expect(result).to.be.true;
+        });
+        test("should return false if any element satisfies the predicate", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.none(n => n % 2 === 0);
+            expect(result).to.be.false;
+        });
+    });
+
     describe("#ofType()", () => {
         test("should return only the elements of the specified type", async () => {
             const enumerable1 = new AsyncEnumerable(mixedProducer([1, "a", 2, "b", 3, "c", BigInt(100)]));
@@ -822,11 +909,45 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#permutations()", () => {
+        test("should return all permutations of the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.permutations().select(p => p.toArray()).toArray();
+            expect(result).to.deep.equal([[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]]);
+        });
+        test("should return all permutations that have the length of 2", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.permutations(2).select(p => p.toArray()).toArray();
+            expect(result).to.deep.equal([[0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1]]);
+        });
+        test("should throw if size is less than 1", () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            expect(() => enumerable.permutations(0).toArray()).toThrowError("Size must be greater than 0.");
+        });
+    });
+
     describe("#prepend()", () => {
         test("should prepend an element to the beginning of the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.prepend(10).toArray();
             expect(result).to.deep.equal([10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+    });
+
+    describe("#product()", () => {
+        test("should return the product of the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(11, 1, 1));
+            const result = await enumerable.product();
+            expect(result).to.eq(3628800);
+        });
+        test("should return the product of the enumerable #2", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(6, 1, 1));
+            const result = await enumerable.product();
+            expect(result).to.eq(120);
+        });
+        test("should throw error if source is empty", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            expect(enumerable.product()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -1076,6 +1197,60 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.skipWhile(n => n < 15).toArray();
             expect(result).to.deep.equal([]);
+        });
+    });
+
+    describe("#span()", () => {
+        test("should return the first n elements that satisfy the predicate", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.span(n => n < 5)
+            expect(result[0].toArray()).to.deep.equal([0, 1, 2, 3, 4]);
+            expect(result[1].toArray()).to.deep.equal([5, 6, 7, 8, 9]);
+        });
+        test("should return all elements if predicate is true for all elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.span(n => n < 15)
+            expect(result[0].toArray()).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            expect(result[1].toArray()).to.deep.equal([]);
+        });
+        test("should return an empty enumerable if predicate is false for all elements", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.span(n => n < 0);
+            expect(result[0].toArray()).to.deep.equal([]);
+            expect(result[1].toArray()).to.deep.equal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        });
+        test("should return an empty enumerable if source is empty", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            const result = await enumerable.span(n => n < 0);
+            expect(result[0].toArray()).to.deep.equal([]);
+            expect(result[1].toArray()).to.deep.equal([]);
+        });
+    });
+
+    describe("#step()", () => {
+        test("should return an enumerable with elements [0, 2, 4, 6, 8]", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.step(2).toArray();
+            expect(result).to.deep.equal([0, 2, 4, 6, 8]);
+        });
+        test("should return an enumerable with elements [0, 3, 6, 9]", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.step(3).toArray();
+            expect(result).to.deep.equal([0, 3, 6, 9]);
+        });
+        test("should return an enumerable with only the first element", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.step(10).toArray();
+            expect(result).to.deep.equal([0]);
+        });
+        test("should return an enumerable with only the first element #2", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const result = await enumerable.step(1071).toArray();
+            expect(result).to.deep.equal([0]);
+        });
+        test("should throw error if step is less than 1", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            expect(() => enumerable.step(0)).toThrowError("Step must be greater than 0.");
         });
     });
 
@@ -1383,6 +1558,41 @@ describe("AsyncEnumerable", () => {
                 expect(num).to.be.lessThan(30);
                 expect(num % 3 === 0).to.be.true;
             }
+        });
+    });
+
+    describe("#windows()", () => {
+        test("should return a list of windows of size 3", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const windows = enumerable.windows(3);
+            const expected = [[1, 2, 3], [2, 3, 4], [3, 4, 5]];
+            const result = await windows.select(w => w.toArray()).toArray();
+            console.log(result);
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return a list of windows of size 1", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const windows = enumerable.windows(1);
+            const expected = [[1], [2], [3], [4], [5]];
+            const result = await windows.select(w => w.toArray()).toArray();
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return a list of windows of size 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const windows = enumerable.windows(5);
+            const expected = [[1, 2, 3, 4, 5]];
+            const result = await windows.select(w => w.toArray()).toArray();
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return an empty list if window size is greater than the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const windows = enumerable.windows(6);
+            const result = await windows.select(w => w.toArray()).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should throw error if window size is less than 1", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            expect(() => enumerable.windows(0).toArray()).toThrowError("Size must be greater than 0.");
         });
     });
 
