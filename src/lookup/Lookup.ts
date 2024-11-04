@@ -109,6 +109,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.chunk(size);
     }
 
+    public combinations(size?: number): IEnumerable<IEnumerable<IGroup<TKey, TElement>>> {
+        return this.#lookupTree.combinations(size);
+    }
+
     public concat(iterable: Iterable<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.concat(iterable);
     }
@@ -119,6 +123,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public count(predicate?: Predicate<IGroup<TKey, TElement>>): number {
         return this.#lookupTree.count(predicate);
+    }
+
+    public cycle(count?: number): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.cycle(count);
     }
 
     public defaultIfEmpty(value?: IGroup<TKey, TElement>): IEnumerable<IGroup<TKey, TElement> | null> {
@@ -176,6 +184,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.intersect(iterable, comparator);
     }
 
+    public intersperse<TSeparator = IGroup<TKey, TElement>>(separator: TSeparator): IEnumerable<IGroup<TKey, TElement> | TSeparator> {
+        return this.#lookupTree.intersperse(separator);
+    }
+
     public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<IGroup<TKey, TElement>, TGroupKey>,
                                             innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<IGroup<TKey, TElement>, TInner, TResult>,
                                             keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
@@ -198,6 +210,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.min(selector);
     }
 
+    public none(predicate?: Predicate<IGroup<TKey, TElement>>): boolean {
+        return this.#lookupTree.none(predicate);
+    }
+
     public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
         return this.#lookupTree.ofType<TResult>(type);
     }
@@ -218,8 +234,16 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.partition(predicate);
     }
 
+    public permutations(size?: number): IEnumerable<IEnumerable<IGroup<TKey, TElement>>> {
+        return this.#lookupTree.permutations(size);
+    }
+
     public prepend(element: IGroup<TKey, TElement>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.prepend(element);
+    }
+
+    public product(selector?: Selector<IGroup<TKey, TElement>, number>): number {
+        return this.#lookupTree.product(selector);
     }
 
     public reverse(): IEnumerable<IGroup<TKey, TElement>> {
@@ -268,6 +292,14 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public skipWhile(predicate: IndexedPredicate<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.skipWhile(predicate);
+    }
+
+    public span(predicate: Predicate<IGroup<TKey, TElement>>): [IEnumerable<IGroup<TKey, TElement>>, IEnumerable<IGroup<TKey, TElement>>] {
+        return this.#lookupTree.span(predicate);
+    }
+
+    public step(step: number): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.step(step);
     }
 
     public sum(selector?: Selector<IGroup<TKey, TElement>, number>): number {
@@ -379,6 +411,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public where(predicate: IndexedPredicate<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.where(predicate);
+    }
+
+    public windows(size: number): IEnumerable<IEnumerable<IGroup<TKey, TElement>>> {
+        return this.#lookupTree.windows(size);
     }
 
     public zip<TSecond, TResult = [IGroup<TKey, TElement>, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<IGroup<TKey, TElement>, TSecond, TResult>): IEnumerable<[IGroup<TKey, TElement>, TSecond]> | IEnumerable<TResult> {

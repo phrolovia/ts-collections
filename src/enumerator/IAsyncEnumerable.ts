@@ -67,6 +67,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
+     * Returns all combinations of the elements of the sequence.
+     * The outputs will not include duplicate combinations.
+     * @template TElement
+     * @param size The size of the combinations. If not specified, it will return all possible combinations.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A new enumerable sequence whose elements are combinations of the source sequence.
+     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     */
+    combinations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
+
+    /**
      * Concatenates two sequences.
      * @param other The enumerable sequence that will be concatenated to the first sequence.
      */
@@ -86,6 +96,17 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate The predicate function that will be used to check each element for a condition.
      */
     count(predicate?: Predicate<TElement>): Promise<number>;
+
+    /**
+     * Returns a new enumerable sequence that repeats the elements of the source sequence a specified number of times.
+     * If count is not specified, the sequence will be repeated indefinitely.
+     * If the sequence is empty, an error will be thrown.
+     * @template TElement
+     * @param count The number of times the source sequence will be repeated.
+     * @returns {IAsyncEnumerable<TElement>} A new enumerable sequence that repeats the elements of the source sequence.
+     * @throws {NoElementsException} If the source is empty.
+     */
+    cycle(count?: number): IAsyncEnumerable<TElement>;
 
     /**
      * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
@@ -198,6 +219,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
 
     /**
+     * Intersperses a specified element between each element of the sequence.
+     * @template TElement, TSeparator
+     * @param separator The element that will be interspersed between each element of the sequence.
+     * @returns {IAsyncEnumerable<TElement|TSeparator>} A new enumerable sequence whose elements are the elements of the source sequence interspersed with the specified element.
+     */
+    intersperse<TSeparator = TElement>(separator: TSeparator): IAsyncEnumerable<TElement | TSeparator>;
+
+    /**
      * Correlates the elements of two sequences based on equality of keys
      * @param inner The enumerable sequence to join to the first sequence.
      * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
@@ -236,6 +265,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {NoElementsException} If the source is empty.
      */
     min(selector?: Selector<TElement, number>): Promise<number>;
+
+    /**
+     * Determines whether no elements of the sequence satisfy the specified predicate.
+     * If no predicate is specified, it will return true if the sequence is empty.
+     * @param predicate The predicate function that will be used to check each element for a condition.
+     * @returns {Promise<boolean>} true if no elements of the sequence satisfy the specified predicate; otherwise, false.
+     */
+    none(predicate?: Predicate<TElement>): Promise<boolean>;
 
     /**
      * Returns the elements that are of the specified type.
@@ -280,10 +317,27 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
+     * Returns an enumerable sequence of permutations, each containing a permutation of the elements of the source sequence.
+     * @template TElement
+     * @param size If specified, it will return only the permutations of the specified size.
+     * If not specified, it will return permutations of the size of the source sequence.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} An enumerable of enumerable sequences, each containing a permutation of the elements of the source sequence.
+     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     */
+    permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
+
+    /**
      * Adds a value to the beginning of the sequence.
      * @param element The element to add to the sequence.
      */
     prepend(element: TElement): IAsyncEnumerable<TElement>;
+
+    /**
+     * Computes the product of the sequence.
+     * @param selector The selector function that will be used to select a numeric value from the sequence elements.
+     * @returns {Promise<number>} The product of the sequence.
+     */
+    product(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
      * Inverts the order of the elements in the sequence.
@@ -360,6 +414,33 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
+     * Splits the sequence into two sequences based on a predicate.
+     * The first sequence contains the elements from the start of the input sequence that satisfy the predicate,
+     * and it continues until the predicate no longer holds.
+     * The second sequence contains the remaining elements.
+     * @template TElement
+     * @param predicate The predicate function that will be used to test each element.
+     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A tuple of two enumerable sequences, the first one containing the elements that satisfy the condition,
+     * and the second one containing the rest of the elements regardless of the condition.
+     */
+    span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+
+    /**
+     * Skips elements in a sequence according to a specified step size.
+     *
+     * Example:
+     * ```typescript
+     *    const numberList = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+     *    const result = numberList.step(2).toArray(); // [1, 3, 5, 7, 9]
+     *    const result2 = numberList.step(3).toArray(); // [1, 4, 7, 10]
+     * ```
+     * @template TElement
+     * @param step The number of elements to skip between each element.
+     * @returns {IAsyncEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence with the elements skipped according to the specified step size.
+     */
+    step(step: number): IAsyncEnumerable<TElement>;
+
+    /**
      * Returns the sum of the values in the sequence.
      * @param selector The selector function that will be used to select the value to sum. If not specified, the value itself will be used.
      * @throws {NoElementsException} If the source is empty.
@@ -401,6 +482,30 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate The predicate function that will be used to test each element.
      */
     where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+
+    /**
+     * Returns an enumerable sequence of windows of the specified size.
+     * If the size is less than or equal to 0, an error will be thrown.
+     * If the size is greater than the number of elements in the sequence, an empty sequence will be returned.
+     *
+     * The windows will overlap, meaning that each element will be included in multiple windows.
+     *
+     * Example:
+     * ```typescript
+     *   const numberList = new List([1, 2, 3, 4, 5]);
+     *   const result = numberList.windows(3).toArray(); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+     *   const result2 = numberList.windows(1).toArray(); // [[1], [2], [3], [4], [5]]
+     *   const result3 = numberList.windows(5).toArray(); // [[1, 2, 3, 4, 5]]
+     *   const result4 = numberList.windows(6).toArray(); // []
+     *   const result5 = numberList.windows(0).toArray(); // Error
+     *   const result6 = numberList.windows(-1).toArray(); // Error
+     * ```
+     * @template TElement
+     * @param size The size of the windows.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A new enumerable sequence that contains the specified number of elements from the start of the input sequence.
+     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     */
+    windows(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
      * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.

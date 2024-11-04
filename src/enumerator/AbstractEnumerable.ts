@@ -76,6 +76,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.chunk(this, size);
     }
 
+    public combinations(size?: number): IEnumerable<IEnumerable<TElement>> {
+        return EnumerableStatic.combinations(this, size);
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.concat(this, iterable);
     }
@@ -87,6 +91,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public count(predicate?: Predicate<TElement>): number {
         return EnumerableStatic.count(this, predicate);
+    }
+
+    public cycle(count?: number): IEnumerable<TElement> {
+        return EnumerableStatic.cycle(this, count);
     }
 
     public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
@@ -138,6 +146,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.intersect(this, iterable, comparator);
     }
 
+    public intersperse<TSeparator = TElement>(separator: TSeparator): IEnumerable<TElement | TSeparator> {
+        return EnumerableStatic.intersperse(this, separator);
+    }
+
     public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
         return EnumerableStatic.join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
@@ -156,6 +168,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public min(selector?: Selector<TElement, number>): number {
         return EnumerableStatic.min(this, selector);
+    }
+
+    public none(predicate?: Predicate<TElement>): boolean {
+        return EnumerableStatic.none(this, predicate);
     }
 
     public ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>> {
@@ -178,8 +194,16 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.partition(this, predicate);
     }
 
+    public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
+        return EnumerableStatic.permutations(this, size);
+    }
+
     public prepend(element: TElement): IEnumerable<TElement> {
         return EnumerableStatic.prepend(this, element);
+    }
+
+    public product(selector?: Selector<TElement, number>): number {
+        return EnumerableStatic.product(this, selector);
     }
 
     public reverse(): IEnumerable<TElement> {
@@ -225,6 +249,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.skipWhile(this, predicate);
+    }
+
+    public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+        return EnumerableStatic.span(this, predicate);
+    }
+
+    public step(step: number): IEnumerable<TElement> {
+        return EnumerableStatic.step(this, step);
     }
 
     public sum(selector?: Selector<TElement, number>): number {
@@ -338,6 +370,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.where(this, predicate);
+    }
+
+    public windows(size: number): IEnumerable<IEnumerable<TElement>> {
+        return EnumerableStatic.windows(this, size);
     }
 
     public zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;

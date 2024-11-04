@@ -891,6 +891,18 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#product()", () => {
+        const dict = new Dictionary<number, Person>([
+            [Person.Rui.age, Person.Rui],
+            [Person.Setsuna.age, Person.Setsuna],
+            [Person.Ayana.age, Person.Ayana]
+        ]);
+        test("should return the product of all keys", () => {
+            const product = dict.product(p => p.key);
+            expect(product).to.eq(Person.Rui.age * Person.Setsuna.age * Person.Ayana.age);
+        });
+    });
+
     describe("#put()", () => {
         const dict = new Dictionary<number, number>();
         dict.add(9, 80);
@@ -1259,6 +1271,21 @@ describe("Dictionary", () => {
             expect(keys.length).to.eq(6);
             // expect(keys).to.have.all.members([8000, 6500, 9000, 4000, 1500, 5500]);
             expect(keys).to.have.all.members([1500, 4000, 5500, 6500, 8000, 9000]);
+        });
+    });
+
+    describe("#span()", () => {
+        test("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
+            const dict = new Dictionary<string, Person>();
+            dict.add(Person.Alice.name, Person.Alice);
+            dict.add(Person.Rui.name, Person.Rui);
+            dict.add(Person.Setsuna.name, Person.Setsuna);
+            dict.add(Person.Ayana.name, Person.Ayana);
+            const [group1, group2] = dict.span(p => p.key.localeCompare("Setsuna") !== 0);
+            const group1Keys = group1.select(p => p.key).toArray();
+            const group2Keys = group2.select(p => p.key).toArray();
+            expect(group1Keys).to.deep.equal(["Alice", "Rui"]);
+            expect(group2Keys).to.deep.equal(["Setsuna", "Ayana"]);
         });
     });
 
