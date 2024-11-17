@@ -11,6 +11,7 @@ import {
     concat,
     contains,
     count,
+    countBy,
     cycle,
     defaultIfEmpty,
     Dictionary,
@@ -32,6 +33,7 @@ import {
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
+    index,
     intersect,
     intersperse,
     join,
@@ -319,9 +321,27 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#countBy()", () => {
+        const list = new List([Person.Suzuha, Person.Suzuha2, Person.Kaori]);
+        test("should return 2", () => {
+            const countPairs = countBy(list, p => p.name);
+            const suuzhaCount = countPairs.first(p => p.key === "Suzuha").value;
+            expect(suuzhaCount).to.eq(2);
+        });
+        test("should use provided comparer", () => {
+            const LittleKaori = new Person("kaori", "Kawashima", 16);
+            const list2 = new List([Person.Suzuha, Person.Suzuha2, Person.Kaori, LittleKaori]);
+            const countPairs = countBy(list2, p => p.name, (a, b) => a.toLowerCase() === b.toLowerCase());
+            const suuzhaCount = countPairs.first(p => p.key === "Suzuha").value;
+            expect(suuzhaCount).to.eq(2);
+            const kaoriCount = countPairs.first(p => p.key === "Kaori").value;
+            expect(kaoriCount).to.eq(2);
+        });
+    });
+
     describe("#cycle()", () => {
         test("should cycle through the list 3 times", () => {
-            const list = cycle([1,2,3], 3);
+            const list = cycle([1, 2, 3], 3);
             expect(count(list)).to.eq(9);
             expect(list.toArray()).to.deep.equal([1, 2, 3, 1, 2, 3, 1, 2, 3]);
         });
@@ -549,6 +569,14 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#index()", () => {
+        test("should return a list of tuples with the index and the element", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const indexedList = index(list);
+            expect(indexedList.toArray()).to.deep.equal([[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]);
+        });
+    });
+
     describe("#intersect()", () => {
         test("should return [4,5]", () => {
             const first = [1, 2, 3, 4, 5];
@@ -598,6 +626,10 @@ describe("Enumerable Standalone Functions", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const result = intersperse(list, 0);
             expect(result.toArray()).to.deep.equal([1, 0, 2, 0, 3, 0, 4, 0, 5]);
+        });
+        test("should intersperse string with a separator", () => {
+            const result = intersperse("ALICE", "-").aggregate((total, next) => total + next, "");
+            expect(result).to.eq("A-L-I-C-E");
         });
     });
 
@@ -1467,7 +1499,7 @@ describe("Enumerable Standalone Functions", () => {
     describe("#toObject()", () => {
         test("should return an object", () => {
             const obj = toObject([["a", 1], ["b", 2], ["c", 3]], t => t[0], t => t[1]);
-            expect(obj).to.deep.equal({ a: 1, b: 2, c: 3 });
+            expect(obj).to.deep.equal({a: 1, b: 2, c: 3});
         });
     });
 

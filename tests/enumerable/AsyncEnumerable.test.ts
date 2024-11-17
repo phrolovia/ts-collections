@@ -260,6 +260,24 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#countBy()", () => {
+        test("should return a key value pair list of names and their counts", {timeout: 5000}, async () => {
+            const personList = [Person.Rui, Person.Setsuna, Person.Suzuha, Person.Suzuha2];
+            const enumerable = new AsyncEnumerable(personProducer(personList))
+            const result1 = enumerable.countBy(p => p.name);
+            const suzuhaCount = (await result1.first(p => p.key === "Suzuha")).value;
+            expect(suzuhaCount).to.eq(2);
+        });
+        test("should return a key value pair list of names and their counts with comparer", {timeout: 5000}, async () => {
+            const LittleSuzuha = new Person("suzuha", "Amane", 16);
+            const personList = [Person.Rui, Person.Setsuna, Person.Suzuha, Person.Suzuha2, LittleSuzuha];
+            const enumerable = new AsyncEnumerable(personProducer(personList))
+            const result1 = enumerable.countBy(p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            const suzuhaCountBig = (await result1.first(p => p.key === "Suzuha")).value;
+            expect(suzuhaCountBig).to.eq(3);
+        });
+    });
+
     describe("#cycle()", () => {
         test("should cycle through the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(3));
@@ -577,6 +595,19 @@ describe("AsyncEnumerable", () => {
                 "Students of Academy: "
             ];
             expect(finalOutput).to.deep.equal(expectedOutput);
+        });
+    });
+
+    describe("#index()", () => {
+        test("should return a list of tuples with index and element", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(stringProducer(["a", "b", "c", "d"]));
+            const result = await enumerable.index().toArray();
+            expect(result).to.deep.equal([
+                [0, "a"],
+                [1, "b"],
+                [2, "c"],
+                [3, "d"]
+            ]);
         });
     });
 

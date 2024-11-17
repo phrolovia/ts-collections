@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { Enumerable } from "../enumerator/Enumerable";
 import { IEnumerable } from "../enumerator/IEnumerable";
 import {
@@ -125,6 +126,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.count(predicate);
     }
 
+    public countBy<TCountKey>(keySelector: Selector<IGroup<TKey, TElement>, TCountKey>, comparator?: EqualityComparator<TCountKey>): IEnumerable<KeyValuePair<TCountKey, number>> {
+        return this.#lookupTree.countBy(keySelector, comparator);
+    }
+
     public cycle(count?: number): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.cycle(count);
     }
@@ -178,6 +183,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public hasKey(key: TKey): boolean {
         return !!this.#lookupTree.findBy(key, g => g.key, this.#keyComparator);
+    }
+
+    public index(): IEnumerable<[number, IGroup<TKey, TElement>]> {
+        return this.#lookupTree.index();
     }
 
     public intersect(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {

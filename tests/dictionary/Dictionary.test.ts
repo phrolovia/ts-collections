@@ -356,6 +356,26 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#countBy()", () => {
+        it("should return a list of [name, count] key value pairs", () => {
+            const dict = new Dictionary<string, Person>();
+            const LittleNoemi = new Person("noemi", "Bluewater", 9);
+            dict.add(Person.Alice.name, Person.Alice);
+            dict.add(Person.Lucrezia.name, Person.Lucrezia);
+            dict.add(Person.Noemi.name, Person.Noemi);
+            dict.add(LittleNoemi.name, LittleNoemi);
+            const countByResult = dict.countBy(p => p.value.name);
+            const noemiCountBig = countByResult.first(p => p.key === "Noemi").value;
+            const noemiCountLittle = countByResult.first(p => p.key === "noemi").value;
+            expect(noemiCountBig).to.eq(1);
+            expect(noemiCountLittle).to.eq(1);
+
+            const countByResult2 = dict.countBy(p => p.value.name, (p1, p2) => p1.toLowerCase().localeCompare(p2.toLowerCase()) === 0);
+            const noemiCount = countByResult2.first(p => p.key === "Noemi").value;
+            expect(noemiCount).to.eq(2);
+        });
+    });
+
     describe("#defaultIfEmpty()", () => {
         test("should return a new IEnumerable with the default value", () => {
             const dictionary = new Dictionary<string, Person>();

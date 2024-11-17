@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
@@ -98,6 +99,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     count(predicate?: Predicate<TElement>): Promise<number>;
 
     /**
+     * Returns an enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
+     * @template TKey
+     * @param keySelector The key selector function that will be used for selecting the key for each element.
+     * @param comparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IAsyncEnumerable<KeyValuePair<TKey, number>>} An enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
+     */
+    countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>>;
+
+    /**
      * Returns a new enumerable sequence that repeats the elements of the source sequence a specified number of times.
      * If count is not specified, the sequence will be repeated indefinitely.
      * If the sequence is empty, an error will be thrown.
@@ -194,6 +204,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
      */
     groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult>;
+
+    /**
+     * Returns an enumerable of tuples, each containing the index and the element from the source sequence.
+     * @template TElement
+     * @returns {IAsyncEnumerable<[number, TElement]>} An enumerable of tuples, each containing the index and the element from the source sequence.
+     */
+    index(): IAsyncEnumerable<[number, TElement]>;
 
     /**
      * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.

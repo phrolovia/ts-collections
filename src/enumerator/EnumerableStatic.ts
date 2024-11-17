@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     Dictionary,
     Enumerable,
@@ -89,6 +90,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).count(predicate);
     }
 
+    public static countBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
+        return new Enumerable(source).countBy(keySelector, keyComparator);
+    }
+
     public static cycle<TElement>(source: IEnumerable<TElement>, count?: number): IEnumerable<TElement> {
         return new Enumerable(source).cycle(count);
     }
@@ -131,6 +136,10 @@ export abstract class EnumerableStatic {
 
     public static groupJoin<TOuter, TInner, TKey, TResult>(source: IEnumerable<TOuter>, innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TOuter, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TOuter, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         return new Enumerable(source).groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
+    public static index<TElement>(source: IEnumerable<TElement>): IEnumerable<[number, TElement]> {
+        return new Enumerable(source).index();
     }
 
     public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {

@@ -169,6 +169,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return count;
     }
 
+    public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
+        comparator ??= Comparators.equalityComparator;
+        const groups = this.groupBy(keySelector, comparator);
+        return groups.select(g => new KeyValuePair(g.key, g.source.count()));
+    }
+
     public cycle(count?: number): IEnumerable<TElement> {
         return new Enumerator(() => this.cycleGenerator(count));
     }
@@ -254,6 +260,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.groupJoinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
+    }
+
+    public index(): IEnumerable<[number, TElement]> {
+        return new Enumerator<[number, TElement]>(() => this.indexGenerator());
     }
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
@@ -853,6 +863,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* indexGenerator(): Iterable<[number, TElement]> {
+        let index = 0;
+        for (const item of this) {
+            yield [index++, item];
+        }
+    }
+
     private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
         const set = new SortedSet(iterable, comparator as OrderComparator<TElement>);
         const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
@@ -902,7 +919,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): Iterable<InferredType<TResult>> {
         const isOfType = typeof type === "string"
             ? ((item: unknown): boolean => typeof item === type) as (item: unknown) => item is InferredType<TResult>
-            : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as any);
+            : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as Function);
         for (const item of this) {
             if (isOfType(item)) {
                 yield item;
