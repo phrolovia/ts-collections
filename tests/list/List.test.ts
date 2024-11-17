@@ -349,6 +349,45 @@ describe("List", () => {
         });
     });
 
+    describe("#countBy()", () => {
+        const list = new List([Person.Noemi, Person.Noemi2, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Eliza]);
+        test("should return 2", () => {
+            const countPairs = list.countBy(p => p.name);
+            const noemiCount = countPairs.first(p => p.key === "Noemi").value;
+            expect(noemiCount).to.eq(2);
+        });
+        test("should return 3", () => {
+            const countPairs = list.countBy(p => p.name);
+            const suzuhaCount = countPairs.first(p => p.key === "Suzuha").value;
+            expect(suzuhaCount).to.eq(3);
+        });
+        test("should return 1", () => {
+            const countPairs = list.countBy(p => p.name);
+            const elizaCount = countPairs.first(p => p.key === "Eliza").value;
+            expect(elizaCount).to.eq(1);
+        });
+        test("should return 0", () => {
+            const countPairs = list.countBy(p => p.name);
+            const aliceCount = countPairs.count(p => p.key === "Alice");
+            expect(aliceCount).to.eq(0);
+        });
+        test("should use provided comparator", () => {
+            const LittleEliza = new Person("eliza", "Nymph", 9);
+            const list2 = new List([...list, LittleEliza])
+            const countPairs1 = list2.countBy(p => p.name, (n1, n2) => n1.localeCompare(n2) === 0);
+
+            const elizaCountBig = countPairs1.first(p => p.key === "Eliza").value;
+            expect(elizaCountBig).to.eq(1);
+
+            const elizaCountLittle = countPairs1.first(p => p.key === "eliza").value;
+            expect(elizaCountLittle).to.eq(1);
+
+            const countPairs2 = list2.countBy(p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            const elizaCountAll = countPairs2.first(p => p.key === "Eliza").value;
+            expect(elizaCountAll).to.eq(2);
+        });
+    });
+
     describe("#cycle()", () => {
         test("should return an infinite iterable", () => {
             const list = new List([1, 2, 3]);
@@ -614,11 +653,6 @@ describe("List", () => {
             expect(kids.length).to.eq(3);
             expect(kids).to.have.all.members([Person.Kaori, Person.Mel, Person.Senna]);
         });
-        test("should use provided comparator", () => {
-            const shortNamedPeople = list.groupBy(p => p.name, (n1, n2) => n1 === n2).where(pg => pg.key.length < 5).selectMany(g => g.source).toArray();
-            expect(shortNamedPeople.length).to.eq(2);
-            expect(shortNamedPeople).to.have.all.members([Person.Mel, Person.Jane]);
-        });
         test("should be iterable with for-of loop", () => {
             const groupedPeople = list.groupBy(p => p.name.length);
             const people: Person[] = [];
@@ -640,6 +674,24 @@ describe("List", () => {
             list.groupBy(p => p.age).forEach(g => {
                 g.source.orderBy(n => n).forEach(p => people.push(p));
             });
+        });
+        test("should use provided comparator for key comparison", () => {
+            const LittleAlice = new Person("alice", "Snowmist", 9);
+            const list = new List([Person.Alice, Person.Mel, Person.Senna, LittleAlice]);
+            const group = list.groupBy(p => p.name, (n1, n2) => n1.toLowerCase() === n2.toLowerCase()).toList();
+            const names: string[] = [];
+            const groupedNames: { [name: string]: string[] } = {};
+            for (const nameGroup of group) {
+                names.push(nameGroup.key);
+                groupedNames[nameGroup.key] ??= [];
+                for (const pdata of nameGroup.source) {
+                    groupedNames[nameGroup.key].push(pdata.name);
+                }
+            }
+            expect(names).to.have.all.members(["Alice", "Mel", "Senna"]);
+            expect(groupedNames["Alice"]).to.have.all.members(["Alice", "alice"]);
+            expect(groupedNames["Mel"]).to.have.all.members(["Mel"]);
+            expect(groupedNames["Senna"]).to.have.all.members(["Senna"]);
         });
     });
 
@@ -680,6 +732,28 @@ describe("List", () => {
                 "Students of Academy: "
             ];
             expect(finalOutput).to.deep.equal(expectedOutput);
+        });
+    });
+
+    describe("#index()", () => {
+        const list1 = new List([Person.Kaori, Person.Mirei, Person.Rui, Person.Setsuna, Person.Reina]);
+        test("should return a tuple of [index, element]", () => {
+            const indexPersonTuple = list1.index().toArray();
+            expect(indexPersonTuple[0][0]).to.eq(0);
+            expect(indexPersonTuple[0][1]).to.eq(Person.Kaori);
+            expect(indexPersonTuple[1][0]).to.eq(1);
+            expect(indexPersonTuple[1][1]).to.eq(Person.Mirei);
+            expect(indexPersonTuple[2][0]).to.eq(2);
+            expect(indexPersonTuple[2][1]).to.eq(Person.Rui);
+            expect(indexPersonTuple[3][0]).to.eq(3);
+            expect(indexPersonTuple[3][1]).to.eq(Person.Setsuna);
+            expect(indexPersonTuple[4][0]).to.eq(4);
+            expect(indexPersonTuple[4][1]).to.eq(Person.Reina);
+        });
+        test("should return empty array if list is empty", () => {
+            const list = new List<Person>();
+            const indexPersonTuple = list.index().toArray();
+            expect(indexPersonTuple).to.deep.equal([]);
         });
     });
 

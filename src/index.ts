@@ -69,6 +69,7 @@ export {
     concat,
     contains,
     count,
+    countBy,
     cycle,
     defaultIfEmpty,
     distinct,
@@ -82,6 +83,7 @@ export {
     from,
     groupBy,
     groupJoin,
+    index,
     intersect,
     intersperse,
     join,
@@ -141,6 +143,7 @@ export type { EqualityComparator } from "./shared/EqualityComparator";
 export type { IndexedAction } from "./shared/IndexedAction";
 export type { IndexedPredicate } from "./shared/IndexedPredicate";
 export type { IndexedSelector } from "./shared/IndexedSelector";
+export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";

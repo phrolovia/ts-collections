@@ -1,6 +1,7 @@
 import { Dictionary } from "../dictionary/Dictionary";
 import { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
 import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
 import { ImmutableList } from "../list/ImmutableList";
 import { LinkedList } from "../list/LinkedList";
@@ -190,6 +191,22 @@ export const count = <TElement>(
     predicate?: Predicate<TElement>
 ): number => {
     return from(source).count(predicate);
+}
+
+/**
+ * Returns an enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
+ * @template TKey
+ * @param source The source iterable.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param comparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<KeyValuePair<TKey, number>>} A new enumerable sequence that contains key value pair objects.
+ */
+export const countBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    comparator?: EqualityComparator<TKey>
+): IEnumerable<KeyValuePair<TKey, number>> => {
+    return from(source).countBy(keySelector, comparator);
 }
 
 /**
@@ -395,6 +412,16 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TResult> => {
     return from(source).groupJoin(from(innerEnumerable), outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+}
+
+/**
+ * Returns an enumerable of tuples, each containing the index and the element from the source sequence.
+ * @template TElement
+ * @param source The source iterable.
+ * @returns {IEnumerable<[number, TElement]>} A new enumerable sequence whose elements are tuples of the index and the element.
+ */
+export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number, TElement]> => {
+    return from(source).index();
 }
 
 /**

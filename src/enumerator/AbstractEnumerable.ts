@@ -1,4 +1,5 @@
 import { Dictionary } from "../dictionary/Dictionary";
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
 import {
     from,
@@ -93,6 +94,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.count(this, predicate);
     }
 
+    public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
+        return EnumerableStatic.countBy(this, keySelector, comparator);
+    }
+
     public cycle(count?: number): IEnumerable<TElement> {
         return EnumerableStatic.cycle(this, count);
     }
@@ -139,6 +144,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
+    public index(): IEnumerable<[number, TElement]> {
+        return EnumerableStatic.index(this);
     }
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {

@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { AsyncEnumerator, IAsyncEnumerable, IEnumerable, IOrderedAsyncEnumerable } from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
@@ -93,6 +94,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.count(predicate);
     }
 
+    public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>> {
+        return this.#enumerator.countBy(keySelector, comparator);
+    }
+
     public cycle(count?: number): IAsyncEnumerable<TElement> {
         return this.#enumerator.cycle(count);
     }
@@ -135,6 +140,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
         return this.#enumerator.groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
+    public index(): IAsyncEnumerable<[number, TElement]> {
+        return this.#enumerator.index();
     }
 
     public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {

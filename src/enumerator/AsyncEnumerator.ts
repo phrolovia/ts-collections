@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     Collections,
     Enumerable,
@@ -154,6 +155,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return count;
     }
 
+    public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>> {
+        comparator ??= Comparators.equalityComparator;
+        const groups = this.groupBy(keySelector, comparator);
+        return groups.select(g => new KeyValuePair(g.key, g.source.count()));
+    }
+
     public cycle(count?: number): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.cycleGenerator(count));
     }
@@ -253,6 +260,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     public groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         return new AsyncEnumerator<TResult>(() => this.groupJoinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare));
+    }
+
+    public index(): IAsyncEnumerable<[number, TElement]> {
+        return new AsyncEnumerator<[number, TElement]>(() => this.indexGenerator());
     }
 
     public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
@@ -716,6 +727,13 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             const outerKey = outerKeySelector(outerElement);
             const innerGroup = innerGroups.find(g => keyComparator(g.key, outerKey));
             yield resultSelector(outerElement, innerGroup?.source ?? Enumerable.empty<TInner>());
+        }
+    }
+
+    private async* indexGenerator(): AsyncIterable<[number, TElement]> {
+        let index = 0;
+        for await (const element of this) {
+            yield [index++, element];
         }
     }
 

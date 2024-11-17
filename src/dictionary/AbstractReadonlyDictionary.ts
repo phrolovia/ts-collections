@@ -113,6 +113,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.count(this, predicate);
     }
 
+    public countBy<TCountKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TCountKey>, comparator?: EqualityComparator<TCountKey>): IEnumerable<KeyValuePair<TCountKey, number>> {
+        return EnumerableStatic.countBy(this, keySelector, comparator);
+    }
+
     public cycle(count?: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.cycle(this, count);
     }
@@ -156,6 +160,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public groupJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
         return EnumerableStatic.groupJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
+    public index(): IEnumerable<[number, KeyValuePair<TKey, TValue>]> {
+        return EnumerableStatic.index(this);
     }
 
     public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {

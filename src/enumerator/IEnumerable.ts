@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     Dictionary,
     EnumerableSet,
@@ -140,6 +141,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     count(predicate?: Predicate<TElement>): number;
 
     /**
+     * Returns an enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
+     * @template TKey
+     * @param keySelector The key selector function that will be used to select the key for an element.
+     * @param comparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IEnumerable<KeyValuePair<TKey, number>>} A new enumerable sequence that contains key value pair objects.
+     */
+    countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>>;
+
+    /**
      * Returns a new enumerable sequence that repeats the elements of the source sequence a specified number of times.
      * If count is not specified, the sequence will be repeated indefinitely.
      * If the sequence is empty, an error will be thrown.
@@ -247,6 +257,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
                                      resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;
+
+    /**
+     * Returns an enumerable of tuples, each containing the index and the element from the source sequence.
+     * @template TElement
+     * @returns {IEnumerable<[number, TElement]>} A new enumerable sequence whose elements are tuples of the index and the element.
+     */
+    index(): IEnumerable<[number, TElement]>;
 
     /**
      * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.

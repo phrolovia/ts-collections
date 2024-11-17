@@ -1,3 +1,4 @@
+import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     Dictionary,
     EnumerableSet,
@@ -144,6 +145,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.count(predicate);
     }
 
+    public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
+        return this.#enumerator.countBy(keySelector, comparator);
+    }
+
     public cycle(count?: number): IEnumerable<TElement> {
         return this.#enumerator.cycle(count);
     }
@@ -186,6 +191,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         return this.#enumerator.groupJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    }
+
+    public index(): IEnumerable<[number, TElement]> {
+        return this.#enumerator.index();
     }
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
