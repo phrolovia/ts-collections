@@ -986,6 +986,27 @@ describe("List", () => {
             expect(() => list.max(n => n * 2)).toThrow(new NoElementsException());
         });
     });
+    describe("#maxBy()", () => {
+        test("should return person with the biggest age", () => {
+            const personList = new List([Person.Alice, Person.Ayana, Person.Setsuna]);
+            const oldest = personList.maxBy(p => p.age);
+            expect(oldest).to.eq(Person.Ayana);
+        });
+        test("should return biggest element", () => {
+            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
+            const max = list.maxBy(n => n);
+            expect(max).to.eq(2312);
+        });
+        test("should use provided comparator", () => {
+            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
+            const max = list.maxBy(n => n, (n1, n2) => n2 - n1); // should return the smallest element
+            expect(max).to.eq(1);
+        });
+        test("should throw if list has no elements", () => {
+            const list = new List<Person>();
+            expect(() => list.maxBy(p => p.age)).toThrow(new NoElementsException());
+        });
+    });
     describe("#min()", () => {
         const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
         test("should return 1", () => {
@@ -1005,7 +1026,27 @@ describe("List", () => {
             expect(() => list.min(n => n / 2)).toThrow(new NoElementsException());
         });
     });
-
+    describe("#minBy()", () => {
+        test("should return person with the smallest age", () => {
+            const personList = new List([Person.Alice, Person.Ayana, Person.Setsuna]);
+            const youngest = personList.minBy(p => p.age);
+            expect(youngest).to.eq(Person.Setsuna);
+        });
+        test("should return smallest element", () => {
+            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
+            const min = list.minBy(n => n);
+            expect(min).to.eq(1);
+        });
+        test("should use provided comparator", () => {
+            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
+            const min = list.minBy(n => n, (n1, n2) => n2 - n1); // should return the biggest element
+            expect(min).to.eq(2312);
+        });
+        test("should throw if list has no elements", () => {
+            const list = new List<Person>();
+            expect(() => list.minBy(p => p.age)).toThrow(new NoElementsException());
+        });
+    });
     describe("#none()", () => {
         test("should return true if list is empty", () => {
             const list = new List<number>();

@@ -42,7 +42,9 @@ import {
     LinkedList,
     List,
     max,
+    maxBy,
     min,
+    minBy,
     none,
     ofType,
     orderBy,
@@ -733,6 +735,18 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#maxBy()", () => {
+        test("should return the maximum value by a selector", () => {
+            const list = new List([Person.Alice, Person.Mirei, Person.Lucrezia, Person.Vanessa]);
+            const maxPerson = maxBy(list, p => p.age);
+            expect(maxPerson).to.eq(Person.Alice);
+        });
+        test("should throw an error if the list is empty", () => {
+            const list = new List<Person>([]);
+            expect(() => maxBy(list, p => p.age)).to.throw();
+        });
+    });
+
     describe("#min()", () => {
         test("should return the minimum value", () => {
             expect(min([1, 2, 3, 4, 5])).to.eq(1);
@@ -744,6 +758,18 @@ describe("Enumerable Standalone Functions", () => {
         test("should throw an error if the list is empty", () => {
             const list = new List([]);
             expect(() => min(list)).to.throw();
+        });
+    });
+
+    describe("#minBy()", () => {
+        test("should return the minimum value by a selector", () => {
+            const list = new List([Person.Alice, Person.Mirei, Person.Lucrezia, Person.Vanessa]);
+            const minPerson = minBy(list, p => p.age);
+            expect(minPerson).to.eq(Person.Vanessa);
+        });
+        test("should throw an error if the list is empty", () => {
+            const list = new List<Person>([]);
+            expect(() => minBy(list, p => p.age)).to.throw();
         });
     });
 

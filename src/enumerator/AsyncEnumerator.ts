@@ -324,6 +324,22 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return max;
     }
 
+    public async maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
+        let maxElement: TElement | null = null;
+        let maxKey: TKey | null = null;
+        for await (const element of this) {
+            const key = keySelector(element);
+            if (maxKey == null || (comparator?.(key, maxKey) ?? key) > maxKey) {
+                maxKey = key;
+                maxElement = element;
+            }
+        }
+        if (maxElement == null) {
+            throw new NoElementsException();
+        }
+        return maxElement;
+    }
+
     public async min(selector?: Selector<TElement, number>): Promise<number> {
         let min: number | null = null;
         for await (const element of this) {
@@ -334,6 +350,22 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             throw new NoElementsException();
         }
         return min;
+    }
+
+    public async minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
+        let minElement: TElement | null = null;
+        let minKey: TKey | null = null;
+        for await (const element of this) {
+            const key = keySelector(element);
+            if (minKey == null || (comparator?.(key, minKey) ?? key) < minKey) {
+                minKey = key;
+                minElement = element;
+            }
+        }
+        if (minElement == null) {
+            throw new NoElementsException();
+        }
+        return minElement;
     }
 
     public async none(predicate?: Predicate<TElement>): Promise<boolean> {

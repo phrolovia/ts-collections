@@ -835,6 +835,28 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#maxBy()", () => {
+        test("should return the maximum value of the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const max = await enumerable.maxBy(n => n);
+            expect(max).to.eq(9);
+        });
+        test("should return the oldest person in the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Alice,
+                Person.Olga,
+                Person.Kaori,
+                Person.Priscilla
+            ]));
+            const max = await enumerable.maxBy(p => p.age);
+            expect(max).to.eq(Person.Olga);
+        });
+        test("should throw error if no element is present", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            expect(enumerable.maxBy(n => n)).rejects.toThrowError(new NoElementsException());
+        });
+    });
+
     describe("#min()", () => {
         test("should return the minimum value of the enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -854,6 +876,28 @@ describe("AsyncEnumerable", () => {
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
             expect(enumerable.min()).rejects.toThrowError(new NoElementsException());
+        });
+    });
+
+    describe("#minBy()", () => {
+        test("should return the minimum value of the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(10));
+            const min = await enumerable.minBy(n => n);
+            expect(min).to.eq(0);
+        });
+        test("should return the youngest person in the enumerable", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Alice,
+                Person.Olga,
+                Person.Kaori,
+                Person.Priscilla
+            ]));
+            const min = await enumerable.minBy(p => p.age);
+            expect(min).to.eq(Person.Priscilla);
+        });
+        test("should throw error if no element is present", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(0));
+            expect(enumerable.minBy(n => n)).rejects.toThrowError(new NoElementsException());
         });
     });
 

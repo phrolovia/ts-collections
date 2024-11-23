@@ -332,12 +332,32 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     max(selector?: Selector<TElement, number>): number;
 
     /**
+     * Returns the element with the maximum value that is obtained by applying the key selector function to each element in the sequence.
+     * @template TElement
+     * @param keySelector The key selector function that will be used to select the key for an element.
+     * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+     * @returns {TElement} The element with the maximum value in the sequence.
+     * @throws {NoElementsException} If the source is empty.
+     */
+    maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
+
+    /**
      * Returns the minimum value in the sequence.
      * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
      * @returns {number} The minimum value in the sequence.
      * @throws {NoElementsException} If the source is empty.
      */
     min(selector?: Selector<TElement, number>): number;
+
+    /**
+     * Returns the element with the minimum value that is obtained by applying the key selector function to each element in the sequence.
+     * @template TElement
+     * @param keySelector The key selector function that will be used to select the key for an element.
+     * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+     * @returns {TElement} The element with the minimum value in the sequence.
+     * @throws {NoElementsException} If the source is empty.
+     */
+    minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
 
     /**
      * Determines whether no elements of the sequence satisfy the specified predicate.

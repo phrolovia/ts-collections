@@ -166,8 +166,16 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).max(selector);
     }
 
+    public static maxBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        return new Enumerable(source).maxBy(keySelector, comparator);
+    }
+
     public static min<TElement>(source: IEnumerable<TElement>, selector?: Selector<TElement, number>): number {
         return new Enumerable(source).min(selector);
+    }
+
+    public static minBy<TElement, TKey>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        return new Enumerable(source).minBy(keySelector, comparator);
     }
 
     public static none<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): boolean {

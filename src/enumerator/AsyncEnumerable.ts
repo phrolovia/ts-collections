@@ -170,8 +170,16 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.max(selector);
     }
 
+    public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
+        return this.#enumerator.maxBy(keySelector, comparator);
+    }
+
     public min(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.min(selector);
+    }
+
+    public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
+        return this.#enumerator.minBy(keySelector, comparator);
     }
 
     public none(predicate?: Predicate<TElement>): Promise<boolean> {
