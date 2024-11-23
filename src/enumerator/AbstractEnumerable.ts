@@ -175,8 +175,16 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.max(this, selector);
     }
 
+    public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        return EnumerableStatic.maxBy(this, keySelector, comparator);
+    }
+
     public min(selector?: Selector<TElement, number>): number {
         return EnumerableStatic.min(this, selector);
+    }
+
+    public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        return EnumerableStatic.minBy(this, keySelector, comparator);
     }
 
     public none(predicate?: Predicate<TElement>): boolean {

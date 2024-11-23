@@ -339,6 +339,22 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        let max: TElement | null = null;
+        let maxKey: TKey | null = null;
+        for (const item of this) {
+            const key = keySelector(item);
+            if (maxKey == null || (comparator ?? Comparators.orderComparator)(key, maxKey) > 0) {
+                max = item;
+                maxKey = key;
+            }
+        }
+        if (max == null) {
+            throw new NoElementsException();
+        }
+        return max;
+    }
+
     public min(selector?: Selector<TElement, number>): number {
         let min: number | null = null;
         if (!selector) {
@@ -358,6 +374,22 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
             return min;
         }
+    }
+
+    public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
+        let min: TElement | null = null;
+        let minKey: TKey | null = null;
+        for (const item of this) {
+            const key = keySelector(item);
+            if (minKey == null || (comparator ?? Comparators.orderComparator)(key, minKey) < 0) {
+                min = item;
+                minKey = key;
+            }
+        }
+        if (min == null) {
+            throw new NoElementsException();
+        }
+        return min;
     }
 
     public none(predicate?: Predicate<TElement>): boolean {

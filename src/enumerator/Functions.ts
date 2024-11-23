@@ -536,6 +536,23 @@ export const max = <TElement>(
 }
 
 /**
+ * Returns the element with the maximum value that is obtained by applying the key selector function to each element in the sequence.
+ * @template TElement, TKey
+ * @param source The source iterable.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+ * @returns {TElement} The element with the maximum value in the sequence.
+ * @throws {NoElementsException} If the source is empty.
+ */
+export const maxBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    comparator?: OrderComparator<TKey>
+): TElement => {
+    return from(source).maxBy(keySelector, comparator);
+}
+
+/**
  * Returns the minimum value in the sequence.
  * @template TElement The type of elements in the sequence.
  * @param source The source iterable.
@@ -548,6 +565,23 @@ export const min = <TElement>(
     selector?: Selector<TElement, number>
 ): number => {
     return from(source).min(selector);
+}
+
+/**
+ * Returns the element with the minimum value that is obtained by applying the key selector function to each element in the sequence.
+ * @template TElement, TKey
+ * @param source The source iterable.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+ * @returns {TElement} The element with the minimum value in the sequence.
+ * @throws {NoElementsException} If the source is empty.
+ */
+export const minBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    comparator?: OrderComparator<TKey>
+): TElement => {
+    return from(source).minBy(keySelector, comparator);
 }
 
 /**

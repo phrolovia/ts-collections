@@ -195,8 +195,16 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.max(this, selector);
     }
 
+    public maxBy<TMaxKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMaxKey>, comparator?: OrderComparator<TMaxKey>): KeyValuePair<TKey, TValue> {
+        return EnumerableStatic.maxBy(this, keySelector, comparator);
+    }
+
     public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return EnumerableStatic.min(this, selector);
+    }
+
+    public minBy<TMinKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMinKey>, comparator?: OrderComparator<TMinKey>): KeyValuePair<TKey, TValue> {
+        return EnumerableStatic.minBy(this, keySelector, comparator);
     }
 
     public none(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {

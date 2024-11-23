@@ -789,6 +789,20 @@ describe("Dictionary", () => {
             expect(() => dictionary.max()).toThrow(new NoElementsException());
         });
     });
+    describe("#maxBy()", () => {
+        const dictionary = new Dictionary<string, Person>(
+            [
+                [Person.Alice.name, Person.Alice],
+                [Person.Noemi.name, Person.Noemi],
+                [Person.Lucrezia.name, Person.Lucrezia],
+            ]
+        );
+        test("should return the person with the maximum age", () => {
+            const max = dictionary.maxBy(p => p.value.age);
+            expect(max.key).to.eq(Person.Noemi.name);
+            expect(max.value).to.eq(Person.Noemi);
+        });
+    });
 
     describe("#min()", () => {
         const dictionary = new Dictionary<string, Person>();
@@ -803,6 +817,21 @@ describe("Dictionary", () => {
         test("should throw error if dictionary has no elements", () => {
             dictionary.clear();
             expect(() => dictionary.min()).toThrow(new NoElementsException());
+        });
+    });
+
+    describe("#minBy()", () => {
+        const dictionary = new Dictionary<string, Person>(
+            [
+                [Person.Alice.name, Person.Alice],
+                [Person.Noemi.name, Person.Noemi],
+                [Person.Lucrezia.name, Person.Lucrezia],
+            ]
+        );
+        test("should return the person with the minimum age", () => {
+            const min = dictionary.minBy(p => p.value.age);
+            expect(min.key).to.eq(Person.Lucrezia.name);
+            expect(min.value).to.eq(Person.Lucrezia);
         });
     });
 

@@ -215,8 +215,16 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.max(selector);
     }
 
+    public maxBy<TMaxKey>(keySelector: Selector<IGroup<TKey, TElement>, TMaxKey>, comparator?: OrderComparator<TMaxKey>): IGroup<TKey, TElement> {
+        return this.#lookupTree.maxBy(keySelector, comparator);
+    }
+
     public min(selector?: Selector<IGroup<TKey, TElement>, number>): number {
         return this.#lookupTree.min(selector);
+    }
+
+    public minBy<TMinKey>(keySelector: Selector<IGroup<TKey, TElement>, TMinKey>, comparator?: OrderComparator<TMinKey>): IGroup<TKey, TElement> {
+        return this.#lookupTree.minBy(keySelector, comparator);
     }
 
     public none(predicate?: Predicate<IGroup<TKey, TElement>>): boolean {
