@@ -385,6 +385,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.union(this, iterable, comparator);
     }
 
+    public unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return EnumerableStatic.unionBy(this, iterable, keySelector, comparator);
+    }
+
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return EnumerableStatic.where(this, predicate);
     }

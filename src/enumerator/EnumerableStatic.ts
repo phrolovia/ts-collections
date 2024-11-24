@@ -370,6 +370,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).union(other, comparator);
     }
 
+    public static unionBy<TElement, TKey>(source: IEnumerable<TElement>, other: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return new Enumerable(source).unionBy(other, keySelector, keyComparator);
+    }
+
     public static where<TElement>(source: IEnumerable<TElement>, predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).where(predicate);
     }

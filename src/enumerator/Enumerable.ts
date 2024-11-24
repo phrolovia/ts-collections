@@ -425,6 +425,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.union(iterable, comparator);
     }
 
+    public unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return this.#enumerator.unionBy(iterable, keySelector, comparator);
+    }
+
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return this.#enumerator.where(predicate);
     }

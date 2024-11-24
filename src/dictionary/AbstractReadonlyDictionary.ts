@@ -329,11 +329,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     public toImmutableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableList<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toImmutableList(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return EnumerableStatic.toImmutableList(this, keyValueComparator);
     }
 
     public toImmutableQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableQueue<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toImmutableQueue(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return EnumerableStatic.toImmutableQueue(this, keyValueComparator);
     }
 
     public toImmutableSet(): ImmutableSet<KeyValuePair<TKey, TValue>> {
@@ -349,15 +351,18 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     public toImmutableStack(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableStack<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toImmutableStack(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return EnumerableStatic.toImmutableStack(this, keyValueComparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): LinkedList<KeyValuePair<TKey, TValue>> {
-        return new LinkedList<KeyValuePair<TKey, TValue>>(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return new LinkedList<KeyValuePair<TKey, TValue>>(this, keyValueComparator);
     }
 
     public toList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): List<KeyValuePair<TKey, TValue>> {
-        return new List<KeyValuePair<TKey, TValue>>(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return new List<KeyValuePair<TKey, TValue>>(this, keyValueComparator);
     }
 
     public toLookup<TLookupKey, TLookupValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TLookupKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TLookupValue>, keyComparator?: OrderComparator<TLookupKey>): ILookup<TLookupKey, TLookupValue> {
@@ -377,7 +382,8 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     public toQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): Queue<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toQueue(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return EnumerableStatic.toQueue(this, keyValueComparator);
     }
 
     public toSet(): Set<KeyValuePair<TKey, TValue>> {
@@ -393,7 +399,8 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     public toStack(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): Stack<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.toStack(this, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return EnumerableStatic.toStack(this, keyValueComparator);
     }
 
     public toString(): string;
@@ -407,7 +414,12 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     }
 
     public union(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.union(this, iterable, comparator);
+        const keyValueComparator = comparator ?? this.keyValueComparer;
+        return EnumerableStatic.union(this, iterable, keyValueComparator);
+    }
+
+    public unionBy<TUnionKey>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keySelector: Selector<KeyValuePair<TKey, TValue>, TUnionKey>, comparator?: EqualityComparator<TUnionKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.unionBy(this, iterable, keySelector, comparator);
     }
 
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {

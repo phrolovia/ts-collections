@@ -515,6 +515,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     union(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
+     * Produces the set union of two sequences by using the specified key selector function.
+     * @param enumerable The enumerable sequence whose distinct elements form the second set for the union.
+     * @param keySelector The key selector function that will be used to select the key for each element.
+     * @param comparator The equality comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.
+     */
+    unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
+
+    /**
      * Filters a sequence of values based on a predicate.
      * @param predicate The predicate function that will be used to test each element.
      */

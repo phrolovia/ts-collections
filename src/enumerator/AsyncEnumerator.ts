@@ -175,7 +175,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         const asyncEnumerable = new AsyncEnumerator(async function* () {
             yield* [] as TElement[];
         });
-        return new AsyncEnumerator<TElement>(() => this.unionGeneratorWithKeySelector(
+        return new AsyncEnumerator<TElement>(() => this.unionByGenerator(
             asyncEnumerable as IAsyncEnumerable<TElement>, keySelect, keyComparer));
     }
 
@@ -612,6 +612,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.unionGenerator(iterable, comparator));
     }
 
+    public unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.unionByGenerator(enumerable, keySelector, comparator));
+    }
+
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.whereGenerator(predicate));
     }
@@ -1000,23 +1004,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* unionGenerator(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): AsyncIterable<TElement> {
-        const collection = comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
-        for await (const element of this) {
-            if (!collection.contains(element)) {
-                collection.add(element);
-                yield element;
-            }
-        }
-        for await (const element of iterable) {
-            if (!collection.contains(element)) {
-                collection.add(element);
-                yield element;
-            }
-        }
-    }
-
-    private async* unionGeneratorWithKeySelector<TKey>(enumerable: IAsyncEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): AsyncIterable<TElement> {
+    private async* unionByGenerator<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): AsyncIterable<TElement> {
         const distinctList: TElement[] = [];
         comparator ??= Comparators.equalityComparator;
         for await (const source of [this, enumerable]) {
@@ -1032,6 +1020,22 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     yield element;
                     distinctList.push(element);
                 }
+            }
+        }
+    }
+
+    private async* unionGenerator(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): AsyncIterable<TElement> {
+        const collection = comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
+        for await (const element of this) {
+            if (!collection.contains(element)) {
+                collection.add(element);
+                yield element;
+            }
+        }
+        for await (const element of iterable) {
+            if (!collection.contains(element)) {
+                collection.add(element);
+                yield element;
             }
         }
     }

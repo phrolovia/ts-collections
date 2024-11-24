@@ -426,6 +426,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.union(iterable, comparator);
     }
 
+    public unionBy<TUnionKey>(iterable: Iterable<IGroup<TKey, TElement>>, keySelector: Selector<IGroup<TKey, TElement>, TUnionKey>, comparator?: EqualityComparator<TUnionKey>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.unionBy(iterable, keySelector, comparator);
+    }
+
     public where(predicate: IndexedPredicate<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.where(predicate);
     }

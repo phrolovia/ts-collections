@@ -294,6 +294,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.union(iterable, comparator);
     }
 
+    public unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.unionBy(enumerable, keySelector, comparator);
+    }
+
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.where(predicate);
     }

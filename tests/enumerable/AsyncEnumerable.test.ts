@@ -1625,6 +1625,24 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#unionBy()", () => {
+        test("should return a set of items from two enumerables", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi, Person.Suzuha]));
+            const enumerable2 = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi2, Person.Suzuha3, Person.Lucrezia]));
+            const union = enumerable1.unionBy(enumerable2, p => p.name);
+            const expected = [Person.Alice, Person.Noemi, Person.Suzuha, Person.Lucrezia];
+            expect(await union.toArray()).to.deep.equal(expected);
+        });
+        test("should use a custom comparer", async () => {
+            const LittleSuzuha = new Person("suzuha", "Mizuki", 2);
+            const enumerable1 = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi, Person.Suzuha, LittleSuzuha]));
+            const enumerable2 = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi2, Person.Suzuha3, Person.Lucrezia]));
+            const union = enumerable1.unionBy(enumerable2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            const expected = [Person.Alice, Person.Noemi, Person.Suzuha, Person.Lucrezia];
+            expect(await union.toArray()).to.deep.equal(expected);
+        });
+    });
+
     describe("#where()", () => {
         test("should select values that can be divided to 3", {timeout: 120000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(30));
