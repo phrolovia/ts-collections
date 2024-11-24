@@ -135,6 +135,7 @@ export {
     toSortedDictionary,
     toSortedSet,
     union,
+    unionBy,
     where,
     windows,
     zip
