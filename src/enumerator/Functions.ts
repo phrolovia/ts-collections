@@ -1364,6 +1364,24 @@ export const union = <TElement>(
 }
 
 /**
+ * Produces the set union of two sequences by using a key selector function.
+ * @template TElement, TKey
+ * @param source The source iterable.
+ * @param other The iterable sequence whose distinct elements form the second set for the union.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param comparator The equality comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding duplicates.
+ */
+export const unionBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    other: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    comparator?: EqualityComparator<TKey>
+): IEnumerable<TElement> => {
+    return from(source).unionBy(other, keySelector, comparator);
+}
+
+/**
  * Filters a sequence of values based on a predicate.
  * @template TElement The type of elements in the sequence.
  * @param source The source iterable.

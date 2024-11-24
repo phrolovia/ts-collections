@@ -1596,19 +1596,23 @@ describe("SortedDictionary", () => {
 
         dict3.add(6, "f");
         dict3.add(7, "g");
-        test("should throw error when keys are duplicate", () => {
-            expect(() => dict1.union(dict2).toSortedDictionary<number, string>(p => p.key, p => p.value)).toThrowError(new InvalidArgumentException(`Key already exists: 2`));
-        });
 
         test("should return a dictionary with unique key value pairs", () => {
             const union1 = dict1.union(dict3).toSortedDictionary<number, string>(p => p.key, p => p.value);
             expect(union1.size()).to.eq(6);
         });
 
+        test("should not throw error if keys are duplicate and values are equal", () => {
+            const union = dict1.union(dict2).toSortedDictionary<number, string>(p => p.key, p => p.value);
+            expect(union.size()).to.eq(5);
+            expect(union.get(2)).to.eq("b");
+            expect(() => dict1.union(dict2).toDictionary(p => p.key, p => p.value)).to.not.throw();
+        });
+
         test("should throw error if key already exists and key value pairs are not equal", () => {
             const dict4 = new SortedDictionary<number, string>();
             dict4.add(1, "z");
-            expect(() => dict1.union(dict4).toDictionary(p => p.key, p => p.value)).to.throw();
+            expect(() => dict1.union(dict4).toDictionary(p => p.key, p => p.value)).to.toThrowError(new InvalidArgumentException(`Key already exists: 1`));
         });
     });
 

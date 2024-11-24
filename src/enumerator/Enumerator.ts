@@ -186,7 +186,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         const keySelect = keySelector ?? ((item: TElement) => item as unknown as TKey);
         const keyCompare = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey>;
-        return new Enumerator(() => this.unionGeneratorWithKeySelector(Enumerable.empty(), keySelect, keyCompare));
+        return new Enumerator(() => this.unionByGenerator(Enumerable.empty(), keySelect, keyCompare));
     }
 
     public elementAt(index: number): TElement {
@@ -745,6 +745,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.unionGenerator(iterable, comparator));
     }
 
+    public unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        comparator ??= Comparators.equalityComparator;
+        return new Enumerator(() => this.unionByGenerator(iterable, keySelector, comparator));
+    }
+
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerator<TElement>(() => this.whereGenerator(predicate));
     }
@@ -1130,6 +1135,25 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* unionByGenerator<TKey>(enumerable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): Iterable<TElement> {
+        const distinctList: Array<TElement> = [];
+        for (const source of [this, enumerable]) {
+            for (const item of source) {
+                let exist = false;
+                for (const existingItem of distinctList) {
+                    if (comparator(keySelector(item), keySelector(existingItem))) {
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist) {
+                    yield item;
+                    distinctList.push(item);
+                }
+            }
+        }
+    }
+
     private* unionGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
         const distinctList: Array<TElement> = [];
         comparator ??= Comparators.equalityComparator;
@@ -1143,25 +1167,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     }
                 }
                 if (!exists) {
-                    yield item;
-                    distinctList.push(item);
-                }
-            }
-        }
-    }
-
-    private* unionGeneratorWithKeySelector<TKey>(enumerable: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): Iterable<TElement> {
-        const distinctList: Array<TElement> = [];
-        for (const source of [this, enumerable]) {
-            for (const item of source) {
-                let exist = false;
-                for (const existingItem of distinctList) {
-                    if (comparator(keySelector(item), keySelector(existingItem))) {
-                        exist = true;
-                        break;
-                    }
-                }
-                if (!exist) {
                     yield item;
                     distinctList.push(item);
                 }

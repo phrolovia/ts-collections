@@ -143,6 +143,7 @@ export {
     toSortedSet,
     toStack,
     union,
+    unionBy,
     where,
     windows,
     zip

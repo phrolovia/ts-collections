@@ -1,4 +1,4 @@
-import { describe } from "vitest";
+import { describe, test } from "vitest";
 import { Dictionary } from "../../src/dictionary/Dictionary";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
@@ -2059,19 +2059,42 @@ describe("Dictionary", () => {
 
         dict3.add(6, "f");
         dict3.add(7, "g");
-        test("should throw error when keys are duplicate", () => {
-            expect(() => dict1.union(dict2).toDictionary<number, string>(p => p.key, p => p.value)).toThrowError(new InvalidArgumentException(`Key already exists: 2`));
-        });
 
         test("should return a dictionary with unique key value pairs", () => {
             const union1 = dict1.union(dict3).toDictionary<number, string>(p => p.key, p => p.value);
             expect(union1.size()).to.eq(6);
         });
 
+        test("should not throw errors if keys are duplicate and values are equal", () => {
+            const union = dict1.union(dict2).toDictionary<number, string>(p => p.key, p => p.value);
+            expect(union.size()).to.eq(5);
+            expect(union.get(2)).to.eq("b");
+            expect(() => dict1.union(dict2).toDictionary<number, string>(p => p.key, p => p.value)).to.not.throw();
+        });
+
         test("should throw error if key already exists and key value pairs are not equal", () => {
             const dict4 = new Dictionary<number, string>();
             dict4.add(1, "z");
-            expect(() => dict1.union(dict4).toDictionary(p => p.key, p => p.value)).to.throw();
+            expect(() => dict1.union(dict4).toDictionary(p => p.key, p => p.value)).toThrowError(new InvalidArgumentException(`Key already exists: 1`));
+        });
+    });
+
+    describe("#unionBy()", () => {
+        const dict1 = new Dictionary<string, Person>();
+        const dict2 = new Dictionary<string, Person>();
+
+        dict1.add(Person.Alice.name, Person.Alice);
+        dict1.add(Person.Noemi.name, Person.Noemi);
+
+        dict2.add(Person.Alice.name, Person.Alice);
+        dict2.add(Person.Priscilla.name, Person.Priscilla);
+
+        test("should return a dictionary with unique key value pairs", () => {
+            const union = dict1.unionBy(dict2, p => p.key).toDictionary<string, Person>(p => p.key, p => p.value);
+            expect(union.size()).to.eq(3);
+            expect(union.get(Person.Alice.name)).to.not.null;
+            expect(union.get(Person.Noemi.name)).to.not.null;
+            expect(union.get(Person.Priscilla.name)).to.not.null;
         });
     });
 

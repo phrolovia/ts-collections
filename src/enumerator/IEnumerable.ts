@@ -808,6 +808,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
     /**
+     * Produces the set union of two sequences by using a key selector function.
+     * @template TElement, TKey
+     * @param iterable The iterable sequence whose distinct elements form the second set for the union.
+     * @param keySelector The key selector function that will be used to select the key for an element.
+     * @param comparator The equality comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.
+     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding duplicates.
+     */
+    unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
+
+    /**
      * Filters a sequence of values based on a predicate.
      * @template TElement
      * @param predicate The predicate function that will be used to test each element.

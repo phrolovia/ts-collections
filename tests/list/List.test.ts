@@ -2342,6 +2342,24 @@ describe("List", () => {
         }, {timeout: 10000});
     });
 
+    describe("#unionBy()", () => {
+        test("should return a set of items from two lists", () => {
+            const list1 = new List([Person.Alice, Person.Noemi]);
+            const list2 = new List([Person.Noemi2, Person.Suzuha, Person.Alice]);
+            const union = list1.unionBy(list2, p => p.name);
+            expect(union.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Suzuha]);
+        });
+        test("should use provided comparator", () => {
+            const LittleAlice = new Person("alice", "Nanahira", 9);
+            const list1 = new List([Person.Alice, Person.Noemi, LittleAlice]);
+            const list2 = new List([Person.Noemi2, Person.Suzuha, Person.Alice]);
+            const unionWithDefaultComparator = list1.unionBy(list2, p => p.name);
+            const unionWithCustomComparator = list1.unionBy(list2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            expect(unionWithDefaultComparator.toArray()).to.deep.equal([Person.Alice, Person.Noemi, LittleAlice, Person.Suzuha]);
+            expect(unionWithCustomComparator.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Suzuha]);
+        });
+    });
+
     describe("#where()", () => {
         test("should return an IEnumerable with elements [2,5]", () => {
             const list = new List([2, 5, 6, 99]);
