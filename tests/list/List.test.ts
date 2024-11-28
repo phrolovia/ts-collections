@@ -575,6 +575,13 @@ describe("List", () => {
             const first = list.first(p => p.name === "Alice");
             expect(first.name).to.eq("Alice");
         });
+        test("should not throw error if sequence contains only null or undefined", () => {
+            const data = [{a: 1, b: undefined}, {a: 3, b: undefined}, {a: 4, b: 5}];
+            const list = new List(data);
+            expect(() => list.select(d => d.b).first()).to.not.throw();
+            const first = list.select(d => d.b).first();
+            expect(first).to.eq(undefined);
+        });
     });
 
     describe("#firstOrDefault()", () => {
@@ -595,6 +602,12 @@ describe("List", () => {
             const list = new List([Person.Mel, Person.Alice, Person.Jane]);
             const first = list.firstOrDefault(p => p.name === "Alice") as Person;
             expect(first.name).to.eq("Alice");
+        });
+        test("should return null if sequence contains only null or undefined", () => {
+            const data = [{a: 1, b: undefined}, {a: 3, b: undefined}, {a: 4, b: 5}];
+            const list = new List(data);
+            const first = list.select(d => d.b).firstOrDefault();
+            expect(first).to.eq(undefined);
         });
     });
 
@@ -925,6 +938,13 @@ describe("List", () => {
             const last = list.last(p => p > 80);
             expect(last).to.eq(87);
         });
+        test("should not throw error if sequence contains only null or undefined items", () => {
+            const data = [{a: 1, b: 5}, {a: 3, b: undefined}, {a: 4, b: null}];
+            const list = new List(data);
+            expect(() => list.select(d => d.b).last()).to.not.throw();
+            const last = list.select(d => d.b).last();
+            expect(last).to.eq(null);
+        });
     });
 
     describe("#lastIndexOf()", () => {
@@ -964,6 +984,12 @@ describe("List", () => {
             const list = new List([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
             const last = list.lastOrDefault(p => p > 80);
             expect(last).to.eq(87);
+        });
+        test("should return null if sequence contains only null or undefined items", () => {
+            const data = [{a: 1, b: 5}, {a: 3, b: undefined}, {a: 4, b: null}];
+            const list = new List(data);
+            const last = list.select(d => d.b).lastOrDefault();
+            expect(last).to.eq(null);
         });
     });
 
@@ -1589,6 +1615,13 @@ describe("List", () => {
             expect(single.name).to.eq("Alice");
             expect(single).to.eq(Person.Alice);
         });
+        test("should not throw error if the only element is null or undefined", () => {
+            const data = [null];
+            const list = new List(data);
+            expect(() => list.single()).to.not.throw();
+            const single = list.single();
+            expect(single).to.eq(null);
+        });
     });
     describe("#singleOrDefault()", () => {
         const list = new List<number>();
@@ -1625,6 +1658,16 @@ describe("List", () => {
         test("should return default value [null] if no matching element is found.", () => {
             const sod = list.singleOrDefault(n => n < 0);
             expect(sod).to.eq(null);
+        });
+        test("should not throw error if the only element is null or undefined", () => {
+            const data = [undefined];
+            const data2 = [null];
+            const list = new List(data);
+            const list2 = new List(data2);
+            const sod = list.singleOrDefault();
+            const sod2 = list2.singleOrDefault();
+            expect(sod).to.eq(undefined);
+            expect(sod2).to.eq(null);
         });
     });
 

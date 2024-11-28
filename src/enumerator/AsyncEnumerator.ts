@@ -282,30 +282,28 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async last(predicate?: Predicate<TElement>): Promise<TElement> {
         let last: TElement | null = null;
-        let count = 0;
+        let found = false;
+
         for await (const element of this) {
-            ++count;
-            if (!predicate) {
+            if (!predicate || predicate(element)) {
                 last = element;
-            } else if (predicate(element)) {
-                last = element;
+                found = true;
             }
         }
-        if (count === 0) {
-            throw new NoElementsException();
+
+        if (!found) {
+            throw predicate
+                ? new NoMatchingElementException()
+                : new NoElementsException();
         }
-        if (last == null) {
-            throw new NoMatchingElementException();
-        }
-        return last;
+
+        return last as TElement;
     }
 
     public async lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
         let last: TElement | null = null;
         for await (const element of this) {
-            if (!predicate) {
-                last = element;
-            } else if (predicate(element)) {
+            if (!predicate || predicate(element)) {
                 last = element;
             }
         }
@@ -475,36 +473,36 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async single(predicate?: Predicate<TElement>): Promise<TElement> {
         let single: TElement | null = null;
-        let index = 0;
+        let found = false;
         let count = 0;
-        if (!predicate) {
-            for await (const element of this) {
-                if (index !== 0) {
+
+        for await (const element of this) {
+            count++;
+            if (!predicate) {
+                if (found) {
                     throw new MoreThanOneElementException();
                 }
                 single = element;
-                ++index;
-                ++count;
+                found = true;
             }
-        } else {
-            for await (const element of this) {
-                if (predicate(element)) {
-                    if (index !== 0) {
-                        throw new MoreThanOneMatchingElementException();
-                    }
-                    single = element;
-                    ++index;
+            if (predicate && predicate(element)) {
+                if (found) {
+                    throw new MoreThanOneMatchingElementException();
                 }
-                ++count;
+                single = element;
+                found = true;
             }
         }
+
         if (count === 0) {
             throw new NoElementsException();
         }
-        if (single == null) {
+
+        if (!found) {
             throw new NoMatchingElementException();
         }
-        return single;
+
+        return single as TElement;
     }
 
     public async singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
@@ -839,7 +837,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         type Permutation = { created: EnumerableSet<TElement>, remaining: EnumerableSet<TElement> };
         const elements = await this.distinct().toArray();
         const queue = new Queue<Permutation>();
-        queue.add({ created: new EnumerableSet<TElement>(), remaining: new EnumerableSet<TElement>(elements) });
+        queue.add({created: new EnumerableSet<TElement>(), remaining: new EnumerableSet<TElement>(elements)});
 
         while (queue.length > 0) {
             const current = queue.poll() as Permutation;
@@ -857,7 +855,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             for (let ix = 0; ix < current.remaining.length; ++ix) {
                 const newCurrent = new EnumerableSet([...current.created, current.remaining.elementAt(ix)]);
                 const newRemaining = new EnumerableSet([...current.remaining.take(ix), ...current.remaining.skip(ix + 1)]);
-                queue.add({ created: newCurrent, remaining: newRemaining });
+                queue.add({created: newCurrent, remaining: newRemaining});
             }
         }
     }
