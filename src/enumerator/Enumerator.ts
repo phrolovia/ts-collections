@@ -223,26 +223,21 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         if (!this.any()) {
             throw new NoElementsException();
         }
-        const item = this.firstOrDefault(predicate);
-        if (!item) {
-            throw new NoMatchingElementException();
+        for (const item of this) {
+            if (!predicate || predicate(item)) {
+                return item;
+            }
         }
-        return item;
+        throw new NoMatchingElementException();
     }
 
     public firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        if (!predicate) {
-            return this[Symbol.iterator]().next().value ?? null;
-        } else {
-            let first: TElement | null = null;
-            for (const item of this) {
-                if (predicate(item)) {
-                    first = item;
-                    break;
-                }
+        for (const item of this) {
+            if (!predicate || predicate(item)) {
+                return item;
             }
-            return first;
         }
+        return null;
     }
 
     public forEach(action: IndexedAction<TElement>): void {
@@ -281,41 +276,33 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public last(predicate?: Predicate<TElement>): TElement {
-        let last: TElement | null = null;
-        if (!predicate) {
-            for (const item of this) {
-                last = item;
-            }
-            if (!last) {
-                throw new NoElementsException();
-            }
-            return last;
-        }
+        let found = false;
+        let result: TElement | null = null;
+
         for (const item of this) {
-            if (predicate(item)) {
-                last = item;
+            if (!predicate || predicate(item)) {
+                result = item;
+                found = true;
             }
         }
-        if (!last) {
-            throw new NoMatchingElementException();
+
+        if (!found) {
+            throw predicate
+                ? new NoMatchingElementException()
+                : new NoElementsException();
         }
-        return last;
+
+        return result as TElement;
     }
 
     public lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        let last: TElement | null = null;
-        if (!predicate) {
-            for (const item of this) {
-                last = item;
-            }
-            return last;
-        }
+        let result: TElement | null = null;
         for (const item of this) {
-            if (predicate(item)) {
-                last = item;
+            if (!predicate || predicate(item)) {
+                result = item;
             }
         }
-        return last;
+        return result;
     }
 
     public max(selector?: Selector<TElement, number>): number {
@@ -498,68 +485,50 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public single(predicate?: Predicate<TElement>): TElement {
-        let single: TElement | null = null;
-        let index: number = 0;
+        let result: TElement | null = null;
+        let found = false;
 
-        if (!predicate) {
-            if (!this.any()) {
-                throw new NoElementsException();
-            }
-            for (const item of this) {
-                if (index !== 0) {
-                    throw new MoreThanOneElementException();
-                } else {
-                    single = item;
-                    index++;
+        if (!this.any()) {
+            throw new NoElementsException();
+        }
+
+        for (const item of this) {
+            if (!predicate || predicate(item)) {
+                if (found) {
+                    throw predicate
+                        ? new MoreThanOneMatchingElementException()
+                        : new MoreThanOneElementException();
                 }
-            }
-        } else {
-            if (!this.any()) {
-                throw new NoElementsException();
-            }
-            for (const item of this) {
-                if (predicate(item)) {
-                    if (index !== 0) {
-                        throw new MoreThanOneMatchingElementException();
-                    } else {
-                        single = item;
-                        index++;
-                    }
-                }
+                result = item;
+                found = true;
             }
         }
-        if (index === 0 || single == null) {
-            throw new NoMatchingElementException();
+
+        if (!found) {
+            throw predicate
+                ? new NoMatchingElementException()
+                : new NoElementsException();
         }
-        return single;
+
+        return result as TElement;
     }
 
     public singleOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        let single: TElement | null = null;
-        let index: number = 0;
-        if (!predicate) {
-            for (const item of this) {
-                if (index !== 0) {
-                    throw new MoreThanOneElementException();
-                } else {
-                    single = item;
-                    index++;
+        let result: TElement | null = null;
+        let found = false;
+
+        for (const item of this) {
+            if (!predicate || predicate(item)) {
+                if (found) {
+                    throw predicate
+                        ? new MoreThanOneMatchingElementException()
+                        : new MoreThanOneElementException();
                 }
+                result = item;
+                found = true;
             }
-            return single;
-        } else {
-            for (const item of this) {
-                if (predicate(item)) {
-                    if (index !== 0) {
-                        throw new MoreThanOneMatchingElementException();
-                    } else {
-                        single = item;
-                        index++;
-                    }
-                }
-            }
-            return single;
         }
+        return result;
     }
 
     public skip(count: number): IEnumerable<TElement> {

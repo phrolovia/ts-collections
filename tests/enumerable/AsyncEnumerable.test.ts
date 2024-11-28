@@ -446,11 +446,19 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw an error if the enumerable is empty", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.first()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.first()).rejects.toThrowError(new NoElementsException());
         });
         test("should throw an error if no elements satisfy the predicate", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
-            expect(enumerable.first(n => n > 10)).rejects.toThrowError(new NoMatchingElementException());
+            await expect(enumerable.first(n => n > 10)).rejects.toThrowError(new NoMatchingElementException());
+        });
+        test("should not throw error if source only contains null or undefined", async () => {
+            const enumerable = new AsyncEnumerable(mixedProducer([undefined, null]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([null, undefined]));
+            const result = await enumerable.first();
+            const result2 = await enumerable2.first();
+            expect(result).to.eq(undefined);
+            expect(result2).to.eq(null);
         });
     });
 
@@ -479,6 +487,14 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.firstOrDefault(n => n > 10);
             expect(result).to.be.null;
+        });
+        test("should not default to null if the first element is undefined", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(mixedProducer([undefined, null]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([null, undefined]));
+            const result = await enumerable.firstOrDefault();
+            const result2 = await enumerable2.firstOrDefault();
+            expect(result).to.eq(undefined);
+            expect(result2).to.eq(null);
         });
     });
 
@@ -784,11 +800,19 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if no element satisfies the predicate", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
-            expect(enumerable.last(n => n > 10)).rejects.toThrowError(new NoMatchingElementException());
+            await expect(enumerable.last(n => n > 10)).rejects.toThrowError(new NoMatchingElementException());
         });
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.last()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.last()).rejects.toThrowError(new NoElementsException());
+        });
+        test("should not throw error if source only contains null or undefined", async () => {
+            const enumerable = new AsyncEnumerable(mixedProducer([undefined, null]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([null, undefined]));
+            const result = await enumerable.last();
+            const result2 = await enumerable2.last();
+            expect(result).to.eq(null);
+            expect(result2).to.eq(undefined);
         });
     });
 
@@ -810,6 +834,14 @@ describe("AsyncEnumerable", () => {
         test("should return null if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
             expect(await enumerable.lastOrDefault()).to.be.null;
+        });
+        test("should not default to null if last element is undefined", async () => {
+            const enumerable = new AsyncEnumerable(mixedProducer([null, undefined]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([undefined, null]));
+            const result = await enumerable.lastOrDefault();
+            const result2 = await enumerable2.lastOrDefault();
+            expect(result).to.eq(undefined);
+            expect(result2).to.eq(null);
         });
     });
 
@@ -1164,20 +1196,28 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error when enumerable has more than one element and no predicate is provided", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2]));
-            expect(enumerable.single()).rejects.toThrowError(new MoreThanOneElementException());
+            await expect(enumerable.single()).rejects.toThrowError(new MoreThanOneElementException());
         });
         test("should throw error if no element matches the predicate", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
-            expect(enumerable.single(n => n > 5)).rejects.toThrowError(new NoMatchingElementException());
+            await expect(enumerable.single(n => n > 5)).rejects.toThrowError(new NoMatchingElementException());
         });
         test("should throw if enumerable is empty", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([]));
-            expect(enumerable.single()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.single()).rejects.toThrowError(new NoElementsException());
         });
         test("should return person with name 'Alice'", async () => {
             const enumerable = new AsyncEnumerable(personProducer([Person.Alice, Person.Bella, Person.Suzuha]));
             const result = await enumerable.single(p => p.name === "Alice");
             expect(result).to.eq(Person.Alice);
+        });
+        test("should not throw error if source only contains null or undefined", async () => {
+            const enumerable = new AsyncEnumerable(mixedProducer([undefined]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([null]));
+            const result = await enumerable.single();
+            const result2 = await enumerable2.single();
+            expect(result).to.eq(undefined);
+            expect(result2).to.eq(null);
         });
     });
 
@@ -1204,15 +1244,23 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error when enumerable has more than one element and no predicate is provided", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2]));
-            expect(enumerable.singleOrDefault()).rejects.toThrowError(new MoreThanOneElementException());
+            await expect(enumerable.singleOrDefault()).rejects.toThrowError(new MoreThanOneElementException());
         });
         test("should throw error if more than one element", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 4]));
-            expect(enumerable.singleOrDefault(n => n === 4)).rejects.toThrowError(new MoreThanOneMatchingElementException());
+            await expect(enumerable.singleOrDefault(n => n === 4)).rejects.toThrowError(new MoreThanOneMatchingElementException());
         });
         test("should throw error if more than one element that matches the predicate", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
-            expect(enumerable.singleOrDefault(n => n % 2 === 0)).rejects.toThrowError(new MoreThanOneMatchingElementException());
+            await expect(enumerable.singleOrDefault(n => n % 2 === 0)).rejects.toThrowError(new MoreThanOneMatchingElementException());
+        });
+        test("should not throw error if source only contains null or undefined", async () => {
+            const enumerable = new AsyncEnumerable(mixedProducer([null]));
+            const enumerable2 = new AsyncEnumerable(mixedProducer([undefined]));
+            const result = await enumerable.singleOrDefault();
+            const result2 = await enumerable2.singleOrDefault();
+            expect(result).to.eq(null);
+            expect(result2).to.eq(undefined);
         });
     });
 
