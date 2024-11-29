@@ -51,6 +51,10 @@ describe("SortedSet", () => {
             expect(set.contains(item as any)).to.be.false;
             expect(set2.contains(25 as any)).to.be.false;
         });
+        test("should return true", () => {
+            const set = new SortedSet([0,1,2,3,4]);
+            expect(set.contains(0)).to.be.true;
+        });
     });
 
     describe("#constructor()", () => {

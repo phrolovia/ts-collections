@@ -115,7 +115,11 @@ describe("RedBlackTree", () => {
             const tree2 = new RedBlackTree([item]);
             expect(tree.contains(item as any)).to.be.false;
             expect(tree2.contains(2 as any)).to.be.false;
-        })
+        });
+        test("should return true", () => {
+            const tree = new RedBlackTree([6,0,1,2,3,4]);
+            expect(tree.contains(0)).to.be.true;
+        });
     });
 
     describe("#delete()", () => {

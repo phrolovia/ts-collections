@@ -1,5 +1,6 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
+    AsyncEnumerable,
     Collections,
     Enumerable,
     EnumerableSet,
@@ -70,6 +71,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             throw new NoElementsException();
         }
         return resultSelector?.(accumulatedValue as TAccumulate) ?? accumulatedValue as TAccumulate;
+    }
+
+    public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>> {
+        keyComparator ??= Comparators.equalityComparator;
+        const groups = this.groupBy(keySelector, keyComparator);
+        return groups.select(g => new KeyValuePair(g.key, g.source.aggregate(accumulator, seedSelector(g.key))));
     }
 
     public async all(predicate: Predicate<TElement>): Promise<boolean> {
@@ -169,14 +176,21 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement | null>(() => this.defaultIfEmptyGenerator(defaultValue));
     }
 
-    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+    public distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
         const keyComparer = keyComparator ?? Comparators.equalityComparator;
-        const keySelect = keySelector ?? ((element: TElement) => element as unknown as TKey);
         const asyncEnumerable = new AsyncEnumerator(async function* () {
             yield* [] as TElement[];
         });
-        return new AsyncEnumerator<TElement>(() => this.unionByGenerator(
-            asyncEnumerable as IAsyncEnumerable<TElement>, keySelect, keyComparer));
+        return new AsyncEnumerator<TElement>(() => this.unionGenerator(
+            asyncEnumerable as IAsyncEnumerable<TElement>, keyComparer));
+    }
+
+    public distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        keyComparator ??= Comparators.equalityComparator;
+        const asyncEnumerable = new AsyncEnumerator(async function* () {
+            yield* [] as TElement[];
+        });
+        return new AsyncEnumerator<TElement>(() => this.unionByGenerator(asyncEnumerable,keySelector, keyComparator));
     }
 
     public async elementAt(index: number): Promise<TElement> {
@@ -210,9 +224,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return null;
     }
 
-    public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
+    public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
-        return new AsyncEnumerator<TElement>(() => this.exceptGenerator(iterable, comparator, orderComparator));
+        return new AsyncEnumerator<TElement>(() => this.exceptGenerator(iterable, comparator));
+    }
+
+    public exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> |  OrderComparator<TKey>): IAsyncEnumerable<TElement> {
+        comparator ??= Comparators.equalityComparator;
+        return new AsyncEnumerator<TElement>(() => this.exceptByGenerator(enumerable, keySelector, comparator));
     }
 
     public async first(predicate?: Predicate<TElement>): Promise<TElement> {
@@ -266,9 +285,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<[number, TElement]>(() => this.indexGenerator());
     }
 
-    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> |  OrderComparator<TElement>): IAsyncEnumerable<TElement> {
         const compare = comparator ?? Comparators.equalityComparator;
-        return new AsyncEnumerator<TElement>(() => this.intersectGenerator(iterable, compare, orderComparator));
+        return new AsyncEnumerator<TElement>(() => this.intersectGenerator(iterable, compare));
+    }
+
+    public intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> |  OrderComparator<TKey>): IAsyncEnumerable<TElement> {
+        const compare = comparator ?? Comparators.equalityComparator;
+        return new AsyncEnumerator<TElement>(() => this.intersectByGenerator(enumerable, keySelector, compare));
     }
 
     public intersperse<TSeparator = TElement>(separator: TSeparator): IAsyncEnumerable<TElement | TSeparator> {
@@ -606,6 +630,15 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return result;
     }
 
+    public async toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
+        const obj: Record<TKey, TValue> = {} as Record<TKey, TValue>;
+        for await (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            obj[key] = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+        }
+        return obj;
+    }
+
     public union(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.unionGenerator(iterable, comparator));
     }
@@ -725,16 +758,46 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): AsyncIterable<TElement> {
-        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
+    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> |  OrderComparator<TElement>): AsyncIterable<TElement> {
+        return yield* this.exceptByGenerator(iterable, e => e, comparator);
+    }
+
+    private async* exceptByGenerator<TKey>(iterable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterable<TElement> {
+        const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
+        const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
+
+        const {value: first, done} = await new AsyncEnumerator(() => iterable)[Symbol.asyncIterator]().next();
+        if (done) {
+            const {value: first, done} = await new AsyncEnumerator(() => this)[Symbol.asyncIterator]().next();
+            if (done) {
+                return yield* this;
+            }
+            const firstKey = keySelector(first);
+            const keyCollection = typeof comparator(firstKey, firstKey) === "number" ? keySet : keyList;
+            for await (const element of this) {
+                const key = keySelector(element);
+                if (!keyCollection.contains(key)) {
+                    keyCollection.add(key);
+                    yield element;
+                }
+            }
+            return;
+        }
+        const firstKey = keySelector(first);
+        const keyCollection = typeof comparator(firstKey, firstKey) === "number" ? keySet : keyList;
+        keyCollection.add(firstKey);
+
         for await (const element of iterable) {
-            if (!collection.contains(element)) {
-                collection.add(element);
+            const key = keySelector(element);
+            if (!keyCollection.contains(key)) {
+                keyCollection.add(key);
             }
         }
+
         for await (const element of this) {
-            if (!collection.contains(element)) {
-                collection.add(element);
+            const key = keySelector(element);
+            if (!keyCollection.contains(key)) {
+                keyCollection.add(key);
                 yield element;
             }
         }
@@ -771,15 +834,33 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* intersectGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): AsyncIterable<TElement> {
-        const collection = orderComparator ? new SortedSet<TElement>([], orderComparator) : comparator ? new List<TElement>([], comparator) : new EnumerableSet<TElement>();
-        for await (const element of iterable) {
-            if (!collection.contains(element)) {
-                collection.add(element);
+    private async* intersectGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): AsyncIterable<TElement> {
+        return yield* this.intersectByGenerator(iterable, e => e, comparator);
+    }
+
+    private async* intersectByGenerator<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterable<TElement> {
+        const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
+        const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
+
+        const {value: first, done} = await new AsyncEnumerator(() => enumerable)[Symbol.asyncIterator]().next();
+        if (done) {
+            return yield* AsyncEnumerable.empty<TElement>();
+        }
+
+        const firstKey = keySelector(first);
+        const keyCollection = typeof comparator(firstKey, firstKey) === "number" ? keySet : keyList;
+        keyCollection.add(firstKey);
+
+        for await (const element of enumerable) {
+            const key = keySelector(element);
+            if (!keyCollection.contains(key)) {
+                keyCollection.add(key);
             }
         }
         for await (const element of this) {
-            if (collection.remove(element)) {
+            const key = keySelector(element);
+            if (keyCollection.contains(key)) {
+                keyCollection.remove(key);
                 yield element;
             }
         }

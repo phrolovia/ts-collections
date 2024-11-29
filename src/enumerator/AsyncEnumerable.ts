@@ -54,6 +54,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.aggregate(accumulator, seed, resultSelector);
     }
 
+    public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>> {
+        return this.#enumerator.aggregateBy(keySelector, seedSelector, accumulator, keyComparator);
+    }
+
     public all(predicate: Predicate<TElement>): Promise<boolean> {
         return this.#enumerator.all(predicate);
     }
@@ -106,8 +110,12 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.defaultIfEmpty(defaultValue);
     }
 
-    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
-        return this.#enumerator.distinct(keySelector, keyComparator);
+    public distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.distinct(keyComparator);
+    }
+
+    public distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.distinctBy(keySelector, keyComparator);
     }
 
     public elementAt(index: number): Promise<TElement> {
@@ -118,8 +126,12 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.elementAtOrDefault(index);
     }
 
-    public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
-        return this.#enumerator.except(iterable, comparator, orderComparator);
+    public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.except(iterable, comparator);
+    }
+
+    public exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.exceptBy(enumerable, keySelector, comparator);
     }
 
     public first(predicate?: Predicate<TElement>): Promise<TElement> {
@@ -146,8 +158,12 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.index();
     }
 
-    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement> {
-        return this.#enumerator.intersect(iterable, comparator, orderComparator);
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> |  OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.intersect(iterable, comparator);
+    }
+
+    public intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.intersectBy(enumerable, keySelector, comparator);
     }
 
     public intersperse<TSeparator = TElement>(separator: TSeparator): IAsyncEnumerable<TElement | TSeparator> {
@@ -288,6 +304,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public async toArray(): Promise<TElement[]> {
         return this.#enumerator.toArray();
+    }
+
+    public async toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
+        return this.#enumerator.toObject(keySelector, valueSelector);
     }
 
     public union(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {

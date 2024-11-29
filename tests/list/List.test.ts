@@ -557,6 +557,12 @@ describe("List", () => {
             const elist = list1.except(list2).toList();
             expect(elist.toArray()).to.deep.equal([1, 2]);
         });
+        test("should return an array of [1,2]", () => {
+            const list1 = new List([1, 1, 2]);
+            const list2 = new List<number>([]);
+            const elist = list1.except(list2).toList();
+            expect(elist.toArray()).to.deep.equal([1, 2]);
+        });
         test("should only have 'Alice', 'Noemi' and 'Senna'", () => {
             const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
             const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
@@ -595,6 +601,12 @@ describe("List", () => {
             const ageCount = exceptionList.count(p => p.age <= 50);
             expect(ageCount).to.eq(0);
         });
+        test("should not fail if the list has falsy values", () => {
+            const list1 = new List([0, undefined, null, false, 1, 2, 3]);
+            const list2 = new List([undefined, 0]);
+            const elist = list1.except(list2);
+            expect(elist.toArray()).to.deep.equal([null, false, 1, 2, 3]);
+        });
     });
 
     describe("#exceptBy()", () => {
@@ -607,6 +619,12 @@ describe("List", () => {
         test("should only have 'Alice' and 'Noemi'", () => {
             const elist = list1.exceptBy(list2, p => p);
             expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Noemi]);
+        });
+        test("shoud return 'Noemi'", () => {
+            const list3 = new List([Person.Noemi, Person.Noemi2]);
+            const list4 = new List<Person>([]);
+            const elist = list3.exceptBy(list4, p => p.name);
+            expect(elist.toArray()).to.deep.equal([Person.Noemi]);
         });
         test("should use provided comparator", () => {
             const LittleNoemi = new Person("noemi", "Nymph", 9);
@@ -862,6 +880,18 @@ describe("List", () => {
             const elist = list1.intersect(list2).toList();
             expect(elist.toArray()).to.deep.equal([3, 4, 5]);
         });
+        test("should return an empty array if second list is empty", () => {
+            const list1 = new List([1, 1,2]);
+            const list2 = new List<number>();
+            const elist = list1.intersect(list2).toList();
+            expect(elist.toArray()).to.deep.equal([]);
+        });
+        test("should not return any duplicates", () => {
+            const list1 = new List([1, 1, 2, 3, 4, 5]);
+            const list2 = new List([4, 5, 5, 6, 7, 8]);
+            const elist = list1.intersect(list2).toList();
+            expect(elist.toArray()).to.deep.equal([4, 5]);
+        });
         test("should only have 'Mel', 'Lenka' and 'Jane'", () => {
             const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
             const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
@@ -904,6 +934,12 @@ describe("List", () => {
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
         });
+        test("should not fail if the list has falsy values", () => {
+            const list1 = new List([0, undefined, null, false, 1, 2, 3]);
+            const list2 = new List([undefined, 0]);
+            const elist = list1.intersect(list2);
+            expect(elist.toArray()).to.deep.equal([0, undefined]);
+        });
     });
 
     describe("#intersectBy()", () => {
@@ -915,6 +951,18 @@ describe("List", () => {
         });
         test("should be empty", () => {
             const elist = list1.intersectBy(list2, p => p);
+            expect(elist.toArray()).to.deep.equal([]);
+        });
+        test("shoud return empty list #2", () => {
+            const list3 = new List([Person.Noemi, Person.Noemi2]);
+            const list4 = new List<Person>([]);
+            const elist = list3.intersectBy(list4, p => p.name);
+            expect(elist.toArray()).to.deep.equal([]);
+        });
+        test("should return empty if first list is empty", () => {
+            const list5 = new List<Person>();
+            const list6 = new List([Person.Eliza, Person.Viola]);
+            const elist = list5.intersectBy(list6, p => p.name);
             expect(elist.toArray()).to.deep.equal([]);
         });
         test("should use provided comparator", () => {
