@@ -126,6 +126,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).except(other, comparator);
     }
 
+    public static exceptBy<TElement, TKey>(source: IEnumerable<TElement>, other: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement> {
+        return new Enumerable(source).exceptBy(other, keySelector, keyComparator);
+    }
+
     public static first<TElement>(source: IEnumerable<TElement>, predicate?: Predicate<TElement>): TElement {
         return new Enumerable(source).first(predicate);
     }
@@ -152,6 +156,10 @@ export abstract class EnumerableStatic {
 
     public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
         return new Enumerable(source).intersect(other, comparator);
+    }
+
+    public static intersectBy<TElement, TKey>(source: IEnumerable<TElement>, other: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement> {
+        return new Enumerable(source).intersectBy(other, keySelector, keyComparator);
     }
 
     public static intersperse<TElement, TSeparator = TElement>(source: IEnumerable<TElement>, separator: TSeparator): IEnumerable<TElement | TSeparator> {

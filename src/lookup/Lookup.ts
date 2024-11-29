@@ -162,6 +162,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.except(iterable, comparator);
     }
 
+    public exceptBy<TExceptKey>(iterable: Iterable<IGroup<TKey, TElement>>, keySelector: Selector<IGroup<TKey, TElement>, TExceptKey>, keyComparator?: EqualityComparator<TExceptKey> | OrderComparator<TExceptKey>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.exceptBy(iterable, keySelector, keyComparator);
+    }
+
     public first(predicate?: Predicate<IGroup<TKey, TElement>>): IGroup<TKey, TElement> {
         return this.#lookupTree.first(predicate);
     }
@@ -199,6 +203,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
     public intersect(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.intersect(iterable, comparator);
+    }
+
+    public intersectBy<TIntersectKey>(iterable: Iterable<IGroup<TKey, TElement>>, keySelector: Selector<IGroup<TKey, TElement>, TIntersectKey>, keyComparator?: EqualityComparator<TIntersectKey> | OrderComparator<TIntersectKey>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.intersectBy(iterable, keySelector, keyComparator);
     }
 
     public intersperse<TSeparator = IGroup<TKey, TElement>>(separator: TSeparator): IEnumerable<IGroup<TKey, TElement> | TSeparator> {

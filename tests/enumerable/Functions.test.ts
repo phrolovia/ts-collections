@@ -23,6 +23,7 @@ import {
     empty,
     EnumerableSet,
     except,
+    exceptBy,
     first,
     firstOrDefault,
     forEach,
@@ -37,6 +38,7 @@ import {
     ImmutableStack,
     index,
     intersect,
+    intersectBy,
     intersperse,
     join,
     last,
@@ -489,6 +491,35 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#exceptBy()", () => {
+        test("should return [1,2,3]", () => {
+            const result = exceptBy([1, 2, 3, 3, 4, 5], [4, 5, 6, 7, 8], n => n);
+            expect(result.toArray()).to.deep.equal([1, 2, 3]);
+        });
+        test("should return [1,2]", () => {
+            const result = exceptBy([1, 2, 3, 3, 4, 5], [3, 4, 5, 6, 7, 8], n => n);
+            expect(result.toArray()).to.deep.equal([1, 2]);
+        });
+        test("should only have 'Alice', 'Noemi' and 'Senna'", () => {
+            const result = exceptBy(
+                [Person.Alice, Person.Noemi, ],
+                [Person.Mel, Person.Noemi2],
+                p => p.name
+            );
+            expect(result.toArray()).to.deep.equal([Person.Alice]);
+        });
+        test("should use provided comparer", () => {
+            const LittleAlice = new Person("alice", "Kawashima", 9);
+            const result = exceptBy(
+                [Person.Alice, Person.Reina],
+                [LittleAlice],
+                p => p.name,
+                (a, b) => a.toLowerCase() === b.toLowerCase()
+            );
+            expect(result.toArray()).to.deep.equal([Person.Reina]);
+        });
+    });
+
     describe("#first()", () => {
         test("should throw error if the sequence is empty", () => {
             expect(() => first([])).toThrow(new NoElementsException());
@@ -656,6 +687,38 @@ describe("Enumerable Standalone Functions", () => {
             const intersection = intersect(first, second, (a, b) => a.age - b.age);
             const ageCount = count(intersection, p => p.age > 59);
             expect(ageCount).to.eq(0);
+        });
+    });
+
+    describe("#intersectBy()", () => {
+        test("should return [4,5]", () => {
+            const first = [1, 2, 3, 4, 5];
+            const second = [4, 5, 6, 7, 8];
+            const result = intersectBy(first, second, n => n);
+            expect(result.toArray()).to.deep.equal([4, 5]);
+        });
+        test("should return [3,4,5]", () => {
+            const first = [1, 2, 3, 3, 4, 5, 5, 5, 11];
+            const second = [3, 3, 3, 4, 4, 5, 5, 6, 7, 8];
+            const result = intersectBy(first, second, n => n);
+            expect(result.toArray()).to.deep.equal([3, 4, 5]);
+        });
+        test("should only have 'Mel', 'Lenka', 'Jane' and 'Noemi'", () => {
+            const result = intersectBy(
+                [Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane],
+                [Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2],
+                p => p.name
+            );
+            expect(result.toArray()).to.deep.equal([Person.Noemi, Person.Mel, Person.Lenka, Person.Jane]);
+        });
+        test("should only have 'Noemi', 'Mel', 'Lenka' and 'Jane'", () => {
+            const result = intersectBy(
+                [Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane],
+                [Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2],
+                p => p.name,
+                (a, b) => a.toLowerCase() === b.toLowerCase()
+            );
+            expect(result.toArray()).to.deep.equal([Person.Noemi, Person.Mel, Person.Lenka, Person.Jane]);
         });
     });
 

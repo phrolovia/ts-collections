@@ -181,6 +181,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.except(iterable, comparator);
     }
 
+    public exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey> | null): IEnumerable<TElement> {
+        return this.#enumerator.exceptBy(iterable, keySelector, keyComparator);
+    }
+
     public first(predicate?: Predicate<TElement>): TElement {
         return this.#enumerator.first(predicate);
     }
@@ -207,6 +211,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
         return this.#enumerator.intersect(iterable, comparator);
+    }
+
+    public intersectBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey> | null): IEnumerable<TElement> {
+        return this.#enumerator.intersectBy(iterable, keySelector, keyComparator);
     }
 
     public intersperse<TSeparator = TElement>(separator: TSeparator): IEnumerable<TElement | TSeparator> {

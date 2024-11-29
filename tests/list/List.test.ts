@@ -597,6 +597,28 @@ describe("List", () => {
         });
     });
 
+    describe("#exceptBy()", () => {
+        const list1 = new List([Person.Alice, Person.Noemi]);
+        const list2 = new List([Person.Mel, Person.Noemi2]);
+        test("should only have 'Alice'", () => {
+            const elist = list1.exceptBy(list2, p => p.name);
+            expect(elist.toArray()).to.deep.equal([Person.Alice]);
+        });
+        test("should only have 'Alice' and 'Noemi'", () => {
+            const elist = list1.exceptBy(list2, p => p);
+            expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Noemi]);
+        });
+        test("should use provided comparator", () => {
+            const LittleNoemi = new Person("noemi", "Nymph", 9);
+            const list3 = new List([Person.Alice, LittleNoemi]);
+            const list4 = new List([Person.Mel, Person.Noemi2]);
+            const elist = list3.exceptBy(list4, p => p.name);
+            const elist2 = list3.exceptBy(list2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            expect(elist.toArray()).to.deep.equal([Person.Alice, LittleNoemi]);
+            expect(elist2.toArray()).to.deep.equal([Person.Alice]);
+        });
+    });
+
     describe("#first()", () => {
         test("should throw error if list is empty()", () => {
             const list = new List<number>();
@@ -881,6 +903,28 @@ describe("List", () => {
             const exceptionList = list1.intersect(list2, (p1, p2) => p1.age - p2.age);
             const ageCount = exceptionList.count(p => p.age > 50);
             expect(ageCount).to.eq(0);
+        });
+    });
+
+    describe("#intersectBy()", () => {
+        const list1 = new List([Person.Alice, Person.Noemi]);
+        const list2 = new List([Person.Mel, Person.Noemi2]);
+        test("should only have 'Noemi'", () => {
+            const elist = list1.intersectBy(list2, p => p.name);
+            expect(elist.toArray()).to.deep.equal([Person.Noemi]);
+        });
+        test("should be empty", () => {
+            const elist = list1.intersectBy(list2, p => p);
+            expect(elist.toArray()).to.deep.equal([]);
+        });
+        test("should use provided comparator", () => {
+            const LittleNoemi = new Person("noemi", "Nymph", 9);
+            const list3 = new List([Person.Alice, LittleNoemi]);
+            const list4 = new List([Person.Mel, Person.Noemi2]);
+            const elist = list3.intersectBy(list4, p => p.name);
+            const elist2 = list3.intersectBy(list2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            expect(elist.toArray()).to.deep.equal([]);
+            expect(elist2.toArray()).to.deep.equal([LittleNoemi]);
         });
     });
 
