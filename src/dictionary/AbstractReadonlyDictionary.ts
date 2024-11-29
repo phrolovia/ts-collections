@@ -52,6 +52,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.aggregate(this, accumulator, seed, resultSelector);
     }
 
+    public aggregateBy<TAggregateKey, TAccumulate = KeyValuePair<TKey, TValue>>(keySelector: Selector<KeyValuePair<TKey, TValue>, TAggregateKey>, seedSelector: Selector<TAggregateKey, TAccumulate>, accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, keyComparator?: EqualityComparator<TAggregateKey>): IEnumerable<KeyValuePair<TAggregateKey, TAccumulate>> {
+        return EnumerableStatic.aggregateBy(this, keySelector, seedSelector, accumulator, keyComparator);
+    }
+
     public all(predicate: Predicate<KeyValuePair<TKey, TValue>>): boolean {
         return EnumerableStatic.all(this, predicate);
     }

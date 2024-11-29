@@ -59,6 +59,7 @@ export {
     SortedSet,
     Stack,
     aggregate,
+    aggregateBy,
     all,
     any,
     append,

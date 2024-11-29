@@ -79,6 +79,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+   public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>> {
+        keyComparator ??= Comparators.equalityComparator;
+        const groups = this.groupBy(keySelector, keyComparator);
+        return groups.select(g => new KeyValuePair(g.key, g.source.aggregate(accumulator, seedSelector(g.key))));
+   }
+
     public all(predicate: Predicate<TElement>): boolean {
         for (const d of this) {
             if (!predicate(d)) {

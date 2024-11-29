@@ -51,6 +51,24 @@ export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulat
 }
 
 /**
+ * Applies an accumulator function over the sequence, grouping the results by a key from the key selector function.
+ * @param source The source iterable.
+ * @param keySelector The key selector function that will be used to select the key for an element.
+ * @param seedSelector The function that will be used to select the initial accumulator value.
+ * @param accumulator The accumulator function that will be applied over the sequence.
+ * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ */
+export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
+    source: IEnumerable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    seedSelector: Selector<TKey, TAccumulate>,
+    accumulator: Accumulator<TElement, TAccumulate>,
+    keyComparator?: EqualityComparator<TKey>
+): IEnumerable<KeyValuePair<TKey, TAccumulate>> => {
+    return from(source).aggregateBy(keySelector, seedSelector, accumulator, keyComparator);
+}
+
+/**
  * Determines if all elements of the sequence satisfy the specified predicate.
  * @param source The source iterable.
  * @param predicate The predicate function that will be used to check each element for a condition.

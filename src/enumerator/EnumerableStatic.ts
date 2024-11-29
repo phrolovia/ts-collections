@@ -46,6 +46,10 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).aggregate(accumulator, seed, resultSelector);
     }
 
+    public static aggregateBy<TElement, TKey, TAccumulate = TElement>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>> {
+        return new Enumerable(source).aggregateBy(keySelector, seedSelector, accumulator, keyComparator);
+    }
+
     public static all<TElement>(source: IEnumerable<TElement>, predicate: Predicate<TElement>): boolean {
         return new Enumerable(source).all(predicate);
     }

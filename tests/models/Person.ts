@@ -26,6 +26,7 @@ export class Person {
         return `${this.name} ${this.surname}`;
     }
 
+    /* DO NOT MODIFY THESE! CREATE YOUR OWN IF NEEDED. */
     public static readonly Alice = new Person("Alice", "Rivermist", 23);
     public static readonly Amy = new Person("Amy", "Rivera", 32);
     public static readonly Ayana = new Person("Ayana", "Suzukawa", 26);

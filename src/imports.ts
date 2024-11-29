@@ -59,6 +59,7 @@ export { ImmutableStack } from "./stack/ImmutableStack";
 export { Collections } from "./core/Collections";
 export {
     aggregate,
+    aggregateBy,
     all,
     any,
     append,
