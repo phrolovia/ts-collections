@@ -82,6 +82,10 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.aggregate(accumulator, seed, resultSelector);
     }
 
+    public aggregateBy<TAggregateKey, TAccumulate = IGroup<TKey, TElement>>(keySelector: Selector<IGroup<TKey, TElement>, TAggregateKey>, seedSelector: Selector<TAggregateKey, TAccumulate>, accumulator: Accumulator<IGroup<TKey, TElement>, TAccumulate>, keyComparator?: EqualityComparator<TAggregateKey>): IEnumerable<KeyValuePair<TAggregateKey, TAccumulate>> {
+        return this.#lookupTree.aggregateBy(keySelector, seedSelector, accumulator, keyComparator);
+    }
+
     public all(predicate: Predicate<IGroup<TKey, TElement>>): boolean {
         return this.#lookupTree.all(predicate);
     }

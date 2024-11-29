@@ -76,6 +76,24 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#aggregateBy()", () => {
+        const dictionary = new Dictionary<number, Person>();
+        dictionary.add(1, Person.Alice);
+        dictionary.add(2, Person.Lucrezia);
+        dictionary.add(3, Person.Noemi);
+        dictionary.add(4, Person.Noemi2);
+        test("should aggregate into (name, sum of ages) pairs", () => {
+            const result = dictionary.aggregateBy(p => p.value.name, () => 0, (total, next) => total + next.value.age);
+            const obj = result.toObject(p => p.key, p => p.value);
+            expect(obj).to.deep.equal({ Alice: 23, Lucrezia: 21, Noemi: 72 });
+        });
+        test("should return empty result if source is empty", () => {
+            dictionary.clear();
+            const result = dictionary.aggregateBy(p => p.value.name, () => 0, (total, next) => total + next.value.age);
+            expect(result.count()).to.eq(0);
+        });
+    });
+
     describe("#all()", () => {
         const dictionary = new Dictionary<string, Person>();
         dictionary.add(Person.Alice.name, Person.Alice);

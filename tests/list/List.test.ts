@@ -109,6 +109,25 @@ describe("List", () => {
         });
     });
 
+    describe("#aggregateBy()", () => {
+        test("should aggregate by name and produce (name, sum of ages) pairs", () => {
+            const list = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori]);
+            const result = list.aggregateBy(p => p.name, () => 0, (acc, p) => acc + p.age);
+            const obj = result.toObject(p => p.key, p => p.value);
+            expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10 });
+        });
+        test("should use provided key comparator", () => {
+            const LittleKaori = new Person("kaori", "Furuya", 6);
+            const list = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori, LittleKaori]);
+            const result = list.aggregateBy(p => p.name, () => 0, (acc, p) => acc + p.age);
+            const result2 = list.aggregateBy(p => p.name, () => 0, (acc, p) => acc + p.age, (k1, k2) => k1.toLowerCase().localeCompare(k2.toLowerCase()) === 0);
+            const obj = result.toObject(p => p.key, p => p.value);
+            const obj2 = result2.toObject(p => p.key, p => p.value);
+            expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10, kaori: 6 });
+            expect(obj2).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 16 });
+        });
+    });
+
     describe("#all()", () => {
         const list = new List([Person.Alice, Person.Mel, Person.Senna, null, Person.Jane]);
         test("should not have any people younger than 9", () => {
