@@ -354,6 +354,28 @@ export const except = <TElement>(
 }
 
 /**
+ * Produces the set difference of two sequences by using the specified key selector function to compare elements.
+ * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
+ *
+ * @template TElement, TKey
+ * @typeParam TElement The type of the elements in the source sequence.
+ * @typeParam TKey The type of the key that will be used for comparison.
+ * @param source The source iterable.
+ * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
+ * @param keySelector The key selector function that will be used for selecting a key which will be used for comparison.
+ * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
+ */
+export const exceptBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    other: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    keyComparator?: EqualityComparator<TKey>
+): IEnumerable<TElement> => {
+    return from(source).exceptBy(other, keySelector, keyComparator);
+}
+
+/**
  * Gets the first element of the sequence.
  * @template TElement The type of elements in the sequence.
  * @param source The source iterable.
@@ -480,6 +502,28 @@ export const intersect = <TElement>(
     comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null
 ): IEnumerable<TElement> => {
     return from(source).intersect(other, comparator);
+}
+
+/**
+ * Produces the set intersection of two sequences by using the specified key selector function to compare elements.
+ * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
+ *
+ * @template TElement, TKey
+ * @typeParam TElement The type of the elements in the source sequence.
+ * @typeParam TKey The type of the key that will be used for comparison.
+ * @param source The source iterable.
+ * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
+ * @param keySelector The key selector function that will be used for selecting a key which will be used for comparison.
+ * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set intersection of the two sequences.
+ */
+export const intersectBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    other: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    keyComparator?: EqualityComparator<TKey>
+): IEnumerable<TElement> => {
+    return from(source).intersectBy(other, keySelector, keyComparator);
 }
 
 /**

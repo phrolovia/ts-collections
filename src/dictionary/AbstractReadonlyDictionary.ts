@@ -150,6 +150,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.except(this, iterable, comparator);
     }
 
+    public exceptBy<TExceptKey>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keySelector: Selector<KeyValuePair<TKey, TValue>, TExceptKey>, keyComparator?: EqualityComparator<TExceptKey> | OrderComparator<TExceptKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.exceptBy(this, iterable, keySelector, keyComparator);
+    }
+
     public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
         return EnumerableStatic.first(this, predicate);
     }
@@ -177,6 +181,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>> | null): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
         return EnumerableStatic.intersect(this, iterable, comparator);
+    }
+
+    public intersectBy<TIntersectKey>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keySelector: Selector<KeyValuePair<TKey, TValue>, TIntersectKey>, keyComparator?: EqualityComparator<TIntersectKey> | OrderComparator<TIntersectKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.intersectBy(this, iterable, keySelector, keyComparator);
     }
 
     public intersperse<TSeparator = KeyValuePair<TKey, TValue>>(separator: TSeparator): IEnumerable<KeyValuePair<TKey, TValue> | TSeparator> {
