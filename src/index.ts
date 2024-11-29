@@ -73,6 +73,7 @@ export {
     cycle,
     defaultIfEmpty,
     distinct,
+    distinctBy,
     elementAt,
     elementAtOrDefault,
     empty,

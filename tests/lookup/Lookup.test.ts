@@ -166,6 +166,16 @@ describe("Lookup", () => {
         });
     });
 
+    describe("#distinctBy()", () => {
+        test("should return a lookup with only unique keys", () => {
+            const LittleMirei = new Person("mirei", "Suzuki", 22);
+            const list = new LinkedList([Person.Alice, Person.Mirei, Person.Alice, LittleMirei]);
+            const lookup = list.toLookup(p => p.name, p => p);
+            const result = lookup.distinctBy(p => p.key, (p1, p2) => p1.toLowerCase() === p2.toLowerCase());
+            expect(result.count()).to.eq(2);
+        });
+    });
+
     describe("#elementAt()", () => {
         test("should return the group at the given index", () => {
             const list = new LinkedList(peopleArray);

@@ -309,7 +309,7 @@ describe("SortedDictionary", () => {
         dictionary.add(Person.Alice.name, Person.Alice);
         dictionary.add(Person.Lucrezia.name, Person.Lucrezia);
         test("should return a new dictionary which is identical to the source dictionary", () => {
-            const dict = dictionary.distinct(e => e.key).toSortedDictionary<string, Person>(p => p.key, p => p.value);
+            const dict = dictionary.distinct().toSortedDictionary<string, Person>(p => p.key, p => p.value);
             expect(dict === dictionary).to.eq(false);
             expect(dict.get("Alice")).to.not.null;
             expect(dict.get("Lucrezia")).to.not.null;

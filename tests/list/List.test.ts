@@ -450,7 +450,7 @@ describe("List", () => {
     describe("#distinct()", () => {
         test("should remove duplicate elements", () => {
             const list = new List([Person.Alice, Person.Mel, Person.Senna, Person.Mel, Person.Alice]);
-            const distinct = list.distinct(p => p.name);
+            const distinct = list.distinct();
             expect(distinct.toArray()).to.deep.equal([Person.Alice, Person.Mel, Person.Senna]);
             expect(distinct.toList().length).to.eq(3);
         });
@@ -464,7 +464,29 @@ describe("List", () => {
         });
         test("should use provided comparator for key comparison", () => {
             const list2 = new List([Person.Alice, Person.Hanna, Person.Hanna2, Person.Noemi, Person.Noemi2]);
-            const distinct2 = list2.distinct(p => p.name, (n1, n2) => n1.localeCompare(n2) === 0).toArray();
+            const distinct2 = list2.distinct((p1, p2) => p1.name.localeCompare(p2.name) === 0).toArray();
+            expect(distinct2).to.deep.equal([Person.Alice, Person.Hanna, Person.Noemi]);
+        });
+    });
+
+    describe("#distinctBy()", () => {
+        test("should return original list", () => {
+            const list = new List([Person.Noemi, Person.Noemi2]);
+            const distinct = list.distinctBy(p => p);
+            const distinct2 = list.distinctBy(p => p.name);
+            expect(distinct.toArray()).to.deep.equal([Person.Noemi, Person.Noemi2]);
+            expect(distinct2.toArray()).to.deep.equal([Person.Noemi]);
+        });
+        test("should remove duplicate elements", () => {
+            const list = new List([Person.Alice, Person.Mel, Person.Senna, Person.Mel, Person.Alice]);
+            const distinct = list.distinctBy(p => p.name);
+            expect(distinct.toArray()).to.deep.equal([Person.Alice, Person.Mel, Person.Senna]);
+            expect(distinct.toList().length).to.eq(3);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const LittleHanna = new Person("hanna", "Nymph", 9);
+            const list2 = new List([Person.Alice, Person.Hanna, Person.Hanna2, Person.Noemi, Person.Noemi2, LittleHanna]);
+            const distinct2 = list2.distinctBy(p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0).toArray();
             expect(distinct2).to.deep.equal([Person.Alice, Person.Hanna, Person.Noemi]);
         });
     });

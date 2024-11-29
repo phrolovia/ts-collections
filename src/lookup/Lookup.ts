@@ -138,8 +138,12 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.defaultIfEmpty(value);
     }
 
-    public distinct<TDistinctKey>(keySelector: Selector<IGroup<TKey, TElement>, TDistinctKey>, comparator?: EqualityComparator<TDistinctKey>): IEnumerable<IGroup<TKey, TElement>> {
-        return this.#lookupTree.distinct(keySelector, comparator);
+    public distinct(keyComparator?: EqualityComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.distinct(keyComparator);
+    }
+
+    public distinctBy<TDistinctKey>(keySelector: Selector<IGroup<TKey, TElement>, TDistinctKey>, comparator?: EqualityComparator<TDistinctKey>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#lookupTree.distinctBy(keySelector, comparator);
     }
 
     public elementAt(index: number): IGroup<TKey, TElement> {
