@@ -845,48 +845,44 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
-        const set = new SortedSet<TElement>([], comparator as OrderComparator<TElement>);
-        const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
-        const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
-        if (!firstOrDefault) {
-            return yield* this;
-        } else {
-            const collection = typeof comparator(firstOrDefault, firstOrDefault) === "number" ? set : list;
-            for (const item of iterable) {
-                if (!collection.contains(item)) {
-                    collection.add(item);
-                }
-            }
-            for (const item of this) {
-                if (!collection.contains(item)) {
-                    collection.add(item);
-                    yield item;
-                }
-            }
-        }
+        return yield* this.exceptByGenerator(iterable, x => x, comparator);
     }
 
     private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): Iterable<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
-        const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
-        if (!firstOrDefault) {
-            return yield* this;
-        } else {
-            const firstOrDefaultKey = keySelector(firstOrDefault);
-            const keyCollection = typeof keyComparator(firstOrDefaultKey, firstOrDefaultKey) === "number" ? keySet : keyList;
-            for (const item of iterable) {
-                const key = keySelector(item);
-                if (!keyCollection.contains(key)) {
-                    keyCollection.add(key);
-                }
+
+        const { value: first, done } = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
+        if (done) {
+            const { value: first, done } = new Enumerator<TElement>(() => this)[Symbol.iterator]().next();
+            if (done) {
+                return yield* this;
             }
+            const firstKey = keySelector(first);
+            const keyCollection = typeof keyComparator(firstKey, firstKey) === "number" ? keySet : keyList;
             for (const item of this) {
                 const key = keySelector(item);
                 if (!keyCollection.contains(key)) {
                     keyCollection.add(key);
                     yield item;
                 }
+            }
+            return;
+        }
+
+        const firstKey = keySelector(first);
+        const keyCollection = typeof keyComparator(firstKey, firstKey) === "number" ? keySet : keyList;
+        for (const item of iterable) {
+            const key = keySelector(item);
+            if (!keyCollection.contains(key)) {
+                keyCollection.add(key);
+            }
+        }
+        for (const item of this) {
+            const key = keySelector(item);
+            if (!keyCollection.contains(key)) {
+                keyCollection.add(key);
+                yield item;
             }
         }
     }
@@ -922,46 +918,30 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
-        const set = new SortedSet(iterable, comparator as OrderComparator<TElement>);
-        const list = new List<TElement>([], comparator as EqualityComparator<TElement>);
-        const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
-        if (!firstOrDefault) {
-            return yield* this;
-        } else {
-            const collection = typeof comparator(firstOrDefault, firstOrDefault) === "number" ? set : list;
-            for (const item of iterable) {
-                if (!collection.contains(item)) {
-                    collection.add(item);
-                }
-            }
-            for (const item of this) {
-                if (collection.remove(item)) {
-                    yield item;
-                }
-            }
-        }
+        return yield* this.intersectByGenerator(iterable, x => x, comparator);
     }
 
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): Iterable<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
-        const firstOrDefault = new Enumerator<TElement>(() => iterable).firstOrDefault();
-        if (!firstOrDefault) {
-            return yield* this;
-        } else {
-            const firstOrDefaultKey = keySelector(firstOrDefault);
-            const keyCollection = typeof keyComparator(firstOrDefaultKey, firstOrDefaultKey) === "number" ? keySet : keyList;
-            for (const item of iterable) {
-                const key = keySelector(item);
-                if (!keyCollection.contains(key)) {
-                    keyCollection.add(key);
-                }
+
+        const { value: first, done } = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
+        if (done) {
+            return yield* Enumerable.empty<TElement>();
+        }
+
+        const firstKey = keySelector(first);
+        const keyCollection = typeof keyComparator(firstKey, firstKey) === "number" ? keySet : keyList;
+        for (const item of iterable) {
+            const key = keySelector(item);
+            if (!keyCollection.contains(key)) {
+                keyCollection.add(key);
             }
-            for (const item of this) {
-                const key = keySelector(item);
-                if (keyCollection.remove(key)) {
-                    yield item;
-                }
+        }
+        for (const item of this) {
+            const key = keySelector(item);
+            if (keyCollection.remove(key)) {
+                yield item;
             }
         }
     }
@@ -1193,23 +1173,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* unionGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
-        const distinctList: Array<TElement> = [];
-        comparator ??= Comparators.equalityComparator;
-        for (const source of [this, iterable]) {
-            for (const item of source) {
-                let exists = false;
-                for (const existingItem of distinctList) {
-                    if (comparator(item, existingItem)) {
-                        exists = true;
-                        break;
-                    }
-                }
-                if (!exists) {
-                    yield item;
-                    distinctList.push(item);
-                }
-            }
-        }
+        return yield* this.unionByGenerator(iterable, x => x, comparator ?? Comparators.equalityComparator);
     }
 
     private* whereGenerator(predicate: IndexedPredicate<TElement>): Iterable<TElement> {

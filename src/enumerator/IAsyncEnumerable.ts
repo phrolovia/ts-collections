@@ -28,6 +28,9 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
 
+
+    aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>
+
     /**
      * Determines if all elements of the sequence satisfy the specified predicate.
      * @param predicate The predicate function that will be used to check each element for a condition.
@@ -126,10 +129,11 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
 
     /**
      * Returns distinct elements from the sequence.
-     * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison. If not provided, the item itself will be used.
      * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
      */
-    distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
+    distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
+
+    distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
      * Returns the element at the specified index in the sequence.
@@ -163,10 +167,11 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be removed.
      * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    except(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
+    except(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
+
+    exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
      * Gets the first element of the sequence.
@@ -230,10 +235,11 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be returned.
      * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @param orderComparator The comparator function that will be used for order comparison. If not provided, default <b>equality comparison</b> will be used.
      * @throws {Error} If the enumerable is null or undefined.
      */
-    intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | null, orderComparator?: OrderComparator<TElement> | null): IAsyncEnumerable<TElement>;
+    intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
+
+    intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
      * Intersperses a specified element between each element of the sequence.
@@ -506,6 +512,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Creates a new array from the elements of the sequence.
      */
     toArray(): Promise<TElement[]>;
+
+    toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
 
     /**
      * Produces the set union of two sequences by using an equality comparer.
