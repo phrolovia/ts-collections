@@ -77,7 +77,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if enumerable is empty and no seed is provided", async () => {
             const result = new AsyncEnumerable(arrayProducer([] as number[])).aggregate((a, b) => a + b);
-            expect(result).rejects.toThrowError(new NoElementsException());
+            await expect(result).rejects.toThrowError(new NoElementsException());
         });
         test("should return see if enumerable is empty and seed is provided", async () => {
             const result = await new AsyncEnumerable(arrayProducer([])).aggregate((a, b) => a + b, 10);
@@ -145,7 +145,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw an error if the enumerable is empty", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.average()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.average()).rejects.toThrowError(new NoElementsException());
         });
         test("should convert values to number", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numericalStringProducer(10));
@@ -297,7 +297,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw an error if source is empty", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.cycle().toArray()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.cycle().toArray()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -344,11 +344,11 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw an error if the index is out of bounds", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
-            expect(enumerable.elementAt(10)).rejects.toThrowError(new IndexOutOfBoundsException(10));
+            await expect(enumerable.elementAt(10)).rejects.toThrowError(new IndexOutOfBoundsException(10));
         });
         test("should throw an error if the index is out of bounds #2", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
-            expect(enumerable.elementAt(-1)).rejects.toThrowError(new IndexOutOfBoundsException(-1));
+            await expect(enumerable.elementAt(-1)).rejects.toThrowError(new IndexOutOfBoundsException(-1));
         });
     });
 
@@ -863,7 +863,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.max()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.max()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -885,7 +885,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.maxBy(n => n)).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.maxBy(n => n)).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -907,7 +907,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.min()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.min()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -929,7 +929,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.minBy(n => n)).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.minBy(n => n)).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -1054,7 +1054,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if source is empty", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.product()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.product()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -1098,7 +1098,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.scan((prev, curr) => prev + curr).toArray()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.scan((prev, curr) => prev + curr).toArray()).rejects.toThrowError(new NoElementsException());
         });
     });
 
@@ -1395,7 +1395,7 @@ describe("AsyncEnumerable", () => {
         });
         test("should return 0 for empty enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
-            expect(enumerable.sum()).rejects.toThrowError(new NoElementsException());
+            await expect(enumerable.sum()).rejects.toThrowError(new NoElementsException());
         });
     });
 

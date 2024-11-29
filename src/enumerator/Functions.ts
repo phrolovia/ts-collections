@@ -244,17 +244,32 @@ export const defaultIfEmpty = <TElement>(
  * Returns distinct elements from the sequence.
  * @template TElement The type of elements in the sequence.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison. If not provided, the item itself will be used.
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
  */
-export const distinct = <TElement, TKey>(
+export const distinct = <TElement>(
     source: Iterable<TElement>,
-    keySelector?: Selector<TElement, TKey>,
+    keyComparator?: EqualityComparator<TElement>
+): IEnumerable<TElement> => {
+    return from(source).distinct(keyComparator);
+}
+
+/**
+ * Returns distinct elements from the sequence based on a specified key selector function.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source iterable.
+ * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison.
+ * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
+ */
+export const distinctBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TElement> => {
-    return from(source).distinct(keySelector, keyComparator);
+    return from(source).distinctBy(keySelector, keyComparator);
 }
+
 
 /**
  * Returns the element at the specified index in the sequence.

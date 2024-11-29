@@ -106,8 +106,12 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.defaultIfEmpty(this as IEnumerable<TElement | null>, value);
     }
 
-    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
-        return EnumerableStatic.distinct(this, keySelector, keyComparator);
+    public distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return EnumerableStatic.distinct(this, keyComparator);
+    }
+
+    public distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return EnumerableStatic.distinctBy(this, keySelector, keyComparator);
     }
 
     public elementAt(index: number): TElement {

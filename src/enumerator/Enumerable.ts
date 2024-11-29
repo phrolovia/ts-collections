@@ -157,8 +157,12 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.defaultIfEmpty(value);
     }
 
-    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
-        return this.#enumerator.distinct(keySelector, keyComparator);
+    public distinct( keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return this.#enumerator.distinct(keyComparator);
+    }
+
+    public distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return this.#enumerator.distinctBy(keySelector, keyComparator);
     }
 
     public elementAt(index: number): TElement {

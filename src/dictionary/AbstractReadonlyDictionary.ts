@@ -125,8 +125,12 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return EnumerableStatic.defaultIfEmpty(this, value);
     }
 
-    public distinct<TDistinctKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TDistinctKey>, comparator?: EqualityComparator<TDistinctKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return EnumerableStatic.distinct(this, keySelector, comparator);
+    public distinct(keyComparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.distinct(this, keyComparator);
+    }
+
+    public distinctBy<TDistinctKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDistinctKey>, comparator?: EqualityComparator<TDistinctKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.distinctBy(this, keySelector, comparator);
     }
 
     public elementAt(index: number): KeyValuePair<TKey, TValue> {

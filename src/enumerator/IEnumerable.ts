@@ -171,11 +171,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Returns distinct elements from the sequence.
      * @template TElement
-     * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison. If not provided, the item itself will be used.
      * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
      * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
      */
-    distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
+    distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
+
+    /**
+     * Returns distinct elements from the sequence.
+     * @template TElement, TKey
+     * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison.
+     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
+     */
+    distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
     /**
      * Returns the element at the specified index in the sequence.

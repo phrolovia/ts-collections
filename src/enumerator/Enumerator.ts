@@ -183,10 +183,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.defaultIfEmptyGenerator(value));
     }
 
-    public distinct<TKey>(keySelector?: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
-        const keySelect = keySelector ?? ((item: TElement) => item as unknown as TKey);
+    public distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        const keyCompare = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TElement>;
+        return new Enumerator(() => this.unionGenerator(Enumerable.empty(), keyCompare));
+    }
+
+    public distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey>;
-        return new Enumerator(() => this.unionByGenerator(Enumerable.empty(), keySelect, keyCompare));
+        return new Enumerator(() => this.unionByGenerator(Enumerable.empty(), keySelector, keyCompare));
     }
 
     public elementAt(index: number): TElement {
