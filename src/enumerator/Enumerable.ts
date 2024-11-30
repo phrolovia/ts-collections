@@ -177,11 +177,11 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.elementAtOrDefault(index);
     }
 
-    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         return this.#enumerator.except(iterable, comparator);
     }
 
-    public exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey> | null): IEnumerable<TElement> {
+    public exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement> {
         return this.#enumerator.exceptBy(iterable, keySelector, keyComparator);
     }
 
@@ -209,11 +209,11 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.index();
     }
 
-    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         return this.#enumerator.intersect(iterable, comparator);
     }
 
-    public intersectBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey> | null): IEnumerable<TElement> {
+    public intersectBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement> {
         return this.#enumerator.intersectBy(iterable, keySelector, keyComparator);
     }
 

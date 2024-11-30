@@ -348,7 +348,7 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
 export const except = <TElement>(
     source: Iterable<TElement>,
     other: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null
+    comparator?: EqualityComparator<TElement> | OrderComparator<TElement>
 ): IEnumerable<TElement> => {
     return from(source).except(other, comparator);
 }
@@ -370,7 +370,7 @@ export const exceptBy = <TElement, TKey>(
     source: Iterable<TElement>,
     other: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
-    keyComparator?: EqualityComparator<TKey>
+    keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>
 ): IEnumerable<TElement> => {
     return from(source).exceptBy(other, keySelector, keyComparator);
 }
@@ -499,7 +499,7 @@ export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number
 export const intersect = <TElement>(
     source: Iterable<TElement>,
     other: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null
+    comparator?: EqualityComparator<TElement> | OrderComparator<TElement>
 ): IEnumerable<TElement> => {
     return from(source).intersect(other, comparator);
 }
@@ -521,7 +521,7 @@ export const intersectBy = <TElement, TKey>(
     source: Iterable<TElement>,
     other: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
-    keyComparator?: EqualityComparator<TKey>
+    keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>
 ): IEnumerable<TElement> => {
     return from(source).intersectBy(other, keySelector, keyComparator);
 }

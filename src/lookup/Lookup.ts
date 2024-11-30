@@ -158,7 +158,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.elementAtOrDefault(index);
     }
 
-    public except(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
+    public except(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | OrderComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.except(iterable, comparator);
     }
 
@@ -201,7 +201,7 @@ export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
         return this.#lookupTree.index();
     }
 
-    public intersect(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | OrderComparator<IGroup<TKey, TElement>> | null): IEnumerable<IGroup<TKey, TElement>> {
+    public intersect(iterable: Iterable<IGroup<TKey, TElement>>, comparator?: EqualityComparator<IGroup<TKey, TElement>> | OrderComparator<IGroup<TKey, TElement>>): IEnumerable<IGroup<TKey, TElement>> {
         return this.#lookupTree.intersect(iterable, comparator);
     }
 

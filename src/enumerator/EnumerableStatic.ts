@@ -122,7 +122,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).elementAtOrDefault(index);
     }
 
-    public static except<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public static except<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).except(other, comparator);
     }
 
@@ -154,7 +154,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).index();
     }
 
-    public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public static intersect<TElement>(source: IEnumerable<TElement>, other: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         return new Enumerable(source).intersect(other, comparator);
     }
 

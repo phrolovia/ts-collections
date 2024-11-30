@@ -224,12 +224,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return null;
     }
 
-    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.exceptGenerator(iterable, comparator));
     }
 
-    public exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey> | null): IEnumerable<TElement> {
+    public exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.exceptByGenerator(iterable, keySelector, keyComparator));
     }
@@ -276,12 +276,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<[number, TElement]>(() => this.indexGenerator());
     }
 
-    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.intersectGenerator(iterable, comparator));
     }
 
-    public intersectBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey> | null): IEnumerable<TElement> {
+    public intersectBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement> {
         keyComparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.intersectByGenerator(iterable, keySelector, keyComparator));
     }
