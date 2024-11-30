@@ -1194,6 +1194,11 @@ describe("AsyncEnumerable", () => {
             expect(result[0]).to.eq(125);
             expect(result[1]).to.eq(729);
         });
+        test("should have index as the second parameter", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5));
+            const result = await enumerable.select((n, i) => n + i).toArray();
+            expect(result).to.deep.equal([0, 2, 4, 6, 8]);
+        });
     });
 
     describe("#selectMany()", async () => {
