@@ -976,9 +976,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* selectGenerator<TResult>(selector: Selector<TElement, TResult>): AsyncIterable<TResult> {
+    private async* selectGenerator<TResult>(selector: IndexedSelector<TElement, TResult>): AsyncIterable<TResult> {
+        let index = 0;
         for await (const element of this) {
-            yield selector(element);
+            yield selector(element, index++);
         }
     }
 
