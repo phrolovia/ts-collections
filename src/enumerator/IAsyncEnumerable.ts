@@ -513,6 +513,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     toArray(): Promise<TElement[]>;
 
+    /**
+     * Converts this enumerable to an object.
+     * @template TKey
+     * @template TValue
+     * @param keySelector The selector that will be used to select the property that will be used as the key of the object. Can only be a string, number or symbol.
+     * @param valueSelector The selector that will be used to select the property that will be used as the value of the object.
+     * @returns {Promise<Record<TKey, TValue>>} An object that contains the elements of the sequence.
+     */
     toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
 
     /**
