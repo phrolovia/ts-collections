@@ -52,11 +52,11 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Applies an accumulator function over the sequence, grouping the results by a key from the key selector function.
      * @param keySelector The key selector function that will be used to select the key for an element.
-     * @param seedSelector The function that will be used to select the initial accumulator value.
+     * @param seedSelector Initial accumulator value or a function that will be used to select the initial accumulator value.
      * @param accumulator The accumulator function that will be applied over the sequence.
      * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
      */
-    aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>>;
+    aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>>;
 
     /**
      * Determines if all elements of the sequence satisfy the specified predicate.

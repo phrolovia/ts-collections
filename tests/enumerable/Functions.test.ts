@@ -169,6 +169,12 @@ describe("Enumerable Standalone Functions", () => {
             expect(obj1).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 14, "jisu": 6 });
             expect(obj2).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 20 });
         });
+        test("should work with non function seed", () => {
+            const sequence = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Jisu])
+            const result = aggregateBy(sequence, p => p.name, 0, (total, next) => total + next.age);
+            const obj = result.toObject(p => p.key, p => p.value);
+            expect(obj).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 14 });
+        });
     });
 
     describe("#all()", () => {

@@ -61,7 +61,7 @@ export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulat
 export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
     source: IEnumerable<TElement>,
     keySelector: Selector<TElement, TKey>,
-    seedSelector: Selector<TKey, TAccumulate>,
+    seedSelector: Selector<TKey, TAccumulate> | TAccumulate,
     accumulator: Accumulator<TElement, TAccumulate>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<KeyValuePair<TKey, TAccumulate>> => {
