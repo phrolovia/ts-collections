@@ -126,6 +126,12 @@ describe("List", () => {
             expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10, kaori: 6 });
             expect(obj2).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 16 });
         });
+        test("should work with non-function seeds", () => {
+            const list = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori]);
+            const result = list.aggregateBy(p => p.name, 0, (acc, p) => acc + p.age);
+            const obj = result.toObject(p => p.key, p => p.value);
+            expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10 });
+        });
     });
 
     describe("#all()", () => {
@@ -1621,6 +1627,16 @@ describe("List", () => {
             expect(list2.size()).to.eq(2);
             expect(list2.get(0)).to.eq(125);
             expect(list2.get(1)).to.eq(729);
+        });
+        test("should have index as the second parameter", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const list2 = list.select((n, i) => n + i).toList();
+            expect(list2.size()).to.eq(5);
+            expect(list2.get(0)).to.eq(1);
+            expect(list2.get(1)).to.eq(3);
+            expect(list2.get(2)).to.eq(5);
+            expect(list2.get(3)).to.eq(7);
+            expect(list2.get(4)).to.eq(9);
         });
     });
 

@@ -110,6 +110,12 @@ describe("AsyncEnumerable", () => {
             expect(result1).to.deep.equal({ "Alice": 23, "Noemi": 72, "Kaori": 10, "kaori": 6 });
             expect(result2).to.deep.equal({ "Alice": 23, "Noemi": 72, "Kaori": 16 });
         });
+        test("should work with non-function seed", async () => {
+            const result = await new AsyncEnumerable(personProducer(
+                [Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori]
+            )).aggregateBy(p => p.name, 0, (total, p) => total + p.age).toObject(p => p.key, p => p.value);
+            expect(result).to.deep.equal({ "Alice": 23, "Noemi": 72, "Kaori": 10 });
+        });
     });
 
     describe("#all()", () => {

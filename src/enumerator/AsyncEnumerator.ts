@@ -73,10 +73,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return resultSelector?.(accumulatedValue as TAccumulate) ?? accumulatedValue as TAccumulate;
     }
 
-    public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate>, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>> {
+    public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>> {
         keyComparator ??= Comparators.equalityComparator;
         const groups = this.groupBy(keySelector, keyComparator);
-        return groups.select(g => new KeyValuePair(g.key, g.source.aggregate(accumulator, seedSelector(g.key))));
+        return groups.select(g => new KeyValuePair(g.key, g.source.aggregate(accumulator, seedSelector instanceof Function ? seedSelector(g.key) : seedSelector)));
     }
 
     public async all(predicate: Predicate<TElement>): Promise<boolean> {
