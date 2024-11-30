@@ -126,7 +126,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.elementAtOrDefault(this, index);
     }
 
-    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         comparator = comparator ?? this.comparer;
         return EnumerableStatic.except(this, iterable, comparator);
     }
@@ -162,7 +162,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return EnumerableStatic.index(this);
     }
 
-    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement> | null): IEnumerable<TElement> {
+    public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         comparator = comparator ?? this.comparer;
         return EnumerableStatic.intersect(this, iterable, comparator);
     }
