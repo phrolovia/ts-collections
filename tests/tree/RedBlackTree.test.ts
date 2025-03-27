@@ -400,5 +400,16 @@ describe("RedBlackTree", () => {
             expect(preOrderArray).to.deep.equal(expectedPreOrderArray);
         });
     });
+
+    describe("#for-loop", () => {
+        test("should end immediately if tree is empty", () => {
+            const tree = new RedBlackTree([]);
+            let x = 0;
+            for (const node of tree) {
+                x = 1;
+            }
+            expect(x).to.eq(0);
+        });
+    });
 });
 
