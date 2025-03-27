@@ -5,6 +5,7 @@ import { IndexedAction } from "../shared/IndexedAction";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
+import { Stack } from "../stack/Stack";
 import { INode } from "./INode";
 import { ITree, TraverseType } from "./ITree";
 
@@ -19,7 +20,19 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.nextNode(this.root);
+        const stack = new Stack<INode<TElement>>();
+        let current = this.root;
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.getLeft();
+            }
+            current = stack.pop();
+            if (current != null) {
+                yield current.getData();
+                current = current.getRight();
+            }
+        }
     }
 
     public clear(): void {
@@ -199,15 +212,6 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         this.toArrayRecursive(root.getLeft(), target);
         target.push(root.getData());
         this.toArrayRecursive(root.getRight(), target);
-    }
-
-    private* nextNode(node: INode<TElement> | null): Iterable<TElement> {
-        if (!node) {
-            return this.getRootData();
-        }
-        yield* this.nextNode(node.getLeft());
-        yield node.getData();
-        yield* this.nextNode(node.getRight());
     }
 
     public abstract override add(element: TElement): boolean;
