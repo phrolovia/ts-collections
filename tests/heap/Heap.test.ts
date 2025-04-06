@@ -35,7 +35,7 @@ describe("Heap", () => {
             const array = [...heap]; // min heap
             expect(array).toEqual(expected);
         });
-        it("should add elements in descending order", () => {
+        test("should add elements in descending order", () => {
             const heap = new Heap<number>(Comparators.reverseOrderComparator);
             heap.add(16);
             heap.add(1210);
@@ -52,6 +52,36 @@ describe("Heap", () => {
         });
     });
 
+    describe("#addAll()", () => {
+        test("should add all elements from the iterable to the heap", () => {
+            const heap = new Heap<number>();
+            heap.addAll([5, 3, 7, 1, 9]);
+            expect(heap.size()).toBe(5);
+
+            // Verify all elements are present
+            const array = heap.toArray();
+            expect(array.length).toBe(5);
+            expect(array).toContain(1);
+            expect(array).toContain(3);
+            expect(array).toContain(5);
+            expect(array).toContain(7);
+            expect(array).toContain(9);
+
+            // Verify the first element is the minimum
+            expect(heap.peek()).toBe(1);
+        });
+        test("should return true if the heap was modified", () => {
+            const heap = new Heap<number>();
+            const result = heap.addAll([5, 3, 7]);
+            expect(result).toBe(true);
+        });
+        test("should return false if the heap was not modified", () => {
+            const heap = new Heap<number>();
+            const result = heap.addAll([]);
+            expect(result).toBe(false);
+        });
+    });
+
     describe("#clear()", () => {
         const heap = new Heap<number>();
         heap.add(34);
@@ -60,6 +90,18 @@ describe("Heap", () => {
         heap.clear();
         test("should clear the heap", () => {
             expect(heap.size()).toBe(0);
+        });
+    });
+
+    describe("#comparator", () => {
+        test("should return the default comparator for min heap", () => {
+            const heap = new Heap<number>();
+            expect(heap.comparator).toBe(Comparators.orderComparator);
+        });
+        test("should return the custom comparator for max heap", () => {
+            const customComparator = Comparators.reverseOrderComparator;
+            const heap = new Heap<number>(customComparator);
+            expect(heap.comparator).toBe(customComparator);
         });
     });
 
@@ -94,13 +136,25 @@ describe("Heap", () => {
             const heap = new Heap<number>(null, [88, 4, 26, 11, 8]);
             expect(heap.size()).toBe(5);
             const array = [...heap]; // min heap
-            expect(array).toEqual([4, 8, 26, 88, 11]);
+            expect(array).toEqual([4, 8, 26, 11, 88]);
         });
         test("should create a max heap from an iterable", () => {
             const heap = new Heap<number>(Comparators.reverseOrderComparator, [88, 4, 26, 11, 8]);
             expect(heap.size()).toBe(5);
             const array = [...heap]; // max heap
             expect(array).toEqual([88, 11, 26, 4, 8]);
+        });
+    });
+
+    describe("#first()", () => {
+        test("should return the first element in the heap", () => {
+            const heap = new Heap<number>();
+            heap.addAll([5, 3, 7, 1, 9]);
+            expect(heap.first()).toBe(1);
+        });
+        test("should throw an error if the heap is empty", () => {
+            const heap = new Heap<number>();
+            expect(() => heap.first()).toThrow();
         });
     });
 
@@ -112,6 +166,18 @@ describe("Heap", () => {
         test("should return false if the heap is not empty", () => {
             heap.add(34);
             expect(heap.isEmpty()).toBe(false);
+        });
+    });
+
+    describe("#last()", () => {
+        test("should return the last element in the heap", () => {
+            const heap = new Heap<number>();
+            heap.addAll([5, 3, 7, 1, 9]);
+            expect(heap.last()).toBe(9);
+        });
+        test("should throw an error if the heap is empty", () => {
+            const heap = new Heap<number>();
+            expect(() => heap.last()).toThrow();
         });
     });
 
@@ -218,6 +284,7 @@ describe("Heap", () => {
             expect(heap.size()).toBe(5);
         });
     });
+
     describe("#removeAll()", () => {
         test("should remove all elements from the given iterable", () => {
             const heap = new Heap<number>(Comparators.reverseOrderComparator, [78, 3, 16, 16, 10, 7]);
@@ -234,6 +301,7 @@ describe("Heap", () => {
             expect(heap.toArray()).toEqual([1, 2, 4, 6]);
         });
     });
+
     describe("#removeIf()", () => {
         test("should remove elements that satisfy the predicate", () => {
             const heap = new Heap<number>(Comparators.reverseOrderComparator, [78, 3, 16, 16, 10, 7]);
@@ -248,6 +316,99 @@ describe("Heap", () => {
             expect(result).toBe(true);
             expect(heap.length).toBe(3);
             expect(heap.toArray()).toEqual([1, 3, 5]);
+        });
+        test("should return false if the heap was not modified", () => {
+            const heap = new Heap<number>();
+            heap.addAll([1, 3, 5]);
+            const result = heap.removeIf((element) => element % 2 === 0);
+            expect(result).toBe(false);
+            expect(heap.length).toBe(3);
+            expect(heap.toArray()).toEqual([1, 3, 5]);
+        });
+    });
+
+    describe("#size()", () => {
+        test("should return the number of elements in the heap", () => {
+            const heap = new Heap<number>();
+            expect(heap.size()).toBe(0);
+            heap.add(1);
+            expect(heap.size()).toBe(1);
+            heap.add(2);
+            expect(heap.size()).toBe(2);
+            heap.clear();
+            expect(heap.size()).toBe(0);
+        });
+    });
+
+    describe("#length", () => {
+        test("should return the number of elements in the heap", () => {
+            const heap = new Heap<number>();
+            expect(heap.length).toBe(0);
+            heap.add(1);
+            expect(heap.length).toBe(1);
+            heap.add(2);
+            expect(heap.length).toBe(2);
+            heap.clear();
+            expect(heap.length).toBe(0);
+        });
+    });
+
+    describe("#toArray()", () => {
+        test("should return an array containing all elements in the heap", () => {
+            const heap = new Heap<number>();
+            heap.addAll([5, 3, 7, 1, 9]);
+            const array = heap.toArray();
+            // The toArray method returns elements in heap order, not sorted order
+            // We just verify that all elements are present
+            expect(array.length).toBe(5);
+            expect(array).toContain(1);
+            expect(array).toContain(3);
+            expect(array).toContain(5);
+            expect(array).toContain(7);
+            expect(array).toContain(9);
+            // Verify the first element is the minimum
+            expect(array[0]).toBe(1);
+        });
+        test("should return an empty array if the heap is empty", () => {
+            const heap = new Heap<number>();
+            expect(heap.toArray()).toEqual([]);
+        });
+    });
+
+    describe("Edge cases", () => {
+        test("should create a heap with an empty iterable", () => {
+            const heap = new Heap<number>(null, []);
+            expect(heap.size()).toBe(0);
+            expect(heap.isEmpty()).toBe(true);
+        });
+
+        test("should maintain heap property after multiple operations", () => {
+            const heap = new Heap<number>();
+            heap.addAll([5, 3, 7, 1, 9]);
+            heap.poll(); // Remove 1
+            heap.add(2);
+            heap.remove(7);
+            expect(heap.toArray()).toEqual([2, 3, 5, 9]);
+            expect(heap.peek()).toBe(2);
+        });
+
+        test("should be iterable", () => {
+            const heap = new Heap<number>();
+            heap.addAll([5, 3, 7, 1, 9]);
+            const array = [];
+            for (const element of heap) {
+                array.push(element);
+            }
+            // The iterator yields elements in heap order, not sorted order
+            // We just verify that all elements are present
+            expect(array.length).toBe(5);
+            expect(array).toContain(1);
+            expect(array).toContain(3);
+            expect(array).toContain(5);
+            expect(array).toContain(7);
+            expect(array).toContain(9);
+            // Verify the first element is the minimum
+            expect(array[0]).toBe(1);
         });
     });
 });

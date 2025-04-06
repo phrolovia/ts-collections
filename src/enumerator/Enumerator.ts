@@ -46,6 +46,9 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
+import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
+import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
+import { permutationsGenerator } from "./helpers/permutationsGenerator";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
@@ -754,18 +757,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.zipGenerator(iterable, zipper));
     }
 
-    private* appendGenerator(element: TElement): Iterable<TElement> {
+    private* appendGenerator(element: TElement): IterableIterator<TElement> {
         yield* this;
         yield element;
     }
 
-    private* castGenerator<TResult>(): Iterable<TResult> {
+    private* castGenerator<TResult>(): IterableIterator<TResult> {
         for (const item of this) {
             yield item as unknown as TResult;
         }
     }
 
-    private* chunkGenerator(size: number): Iterable<IEnumerable<TElement>> {
+    private* chunkGenerator(size: number): IterableIterator<IEnumerable<TElement>> {
         const iterator = this[Symbol.iterator]();
         let next = iterator.next();
         while (!next.done) {
@@ -781,7 +784,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* combinationsGenerator(size?: number): Iterable<IEnumerable<TElement>> {
+    private* combinationsGenerator(size?: number): IterableIterator<IEnumerable<TElement>> {
         const iterator = this[Symbol.iterator]();
 
         let next = iterator.next();
@@ -815,12 +818,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* concatGenerator(enumerable: Iterable<TElement>): Iterable<TElement> {
+    private* concatGenerator(enumerable: Iterable<TElement>): IterableIterator<TElement> {
         yield* this;
         yield* enumerable;
     }
 
-    private* cycleGenerator(count?: number): Iterable<TElement> {
+    private* cycleGenerator(count?: number): IterableIterator<TElement> {
         if (this.none()) {
             throw new NoElementsException();
         }
@@ -835,7 +838,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* defaultIfEmptyGenerator(value?: TElement | null): Iterable<TElement | null> {
+    private* defaultIfEmptyGenerator(value?: TElement | null): IterableIterator<TElement | null> {
         if (this.any()) {
             yield* this;
         } else {
@@ -844,11 +847,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
+    private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
         return yield* this.exceptByGenerator(iterable, x => x, comparator);
     }
 
-    private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): Iterable<TElement> {
+    private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
 
@@ -887,41 +890,73 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): Iterable<IGroup<TKey, TElement>> {
-        const groups: Array<IGroup<TKey, TElement>> = [];
+    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IterableIterator<IGroup<TKey, TElement>> {
+        const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+
+        const findKeyInMap = (targetKey: TKey): TKey | undefined => {
+            for (const existingKey of groupMap.keys()) {
+                if (keyComparator!(existingKey, targetKey)) { // keyComparator is guaranteed to exist here
+                    return existingKey;
+                }
+            }
+            return undefined;
+        };
+
         for (const item of this) {
             const key = keySelector(item);
-            const group = groups.find(g => keyComparator?.(g.key, key));
+            let group: IGroup<TKey, TElement> | undefined;
+            let mapKey: TKey = key;
+
+            if (keyComparator) {
+                const existingKey = findKeyInMap(key);
+                if (existingKey !== undefined) {
+                    group = groupMap.get(existingKey);
+                    mapKey = existingKey;
+                }
+            } else {
+                group = groupMap.get(key);
+            }
+
             if (group) {
                 (group.source as List<TElement>).add(item);
             } else {
-                const newGroup = new Group(key, new List([item]));
-                groups.push(newGroup);
+                const newList = new List([item]);
+                const newGroup = new Group(key, newList);
+                groupMap.set(mapKey, newGroup);
             }
         }
-        yield* groups;
+        yield* groupMap.values();
     }
 
-    private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): Iterable<TResult> {
+    private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
+        const lookupStore: Array<GroupJoinLookup<TKey, TInner>> = [];
+
+        for (const innerElement of innerEnumerable) {
+            const innerKey = innerKeySelector(innerElement);
+            const group = findOrCreateGroupEntry(lookupStore, innerKey, keyCompare);
+            group.push(innerElement);
+        }
+
         for (const element of this) {
-            const joinedEntries = innerEnumerable.where(innerElement => keyCompare(outerKeySelector(element), innerKeySelector(innerElement)));
-            yield resultSelector(element, joinedEntries);
+            const outerKey = outerKeySelector(element);
+            const joinedEntries = findGroupInStore(lookupStore, outerKey, keyCompare);
+            yield resultSelector(element, Enumerable.from(joinedEntries ?? []));
         }
     }
 
-    private* indexGenerator(): Iterable<[number, TElement]> {
+    private* indexGenerator(): IterableIterator<[number, TElement]> {
         let index = 0;
         for (const item of this) {
             yield [index++, item];
         }
     }
 
-    private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): Iterable<TElement> {
+    private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
         return yield* this.intersectByGenerator(iterable, x => x, comparator);
     }
 
-    private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): Iterable<TElement> {
+    private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
 
@@ -946,7 +981,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* intersperseGenerator<TSeparator = TElement>(separator: TSeparator): Iterable<TElement | TSeparator> {
+    private* intersperseGenerator<TSeparator = TElement>(separator: TSeparator): IterableIterator<TElement | TSeparator> {
         let index = 0;
         for (const item of this) {
             if (index !== 0) {
@@ -957,21 +992,25 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* joinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): Iterable<TResult> {
+    private* joinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
-        for (const element of this) {
-            const innerItems = innerEnumerable.where(innerElement => keyCompare(outerKeySelector(element), innerKeySelector(innerElement)));
-            if (leftJoin && !innerItems.any()) {
-                yield resultSelector(element, null);
-            } else {
-                for (const innerItem of innerItems) {
-                    yield resultSelector(element, innerItem);
-                }
-            }
+        const effectiveLeftJoin = leftJoin ?? false;
+        const groups = buildGroupsSync(innerEnumerable, innerKeySelector, keyCompare);
+
+        for (const outerElement of this) {
+            const outerKey = outerKeySelector(outerElement);
+            yield* processOuterElement(
+                outerElement,
+                outerKey,
+                groups,
+                keyCompare,
+                resultSelector,
+                effectiveLeftJoin
+            );
         }
     }
 
-    private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): Iterable<InferredType<TResult>> {
+    private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): IterableIterator<InferredType<TResult>> {
         const isOfType = typeof type === "string"
             ? ((item: unknown): boolean => typeof item === type) as (item: unknown) => item is InferredType<TResult>
             : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as Function);
@@ -982,7 +1021,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* pairwiseGenerator(resultSelector: PairwiseSelector<TElement, TElement>): Iterable<[TElement, TElement]> {
+    private* pairwiseGenerator(resultSelector: PairwiseSelector<TElement, TElement>): IterableIterator<[TElement, TElement]> {
         const iterator = this[Symbol.iterator]();
         let next = iterator.next();
         while (!next.done) {
@@ -994,39 +1033,21 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* permutationsGenerator(size?: number): Iterable<IEnumerable<TElement>> {
-        type Permutation = { processed: EnumerableSet<TElement>, remaining: EnumerableSet<TElement> };
-        const elements = this.distinct();
-        const queue = new Queue<Permutation>();
-        queue.add({processed: new EnumerableSet<TElement>(), remaining: new EnumerableSet<TElement>(elements)});
-        while (queue.length > 0) {
-            const current = queue.poll() as Permutation;
-            if (size != null && current.processed.length === size) {
-                yield current.processed;
-                continue;
-            }
-            if (size == null && current.remaining.length === 0) {
-                yield current.processed;
-                continue;
-            }
-            for (let ix = 0; ix < current.remaining.length; ++ix) {
-                const newCurrent = new EnumerableSet([...current.processed, current.remaining.elementAt(ix)]);
-                const newRemaining = new EnumerableSet([...current.remaining.take(ix), ...current.remaining.skip(ix + 1)]);
-                queue.add({processed: newCurrent, remaining: newRemaining});
-            }
-        }
+    private* permutationsGenerator(size?: number): IterableIterator<IEnumerable<TElement>> {
+        const distinctElements = Array.from(this.distinct());
+        yield* permutationsGenerator(distinctElements, size);
     }
 
-    private* prependGenerator(item: TElement): Iterable<TElement> {
+    private* prependGenerator(item: TElement): IterableIterator<TElement> {
         yield item;
         yield* this;
     }
 
-    private* reverseGenerator(): Iterable<TElement> {
+    private* reverseGenerator(): IterableIterator<TElement> {
         yield* Array.from(this).reverse();
     }
 
-    private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): Iterable<TAccumulate> {
+    private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IterableIterator<TAccumulate> {
         let accumulatedValue: TAccumulate;
         if (seed == null) {
             if (!this.any()) {
@@ -1047,14 +1068,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* selectGenerator<TResult>(selector: IndexedSelector<TElement, TResult>): Iterable<TResult> {
+    private* selectGenerator<TResult>(selector: IndexedSelector<TElement, TResult>): IterableIterator<TResult> {
         let index = 0;
         for (const d of this) {
             yield selector(d, index++);
         }
     }
 
-    private* selectManyGenerator<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): Iterable<TResult> {
+    private* selectManyGenerator<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IterableIterator<TResult> {
         let index = 0;
         for (const item of this) {
             yield* selector(item, index);
@@ -1062,13 +1083,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* shuffleGenerator(): Iterable<TElement> {
+    private* shuffleGenerator(): IterableIterator<TElement> {
         const array = Array.from(this);
         Collections.shuffle(array);
         yield* array;
     }
 
-    private* skipGenerator(count: number): Iterable<TElement> {
+    private* skipGenerator(count: number): IterableIterator<TElement> {
         let index = 0;
         for (const item of this) {
             if (index >= count) {
@@ -1079,11 +1100,23 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* skipLastGenerator(count: number): IterableIterator<TElement> {
-        const result: Array<TElement> = [];
+        if (count <= 0) {
+            yield* this;
+            return;
+        }
+
+        const buffer: TElement[] = new Array(count);
+        let bufferSize = 0;
+        let index = 0;
+
         for (const item of this) {
-            result.push(item);
-            if (result.length > count) {
-                yield result.shift() as TElement;
+            if (bufferSize === count) {
+                yield buffer[index];
+            }
+            buffer[index] = item;
+            index = (index + 1) % count;
+            if (bufferSize < count) {
+                bufferSize++;
             }
         }
     }
@@ -1103,7 +1136,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* stepGenerator(step: number): Iterable<TElement> {
+    private* stepGenerator(step: number): IterableIterator<TElement> {
         let index = 0;
         for (const item of this) {
             if (index % step === 0) {
@@ -1126,17 +1159,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* takeLastGenerator(count: number): IterableIterator<TElement> {
-        const result: Array<TElement> = [];
+        const allItems: Array<TElement> = [];
         for (const item of this) {
-            result.push(item);
-            if (result.length > count) {
-                result.shift();
-            }
+            allItems.push(item);
         }
-        yield* result;
+        const startIndex = Math.max(0, allItems.length - count);
+        for (let i = startIndex; i < allItems.length; i++) {
+            yield allItems[i];
+        }
     }
 
-    private* takeWhileGenerator(predicate: IndexedPredicate<TElement>): Iterable<TElement> {
+    private* takeWhileGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
         let index = 0;
         let takeEnded = false;
         for (const item of this) {
@@ -1153,30 +1186,45 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* unionByGenerator<TKey>(enumerable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): Iterable<TElement> {
-        const distinctList: Array<TElement> = [];
+    private* unionByGenerator<TKey>(enumerable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): IterableIterator<TElement> {
+        const isDefaultComparator = comparator === Comparators.equalityComparator;
+        const seenKeysSet = isDefaultComparator ? new Set<TKey>() : null;
+        const seenKeysList = isDefaultComparator ? null : new Array<TKey>();
+
         for (const source of [this, enumerable]) {
             for (const item of source) {
-                let exist = false;
-                for (const existingItem of distinctList) {
-                    if (comparator(keySelector(item), keySelector(existingItem))) {
-                        exist = true;
-                        break;
+                const key = keySelector(item);
+                let exists = false;
+
+                if (seenKeysSet) {
+                    exists = seenKeysSet.has(key);
+                    if (!exists) {
+                        seenKeysSet.add(key);
+                    }
+                } else if (seenKeysList) {
+                    for (const seenKey of seenKeysList) {
+                        if (comparator(key, seenKey)) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        seenKeysList.push(key);
                     }
                 }
-                if (!exist) {
+
+                if (!exists) {
                     yield item;
-                    distinctList.push(item);
                 }
             }
         }
     }
 
-    private* unionGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): Iterable<TElement> {
+    private* unionGenerator(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IterableIterator<TElement> {
         return yield* this.unionByGenerator(iterable, x => x, comparator ?? Comparators.equalityComparator);
     }
 
-    private* whereGenerator(predicate: IndexedPredicate<TElement>): Iterable<TElement> {
+    private* whereGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
         let index = 0;
         for (const d of this) {
             if (predicate(d, index)) {
@@ -1186,7 +1234,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* windowsGenerator(size: number): Iterable<IEnumerable<TElement>> {
+    private* windowsGenerator(size: number): IterableIterator<IEnumerable<TElement>> {
         const iterator = this[Symbol.iterator]();
         const window = new List<TElement>();
         for (let item = iterator.next(); !item.done; item = iterator.next()) {
@@ -1198,7 +1246,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* zipGenerator<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): Iterable<TResult> {
+    private* zipGenerator<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IterableIterator<TResult> {
         const iterator = this[Symbol.iterator]();
         const otherIterator = iterable[Symbol.iterator]();
         while (true) {

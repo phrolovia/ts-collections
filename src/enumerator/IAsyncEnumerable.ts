@@ -29,6 +29,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
 
 
+    /**
+     * Groups the elements of the sequence according to a specified key selector function and applies an accumulator function over each group.
+     * @template TKey The type of the key returned by the key selector.
+     * @template TAccumulate The type of the accumulated value.
+     * @param keySelector The key selector function that will be used for selecting the key for each element.
+     * @param seedSelector The seed selector function that will be used to get the initial value for each group, or a constant value that will be used as the initial value for all groups.
+     * @param accumulator The accumulator function that will be applied over each group.
+     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>} An enumerable sequence of key-value pairs, where each key is a unique key from the source sequence and each value is the accumulated value for that key.
+     */
     aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>
 
     /**
@@ -133,6 +143,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
+    /**
+     * Returns distinct elements from the sequence based on a key selector function.
+     * @template TKey The type of the key returned by the key selector.
+     * @param keySelector The key selector function that will be used for selecting the key for each element.
+     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IAsyncEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence based on the key selector.
+     */
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
@@ -171,6 +188,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     except(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
 
+    /**
+     * Produces the set difference of two sequences by using the specified key selector function and comparator.
+     * @template TKey The type of the key returned by the key selector.
+     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be removed.
+     * @param keySelector The key selector function that will be used for selecting the key for each element.
+     * @param comparator The comparator function that will be used for equality comparison or order comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IAsyncEnumerable<TElement>} A sequence that contains the set difference of the elements from the source sequence and the enumerable sequence.
+     * @throws {Error} If the enumerable is null or undefined.
+     */
     exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
@@ -239,6 +265,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
 
+    /**
+     * Produces the set intersection of two sequences by using the specified key selector function and comparator.
+     * @template TKey The type of the key returned by the key selector.
+     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be returned.
+     * @param keySelector The key selector function that will be used for selecting the key for each element.
+     * @param comparator The comparator function that will be used for equality comparison or order comparison of selected keys. If not provided, default equality comparison is used.
+     * @returns {IAsyncEnumerable<TElement>} A sequence that contains the elements that form the set intersection of the source sequence and the enumerable sequence.
+     * @throws {Error} If the enumerable is null or undefined.
+     */
     intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**

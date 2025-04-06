@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
 import { Enumerable } from "../../src/enumerator/Enumerable";
 import { Group } from "../../src/enumerator/Group";
@@ -79,10 +80,6 @@ describe("Lookup", () => {
         });
     });
 
-    // describe("#cast()", () => {
-    //     // TODO
-    // });
-
     describe("#chunk()", () => {
         test("should return 3 chunks", () => {
             const list = new LinkedList(peopleArray);
@@ -125,6 +122,13 @@ describe("Lookup", () => {
             expect(lookup.length).to.eq(3);
             expect(lookup.size()).to.eq(3);
         });
+        test("should return 0 for an empty lookup", () => {
+            const emptyList = new LinkedList<Person>();
+            const lookup = emptyList.toLookup(p => p.name, p => p);
+            expect(lookup.count()).to.eq(0);
+            expect(lookup.length).to.eq(0);
+            expect(lookup.size()).to.eq(0);
+        });
     });
 
     describe("#create()", () => {
@@ -137,6 +141,22 @@ describe("Lookup", () => {
         });
         test("should throw error if valueSelector is null", () => {
             expect(() => Lookup.create(Enumerable.from([Person.Alice]), p => p, null as any)).to.throw(Error);
+        });
+        test("should create a lookup with valid inputs", () => {
+            const people = [Person.Alice, Person.Mirei, Person.Kaori];
+            const lookup = Lookup.create(people, p => p.name, p => p.age);
+            expect(lookup.size()).to.eq(3);
+            expect(lookup.get("Alice").first()).to.eq(Person.Alice.age);
+            expect(lookup.get("Mirei").first()).to.eq(Person.Mirei.age);
+            expect(lookup.get("Kaori").first()).to.eq(Person.Kaori.age);
+        });
+        test("should create a lookup with custom comparator", () => {
+            const people = [Person.Alice, Person.Mirei, new Person("alice", "Smith", 30)];
+            const caseInsensitiveComparator = (a: string, b: string) => a.toLowerCase() === b.toLowerCase() ? 0 : a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+            const lookup = Lookup.create(people, p => p.name, p => p, caseInsensitiveComparator);
+            expect(lookup.size()).to.eq(2); // "Alice" and "alice" should be considered the same key
+            expect(lookup.get("Alice").count()).to.eq(2);
+            expect(lookup.get("alice").count()).to.eq(2); // Should be able to get with either case
         });
     });
 
@@ -278,9 +298,77 @@ describe("Lookup", () => {
         });
     });
 
-    // describe("#groupJoin()", () => {
-    //     // TODO
-    // });
+    describe("#groupJoin()", () => {
+        test("should group join two collections based on matching keys", () => {
+            // Create a lookup of people by name
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+
+            // Create a collection of additional data by name
+            const additionalData = [
+                {name: "Hanna", favoriteColor: "Blue"},
+                {name: "Hanna", favoriteFood: "Pizza"}, // Multiple entries for same key
+                {name: "Noemi", favoriteColor: "Red"},
+                {name: "Suzuha", favoriteColor: "Green"},
+                {name: "Kaori", favoriteColor: "Purple"} // Not in the lookup
+            ];
+
+            // Group join the lookup with the additional data
+            const result = lookup.groupJoin(
+                Enumerable.from(additionalData),
+                group => group.key,
+                data => data.name,
+                (group, dataItems) => ({
+                    name: group.key,
+                    people: group.source.toArray(),
+                    additionalInfo: dataItems!.toArray()
+                })
+            );
+
+            expect(result.count()).to.eq(3); // All keys from the lookup are included
+
+            const hannaResult = result.first();
+            expect(hannaResult.name).to.eq("Hanna");
+            expect(hannaResult.people).to.have.lengthOf(2); // Hanna and Hanna2
+            expect(hannaResult.additionalInfo).to.have.lengthOf(2); // Two entries for Hanna
+
+            const noemiResult = result.elementAt(1);
+            expect(noemiResult.name).to.eq("Noemi");
+            expect(noemiResult.people).to.have.lengthOf(2); // Noemi and Noemi2
+            expect(noemiResult.additionalInfo).to.have.lengthOf(1); // One entry for Noemi
+        });
+
+        test("should include all outer keys even when no inner keys match", () => {
+            // Create a lookup of people by name
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+
+            // Create a collection with no matching keys
+            const nonMatchingData = [
+                {name: "Alice", favoriteColor: "Blue"},
+                {name: "Bob", favoriteColor: "Red"}
+            ];
+
+            // Group join the lookup with the non-matching data
+            const result = lookup.groupJoin(
+                Enumerable.from(nonMatchingData),
+                group => group.key,
+                data => data.name,
+                (group, dataItems) => ({
+                    name: group.key,
+                    people: group.source.toArray(),
+                    additionalInfo: dataItems!.toArray()
+                })
+            );
+
+            expect(result.count()).to.eq(3); // All keys from the lookup are included
+
+            // All results should have empty additionalInfo arrays
+            result.forEach(item => {
+                expect(item.additionalInfo).to.have.lengthOf(0);
+            });
+        });
+    });
 
     describe("#hasKey()", () => {
         test("should return true if lookup has the key", () => {
@@ -296,6 +384,42 @@ describe("Lookup", () => {
             expect(lookup.hasKey("Lucrezia")).to.eq(false);
             expect(lookup.length).to.eq(3);
         });
+        test("should return false for all keys in an empty lookup", () => {
+            const emptyList = new LinkedList<Person>();
+            const lookup = emptyList.toLookup(p => p.name, p => p);
+            expect(lookup.hasKey("Noemi")).to.eq(false);
+            expect(lookup.hasKey("")).to.eq(false);
+            expect(lookup.hasKey(null as any)).to.eq(false);
+        });
+    });
+
+    describe("#[Symbol.iterator]()", () => {
+        test("should allow iteration over the lookup", () => {
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+
+            let count = 0;
+            const keys: string[] = [];
+            for (const group of lookup) {
+                count++;
+                keys.push(group.key);
+            }
+
+            expect(count).to.eq(3);
+            expect(keys).to.have.members(["Hanna", "Noemi", "Suzuha"]);
+        });
+
+        test("should return no items for an empty lookup", () => {
+            const emptyList = new LinkedList<Person>();
+            const lookup = emptyList.toLookup(p => p.name, p => p);
+
+            let count = 0;
+            for (const _ of lookup) {
+                count++;
+            }
+
+            expect(count).to.eq(0);
+        });
     });
 
     describe("#intersect()", () => {
@@ -309,9 +433,71 @@ describe("Lookup", () => {
         });
     });
 
-    // describe("#join()", () => {
-    //     // TODO
-    // });
+    describe("#join()", () => {
+        test("should join two collections based on matching keys", () => {
+            // Create a lookup of people by name
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+
+            // Create a collection of additional data by name
+            const additionalData = [
+                {name: "Hanna", favoriteColor: "Blue"},
+                {name: "Noemi", favoriteColor: "Red"},
+                {name: "Suzuha", favoriteColor: "Green"},
+                {name: "Kaori", favoriteColor: "Purple"} // Not in the lookup
+            ];
+
+            // Join the lookup with the additional data
+            const result = lookup.join(
+                Enumerable.from(additionalData),
+                group => group.key,
+                data => data.name,
+                (group, data) => ({
+                    name: group.key,
+                    people: group.source.toArray(),
+                    favoriteColor: data!.favoriteColor
+                })
+            );
+
+            expect(result.count()).to.eq(3); // Only matching keys are included
+
+            const hannaResult = result.first();
+            expect(hannaResult.name).to.eq("Hanna");
+            expect(hannaResult.people).to.have.lengthOf(2); // Hanna and Hanna2
+            expect(hannaResult.favoriteColor).to.eq("Blue");
+
+            const noemiResult = result.elementAt(1);
+            expect(noemiResult.name).to.eq("Noemi");
+            expect(noemiResult.people).to.have.lengthOf(2); // Noemi and Noemi2
+            expect(noemiResult.favoriteColor).to.eq("Red");
+        });
+
+        test("should return empty result when no keys match", () => {
+            // Create a lookup of people by name
+            const list = new LinkedList(peopleArray);
+            const lookup = list.toLookup(p => p.name, p => p);
+
+            // Create a collection with no matching keys
+            const nonMatchingData = [
+                {name: "Alice", favoriteColor: "Blue"},
+                {name: "Bob", favoriteColor: "Red"}
+            ];
+
+            // Join the lookup with the non-matching data
+            const result = lookup.join(
+                Enumerable.from(nonMatchingData),
+                group => group.key,
+                data => data.name,
+                (group, data) => ({
+                    name: group.key,
+                    people: group.source.toArray(),
+                    favoriteColor: data!.favoriteColor
+                })
+            );
+
+            expect(result.any()).to.be.false;
+        });
+    });
 
     describe("#last()", () => {
         test("should return the last group", () => {
@@ -369,10 +555,6 @@ describe("Lookup", () => {
             expect(() => lookup.min()).to.throw(Error);
         });
     });
-
-    // describe("#ofType()", () => {
-    //     // TODO
-    // });
 
     describe("#orderBy()", () => {
         test("should order the lookup by the given key", () => {
