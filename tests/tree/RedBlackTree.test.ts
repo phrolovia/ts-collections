@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { ICollection } from "../../src/core/ICollection";
 import { Enumerable, LinkedList } from "../../src/imports";
 import { RedBlackTree } from "../../src/tree/RedBlackTree";
@@ -55,6 +56,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(3)).to.be.true;
             expect(tree.length).to.eq(3);
         });
+
         test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             const noemiTest = new Person("Noemi", "Waterfox", 29);
@@ -68,6 +70,7 @@ describe("RedBlackTree", () => {
             expect(added).to.be.false;
             expect(tree.length).to.eq(3);
         });
+
         test("should not have duplicates", () => {
             const randomArray = randomArrayGenerator(5000);
             const distinct = Enumerable.from(randomArray).distinct().toArray();
@@ -75,11 +78,41 @@ describe("RedBlackTree", () => {
             expect(distinct.length).to.eq(tree.size());
             expect(distinct.length).to.eq(tree.length);
         }, {timeout: 5000});
+
         test("should not have duplicates #2", () => {
             const repeatedEnumerable = Enumerable.repeat(100, 100);
             const tree = new RedBlackTree<number>(repeatedEnumerable);
             expect(tree.size()).to.eq(1);
             expect(tree.length).to.eq(1);
+        });
+
+        test("should return true when element is added successfully", () => {
+            const tree = new RedBlackTree<number>();
+            expect(tree.add(1)).to.be.true;
+            expect(tree.add(2)).to.be.true;
+            expect(tree.add(3)).to.be.true;
+        });
+
+        test("should return false when element already exists", () => {
+            const tree = new RedBlackTree<number>();
+            tree.add(1);
+            tree.add(2);
+            expect(tree.add(1)).to.be.false;
+            expect(tree.size()).to.eq(2);
+        });
+
+        test("should handle different object references with same values using custom comparator", () => {
+            const tree = new RedBlackTree<Person>([], personNameComparator);
+            const alice1 = new Person("Alice", "Smith", 30);
+            const alice2 = new Person("Alice", "Jones", 25);
+
+            expect(tree.add(alice1)).to.be.true;
+            expect(tree.add(alice2)).to.be.false; // Should be considered duplicate by name
+            expect(tree.size()).to.eq(1);
+
+            // The tree should contain the first Alice that was added
+            const found = tree.find(p => p.name === "Alice");
+            expect(found).to.eq(alice1);
         });
     });
 
@@ -117,7 +150,7 @@ describe("RedBlackTree", () => {
             expect(tree2.contains(2 as any)).to.be.false;
         });
         test("should return true", () => {
-            const tree = new RedBlackTree([6,0,1,2,3,4]);
+            const tree = new RedBlackTree([6, 0, 1, 2, 3, 4]);
             expect(tree.contains(0)).to.be.true;
         });
     });
@@ -134,6 +167,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(2)).to.be.false;
             expect(tree.length).to.eq(2);
         });
+
         test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             tree.add(Person.Alice);
@@ -144,6 +178,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Noemi2)).to.be.true; // since it is equal to Person.Noemi via personComparator
             expect(tree.length).to.eq(2);
         });
+
         test("should add 1000 random number and then delete them randomly", () => {
             const numTree = new RedBlackTree<number>();
             const randArray = randomUniqueArrayGenerator(1000);
@@ -156,6 +191,49 @@ describe("RedBlackTree", () => {
             }
             expect(numTree.size()).to.eq(0);
             expect(numTree.length).to.eq(0);
+        });
+
+        test("should handle deleting from empty tree gracefully", () => {
+            const tree = new RedBlackTree<number>();
+            tree.delete(5); // Should not throw error
+            expect(tree.size()).to.eq(0);
+        });
+
+        test("should handle deleting non-existent element gracefully", () => {
+            const tree = new RedBlackTree<number>([1, 2, 3]);
+            tree.delete(5); // Should not throw error
+            expect(tree.size()).to.eq(3);
+        });
+
+        test("should handle deleting the root node", () => {
+            const tree = new RedBlackTree<number>([2, 1, 3]);
+            const rootBefore = tree.getRootData();
+            expect(rootBefore).to.eq(2);
+
+            tree.delete(2);
+            expect(tree.size()).to.eq(2);
+            expect(tree.contains(2)).to.be.false;
+
+            // After deleting the root, the tree should rebalance
+            const rootAfter = tree.getRootData();
+            expect(rootAfter).to.not.be.null;
+        });
+
+        test("should handle deleting with custom comparator based on specific property", () => {
+            const tree = new RedBlackTree<Person>(
+                [Person.Alice, Person.Bella, Person.Noemi],
+                personNameComparator
+            );
+
+            // Create a person with the same name but different other properties
+            const differentAlice = new Person("Alice", "Different", 99);
+
+            // Delete using the custom comparator (which only compares names)
+            tree.delete(differentAlice);
+
+            // Alice should be deleted because the comparator only checks names
+            expect(tree.size()).to.eq(2);
+            expect(tree.contains(Person.Alice)).to.be.false;
         });
     });
 
@@ -186,6 +264,33 @@ describe("RedBlackTree", () => {
         test("should return null if tree is empty", () => {
             tree.clear();
             expect(tree.find(p => p.name.startsWith("L"))).to.be.null;
+        });
+    });
+
+    describe("#findBy()", () => {
+        test("should find an item by key using selector and default comparator", () => {
+            const tree = new RedBlackTree<Person>([Person.Alice, Person.Bella, Person.Noemi]);
+            const found = tree.findBy("Bella", p => p.name);
+            expect(found).to.eq(Person.Bella);
+        });
+
+        test("should find an item by key using selector and custom comparator", () => {
+            const tree = new RedBlackTree<Person>([Person.Alice, Person.Bella, Person.Noemi]);
+            const customComparator = (a: string, b: string) => a.localeCompare(b);
+            const found = tree.findBy("Noemi", p => p.name, customComparator);
+            expect(found).to.eq(Person.Noemi);
+        });
+
+        test("should return null if item with key does not exist", () => {
+            const tree = new RedBlackTree<Person>([Person.Alice, Person.Bella, Person.Noemi]);
+            const found = tree.findBy("Unknown", p => p.name);
+            expect(found).to.be.null;
+        });
+
+        test("should return null if tree is empty", () => {
+            const tree = new RedBlackTree<Person>();
+            const found = tree.findBy("Alice", p => p.name);
+            expect(found).to.be.null;
         });
     });
 
@@ -237,6 +342,7 @@ describe("RedBlackTree", () => {
             expect(tree.contains(3)).to.be.true;
             expect(tree.length).to.eq(3);
         });
+
         test("should use provided comparator", () => {
             const tree = new RedBlackTree<Person>([], personComparator);
             const noemiTest = new Person("Noemi", "Waterfox", 29);
@@ -248,6 +354,45 @@ describe("RedBlackTree", () => {
             expect(tree.size()).to.eq(3);
             expect(tree.contains(noemiTest)).to.be.true; // since it is equal to Person.Noemi via personComparator
             expect(tree.length).to.eq(3);
+        });
+
+        test("should not increase size when inserting duplicate elements", () => {
+            const tree = new RedBlackTree<number>();
+            tree.insert(1);
+            tree.insert(2);
+            tree.insert(1); // Duplicate
+            expect(tree.size()).to.eq(2);
+        });
+
+        test("should handle different object references with same values using custom comparator", () => {
+            const tree = new RedBlackTree<Person>([], personNameComparator);
+            const alice1 = new Person("Alice", "Smith", 30);
+            const alice2 = new Person("Alice", "Jones", 25);
+
+            tree.insert(alice1);
+            tree.insert(alice2); // Should be considered duplicate by name
+            expect(tree.size()).to.eq(1);
+
+            // The tree should contain the first Alice that was added
+            const found = tree.find(p => p.name === "Alice");
+            expect(found).to.eq(alice1);
+        });
+
+        test("should handle inserting elements in descending order", () => {
+            const tree = new RedBlackTree<number>();
+            for (let i = 10; i > 0; i--) {
+                tree.insert(i);
+            }
+            expect(tree.size()).to.eq(10);
+            expect(tree.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+
+        test("should handle inserting elements in random order", () => {
+            const tree = new RedBlackTree<number>();
+            const randomOrder = [7, 3, 9, 1, 5, 8, 2, 6, 4, 10];
+            randomOrder.forEach(n => tree.insert(n));
+            expect(tree.size()).to.eq(10);
+            expect(tree.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         });
     });
 
@@ -316,6 +461,53 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Lucrezia)).to.be.true;
             expect(tree.length).to.eq(2);
         });
+
+        test("should handle empty collection gracefully", () => {
+            const tree = new RedBlackTree([1, 2, 3, 4, 5]);
+            const emptyList = new LinkedList<number>();
+            tree.removeAll(emptyList);
+            expect(tree.size()).to.eq(5);
+        });
+
+        test("should handle empty tree gracefully", () => {
+            const tree = new RedBlackTree<number>();
+            const list = new LinkedList([1, 2, 3]);
+            tree.removeAll(list);
+            expect(tree.size()).to.eq(0);
+        });
+    });
+
+    describe("#removeBy()", () => {
+        test("should remove an item by key using selector and default comparator", () => {
+            const tree = new RedBlackTree<Person>([Person.Alice, Person.Bella, Person.Noemi]);
+            const removed = tree.removeBy("Bella", p => p.name);
+            expect(removed).to.eq(Person.Bella);
+            expect(tree.size()).to.eq(2);
+            expect(tree.contains(Person.Bella)).to.be.false;
+        });
+
+        test("should remove an item by key using selector and custom comparator", () => {
+            const tree = new RedBlackTree<Person>([Person.Alice, Person.Bella, Person.Noemi]);
+            const customComparator = (a: string, b: string) => a.localeCompare(b);
+            const removed = tree.removeBy("Noemi", p => p.name, customComparator);
+            expect(removed).to.eq(Person.Noemi);
+            expect(tree.size()).to.eq(2);
+            expect(tree.contains(Person.Noemi)).to.be.false;
+        });
+
+        test("should return null if item with key does not exist", () => {
+            const tree = new RedBlackTree<Person>([Person.Alice, Person.Bella, Person.Noemi]);
+            const removed = tree.removeBy("Unknown", p => p.name);
+            expect(removed).to.be.null;
+            expect(tree.size()).to.eq(3);
+        });
+
+        test("should return null if tree is empty", () => {
+            const tree = new RedBlackTree<Person>();
+            const removed = tree.removeBy("Alice", p => p.name);
+            expect(removed).to.be.null;
+            expect(tree.size()).to.eq(0);
+        });
     });
 
     describe("#removeIf()", () => {
@@ -330,10 +522,46 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Lucrezia)).to.be.true;
             expect(tree.length).to.eq(2);
         });
+
+        test("should handle empty tree gracefully", () => {
+            const tree = new RedBlackTree<number>();
+            const result = tree.removeIf(n => n > 5);
+            expect(result).to.be.false;
+            expect(tree.size()).to.eq(0);
+        });
+
+        test("should return false if no elements match the predicate", () => {
+            const tree = new RedBlackTree([1, 2, 3, 4, 5]);
+            const result = tree.removeIf(n => n > 10);
+            expect(result).to.be.false;
+            expect(tree.size()).to.eq(5);
+        });
+
+        test("should return true if at least one element is removed", () => {
+            const tree = new RedBlackTree([1, 2, 3, 4, 5]);
+            const result = tree.removeIf(n => n > 3);
+            expect(result).to.be.true;
+            expect(tree.size()).to.eq(3);
+            expect(tree.contains(4)).to.be.false;
+            expect(tree.contains(5)).to.be.false;
+        });
+
+        test("should work with custom comparator", () => {
+            const tree = new RedBlackTree<Person>(
+                [Person.Alice, Person.Bella, Person.Noemi, Person.Eliza],
+                personNameComparator
+            );
+            tree.removeIf(p => p.name.startsWith("A") || p.name.startsWith("B"));
+            expect(tree.size()).to.eq(2);
+            expect(tree.contains(Person.Alice)).to.be.false;
+            expect(tree.contains(Person.Bella)).to.be.false;
+            expect(tree.contains(Person.Noemi)).to.be.true;
+            expect(tree.contains(Person.Eliza)).to.be.true;
+        });
     });
 
     describe("#retainAll()", () => {
-        test("should remove all elements of the collection from the tree", () => {
+        test("should retain only elements that are in the collection", () => {
             const tree = new RedBlackTree([Person.Alice, Person.Eliza, Person.Bella, Person.Lucrezia, Person.Vanessa]);
             const list = new LinkedList([Person.Alice, Person.Eliza, Person.Vanessa]);
             tree.retainAll(list);
@@ -345,6 +573,49 @@ describe("RedBlackTree", () => {
             expect(tree.contains(Person.Lucrezia)).to.be.false;
             expect(tree.length).to.eq(3);
         });
+
+        test("should clear the tree if collection is empty", () => {
+            const tree = new RedBlackTree([1, 2, 3, 4, 5]);
+            const emptyList = new LinkedList<number>();
+            tree.retainAll(emptyList);
+            expect(tree.size()).to.eq(0);
+            expect(tree.isEmpty()).to.be.true;
+        });
+
+        test("should handle empty tree gracefully", () => {
+            const tree = new RedBlackTree<number>();
+            const list = new LinkedList([1, 2, 3]);
+            tree.retainAll(list);
+            expect(tree.size()).to.eq(0);
+            expect(tree.isEmpty()).to.be.true;
+        });
+
+        test("should retain all elements when collection contains all tree elements", () => {
+            const tree = new RedBlackTree([1, 2, 3]);
+            const list = new LinkedList([1, 2, 3, 4, 5]);
+            tree.retainAll(list);
+            expect(tree.size()).to.eq(3);
+            expect(tree.contains(1)).to.be.true;
+            expect(tree.contains(2)).to.be.true;
+            expect(tree.contains(3)).to.be.true;
+        });
+
+        test("should work with custom comparator", () => {
+            const tree = new RedBlackTree<Person>(
+                [Person.Alice, Person.Bella, Person.Noemi, Person.Eliza],
+                personNameComparator
+            );
+            const list = new LinkedList([
+                new Person("Alice", "Different", 99),
+                new Person("Bella", "Different", 99)
+            ]);
+            tree.retainAll(list);
+            expect(tree.size()).to.eq(2);
+            expect(tree.contains(Person.Alice)).to.be.true;
+            expect(tree.contains(Person.Bella)).to.be.true;
+            expect(tree.contains(Person.Noemi)).to.be.false;
+            expect(tree.contains(Person.Eliza)).to.be.false;
+        });
     });
 
     describe("#search()", () => {
@@ -354,6 +625,24 @@ describe("RedBlackTree", () => {
             expect(tree.search(3)).to.be.true;
             expect(tree.search(5)).to.be.true;
             tree.remove(5);
+            expect(tree.search(5)).to.be.false;
+        });
+
+        test("should work with custom comparator", () => {
+            const tree = new RedBlackTree<Person>(
+                [Person.Alice, Person.Bella, Person.Noemi],
+                personNameComparator
+            );
+            // Should find by name only due to personNameComparator
+            const similarAlice = new Person("Alice", "Different", 99);
+            expect(tree.search(similarAlice)).to.be.true;
+
+            const unknown = new Person("Unknown", "Person", 25);
+            expect(tree.search(unknown)).to.be.false;
+        });
+
+        test("should return false for empty tree", () => {
+            const tree = new RedBlackTree<number>();
             expect(tree.search(5)).to.be.false;
         });
     });
@@ -399,17 +688,49 @@ describe("RedBlackTree", () => {
             expect(postOrderArray).to.deep.equal(expectedPostOrderArray);
             expect(preOrderArray).to.deep.equal(expectedPreOrderArray);
         });
+
+        test("should return empty array if tree is empty", () => {
+            const tree = new RedBlackTree<number>();
+            expect(tree.traverseToArray("INORDER")).to.be.empty;
+            expect(tree.traverseToArray("PREORDER")).to.be.empty;
+            expect(tree.traverseToArray("POSTORDER")).to.be.empty;
+        });
+
+        test("should work with custom comparator", () => {
+            const tree = new RedBlackTree<Person>(
+                [Person.Alice, Person.Bella, Person.Noemi, Person.Eliza],
+                personNameComparator
+            );
+            const inOrderArray = tree.traverseToArray("INORDER");
+            // Names should be in alphabetical order due to personNameComparator
+            expect(inOrderArray.map(p => p.name)).to.deep.equal(["Alice", "Bella", "Eliza", "Noemi"]);
+
+            // Test preorder traversal
+            const preOrderArray = tree.traverseToArray("PREORDER");
+            expect(preOrderArray.length).to.eq(4);
+
+            // Test postorder traversal
+            const postOrderArray = tree.traverseToArray("POSTORDER");
+            expect(postOrderArray.length).to.eq(4);
+        });
+
+        test("should default to INORDER if no direction is specified", () => {
+            const tree = new RedBlackTree([3, 1, 4, 2, 5]);
+            const defaultArray = tree.traverseToArray();
+            const inOrderArray = tree.traverseToArray("INORDER");
+            expect(defaultArray).to.deep.equal(inOrderArray);
+            expect(defaultArray).to.deep.equal([1, 2, 3, 4, 5]);
+        });
     });
 
     describe("#for-loop", () => {
         test("should end immediately if tree is empty", () => {
             const tree = new RedBlackTree([]);
             let x = 0;
-            for (const node of tree) {
+            for (const _ of tree) {
                 x = 1;
             }
             expect(x).to.eq(0);
         });
     });
 });
-

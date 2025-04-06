@@ -1,4 +1,5 @@
 import { describe } from "vitest";
+import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { AsyncEnumerable } from "../../src/enumerator/AsyncEnumerable";
 import { Enumerable, List } from "../../src/imports";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -56,6 +57,13 @@ describe("AsyncEnumerable", () => {
         for (let ix = 0; ix < stringList.length; ++ix) {
             await suspend(delay);
             yield stringList[ix];
+        }
+    };
+
+    const keyValuePairProducer = async function* <TKey, TValue>(pairs: Array<[TKey, TValue]>, delay: number = 1): AsyncIterable<KeyValuePair<TKey, TValue>> {
+        for (let ix = 0; ix < pairs.length; ++ix) {
+            await suspend(delay);
+            yield new KeyValuePair<TKey, TValue>(pairs[ix][0], pairs[ix][1]);
         }
     };
 
@@ -473,6 +481,47 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#exceptBy()", () => {
+        test("should only have 'Alice' in the result", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer([Person.Alice, Person.Hanna]));
+            const enumerable2 = new AsyncEnumerable(personProducer([Person.Julia, Person.Hanna2]));
+            const result = enumerable1.exceptBy(enumerable2, p => p.name);
+            const resultArray = await result.toArray();
+            expect(resultArray).to.deep.equal([Person.Alice]);
+        });
+        test("should return all elements if second enumerable is empty", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer([Person.Alice, Person.Hanna]));
+            const enumerable2 = new AsyncEnumerable(personProducer([]));
+            const result = enumerable1.exceptBy(enumerable2, p => p.surname);
+            const resultArray = await result.toArray();
+            expect(resultArray).to.deep.equal([Person.Alice, Person.Hanna]);
+        });
+        test("should be empty if first enumerable is empty", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer([]));
+            const enumerable2 = new AsyncEnumerable(personProducer([Person.Alice, Person.Hanna]));
+            const result = await enumerable1.exceptBy(enumerable2, p => p.surname).toArray();
+            expect(result).to.be.empty;
+        });
+        test("should use provided comparator", async () => {
+            const LittleAlice = new Person("alice", "Rivermist", 9);
+            const enumerable1 = new AsyncEnumerable(personProducer([Person.Alice, LittleAlice, Person.Hanna]));
+            const enumerable2 = new AsyncEnumerable(personProducer([Person.Eliza, Person.Hanna2]));
+            const result = enumerable1.exceptBy(enumerable2, p => p.name, (n1, n2) => n1.toLowerCase() === n2.toLowerCase());
+            const resultArray = await result.toArray();
+            expect(resultArray).to.deep.equal([Person.Alice]);
+        });
+        test("should return elements with keys not in second enumerable", async () => {
+            const enumerable1 = new AsyncEnumerable(personProducer([
+                Person.Alice, Person.Noemi, Person.Kaori, Person.Hanna
+            ]));
+            const enumerable2 = new AsyncEnumerable(personProducer([
+                Person.Bella, Person.Emily, Person.Hanna2, Person.Julia, Person.Vanessa
+            ]));
+            const result = await enumerable1.exceptBy(enumerable2, p => p.age).toArray();
+            expect(result).to.deep.equal([Person.Alice, Person.Noemi, Person.Kaori]);
+        });
+    });
+
     describe("#first()", () => {
         test("should return the first element of the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -656,6 +705,188 @@ describe("AsyncEnumerable", () => {
                 "Students of Academy: "
             ];
             expect(finalOutput).to.deep.equal(expectedOutput);
+        });
+
+        test("should handle empty outer collection", {timeout: 5000}, async () => {
+            const emptySchoolsProducer = async function* (): AsyncIterableIterator<School> {
+                yield* [];
+            };
+            const schoolsEnumerable = new AsyncEnumerable(emptySchoolsProducer());
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+
+            const joinedData = schoolsEnumerable.groupJoin(studentsEnumerable, sc => sc.id, st => st.schoolId,
+                (school, students) => {
+                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
+                });
+
+            const finalData = await joinedData.toArray();
+            expect(finalData).to.be.empty;
+        });
+
+        test("should handle empty inner collection", {timeout: 5000}, async () => {
+            const emptyStudentsProducer = async function* (): AsyncIterableIterator<Student> {
+                yield* [];
+            };
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(emptyStudentsProducer());
+
+            const joinedData = schoolsEnumerable.groupJoin(studentsEnumerable, sc => sc.id, st => st.schoolId,
+                (school, students) => {
+                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
+                });
+
+            const finalData = await joinedData.toArray();
+            expect(finalData).to.have.lengthOf(schools.length);
+
+            // All schools should have empty student lists
+            for (const schoolStudents of finalData) {
+                expect(schoolStudents.students.size()).to.equal(0);
+            }
+        });
+
+        test("should handle no matching elements between collections", {timeout: 5000}, async () => {
+            const nonMatchingStudents: Student[] = [
+                new Student(100, "Desireé", "Moretti", 10),
+                new Student(200, "Apolline", "Bruyere", 20),
+                new Student(300, "Giselle", "García", 30)
+            ];
+
+            const nonMatchingStudentsProducer = async function* (): AsyncIterableIterator<Student> {
+                for (const student of nonMatchingStudents) {
+                    await suspend(100);
+                    yield student;
+                }
+            };
+
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(nonMatchingStudentsProducer());
+
+            const joinedData = schoolsEnumerable.groupJoin(studentsEnumerable, sc => sc.id, st => st.schoolId,
+                (school, students) => {
+                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
+                });
+
+            const finalData = await joinedData.toArray();
+            expect(finalData).to.have.lengthOf(schools.length);
+
+            // All schools should have empty student lists
+            for (const schoolStudents of finalData) {
+                expect(schoolStudents.students.size()).to.equal(0);
+            }
+        });
+
+        test("should use custom key comparator", {timeout: 5000}, async () => {
+            // Create students with string IDs that match school IDs when converted to strings
+            const stringIdStudents: Student[] = [
+                new Student(100, "Student1", "Surname1", 1),
+                new Student(200, "Student2", "Surname2", 2),
+                new Student(300, "Student3", "Surname3", 3)
+            ];
+
+            const stringIdStudentsProducer = async function* (): AsyncIterableIterator<Student> {
+                for (const student of stringIdStudents) {
+                    await suspend(100);
+                    yield student;
+                }
+            };
+
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(stringIdStudentsProducer());
+
+            // Use a custom comparator that compares school.id with the first digit of student.id
+            const joinedData = schoolsEnumerable.groupJoin(
+                studentsEnumerable,
+                sc => sc.id,
+                st => Math.floor(st.id / 100), // Extract first digit (1, 2, 3)
+                (school, students) => {
+                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
+                },
+                (schoolId, studentFirstDigit) => schoolId === studentFirstDigit
+            );
+
+            const finalData = await joinedData.toArray();
+
+            // Verify each school has the correct number of students
+            const schoolId1 = finalData.find(ss => ss.schoolId === 1);
+            const schoolId2 = finalData.find(ss => ss.schoolId === 2);
+            const schoolId3 = finalData.find(ss => ss.schoolId === 3);
+            const schoolId5 = finalData.find(ss => ss.schoolId === 5);
+
+            expect(schoolId1?.students.size()).to.equal(1);
+            expect(schoolId2?.students.size()).to.equal(1);
+            expect(schoolId3?.students.size()).to.equal(1);
+            expect(schoolId5?.students.size()).to.equal(0);
+        });
+
+        test("should work with complex key selectors", {timeout: 5000}, async () => {
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+
+            // Use complex key selectors that combine multiple properties
+            const joinedData = schoolsEnumerable.groupJoin(
+                studentsEnumerable,
+                school => ({ id: school.id, nameLength: school.name.length }),
+                student => ({ id: student.schoolId, nameLength: student.name.length }),
+                (school, students) => {
+                    return {
+                        schoolId: school.id,
+                        schoolName: school.name,
+                        studentCount: students!.count(),
+                        students: students!.toList()
+                    };
+                },
+                (schoolKey, studentKey) => schoolKey.id === studentKey.id
+            );
+
+            const finalData = await joinedData.toArray();
+
+            // Verify the results - should be the same as the basic join by ID
+            expect(finalData).to.have.lengthOf(schools.length);
+
+            // Check that each school has the correct number of students
+            const schoolCounts = new Map<number, number>();
+            for (const school of finalData) {
+                schoolCounts.set(school.schoolId, school.studentCount);
+            }
+
+            expect(schoolCounts.get(1)).to.equal(1); // Elementary School has 1 student
+            expect(schoolCounts.get(2)).to.equal(2); // High School has 2 students
+            expect(schoolCounts.get(3)).to.equal(1); // University has 1 student
+            expect(schoolCounts.get(5)).to.equal(0); // Academy has 0 students
+        });
+
+        test("should work with different result selector patterns", {timeout: 5000}, async () => {
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+
+            // Use a result selector that creates a simple object with arrays instead of collections
+            const joinedData = schoolsEnumerable.groupJoin(
+                studentsEnumerable,
+                sc => sc.id,
+                st => st.schoolId,
+                (school, students) => {
+                    return {
+                        school: school,
+                        studentNames: students!.select(s => `${s.name} ${s.surname}`).toArray()
+                    };
+                }
+            );
+
+            const finalData = await joinedData.toArray();
+            expect(finalData).to.have.lengthOf(schools.length);
+
+            // Find the High School entry and verify it has the correct student names
+            const highSchool = finalData.find(item => item.school.id === 2);
+            expect(highSchool).to.not.be.undefined;
+            expect(await highSchool?.studentNames).to.have.members([
+                "Apolline Bruyere",
+                "Giselle García"
+            ]);
+
+            // Find the Academy entry and verify it has no students
+            const academy = finalData.find(item => item.school.id === 5);
+            expect(academy).to.not.be.undefined;
+            expect(await academy?.studentNames).to.be.empty;
         });
     });
 
@@ -860,6 +1091,37 @@ describe("AsyncEnumerable", () => {
             ];
             expect(joinedData.length).to.eq(5);
             expect(joinedData).to.deep.equal(expectedOutput);
+        });
+
+        test("should return empty result when inner collection is empty", async () => {
+            const emptySchoolProducer = async function* (): AsyncIterableIterator<School> {
+                // Empty producer
+            };
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+            const emptySchoolsEnumerable = new AsyncEnumerable(emptySchoolProducer());
+
+            const joinedData = await studentsEnumerable.join(emptySchoolsEnumerable, st => st.schoolId, sc => sc.id,
+                (student, school) => `${student.name} ${student.surname} :: ${school?.name}`).toArray();
+
+            expect(joinedData.length).to.eq(0);
+        });
+
+        test("should handle custom equality comparator", async () => {
+            // Custom comparator that considers school IDs equal if they have the same parity (odd/even)
+            const parityComparator = (id1: number, id2: number) => id1 % 2 === id2 % 2;
+
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+
+            const joinedData = await studentsEnumerable.join(schoolsEnumerable, st => st.schoolId, sc => sc.id,
+                (student, school) => `${student.name} at ${school?.name}`, parityComparator).toArray();
+
+            // All students should match with at least one school since we're matching by parity
+            expect(joinedData.length).to.be.greaterThan(0);
+
+            // Lucrezia (schoolId 4) should match with schools with even IDs (2)
+            const lucreziaMatches = joinedData.filter(s => s.startsWith("Lucrezia")).length;
+            expect(lucreziaMatches).to.be.greaterThan(0);
         });
     });
 
@@ -1509,6 +1771,15 @@ describe("AsyncEnumerable", () => {
             const result = await enumerable.takeLast(0).toArray();
             expect(result).to.deep.equal([]);
         });
+        test("should run performance test", async () => {
+            const size = 500;
+            const enumerable = new AsyncEnumerable(numberProducer(size, 0));
+
+            const result = await enumerable.takeLast(100).toArray();
+            expect(result.length).to.eq(100);
+            expect(result[0]).to.eq(size - 100);
+            expect(result[99]).to.eq(size - 1);
+        }, { timeout: 10000 });
     });
 
     describe("#takeWhile()", () => {
@@ -1843,6 +2114,113 @@ describe("AsyncEnumerable", () => {
             });
             const expected = [{1: "a"}, {2: "b"}, {3: "c"}, {4: "d"}, {5: "e"}];
             expect(await zipped.toArray()).to.deep.equal(expected);
+        });
+    });
+
+    describe("#toArray()", () => {
+        test("should convert enumerable to array", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5));
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal([0, 1, 2, 3, 4]);
+        });
+
+        test("should convert enumerable of strings to array", async () => {
+            const strings = ["a", "b", "c", "d", "e"];
+            const enumerable = new AsyncEnumerable(stringProducer(strings));
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal(strings);
+        });
+
+        test("should convert enumerable of objects to array", async () => {
+            const people = [Person.Alice, Person.Noemi, Person.Kaori];
+            const enumerable = new AsyncEnumerable(personProducer(people));
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal(people);
+        });
+
+        test("should handle empty enumerable", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([]));
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal([]);
+        });
+
+        test("should handle large collections", async () => {
+            const size = 500;
+            const enumerable = new AsyncEnumerable(numberProducer(size));
+            const result = await enumerable.toArray();
+            expect(result.length).to.equal(size);
+            expect(result[0]).to.equal(0);
+            expect(result[size - 1]).to.equal(size - 1);
+        }, { timeout: 10000 });
+
+        test("should preserve order of elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([5, 3, 1, 4, 2]));
+            const result = await enumerable.toArray();
+            expect(result).to.deep.equal([5, 3, 1, 4, 2]);
+        });
+    });
+
+    describe("#toObject()", () => {
+        test("should convert enumerable to object using key and value selectors", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi, Person.Kaori]));
+            const result = await enumerable.toObject(p => p.name, p => p.age);
+            expect(result).to.deep.equal({
+                "Alice": 23,
+                "Noemi": 29,
+                "Kaori": 10
+            });
+        });
+
+        test("should convert enumerable of KeyValuePairs to object", async () => {
+            const pairs = [
+                ["name", "John"],
+                ["age", 30],
+                ["city", "New York"]
+            ] as [string, string|number][];
+            const enumerable = new AsyncEnumerable(keyValuePairProducer(pairs));
+            const result = await enumerable.toObject(kv => kv.key, kv => kv.value);
+            expect(result).to.deep.equal({
+                "name": "John",
+                "age": 30,
+                "city": "New York"
+            });
+        });
+
+        test("should handle KeyValuePairs with default selectors", async () => {
+            const pairs = [
+                ["name", "John"],
+                ["age", 30],
+                ["city", "New York"]
+            ] as [string, string|number][];
+            const enumerable = new AsyncEnumerable(keyValuePairProducer(pairs));
+            // When item is KeyValuePair and no selectors provided, it should use key/value properties
+            const result = await enumerable.toObject(null as any, null as any);
+            expect(result).to.deep.equal({
+                "name": "John",
+                "age": 30,
+                "city": "New York"
+            });
+        });
+
+        test("should handle empty enumerable", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([]));
+            const result = await enumerable.toObject(p => p.name, p => p.age);
+            expect(result).to.deep.equal({});
+        });
+
+        test("should use custom key and value selectors", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5));
+            const result = await enumerable.toObject(
+                n => `key${n}`,
+                n => n * n
+            );
+            expect(result).to.deep.equal({
+                "key0": 0,
+                "key1": 1,
+                "key2": 4,
+                "key3": 9,
+                "key4": 16
+            });
         });
     });
 });

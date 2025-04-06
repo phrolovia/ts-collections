@@ -1,4 +1,4 @@
-import { describe, expect } from "vitest";
+import { describe, expect, test } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
 import { Dictionary, Enumerable, List } from "../../src/imports";
