@@ -3,6 +3,7 @@ import { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
 import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
+import { CircularLinkedList } from "../list/CircularLinkedList";
 import { ImmutableList } from "../list/ImmutableList";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
@@ -1109,6 +1110,20 @@ export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
 }
 
 /**
+ * Creates a new circular linked list from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source iterable.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+ * @returns {CircularLinkedList<TElement>} A new circular linked list that contains the elements from the input sequence.
+ */
+export const toCircularLinkedList = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): CircularLinkedList<TElement> => {
+    return from(source).toCircularLinkedList(comparator);
+}
+
+/**
  * Creates a new dictionary from the elements of the sequence.
  * @template TElement The type of elements in the sequence.
  * @template TKey The type of the key that will be used for the dictionary.
@@ -1135,7 +1150,7 @@ export const toDictionary = <TElement, TKey, TValue>(
  * @returns {EnumerableSet<TElement>} A new enumerable set that contains the elements of the source.
  */
 export const toEnumerableSet = <TElement>(
-    source: Iterable<TElement>,
+    source: Iterable<TElement>
 ): EnumerableSet<TElement> => {
     return from(source).toEnumerableSet();
 }
@@ -1195,7 +1210,7 @@ export const toImmutableQueue = <TElement>(
  * @returns {ImmutableSet<TElement>} A new immutable set that contains the elements of the source.
  */
 export const toImmutableSet = <TElement>(
-    source: Iterable<TElement>,
+    source: Iterable<TElement>
 ): ImmutableSet<TElement> => {
     return from(source).toImmutableSet();
 }
