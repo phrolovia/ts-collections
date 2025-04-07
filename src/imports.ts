@@ -34,6 +34,7 @@ export { Queue } from "./queue/Queue";
 export { Stack } from "./stack/Stack";
 export { CircularQueue } from "./queue/CircularQueue";
 export { LinkedList } from "./list/LinkedList";
+export { CircularLinkedList } from "./list/CircularLinkedList";
 export { ImmutableList } from "./list/ImmutableList";
 export type { ITree, TraverseType } from "./tree/ITree";
 export { AbstractTree } from "./tree/AbstractTree";

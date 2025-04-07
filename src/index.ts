@@ -31,6 +31,7 @@ export {
     AbstractSet,
     AbstractTree,
     AsyncEnumerable,
+    CircularLinkedList,
     CircularQueue,
     Collections,
     Dictionary,

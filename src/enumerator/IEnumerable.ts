@@ -1,5 +1,6 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
+    CircularLinkedList,
     Dictionary,
     EnumerableSet,
     IGroup,
@@ -666,6 +667,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {TElement[]} An array that contains the elements from the input sequence.
      */
     toArray(): TElement[];
+
+    /**
+     * Creates a new circular linked list from the elements of the sequence.
+     * @template TElement The type of elements in the sequence.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     * @returns {CircularLinkedList<TElement>} A new circular linked list that contains the elements from the input sequence.
+     */
+    toCircularLinkedList(comparator?: EqualityComparator<TElement>): CircularLinkedList<TElement>;
 
     /**
      * Creates a new dictionary from the elements of the sequence.

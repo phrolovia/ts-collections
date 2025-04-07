@@ -1,5 +1,12 @@
 import { describe, expect, test } from "vitest";
-import { Enumerable, ImmutableList, PriorityQueue, ReadonlyCollection, Stack } from "../../src/imports";
+import {
+    CircularLinkedList,
+    Enumerable,
+    ImmutableList,
+    PriorityQueue,
+    ReadonlyCollection,
+    Stack
+} from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -294,7 +301,7 @@ describe("List", () => {
             const combinations = list.combinations();
             expect(combinations.toArray()).to.deep.equal([]);
         });
-        it("should throw error if length is less than 0", () => {
+        test("should throw error if length is less than 0", () => {
             expect(() => list.combinations(-1)).toThrowError("Size must be greater than or equal to 0.");
         });
     });
@@ -437,7 +444,7 @@ describe("List", () => {
             const cycle = list.cycle(0);
             expect(cycle.toArray()).to.deep.equal([]);
         });
-        it("should return an empty iterable if count is less than 0", () => {
+        test("should return an empty iterable if count is less than 0", () => {
             const list = new List([1, 2, 3]);
             const cycle = list.cycle(-1);
             expect(cycle.toArray()).to.deep.equal([]);
@@ -2493,6 +2500,42 @@ describe("List", () => {
         });
     });
 
+    describe("#toCircularLinkedList()", () => {
+        const list = new List([1, 2, 3, 4, 5]);
+        const circularList = list.toCircularLinkedList();
+
+        test("should return a new CircularLinkedList without altering the current list", () => {
+            expect(list.size()).to.eq(5);
+            expect(circularList instanceof CircularLinkedList).to.be.true;
+            expect(circularList.size()).to.eq(5);
+            expect(list.length).to.eq(5);
+            expect(circularList.length).to.eq(5);
+        });
+
+        test("should preserve the elements and their order", () => {
+            expect(circularList.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+
+        test("should work with an empty list", () => {
+            const emptyList = new List<number>();
+            const emptyCircularList = emptyList.toCircularLinkedList();
+            expect(emptyCircularList.isEmpty()).to.be.true;
+            expect(emptyCircularList.size()).to.eq(0);
+        });
+
+        test("should accept a custom comparator", () => {
+            const personList = new List([Person.Alice, Person.Noemi]);
+            const customComparator = (p1: Person, p2: Person) => p1.name === p2.name;
+            const circularPersonList = personList.toCircularLinkedList(customComparator);
+
+            // Create a new person with the same name but different age
+            const aliceClone = new Person("Alice", "Smith", 30);
+
+            // With custom comparator, it should find Alice by name
+            expect(circularPersonList.contains(aliceClone)).to.be.true;
+        });
+    });
+
     describe("#toDictionary()", () => {
         const list = new List([Person.Alice, Person.Mel, Person.Noemi, Person.Lucrezia, Person.Amy, Person.Bella, Person.Reina]);
         test("should convert it to a dictionary", () => {
@@ -2742,6 +2785,8 @@ describe("List", () => {
         })
     });
 
+
+
     describe("#toSortedSet()", () => {
         const list = new List([5, 2, 3, 4, 4, 3, 9, 7, 7, 6, 8, 1, 10]);
         test("should create a sorted set from the list", () => {
@@ -2864,7 +2909,7 @@ describe("List", () => {
             const windows = list.windows(6).toList();
             expect(windows.size()).to.eq(0);
         });
-        it("should throw an error if size is less than 1", () => {
+        test("should throw an error if size is less than 1", () => {
             expect(() => list.windows(0)).to.throw("Size must be greater than 0.");
             expect(() => list.windows(-1)).to.throw("Size must be greater than 0.");
         });

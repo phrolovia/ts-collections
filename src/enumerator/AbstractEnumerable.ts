@@ -2,6 +2,7 @@ import { Dictionary } from "../dictionary/Dictionary";
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
 import {
+    CircularLinkedList,
     from,
     IEnumerable,
     ImmutableDictionary,
@@ -310,6 +311,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public toArray(): TElement[] {
         return EnumerableStatic.toArray(this);
+    }
+
+    public toCircularLinkedList(comparator?: EqualityComparator<TElement, TElement>): CircularLinkedList<TElement> {
+        return EnumerableStatic.toCircularLinkedList(this, comparator);
     }
 
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
