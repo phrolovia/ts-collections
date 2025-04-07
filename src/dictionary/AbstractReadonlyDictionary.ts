@@ -1,5 +1,6 @@
 import { EnumerableStatic } from "../enumerator/EnumerableStatic";
 import {
+    CircularLinkedList,
     EnumerableSet,
     ICollection,
     IEnumerable,
@@ -330,6 +331,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public toArray(): KeyValuePair<TKey, TValue>[] {
         return Array.from(this);
+    }
+    
+    public toCircularLinkedList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): CircularLinkedList<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toCircularLinkedList(this, comparator);
     }
 
     public toDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {

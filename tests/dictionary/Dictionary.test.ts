@@ -3,6 +3,7 @@ import { Dictionary } from "../../src/dictionary/Dictionary";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { Enumerable } from "../../src/enumerator/Enumerable";
 import {
+    CircularLinkedList,
     EnumerableSet,
     ImmutableDictionary,
     ImmutableList,
@@ -85,7 +86,7 @@ describe("Dictionary", () => {
         test("should aggregate into (name, sum of ages) pairs", () => {
             const result = dictionary.aggregateBy(p => p.value.name, () => 0, (total, next) => total + next.value.age);
             const obj = result.toObject(p => p.key, p => p.value);
-            expect(obj).to.deep.equal({ Alice: 23, Lucrezia: 21, Noemi: 72 });
+            expect(obj).to.deep.equal({Alice: 23, Lucrezia: 21, Noemi: 72});
         });
         test("should return empty result if source is empty", () => {
             dictionary.clear();
@@ -275,7 +276,7 @@ describe("Dictionary", () => {
         const dictionary = new Dictionary<string, Person>(
             [
                 new KeyValuePair<string, Person>(Person.Alice.name, Person.Alice),
-                new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia),
+                new KeyValuePair<string, Person>(Person.Lucrezia.name, Person.Lucrezia)
             ],
             (p1, p2) => p1.name === p2.name
         );
@@ -828,7 +829,7 @@ describe("Dictionary", () => {
             [
                 [Person.Alice.name, Person.Alice],
                 [Person.Noemi.name, Person.Noemi],
-                [Person.Lucrezia.name, Person.Lucrezia],
+                [Person.Lucrezia.name, Person.Lucrezia]
             ]
         );
         test("should return the person with the maximum age", () => {
@@ -859,7 +860,7 @@ describe("Dictionary", () => {
             [
                 [Person.Alice.name, Person.Alice],
                 [Person.Noemi.name, Person.Noemi],
-                [Person.Lucrezia.name, Person.Lucrezia],
+                [Person.Lucrezia.name, Person.Lucrezia]
             ]
         );
         test("should return the person with the minimum age", () => {
@@ -1094,7 +1095,7 @@ describe("Dictionary", () => {
                 new KeyValuePair<string, string>(Person.Lucrezia.name, Person.Lucrezia.surname),
                 new KeyValuePair<string, string>(Person.Alice.name, Person.Alice.surname),
                 new KeyValuePair<string, string>(Person.Priscilla.name, Person.Priscilla.surname),
-                new KeyValuePair<string, string>(Person.Noemi.name, Person.Noemi.surname),
+                new KeyValuePair<string, string>(Person.Noemi.name, Person.Noemi.surname)
             ];
             let index = 0;
             for (const person of result) {
@@ -1673,6 +1674,20 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#toCircularLinkedList()", () => {
+        const dictionary = new Dictionary<number, string>();
+        dictionary.add(1, "a");
+        dictionary.add(2, "b");
+        const list = dictionary.toCircularLinkedList();
+        test("should create a new KeyValuePair circular linked list", () => {
+            expect(list.size()).to.eq(dictionary.size());
+            expect(list.get(0).equals(new KeyValuePair<number, string>(1, "a"))).to.eq(true);
+            expect(list.get(1).equals(new KeyValuePair<number, string>(2, "b"))).to.eq(true);
+            expect(list instanceof CircularLinkedList).to.be.true;
+            expect(list.length).to.eq(dictionary.length);
+        });
+    });
+
     describe("#toDictionary()", () => {
         const dict = new Dictionary<string, Person>();
         dict.add(Person.Lucrezia.name, Person.Lucrezia);
@@ -1915,7 +1930,7 @@ describe("Dictionary", () => {
         dictionary.add(2, "b");
         const obj = dictionary.toObject(p => p.key * 10, p => p.value);
         test("should create a new object", () => {
-            expect(obj).to.deep.equal({ 10: "a", 20: "b" });
+            expect(obj).to.deep.equal({10: "a", 20: "b"});
         });
     });
 
@@ -1929,7 +1944,7 @@ describe("Dictionary", () => {
         dictionary.add(65, "f");
         dictionary.add(12, "g");
         dictionary.add(37, "h");
-        const queue = dictionary.toPriorityQueue((a,b) => a.key - b.key);
+        const queue = dictionary.toPriorityQueue((a, b) => a.key - b.key);
         test("should create a new min priority queue", () => {
             const expectedQueueItems = [
                 new KeyValuePair(0, "c"),
@@ -1946,7 +1961,7 @@ describe("Dictionary", () => {
             expect(queue.toArray()).to.deep.eq(expectedQueueItems);
         });
         test("should create a new max priority queue", () => {
-            const queue = dictionary.toPriorityQueue((a,b) => b.key - a.key);
+            const queue = dictionary.toPriorityQueue((a, b) => b.key - a.key);
             const expectedQueueItems = [
                 new KeyValuePair(70, "a"),
                 new KeyValuePair(37, "h"),
@@ -1955,7 +1970,7 @@ describe("Dictionary", () => {
                 new KeyValuePair(14, "d"),
                 new KeyValuePair(0, "c"),
                 new KeyValuePair(12, "g"),
-                new KeyValuePair(5, "b"),
+                new KeyValuePair(5, "b")
             ];
             expect(queue instanceof PriorityQueue).to.be.true;
             expect(queue.size()).to.eq(dictionary.size());

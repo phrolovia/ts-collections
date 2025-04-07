@@ -1,9 +1,4 @@
-import {
-    AbstractEnumerable,
-    ICollectionChangedEventArgs,
-    IReadonlyCollection,
-    ObservableCollection
-} from "../imports";
+import { AbstractEnumerable, ICollectionChangedEventArgs, IReadonlyCollection, ObservableCollection } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 
 export class ReadonlyObservableCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {

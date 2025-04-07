@@ -5,7 +5,7 @@ import { Predicate } from "../shared/Predicate";
 
 export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
     readonly #comparator: OrderComparator<TElement> = Comparators.orderComparator;
-    readonly #heap: List<TElement> = new List<TElement>();
+    readonly #heap = new List<TElement>();
 
     public constructor();
     public constructor(comparator: OrderComparator<TElement>);

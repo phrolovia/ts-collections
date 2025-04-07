@@ -1,5 +1,6 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
+    CircularLinkedList,
     Collections,
     Dictionary,
     Enumerable,
@@ -625,6 +626,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return Array.from(this);
     }
 
+    public toCircularLinkedList(comparator?: EqualityComparator<TElement, TElement>): CircularLinkedList<TElement> {
+        return new CircularLinkedList<TElement>(this, comparator);
+    }
+
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         const dictionary = new Dictionary<TKey, TValue>(Enumerable.empty(), valueComparator);
         for (const item of this) {
@@ -1159,13 +1164,28 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* takeLastGenerator(count: number): IterableIterator<TElement> {
-        const allItems: Array<TElement> = [];
-        for (const item of this) {
-            allItems.push(item);
+        if (count <= 0) {
+            return;
         }
-        const startIndex = Math.max(0, allItems.length - count);
-        for (let i = startIndex; i < allItems.length; i++) {
-            yield allItems[i];
+
+        const buffer = new Array<TElement>(count);
+        let bufferSize = 0;
+        let startIndex = 0;
+
+        for (const item of this) {
+            const nextIndex = (startIndex + bufferSize) % count;
+            buffer[nextIndex] = item;
+
+            if (bufferSize < count) {
+                bufferSize++;
+            } else {
+                startIndex = (startIndex + 1) % count;
+            }
+        }
+
+        for (let i = 0; i < bufferSize; i++) {
+            const readIndex = (startIndex + i) % count;
+            yield buffer[readIndex];
         }
     }
 

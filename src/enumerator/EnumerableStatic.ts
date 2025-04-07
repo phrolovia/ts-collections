@@ -1,5 +1,6 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
+    CircularLinkedList,
     Dictionary,
     Enumerable,
     EnumerableSet,
@@ -300,6 +301,10 @@ export abstract class EnumerableStatic {
 
     public static toArray<TElement>(source: IEnumerable<TElement>): TElement[] {
         return new Enumerable(source).toArray();
+    }
+
+    public static toCircularLinkedList<TElement>(source: IEnumerable<TElement>, comparator?: EqualityComparator<TElement>): CircularLinkedList<TElement> {
+        return new Enumerable(source).toCircularLinkedList(comparator);
     }
 
     public static toDictionary<TElement, TKey, TValue>(source: IEnumerable<TElement>, keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {

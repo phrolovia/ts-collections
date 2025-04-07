@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { Enumerable, LinkedList } from "../../src/imports";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
