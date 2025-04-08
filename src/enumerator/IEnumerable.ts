@@ -7,6 +7,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutablePriorityQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -710,6 +711,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableList<TElement>} A new immutable list that contains the elements from the input sequence.
      */
     toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement>;
+
+    /**
+     * Creates a new immutable priority queue from the elements of the sequence.
+     * @template TElement
+     * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+     * @returns {ImmutablePriorityQueue<TElement>} A new immutable priority queue that contains the elements from the input sequence.
+     */
+    toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement>;
 
     /**
      * Creates a new immutable queue from the elements of the sequence.
