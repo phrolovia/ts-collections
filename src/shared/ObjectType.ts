@@ -30,7 +30,7 @@ export type ObjectType<T = unknown> =
     | PrimitiveNumber | "number"
     | PrimitiveBigInt | "bigint"
     | Class<T>
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     | Function | "function"
     | PrimitiveObject | "object"
     | PrimitiveString | "string";

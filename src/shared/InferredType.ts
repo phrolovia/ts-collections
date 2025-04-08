@@ -1,6 +1,7 @@
 import { Class } from "./Class";
 
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-wrapper-object-types */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 
 export type BooleanType = boolean | Boolean | BooleanConstructor | "boolean";
 export type SymbolType = symbol | Symbol | SymbolConstructor | "symbol";
