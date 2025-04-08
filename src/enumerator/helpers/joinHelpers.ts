@@ -40,13 +40,10 @@ export const buildGroupsAsync = async <TInner, TKey>(innerAsyncEnumerable: Async
         return groups;
     }
 
-    try {
-        for await (const innerElement of innerAsyncEnumerable) {
-            processGroupElement(innerElement, groups, innerKeySelector, keyCompare);
-        }
-    } catch (error) {
-        throw error;
+    for await (const innerElement of innerAsyncEnumerable) {
+        processGroupElement(innerElement, groups, innerKeySelector, keyCompare);
     }
+
     return groups;
 }
 

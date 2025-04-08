@@ -66,7 +66,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         for (const item of this.#dictionary) {
             yield [item[0], item[1].value];
         }
-    };
+    }
 
     public get(key: TKey): TValue | null {
         const pair = this.#dictionary.get(key);

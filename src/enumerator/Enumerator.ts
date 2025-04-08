@@ -167,7 +167,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public count(predicate?: Predicate<TElement>): number {
         let count: number = 0;
         if (!predicate) {
-            for (const {} of this) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            for (const _ of this) {
                 ++count;
             }
             return count;
@@ -857,10 +858,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
-        return yield* this.exceptByGenerator(iterable, x => x, comparator);
-    }
-
     private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
@@ -898,6 +895,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 yield item;
             }
         }
+    }
+
+    private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
+        return yield* this.exceptByGenerator(iterable, x => x, comparator);
     }
 
     private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IterableIterator<IGroup<TKey, TElement>> {
@@ -962,10 +963,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
-        return yield* this.intersectByGenerator(iterable, x => x, comparator);
-    }
-
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
@@ -989,6 +986,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 yield item;
             }
         }
+    }
+
+    private* intersectGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
+        return yield* this.intersectByGenerator(iterable, x => x, comparator);
     }
 
     private* intersperseGenerator<TSeparator = TElement>(separator: TSeparator): IterableIterator<TElement | TSeparator> {
@@ -1023,6 +1024,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): IterableIterator<InferredType<TResult>> {
         const isOfType = typeof type === "string"
             ? ((item: unknown): boolean => typeof item === type) as (item: unknown) => item is InferredType<TResult>
+            // eslint-disable-next-line @typescript-eslint/ban-types
             : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as Function);
         for (const item of this) {
             if (isOfType(item)) {
@@ -1275,8 +1277,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const iterator = this[Symbol.iterator]();
         const otherIterator = iterable[Symbol.iterator]();
         while (true) {
-            let first = iterator.next();
-            let second = otherIterator.next();
+            const first = iterator.next();
+            const second = otherIterator.next();
             if (first.done || second.done) {
                 break;
             } else {

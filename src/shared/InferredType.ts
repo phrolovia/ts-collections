@@ -1,5 +1,7 @@
 import { Class } from "./Class";
 
+/* eslint-disable @typescript-eslint/ban-types */
+
 export type BooleanType = boolean | Boolean | BooleanConstructor | "boolean";
 export type SymbolType = symbol | Symbol | SymbolConstructor | "symbol";
 export type BigIntType = bigint | BigInt | BigIntConstructor | "bigint";

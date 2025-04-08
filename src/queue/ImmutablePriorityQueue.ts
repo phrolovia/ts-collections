@@ -5,22 +5,13 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 
 export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollection<TElement> {
-    readonly #heap: Heap<TElement>;
     readonly #comparator: OrderComparator<TElement>;
+    readonly #heap: Heap<TElement>;
 
     private constructor(iterable?: Iterable<TElement>, comparator?: OrderComparator<TElement>) {
         super();
         this.#comparator = comparator ?? Comparators.orderComparator;
         this.#heap = new Heap(this.#comparator, iterable ?? []);
-    }
-
-    * [Symbol.iterator](): Iterator<TElement> {
-        // Iterating over a heap doesn't guarantee priority order,
-        // it usually gives heap order (level by level).
-        // To iterate in priority order, one would typically poll repeatedly,
-        // but that's inefficient and doesn't fit an immutable iterator.
-        // We delegate to the heap's natural iteration order.
-        yield* this.#heap;
     }
 
     /**
@@ -32,6 +23,15 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      */
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement> {
         return new ImmutablePriorityQueue(iterable, comparator);
+    }
+
+    * [Symbol.iterator](): Iterator<TElement> {
+        // Iterating over a heap doesn't guarantee priority order,
+        // it usually gives heap order (level by level).
+        // To iterate in priority order, one would typically poll repeatedly,
+        // but that's inefficient and doesn't fit an immutable iterator.
+        // We delegate to the heap's natural iteration order.
+        yield* this.#heap;
     }
 
     /**

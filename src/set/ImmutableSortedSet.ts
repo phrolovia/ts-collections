@@ -14,13 +14,13 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
         this.#comparator = comparator;
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#set;
-    }
-
     public static create<TElement>(iterable?: Iterable<TElement>,
                                    comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
         return new ImmutableSortedSet(iterable, comparator);
+    }
+
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.#set;
     }
 
     /**

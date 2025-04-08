@@ -10,12 +10,12 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
         this.#stack = new Stack(iterable, comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#stack;
-    }
-
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
         return new ImmutableStack(iterable, comparator);
+    }
+    
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.#stack;
     }
 
     /**

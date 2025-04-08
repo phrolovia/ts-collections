@@ -75,6 +75,16 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return -1;
     }
 
+    public override last(predicate?: Predicate<TElement>): TElement {
+        if (!predicate) {
+            if (this.isEmpty()) {
+                throw new NoElementsException();
+            }
+            return this.get(this.size() - 1);
+        }
+        return super.last(predicate);
+    }
+
     public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
         const array = this.toArray();
         comparator ??= this.comparer;
@@ -92,16 +102,6 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
             }
         }
         return -1;
-    }
-
-    public override last(predicate?: Predicate<TElement>): TElement {
-        if (!predicate) {
-            if (this.isEmpty()) {
-                throw new NoElementsException();
-            }
-            return this.get(this.size() - 1);
-        }
-        return super.last(predicate);
     }
 
     public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null {

@@ -40,6 +40,11 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         this.treeSize = 0;
     }
 
+    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
+        comparator ??= this.comparer;
+        return this.containsRecursive(this.root, element, comparator);
+    }
+
     public find(predicate: Predicate<TElement>): TElement | null {
         if (this.root == null) {
             return null;
@@ -64,11 +69,6 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
 
     public getRootData(): TElement | null {
         return this.root?.getData() ?? null;
-    }
-
-    public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        comparator ??= this.comparer;
-        return this.containsRecursive(this.root, element, comparator);
     }
 
     public override isEmpty(): boolean {
@@ -181,7 +181,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         if (predicate(root.getData())) {
             return root.getData();
         }
-        let foundItem: TElement | null = this.findRecursive(root.getLeft(), predicate);
+        const foundItem: TElement | null = this.findRecursive(root.getLeft(), predicate);
         if (foundItem != null) {
             return foundItem;
         }
