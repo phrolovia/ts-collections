@@ -12,12 +12,12 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         this.#list = new ReadonlyList(new List(iterable, comparator));
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#list;
-    }
-
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return new ImmutableList(iterable, comparator);
+    }
+
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.#list;
     }
 
     /**

@@ -1,0 +1,16 @@
+# Build output
+dist/
+
+# Node modules
+node_modules/
+
+# Configuration files
+*.config.mts
+*.config.js
+*.config.ts
+
+# Coverage reports
+coverage/
+
+# Documentation
+html/

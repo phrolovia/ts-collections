@@ -34,7 +34,7 @@ import { Predicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
-import { buildGroupsAsync, JoinGroup, processOuterElement } from "./helpers/joinHelpers";
+import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
@@ -153,7 +153,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     public async count(predicate?: Predicate<TElement>): Promise<number> {
         let count = 0;
         if (!predicate) {
-            for await (const {} of this) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            for await (const _ of this) {
                 ++count;
             }
             return count;
@@ -759,10 +760,6 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> |  OrderComparator<TElement>): AsyncIterableIterator<TElement> {
-        return yield* this.exceptByGenerator(iterable, e => e, comparator);
-    }
-
     private async* exceptByGenerator<TKey>(iterable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
@@ -789,6 +786,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 yield element;
             }
         }
+    }
+
+    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> |  OrderComparator<TElement>): AsyncIterableIterator<TElement> {
+        return yield* this.exceptByGenerator(iterable, e => e, comparator);
     }
 
     private async* groupByGenerator<TKey>(
@@ -854,10 +855,6 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* intersectGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): AsyncIterableIterator<TElement> {
-        return yield* this.intersectByGenerator(iterable, e => e, comparator);
-    }
-
     private async* intersectByGenerator<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
@@ -886,6 +883,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
+    private async* intersectGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): AsyncIterableIterator<TElement> {
+        return yield* this.intersectByGenerator(iterable, e => e, comparator);
+    }
+
     private async* intersperseGenerator<TSeparator = TElement>(separator: TSeparator): AsyncIterableIterator<TElement | TSeparator> {
         let index = 0;
         for await (const element of this) {
@@ -900,28 +901,18 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private async* joinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator: EqualityComparator<TKey>, leftJoin: boolean): AsyncIterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         const effectiveLeftJoin = leftJoin ?? false;
+        const groups = await buildGroupsAsync(inner, innerKeySelector, keyCompare);
 
-        let groups: JoinGroup<TKey, TInner>[] = [];
-        try {
-            groups = await buildGroupsAsync(inner, innerKeySelector, keyCompare);
-        } catch(error) {
-            throw error;
-        }
-
-        try {
-            for await (const outerElement of this) {
-                const outerKey = outerKeySelector(outerElement);
-                yield* processOuterElement(
-                    outerElement,
-                    outerKey,
-                    groups,
-                    keyCompare,
-                    resultSelector,
-                    effectiveLeftJoin
-                );
-            }
-        } catch (error) {
-            throw error;
+        for await (const outerElement of this) {
+            const outerKey = outerKeySelector(outerElement);
+            yield* processOuterElement(
+                outerElement,
+                outerKey,
+                groups,
+                keyCompare,
+                resultSelector,
+                effectiveLeftJoin
+            );
         }
     }
 
@@ -1060,7 +1051,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    public async* stepGenerator(step: number): AsyncIterableIterator<TElement> {
+    private async* stepGenerator(step: number): AsyncIterableIterator<TElement> {
         let index = 0;
         for await (const element of this) {
             if (index % step === 0) {

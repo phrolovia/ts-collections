@@ -255,18 +255,6 @@ export class CircularLinkedList<TElement> extends AbstractList<TElement> {
     }
 
     /**
-     * Removes the element at the specified index.
-     * @param index The zero-based index of the element to remove.
-     * @returns {TElement} The element that was removed.
-     * @throws {IndexOutOfBoundsException} If the index is out of range.
-     */
-    public removeAt(index: number): TElement {
-        this.checkElementIndex(index);
-        const nodeToRemove = this.node(index);
-        return this.unlink(nodeToRemove);
-    }
-
-    /**
      * Removes the first occurrence of the specified element from the list.
      * @param element The element to remove.
      * @returns {boolean} True if the element was found and removed; otherwise, false.
@@ -289,6 +277,18 @@ export class CircularLinkedList<TElement> extends AbstractList<TElement> {
         } while (current !== this.#head && iterations <= this.#listSize);
 
         return false;
+    }
+
+    /**
+     * Removes the element at the specified index.
+     * @param index The zero-based index of the element to remove.
+     * @returns {TElement} The element that was removed.
+     * @throws {IndexOutOfBoundsException} If the index is out of range.
+     */
+    public removeAt(index: number): TElement {
+        this.checkElementIndex(index);
+        const nodeToRemove = this.node(index);
+        return this.unlink(nodeToRemove);
     }
 
     /**

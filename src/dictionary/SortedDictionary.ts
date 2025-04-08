@@ -72,7 +72,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         for (const pair of this) {
             yield [pair.key, pair.value];
         }
-    };
+    }
 
     public get(key: TKey): TValue | null {
         return this.#keyValueTree.findBy(key, p => p.key, this.#keyComparer)?.value ?? null;

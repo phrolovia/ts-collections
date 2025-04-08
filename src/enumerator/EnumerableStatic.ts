@@ -312,7 +312,7 @@ export abstract class EnumerableStatic {
         return new Enumerable(source).toDictionary(keySelector, valueSelector, valueComparator);
     }
 
-    public static toEnumerableSet(source: IEnumerable<any>): EnumerableSet<any> {
+    public static toEnumerableSet<TElement>(source: IEnumerable<TElement>): EnumerableSet<TElement> {
         return new Enumerable(source).toEnumerableSet();
     }
 

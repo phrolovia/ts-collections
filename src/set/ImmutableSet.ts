@@ -10,12 +10,12 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
         this.#set = new EnumerableSet(iterable);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#set;
-    }
-
     public static create<TElement>(iterable?: Iterable<TElement>): ImmutableSet<TElement> {
         return new ImmutableSet(iterable);
+    }
+
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.#set;
     }
 
     /**

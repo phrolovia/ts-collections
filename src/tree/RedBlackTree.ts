@@ -13,10 +13,10 @@ import { Predicate } from "../shared/Predicate";
 import { TreeNode } from "./TreeNode";
 
 class RedBlackNode<TElement> extends TreeNode<TElement> {
-    public static readonly RED = 0;
-    public static readonly BLACK = 1;
-    private parent: RedBlackNode<TElement> | null;
     private color: number;
+    private parent: RedBlackNode<TElement> | null;
+    public static readonly BLACK = 1;
+    public static readonly RED = 0;
 
     public constructor(data: TElement) {
         super(data);
@@ -262,9 +262,9 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
     }
 
     private deleteNode(v: RedBlackNode<TElement>): void {
-        let u: RedBlackNode<TElement> | null = this.findReplaceItem(v);
+        const u: RedBlackNode<TElement> | null = this.findReplaceItem(v);
         const bothBlack = ((u == null || u.getColor() === RedBlackNode.BLACK) && v.getColor() === RedBlackNode.BLACK);
-        let parent: RedBlackNode<TElement> | null = v.getParent();
+        const parent: RedBlackNode<TElement> | null = v.getParent();
 
         if (u === null) {
             this.handleNullReplacement(v, bothBlack, parent);
@@ -311,8 +311,8 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
     private fixDoubleBlack(node: RedBlackNode<TElement> | null): void {
         if (node == null || node === this.root) return;
 
-        let sibling = node.getSibling();
-        let parent = node.getParent() as RedBlackNode<TElement>;
+        const sibling = node.getSibling();
+        const parent = node.getParent() as RedBlackNode<TElement>;
 
         if (sibling == null) {
             this.fixDoubleBlack(parent);
@@ -333,15 +333,15 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             return;
         }
 
-        let parent = node.getParent() as RedBlackNode<TElement>;
+        const parent = node.getParent() as RedBlackNode<TElement>;
 
         // If parent is black, no double red violation
         if (parent.getColor() === RedBlackNode.BLACK) {
             return;
         }
 
-        let grandParent = parent.getParent() as RedBlackNode<TElement>;
-        let uncle: RedBlackNode<TElement> | null = node.getUncle();
+        const grandParent = parent.getParent() as RedBlackNode<TElement>;
+        const uncle: RedBlackNode<TElement> | null = node.getUncle();
 
         if (uncle != null && uncle.getColor() === RedBlackNode.RED) {
             this.handleRedUncle(parent, uncle, grandParent);
@@ -379,37 +379,6 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         } else {
             this.handleBlackSiblingWithBlackChildren(sibling, parent);
         }
-    }
-
-    private handleRedSibling(
-        node: RedBlackNode<TElement>,
-        sibling: RedBlackNode<TElement>,
-        parent: RedBlackNode<TElement>
-    ): void {
-        parent.setColor(RedBlackNode.RED);
-        sibling.setColor(RedBlackNode.BLACK);
-
-        if (sibling.isOnLeft()) {
-            this.rightRotate(parent);
-        } else {
-            this.leftRotate(parent);
-        }
-
-        this.fixDoubleBlack(node);
-    }
-
-    private handleRedUncle(
-        parent: RedBlackNode<TElement>,
-        uncle: RedBlackNode<TElement>,
-        grandParent: RedBlackNode<TElement>
-    ): void {
-        // Color parent and uncle black, grandparent red
-        parent.setColor(RedBlackNode.BLACK);
-        uncle.setColor(RedBlackNode.BLACK);
-        grandParent.setColor(RedBlackNode.RED);
-
-        // Recursively fix any double red violation at grandparent
-        this.fixDoubleRed(grandParent);
     }
 
     private handleBlackSiblingWithBlackChildren(
@@ -458,6 +427,59 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
 
         // Common step for both Left-Left and Left-Right cases
         this.rightRotate(grandParent);
+    }
+
+    private handleNullReplacement(
+        node: RedBlackNode<TElement>,
+        bothBlack: boolean,
+        parent: RedBlackNode<TElement> | null
+    ): void {
+        if (node === this.root) {
+            // If node is root with no children, tree becomes empty
+            this.root = null;
+            return;
+        }
+
+        // Handle color violations
+        if (bothBlack) {
+            this.fixDoubleBlack(node);
+        } else if (node.getSibling() != null) {
+            node.getSibling()?.setColor(RedBlackNode.RED);
+        }
+
+        // Remove node from parent
+        this.detachNodeFromParent(node, parent, null);
+    }
+
+    private handleRedSibling(
+        node: RedBlackNode<TElement>,
+        sibling: RedBlackNode<TElement>,
+        parent: RedBlackNode<TElement>
+    ): void {
+        parent.setColor(RedBlackNode.RED);
+        sibling.setColor(RedBlackNode.BLACK);
+
+        if (sibling.isOnLeft()) {
+            this.rightRotate(parent);
+        } else {
+            this.leftRotate(parent);
+        }
+
+        this.fixDoubleBlack(node);
+    }
+
+    private handleRedUncle(
+        parent: RedBlackNode<TElement>,
+        uncle: RedBlackNode<TElement>,
+        grandParent: RedBlackNode<TElement>
+    ): void {
+        // Color parent and uncle black, grandparent red
+        parent.setColor(RedBlackNode.BLACK);
+        uncle.setColor(RedBlackNode.BLACK);
+        grandParent.setColor(RedBlackNode.RED);
+
+        // Recursively fix any double red violation at grandparent
+        this.fixDoubleRed(grandParent);
     }
 
     private handleRightParent(
@@ -534,30 +556,12 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         }
     }
 
-    private handleNullReplacement(
-        node: RedBlackNode<TElement>,
-        bothBlack: boolean,
-        parent: RedBlackNode<TElement> | null
-    ): void {
-        if (node === this.root) {
-            // If node is root with no children, tree becomes empty
-            this.root = null;
-            return;
-        }
-
-        // Handle color violations
-        if (bothBlack) {
-            this.fixDoubleBlack(node);
-        } else if (node.getSibling() != null) {
-            node.getSibling()?.setColor(RedBlackNode.RED);
-        }
-
-        // Remove node from parent
-        this.detachNodeFromParent(node, parent, null);
+    private isExactMatch(element1: TElement, element2: TElement): boolean {
+        return this.comparer(element1, element2);
     }
 
     private leftRotate(node: RedBlackNode<TElement>): void {
-        let p = node.getRight() as RedBlackNode<TElement>;
+        const p = node.getRight() as RedBlackNode<TElement>;
         if (node === this.root) {
             this.root = p;
         }
@@ -569,8 +573,16 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         p.setLeft(node);
     }
 
+    private moveLeft(node: RedBlackNode<TElement>): RedBlackNode<TElement> {
+        return node.getLeft() as RedBlackNode<TElement>;
+    }
+
+    private moveRight(node: RedBlackNode<TElement>): RedBlackNode<TElement> {
+        return node.getRight() as RedBlackNode<TElement>;
+    }
+
     private rightRotate(node: RedBlackNode<TElement>): void {
-        let p = node.getLeft() as RedBlackNode<TElement>;
+        const p = node.getLeft() as RedBlackNode<TElement>;
         if (node === this.root) {
             this.root = p;
         }
@@ -612,26 +624,14 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         }
     }
 
-    private isExactMatch(element1: TElement, element2: TElement): boolean {
-        return this.comparer(element1, element2);
-    }
-
-    private moveLeft(node: RedBlackNode<TElement>): RedBlackNode<TElement> {
-        return node.getLeft() as RedBlackNode<TElement>;
-    }
-
-    private moveRight(node: RedBlackNode<TElement>): RedBlackNode<TElement> {
-        return node.getRight() as RedBlackNode<TElement>;
-    }
-
     private swapColors(u: RedBlackNode<TElement>, v: RedBlackNode<TElement>): void {
-        let temp = u.getColor();
+        const temp = u.getColor();
         u.setColor(v.getColor());
         v.setColor(temp);
     }
 
     private swapValues(u: RedBlackNode<TElement>, v: RedBlackNode<TElement>): void {
-        let temp = u.getData();
+        const temp = u.getData();
         u.setData(v.getData());
         v.setData(temp);
     }

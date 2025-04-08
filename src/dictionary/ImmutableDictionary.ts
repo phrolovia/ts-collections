@@ -11,10 +11,6 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         this.#dictionary = new ReadonlyDictionary(dictionary);
     }
 
-    * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
-        yield* this.#dictionary;
-    }
-
     public static create<TKey, TValue>(): ImmutableDictionary<TKey, TValue>;
     public static create<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
     public static create<TKey, TValue>(iterable: Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
@@ -24,6 +20,10 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         valueComparator?: EqualityComparator<TValue>
     ): ImmutableDictionary<TKey, TValue> {
         return new ImmutableDictionary(new Dictionary(iterable, valueComparator));
+    }
+
+    * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
+        yield* this.#dictionary;
     }
 
     public add(key: TKey, value: TValue): ImmutableDictionary<TKey, TValue> {

@@ -32,6 +32,7 @@ import {
     groupJoin,
     ImmutableDictionary,
     ImmutableList,
+    ImmutablePriorityQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -89,6 +90,7 @@ import {
     toEnumerableSet,
     toImmutableDictionary,
     toImmutableList,
+    toImmutablePriorityQueue,
     toImmutableQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
@@ -159,7 +161,7 @@ describe("Enumerable Standalone Functions", () => {
             const sequence = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Jisu])
             const result = aggregateBy(sequence, p => p.name, () => 0, (total, next) => total + next.age);
             const obj = result.toObject(p => p.key, p => p.value);
-            expect(obj).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 14 });
+            expect(obj).to.deep.equal({"Alice": 23, "Noemi": 72, "Jisu": 14});
         });
         test("should return (name, sum of ages) with a comparer", () => {
             const LittleJisu = new Person("jisu", "", 6);
@@ -168,14 +170,14 @@ describe("Enumerable Standalone Functions", () => {
             const result2 = aggregateBy(sequence, p => p.name, () => 0, (total, next) => total + next.age, (a, b) => a.toLowerCase() === b.toLowerCase());
             const obj1 = result1.toObject(p => p.key, p => p.value);
             const obj2 = result2.toObject(p => p.key, p => p.value);
-            expect(obj1).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 14, "jisu": 6 });
-            expect(obj2).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 20 });
+            expect(obj1).to.deep.equal({"Alice": 23, "Noemi": 72, "Jisu": 14, "jisu": 6});
+            expect(obj2).to.deep.equal({"Alice": 23, "Noemi": 72, "Jisu": 20});
         });
         test("should work with non function seed", () => {
             const sequence = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Jisu])
             const result = aggregateBy(sequence, p => p.name, 0, (total, next) => total + next.age);
             const obj = result.toObject(p => p.key, p => p.value);
-            expect(obj).to.deep.equal({ "Alice": 23, "Noemi": 72, "Jisu": 14 });
+            expect(obj).to.deep.equal({"Alice": 23, "Noemi": 72, "Jisu": 14});
         });
     });
 
@@ -510,7 +512,7 @@ describe("Enumerable Standalone Functions", () => {
         });
         test("should only have 'Alice', 'Noemi' and 'Senna'", () => {
             const result = exceptBy(
-                [Person.Alice, Person.Noemi, ],
+                [Person.Alice, Person.Noemi],
                 [Person.Mel, Person.Noemi2],
                 p => p.name
             );
@@ -1544,6 +1546,15 @@ describe("Enumerable Standalone Functions", () => {
             expect(immutableList instanceof ImmutableList).to.be.true;
             expect(immutableList.size()).to.eq(5);
             expect(immutableList.length).to.eq(5);
+        });
+    });
+
+    describe("#toImmutablePriorityQueue()", () => {
+        test("should return an immutable priority queue", () => {
+            const immutablePriorityQueue = toImmutablePriorityQueue([1, 2, 3, 4, 5]);
+            expect(immutablePriorityQueue instanceof ImmutablePriorityQueue).to.be.true;
+            expect(immutablePriorityQueue.size()).to.eq(5);
+            expect(immutablePriorityQueue.length).to.eq(5);
         });
     });
 

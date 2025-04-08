@@ -24,12 +24,13 @@ class PrimitiveSymbol {
     static [Symbol.hasInstance] = (x: unknown) => typeof x === 'symbol';
 }
 
-export type ObjectType<T = any> =
+export type ObjectType<T = unknown> =
     | PrimitiveSymbol | "symbol"
     | PrimitiveBoolean | "boolean"
     | PrimitiveNumber | "number"
     | PrimitiveBigInt | "bigint"
     | Class<T>
+    // eslint-disable-next-line @typescript-eslint/ban-types
     | Function | "function"
     | PrimitiveObject | "object"
     | PrimitiveString | "string";

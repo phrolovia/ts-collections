@@ -157,6 +157,14 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
     }
 
     /**
+     * Returns the number of elements in the heap.
+     * @returns The number of elements in the heap.
+     */
+    public size(): number {
+        return this.#heap.size();
+    }
+
+    /**
      * Builds a heap from the current elements in O(n) time.
      * This is more efficient than adding elements one by one, which takes O(n log n) time.
      * @private
@@ -170,14 +178,6 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
         for (let i = Math.floor((size - 2) / 2); i >= 0; i--) {
             this.heapifyDown(i);
         }
-    }
-
-    /**
-     * Returns the number of elements in the heap.
-     * @returns The number of elements in the heap.
-     */
-    public size(): number {
-        return this.#heap.size();
     }
 
     public override get comparator(): OrderComparator<TElement> {

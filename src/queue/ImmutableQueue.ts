@@ -10,12 +10,12 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
         this.#queue = new Queue(iterable, comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#queue;
-    }
-
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {
         return new ImmutableQueue(iterable, comparator);
+    }
+
+    * [Symbol.iterator](): Iterator<TElement> {
+        yield* this.#queue;
     }
 
     /**

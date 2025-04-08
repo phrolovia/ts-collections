@@ -371,7 +371,7 @@ export abstract class Collections {
                 if (index >= size) {
                     index -= size;
                 }
-                let oldValue: TElement = sequence[index];
+                const oldValue: TElement = sequence[index];
                 sequence[index] = displaced;
                 displaced = oldValue;
                 moveCount++;
