@@ -9,6 +9,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutablePriorityQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -376,6 +377,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
         return this.#enumerator.toImmutableList(comparator);
+    }
+
+    public toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement> {
+        return this.#enumerator.toImmutablePriorityQueue(comparator);
     }
 
     public toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {

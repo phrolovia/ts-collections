@@ -8,6 +8,7 @@ import {
     ILookup,
     ImmutableDictionary,
     ImmutableList,
+    ImmutablePriorityQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -332,7 +333,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public toArray(): KeyValuePair<TKey, TValue>[] {
         return Array.from(this);
     }
-    
+
     public toCircularLinkedList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): CircularLinkedList<KeyValuePair<TKey, TValue>> {
         return EnumerableStatic.toCircularLinkedList(this, comparator);
     }
@@ -352,6 +353,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public toImmutableList(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableList<KeyValuePair<TKey, TValue>> {
         const keyValueComparator = comparator ?? this.keyValueComparer;
         return EnumerableStatic.toImmutableList(this, keyValueComparator);
+    }
+
+    public toImmutablePriorityQueue(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): ImmutablePriorityQueue<KeyValuePair<TKey, TValue>> {
+        return EnumerableStatic.toImmutablePriorityQueue(this, comparator);
     }
 
     public toImmutableQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableQueue<KeyValuePair<TKey, TValue>> {

@@ -8,6 +8,7 @@ import { ImmutableList } from "../list/ImmutableList";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
 import { ILookup } from "../lookup/ILookup";
+import { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
 import { ImmutableQueue } from "../queue/ImmutableQueue";
 import { PriorityQueue } from "../queue/PriorityQueue";
 import { Queue } from "../queue/Queue";
@@ -1187,6 +1188,20 @@ export const toImmutableList = <TElement>(
     comparator?: EqualityComparator<TElement>
 ): ImmutableList<TElement> => {
     return from(source).toImmutableList(comparator);
+}
+
+/**
+ * Creates a new immutable priority queue from the elements of the sequence.
+ * @template TElement The type of elements in the sequence.
+ * @param source The source iterable.
+ * @param comparator The order comparator function that will be used to compare two elements. If not specified, default order comparer will be used.
+ * @returns {ImmutablePriorityQueue<TElement>} A new immutable priority queue that contains the elements of the source.
+ */
+export const toImmutablePriorityQueue = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: OrderComparator<TElement>
+): ImmutablePriorityQueue<TElement> => {
+    return from(source).toImmutablePriorityQueue(comparator);
 }
 
 /**

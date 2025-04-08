@@ -56,6 +56,7 @@ export { ImmutableSortedSet } from "./set/ImmutableSortedSet";
 export { Heap } from "./heap/Heap";
 export { PriorityQueue } from "./queue/PriorityQueue";
 export { ImmutableQueue } from "./queue/ImmutableQueue";
+export { ImmutablePriorityQueue } from "./queue/ImmutablePriorityQueue";
 export { ImmutableStack } from "./stack/ImmutableStack";
 export { Collections } from "./core/Collections";
 export {
@@ -133,6 +134,7 @@ export {
     toImmutableDictionary,
     toImmutableList,
     toImmutableQueue,
+    toImmutablePriorityQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
