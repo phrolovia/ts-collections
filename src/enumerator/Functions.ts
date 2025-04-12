@@ -19,6 +19,7 @@ import { SortedSet } from "../set/SortedSet";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
@@ -885,7 +886,7 @@ export const scan = <TElement, TAccumulate = TElement>(
  */
 export const select = <TElement, TResult>(
     source: Iterable<TElement>,
-    selector: Selector<TElement, TResult>
+    selector: IndexedSelector<TElement, TResult>
 ): IEnumerable<TResult> => {
     return from(source).select(selector);
 }
@@ -1000,7 +1001,7 @@ export const skipLast = <TElement>(
  */
 export const skipWhile = <TElement>(
     source: Iterable<TElement>,
-    predicate: Predicate<TElement>
+    predicate: IndexedPredicate<TElement>
 ): IEnumerable<TElement> => {
     return from(source).skipWhile(predicate);
 }
@@ -1095,7 +1096,7 @@ export const takeLast = <TElement>(
  */
 export const takeWhile = <TElement>(
     source: Iterable<TElement>,
-    predicate: Predicate<TElement>
+    predicate: IndexedPredicate<TElement>
 ): IEnumerable<TElement> => {
     return from(source).takeWhile(predicate);
 }
@@ -1497,7 +1498,7 @@ export const unionBy = <TElement, TKey>(
  */
 export const where = <TElement>(
     source: Iterable<TElement>,
-    predicate: Predicate<TElement>
+    predicate: IndexedPredicate<TElement>
 ): IEnumerable<TElement> => {
     return from(source).where(predicate);
 }

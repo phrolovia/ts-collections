@@ -115,10 +115,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.appendGenerator(element));
     }
 
-    public asEnumerable(): IEnumerable<TElement> {
-        return this;
-    }
-
     public average(selector?: Selector<TElement, number>): number {
         if (!this.any()) {
             throw new NoElementsException();
@@ -1024,7 +1020,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* ofTypeGenerator<TResult extends ObjectType>(type: TResult): IterableIterator<InferredType<TResult>> {
         const isOfType = typeof type === "string"
             ? ((item: unknown): boolean => typeof item === type) as (item: unknown) => item is InferredType<TResult>
-            // eslint-disable-next-line @typescript-eslint/ban-types
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
             : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as Function);
         for (const item of this) {
             if (isOfType(item)) {
