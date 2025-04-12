@@ -119,10 +119,6 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.append(element);
     }
 
-    public asEnumerable(): IEnumerable<TElement> {
-        return this.#enumerator.asEnumerable();
-    }
-
     public average(selector?: Selector<TElement, number>): number {
         return this.#enumerator.average(selector);
     }

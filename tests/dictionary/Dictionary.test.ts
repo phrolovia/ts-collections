@@ -143,22 +143,6 @@ describe("Dictionary", () => {
         });
     });
 
-    describe("#asEnumerable()", () => {
-        test("should return an IEnumerable", () => {
-            const dictionary = new Dictionary<string, number>([
-                ["a", 1],
-                ["b", 2],
-                ["c", 3]
-            ]);
-            const enumerable = dictionary.asEnumerable();
-            expect(enumerable.toArray()).to.deep.equal([
-                new KeyValuePair<string, number>("a", 1),
-                new KeyValuePair<string, number>("b", 2),
-                new KeyValuePair<string, number>("c", 3)
-            ]);
-        });
-    });
-
     describe("#asObject()", () => {
         test("should return an object representation of the dictionary", () => {
             const dictionary = new Dictionary<string, number>([
