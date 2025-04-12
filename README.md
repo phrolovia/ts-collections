@@ -8,6 +8,7 @@ A TypeScript library providing a comprehensive set of data structures with a foc
   - [List](#list)
     - [List](#list-1)
     - [LinkedList](#linkedlist)
+    - [CircularLinkedList](#circularlinkedlist)
   - [Dictionary](#dictionary)
     - [Dictionary](#dictionary-1)
     - [SortedDictionary](#sorteddictionary)
@@ -26,6 +27,13 @@ A TypeScript library providing a comprehensive set of data structures with a foc
     - [RedBlackTree](#redblacktree)
   - [Lookup](#lookup)
     - [Lookup](#lookup-1)
+  - [Observable Collections](#observable-collections)
+    - [ObservableCollection](#observablecollection)
+    - [ReadonlyObservableCollection](#readonlyobservablecollection)
+  - [Readonly Collections](#readonly-collections)
+    - [ReadonlyCollection](#readonlycollection)
+    - [ReadonlyDictionary](#readonlydictionary)
+    - [ReadonlyList](#readonlylist)
   - [Immutable Data Structures](#immutable-data-structures)
     - [ImmutableList](#immutablelist)
     - [ImmutableDictionary](#immutabledictionary)
@@ -33,6 +41,7 @@ A TypeScript library providing a comprehensive set of data structures with a foc
     - [ImmutableSet](#immutableset)
     - [ImmutableSortedSet](#immutablesortedset)
     - [ImmutableQueue](#immutablequeue)
+    - [ImmutablePriorityQueue](#immutablepriorityqueue)
     - [ImmutableStack](#immutablestack)
 - [Enumerable Support](#enumerable-support)
 
@@ -86,6 +95,28 @@ linkedList.addFirst(0);     // Add at beginning
 linkedList.addLast(4);      // Add at end
 linkedList.removeFirst();   // Remove from beginning
 linkedList.removeLast();    // Remove from end
+```
+
+#### CircularLinkedList
+
+A circular doubly-linked list implementation where the last node points to the first node and the first node points to the last node, forming a circle.
+
+- **When to use**: When you need a linked list with circular traversal capabilities or when you need to efficiently access both ends of the list.
+- **Key features**:
+  - O(1) operations at both ends (addFirst, addLast, removeFirst, removeLast)
+  - Circular structure allows wrapping around from the end to the beginning
+  - Supports efficient traversal in both directions
+  - Optimized node access by traversing from the closer end
+- **Example usage**:
+
+```typescript
+const circularList = new CircularLinkedList([1, 2, 3]);
+circularList.addFirst(0);     // Add at beginning
+circularList.addLast(4);      // Add at end
+circularList.removeFirst();   // Remove from beginning
+circularList.removeLast();    // Remove from end
+// Get a range of elements that can wrap around the list
+const range = circularList.getRange(2, 4);
 ```
 
 ### Dictionary
@@ -337,6 +368,126 @@ const lookup = Lookup.create(
 const categoryA = lookup.get("A"); // Returns collection with values 1 and 3
 ```
 
+### Observable Collections
+
+Observable collections are collections that notify subscribers when changes occur.
+
+#### ObservableCollection
+
+A collection that notifies subscribers when elements are added, removed, or modified.
+
+- **When to use**: When you need to track changes to a collection and react to those changes.
+- **Key features**:
+  - Notifies subscribers when elements are added, removed, or modified
+  - Provides information about what changed (old items, new items, action type)
+  - Wraps a List for efficient operations
+- **Example usage**:
+
+```typescript
+const collection = new ObservableCollection([1, 2, 3]);
+collection.collectionChanged = (sender, args) => {
+    console.log("Collection changed:", args.action);
+    console.log("New items:", args.newItems);
+    console.log("Old items:", args.oldItems);
+};
+collection.add(4);          // Triggers collectionChanged event
+collection.remove(2);       // Triggers collectionChanged event
+collection.clear();         // Triggers collectionChanged event
+```
+
+#### ReadonlyObservableCollection
+
+A read-only wrapper around an ObservableCollection that forwards collection change events.
+
+- **When to use**: When you need to provide read-only access to an observable collection while still allowing subscribers to be notified of changes.
+- **Key features**:
+  - Provides read-only access to the underlying collection
+  - Forwards collection change events from the wrapped collection
+  - Prevents modification of the collection through this wrapper
+- **Example usage**:
+
+```typescript
+const observableCollection = new ObservableCollection([1, 2, 3]);
+const readonlyCollection = new ReadonlyObservableCollection(observableCollection);
+readonlyCollection.collectionChanged = (sender, args) => {
+    console.log("Collection changed:", args.action);
+};
+// Changes to the original collection are still observable through the readonly wrapper
+observableCollection.add(4); // Triggers collectionChanged event on readonlyCollection
+```
+
+### Readonly Collections
+
+Readonly collections are wrappers that provide read-only access to underlying collections.
+
+#### ReadonlyCollection
+
+A wrapper around an ICollection that provides read-only access to the underlying collection.
+
+- **When to use**: When you need to provide read-only access to a collection to prevent modifications.
+- **Key features**:
+  - Provides read-only access to the underlying collection
+  - Delegates all operations to the wrapped collection
+  - Prevents modification of the collection through this wrapper
+- **Example usage**:
+
+```typescript
+const list = new List([1, 2, 3]);
+const readonlyCollection = new ReadonlyCollection(list);
+readonlyCollection.contains(2);  // Returns true
+// readonlyCollection.add(4);    // Error: Method not available
+// Changes to the original collection are reflected in the readonly wrapper
+list.add(4);
+readonlyCollection.contains(4);  // Returns true
+```
+
+#### ReadonlyDictionary
+
+A wrapper around an IDictionary that provides read-only access to the underlying dictionary.
+
+- **When to use**: When you need to provide read-only access to a dictionary to prevent modifications.
+- **Key features**:
+  - Provides read-only access to the underlying dictionary
+  - Delegates all operations to the wrapped dictionary
+  - Prevents modification of the dictionary through this wrapper
+- **Example usage**:
+
+```typescript
+const dict = new Dictionary<string, number>();
+dict.add("one", 1);
+dict.add("two", 2);
+const readonlyDict = new ReadonlyDictionary(dict);
+readonlyDict.get("one");         // Returns 1
+readonlyDict.containsKey("two"); // Returns true
+// readonlyDict.add("three", 3); // Error: Method not available
+// Changes to the original dictionary are reflected in the readonly wrapper
+dict.add("three", 3);
+readonlyDict.containsKey("three"); // Returns true
+```
+
+#### ReadonlyList
+
+A wrapper around an IList that provides read-only access to the underlying list.
+
+- **When to use**: When you need to provide read-only access to a list to prevent modifications.
+- **Key features**:
+  - Provides read-only access to the underlying list
+  - Delegates all operations to the wrapped list
+  - Supports index-based access
+  - Prevents modification of the list through this wrapper
+- **Example usage**:
+
+```typescript
+const list = new List([1, 2, 3]);
+const readonlyList = new ReadonlyList(list);
+readonlyList.get(0);           // Returns 1
+readonlyList.indexOf(2);       // Returns 1
+// readonlyList.add(4);        // Error: Method not available
+// Changes to the original list are reflected in the readonly wrapper
+list.add(4);
+readonlyList.contains(4);      // Returns true
+```
+
 ### Immutable Data Structures
 
 Immutable data structures are collections that cannot be modified after they are created. Any operation that would modify the structure instead returns a new instance with the modification applied, leaving the original structure unchanged.
@@ -452,6 +603,26 @@ An immutable version of Stack.
 const stack = ImmutableStack.create([1, 2, 3]);
 const stack2 = stack.add(4);      // Original stack is unchanged
 // Elements will be popped in order: 4, 3, 2, 1
+```
+
+#### ImmutablePriorityQueue
+
+An immutable version of PriorityQueue.
+
+- **When to use**: When you need a priority queue that cannot be modified, or when you want to ensure that elements are processed in priority order without modifying the original collection.
+- **Key features**:
+  - All operations that would modify the queue return a new queue
+  - Elements are dequeued according to priority
+  - Supports custom priority comparators
+  - Provides both queue operations (enqueue/dequeue) and collection operations (add/remove)
+- **Example usage**:
+
+```typescript
+// Min priority queue (smallest element first)
+const queue = ImmutablePriorityQueue.create([3, 1, 4, 2]);
+const queue2 = queue.enqueue(5);  // Original queue is unchanged
+const front = queue2.peek();      // Returns 1 (smallest element)
+const queue3 = queue2.dequeue();  // Returns new queue without the highest priority element
 ```
 
 ## Enumerable Support
