@@ -23,7 +23,8 @@ import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
 
 describe("List", () => {
-    const personNameComparator = (p1: Person, p2: Person) => p1.name === p2.name;
+    const personNameComparator = (p1: Person, p2: Person) =>
+        p1.name === p2.name;
 
     describe("#add()", () => {
         const list = new List([1, 2, 3]);
@@ -37,7 +38,12 @@ describe("List", () => {
 
     describe("#addAll()", () => {
         test("should add all elements from the second list to this list", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+            ]);
             const list2 = new List([Person.Vanessa, Person.Viola]);
             const personArray = [...list1.toArray(), ...list2.toArray()];
             list1.addAll(list2);
@@ -49,7 +55,12 @@ describe("List", () => {
             expect(list1.length).to.eq(6);
         });
         test("should return true if list is changed as a result (and false if not)", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+            ]);
             const list2 = new List([Person.Vanessa, Person.Viola]);
             const list3 = new List<Person>();
             const result = list1.addAll(list2);
@@ -62,20 +73,39 @@ describe("List", () => {
 
     describe("#addAt()", () => {
         test("should throw error if index is out of bounds", () => {
-            const list = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
-            expect(() => list.addAt(Person.Suzuha, -1)).toThrow(new IndexOutOfBoundsException(-1));
-            expect(() => list.addAt(Person.Suzuha, 5)).toThrow(new IndexOutOfBoundsException(5));
+            const list = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+            ]);
+            expect(() => list.addAt(Person.Suzuha, -1)).toThrow(
+                new IndexOutOfBoundsException(-1)
+            );
+            expect(() => list.addAt(Person.Suzuha, 5)).toThrow(
+                new IndexOutOfBoundsException(5)
+            );
             expect(() => list.addAt(Person.Bella, 2)).to.not.throw;
             expect(list.length).to.eq(4);
         });
         test("should add the element to the specified index", () => {
-            const list = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            const list = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+            ]);
             list.addAt(Person.Bella, 2);
             expect(list.get(2)).to.eq(Person.Bella);
             expect(list.length).to.eq(5);
         });
         test("should not throw error and add the element if index is equal to size", () => {
-            const list = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            const list = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+            ]);
             expect(() => list.addAt(Person.Bella, 4)).to.not.throw;
             list.addAt(Person.Bella, 4);
             expect(list.size()).to.eq(5);
@@ -87,88 +117,177 @@ describe("List", () => {
     describe("#aggregate()", () => {
         test("should return 6", () => {
             const list = new List([4, 8, 8, 3, 9, 0, 7, 8, 2]);
-            const result = list.aggregate((total, next) => next % 2 === 0 ? total + 1 : total, 0);
+            const result = list.aggregate(
+                (total, next) => (next % 2 === 0 ? total + 1 : total),
+                0
+            );
             expect(result).to.eq(6);
         });
         test("should return pomegranate", () => {
-            const list = new List(["apple", "mango", "orange", "pomegranate", "grape"]);
-            const result = list.aggregate((longest, next) => next.length > longest.length ? next : longest, "banana");
+            const list = new List([
+                "apple",
+                "mango",
+                "orange",
+                "pomegranate",
+                "grape",
+            ]);
+            const result = list.aggregate(
+                (longest, next) =>
+                    next.length > longest.length ? next : longest,
+                "banana"
+            );
             expect(result).to.eq("pomegranate");
         });
         test("should return 10", () => {
             const list = new List([1, 2, 3, 4]);
-            const result = list.aggregate<number>((total, num) => total += num);
+            const result = list.aggregate<number>(
+                (total, num) => (total += num)
+            );
             expect(result).to.eq(10);
         });
         test("should throw error if list is empty and no seed is provided", () => {
             const list = new List<number>([]);
-            expect(() => list.aggregate<number>((acc, num) => acc *= num)).toThrow(new NoElementsException());
+            expect(() =>
+                list.aggregate<number>((acc, num) => (acc *= num))
+            ).toThrow(new NoElementsException());
         });
         test("should return the seed if list is empty", () => {
             const list = new List<number>([]);
-            const result = list.aggregate<number>((total, num) => total += num, -99);
+            const result = list.aggregate<number>(
+                (total, num) => (total += num),
+                -99
+            );
             expect(result).to.eq(-99);
         });
         test("should use provided resultSelector and return 100", () => {
             const list = new List([1, 2, 3, 4]);
-            const result = list.aggregate<number>((total, num) => total += num, 0, r => Math.pow(r, 2));
+            const result = list.aggregate<number>(
+                (total, num) => (total += num),
+                0,
+                (r) => Math.pow(r, 2)
+            );
             expect(result).to.eq(100);
         });
     });
 
     describe("#aggregateBy()", () => {
         test("should aggregate by name and produce (name, sum of ages) pairs", () => {
-            const list = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori]);
-            const result = list.aggregateBy(p => p.name, () => 0, (acc, p) => acc + p.age);
-            const obj = result.toObject(p => p.key, p => p.value);
+            const list = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Noemi2,
+                Person.Kaori,
+            ]);
+            const result = list.aggregateBy(
+                (p) => p.name,
+                () => 0,
+                (acc, p) => acc + p.age
+            );
+            const obj = result.toObject(
+                (p) => p.key,
+                (p) => p.value
+            );
             expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10 });
         });
         test("should use provided key comparator", () => {
             const LittleKaori = new Person("kaori", "Furuya", 6);
-            const list = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori, LittleKaori]);
-            const result = list.aggregateBy(p => p.name, () => 0, (acc, p) => acc + p.age);
-            const result2 = list.aggregateBy(p => p.name, () => 0, (acc, p) => acc + p.age, (k1, k2) => k1.toLowerCase().localeCompare(k2.toLowerCase()) === 0);
-            const obj = result.toObject(p => p.key, p => p.value);
-            const obj2 = result2.toObject(p => p.key, p => p.value);
-            expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10, kaori: 6 });
+            const list = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Noemi2,
+                Person.Kaori,
+                LittleKaori,
+            ]);
+            const result = list.aggregateBy(
+                (p) => p.name,
+                () => 0,
+                (acc, p) => acc + p.age
+            );
+            const result2 = list.aggregateBy(
+                (p) => p.name,
+                () => 0,
+                (acc, p) => acc + p.age,
+                (k1, k2) =>
+                    k1.toLowerCase().localeCompare(k2.toLowerCase()) === 0
+            );
+            const obj = result.toObject(
+                (p) => p.key,
+                (p) => p.value
+            );
+            const obj2 = result2.toObject(
+                (p) => p.key,
+                (p) => p.value
+            );
+            expect(obj).to.deep.equal({
+                Alice: 23,
+                Noemi: 72,
+                Kaori: 10,
+                kaori: 6,
+            });
             expect(obj2).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 16 });
         });
         test("should work with non-function seeds", () => {
-            const list = new List([Person.Alice, Person.Noemi, Person.Noemi2, Person.Kaori]);
-            const result = list.aggregateBy(p => p.name, 0, (acc, p) => acc + p.age);
-            const obj = result.toObject(p => p.key, p => p.value);
+            const list = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Noemi2,
+                Person.Kaori,
+            ]);
+            const result = list.aggregateBy(
+                (p) => p.name,
+                0,
+                (acc, p) => acc + p.age
+            );
+            const obj = result.toObject(
+                (p) => p.key,
+                (p) => p.value
+            );
             expect(obj).to.deep.equal({ Alice: 23, Noemi: 72, Kaori: 10 });
         });
     });
 
     describe("#all()", () => {
-        const list = new List([Person.Alice, Person.Mel, Person.Senna, null, Person.Jane]);
+        const list = new List([
+            Person.Alice,
+            Person.Mel,
+            Person.Senna,
+            null,
+            Person.Jane,
+        ]);
         test("should not have any people younger than 9", () => {
-            const all = list.all(p => !p ? true : p.age >= 9);
+            const all = list.all((p) => (!p ? true : p.age >= 9));
             expect(all).to.eq(true);
         });
         test("should have people whose names start with an uppercase letter", () => {
-            const all = list.any(p => !p ? true : p.name.charAt(0).toUpperCase() === p.name.charAt(0));
+            const all = list.any((p) =>
+                !p ? true : p.name.charAt(0).toUpperCase() === p.name.charAt(0)
+            );
             expect(all).to.eq(true);
         });
         test("should have no null items", () => {
-            const all = list.all(p => p != null);
+            const all = list.all((p) => p != null);
             expect(all).to.eq(false);
         });
     });
 
     describe("#any()", () => {
-        const list = new List([Person.Alice, Person.Mel, Person.Senna, null, Person.Jane]);
+        const list = new List([
+            Person.Alice,
+            Person.Mel,
+            Person.Senna,
+            null,
+            Person.Jane,
+        ]);
         test("should have a person with age '9'", () => {
-            const any = list.any(p => p?.age === 9);
+            const any = list.any((p) => p?.age === 9);
             expect(any).to.eq(true);
         });
         test("should not have people whose names start with 'T'", () => {
-            const any = list.any(p => p?.name.startsWith("T") === true);
+            const any = list.any((p) => p?.name.startsWith("T") === true);
             expect(any).to.eq(false);
         });
         test("should have null", () => {
-            const any = list.any(p => p == null);
+            const any = list.any((p) => p == null);
             expect(any).to.eq(true);
         });
         test("should return true if no predicate is provided and list is not empty", () => {
@@ -211,7 +330,7 @@ describe("List", () => {
     describe("#average()", () => {
         test("should return 99948748093", () => {
             const list = new List(["10007", "37", "299846234235"]);
-            const avg = list.average(s => parseInt(s, 10));
+            const avg = list.average((s) => parseInt(s, 10));
             expect(avg).to.eq(99948748093);
         });
         test("should use non-transformed values if predicate is not provided.", () => {
@@ -220,14 +339,20 @@ describe("List", () => {
         });
         test("should throw error if list is empty", () => {
             const list = new List<string>([]);
-            expect(() => list.average(s => parseInt(s, 10))).toThrow(new NoElementsException());
+            expect(() => list.average((s) => parseInt(s, 10))).toThrow(
+                new NoElementsException()
+            );
         });
     });
 
     describe("#cast()", () => {
         const mixedList = new List([1, 2, 3, "4", "5", "6", 7, 8, 9, "10"]);
-        const numbers = mixedList.where(n => typeof n === "number").cast<number>();
-        const strings = mixedList.where(s => typeof s === "string").cast<string>();
+        const numbers = mixedList
+            .where((n) => typeof n === "number")
+            .cast<number>();
+        const strings = mixedList
+            .where((s) => typeof s === "string")
+            .cast<string>();
         test("should return a list of numbers", () => {
             expect(numbers.toArray()).to.deep.equal([1, 2, 3, 7, 8, 9]);
         });
@@ -251,12 +376,23 @@ describe("List", () => {
         });
         test("should throw error if chunk size is 0", () => {
             const list = Enumerable.range(1, 100);
-            expect(() => list.chunk(0)).toThrowError(new InvalidArgumentException(`Invalid argument: size. Size must be greater than 0.`));
+            expect(() => list.chunk(0)).toThrowError(
+                new InvalidArgumentException(
+                    `Invalid argument: size. Size must be greater than 0.`
+                )
+            );
         });
     });
 
     describe("#clear()", () => {
-        const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Lucrezia,
+            Person.Noemi,
+            Person.Priscilla,
+            Person.Vanessa,
+            Person.Viola,
+        ]);
         test("should remove all elements from the collection", () => {
             list1.clear();
             expect(list1.size()).to.eq(0);
@@ -268,32 +404,45 @@ describe("List", () => {
         const list = new List([1, 2, 3]);
         test("should return all combinations", () => {
             const combinations = list.combinations();
-            const array = combinations.select(c => c.toArray()).toArray();
-            expect(array).to.deep.equal([[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]);
+            const array = combinations.select((c) => c.toArray()).toArray();
+            expect(array).to.deep.equal([
+                [],
+                [1],
+                [2],
+                [1, 2],
+                [3],
+                [1, 3],
+                [2, 3],
+                [1, 2, 3],
+            ]);
         });
         test("should return all combinations of length 2", () => {
             const combinations = list.combinations(2);
-            const array = combinations.select(c => c.toArray()).toArray();
-            expect(array).to.deep.equal([[1, 2], [1, 3], [2, 3]]);
+            const array = combinations.select((c) => c.toArray()).toArray();
+            expect(array).to.deep.equal([
+                [1, 2],
+                [1, 3],
+                [2, 3],
+            ]);
         });
         test("should return all combinations of length 3", () => {
             const combinations = list.combinations(3);
-            const array = combinations.select(c => c.toArray()).toArray();
+            const array = combinations.select((c) => c.toArray()).toArray();
             expect(array).to.deep.equal([[1, 2, 3]]);
         });
         test("should return all combinations of length 4", () => {
             const combinations = list.combinations(4);
-            const array = combinations.select(c => c.toArray()).toArray();
+            const array = combinations.select((c) => c.toArray()).toArray();
             expect(array).to.deep.equal([]);
         });
         test("should return all combinations of length 0", () => {
             const combinations = list.combinations(0);
-            const array = combinations.select(c => c.toArray()).toArray();
+            const array = combinations.select((c) => c.toArray()).toArray();
             expect(array).to.deep.equal([[]]);
         });
         test("it should return all combinations of length 1", () => {
             const combinations = list.combinations(1);
-            const array = combinations.select(c => c.toArray()).toArray();
+            const array = combinations.select((c) => c.toArray()).toArray();
             expect(array).to.deep.equal([[1], [2], [3]]);
         });
         test("should return an empty list if source list is empty", () => {
@@ -302,7 +451,9 @@ describe("List", () => {
             expect(combinations.toArray()).to.deep.equal([]);
         });
         test("should throw error if length is less than 0", () => {
-            expect(() => list.combinations(-1)).toThrowError("Size must be greater than or equal to 0.");
+            expect(() => list.combinations(-1)).toThrowError(
+                "Size must be greater than or equal to 0."
+            );
         });
     });
 
@@ -321,7 +472,10 @@ describe("List", () => {
     describe("#contains()", () => {
         const list = new List([1, 3, 5, 6, 7, 8, 9, 2, 0, -1, 99, -99]);
         const personList = new List([Person.Alice, Person.Mel, Person.Senna]);
-        const personComparator: EqualityComparator<Person> = (p1: Person, p2: Person) => p1.name === p2.name;
+        const personComparator: EqualityComparator<Person> = (
+            p1: Person,
+            p2: Person
+        ) => p1.name === p2.name;
         test("should contain -1", () => {
             expect(list.contains(-1)).to.eq(true);
         });
@@ -329,15 +483,23 @@ describe("List", () => {
             expect(list.contains(-77)).to.eq(false);
         });
         test("should contain person 'Alice'", () => {
-            expect(personList.contains(Person.Alice, personComparator)).to.eq(true);
+            expect(personList.contains(Person.Alice, personComparator)).to.eq(
+                true
+            );
         });
         test("should not contain person 'Lenka'", () => {
-            expect(personList.contains(Person.Lenka, personComparator)).to.eq(false);
+            expect(personList.contains(Person.Lenka, personComparator)).to.eq(
+                false
+            );
         });
         test("should run fast with big collections", () => {
             const bigPeopleArray = Helper.generateRandomPerson(200000);
             const searchedPerson = new Person("Mona", "Lumia", 21);
-            bigPeopleArray.splice(Helper.generateRandomNumber(0, bigPeopleArray.length - 1), 0, searchedPerson);
+            bigPeopleArray.splice(
+                Helper.generateRandomNumber(0, bigPeopleArray.length - 1),
+                0,
+                searchedPerson
+            );
             const list = new List(bigPeopleArray);
             const includes = list.contains(searchedPerson, personComparator);
             expect(includes).to.be.true;
@@ -345,7 +507,14 @@ describe("List", () => {
     });
 
     describe("#containsAll()", () => {
-        const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Lucrezia,
+            Person.Noemi,
+            Person.Priscilla,
+            Person.Vanessa,
+            Person.Viola,
+        ]);
         const list2 = new List([Person.Vanessa, Person.Viola]);
         test("should return false if size is smaller than the other list's size", () => {
             expect(list2.containsAll(list1)).to.eq(false);
@@ -371,7 +540,7 @@ describe("List", () => {
         });
         test("should return 5", () => {
             const list = new List([1, 9, 2, 8, 3, 7, 4, 6, 5, 0]);
-            const count = list.count(n => n < 5);
+            const count = list.count((n) => n < 5);
             expect(count).to.eq(5);
         });
         test("should use list's size if predicate is not provided", () => {
@@ -382,40 +551,62 @@ describe("List", () => {
     });
 
     describe("#countBy()", () => {
-        const list = new List([Person.Noemi, Person.Noemi2, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Eliza]);
+        const list = new List([
+            Person.Noemi,
+            Person.Noemi2,
+            Person.Suzuha,
+            Person.Suzuha2,
+            Person.Suzuha3,
+            Person.Eliza,
+        ]);
         test("should return 2", () => {
-            const countPairs = list.countBy(p => p.name);
-            const noemiCount = countPairs.first(p => p.key === "Noemi").value;
+            const countPairs = list.countBy((p) => p.name);
+            const noemiCount = countPairs.first((p) => p.key === "Noemi").value;
             expect(noemiCount).to.eq(2);
         });
         test("should return 3", () => {
-            const countPairs = list.countBy(p => p.name);
-            const suzuhaCount = countPairs.first(p => p.key === "Suzuha").value;
+            const countPairs = list.countBy((p) => p.name);
+            const suzuhaCount = countPairs.first(
+                (p) => p.key === "Suzuha"
+            ).value;
             expect(suzuhaCount).to.eq(3);
         });
         test("should return 1", () => {
-            const countPairs = list.countBy(p => p.name);
-            const elizaCount = countPairs.first(p => p.key === "Eliza").value;
+            const countPairs = list.countBy((p) => p.name);
+            const elizaCount = countPairs.first((p) => p.key === "Eliza").value;
             expect(elizaCount).to.eq(1);
         });
         test("should return 0", () => {
-            const countPairs = list.countBy(p => p.name);
-            const aliceCount = countPairs.count(p => p.key === "Alice");
+            const countPairs = list.countBy((p) => p.name);
+            const aliceCount = countPairs.count((p) => p.key === "Alice");
             expect(aliceCount).to.eq(0);
         });
         test("should use provided comparator", () => {
             const LittleEliza = new Person("eliza", "Nymph", 9);
-            const list2 = new List([...list, LittleEliza])
-            const countPairs1 = list2.countBy(p => p.name, (n1, n2) => n1.localeCompare(n2) === 0);
+            const list2 = new List([...list, LittleEliza]);
+            const countPairs1 = list2.countBy(
+                (p) => p.name,
+                (n1, n2) => n1.localeCompare(n2) === 0
+            );
 
-            const elizaCountBig = countPairs1.first(p => p.key === "Eliza").value;
+            const elizaCountBig = countPairs1.first(
+                (p) => p.key === "Eliza"
+            ).value;
             expect(elizaCountBig).to.eq(1);
 
-            const elizaCountLittle = countPairs1.first(p => p.key === "eliza").value;
+            const elizaCountLittle = countPairs1.first(
+                (p) => p.key === "eliza"
+            ).value;
             expect(elizaCountLittle).to.eq(1);
 
-            const countPairs2 = list2.countBy(p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
-            const elizaCountAll = countPairs2.first(p => p.key === "Eliza").value;
+            const countPairs2 = list2.countBy(
+                (p) => p.name,
+                (n1, n2) =>
+                    n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0
+            );
+            const elizaCountAll = countPairs2.first(
+                (p) => p.key === "Eliza"
+            ).value;
             expect(elizaCountAll).to.eq(2);
         });
     });
@@ -427,7 +618,7 @@ describe("List", () => {
             const iterator = cycle[Symbol.iterator]();
             for (let i = 0; i < 100; ++i) {
                 const value = iterator.next().value;
-                expect(value).to.eq(i % 3 + 1);
+                expect(value).to.eq((i % 3) + 1);
             }
         });
         test("should return an iterable with 10 elements", () => {
@@ -451,7 +642,9 @@ describe("List", () => {
         });
         test("should throw error if source list is empty", () => {
             const list = new List<number>();
-            expect(() => list.cycle().toList()).toThrowError("Sequence contains no elements.");
+            expect(() => list.cycle().toList()).toThrowError(
+                "Sequence contains no elements."
+            );
         });
     });
 
@@ -481,45 +674,110 @@ describe("List", () => {
 
     describe("#distinct()", () => {
         test("should remove duplicate elements", () => {
-            const list = new List([Person.Alice, Person.Mel, Person.Senna, Person.Mel, Person.Alice]);
+            const list = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+                Person.Mel,
+                Person.Alice,
+            ]);
             const distinct = list.distinct();
-            expect(distinct.toArray()).to.deep.equal([Person.Alice, Person.Mel, Person.Senna]);
+            expect(distinct.toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+            ]);
             expect(distinct.toList().length).to.eq(3);
         });
         test("should use default comparator if no comparator is provided", () => {
             const list1 = new List([1, 2, 3, 1, 1, 1, 4, 5, 4, 3]);
-            const list2 = new List(["Alice", "Vanessa", "Misaki", "Alice", "Misaki", "Megumi", "Megumi"]);
+            const list2 = new List([
+                "Alice",
+                "Vanessa",
+                "Misaki",
+                "Alice",
+                "Misaki",
+                "Megumi",
+                "Megumi",
+            ]);
             const distinct1 = list1.distinct().toArray();
             const distinct2 = list2.distinct().toArray();
             expect(distinct1).to.deep.equal([1, 2, 3, 4, 5]);
-            expect(distinct2).to.deep.equal(["Alice", "Vanessa", "Misaki", "Megumi"]);
+            expect(distinct2).to.deep.equal([
+                "Alice",
+                "Vanessa",
+                "Misaki",
+                "Megumi",
+            ]);
         });
         test("should use provided comparator for key comparison", () => {
-            const list2 = new List([Person.Alice, Person.Hanna, Person.Hanna2, Person.Noemi, Person.Noemi2]);
-            const distinct2 = list2.distinct((p1, p2) => p1.name.localeCompare(p2.name) === 0).toArray();
-            expect(distinct2).to.deep.equal([Person.Alice, Person.Hanna, Person.Noemi]);
+            const list2 = new List([
+                Person.Alice,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Noemi,
+                Person.Noemi2,
+            ]);
+            const distinct2 = list2
+                .distinct((p1, p2) => p1.name.localeCompare(p2.name) === 0)
+                .toArray();
+            expect(distinct2).to.deep.equal([
+                Person.Alice,
+                Person.Hanna,
+                Person.Noemi,
+            ]);
         });
     });
 
     describe("#distinctBy()", () => {
         test("should return original list", () => {
             const list = new List([Person.Noemi, Person.Noemi2]);
-            const distinct = list.distinctBy(p => p);
-            const distinct2 = list.distinctBy(p => p.name);
-            expect(distinct.toArray()).to.deep.equal([Person.Noemi, Person.Noemi2]);
+            const distinct = list.distinctBy((p) => p);
+            const distinct2 = list.distinctBy((p) => p.name);
+            expect(distinct.toArray()).to.deep.equal([
+                Person.Noemi,
+                Person.Noemi2,
+            ]);
             expect(distinct2.toArray()).to.deep.equal([Person.Noemi]);
         });
         test("should remove duplicate elements", () => {
-            const list = new List([Person.Alice, Person.Mel, Person.Senna, Person.Mel, Person.Alice]);
-            const distinct = list.distinctBy(p => p.name);
-            expect(distinct.toArray()).to.deep.equal([Person.Alice, Person.Mel, Person.Senna]);
+            const list = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+                Person.Mel,
+                Person.Alice,
+            ]);
+            const distinct = list.distinctBy((p) => p.name);
+            expect(distinct.toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+            ]);
             expect(distinct.toList().length).to.eq(3);
         });
         test("should use provided comparator for key comparison", () => {
             const LittleHanna = new Person("hanna", "Nymph", 9);
-            const list2 = new List([Person.Alice, Person.Hanna, Person.Hanna2, Person.Noemi, Person.Noemi2, LittleHanna]);
-            const distinct2 = list2.distinctBy(p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0).toArray();
-            expect(distinct2).to.deep.equal([Person.Alice, Person.Hanna, Person.Noemi]);
+            const list2 = new List([
+                Person.Alice,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Noemi,
+                Person.Noemi2,
+                LittleHanna,
+            ]);
+            const distinct2 = list2
+                .distinctBy(
+                    (p) => p.name,
+                    (n1, n2) =>
+                        n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0
+                )
+                .toArray();
+            expect(distinct2).to.deep.equal([
+                Person.Alice,
+                Person.Hanna,
+                Person.Noemi,
+            ]);
         });
     });
 
@@ -577,43 +835,101 @@ describe("List", () => {
             expect(elist.toArray()).to.deep.equal([1, 2]);
         });
         test("should only have 'Alice', 'Noemi' and 'Senna'", () => {
-            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Mel,
+                Person.Senna,
+                Person.Lenka,
+                Person.Jane,
+            ]);
+            const list2 = new List([
+                Person.Mel,
+                Person.Lenka,
+                Person.Jane,
+                Person.Noemi2,
+            ]);
             const elist = list1.except(list2);
-            expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Senna]);
+            expect(elist.toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Noemi,
+                Person.Senna,
+            ]);
         });
         test("should only have 'Alice' and 'Senna'", () => {
-            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Mel,
+                Person.Senna,
+                Person.Lenka,
+                Person.Jane,
+            ]);
+            const list2 = new List([
+                Person.Mel,
+                Person.Lenka,
+                Person.Jane,
+                Person.Noemi2,
+            ]);
             const elist = list1.except(list2, (p1, p2) => p1.name === p2.name);
             expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Senna]);
         });
-        test("should return a set of people unique to first enumerable", {timeout: 10000}, () => {
-            const list1 = new List<Person>();
-            const list2 = new List<Person>();
-            for (let px = 0; px < 100000; ++px) {
-                const p1 = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
-                const p2 = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
-                list1.add(p1);
-                list2.add(p2);
+        test(
+            "should return a set of people unique to first enumerable",
+            { timeout: 10000 },
+            () => {
+                const list1 = new List<Person>();
+                const list2 = new List<Person>();
+                for (let px = 0; px < 100000; ++px) {
+                    const p1 = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 90)
+                    );
+                    const p2 = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 50)
+                    );
+                    list1.add(p1);
+                    list2.add(p2);
+                }
+                const exceptionList = list1.except(
+                    list2,
+                    (p1, p2) => p1.age === p2.age
+                );
+                const ageCount = exceptionList.count((p) => p.age <= 50);
+                expect(ageCount).to.eq(0);
             }
-            const exceptionList = list1.except(list2, (p1, p2) => p1.age === p2.age);
-            const ageCount = exceptionList.count(p => p.age <= 50);
-            expect(ageCount).to.eq(0);
-        });
-        test("should use order comparator and return a set of people unique to first enumerable #2", {timeout: 10000}, () => {
-            const list1 = new List<Person>();
-            const list2 = new List<Person>();
-            for (let px = 0; px < 100000; ++px) {
-                const p1 = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
-                const p2 = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
-                list1.add(p1);
-                list2.add(p2);
+        );
+        test(
+            "should use order comparator and return a set of people unique to first enumerable #2",
+            { timeout: 10000 },
+            () => {
+                const list1 = new List<Person>();
+                const list2 = new List<Person>();
+                for (let px = 0; px < 100000; ++px) {
+                    const p1 = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 90)
+                    );
+                    const p2 = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 50)
+                    );
+                    list1.add(p1);
+                    list2.add(p2);
+                }
+                const exceptionList = list1.except(
+                    list2,
+                    (p1, p2) => p1.age - p2.age
+                );
+                const ageCount = exceptionList.count((p) => p.age <= 50);
+                expect(ageCount).to.eq(0);
             }
-            const exceptionList = list1.except(list2, (p1, p2) => p1.age - p2.age);
-            const ageCount = exceptionList.count(p => p.age <= 50);
-            expect(ageCount).to.eq(0);
-        });
+        );
         test("should not fail if the list has falsy values", () => {
             const list1 = new List([0, undefined, null, false, 1, 2, 3]);
             const list2 = new List([undefined, 0]);
@@ -626,25 +942,30 @@ describe("List", () => {
         const list1 = new List([Person.Alice, Person.Noemi]);
         const list2 = new List([Person.Mel, Person.Noemi2]);
         test("should only have 'Alice'", () => {
-            const elist = list1.exceptBy(list2, p => p.name);
+            const elist = list1.exceptBy(list2, (p) => p.name);
             expect(elist.toArray()).to.deep.equal([Person.Alice]);
         });
         test("should only have 'Alice' and 'Noemi'", () => {
-            const elist = list1.exceptBy(list2, p => p);
+            const elist = list1.exceptBy(list2, (p) => p);
             expect(elist.toArray()).to.deep.equal([Person.Alice, Person.Noemi]);
         });
         test("shoud return 'Noemi'", () => {
             const list3 = new List([Person.Noemi, Person.Noemi2]);
             const list4 = new List<Person>([]);
-            const elist = list3.exceptBy(list4, p => p.name);
+            const elist = list3.exceptBy(list4, (p) => p.name);
             expect(elist.toArray()).to.deep.equal([Person.Noemi]);
         });
         test("should use provided comparator", () => {
             const LittleNoemi = new Person("noemi", "Nymph", 9);
             const list3 = new List([Person.Alice, LittleNoemi]);
             const list4 = new List([Person.Mel, Person.Noemi2]);
-            const elist = list3.exceptBy(list4, p => p.name);
-            const elist2 = list3.exceptBy(list2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            const elist = list3.exceptBy(list4, (p) => p.name);
+            const elist2 = list3.exceptBy(
+                list2,
+                (p) => p.name,
+                (n1, n2) =>
+                    n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0
+            );
             expect(elist.toArray()).to.deep.equal([Person.Alice, LittleNoemi]);
             expect(elist2.toArray()).to.deep.equal([Person.Alice]);
         });
@@ -662,18 +983,24 @@ describe("List", () => {
         });
         test("should throw an error if no matching element is found.", () => {
             const list = new List([99, 2, 3, 4, 5]);
-            expect(() => list.first(n => n < 0)).toThrowError(new NoMatchingElementException());
+            expect(() => list.first((n) => n < 0)).toThrowError(
+                new NoMatchingElementException()
+            );
         });
         test("should return a person with name 'Alice'", () => {
             const list = new List([Person.Mel, Person.Alice, Person.Jane]);
-            const first = list.first(p => p.name === "Alice");
+            const first = list.first((p) => p.name === "Alice");
             expect(first.name).to.eq("Alice");
         });
         test("should not throw error if sequence contains only null or undefined", () => {
-            const data = [{a: 1, b: undefined}, {a: 3, b: undefined}, {a: 4, b: 5}];
+            const data = [
+                { a: 1, b: undefined },
+                { a: 3, b: undefined },
+                { a: 4, b: 5 },
+            ];
             const list = new List(data);
-            expect(() => list.select(d => d.b).first()).to.not.throw();
-            const first = list.select(d => d.b).first();
+            expect(() => list.select((d) => d.b).first()).to.not.throw();
+            const first = list.select((d) => d.b).first();
             expect(first).to.eq(undefined);
         });
     });
@@ -690,26 +1017,43 @@ describe("List", () => {
         });
         test("should return null if no matching element is found.", () => {
             const list = new List([99, 2, 3, 4, 5]);
-            expect(list.firstOrDefault(n => n < 0)).to.eq(null);
+            expect(list.firstOrDefault((n) => n < 0)).to.eq(null);
         });
         test("should return a person with name 'Alice'", () => {
             const list = new List([Person.Mel, Person.Alice, Person.Jane]);
-            const first = list.firstOrDefault(p => p.name === "Alice") as Person;
+            const first = list.firstOrDefault(
+                (p) => p.name === "Alice"
+            ) as Person;
             expect(first.name).to.eq("Alice");
         });
         test("should return null if sequence contains only null or undefined", () => {
-            const data = [{a: 1, b: undefined}, {a: 3, b: undefined}, {a: 4, b: 5}];
+            const data = [
+                { a: 1, b: undefined },
+                { a: 3, b: undefined },
+                { a: 4, b: 5 },
+            ];
             const list = new List(data);
-            const first = list.select(d => d.b).firstOrDefault();
+            const first = list.select((d) => d.b).firstOrDefault();
             expect(first).to.eq(undefined);
         });
     });
 
     describe("#get()", () => {
-        const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Lucrezia,
+            Person.Noemi,
+            Person.Priscilla,
+            Person.Vanessa,
+            Person.Viola,
+        ]);
         test("should throw error if index is out of bounds", () => {
-            expect(() => list1.get(-1)).toThrow(new IndexOutOfBoundsException(-1));
-            expect(() => list1.get(6)).toThrow(new IndexOutOfBoundsException(6));
+            expect(() => list1.get(-1)).toThrow(
+                new IndexOutOfBoundsException(-1)
+            );
+            expect(() => list1.get(6)).toThrow(
+                new IndexOutOfBoundsException(6)
+            );
         });
         test("should return the element at the specified index", () => {
             expect(list1.get(0)).to.eq(Person.Alice);
@@ -719,26 +1063,55 @@ describe("List", () => {
     });
 
     describe("#getRange()", () => {
-        const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Lucrezia,
+            Person.Noemi,
+            Person.Priscilla,
+            Person.Vanessa,
+            Person.Viola,
+        ]);
         test("should throw error if index is out of bounds", () => {
-            expect(() => list1.getRange(-1, 3)).toThrow(new IndexOutOfBoundsException(-1));
-            expect(() => list1.getRange(6, 3)).toThrow(new IndexOutOfBoundsException(6));
+            expect(() => list1.getRange(-1, 3)).toThrow(
+                new IndexOutOfBoundsException(-1)
+            );
+            expect(() => list1.getRange(6, 3)).toThrow(
+                new IndexOutOfBoundsException(6)
+            );
         });
         test("should throw error if length is out of bounds", () => {
-            expect(() => list1.getRange(0, 7)).toThrow(new IndexOutOfBoundsException(7));
-            expect(() => list1.getRange(0, -1)).toThrow(new InvalidArgumentException(`Invalid argument: count. count must be greater than or equal to zero.`));
+            expect(() => list1.getRange(0, 7)).toThrow(
+                new IndexOutOfBoundsException(7)
+            );
+            expect(() => list1.getRange(0, -1)).toThrow(
+                new InvalidArgumentException(
+                    `Invalid argument: count. count must be greater than or equal to zero.`
+                )
+            );
         });
         test("should return the elements at the specified index", () => {
             const range = list1.getRange(1, 3);
-            expect(range.toArray()).to.deep.equal([Person.Lucrezia, Person.Noemi, Person.Priscilla]);
+            expect(range.toArray()).to.deep.equal([
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+            ]);
             expect(range.length).to.eq(3);
         });
     });
 
     describe("#groupBy()", () => {
-        const list = new List([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Kaori, Person.Reina]);
+        const list = new List([
+            Person.Alice,
+            Person.Mel,
+            Person.Senna,
+            Person.Lenka,
+            Person.Jane,
+            Person.Kaori,
+            Person.Reina,
+        ]);
         test("should group people by age", () => {
-            const group = list.groupBy(p => p.age).toList();
+            const group = list.groupBy((p) => p.age).toList();
             const ages: number[] = [];
             const groupedAges: { [age: number]: number[] } = {};
             for (const ageGroup of group) {
@@ -751,19 +1124,37 @@ describe("List", () => {
             expect(ages).to.have.all.members([9, 10, 16, 23]);
             for (const g in groupedAges) {
                 const sameAges = groupedAges[g];
-                const expectedAges = new Array(sameAges.length).fill(sameAges[0]);
+                const expectedAges = new Array(sameAges.length).fill(
+                    sameAges[0]
+                );
                 expect(sameAges).to.deep.equal(expectedAges);
             }
         });
         test("should return people who are younger than 16", () => {
-            const kids = list.groupBy(p => p.age).where(pg => pg.key < 16).selectMany(g => g.source).toArray();
+            const kids = list
+                .groupBy((p) => p.age)
+                .where((pg) => pg.key < 16)
+                .selectMany((g) => g.source)
+                .toArray();
             expect(kids.length).to.eq(3);
-            expect(kids).to.have.all.members([Person.Kaori, Person.Mel, Person.Senna]);
+            expect(kids).to.have.all.members([
+                Person.Kaori,
+                Person.Mel,
+                Person.Senna,
+            ]);
         });
         test("should be iterable with for-of loop", () => {
-            const groupedPeople = list.groupBy(p => p.name.length);
+            const groupedPeople = list.groupBy((p) => p.name.length);
             const people: Person[] = [];
-            const expectedResult = [Person.Alice, Person.Senna, Person.Lenka, Person.Kaori, Person.Reina, Person.Mel, Person.Jane];
+            const expectedResult = [
+                Person.Alice,
+                Person.Senna,
+                Person.Lenka,
+                Person.Kaori,
+                Person.Reina,
+                Person.Mel,
+                Person.Jane,
+            ];
             for (const group of groupedPeople) {
                 for (const person of group) {
                     people.push(person);
@@ -774,18 +1165,32 @@ describe("List", () => {
         test("should work with good performance", () => {
             const list = new List<Person>();
             for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
+                const p = new Person(
+                    Helper.generateRandomString(8),
+                    Helper.generateRandomString(10),
+                    Helper.generateRandomNumber(1, 50)
+                );
                 list.add(p);
             }
             const people: Person[] = [];
-            list.groupBy(p => p.age).forEach(g => {
-                g.source.orderBy(n => n).forEach(p => people.push(p));
+            list.groupBy((p) => p.age).forEach((g) => {
+                g.source.orderBy((n) => n).forEach((p) => people.push(p));
             });
         });
         test("should use provided comparator for key comparison", () => {
             const LittleAlice = new Person("alice", "Snowmist", 9);
-            const list = new List([Person.Alice, Person.Mel, Person.Senna, LittleAlice]);
-            const group = list.groupBy(p => p.name, (n1, n2) => n1.toLowerCase() === n2.toLowerCase()).toList();
+            const list = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+                LittleAlice,
+            ]);
+            const group = list
+                .groupBy(
+                    (p) => p.name,
+                    (n1, n2) => n1.toLowerCase() === n2.toLowerCase()
+                )
+                .toList();
             const names: string[] = [];
             const groupedNames: { [name: string]: string[] } = {};
             for (const nameGroup of group) {
@@ -796,7 +1201,10 @@ describe("List", () => {
                 }
             }
             expect(names).to.have.all.members(["Alice", "Mel", "Senna"]);
-            expect(groupedNames["Alice"]).to.have.all.members(["Alice", "alice"]);
+            expect(groupedNames["Alice"]).to.have.all.members([
+                "Alice",
+                "alice",
+            ]);
             expect(groupedNames["Mel"]).to.have.all.members(["Mel"]);
             expect(groupedNames["Senna"]).to.have.all.members(["Senna"]);
         });
@@ -813,20 +1221,39 @@ describe("List", () => {
         const priscilla = new Student(400, "Priscilla", "Necci", 1);
         const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
         const schools = new List([school1, school2, school3, school4]);
-        const students = new List([desiree, apolline, giselle, priscilla, lucrezia]);
+        const students = new List([
+            desiree,
+            apolline,
+            giselle,
+            priscilla,
+            lucrezia,
+        ]);
 
         test("should join and group by school id", () => {
-            const joinedData = schools.groupJoin(students, sc => sc.id, st => st.schoolId,
-                (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                }).orderByDescending(ss => ss.students.size());
+            const joinedData = schools
+                .groupJoin(
+                    students,
+                    (sc) => sc.id,
+                    (st) => st.schoolId,
+                    (school, students) => {
+                        return new SchoolStudents(
+                            school.id,
+                            students?.toList() ?? new List<Student>()
+                        );
+                    }
+                )
+                .orderByDescending((ss) => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];
             for (const sd of finalData) {
-                const school = schools.where(s => s.id === sd.schoolId).single();
+                const school = schools
+                    .where((s) => s.id === sd.schoolId)
+                    .single();
                 finalOutput.push(`Students of ${school.name}: `);
                 for (const student of sd.students) {
-                    finalOutput.push(`[${student.id}] :: ${student.name} ${student.surname}`);
+                    finalOutput.push(
+                        `[${student.id}] :: ${student.name} ${student.surname}`
+                    );
                 }
             }
             const expectedOutput: string[] = [
@@ -837,17 +1264,24 @@ describe("List", () => {
                 "[400] :: Priscilla Necci",
                 "Students of University: ",
                 "[100] :: Desireé Moretti",
-                "Students of Academy: "
+                "Students of Academy: ",
             ];
             expect(finalOutput).to.deep.equal(expectedOutput);
         });
 
         test("should handle empty inner collection", () => {
             const emptyStudents = new List<Student>();
-            const joinedData = schools.groupJoin(emptyStudents, sc => sc.id, st => st.schoolId,
+            const joinedData = schools.groupJoin(
+                emptyStudents,
+                (sc) => sc.id,
+                (st) => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                });
+                    return new SchoolStudents(
+                        school.id,
+                        students?.toList() ?? new List<Student>()
+                    );
+                }
+            );
 
             const result = joinedData.toArray();
             expect(result.length).to.equal(4);
@@ -860,10 +1294,17 @@ describe("List", () => {
 
         test("should handle empty outer collection", () => {
             const emptySchools = new List<School>();
-            const joinedData = emptySchools.groupJoin(students, sc => sc.id, st => st.schoolId,
+            const joinedData = emptySchools.groupJoin(
+                students,
+                (sc) => sc.id,
+                (st) => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                });
+                    return new SchoolStudents(
+                        school.id,
+                        students?.toList() ?? new List<Student>()
+                    );
+                }
+            );
 
             const result = joinedData.toArray();
             expect(result.length).to.equal(0);
@@ -872,13 +1313,20 @@ describe("List", () => {
         test("should handle no matches between collections", () => {
             const unrelatedSchools = new List([
                 new School(10, "Music School"),
-                new School(11, "Art School")
+                new School(11, "Art School"),
             ]);
 
-            const joinedData = unrelatedSchools.groupJoin(students, sc => sc.id, st => st.schoolId,
+            const joinedData = unrelatedSchools.groupJoin(
+                students,
+                (sc) => sc.id,
+                (st) => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                });
+                    return new SchoolStudents(
+                        school.id,
+                        students?.toList() ?? new List<Student>()
+                    );
+                }
+            );
 
             const result = joinedData.toArray();
             expect(result.length).to.equal(2);
@@ -891,109 +1339,200 @@ describe("List", () => {
 
         test("should handle custom equality comparator", () => {
             // Create a custom comparator that considers school IDs equal if they have the same parity (odd/even)
-            const parityComparator = (id1: number, id2: number) => (id1 % 2) === (id2 % 2);
+            const parityComparator = (id1: number, id2: number) =>
+                id1 % 2 === id2 % 2;
 
-            const joinedData = schools.groupJoin(students, sc => sc.id, st => st.schoolId,
+            const joinedData = schools.groupJoin(
+                students,
+                (sc) => sc.id,
+                (st) => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                }, parityComparator);
+                    return new SchoolStudents(
+                        school.id,
+                        students?.toList() ?? new List<Student>()
+                    );
+                },
+                parityComparator
+            );
 
             const result = joinedData.toArray();
 
             // School 1 (odd) should match students with school IDs 1 and 3 (odd)
-            const school1Students = result.find(ss => ss.schoolId === 1)?.students.toArray() ?? [];
+            const school1Students =
+                result.find((ss) => ss.schoolId === 1)?.students.toArray() ??
+                [];
             expect(school1Students.length).to.equal(2);
-            expect(school1Students.map(s => s.id)).to.have.members([100, 400]);
+            expect(school1Students.map((s) => s.id)).to.have.members([
+                100, 400,
+            ]);
 
             // School 2 (even) should match students with school IDs 2 and 4 (even)
-            const school2Students = result.find(ss => ss.schoolId === 2)?.students.toArray() ?? [];
+            const school2Students =
+                result.find((ss) => ss.schoolId === 2)?.students.toArray() ??
+                [];
             expect(school2Students.length).to.equal(3);
-            expect(school2Students.map(s => s.id)).to.have.members([200, 300, 500]);
+            expect(school2Students.map((s) => s.id)).to.have.members([
+                200, 300, 500,
+            ]);
 
             // School 3 (odd) should match students with school IDs 1 and 3 (odd)
-            const school3Students = result.find(ss => ss.schoolId === 3)?.students.toArray() ?? [];
+            const school3Students =
+                result.find((ss) => ss.schoolId === 3)?.students.toArray() ??
+                [];
             expect(school3Students.length).to.equal(2);
-            expect(school3Students.map(s => s.id)).to.have.members([100, 400]);
+            expect(school3Students.map((s) => s.id)).to.have.members([
+                100, 400,
+            ]);
 
             // School 5 (odd) should match students with school IDs 1 and 3 (odd)
-            const school5Students = result.find(ss => ss.schoolId === 5)?.students.toArray() ?? [];
+            const school5Students =
+                result.find((ss) => ss.schoolId === 5)?.students.toArray() ??
+                [];
             expect(school5Students.length).to.equal(2);
-            expect(school5Students.map(s => s.id)).to.have.members([100, 400]);
+            expect(school5Students.map((s) => s.id)).to.have.members([
+                100, 400,
+            ]);
         });
 
         test("should handle different key selectors", () => {
             // Use a string key selector that converts the ID to a string
-            const joinedData = schools.groupJoin(students, sc => sc.id.toString(), st => st.schoolId.toString(),
+            const joinedData = schools.groupJoin(
+                students,
+                (sc) => sc.id.toString(),
+                (st) => st.schoolId.toString(),
                 (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                });
+                    return new SchoolStudents(
+                        school.id,
+                        students?.toList() ?? new List<Student>()
+                    );
+                }
+            );
 
             const result = joinedData.toArray();
             expect(result.length).to.equal(4);
 
             // Verify the same grouping as the original test
-            const school1Students = result.find(ss => ss.schoolId === 1)?.students.toArray() ?? [];
+            const school1Students =
+                result.find((ss) => ss.schoolId === 1)?.students.toArray() ??
+                [];
             expect(school1Students.length).to.equal(1);
             expect(school1Students[0].id).to.equal(400);
 
-            const school2Students = result.find(ss => ss.schoolId === 2)?.students.toArray() ?? [];
+            const school2Students =
+                result.find((ss) => ss.schoolId === 2)?.students.toArray() ??
+                [];
             expect(school2Students.length).to.equal(2);
-            expect(school2Students.map(s => s.id)).to.have.members([200, 300]);
+            expect(school2Students.map((s) => s.id)).to.have.members([
+                200, 300,
+            ]);
 
-            const school3Students = result.find(ss => ss.schoolId === 3)?.students.toArray() ?? [];
+            const school3Students =
+                result.find((ss) => ss.schoolId === 3)?.students.toArray() ??
+                [];
             expect(school3Students.length).to.equal(1);
             expect(school3Students[0].id).to.equal(100);
 
-            const school5Students = result.find(ss => ss.schoolId === 5)?.students.toArray() ?? [];
+            const school5Students =
+                result.find((ss) => ss.schoolId === 5)?.students.toArray() ??
+                [];
             expect(school5Students.length).to.equal(0);
         });
 
         test("should handle null keys", () => {
             // Create students with null school IDs
-            const studentWithNullSchool1 = new Student(600, "Student", "WithNullSchool1", null as any);
-            const studentWithNullSchool2 = new Student(700, "Student", "WithNullSchool2", null as any);
+            const studentWithNullSchool1 = new Student(
+                600,
+                "Student",
+                "WithNullSchool1",
+                null as any
+            );
+            const studentWithNullSchool2 = new Student(
+                700,
+                "Student",
+                "WithNullSchool2",
+                null as any
+            );
 
             // Create a school with null ID
             const schoolWithNullId = new School(null as any, "Null ID School");
 
-            const schoolsWithNull = new List([...schools.toArray(), schoolWithNullId]);
-            const studentsWithNull = new List([...students.toArray(), studentWithNullSchool1, studentWithNullSchool2]);
+            const schoolsWithNull = new List([
+                ...schools.toArray(),
+                schoolWithNullId,
+            ]);
+            const studentsWithNull = new List([
+                ...students.toArray(),
+                studentWithNullSchool1,
+                studentWithNullSchool2,
+            ]);
 
-            const joinedData = schoolsWithNull.groupJoin(studentsWithNull, sc => sc.id, st => st.schoolId,
+            const joinedData = schoolsWithNull.groupJoin(
+                studentsWithNull,
+                (sc) => sc.id,
+                (st) => st.schoolId,
                 (school, students) => {
-                    return new SchoolStudents(school.id, students?.toList() ?? new List<Student>());
-                });
+                    return new SchoolStudents(
+                        school.id,
+                        students?.toList() ?? new List<Student>()
+                    );
+                }
+            );
 
             const result = joinedData.toArray();
             expect(result.length).to.equal(5);
 
             // The null ID school should match students with null school IDs
-            const nullSchoolStudents = result.find(ss => ss.schoolId === null)?.students.toArray() ?? [];
+            const nullSchoolStudents =
+                result.find((ss) => ss.schoolId === null)?.students.toArray() ??
+                [];
             expect(nullSchoolStudents.length).to.equal(2);
-            expect(nullSchoolStudents.map(s => s.id)).to.have.members([600, 700]);
+            expect(nullSchoolStudents.map((s) => s.id)).to.have.members([
+                600, 700,
+            ]);
         });
 
         test("should handle complex result selector", () => {
             // Use a more complex result selector that creates a formatted string
-            const joinedData = schools.groupJoin(students, sc => sc.id, st => st.schoolId,
+            const joinedData = schools.groupJoin(
+                students,
+                (sc) => sc.id,
+                (st) => st.schoolId,
                 (school, students) => {
                     const studentCount = students!.count();
-                    const studentNames = students!.select(s => `${s.name} ${s.surname}`).toArray().join(", ");
-                    return `${school.name} (${studentCount} students): ${studentCount > 0 ? studentNames : "No students"}`;
-                });
+                    const studentNames = students!
+                        .select((s) => `${s.name} ${s.surname}`)
+                        .toArray()
+                        .join(", ");
+                    return `${school.name} (${studentCount} students): ${
+                        studentCount > 0 ? studentNames : "No students"
+                    }`;
+                }
+            );
 
             const result = joinedData.toArray();
             expect(result.length).to.equal(4);
 
-            expect(result).to.include("Elementary School (1 students): Priscilla Necci");
-            expect(result).to.include("High School (2 students): Apolline Bruyere, Giselle García");
-            expect(result).to.include("University (1 students): Desireé Moretti");
+            expect(result).to.include(
+                "Elementary School (1 students): Priscilla Necci"
+            );
+            expect(result).to.include(
+                "High School (2 students): Apolline Bruyere, Giselle García"
+            );
+            expect(result).to.include(
+                "University (1 students): Desireé Moretti"
+            );
             expect(result).to.include("Academy (0 students): No students");
         });
     });
 
     describe("#index()", () => {
-        const list1 = new List([Person.Kaori, Person.Mirei, Person.Rui, Person.Setsuna, Person.Reina]);
+        const list1 = new List([
+            Person.Kaori,
+            Person.Mirei,
+            Person.Rui,
+            Person.Setsuna,
+            Person.Reina,
+        ]);
         test("should return a tuple of [index, element]", () => {
             const indexPersonTuple = list1.index().toArray();
             expect(indexPersonTuple[0][0]).to.eq(0);
@@ -1015,7 +1554,13 @@ describe("List", () => {
     });
 
     describe("#indexOf()", () => {
-        const list1 = new List([Person.Alice, Person.Noemi, null, Person.Noemi2, null]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Noemi,
+            null,
+            Person.Noemi2,
+            null,
+        ]);
         test("should return 2", () => {
             expect(list1.indexOf(null)).to.eq(2);
         });
@@ -1023,7 +1568,8 @@ describe("List", () => {
             expect(list1.indexOf(Person.Noemi)).to.eq(1);
         });
         test("should use the given comparator", () => {
-            const ageComparator = (p1: Person | null, p2: Person | null) => p1?.age === p2?.age;
+            const ageComparator = (p1: Person | null, p2: Person | null) =>
+                p1?.age === p2?.age;
             const index = list1.indexOf(Person.Noemi2, ageComparator);
             expect(index).to.eq(3);
         });
@@ -1044,7 +1590,7 @@ describe("List", () => {
             expect(elist.toArray()).to.deep.equal([3, 4, 5]);
         });
         test("should return an empty array if second list is empty", () => {
-            const list1 = new List([1, 1,2]);
+            const list1 = new List([1, 1, 2]);
             const list2 = new List<number>();
             const elist = list1.intersect(list2).toList();
             expect(elist.toArray()).to.deep.equal([]);
@@ -1056,47 +1602,113 @@ describe("List", () => {
             expect(elist.toArray()).to.deep.equal([4, 5]);
         });
         test("should only have 'Mel', 'Lenka' and 'Jane'", () => {
-            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Mel,
+                Person.Senna,
+                Person.Lenka,
+                Person.Jane,
+            ]);
+            const list2 = new List([
+                Person.Mel,
+                Person.Lenka,
+                Person.Jane,
+                Person.Noemi2,
+            ]);
             const elist = list1.intersect(list2);
-            expect(elist.toArray()).to.deep.equal([Person.Mel, Person.Lenka, Person.Jane]);
+            expect(elist.toArray()).to.deep.equal([
+                Person.Mel,
+                Person.Lenka,
+                Person.Jane,
+            ]);
         });
         test("should only have 'Noemi', 'Mel', 'Lenka' and 'Jane'", () => {
-            const list1 = new List([Person.Alice, Person.Noemi, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const list2 = new List([Person.Mel, Person.Lenka, Person.Jane, Person.Noemi2]);
-            const elist = list1.intersect(list2, (p1, p2) => p1.name === p2.name);
-            expect(elist.toArray()).to.deep.equal([Person.Noemi, Person.Mel, Person.Lenka, Person.Jane]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Noemi,
+                Person.Mel,
+                Person.Senna,
+                Person.Lenka,
+                Person.Jane,
+            ]);
+            const list2 = new List([
+                Person.Mel,
+                Person.Lenka,
+                Person.Jane,
+                Person.Noemi2,
+            ]);
+            const elist = list1.intersect(
+                list2,
+                (p1, p2) => p1.name === p2.name
+            );
+            expect(elist.toArray()).to.deep.equal([
+                Person.Noemi,
+                Person.Mel,
+                Person.Lenka,
+                Person.Jane,
+            ]);
         });
-        test("should return a set of people common in both enumerables", {timeout: 10000}, () => {
-            const list1 = new List<Person>();
-            const list2 = new List<Person>();
-            for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
-                list1.add(p);
+        test(
+            "should return a set of people common in both enumerables",
+            { timeout: 10000 },
+            () => {
+                const list1 = new List<Person>();
+                const list2 = new List<Person>();
+                for (let px = 0; px < 100000; ++px) {
+                    const p = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 90)
+                    );
+                    list1.add(p);
+                }
+                for (let px = 0; px < 100000; ++px) {
+                    const p = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 50)
+                    );
+                    list2.add(p);
+                }
+                const exceptionList = list1.intersect(
+                    list2,
+                    (p1, p2) => p1.age === p2.age
+                );
+                const ageCount = exceptionList.count((p) => p.age > 50);
+                expect(ageCount).to.eq(0);
             }
-            for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
-                list2.add(p);
+        );
+        test(
+            "should use order comparator and return a set of people common in both enumerables",
+            { timeout: 10000 },
+            () => {
+                const list1 = new List<Person>();
+                const list2 = new List<Person>();
+                for (let px = 0; px < 100000; ++px) {
+                    const p = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 90)
+                    );
+                    list1.add(p);
+                }
+                for (let px = 0; px < 100000; ++px) {
+                    const p = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 50)
+                    );
+                    list2.add(p);
+                }
+                const exceptionList = list1.intersect(
+                    list2,
+                    (p1, p2) => p1.age - p2.age
+                );
+                const ageCount = exceptionList.count((p) => p.age > 50);
+                expect(ageCount).to.eq(0);
             }
-            const exceptionList = list1.intersect(list2, (p1, p2) => p1.age === p2.age);
-            const ageCount = exceptionList.count(p => p.age > 50);
-            expect(ageCount).to.eq(0);
-        });
-        test("should use order comparator and return a set of people common in both enumerables", {timeout: 10000}, () => {
-            const list1 = new List<Person>();
-            const list2 = new List<Person>();
-            for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
-                list1.add(p);
-            }
-            for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
-                list2.add(p);
-            }
-            const exceptionList = list1.intersect(list2, (p1, p2) => p1.age - p2.age);
-            const ageCount = exceptionList.count(p => p.age > 50);
-            expect(ageCount).to.eq(0);
-        });
+        );
         test("should not fail if the list has falsy values", () => {
             const list1 = new List([0, undefined, null, false, 1, 2, 3]);
             const list2 = new List([undefined, 0]);
@@ -1109,31 +1721,36 @@ describe("List", () => {
         const list1 = new List([Person.Alice, Person.Noemi]);
         const list2 = new List([Person.Mel, Person.Noemi2]);
         test("should only have 'Noemi'", () => {
-            const elist = list1.intersectBy(list2, p => p.name);
+            const elist = list1.intersectBy(list2, (p) => p.name);
             expect(elist.toArray()).to.deep.equal([Person.Noemi]);
         });
         test("should be empty", () => {
-            const elist = list1.intersectBy(list2, p => p);
+            const elist = list1.intersectBy(list2, (p) => p);
             expect(elist.toArray()).to.deep.equal([]);
         });
         test("shoud return empty list #2", () => {
             const list3 = new List([Person.Noemi, Person.Noemi2]);
             const list4 = new List<Person>([]);
-            const elist = list3.intersectBy(list4, p => p.name);
+            const elist = list3.intersectBy(list4, (p) => p.name);
             expect(elist.toArray()).to.deep.equal([]);
         });
         test("should return empty if first list is empty", () => {
             const list5 = new List<Person>();
             const list6 = new List([Person.Eliza, Person.Viola]);
-            const elist = list5.intersectBy(list6, p => p.name);
+            const elist = list5.intersectBy(list6, (p) => p.name);
             expect(elist.toArray()).to.deep.equal([]);
         });
         test("should use provided comparator", () => {
             const LittleNoemi = new Person("noemi", "Nymph", 9);
             const list3 = new List([Person.Alice, LittleNoemi]);
             const list4 = new List([Person.Mel, Person.Noemi2]);
-            const elist = list3.intersectBy(list4, p => p.name);
-            const elist2 = list3.intersectBy(list2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
+            const elist = list3.intersectBy(list4, (p) => p.name);
+            const elist2 = list3.intersectBy(
+                list2,
+                (p) => p.name,
+                (n1, n2) =>
+                    n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0
+            );
             expect(elist.toArray()).to.deep.equal([]);
             expect(elist2.toArray()).to.deep.equal([LittleNoemi]);
         });
@@ -1143,7 +1760,17 @@ describe("List", () => {
         test("should return [1, 'a', 2, 'a', 3, 'a', 4, 'a', 5]", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const interspersed = list.intersperse("a").toList();
-            expect(interspersed.toArray()).to.deep.equal([1, "a", 2, "a", 3, "a", 4, "a", 5]);
+            expect(interspersed.toArray()).to.deep.equal([
+                1,
+                "a",
+                2,
+                "a",
+                3,
+                "a",
+                4,
+                "a",
+                5,
+            ]);
             expect(interspersed.length).to.eq(9);
         });
         test("should return empty list if list is empty", () => {
@@ -1155,12 +1782,18 @@ describe("List", () => {
     });
 
     describe("#isEmpty()", () => {
-        const list1 = new List([Person.Alice, Person.Noemi, null, Person.Noemi2, null]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Noemi,
+            null,
+            Person.Noemi2,
+            null,
+        ]);
         test("should return false if list is not empty", () => {
             expect(list1.isEmpty()).to.false;
         });
         test("should return true if list is empty", () => {
-            list1.removeIf(p => !p || !!p);
+            list1.removeIf((p) => !p || !!p);
             expect(list1.isEmpty()).to.true;
         });
     });
@@ -1175,22 +1808,43 @@ describe("List", () => {
         const priscilla = new Student(400, "Priscilla", "Necci", 1);
         const lucrezia = new Student(500, "Lucrezia", "Volpe", 4);
         const schools = new List([school1, school2, school3]);
-        const students = new List([desiree, apolline, giselle, priscilla, lucrezia]);
+        const students = new List([
+            desiree,
+            apolline,
+            giselle,
+            priscilla,
+            lucrezia,
+        ]);
         test("should join students and schools", () => {
-            const joinedData = students.join(schools, st => st.schoolId, sc => sc.id,
-                (student, school) => `${student.name} ${student.surname} :: ${school?.name}`).toList();
+            const joinedData = students
+                .join(
+                    schools,
+                    (st) => st.schoolId,
+                    (sc) => sc.id,
+                    (student, school) =>
+                        `${student.name} ${student.surname} :: ${school?.name}`
+                )
+                .toList();
             const expectedOutputDataList = [
                 "Desireé Moretti :: University",
                 "Apolline Bruyere :: High School",
                 "Giselle García :: High School",
-                "Priscilla Necci :: Elementary School"
+                "Priscilla Necci :: Elementary School",
             ];
             expect(joinedData.size()).to.eq(4);
             expect(joinedData.toArray()).to.deep.equal(expectedOutputDataList);
         });
         test("should set null for school if left join is true", () => {
-            const joinedData = students.join(schools, st => st.schoolId, sc => sc.id,
-                (student, school) => [student, school], (stid, scid) => stid === scid, true).toArray();
+            const joinedData = students
+                .join(
+                    schools,
+                    (st) => st.schoolId,
+                    (sc) => sc.id,
+                    (student, school) => [student, school],
+                    (stid, scid) => stid === scid,
+                    true
+                )
+                .toArray();
             for (const jd of joinedData) {
                 if ((jd[0] as Student).surname === "Volpe") {
                     expect(jd[1]).to.eq(null);
@@ -1200,15 +1854,30 @@ describe("List", () => {
             }
         });
         test("should join key-value pairs", () => {
-            const pairList1 = new List([new Pair(1, "A"), new Pair(2, "B"), new Pair(3, "C")]);
-            const pairList2 = new List([new Pair(1, "a1"), new Pair(1, "a2"), new Pair(1, "a3"), new Pair(2, "b1"), new Pair(2, "b2")]);
-            const joinList = pairList1.join(pairList2, p1 => p1.key, p2 => p2.key, (pair1, pair2) => [pair1.value, pair2?.value]);
+            const pairList1 = new List([
+                new Pair(1, "A"),
+                new Pair(2, "B"),
+                new Pair(3, "C"),
+            ]);
+            const pairList2 = new List([
+                new Pair(1, "a1"),
+                new Pair(1, "a2"),
+                new Pair(1, "a3"),
+                new Pair(2, "b1"),
+                new Pair(2, "b2"),
+            ]);
+            const joinList = pairList1.join(
+                pairList2,
+                (p1) => p1.key,
+                (p2) => p2.key,
+                (pair1, pair2) => [pair1.value, pair2?.value]
+            );
             const expectedOutput = [
                 ["A", "a1"],
                 ["A", "a2"],
                 ["A", "a3"],
                 ["B", "b1"],
-                ["B", "b2"]
+                ["B", "b2"],
             ];
             expect(joinList.toArray()).to.deep.equal(expectedOutput);
             expect(joinList.toList().length).to.eq(5);
@@ -1216,24 +1885,40 @@ describe("List", () => {
 
         test("should return empty result when outer collection is empty", () => {
             const emptyStudents = new List<Student>();
-            const joinedData = emptyStudents.join(schools, st => st.schoolId, sc => sc.id,
-                (student, school) => `${student.name} ${student.surname} :: ${school?.name}`);
+            const joinedData = emptyStudents.join(
+                schools,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) =>
+                    `${student.name} ${student.surname} :: ${school?.name}`
+            );
             expect(joinedData.any()).to.be.false;
             expect(joinedData.count()).to.eq(0);
         });
 
         test("should return empty result when inner collection is empty", () => {
             const emptySchools = new List<School>();
-            const joinedData = students.join(emptySchools, st => st.schoolId, sc => sc.id,
-                (student, school) => `${student.name} ${student.surname} :: ${school?.name}`);
+            const joinedData = students.join(
+                emptySchools,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) =>
+                    `${student.name} ${student.surname} :: ${school?.name}`
+            );
             expect(joinedData.any()).to.be.false;
             expect(joinedData.count()).to.eq(0);
         });
 
         test("should return results for left join when inner collection is empty", () => {
             const emptySchools = new List<School>();
-            const joinedData = students.join(emptySchools, st => st.schoolId, sc => sc.id,
-                (student, school) => [student.name, school?.name], undefined, true);
+            const joinedData = students.join(
+                emptySchools,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) => [student.name, school?.name],
+                undefined,
+                true
+            );
             expect(joinedData.count()).to.eq(5);
             for (const item of joinedData) {
                 expect(item[1]).to.be.undefined;
@@ -1242,27 +1927,44 @@ describe("List", () => {
 
         test("should handle custom equality comparator", () => {
             // Custom comparator that considers school IDs equal if they have the same parity (odd/even)
-            const parityComparator = (id1: number, id2: number) => id1 % 2 === id2 % 2;
+            const parityComparator = (id1: number, id2: number) =>
+                id1 % 2 === id2 % 2;
 
-            const joinedData = students.join(schools, st => st.schoolId, sc => sc.id,
-                (student, school) => `${student.name} at ${school?.name}`, parityComparator);
+            const joinedData = students.join(
+                schools,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) => `${student.name} at ${school?.name}`,
+                parityComparator
+            );
 
             // All students should match with at least one school since we're matching by parity
             expect(joinedData.count()).to.be.greaterThan(0);
 
             // Lucrezia (schoolId 4) should match with schools with even IDs (2)
-            const lucreziaMatches = joinedData.where(s => s.startsWith("Lucrezia")).count();
+            const lucreziaMatches = joinedData
+                .where((s) => s.startsWith("Lucrezia"))
+                .count();
             expect(lucreziaMatches).to.be.greaterThan(0);
         });
 
         test("should handle null keys in outer collection", () => {
             const studentsWithNull = new List([
                 desiree,
-                new Student(600, "Student", "WithNullSchool", null as unknown as number)
+                new Student(
+                    600,
+                    "Student",
+                    "WithNullSchool",
+                    null as unknown as number
+                ),
             ]);
 
-            const joinedData = studentsWithNull.join(schools, st => st.schoolId, sc => sc.id,
-                (student, school) => [student.name, school?.name]);
+            const joinedData = studentsWithNull.join(
+                schools,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) => [student.name, school?.name]
+            );
 
             // Only Desiree should match
             expect(joinedData.count()).to.eq(1);
@@ -1272,11 +1974,15 @@ describe("List", () => {
         test("should handle null keys in inner collection", () => {
             const schoolsWithNull = new List([
                 school1,
-                new School(null as unknown as number, "School with null ID")
+                new School(null as unknown as number, "School with null ID"),
             ]);
 
-            const joinedData = students.join(schoolsWithNull, st => st.schoolId, sc => sc.id,
-                (student, school) => [student.name, school?.name]);
+            const joinedData = students.join(
+                schoolsWithNull,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) => [student.name, school?.name]
+            );
 
             // Only Priscilla should match with school1
             expect(joinedData.count()).to.eq(1);
@@ -1291,20 +1997,30 @@ describe("List", () => {
                 new School(2, "High School 1"),
                 new School(2, "High School 2"),
                 new School(3, "University 1"),
-                new School(3, "University 2")
+                new School(3, "University 2"),
             ]);
 
-            const joinedData = students.join(schoolsWithDuplicates, st => st.schoolId, sc => sc.id,
-                (student, school) => `${student.name} at ${school?.name}`);
+            const joinedData = students.join(
+                schoolsWithDuplicates,
+                (st) => st.schoolId,
+                (sc) => sc.id,
+                (student, school) => `${student.name} at ${school?.name}`
+            );
 
             // Each student should match with two schools (except Lucrezia)
             expect(joinedData.count()).to.eq(8); // 4 students * 2 schools each
 
             // Check that Priscilla matches with both Elementary Schools
-            const priscillaMatches = joinedData.where(s => s.startsWith("Priscilla")).toArray();
+            const priscillaMatches = joinedData
+                .where((s) => s.startsWith("Priscilla"))
+                .toArray();
             expect(priscillaMatches.length).to.eq(2);
-            expect(priscillaMatches).to.include("Priscilla at Elementary School 1");
-            expect(priscillaMatches).to.include("Priscilla at Elementary School 2");
+            expect(priscillaMatches).to.include(
+                "Priscilla at Elementary School 1"
+            );
+            expect(priscillaMatches).to.include(
+                "Priscilla at Elementary School 2"
+            );
         });
     });
 
@@ -1320,24 +2036,38 @@ describe("List", () => {
         });
         test("should throw an error if no matching element is found.", () => {
             const list = new List([99, 2, 3, 4, 5]);
-            expect(() => list.last(n => n < 0)).toThrowError(new NoMatchingElementException());
+            expect(() => list.last((n) => n < 0)).toThrowError(
+                new NoMatchingElementException()
+            );
         });
         test("should return 87", () => {
-            const list = new List([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
-            const last = list.last(p => p > 80);
+            const list = new List([
+                9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19,
+            ]);
+            const last = list.last((p) => p > 80);
             expect(last).to.eq(87);
         });
         test("should not throw error if sequence contains only null or undefined items", () => {
-            const data = [{a: 1, b: 5}, {a: 3, b: undefined}, {a: 4, b: null}];
+            const data = [
+                { a: 1, b: 5 },
+                { a: 3, b: undefined },
+                { a: 4, b: null },
+            ];
             const list = new List(data);
-            expect(() => list.select(d => d.b).last()).to.not.throw();
-            const last = list.select(d => d.b).last();
+            expect(() => list.select((d) => d.b).last()).to.not.throw();
+            const last = list.select((d) => d.b).last();
             expect(last).to.eq(null);
         });
     });
 
     describe("#lastIndexOf()", () => {
-        const list1 = new List([Person.Alice, Person.Noemi, null, Person.Noemi2, null]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Noemi,
+            null,
+            Person.Noemi2,
+            null,
+        ]);
         test("should return 4", () => {
             expect(list1.lastIndexOf(null)).to.eq(4);
         });
@@ -1345,12 +2075,13 @@ describe("List", () => {
             expect(list1.lastIndexOf(Person.Noemi)).to.eq(1);
         });
         test("should use the given comparator", () => {
-            const nameComparator = (p1: Person | null, p2: Person | null) => p1?.name === p2?.name;
+            const nameComparator = (p1: Person | null, p2: Person | null) =>
+                p1?.name === p2?.name;
             const index = list1.lastIndexOf(Person.Noemi, nameComparator);
             expect(index).to.eq(3);
         });
         test("should return -1", () => {
-            list1.removeIf(p => !p);
+            list1.removeIf((p) => !p);
             expect(list1.lastIndexOf(null)).to.eq(-1);
         });
     });
@@ -1367,17 +2098,23 @@ describe("List", () => {
         });
         test("should return null if no matching element is found.", () => {
             const list = new List([99, 2, 3, 4, 5]);
-            expect(list.lastOrDefault(n => n < 0)).to.eq(null);
+            expect(list.lastOrDefault((n) => n < 0)).to.eq(null);
         });
         test("should return 87", () => {
-            const list = new List([9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19]);
-            const last = list.lastOrDefault(p => p > 80);
+            const list = new List([
+                9, 34, 65, 92, 87, 435, 3, 54, 83, 23, 87, 67, 12, 19,
+            ]);
+            const last = list.lastOrDefault((p) => p > 80);
             expect(last).to.eq(87);
         });
         test("should return null if sequence contains only null or undefined items", () => {
-            const data = [{a: 1, b: 5}, {a: 3, b: undefined}, {a: 4, b: null}];
+            const data = [
+                { a: 1, b: 5 },
+                { a: 3, b: undefined },
+                { a: 4, b: null },
+            ];
             const list = new List(data);
-            const last = list.select(d => d.b).lastOrDefault();
+            const last = list.select((d) => d.b).lastOrDefault();
             expect(last).to.eq(null);
         });
     });
@@ -1385,95 +2122,137 @@ describe("List", () => {
     describe("#max()", () => {
         const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
         test("should return 2312", () => {
-            const max = list.max(n => n);
+            const max = list.max((n) => n);
             const max2 = list.max();
             expect(max).to.eq(2312);
             expect(max2).to.eq(max);
         });
         test("should return 23", () => {
-            const personList = new List([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const max = personList.max(p => p.age);
+            const personList = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+                Person.Lenka,
+                Person.Jane,
+            ]);
+            const max = personList.max((p) => p.age);
             expect(max).to.eq(23);
         });
         test("should throw if list has no elements", () => {
             const list = new List<number>();
             expect(() => list.max()).toThrow(new NoElementsException());
-            expect(() => list.max(n => n * 2)).toThrow(new NoElementsException());
+            expect(() => list.max((n) => n * 2)).toThrow(
+                new NoElementsException()
+            );
         });
     });
     describe("#maxBy()", () => {
         test("should return person with the biggest age", () => {
-            const personList = new List([Person.Alice, Person.Ayana, Person.Setsuna]);
-            const oldest = personList.maxBy(p => p.age);
+            const personList = new List([
+                Person.Alice,
+                Person.Ayana,
+                Person.Setsuna,
+            ]);
+            const oldest = personList.maxBy((p) => p.age);
             expect(oldest).to.eq(Person.Ayana);
         });
         test("should return biggest element", () => {
-            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
-            const max = list.maxBy(n => n);
+            const list = new List([
+                43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011,
+            ]);
+            const max = list.maxBy((n) => n);
             expect(max).to.eq(2312);
         });
         test("should use provided comparator", () => {
-            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
-            const max = list.maxBy(n => n, (n1, n2) => n2 - n1); // should return the smallest element
+            const list = new List([
+                43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011,
+            ]);
+            const max = list.maxBy(
+                (n) => n,
+                (n1, n2) => n2 - n1
+            ); // should return the smallest element
             expect(max).to.eq(1);
         });
         test("should throw if list has no elements", () => {
             const list = new List<Person>();
-            expect(() => list.maxBy(p => p.age)).toThrow(new NoElementsException());
+            expect(() => list.maxBy((p) => p.age)).toThrow(
+                new NoElementsException()
+            );
         });
     });
     describe("#min()", () => {
         const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
         test("should return 1", () => {
-            const min = list.min(n => n);
+            const min = list.min((n) => n);
             const min2 = list.min();
             expect(min).to.eq(1);
             expect(min2).to.eq(min);
         });
         test("should return 9", () => {
-            const personList = new List([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane]);
-            const min = personList.min(p => p.age);
+            const personList = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+                Person.Lenka,
+                Person.Jane,
+            ]);
+            const min = personList.min((p) => p.age);
             expect(min).to.eq(9);
         });
         test("should throw if list has no elements", () => {
             const list = new List<number>();
             expect(() => list.min()).toThrow(new NoElementsException());
-            expect(() => list.min(n => n / 2)).toThrow(new NoElementsException());
+            expect(() => list.min((n) => n / 2)).toThrow(
+                new NoElementsException()
+            );
         });
     });
     describe("#minBy()", () => {
         test("should return person with the smallest age", () => {
-            const personList = new List([Person.Alice, Person.Ayana, Person.Setsuna]);
-            const youngest = personList.minBy(p => p.age);
+            const personList = new List([
+                Person.Alice,
+                Person.Ayana,
+                Person.Setsuna,
+            ]);
+            const youngest = personList.minBy((p) => p.age);
             expect(youngest).to.eq(Person.Setsuna);
         });
         test("should return smallest element", () => {
-            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
-            const min = list.minBy(n => n);
+            const list = new List([
+                43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011,
+            ]);
+            const min = list.minBy((n) => n);
             expect(min).to.eq(1);
         });
         test("should use provided comparator", () => {
-            const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
-            const min = list.minBy(n => n, (n1, n2) => n2 - n1); // should return the biggest element
+            const list = new List([
+                43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011,
+            ]);
+            const min = list.minBy(
+                (n) => n,
+                (n1, n2) => n2 - n1
+            ); // should return the biggest element
             expect(min).to.eq(2312);
         });
         test("should throw if list has no elements", () => {
             const list = new List<Person>();
-            expect(() => list.minBy(p => p.age)).toThrow(new NoElementsException());
+            expect(() => list.minBy((p) => p.age)).toThrow(
+                new NoElementsException()
+            );
         });
     });
     describe("#none()", () => {
         test("should return true if list is empty", () => {
             const list = new List<number>();
-            expect(list.none(n => n > 1)).to.true;
+            expect(list.none((n) => n > 1)).to.true;
         });
         test("should return true if no element matches the predicate", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            expect(list.none(n => n > 5)).to.true;
+            expect(list.none((n) => n > 5)).to.true;
         });
         test("should return false if an element matches the predicate", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            expect(list.none(n => n === 3)).to.false;
+            expect(list.none((n) => n === 3)).to.false;
         });
         test("should return true if list is empty and no predicate is provided", () => {
             const list = new List<number>();
@@ -1499,10 +2278,18 @@ describe("List", () => {
             return 1;
         };
         const list = new List([
-            1, 2, 3,
-            "4", "5", "6",
-            7, 8, 9, 10,
-            true, false,
+            1,
+            2,
+            3,
+            "4",
+            "5",
+            "6",
+            7,
+            8,
+            9,
+            10,
+            true,
+            false,
             Number(999),
             symbol,
             object,
@@ -1512,7 +2299,7 @@ describe("List", () => {
             bigint2,
             ["x", "y", "z"],
             generator,
-            func
+            func,
         ]);
         test("should return an array of numbers via Number constructor", () => {
             const numbers = list.ofType(Number).toArray();
@@ -1548,11 +2335,21 @@ describe("List", () => {
         });
         test("should return an array of objects", () => {
             const objects = list.ofType(Object).toArray();
-            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
+            expect(objects).to.deep.equal([
+                object,
+                Person.Mirei,
+                Person.Alice,
+                ["x", "y", "z"],
+            ]);
         });
         test("should return an array of objects via typeof", () => {
             const objects = list.ofType("object").toArray();
-            expect(objects).to.deep.equal([object, Person.Mirei, Person.Alice, ["x", "y", "z"]]);
+            expect(objects).to.deep.equal([
+                object,
+                Person.Mirei,
+                Person.Alice,
+                ["x", "y", "z"],
+            ]);
         });
         test("should return an array of Person", () => {
             const people = list.ofType(Person).toArray();
@@ -1579,25 +2376,64 @@ describe("List", () => {
             expect(functions).to.deep.equal([generator, func]);
         });
         test("should return an array of strings and numbers", () => {
-            const stringsAndNumbers = [...list.ofType(String), ...list.ofType(Number)];
-            expect(stringsAndNumbers).to.deep.equal(["4", "5", "6", 1, 2, 3, 7, 8, 9, 10, 999]);
+            const stringsAndNumbers = [
+                ...list.ofType(String),
+                ...list.ofType(Number),
+            ];
+            expect(stringsAndNumbers).to.deep.equal([
+                "4",
+                "5",
+                "6",
+                1,
+                2,
+                3,
+                7,
+                8,
+                9,
+                10,
+                999,
+            ]);
         });
     });
 
     describe("#orderBy()", () => {
         test("should order people by age [asc]", () => {
-            const people = new List([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
-            const orderedPeople = people.orderBy(p => p.age);
-            const orderedPeopleAges = orderedPeople.select(p => p.age);
+            const people = new List([
+                Person.Alice,
+                Person.Lenka,
+                Person.Jane,
+                Person.Jisu,
+                Person.Kaori,
+                Person.Mel,
+                Person.Rebecca,
+                Person.Reina,
+                Person.Senna,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
+            const orderedPeople = people.orderBy((p) => p.age);
+            const orderedPeopleAges = orderedPeople.select((p) => p.age);
             const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
         });
     });
     describe("#orderByDescending()", () => {
         test("should order people by age [desc]", () => {
-            const people = new List([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
-            const orderedPeople = people.orderByDescending(p => p.age);
-            const orderedPeopleAges = orderedPeople.select(p => p.age);
+            const people = new List([
+                Person.Alice,
+                Person.Lenka,
+                Person.Jane,
+                Person.Jisu,
+                Person.Kaori,
+                Person.Mel,
+                Person.Rebecca,
+                Person.Reina,
+                Person.Senna,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
+            const orderedPeople = people.orderByDescending((p) => p.age);
+            const orderedPeopleAges = orderedPeople.select((p) => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
         });
@@ -1605,16 +2441,25 @@ describe("List", () => {
 
     describe("#pairwise()", () => {
         const list = new List(["a", "b", "c", "d", "e", "f"]);
-        const result = list.pairwise((prev, curr) => [`->${prev}`, `${curr}<-`]);
+        const result = list.pairwise((prev, curr) => [
+            `->${prev}`,
+            `${curr}<-`,
+        ]);
         test("should create an enumerable that pairs up the values", () => {
-            expect(result.toArray()).to.deep.equal([["->a", "b<-"], ["->b", "c<-"], ["->c", "d<-"], ["->d", "e<-"], ["->e", "f<-"]]);
+            expect(result.toArray()).to.deep.equal([
+                ["->a", "b<-"],
+                ["->b", "c<-"],
+                ["->c", "d<-"],
+                ["->d", "e<-"],
+                ["->e", "f<-"],
+            ]);
         });
     });
 
     describe("#partition()", () => {
         test("should partition the list into two lists", () => {
             const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-            const [evens, odds] = list.partition(n => n % 2 === 0);
+            const [evens, odds] = list.partition((n) => n % 2 === 0);
             expect(evens.toArray()).to.deep.equal([2, 4, 6, 8, 10]);
             expect(odds.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
         });
@@ -1623,20 +2468,26 @@ describe("List", () => {
     describe("#permutations()", () => {
         test("should return all permutations of the list", () => {
             const list = new List([1, 2, 3]);
-            const perms = list.permutations().select(p => p.toArray()).toArray();
+            const perms = list
+                .permutations()
+                .select((p) => p.toArray())
+                .toArray();
             const expected = [
                 [1, 2, 3],
                 [1, 3, 2],
                 [2, 1, 3],
                 [2, 3, 1],
                 [3, 1, 2],
-                [3, 2, 1]
+                [3, 2, 1],
             ];
             expect(perms).to.deep.equal(expected);
         });
         test("should return all permutations that have the length of 2", () => {
             const list = new List(["a", "b", "c", "d"]);
-            const perms = list.permutations(2).select(p => p.toArray()).toArray();
+            const perms = list
+                .permutations(2)
+                .select((p) => p.toArray())
+                .toArray();
             const expected = [
                 ["a", "b"],
                 ["a", "c"],
@@ -1649,33 +2500,54 @@ describe("List", () => {
                 ["c", "d"],
                 ["d", "a"],
                 ["d", "b"],
-                ["d", "c"]
+                ["d", "c"],
             ];
             expect(perms).to.deep.equal(expected);
-        })
+        });
         test("should throw error if size is less than 1", () => {
             const list = new List([1, 2, 3]);
-            expect(() => list.permutations(0)).toThrow("Size must be greater than 0.");
-            expect(() => list.permutations(-1)).toThrow("Size must be greater than 0.");
+            expect(() => list.permutations(0)).toThrow(
+                "Size must be greater than 0."
+            );
+            expect(() => list.permutations(-1)).toThrow(
+                "Size must be greater than 0."
+            );
         });
         test("should return empty list if source list is empty", () => {
             const list = new List<number>();
-            const perms = list.permutations().select(p => p.toArray()).toArray();
+            const perms = list
+                .permutations()
+                .select((p) => p.toArray())
+                .toArray();
             expect(perms).to.deep.equal([[]]);
         });
         test("should return empty list if there are no distinct elements", () => {
             const list = new List([1, 1, 1]);
-            const perms = list.permutations().select(p => p.toArray()).toArray();
+            const perms = list
+                .permutations()
+                .select((p) => p.toArray())
+                .toArray();
             expect(perms).to.deep.equal([[1]]);
         });
-        test("should measure the time taken to generate permutations", () => {
-            const list = Enumerable.range(1, 9).toList();
-            const startTime = performance.now();
-            const perms = list.permutations().select(p => p.toArray()).toArray();
-            const endTime = performance.now();
-            console.log(`Time taken to generate permutations: ${endTime - startTime} ms`);
-            expect(perms.length).to.eq(362880);
-        },  {timeout: 10000});
+        test(
+            "should measure the time taken to generate permutations",
+            () => {
+                const list = Enumerable.range(1, 9).toList();
+                const startTime = performance.now();
+                const perms = list
+                    .permutations()
+                    .select((p) => p.toArray())
+                    .toArray();
+                const endTime = performance.now();
+                console.log(
+                    `Time taken to generate permutations: ${
+                        endTime - startTime
+                    } ms`
+                );
+                expect(perms.length).to.eq(362880);
+            },
+            { timeout: 10000 }
+        );
     });
 
     describe("#prepend()", () => {
@@ -1719,8 +2591,10 @@ describe("List", () => {
         });
         test("it should use the provided selector", () => {
             const list = new List([Person.Alice, Person.Reina, Person.Mirei]);
-            const product = list.product(p => p.age);
-            expect(product).to.eq(Person.Alice.age * Person.Reina.age * Person.Mirei.age);
+            const product = list.product((p) => p.age);
+            expect(product).to.eq(
+                Person.Alice.age * Person.Reina.age * Person.Mirei.age
+            );
         });
         test("should throw error if list is empty", () => {
             const list = new List<number>();
@@ -1729,7 +2603,13 @@ describe("List", () => {
     });
 
     describe("#remove()", () => {
-        const list1 = new List([Person.Alice, Person.Noemi, null, Person.Noemi2, null]);
+        const list1 = new List([
+            Person.Alice,
+            Person.Noemi,
+            null,
+            Person.Noemi2,
+            null,
+        ]);
         test("should remove null from index 2", () => {
             list1.remove(null);
             expect(list1.get(2)).to.eq(Person.Noemi2);
@@ -1745,16 +2625,41 @@ describe("List", () => {
 
     describe("#removeAll()", () => {
         test("should remove the elements of second list from first list", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
-            const list2 = new List([Person.Vanessa, Person.Viola, Person.Noemi2]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
+            const list2 = new List([
+                Person.Vanessa,
+                Person.Viola,
+                Person.Noemi2,
+            ]);
             list1.removeAll(list2);
             expect(list1.size()).to.eq(4);
             expect(list1.get(3)).to.eq(Person.Priscilla);
             expect(list1.length).to.eq(4);
         });
         test("should use the provided comparator for comparison", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola], personNameComparator);
-            const list2 = new List([Person.Vanessa, Person.Viola, Person.Noemi2]);
+            const list1 = new List(
+                [
+                    Person.Alice,
+                    Person.Lucrezia,
+                    Person.Noemi,
+                    Person.Priscilla,
+                    Person.Vanessa,
+                    Person.Viola,
+                ],
+                personNameComparator
+            );
+            const list2 = new List([
+                Person.Vanessa,
+                Person.Viola,
+                Person.Noemi2,
+            ]);
             list1.removeAll(list2);
             expect(list1.size()).to.eq(3);
             expect(list1.get(2)).to.eq(Person.Priscilla);
@@ -1772,12 +2677,23 @@ describe("List", () => {
     describe("#removeAt()", () => {
         test("should throw error if index is out of bounds", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            expect(() => list.removeAt(-1)).toThrow(new IndexOutOfBoundsException(-1));
-            expect(() => list.removeAt(44)).toThrow(new IndexOutOfBoundsException(44));
+            expect(() => list.removeAt(-1)).toThrow(
+                new IndexOutOfBoundsException(-1)
+            );
+            expect(() => list.removeAt(44)).toThrow(
+                new IndexOutOfBoundsException(44)
+            );
             expect(list.length).to.eq(5);
         });
         test("should remove element from the specified index", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
+            const list1 = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
             const removedElement = list1.removeAt(5);
             expect(list1.size()).to.eq(5);
             expect(list1.get(0)).to.eq(Person.Alice);
@@ -1789,8 +2705,15 @@ describe("List", () => {
 
     describe("#removeIf()", () => {
         test("should remove people whose names are longer than 5 characters from the list", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
-            list1.removeIf(p => p.name.length > 5);
+            const list1 = new List([
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Noemi,
+                Person.Priscilla,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
+            list1.removeIf((p) => p.name.length > 5);
             expect(list1.size()).to.eq(3);
             expect(list1.get(0)).to.eq(Person.Alice);
             expect(list1.get(1)).to.eq(Person.Noemi);
@@ -1810,8 +2733,22 @@ describe("List", () => {
             expect(list1.length).to.eq(2);
         });
         test("should use the provided comparator", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola], personNameComparator);
-            const list2 = new List([Person.Vanessa, Person.Viola, Person.Noemi2]);
+            const list1 = new List(
+                [
+                    Person.Alice,
+                    Person.Lucrezia,
+                    Person.Noemi,
+                    Person.Priscilla,
+                    Person.Vanessa,
+                    Person.Viola,
+                ],
+                personNameComparator
+            );
+            const list2 = new List([
+                Person.Vanessa,
+                Person.Viola,
+                Person.Noemi2,
+            ]);
             list1.retainAll(list2);
             expect(list1.size()).to.eq(3);
             expect(list1.get(0)).to.eq(Person.Noemi);
@@ -1826,6 +2763,14 @@ describe("List", () => {
             expect(list.get(0)).to.eq(3);
             expect(list.get(1)).to.eq(16);
             expect(list.get(1)).to.eq(16);
+        });
+        test("should measure performance of retainAll", () => {
+            const list1 = Enumerable.range(1, 10000).toList();
+            const list2 = Enumerable.range(5000, 10000).toList();
+            const startTime = performance.now();
+            list1.retainAll(list2);
+            const endTime = performance.now();
+            console.log(`Time taken to retainAll: ${endTime - startTime} ms`);
         });
     });
 
@@ -1869,14 +2814,16 @@ describe("List", () => {
         });
         test("should throw error if the list is empty", () => {
             const list = new List<number>();
-            expect(() => list.scan((acc, n) => acc + n).toArray()).toThrow(new NoElementsException());
+            expect(() => list.scan((acc, n) => acc + n).toArray()).toThrow(
+                new NoElementsException()
+            );
         });
     });
 
     describe("#select()", () => {
         test("should return an IEnumerable with elements [4, 25, 36, 81]", () => {
             const list = new List([2, 5, 6, 9]);
-            const list2 = list.select(n => Math.pow(n, 2)).toList();
+            const list2 = list.select((n) => Math.pow(n, 2)).toList();
             expect(list2.size()).to.eq(4);
             expect(list2.get(0)).to.eq(4);
             expect(list2.get(1)).to.eq(25);
@@ -1886,7 +2833,10 @@ describe("List", () => {
         });
         test("should return an IEnumerable with elements [125, 729]", () => {
             const list = new List([2, 5, 6, 9]);
-            const list2 = list.where(n => n % 2 !== 0).select(n => Math.pow(n, 3)).toList();
+            const list2 = list
+                .where((n) => n % 2 !== 0)
+                .select((n) => Math.pow(n, 3))
+                .toList();
             expect(list2.size()).to.eq(2);
             expect(list2.get(0)).to.eq(125);
             expect(list2.get(1)).to.eq(729);
@@ -1908,28 +2858,44 @@ describe("List", () => {
             const people: Person[] = [];
             Person.Viola.friendsArray = [Person.Rebecca];
             Person.Jisu.friendsArray = [Person.Alice, Person.Mel];
-            Person.Vanessa.friendsArray = [Person.Viola, Person.Rebecca, Person.Jisu, Person.Alice];
+            Person.Vanessa.friendsArray = [
+                Person.Viola,
+                Person.Rebecca,
+                Person.Jisu,
+                Person.Alice,
+            ];
             Person.Rebecca.friendsArray = [Person.Viola];
             people.push(Person.Viola);
             people.push(Person.Rebecca);
             people.push(Person.Jisu);
             people.push(Person.Vanessa);
             const peopleList = new List(people);
-            const friends = peopleList.selectMany(p => p.friendsArray).select(p => p.age).toArray();
+            const friends = peopleList
+                .selectMany((p) => p.friendsArray)
+                .select((p) => p.age)
+                .toArray();
             expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
         });
         test("should return a flattened array of ages #2", () => {
             const people: Person[] = [];
             Person.Viola.friendsList = new List([Person.Rebecca]);
             Person.Jisu.friendsList = new List([Person.Alice, Person.Mel]);
-            Person.Vanessa.friendsList = new List([Person.Viola, Person.Rebecca, Person.Jisu, Person.Alice]);
+            Person.Vanessa.friendsList = new List([
+                Person.Viola,
+                Person.Rebecca,
+                Person.Jisu,
+                Person.Alice,
+            ]);
             Person.Rebecca.friendsList = new List([Person.Viola]);
             people.push(Person.Viola);
             people.push(Person.Rebecca);
             people.push(Person.Jisu);
             people.push(Person.Vanessa);
             const peopleList = new List(people);
-            const friends = peopleList.selectMany(p => p.friendsList).select(p => p.age).toArray();
+            const friends = peopleList
+                .selectMany((p) => p.friendsList)
+                .select((p) => p.age)
+                .toArray();
             expect(friends).to.deep.eq([17, 28, 23, 9, 28, 17, 14, 23]);
         });
     });
@@ -1951,9 +2917,21 @@ describe("List", () => {
             expect(list1.sequenceEqual(list2)).to.eq(true);
         });
         test("should return true if lists have members in the same order", () => {
-            const list1 = new List([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi]);
-            const list2 = new List([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi2]);
-            expect(list1.sequenceEqual(list2, (p1, p2) => p1.name === p2.name)).to.eq(true);
+            const list1 = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Lenka,
+                Person.Noemi,
+            ]);
+            const list2 = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Lenka,
+                Person.Noemi2,
+            ]);
+            expect(
+                list1.sequenceEqual(list2, (p1, p2) => p1.name === p2.name)
+            ).to.eq(true);
             expect(list1.sequenceEqual(list2)).to.eq(false);
         });
     });
@@ -1961,18 +2939,24 @@ describe("List", () => {
     describe("#set", () => {
         test("should throw error if index is out of bounds", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            expect(() => list.set(-1, 111)).toThrow(new IndexOutOfBoundsException(-1));
-            expect(() => list.set(44, 111)).toThrow(new IndexOutOfBoundsException(44));
+            expect(() => list.set(-1, 111)).toThrow(
+                new IndexOutOfBoundsException(-1)
+            );
+            expect(() => list.set(44, 111)).toThrow(
+                new IndexOutOfBoundsException(44)
+            );
             list.clear();
-            expect(() => list.set(0, 111)).toThrow(new IndexOutOfBoundsException(0));
-        })
+            expect(() => list.set(0, 111)).toThrow(
+                new IndexOutOfBoundsException(0)
+            );
+        });
         test("should change the element at the specified index with the provided element", () => {
             const list = new List([1, 2, 3, 4, 5]);
             list.set(1, 222);
             expect(list.size()).to.eq(5);
             expect(list.get(1)).to.eq(222);
             expect(list.indexOf(2)).to.eq(-1);
-        })
+        });
     });
 
     describe("#shuffle()", () => {
@@ -1980,7 +2964,9 @@ describe("List", () => {
             const list = new List(Enumerable.range(1, 12));
             const shuffled = list.shuffle();
             expect(shuffled.count()).to.eq(12);
-            expect(shuffled.toArray()).to.not.deep.eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+            expect(shuffled.toArray()).to.not.deep.eq([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+            ]);
         });
     });
 
@@ -1988,14 +2974,18 @@ describe("List", () => {
         test("should throw error if list is empty.", () => {
             const list = new List<number>();
             expect(() => list.single()).toThrow(new NoElementsException());
-            expect(() => list.single(n => n > 0)).toThrow(new NoElementsException());
+            expect(() => list.single((n) => n > 0)).toThrow(
+                new NoElementsException()
+            );
         });
         test("should throw error if list has more than one element", () => {
             const list = new List();
             list.add(Person.Alice);
             list.add(Person.Senna);
             list.add(Person.Jane);
-            expect(() => list.single()).toThrowError(new MoreThanOneElementException());
+            expect(() => list.single()).toThrowError(
+                new MoreThanOneElementException()
+            );
         });
         test("should return the only element in the list", () => {
             const list = new List();
@@ -2008,7 +2998,9 @@ describe("List", () => {
             list.add(Person.Alice);
             list.add(Person.Senna);
             list.add(Person.Jane);
-            expect(() => list.single(p => p.name === "Lenka")).toThrowError(new NoMatchingElementException());
+            expect(() => list.single((p) => p.name === "Lenka")).toThrowError(
+                new NoMatchingElementException()
+            );
         });
         test("should throw error if more than one matching element is found.", () => {
             const list = new List<Person>();
@@ -2016,14 +3008,16 @@ describe("List", () => {
             list.add(Person.Senna);
             list.add(Person.Jane);
             list.add(Person.Senna);
-            expect(() => list.single(p => p.name === "Senna")).toThrowError(new MoreThanOneMatchingElementException());
+            expect(() => list.single((p) => p.name === "Senna")).toThrowError(
+                new MoreThanOneMatchingElementException()
+            );
         });
         test("should return person with name 'Alice'.", () => {
             const list = new List<Person>();
             list.add(Person.Alice);
             list.add(Person.Senna);
             list.add(Person.Jane);
-            const single = list.single(p => p.name === "Alice");
+            const single = list.single((p) => p.name === "Alice");
             expect(single.name).to.eq("Alice");
             expect(single).to.eq(Person.Alice);
         });
@@ -2043,17 +3037,19 @@ describe("List", () => {
         test("should return null if the list is empty", () => {
             const list2 = new List<number>();
             const sod1 = list2.singleOrDefault();
-            const sod2 = list2.singleOrDefault(n => n > 0);
+            const sod2 = list2.singleOrDefault((n) => n > 0);
             expect(sod1).to.eq(null);
             expect(sod2).to.eq(null);
         });
         test("should return 3", () => {
-            const item = list.singleOrDefault(n => n === 3);
+            const item = list.singleOrDefault((n) => n === 3);
             expect(item).to.eq(3);
         });
         test(`should throw error`, () => {
             list.add(3);
-            expect(() => list.singleOrDefault(n => n === 3)).toThrowError(new MoreThanOneMatchingElementException());
+            expect(() => list.singleOrDefault((n) => n === 3)).toThrowError(
+                new MoreThanOneMatchingElementException()
+            );
         });
         test("should return the only element in the list", () => {
             const list2 = new List<string>();
@@ -2065,10 +3061,12 @@ describe("List", () => {
             const list2 = new List<string>();
             list2.add("Suzuha");
             list2.add("Suzuri");
-            expect(() => list2.singleOrDefault()).toThrowError(new MoreThanOneElementException());
+            expect(() => list2.singleOrDefault()).toThrowError(
+                new MoreThanOneElementException()
+            );
         });
         test("should return default value [null] if no matching element is found.", () => {
-            const sod = list.singleOrDefault(n => n < 0);
+            const sod = list.singleOrDefault((n) => n < 0);
             expect(sod).to.eq(null);
         });
         test("should not throw error if the only element is null or undefined", () => {
@@ -2141,7 +3139,14 @@ describe("List", () => {
 
     describe("#sort", () => {
         test("should sort list with the specified constructor", () => {
-            const list = new List([Person.Noemi, Person.Alice, Person.Lucrezia, Person.Priscilla, Person.Eliza, Person.Bella]);
+            const list = new List([
+                Person.Noemi,
+                Person.Alice,
+                Person.Lucrezia,
+                Person.Priscilla,
+                Person.Eliza,
+                Person.Bella,
+            ]);
             list.sort((p1, p2) => p1.name.localeCompare(p2.name));
             expect(list.get(0)).to.eq(Person.Alice);
             expect(list.get(1)).to.eq(Person.Bella);
@@ -2159,33 +3164,33 @@ describe("List", () => {
             expect(list.get(3)).to.eq(3);
             expect(list.get(4)).to.eq(8);
             expect(list.get(5)).to.eq(10);
-        })
+        });
     });
 
     describe("#span()", () => {
         test("should return two lists", () => {
             const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 6, 5, 3]);
-            const [first, second] = list.span(n => n < 6);
+            const [first, second] = list.span((n) => n < 6);
             expect(first.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
             expect(second.toArray()).to.deep.equal([6, 7, 8, 9, 10, 6, 5, 3]);
         });
         test("should have empty list for first part and full list for second part", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            const [first, second] = list.span(n => n > 100);
-            expect(second.toArray()).to.deep.equal([1,2,3,4,5]);
+            const [first, second] = list.span((n) => n > 100);
+            expect(second.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
             expect(first.none()).to.eq(true);
             expect(second.none()).to.eq(false);
         });
         test("should have full list for first part and empty list for second part", () => {
             const list = new List([1, 2, 3, 4, 5]);
-            const [first, second] = list.span(n => n < 100);
-            expect(first.toArray()).to.deep.equal([1,2,3,4,5]);
+            const [first, second] = list.span((n) => n < 100);
+            expect(first.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
             expect(first.none()).to.eq(false);
             expect(second.none()).to.eq(true);
         });
         test("should have empty list for both parts", () => {
             const list = new List<number>();
-            const [first, second] = list.span(n => n < 100);
+            const [first, second] = list.span((n) => n < 100);
             expect(first.none()).to.eq(true);
             expect(second.none()).to.eq(true);
         });
@@ -2229,7 +3234,7 @@ describe("List", () => {
     describe("#sum()", () => {
         test("should return 21", () => {
             const list = new List([1, 2, 3, 4, 5, 6]);
-            const sum = list.sum(n => n);
+            const sum = list.sum((n) => n);
             const sum2 = list.sum();
             expect(sum).to.eq(21);
             expect(sum2).to.eq(sum);
@@ -2298,13 +3303,21 @@ describe("List", () => {
             expect(result.count()).to.eq(100);
             expect(result.get(0)).to.eq(99900);
             expect(result.get(99)).to.eq(99999);
-
         });
     });
     describe("#takeWhile()", () => {
-        const list = new List(["apple", "banana", "mango", "orange", "plum", "grape"]);
+        const list = new List([
+            "apple",
+            "banana",
+            "mango",
+            "orange",
+            "plum",
+            "grape",
+        ]);
         test("should return an IEnumerable with elements [apple, banana, mango]", () => {
-            const list2 = list.takeWhile(f => f.localeCompare("orange") !== 0).toList();
+            const list2 = list
+                .takeWhile((f) => f.localeCompare("orange") !== 0)
+                .toList();
             expect(list2.get(0)).to.eq("apple");
             expect(list2.get(1)).to.eq("banana");
             expect(list2.get(2)).to.eq("mango");
@@ -2314,21 +3327,71 @@ describe("List", () => {
 
     describe("#thenBy()", () => {
         test("should order people by age [asc] then by name[asc]", () => {
-            const people = new List([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
-            const orderedPeople = people.orderBy(p => p.age, (a1, a2) => a1 - a2).thenBy(p => p.name);
-            const orderedPeopleAges = orderedPeople.select(p => p.age);
-            const orderedPeopleNames = orderedPeople.select(p => p.name);
+            const people = new List([
+                Person.Alice,
+                Person.Lenka,
+                Person.Jane,
+                Person.Jisu,
+                Person.Kaori,
+                Person.Mel,
+                Person.Rebecca,
+                Person.Reina,
+                Person.Senna,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
+            const orderedPeople = people
+                .orderBy(
+                    (p) => p.age,
+                    (a1, a2) => a1 - a2
+                )
+                .thenBy((p) => p.name);
+            const orderedPeopleAges = orderedPeople.select((p) => p.age);
+            const orderedPeopleNames = orderedPeople.select((p) => p.name);
             const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
-            const expectedNames = ["Mel", "Kaori", "Senna", "Jisu", "Jane", "Lenka", "Rebecca", "Vanessa", "Alice", "Reina", "Viola"];
+            const expectedNames = [
+                "Mel",
+                "Kaori",
+                "Senna",
+                "Jisu",
+                "Jane",
+                "Lenka",
+                "Rebecca",
+                "Vanessa",
+                "Alice",
+                "Reina",
+                "Viola",
+            ];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
             expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
         });
         test("should order people by age [asc] then by name[asc] then by surname[asc]", () => {
-            const people = new List([Person.Bella, Person.Amy, Person.Emily, Person.Eliza, Person.Hanna, Person.Hanna2,
-                Person.Suzuha3, Person.Julia, Person.Lucrezia, Person.Megan, Person.Noemi, Person.Olga, Person.Priscilla, Person.Reika, Person.Suzuha, Person.Suzuha2, Person.Noemi2]);
-            const orderedPeople = people.orderBy(p => p.age)
-                .thenBy(p => p.name, (n1, n2) => n1.localeCompare(n2))
-                .thenBy(p => p.surname);
+            const people = new List([
+                Person.Bella,
+                Person.Amy,
+                Person.Emily,
+                Person.Eliza,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Suzuha3,
+                Person.Julia,
+                Person.Lucrezia,
+                Person.Megan,
+                Person.Noemi,
+                Person.Olga,
+                Person.Priscilla,
+                Person.Reika,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Noemi2,
+            ]);
+            const orderedPeople = people
+                .orderBy((p) => p.age)
+                .thenBy(
+                    (p) => p.name,
+                    (n1, n2) => n1.localeCompare(n2)
+                )
+                .thenBy((p) => p.surname);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
                 "[19] :: Eliza Jackson",
@@ -2346,7 +3409,7 @@ describe("List", () => {
                 "[43] :: Noemi Waterfox",
                 "[44] :: Julia Watson",
                 "[44] :: Megan Watson",
-                "[77] :: Olga Byakova"
+                "[77] :: Olga Byakova",
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toList()) {
@@ -2356,12 +3419,37 @@ describe("List", () => {
             expect(returnedOrder).to.deep.equal(expectedOrder);
         });
         test("should be ignored if followed by an orderBy", () => {
-            const people = new List([Person.Bella, Person.Amy, Person.Emily, Person.Eliza, Person.Hanna, Person.Hanna2,
-                Person.Suzuha3, Person.Julia, Person.Lucrezia, Person.Megan, Person.Noemi, Person.Olga, Person.Priscilla, Person.Reika, Person.Suzuha, Person.Suzuha2, Person.Noemi2]);
-            const orderedPeople = people.orderByDescending(p => p.age, (a1, a2) => a1 - a2)
-                .thenBy(p => p.name)
-                .thenByDescending(p => p.surname, (n1, n2) => n1.localeCompare(n2))
-                .orderBy(p => p.age).thenBy(p => p.name);
+            const people = new List([
+                Person.Bella,
+                Person.Amy,
+                Person.Emily,
+                Person.Eliza,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Suzuha3,
+                Person.Julia,
+                Person.Lucrezia,
+                Person.Megan,
+                Person.Noemi,
+                Person.Olga,
+                Person.Priscilla,
+                Person.Reika,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Noemi2,
+            ]);
+            const orderedPeople = people
+                .orderByDescending(
+                    (p) => p.age,
+                    (a1, a2) => a1 - a2
+                )
+                .thenBy((p) => p.name)
+                .thenByDescending(
+                    (p) => p.surname,
+                    (n1, n2) => n1.localeCompare(n2)
+                )
+                .orderBy((p) => p.age)
+                .thenBy((p) => p.name);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
                 "[19] :: Eliza Jackson",
@@ -2379,7 +3467,7 @@ describe("List", () => {
                 "[43] :: Noemi Waterfox",
                 "[44] :: Julia Watson",
                 "[44] :: Megan Watson",
-                "[77] :: Olga Byakova"
+                "[77] :: Olga Byakova",
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toArray()) {
@@ -2391,21 +3479,71 @@ describe("List", () => {
     });
     describe("#thenByDescending()", () => {
         test("should order people by age [asc] then by name[desc]", () => {
-            const people = new List([Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola]);
-            const orderedPeople = people.orderBy(p => p.age).thenByDescending(p => p.name);
-            const orderedPeopleAges = orderedPeople.select(p => p.age);
-            const orderedPeopleNames = orderedPeople.select(p => p.name);
+            const people = new List([
+                Person.Alice,
+                Person.Lenka,
+                Person.Jane,
+                Person.Jisu,
+                Person.Kaori,
+                Person.Mel,
+                Person.Rebecca,
+                Person.Reina,
+                Person.Senna,
+                Person.Vanessa,
+                Person.Viola,
+            ]);
+            const orderedPeople = people
+                .orderBy((p) => p.age)
+                .thenByDescending((p) => p.name);
+            const orderedPeopleAges = orderedPeople.select((p) => p.age);
+            const orderedPeopleNames = orderedPeople.select((p) => p.name);
             const expectedAges = [9, 10, 10, 14, 16, 16, 17, 20, 23, 23, 28];
-            const expectedNames = ["Mel", "Senna", "Kaori", "Jisu", "Lenka", "Jane", "Rebecca", "Vanessa", "Reina", "Alice", "Viola"];
+            const expectedNames = [
+                "Mel",
+                "Senna",
+                "Kaori",
+                "Jisu",
+                "Lenka",
+                "Jane",
+                "Rebecca",
+                "Vanessa",
+                "Reina",
+                "Alice",
+                "Viola",
+            ];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
             expect(orderedPeopleNames.toArray()).to.deep.equal(expectedNames);
         });
         test("should order people by age [desc] then by name[desc] then by surname[desc]", () => {
-            const people = new List([Person.Bella, Person.Amy, Person.Emily, Person.Eliza, Person.Hanna, Person.Hanna2,
-                Person.Suzuha3, Person.Julia, Person.Lucrezia, Person.Megan, Person.Noemi, Person.Olga, Person.Priscilla, Person.Reika, Person.Suzuha, Person.Suzuha2, Person.Noemi2]);
-            const orderedPeople = people.orderByDescending(p => p.age, (a1, a2) => a1 - a2)
-                .thenByDescending(p => p.name)
-                .thenByDescending(p => p.surname, (n1, n2) => n1.localeCompare(n2));
+            const people = new List([
+                Person.Bella,
+                Person.Amy,
+                Person.Emily,
+                Person.Eliza,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Suzuha3,
+                Person.Julia,
+                Person.Lucrezia,
+                Person.Megan,
+                Person.Noemi,
+                Person.Olga,
+                Person.Priscilla,
+                Person.Reika,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Noemi2,
+            ]);
+            const orderedPeople = people
+                .orderByDescending(
+                    (p) => p.age,
+                    (a1, a2) => a1 - a2
+                )
+                .thenByDescending((p) => p.name)
+                .thenByDescending(
+                    (p) => p.surname,
+                    (n1, n2) => n1.localeCompare(n2)
+                );
             const expectedOrder: string[] = [
                 "[77] :: Olga Byakova",
                 "[44] :: Megan Watson",
@@ -2423,7 +3561,7 @@ describe("List", () => {
                 "[20] :: Hanna Jackson",
                 "[19] :: Hanna Jackson",
                 "[19] :: Eliza Jackson",
-                "[9] :: Priscilla Necci"
+                "[9] :: Priscilla Necci",
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toArray()) {
@@ -2433,12 +3571,37 @@ describe("List", () => {
             expect(returnedOrder).to.deep.equal(expectedOrder);
         });
         test("should be ignored if followed by an orderBy", () => {
-            const people = new List([Person.Bella, Person.Amy, Person.Emily, Person.Eliza, Person.Hanna, Person.Hanna2,
-                Person.Suzuha3, Person.Julia, Person.Lucrezia, Person.Megan, Person.Noemi, Person.Olga, Person.Priscilla, Person.Reika, Person.Suzuha, Person.Suzuha2, Person.Noemi2]);
-            const orderedPeople = people.orderByDescending(p => p.age, (a1, a2) => a1 - a2)
-                .thenByDescending(p => p.name)
-                .thenByDescending(p => p.surname, (n1, n2) => n1.localeCompare(n2))
-                .orderBy(p => p.age).thenBy(p => p.name);
+            const people = new List([
+                Person.Bella,
+                Person.Amy,
+                Person.Emily,
+                Person.Eliza,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Suzuha3,
+                Person.Julia,
+                Person.Lucrezia,
+                Person.Megan,
+                Person.Noemi,
+                Person.Olga,
+                Person.Priscilla,
+                Person.Reika,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Noemi2,
+            ]);
+            const orderedPeople = people
+                .orderByDescending(
+                    (p) => p.age,
+                    (a1, a2) => a1 - a2
+                )
+                .thenByDescending((p) => p.name)
+                .thenByDescending(
+                    (p) => p.surname,
+                    (n1, n2) => n1.localeCompare(n2)
+                )
+                .orderBy((p) => p.age)
+                .thenBy((p) => p.name);
             const expectedOrder: string[] = [
                 "[9] :: Priscilla Necci",
                 "[19] :: Eliza Jackson",
@@ -2456,7 +3619,7 @@ describe("List", () => {
                 "[43] :: Noemi Waterfox",
                 "[44] :: Julia Watson",
                 "[44] :: Megan Watson",
-                "[77] :: Olga Byakova"
+                "[77] :: Olga Byakova",
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toArray()) {
@@ -2466,12 +3629,37 @@ describe("List", () => {
             expect(returnedOrder).to.deep.equal(expectedOrder);
         });
         test("should be ignored if followed by an orderByDescending", () => {
-            const people = new List([Person.Bella, Person.Amy, Person.Emily, Person.Eliza, Person.Hanna, Person.Hanna2,
-                Person.Suzuha3, Person.Julia, Person.Lucrezia, Person.Megan, Person.Noemi, Person.Olga, Person.Priscilla, Person.Reika, Person.Suzuha, Person.Suzuha2, Person.Noemi2]);
-            const orderedPeople = people.orderByDescending(p => p.age, (a1, a2) => a1 - a2)
-                .thenByDescending(p => p.name)
-                .thenByDescending(p => p.surname, (n1, n2) => n1.localeCompare(n2))
-                .orderByDescending(p => p.age).thenBy(p => p.name);
+            const people = new List([
+                Person.Bella,
+                Person.Amy,
+                Person.Emily,
+                Person.Eliza,
+                Person.Hanna,
+                Person.Hanna2,
+                Person.Suzuha3,
+                Person.Julia,
+                Person.Lucrezia,
+                Person.Megan,
+                Person.Noemi,
+                Person.Olga,
+                Person.Priscilla,
+                Person.Reika,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Noemi2,
+            ]);
+            const orderedPeople = people
+                .orderByDescending(
+                    (p) => p.age,
+                    (a1, a2) => a1 - a2
+                )
+                .thenByDescending((p) => p.name)
+                .thenByDescending(
+                    (p) => p.surname,
+                    (n1, n2) => n1.localeCompare(n2)
+                )
+                .orderByDescending((p) => p.age)
+                .thenBy((p) => p.name);
             const expectedOrder: string[] = [
                 "[77] :: Olga Byakova",
                 "[44] :: Julia Watson",
@@ -2489,7 +3677,7 @@ describe("List", () => {
                 "[20] :: Hanna Jackson",
                 "[19] :: Eliza Jackson",
                 "[19] :: Hanna Jackson",
-                "[9] :: Priscilla Necci"
+                "[9] :: Priscilla Necci",
             ];
             const returnedOrder: string[] = [];
             for (const p of orderedPeople.toArray()) {
@@ -2525,8 +3713,10 @@ describe("List", () => {
 
         test("should accept a custom comparator", () => {
             const personList = new List([Person.Alice, Person.Noemi]);
-            const customComparator = (p1: Person, p2: Person) => p1.name === p2.name;
-            const circularPersonList = personList.toCircularLinkedList(customComparator);
+            const customComparator = (p1: Person, p2: Person) =>
+                p1.name === p2.name;
+            const circularPersonList =
+                personList.toCircularLinkedList(customComparator);
 
             // Create a new person with the same name but different age
             const aliceClone = new Person("Alice", "Smith", 30);
@@ -2537,17 +3727,38 @@ describe("List", () => {
     });
 
     describe("#toDictionary()", () => {
-        const list = new List([Person.Alice, Person.Mel, Person.Noemi, Person.Lucrezia, Person.Amy, Person.Bella, Person.Reina]);
+        const list = new List([
+            Person.Alice,
+            Person.Mel,
+            Person.Noemi,
+            Person.Lucrezia,
+            Person.Amy,
+            Person.Bella,
+            Person.Reina,
+        ]);
         test("should convert it to a dictionary", () => {
-            const dictionary = list.toDictionary(p => p.name, p => p);
+            const dictionary = list.toDictionary(
+                (p) => p.name,
+                (p) => p
+            );
             expect(dictionary.get(Person.Alice.name)).to.equal(Person.Alice);
             expect(dictionary.get(Person.Mel.name)).to.equal(Person.Mel);
             expect(dictionary.get(Person.Noemi.name)).to.equal(Person.Noemi);
-            expect(dictionary.get(Person.Lucrezia.name)).to.equal(Person.Lucrezia);
+            expect(dictionary.get(Person.Lucrezia.name)).to.equal(
+                Person.Lucrezia
+            );
             expect(dictionary.get(Person.Amy.name)).to.equal(Person.Amy);
             expect(dictionary.get(Person.Bella.name)).to.equal(Person.Bella);
             expect(dictionary.get(Person.Reina.name)).to.equal(Person.Reina);
-            expect(dictionary.keys().toArray()).to.deep.equal(["Alice", "Mel", "Noemi", "Lucrezia", "Amy", "Bella", "Reina"]);
+            expect(dictionary.keys().toArray()).to.deep.equal([
+                "Alice",
+                "Mel",
+                "Noemi",
+                "Lucrezia",
+                "Amy",
+                "Bella",
+                "Reina",
+            ]);
         });
     });
 
@@ -2555,30 +3766,65 @@ describe("List", () => {
         const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
         test("should convert it to a set", () => {
             const set = list.toEnumerableSet();
-            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(set.toArray()).to.deep.equal([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            ]);
         });
     });
 
     describe("#toImmutableDictionary()", () => {
-        const list = new List([Person.Alice, Person.Mel, Person.Noemi, Person.Lucrezia, Person.Amy, Person.Bella, Person.Reina]);
+        const list = new List([
+            Person.Alice,
+            Person.Mel,
+            Person.Noemi,
+            Person.Lucrezia,
+            Person.Amy,
+            Person.Bella,
+            Person.Reina,
+        ]);
         test("should convert it to an immutable dictionary", () => {
-            const dictionary = list.toImmutableDictionary(p => p.name, p => p);
+            const dictionary = list.toImmutableDictionary(
+                (p) => p.name,
+                (p) => p
+            );
             expect(dictionary.get(Person.Alice.name)).to.equal(Person.Alice);
             expect(dictionary.get(Person.Mel.name)).to.equal(Person.Mel);
             expect(dictionary.get(Person.Noemi.name)).to.equal(Person.Noemi);
-            expect(dictionary.get(Person.Lucrezia.name)).to.equal(Person.Lucrezia);
+            expect(dictionary.get(Person.Lucrezia.name)).to.equal(
+                Person.Lucrezia
+            );
             expect(dictionary.get(Person.Amy.name)).to.equal(Person.Amy);
             expect(dictionary.get(Person.Bella.name)).to.equal(Person.Bella);
             expect(dictionary.get(Person.Reina.name)).to.equal(Person.Reina);
-            expect(dictionary.keys().toArray()).to.deep.equal(["Alice", "Mel", "Noemi", "Lucrezia", "Amy", "Bella", "Reina"]);
-            const dict2 = dictionary.add(Person.Priscilla.name, Person.Priscilla);
+            expect(dictionary.keys().toArray()).to.deep.equal([
+                "Alice",
+                "Mel",
+                "Noemi",
+                "Lucrezia",
+                "Amy",
+                "Bella",
+                "Reina",
+            ]);
+            const dict2 = dictionary.add(
+                Person.Priscilla.name,
+                Person.Priscilla
+            );
             expect(dict2.size()).to.eq(8);
             expect(dict2.get(Person.Priscilla.name)).to.eq(Person.Priscilla);
             expect(dictionary.size()).to.eq(7);
             expect(dictionary.get(Person.Priscilla.name)).to.be.null;
             expect(dict2.length).to.eq(8);
             expect(dictionary.length).to.eq(7);
-            expect(dict2.keys().toArray()).to.deep.equal(["Alice", "Mel", "Noemi", "Lucrezia", "Amy", "Bella", "Reina", "Priscilla"]);
+            expect(dict2.keys().toArray()).to.deep.equal([
+                "Alice",
+                "Mel",
+                "Noemi",
+                "Lucrezia",
+                "Amy",
+                "Bella",
+                "Reina",
+                "Priscilla",
+            ]);
         });
     });
 
@@ -2620,7 +3866,9 @@ describe("List", () => {
         const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
         test("should convert it to an immutable set", () => {
             const set = list.toImmutableSet();
-            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(set.toArray()).to.deep.equal([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            ]);
             const set2 = set.toImmutableSet().add(999);
             expect(set).to.not.equal(set2);
             expect(set.size()).to.eq(10);
@@ -2630,11 +3878,26 @@ describe("List", () => {
     });
 
     describe("#toImmutableSortedDictionary()", () => {
-        const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        const people = new List([
+            Person.Alice,
+            Person.Vanessa,
+            Person.Viola,
+            Person.Lenka,
+            Person.Senna,
+        ]);
         test("should create a sorted dictionary from the list", () => {
-            const dict = people.toImmutableSortedDictionary(p => p.name, p => p);
+            const dict = people.toImmutableSortedDictionary(
+                (p) => p.name,
+                (p) => p
+            );
             expect(dict.size()).to.eq(people.size());
-            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
+            expect(dict.keys().toArray()).to.deep.equal([
+                "Alice",
+                "Lenka",
+                "Senna",
+                "Vanessa",
+                "Viola",
+            ]);
             const dict2 = dict.add(Person.Kaori.name, Person.Kaori);
             expect(dict2.size()).to.eq(people.size() + 1);
             expect(dict2.get(Person.Kaori.name)).to.eq(Person.Kaori);
@@ -2642,15 +3905,24 @@ describe("List", () => {
             expect(dict.get(Person.Kaori.name)).to.be.null;
             expect(dict2.length).to.eq(people.size() + 1);
             expect(dict.length).to.eq(people.size());
-            expect(dict2.keys().toArray()).to.deep.equal(["Alice", "Kaori", "Lenka", "Senna", "Vanessa", "Viola"]);
-        })
+            expect(dict2.keys().toArray()).to.deep.equal([
+                "Alice",
+                "Kaori",
+                "Lenka",
+                "Senna",
+                "Vanessa",
+                "Viola",
+            ]);
+        });
     });
 
     describe("#toImmutableSortedSet()", () => {
         const list = new List([5, 2, 3, 4, 4, 3, 9, 7, 7, 6, 8, 1, 10]);
         test("should convert it to an immutable sorted set", () => {
             const set = list.toImmutableSortedSet();
-            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(set.toArray()).to.deep.equal([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            ]);
             const set2 = set.toImmutableSortedSet().add(999);
             expect(set).to.not.equal(set2);
             expect(set.size()).to.eq(10);
@@ -2695,8 +3967,20 @@ describe("List", () => {
     });
 
     describe("#toLookup()", () => {
-        const list = new List([Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2]);
-        const lookup = list.toLookup(p => p.name, p => p, (n1, n2) => n1.localeCompare(n2));
+        const list = new List([
+            Person.Suzuha,
+            Person.Suzuha2,
+            Person.Suzuha3,
+            Person.Noemi,
+            Person.Noemi2,
+            Person.Hanna,
+            Person.Hanna2,
+        ]);
+        const lookup = list.toLookup(
+            (p) => p.name,
+            (p) => p,
+            (n1, n2) => n1.localeCompare(n2)
+        );
         test("should create a lookup with name being the key", () => {
             expect(lookup.size()).to.eq(3);
             expect(lookup.hasKey("Noemi")).to.eq(true);
@@ -2704,8 +3988,19 @@ describe("List", () => {
     });
 
     describe("#toMap()", () => {
-        const list = new List([Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2]);
-        const map = list.toMap(p => p.name, p => p);
+        const list = new List([
+            Person.Suzuha,
+            Person.Suzuha2,
+            Person.Suzuha3,
+            Person.Noemi,
+            Person.Noemi2,
+            Person.Hanna,
+            Person.Hanna2,
+        ]);
+        const map = list.toMap(
+            (p) => p.name,
+            (p) => p
+        );
         /**
          * Duplicate keys are not allowed in a map, so the last element with the same key will be the one stored in the map.
          */
@@ -2718,8 +4013,19 @@ describe("List", () => {
     });
 
     describe("#toObject()", () => {
-        const list = new List([Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi, Person.Noemi2, Person.Hanna, Person.Hanna2]);
-        const obj = list.toObject(p => p.name, p => p);
+        const list = new List([
+            Person.Suzuha,
+            Person.Suzuha2,
+            Person.Suzuha3,
+            Person.Noemi,
+            Person.Noemi2,
+            Person.Hanna,
+            Person.Hanna2,
+        ]);
+        const obj = list.toObject(
+            (p) => p.name,
+            (p) => p
+        );
         test("should create an object with name being the key", () => {
             expect(obj["Noemi"]).to.eq(Person.Noemi2);
             expect(obj["Suzuha"]).to.eq(Person.Suzuha3);
@@ -2772,26 +4078,43 @@ describe("List", () => {
         const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
         test("should convert it to a set", () => {
             const set = list.toSet();
-            expect(Array.from(set)).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(Array.from(set)).to.deep.equal([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            ]);
         });
     });
 
     describe("#toSortedDictionary()", () => {
-        const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
+        const people = new List([
+            Person.Alice,
+            Person.Vanessa,
+            Person.Viola,
+            Person.Lenka,
+            Person.Senna,
+        ]);
         test("should create a sorted dictionary from the list", () => {
-            const dict = people.toSortedDictionary(p => p.name, p => p);
+            const dict = people.toSortedDictionary(
+                (p) => p.name,
+                (p) => p
+            );
             expect(dict.size()).to.eq(people.size());
-            expect(dict.keys().toArray()).to.deep.equal(["Alice", "Lenka", "Senna", "Vanessa", "Viola"]);
-        })
+            expect(dict.keys().toArray()).to.deep.equal([
+                "Alice",
+                "Lenka",
+                "Senna",
+                "Vanessa",
+                "Viola",
+            ]);
+        });
     });
-
-
 
     describe("#toSortedSet()", () => {
         const list = new List([5, 2, 3, 4, 4, 3, 9, 7, 7, 6, 8, 1, 10]);
         test("should create a sorted set from the list", () => {
             const set = list.toSortedSet();
-            expect(set.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            expect(set.toArray()).to.deep.equal([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            ]);
         });
     });
 
@@ -2813,8 +4136,16 @@ describe("List", () => {
             expect(list.toString("|")).to.equal("1|2|3");
         });
         test("should return a string representation of the list by using the separator and the format", () => {
-            const people = new List([Person.Alice, Person.Vanessa, Person.Viola, Person.Lenka, Person.Senna]);
-            expect(people.toString("|", p => `${p.name}`)).to.equal("Alice|Vanessa|Viola|Lenka|Senna");
+            const people = new List([
+                Person.Alice,
+                Person.Vanessa,
+                Person.Viola,
+                Person.Lenka,
+                Person.Senna,
+            ]);
+            expect(people.toString("|", (p) => `${p.name}`)).to.equal(
+                "Alice|Vanessa|Viola|Lenka|Senna"
+            );
         });
         test("should return empty string if the list is empty", () => {
             const emptyList = new List<number>();
@@ -2831,50 +4162,110 @@ describe("List", () => {
         });
         test("should use default comparator if no comparator is provided", () => {
             const list1 = new List(["Alice", "Misaki", "Megumi", "Misaki"]);
-            const list2 = new List(["Alice", "Rei", "Vanessa", "Vanessa", "Yuzuha"]);
+            const list2 = new List([
+                "Alice",
+                "Rei",
+                "Vanessa",
+                "Vanessa",
+                "Yuzuha",
+            ]);
             const union = list1.union(list2);
-            expect(union.toArray()).to.deep.equal(["Alice", "Misaki", "Megumi", "Rei", "Vanessa", "Yuzuha"]);
+            expect(union.toArray()).to.deep.equal([
+                "Alice",
+                "Misaki",
+                "Megumi",
+                "Rei",
+                "Vanessa",
+                "Yuzuha",
+            ]);
             expect(union.toList().length).to.eq(6);
         });
-        test("should return union of two enumerables", () => {
-            const list1 = new List<Person>();
-            const list2 = new List<Person>();
-            for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 90));
-                list1.add(p);
-            }
-            for (let px = 0; px < 100000; ++px) {
-                const p = new Person(Helper.generateRandomString(8), Helper.generateRandomString(10), Helper.generateRandomNumber(1, 50));
-                list2.add(p);
-            }
-            const exceptionList = list1.union(list2, (p1, p2) => p1.age === p2.age);
-            const ageCount = exceptionList.select(p => p.age).distinct().count();
-            expect(ageCount).to.not.greaterThan(90);
-        }, {timeout: 10000});
+        test(
+            "should return union of two enumerables",
+            () => {
+                const list1 = new List<Person>();
+                const list2 = new List<Person>();
+                for (let px = 0; px < 100000; ++px) {
+                    const p = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 90)
+                    );
+                    list1.add(p);
+                }
+                for (let px = 0; px < 100000; ++px) {
+                    const p = new Person(
+                        Helper.generateRandomString(8),
+                        Helper.generateRandomString(10),
+                        Helper.generateRandomNumber(1, 50)
+                    );
+                    list2.add(p);
+                }
+                const exceptionList = list1.union(
+                    list2,
+                    (p1, p2) => p1.age === p2.age
+                );
+                const ageCount = exceptionList
+                    .select((p) => p.age)
+                    .distinct()
+                    .count();
+                expect(ageCount).to.not.greaterThan(90);
+            },
+            { timeout: 10000 }
+        );
     });
 
     describe("#unionBy()", () => {
         test("should return a set of items from two lists", () => {
             const list1 = new List([Person.Alice, Person.Noemi]);
-            const list2 = new List([Person.Noemi2, Person.Suzuha, Person.Alice]);
-            const union = list1.unionBy(list2, p => p.name);
-            expect(union.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Suzuha]);
+            const list2 = new List([
+                Person.Noemi2,
+                Person.Suzuha,
+                Person.Alice,
+            ]);
+            const union = list1.unionBy(list2, (p) => p.name);
+            expect(union.toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Noemi,
+                Person.Suzuha,
+            ]);
         });
         test("should use provided comparator", () => {
             const LittleAlice = new Person("alice", "Nanahira", 9);
             const list1 = new List([Person.Alice, Person.Noemi, LittleAlice]);
-            const list2 = new List([Person.Noemi2, Person.Suzuha, Person.Alice]);
-            const unionWithDefaultComparator = list1.unionBy(list2, p => p.name);
-            const unionWithCustomComparator = list1.unionBy(list2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
-            expect(unionWithDefaultComparator.toArray()).to.deep.equal([Person.Alice, Person.Noemi, LittleAlice, Person.Suzuha]);
-            expect(unionWithCustomComparator.toArray()).to.deep.equal([Person.Alice, Person.Noemi, Person.Suzuha]);
+            const list2 = new List([
+                Person.Noemi2,
+                Person.Suzuha,
+                Person.Alice,
+            ]);
+            const unionWithDefaultComparator = list1.unionBy(
+                list2,
+                (p) => p.name
+            );
+            const unionWithCustomComparator = list1.unionBy(
+                list2,
+                (p) => p.name,
+                (n1, n2) =>
+                    n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0
+            );
+            expect(unionWithDefaultComparator.toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Noemi,
+                LittleAlice,
+                Person.Suzuha,
+            ]);
+            expect(unionWithCustomComparator.toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Noemi,
+                Person.Suzuha,
+            ]);
         });
     });
 
     describe("#where()", () => {
         test("should return an IEnumerable with elements [2,5]", () => {
             const list = new List([2, 5, 6, 99]);
-            const list2 = list.where(n => n <= 5).toList();
+            const list2 = list.where((n) => n <= 5).toList();
             expect(list2.size()).to.eq(2);
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
@@ -2910,20 +4301,34 @@ describe("List", () => {
             expect(windows.size()).to.eq(0);
         });
         test("should throw an error if size is less than 1", () => {
-            expect(() => list.windows(0)).to.throw("Size must be greater than 0.");
-            expect(() => list.windows(-1)).to.throw("Size must be greater than 0.");
+            expect(() => list.windows(0)).to.throw(
+                "Size must be greater than 0."
+            );
+            expect(() => list.windows(-1)).to.throw(
+                "Size must be greater than 0."
+            );
         });
     });
 
     describe("#zip()", () => {
         const numberList = new List([1, 2, 3, 4]);
         const stringList = new List(["one", "two", "three"]);
-        const numStrList = numberList.zip(stringList, (first: number, second: string) => `${first} ${second}`).toList();
+        const numStrList = numberList
+            .zip(
+                stringList,
+                (first: number, second: string) => `${first} ${second}`
+            )
+            .toList();
         test("should return array of tuple if predicate is null", () => {
             const list = new List([2, 5, 6, 99]);
             const list2 = new List([true, true, false, true]);
             const result = list.zip(list2).toArray();
-            const expectedResult = [[2, true], [5, true], [6, false], [99, true]];
+            const expectedResult = [
+                [2, true],
+                [5, true],
+                [6, false],
+                [99, true],
+            ];
             expect(result).to.deep.equal(expectedResult);
         });
         test("should return a zipped list with size of 3", () => {
@@ -2935,7 +4340,13 @@ describe("List", () => {
         test("should return a zipped list with size of 2", () => {
             stringList.add("four");
             stringList.add("five");
-            const zippedList = numberList.takeWhile(n => n <= 2).zip(stringList, (first: number, second: string) => `${second} ${first}`).toList();
+            const zippedList = numberList
+                .takeWhile((n) => n <= 2)
+                .zip(
+                    stringList,
+                    (first: number, second: string) => `${second} ${first}`
+                )
+                .toList();
             expect(zippedList.size()).to.eq(2);
             expect(zippedList.get(0)).to.eq("one 1");
             expect(zippedList.get(1)).to.eq("two 2");

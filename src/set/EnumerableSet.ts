@@ -52,8 +52,16 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
         return changed;
     }
 
-    public override retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return super.retainAll(collection);
+    public override retainAll(collection: Iterable<TElement>): boolean {
+        const originalSize = this.#set.size;
+        const elementsToRetain = new Set<TElement>(collection); // O(M) to build
+
+        for (const element of this.#set) { // O(N) iteration
+            if (!elementsToRetain.has(element as TElement)) { // O(1) average lookup
+                this.#set.delete(element); // O(1) average deletion
+            }
+        }
+        return this.#set.size !== originalSize;
     }
 
     public override size(): number {
