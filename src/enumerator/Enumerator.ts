@@ -1296,11 +1296,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 count++;
 
                 if (count === size) {
-                    const window = new Array<TElement>(size);
-                    for (let i = 0; i < size; i++) {
-                        window[i] = buffer[i];
-                    }
-                    yield new Enumerable<TElement>(window);
+                    yield new Enumerable<TElement>(buffer.slice(0, size));
                 }
             } else {
                 buffer[start] = item.value;
