@@ -53,6 +53,10 @@ import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
+    private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
+    private static readonly NO_ELEMENTS_EXCEPTION = new NoElementsException();
+    private static readonly NO_MATCHING_ELEMENT_EXCEPTION = new NoMatchingElementException();
 
     public constructor(private readonly iterable: () => Iterable<TElement>) {
     }
@@ -64,12 +68,16 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         let accumulatedValue: TAccumulate;
         if (seed == null) {
-            if (!this.any()) {
-                throw new NoElementsException();
+            const iterator = this[Symbol.iterator]();
+            const first = iterator.next();
+            if (first.done) {
+                throw Enumerator.NO_ELEMENTS_EXCEPTION;
             }
-            accumulatedValue = this.first() as unknown as TAccumulate;
-            for (const element of this.skip(1)) {
-                accumulatedValue = accumulator(accumulatedValue, element);
+            accumulatedValue = first.value as unknown as TAccumulate;
+            let next = iterator.next();
+            while (!next.done) {
+                accumulatedValue = accumulator(accumulatedValue, next.value);
+                next = iterator.next();
             }
         } else {
             accumulatedValue = seed;
@@ -116,14 +124,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public average(selector?: Selector<TElement, number>): number {
-        if (!this.any()) {
-            throw new NoElementsException();
-        }
         let total: number = 0;
         let count: number = 0;
         for (const d of this) {
             total += selector?.(d) ?? d as unknown as number;
             count++;
+        }
+        if (count === 0) {
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total / count;
     }
@@ -237,15 +245,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public first(predicate?: Predicate<TElement>): TElement {
-        if (!this.any()) {
-            throw new NoElementsException();
-        }
         for (const item of this) {
             if (!predicate || predicate(item)) {
                 return item;
             }
         }
-        throw new NoMatchingElementException();
+        throw predicate ? Enumerator.NO_MATCHING_ELEMENT_EXCEPTION : Enumerator.NO_ELEMENTS_EXCEPTION;
     }
 
     public firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
@@ -310,8 +315,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
         if (!found) {
             throw predicate
-                ? new NoMatchingElementException()
-                : new NoElementsException();
+                ? Enumerator.NO_MATCHING_ELEMENT_EXCEPTION
+                : Enumerator.NO_ELEMENTS_EXCEPTION;
         }
 
         return result as TElement;
@@ -334,7 +339,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 max = Math.max(max ?? Number.NEGATIVE_INFINITY, item as unknown as number);
             }
             if (max == null) {
-                throw new NoElementsException();
+                throw Enumerator.NO_ELEMENTS_EXCEPTION;
             }
             return max;
         } else {
@@ -342,7 +347,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 max = Math.max(max ?? Number.NEGATIVE_INFINITY, selector(item));
             }
             if (max == null) {
-                throw new NoElementsException();
+                throw Enumerator.NO_ELEMENTS_EXCEPTION;
             }
             return max;
         }
@@ -359,7 +364,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         if (max == null) {
-            throw new NoElementsException();
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return max;
     }
@@ -371,7 +376,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 min = Math.min(min ?? Number.POSITIVE_INFINITY, item as unknown as number);
             }
             if (min == null) {
-                throw new NoElementsException();
+                throw Enumerator.NO_ELEMENTS_EXCEPTION;
             }
             return min;
         } else {
@@ -379,7 +384,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 min = Math.min(min ?? Number.POSITIVE_INFINITY, selector(item));
             }
             if (min == null) {
-                throw new NoElementsException();
+                throw Enumerator.NO_ELEMENTS_EXCEPTION;
             }
             return min;
         }
@@ -396,7 +401,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         if (min == null) {
-            throw new NoElementsException();
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return min;
     }
@@ -454,12 +459,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public product(selector?: Selector<TElement, number>): number {
-        if (!this.any()) {
-            throw new NoElementsException();
-        }
         let total: number = 1;
+        let hasElements = false;
         for (const d of this) {
             total *= selector?.(d) ?? d as unknown as number;
+            hasElements = true;
+        }
+        if (!hasElements) {
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total;
     }
@@ -509,17 +516,15 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public single(predicate?: Predicate<TElement>): TElement {
         let result: TElement | null = null;
         let found = false;
-
-        if (!this.any()) {
-            throw new NoElementsException();
-        }
+        let hasAnyElements = false;
 
         for (const item of this) {
+            hasAnyElements = true;
             if (!predicate || predicate(item)) {
                 if (found) {
                     throw predicate
-                        ? new MoreThanOneMatchingElementException()
-                        : new MoreThanOneElementException();
+                        ? Enumerator.MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION
+                        : Enumerator.MORE_THAN_ONE_ELEMENT_EXCEPTION;
                 }
                 result = item;
                 found = true;
@@ -527,9 +532,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
 
         if (!found) {
-            throw predicate
-                ? new NoMatchingElementException()
-                : new NoElementsException();
+            throw !hasAnyElements
+                ? Enumerator.NO_ELEMENTS_EXCEPTION
+                : Enumerator.NO_MATCHING_ELEMENT_EXCEPTION;
         }
 
         return result as TElement;
@@ -543,8 +548,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             if (!predicate || predicate(item)) {
                 if (found) {
                     throw predicate
-                        ? new MoreThanOneMatchingElementException()
-                        : new MoreThanOneElementException();
+                        ? Enumerator.MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION
+                        : Enumerator.MORE_THAN_ONE_ELEMENT_EXCEPTION;
                 }
                 result = item;
                 found = true;
@@ -590,12 +595,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public sum(selector?: Selector<TElement, number>): number {
-        if (!this.any()) {
-            throw new NoElementsException();
-        }
         let total: number = 0;
+        let hasElements = false;
         for (const d of this) {
             total += selector?.(d) ?? d as unknown as number;
+            hasElements = true;
+        }
+        if (!hasElements) {
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total;
     }
@@ -832,7 +839,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* cycleGenerator(count?: number): IterableIterator<TElement> {
         if (this.none()) {
-            throw new NoElementsException();
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         if (count == null) {
             while (true) {
@@ -846,11 +853,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* defaultIfEmptyGenerator(value?: TElement | null): IterableIterator<TElement | null> {
-        if (this.any()) {
-            yield* this;
+        const iterator = this[Symbol.iterator]();
+        const first = iterator.next();
+        if (!first.done) {
+            yield first.value;
+            yield* iterator as IterableIterator<TElement>;
         } else {
             yield value ?? null;
-            yield* this;
         }
     }
 
@@ -893,46 +902,55 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* exceptGenerator(iterable: Iterable<any>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
+    private* exceptGenerator(iterable: Iterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): IterableIterator<TElement> {
         return yield* this.exceptByGenerator(iterable, x => x, comparator);
     }
 
     private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IterableIterator<IGroup<TKey, TElement>> {
-        const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+        if (!keyComparator) {
+            const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
 
-        const findKeyInMap = (targetKey: TKey): TKey | undefined => {
-            for (const existingKey of groupMap.keys()) {
-                if (keyComparator!(existingKey, targetKey)) { // keyComparator is guaranteed to exist here
-                    return existingKey;
+            for (const item of this) {
+                const key = keySelector(item);
+                const group = groupMap.get(key);
+                if (group) {
+                    (group.source as List<TElement>).add(item);
+                } else {
+                    const newList = new List([item]);
+                    const newGroup = new Group(key, newList);
+                    groupMap.set(key, newGroup);
                 }
             }
-            return undefined;
-        };
+            yield* groupMap.values();
+        } else {
+            const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+            const keyLookupMap = new Map<TKey, TKey>();
 
-        for (const item of this) {
-            const key = keySelector(item);
-            let group: IGroup<TKey, TElement> | undefined;
-            let mapKey: TKey = key;
+            const findExistingKey = (targetKey: TKey): TKey | undefined => {
+                for (const existingKey of keyLookupMap.values()) {
+                    if (keyComparator(existingKey, targetKey)) {
+                        return existingKey;
+                    }
+                }
+                return undefined;
+            };
 
-            if (keyComparator) {
-                const existingKey = findKeyInMap(key);
+            for (const item of this) {
+                const key = keySelector(item);
+                const existingKey = findExistingKey(key);
+
                 if (existingKey !== undefined) {
-                    group = groupMap.get(existingKey);
-                    mapKey = existingKey;
+                    const group = groupMap.get(existingKey)!;
+                    (group.source as List<TElement>).add(item);
+                } else {
+                    const newList = new List([item]);
+                    const newGroup = new Group(key, newList);
+                    groupMap.set(key, newGroup);
+                    keyLookupMap.set(key, key);
                 }
-            } else {
-                group = groupMap.get(key);
             }
-
-            if (group) {
-                (group.source as List<TElement>).add(item);
-            } else {
-                const newList = new List([item]);
-                const newGroup = new Group(key, newList);
-                groupMap.set(mapKey, newGroup);
-            }
+            yield* groupMap.values();
         }
-        yield* groupMap.values();
     }
 
     private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IterableIterator<TResult> {
@@ -1058,14 +1076,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IterableIterator<TAccumulate> {
         let accumulatedValue: TAccumulate;
         if (seed == null) {
-            if (!this.any()) {
-                throw new NoElementsException();
+            const iterator = this[Symbol.iterator]();
+            const first = iterator.next();
+            if (first.done) {
+                throw Enumerator.NO_ELEMENTS_EXCEPTION;
             }
-            accumulatedValue = this.first() as unknown as TAccumulate;
+            accumulatedValue = first.value as unknown as TAccumulate;
             yield accumulatedValue;
-            for (const element of this.skip(1)) {
-                accumulatedValue = accumulator(accumulatedValue, element);
+            let next = iterator.next();
+            while (!next.done) {
+                accumulatedValue = accumulator(accumulatedValue, next.value);
                 yield accumulatedValue;
+                next = iterator.next();
             }
         } else {
             accumulatedValue = seed;
@@ -1211,33 +1233,38 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* unionByGenerator<TKey>(enumerable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): IterableIterator<TElement> {
         const isDefaultComparator = comparator === Comparators.equalityComparator;
-        const seenKeysSet = isDefaultComparator ? new Set<TKey>() : null;
-        const seenKeysList = isDefaultComparator ? null : new Array<TKey>();
 
-        for (const source of [this, enumerable]) {
-            for (const item of source) {
-                const key = keySelector(item);
-                let exists = false;
-
-                if (seenKeysSet) {
-                    exists = seenKeysSet.has(key);
-                    if (!exists) {
-                        seenKeysSet.add(key);
-                    }
-                } else if (seenKeysList) {
-                    for (const seenKey of seenKeysList) {
-                        if (comparator(key, seenKey)) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        seenKeysList.push(key);
+        if (isDefaultComparator) {
+            const seenKeys = new Set<TKey>();
+            for (const source of [this, enumerable]) {
+                for (const item of source) {
+                    const key = keySelector(item);
+                    if (!seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        yield item;
                     }
                 }
+            }
+        } else {
+            const seenKeysMap = new Map<TKey, boolean>();
+            const findExistingKey = (targetKey: TKey): TKey | undefined => {
+                for (const existingKey of seenKeysMap.keys()) {
+                    if (comparator(targetKey, existingKey)) {
+                        return existingKey;
+                    }
+                }
+                return undefined;
+            };
 
-                if (!exists) {
-                    yield item;
+            for (const source of [this, enumerable]) {
+                for (const item of source) {
+                    const key = keySelector(item);
+                    const existingKey = findExistingKey(key);
+
+                    if (existingKey === undefined) {
+                        seenKeysMap.set(key, true);
+                        yield item;
+                    }
                 }
             }
         }
@@ -1259,12 +1286,30 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* windowsGenerator(size: number): IterableIterator<IEnumerable<TElement>> {
         const iterator = this[Symbol.iterator]();
-        const window = new List<TElement>();
+        const buffer = new Array<TElement>(size);
+        let count = 0;
+        let start = 0;
+
         for (let item = iterator.next(); !item.done; item = iterator.next()) {
-            window.add(item.value);
-            if (window.size() === size) {
-                yield window.toImmutableList();
-                window.removeAt(0);
+            if (count < size) {
+                buffer[count] = item.value;
+                count++;
+
+                if (count === size) {
+                    const window = new Array<TElement>(size);
+                    for (let i = 0; i < size; i++) {
+                        window[i] = buffer[i];
+                    }
+                    yield new Enumerable<TElement>(window);
+                }
+            } else {
+                buffer[start] = item.value;
+                start = (start + 1) % size;
+                const window = new Array<TElement>(size);
+                for (let i = 0; i < size; i++) {
+                    window[i] = buffer[(start + i) % size];
+                }
+                yield new Enumerable<TElement>(window);
             }
         }
     }

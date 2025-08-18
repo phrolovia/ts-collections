@@ -38,6 +38,10 @@ import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
+    private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
+    private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
+    private static readonly NO_ELEMENTS_EXCEPTION = new NoElementsException();
+    private static readonly NO_MATCHING_ELEMENT_EXCEPTION = new NoMatchingElementException();
 
     public constructor(private readonly iterable: () => AsyncIterable<TElement>) {
     }
@@ -48,30 +52,26 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>,
                                                                           seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult> {
-        let accumulatedValue: TAccumulate | null = null;
-        let count = 0;
+        let accumulatedValue: TAccumulate;
         if (seed == null) {
-            let index = 0;
-            for await (const element of this) {
-                if (index === 0) {
-                    accumulatedValue = element as unknown as TAccumulate;
-                } else {
-                    accumulatedValue = accumulator(accumulatedValue as TAccumulate, element);
-                }
-                ++index;
-                ++count;
+            const iterator = this[Symbol.asyncIterator]();
+            const first = await iterator.next();
+            if (first.done) {
+                throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
+            }
+            accumulatedValue = first.value as unknown as TAccumulate;
+            let next = await iterator.next();
+            while (!next.done) {
+                accumulatedValue = accumulator(accumulatedValue, next.value);
+                next = await iterator.next();
             }
         } else {
             accumulatedValue = seed;
             for await (const element of this) {
                 accumulatedValue = accumulator(accumulatedValue, element);
-                ++count;
             }
         }
-        if (count === 0 && accumulatedValue == null) {
-            throw new NoElementsException();
-        }
-        return resultSelector?.(accumulatedValue as TAccumulate) ?? accumulatedValue as TAccumulate;
+        return resultSelector?.(accumulatedValue) ?? accumulatedValue;
     }
 
     public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>> {
@@ -113,7 +113,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             ++count;
         }
         if (count === 0) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total / count;
     }
@@ -251,9 +251,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (count === 0) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
-        throw new NoMatchingElementException();
+        throw AsyncEnumerator.NO_MATCHING_ELEMENT_EXCEPTION;
     }
 
     public async firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
@@ -322,8 +322,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
         if (!found) {
             throw predicate
-                ? new NoMatchingElementException()
-                : new NoElementsException();
+                ? AsyncEnumerator.NO_MATCHING_ELEMENT_EXCEPTION
+                : AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
 
         return last as TElement;
@@ -346,7 +346,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             max = Math.max(max ?? Number.NEGATIVE_INFINITY, value);
         }
         if (max == null) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return max;
     }
@@ -362,7 +362,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (maxElement == null) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return maxElement;
     }
@@ -374,7 +374,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             min = Math.min(min ?? Number.POSITIVE_INFINITY, value);
         }
         if (min == null) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return min;
     }
@@ -390,7 +390,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         if (minElement == null) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return minElement;
     }
@@ -449,7 +449,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
 
         if (count === 0) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
 
         return product;
@@ -506,14 +506,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             count++;
             if (!predicate) {
                 if (found) {
-                    throw new MoreThanOneElementException();
+                    throw AsyncEnumerator.MORE_THAN_ONE_ELEMENT_EXCEPTION;
                 }
                 single = element;
                 found = true;
             }
             if (predicate && predicate(element)) {
                 if (found) {
-                    throw new MoreThanOneMatchingElementException();
+                    throw AsyncEnumerator.MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION;
                 }
                 single = element;
                 found = true;
@@ -521,11 +521,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
 
         if (count === 0) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
 
         if (!found) {
-            throw new NoMatchingElementException();
+            throw AsyncEnumerator.NO_MATCHING_ELEMENT_EXCEPTION;
         }
 
         return single as TElement;
@@ -537,7 +537,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         if (!predicate) {
             for await (const element of this) {
                 if (index !== 0) {
-                    throw new MoreThanOneElementException();
+                    throw AsyncEnumerator.MORE_THAN_ONE_ELEMENT_EXCEPTION;
                 }
                 single = element;
                 ++index;
@@ -546,7 +546,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             for await (const element of this) {
                 if (predicate(element)) {
                     if (index !== 0) {
-                        throw new MoreThanOneMatchingElementException();
+                        throw AsyncEnumerator.MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION;
                     }
                     single = element;
                     ++index;
@@ -731,7 +731,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
 
         if (elements.length === 0) {
-            throw new NoElementsException();
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
 
         if (count == null) {
@@ -968,7 +968,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 ++index;
             }
             if (index === 0) {
-                throw new NoElementsException();
+                throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
             }
         } else {
             accumulatedValue = seed;
@@ -1156,13 +1156,25 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* windowsGenerator(size: number): AsyncIterableIterator<IEnumerable<TElement>> {
-        const iterator = this[Symbol.asyncIterator]();
-        const window = new List<TElement>();
-        for (let item = await iterator.next(); !item.done; item = await iterator.next()) {
-            window.add(item.value);
-            if (window.length === size) {
-                yield Enumerable.from([...window]);
-                window.removeAt(0);
+        const window: TElement[] = new Array(size);
+        let index = 0;
+        let count = 0;
+        
+        for await (const element of this) {
+            window[index] = element;
+            index = (index + 1) % size;
+            
+            if (count < size) {
+                count++;
+            }
+            
+            if (count === size) {
+                const result: TElement[] = [];
+                for (let i = 0; i < size; i++) {
+                    const readIndex = (index + i) % size;
+                    result.push(window[readIndex]);
+                }
+                yield Enumerable.from(result);
             }
         }
     }
