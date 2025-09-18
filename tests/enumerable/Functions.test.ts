@@ -1,4 +1,5 @@
-import { describe, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
+import type { IEnumerable } from "../../src/imports";
 import {
     aggregate,
     aggregateBy,
@@ -118,6 +119,7 @@ import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOn
 import { NoElementsException } from "../../src/shared/NoElementsException";
 import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
+import { ApiResponse, ApiResponseSuccess, isSuccess } from "../models/ApiResponse";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
@@ -1777,6 +1779,39 @@ describe("Enumerable Standalone Functions", () => {
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
+        });
+
+        test("should narrow the filtered sequence when using a type guard", () => {
+            const responses = new List<ApiResponse<Person>>([
+                { status: "success", data: Person.Alice },
+                { status: "error", error: "Not found" },
+                { status: "success", data: Person.Bella },
+                { status: "error", error: "Server error" },
+                { status: "success", data: Person.Mel },
+                { status: "loading" }
+            ]);
+
+            const successesFromMethod = responses.where(isSuccess);
+            const namesFromMethod = successesFromMethod.select(result => result.data.name).toArray();
+
+            expect(namesFromMethod).to.deep.equal([
+                Person.Alice.name,
+                Person.Bella.name,
+                Person.Mel.name
+            ]);
+
+            expectTypeOf(successesFromMethod).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+
+            const successesFromFunction = where(responses, isSuccess);
+            const namesFromFunction = successesFromFunction.select(result => result.data.name).toArray();
+
+            expect(namesFromFunction).to.deep.equal([
+                Person.Alice.name,
+                Person.Bella.name,
+                Person.Mel.name
+            ]);
+
+            expectTypeOf(successesFromFunction).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
         });
     });
 

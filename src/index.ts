@@ -160,7 +160,7 @@ export { KeyValuePair } from "./dictionary/KeyValuePair";
 export type { Accumulator } from "./shared/Accumulator";
 export type { EqualityComparator } from "./shared/EqualityComparator";
 export type { IndexedAction } from "./shared/IndexedAction";
-export type { IndexedPredicate } from "./shared/IndexedPredicate";
+export type { IndexedPredicate, IndexedTypePredicate } from "./shared/IndexedPredicate";
 export type { IndexedSelector } from "./shared/IndexedSelector";
 export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";

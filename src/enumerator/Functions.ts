@@ -19,7 +19,7 @@ import { SortedSet } from "../set/SortedSet";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
@@ -2974,11 +2974,19 @@ export const unionBy = <TElement, TKey>(
  *      const cheapProducts = products.where(p => p.price < 0.6).toArray();
  *      // cheapProducts = [ { name: 'Apple', price: 0.5 }, { name: 'Banana', price: 0.3 } ]
  */
-export const where = <TElement>(
+export function where<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: IndexedTypePredicate<TElement, TFiltered>
+): IEnumerable<TFiltered>;
+export function where<TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement>
-): IEnumerable<TElement> => {
-    return from(source).where(predicate);
+): IEnumerable<TElement>;
+export function where<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
+): IEnumerable<TElement> | IEnumerable<TFiltered> {
+    return from(source).where(predicate as IndexedPredicate<TElement>);
 }
 
 /**

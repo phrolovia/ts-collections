@@ -25,7 +25,7 @@ import {
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
@@ -2345,7 +2345,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Filters a sequence of values based on a predicate.
      * @template TElement
-     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
+     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out. When the predicate acts as a type guard, the resulting sequence is narrowed to the guarded type.
      * @returns {IEnumerable<TElement>} A new enumerable sequence that contains elements from the input sequence that satisfy the condition.
      * @example
      *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8]);
@@ -2374,6 +2374,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const cheapProducts = products.where(p => p.price < 0.6).toArray();
      *      // cheapProducts = [ { name: 'Apple', price: 0.5 }, { name: 'Banana', price: 0.3 } ]
      */
+    where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**

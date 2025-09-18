@@ -32,7 +32,7 @@ import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InferredType } from "../shared/InferredType";
@@ -756,8 +756,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.unionByGenerator(iterable, keySelector, comparator));
     }
 
-    public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
-        return new Enumerator<TElement>(() => this.whereGenerator(predicate));
+    public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return new Enumerator<TElement>(() => this.whereGenerator(predicate as IndexedPredicate<TElement>));
     }
 
     public windows(size: number): IEnumerable<IEnumerable<TElement>> {

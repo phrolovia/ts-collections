@@ -116,7 +116,7 @@ import {
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
@@ -534,8 +534,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return unionBy(this, iterable, keySelector, comparator);
     }
 
-    public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return where(this, predicate);
+    public where<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;
+    public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
+    public where<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
+        return where(this, predicate as IndexedPredicate<KeyValuePair<TKey, TValue>>);
     }
 
     public windows(size: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {

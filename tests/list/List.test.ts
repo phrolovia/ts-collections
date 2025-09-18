@@ -16,6 +16,7 @@ import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOn
 import { NoElementsException } from "../../src/shared/NoElementsException";
 import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
+import { ApiResponse, isSuccess } from "../models/ApiResponse";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
@@ -4262,6 +4263,23 @@ describe("List", () => {
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
+        });
+        test("should return type-guarded elements", () => {
+            const responses = new List<ApiResponse<Person>>([
+                { status: "success", data: Person.Alice },
+                { status: "error", error: "Not found" },
+                { status: "success", data: Person.Bella },
+                { status: "error", error: "Server error" },
+                { status: "success", data: Person.Mel },
+                { status: "loading" }
+            ]);
+            const responseArray = responses.toArray();
+
+            const success = responses.where(isSuccess).select(p => p.data);
+            const successArray = responseArray.filter(isSuccess).map(p => p.data);
+
+            expect(success.count()).to.eq(3);
+            expect(success.toArray()).to.deep.equal(successArray);
         });
     });
 

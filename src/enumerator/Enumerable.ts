@@ -27,7 +27,7 @@ import {
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
@@ -451,8 +451,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.unionBy(iterable, keySelector, comparator);
     }
 
-    public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
-        return this.#enumerator.where(predicate);
+    public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return this.#enumerator.where(predicate as IndexedPredicate<TElement>);
     }
 
     public windows(size: number): IEnumerable<IEnumerable<TElement>> {
