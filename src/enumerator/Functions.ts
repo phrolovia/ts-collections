@@ -48,10 +48,11 @@ import { IOrderedEnumerable } from "./IOrderedEnumerable";
  * @returns {TAccumulate|TResult} The final accumulator value.
  * @throws {NoElementsException} If the source is empty and seed is not provided.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const sum = numbers.aggregate((acc, current) => acc + current); // sum = 15
- *      const productWithSeed = numbers.aggregate((acc, current) => acc * current, 10); // productWithSeed = 1200 (10 * 1 * 2 * 3 * 4 * 5)
- *      const sumAsString = numbers.aggregate(
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const sum = aggregate(numbers, (acc, current) => acc + current); // sum = 15
+ *      const productWithSeed = aggregate(numbers, (acc, current) => acc * current, 10); // productWithSeed = 1200 (10 * 1 * 2 * 3 * 4 * 5)
+ *      const sumAsString = aggregate(
+ *          numbers,
  *          (acc, current) => acc + current, // Accumulator
  *          0,                             // Seed
  *          (finalResult) => `Sum: ${finalResult}` // Result selector
@@ -75,17 +76,18 @@ export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulat
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
  * @example
  *      interface Product { category: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = from<Product>([
  *           { category: 'Electronics', price: 700 },
  *           { category: 'Books', price: 120 },
  *           { category: 'Electronics', price: 200 },
  *           { category: 'Books', price: 90 }
  *      ]);
- *      const totalValuePerCategory = products.aggregateBy(
+ *      const totalValuePerCategory = toArray(aggregateBy(
+ *           products,
  *           p => p.category, // keySelector: group by category
  *           0,               // seedSelector: start sum at 0 for each category
  *           (sum, p) => sum + p.price // accumulator: add product price to sum
- *      ).toArray();
+ *      ));
  *      // totalValuePerCategory: [{ key: 'Electronics', value: 900 }, { key: 'Books', value: 210 }]
  */
 export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
@@ -104,9 +106,9 @@ export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
  * @param predicate The predicate function that will be used to check each element for a condition.
  * @returns {boolean} true if all elements of the sequence satisfy the specified predicate; otherwise, false.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const allPositive = numbers.all(n => n > 0); // allPositive = true
- *      const allEven = numbers.all(n => n % 2 === 0); // allEven = false
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const allPositive = all(numbers, n => n > 0); // allPositive = true
+ *      const allEven = all(numbers, n => n % 2 === 0); // allEven = false
  */
 export const all = <TElement>(
     source: Iterable<TElement>,
@@ -122,11 +124,11 @@ export const all = <TElement>(
  * If not specified, it will return true if the sequence has elements, otherwise false.
  * @returns {boolean} true if any element of the sequence satisfies the specified predicate; otherwise, false.
  * @example
- *      const numbers = new List([1, 2, -3, 4, 5]);
- *      const hasNegative = numbers.any(n => n < 0); // hasNegative = true
- *      const hasGreaterThanTen = numbers.any(n => n > 10); // hasGreaterThanTen = false
- *      const isEmpty = new List<number>().any(); // isEmpty = false
- *      const isNotEmpty = numbers.any(); // isNotEmpty = true
+ *      const numbers = [1, 2, -3, 4, 5];
+ *      const hasNegative = any(numbers, n => n < 0); // hasNegative = true
+ *      const hasGreaterThanTen = any(numbers, n => n > 10); // hasGreaterThanTen = false
+ *      const isEmpty = any([] as number[]); // isEmpty = false
+ *      const isNotEmpty = any(numbers); // isNotEmpty = true
  */
 export const any = <TElement>(
     source: Iterable<TElement>,
@@ -142,8 +144,8 @@ export const any = <TElement>(
  * @param element The element that will be appended to the end of the sequence
  * @returns {IEnumerable<TElement>} A new enumerable sequence that ends with the specified element.
  * @example
- *      const numbers = new List([1, 2, 3]);
- *      const appended = numbers.append(4).toArray(); // appended = [1, 2, 3, 4]
+ *      const numbers = [1, 2, 3];
+ *      const appended = toArray(append(numbers, 4)); // appended = [1, 2, 3, 4]
  */
 export const append = <TElement>(
     source: Iterable<TElement>,
@@ -159,12 +161,16 @@ export const append = <TElement>(
  * @returns {number} The average of the sequence.
  * @throws {NoElementsException} If the source is empty.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const avg = numbers.average(); // avg = 3
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const avg = average(numbers); // avg = 3
  *
  *      interface Item { value: number; }
- *      const items = new List<Item>([{ value: 10 }, { value: 20 }, { value: 60 }]);
- *      const avgValue = items.average(item => item.value); // avgValue = 30
+ *      const items = [
+ *          { value: 10 },
+ *          { value: 20 },
+ *          { value: 60 }
+ *      ];
+ *      const avgValue = average(items, item => item.value); // avgValue = 30
  */
 export const average = <TElement>(
     source: Iterable<TElement>,
@@ -179,16 +185,16 @@ export const average = <TElement>(
  * @param source The source iterable.
  * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
  * @example
- *      const mixedList = new List([1, 'two', 3, 'four', 5]);
- *      const numbersOnly = mixedList
- *          .where(item => typeof item === 'number')
- *          .cast<number>();
+ *      const mixedList = [1, 'two', 3, 'four', 5];
+ *      const numbersOnly = toArray(cast<number>(
+ *          where(mixedList, item => typeof item === 'number')
+ *      ));
  *      // numbersOnly = [1, 3, 5]
  *
  *      // Note: Cast doesn't perform type conversion, only type assertion.
  *      // If an element cannot be cast, it may lead to runtime errors later.
  *      // Example of a potential issue (if not pre-filtered):
- *      // const potentialError = mixedList.cast<number>();
+ *      // const potentialError = cast<number>(mixedList);
  *      // Iterating potentialError might throw errors when 'two' or 'four' are accessed as numbers.
  */
 export const cast = <TResult, TElement = unknown>(
@@ -205,8 +211,11 @@ export const cast = <TResult, TElement = unknown>(
  * @return {IEnumerable<IEnumerable<TElement>>} A new enumerable sequence whose elements are chunks of the original sequence.
  * @throws {InvalidArgumentException} If size is less than or equal to 0.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8]);
- *      const chunks = numbers.chunk(3).select(chunk => chunk.toArray()).toArray();
+ *      const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+ *      const chunks = toArray(select(
+ *          chunk(numbers, 3),
+ *          chunkItems => toArray(chunkItems)
+ *      ));
  *      // chunks = [[1, 2, 3], [4, 5, 6], [7, 8]]
  */
 export const chunk = <TElement>(
@@ -225,15 +234,17 @@ export const chunk = <TElement>(
  * @returns {IEnumerable<IEnumerable<TElement>>} A new enumerable sequence whose elements are combinations of the source sequence.
  * @throws {InvalidArgumentException} If size is less than or equal to 0.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const combinationsOfTwo = letters.combinations(2)
- *          .select(c => c.toArray())
- *          .toArray();
+ *      const letters = ['a', 'b', 'c'];
+ *      const combinationsOfTwo = toArray(select(
+ *          combinations(letters, 2),
+ *          combo => toArray(combo)
+ *      ));
  *      // combinationsOfTwo = [['a', 'b'], ['a', 'c'], ['b', 'c']]
  *
- *      const allCombinations = letters.combinations()
- *          .select(c => c.toArray())
- *          .toArray();
+ *      const allCombinations = toArray(select(
+ *          combinations(letters),
+ *          combo => toArray(combo)
+ *      ));
  *      // allCombinations = [['a'], ['b'], ['c'], ['a', 'b'], ['a', 'c'], ['b', 'c'], ['a', 'b', 'c']]
  */
 export const combinations = <TElement>(
@@ -250,9 +261,9 @@ export const combinations = <TElement>(
  * @param other The iterable sequence that will be concatenated to the first sequence.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements of both sequences.
  * @example
- *      const list1 = new List([1, 2]);
- *      const list2 = new List([3, 4]);
- *      const concatenated = list1.concat(list2).toArray();
+ *      const list1 = [1, 2];
+ *      const list2 = [3, 4];
+ *      const concatenated = toArray(concat(list1, list2));
  *      // concatenated = [1, 2, 3, 4]
  */
 export const concat = <TElement>(
@@ -269,17 +280,20 @@ export const concat = <TElement>(
  * @param comparator The comparator function that will be used for equality comparison. If not provided, the default equality comparison is used.
  * @returns {boolean} true if the sequence contains the specified element; otherwise, false.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const hasThree = numbers.contains(3);
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const hasThree = contains(numbers, 3);
  *      // hasThree = true
- *      const hasTen = numbers.contains(10);
+ *      const hasTen = contains(numbers, 10);
  *      // hasTen = false
  *
  *      // Using a custom comparator for objects
  *      interface Person { id: number; name: string; }
- *      const people = new List<Person>([{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }]);
+ *      const people = [
+ *          { id: 1, name: 'Alice' },
+ *          { id: 2, name: 'Bob' }
+ *      ];
  *      const bob = { id: 2, name: 'Bob' };
- *      const hasBobById = people.contains(bob, (p1, p2) => p1.id === p2.id);
+ *      const hasBobById = contains(people, bob, (p1, p2) => p1.id === p2.id);
  *      // hasBobById = true
  */
 export const contains = <TElement>(
@@ -298,11 +312,11 @@ export const contains = <TElement>(
  * @param predicate The predicate function that will be used to check each element for a condition.
  * @returns {number} The number of elements in the sequence.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6]);
- *      const totalCount = numbers.count();
+ *      const numbers = [1, 2, 3, 4, 5, 6];
+ *      const totalCount = count(numbers);
  *      // totalCount = 6
  *
- *      const evenCount = numbers.count(n => n % 2 === 0);
+ *      const evenCount = count(numbers, n => n % 2 === 0);
  *      // evenCount = 3
  */
 export const count = <TElement>(
@@ -320,8 +334,8 @@ export const count = <TElement>(
  * @param comparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
  * @returns {IEnumerable<KeyValuePair<TKey, number>>} A new enumerable sequence that contains key value pair objects.
  * @example
- *      const fruits = new List(['apple', 'banana', 'apple', 'orange', 'banana', 'apple']);
- *      const fruitCounts = fruits.countBy(fruit => fruit).toArray();
+ *      const fruits = ['apple', 'banana', 'apple', 'orange', 'banana', 'apple'];
+ *      const fruitCounts = toArray(countBy(fruits, fruit => fruit));
  *      // fruitCounts = [
  *      //   { key: 'apple', value: 3 },
  *      //   { key: 'banana', value: 2 },
@@ -330,8 +344,12 @@ export const count = <TElement>(
  *
  *      // Example with objects and key selector
  *      interface Item { type: string; }
- *      const items = new List<Item>([{ type: 'A' }, { type: 'B' }, { type: 'A' }]);
- *      const typeCounts = items.countBy(item => item.type).toArray();
+ *      const items = [
+ *          { type: 'A' },
+ *          { type: 'B' },
+ *          { type: 'A' }
+ *      ];
+ *      const typeCounts = toArray(countBy(items, item => item.type));
  *      // typeCounts = [ { key: 'A', value: 2 }, { key: 'B', value: 1 } ]
  */
 export const countBy = <TElement, TKey>(
@@ -352,17 +370,17 @@ export const countBy = <TElement, TKey>(
  * @returns {IEnumerable<TElement>} A new enumerable sequence that repeats the elements of the source sequence.
  * @throws {NoElementsException} If the source is empty.
  * @example
- *      const pattern = new List([1, 2]);
- *      const repeatedFinite = pattern.cycle(3).toArray();
+ *      const pattern = [1, 2];
+ *      const repeatedFinite = toArray(cycle(pattern, 3));
  *      // repeatedFinite = [1, 2, 1, 2, 1, 2]
  *
  *      // Infinite cycle (use with caution, typically with take)
- *      // const repeatedInfinite = pattern.cycle();
- *      // const firstTen = repeatedInfinite.take(10).toArray();
+ *      // const repeatedInfinite = cycle(pattern);
+ *      // const firstTen = toArray(take(repeatedInfinite, 10));
  *      // firstTen = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2]
  *
  *      // Throws error if the source is empty
- *      // new List<number>().cycle(); // Throws NoElementsException
+ *      // cycle([] as number[]); // Throws NoElementsException
  */
 export const cycle = <TElement>(
     source: Iterable<TElement>,
@@ -378,15 +396,15 @@ export const cycle = <TElement>(
  * @param value The value to return if the sequence is empty. Defaults to null if not provided.
  * @returns {IEnumerable<TElement | null>} The specified sequence or the specified value in a singleton collection if the sequence is empty.
  * @example
- *      const numbers = new List([1, 2, 3]);
- *      const resultNotEmpty = numbers.defaultIfEmpty(0).toArray();
+ *      const numbers = [1, 2, 3];
+ *      const resultNotEmpty = toArray(defaultIfEmpty(numbers, 0));
  *      // resultNotEmpty = [1, 2, 3]
  *
- *      const emptyList = new List<number>();
- *      const resultEmptyWithDefault = emptyList.defaultIfEmpty(0).toArray();
+ *      const emptyList = [] as number[];
+ *      const resultEmptyWithDefault = toArray(defaultIfEmpty(emptyList, 0));
  *      // resultEmptyWithDefault = [0]
  *
- *      const resultEmptyNull = emptyList.defaultIfEmpty().toArray(); // No value specified, defaults to null
+ *      const resultEmptyNull = toArray(defaultIfEmpty(emptyList)); // No value specified, defaults to null
  *      // resultEmptyNull = [null]
  */
 export const defaultIfEmpty = <TElement>(
@@ -403,18 +421,18 @@ export const defaultIfEmpty = <TElement>(
  * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
  * @example
- *      const numbers = new List([1, 2, 2, 3, 1, 4, 5, 5]);
- *      const distinctNumbers = numbers.distinct().toArray();
+ *      const numbers = [1, 2, 2, 3, 1, 4, 5, 5];
+ *      const distinctNumbers = toArray(distinct(numbers));
  *      // distinctNumbers = [1, 2, 3, 4, 5]
  *
  *      // Using a custom comparator for objects (compares based on id)
  *      interface Item { id: number; value: string; }
- *      const items = new List<Item>([
+ *      const items = [
  *          { id: 1, value: 'A' },
  *          { id: 2, value: 'B' },
  *          { id: 1, value: 'C' }
- *      ]);
- *      const distinctItemsById = items.distinct((a, b) => a.id === b.id).toArray();
+ *      ];
+ *      const distinctItemsById = toArray(distinct(items, (a, b) => a.id === b.id));
  *      // distinctItemsById = [{ id: 1, value: 'A' }, { id: 2, value: 'B' }]
  */
 export const distinct = <TElement>(
@@ -433,15 +451,15 @@ export const distinct = <TElement>(
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
  * @example
  *      interface Product { category: string; name: string; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { category: 'Electronics', name: 'Laptop' },
  *          { category: 'Books', name: 'TypeScript Guide' },
  *          { category: 'Electronics', name: 'Mouse' },
  *          { category: 'Books', name: 'Another Book' }
- *      ]);
+ *      ];
  *
  *      // Get one product from each distinct category
- *      const distinctByCategory = products.distinctBy(p => p.category).toArray();
+ *      const distinctByCategory = toArray(distinctBy(products, p => p.category));
  *      // distinctByCategory might be:
  *      // [
  *      //   { category: 'Electronics', name: 'Laptop' },
@@ -450,15 +468,16 @@ export const distinct = <TElement>(
  *      // (The specific element kept from duplicates is the first one encountered)
  *
  *      // Using a custom key comparator (case-insensitive category)
- *      const productsMixedCase = new List<Product>([
+ *      const productsMixedCase = [
  *          { category: 'Electronics', name: 'Laptop' },
  *          { category: 'electronics', name: 'Keyboard' },
  *          { category: 'Books', name: 'Guide' }
- *      ]);
- *      const distinctCaseInsensitive = productsMixedCase.distinctBy(
+ *      ];
+ *      const distinctCaseInsensitive = toArray(distinctBy(
+ *          productsMixedCase,
  *          p => p.category,
  *          (keyA, keyB) => keyA.toLowerCase() === keyB.toLowerCase()
- *      ).toArray();
+ *      ));
  *      // distinctCaseInsensitive might be:
  *      // [
  *      //   { category: 'Electronics', name: 'Laptop' },
@@ -482,18 +501,18 @@ export const distinctBy = <TElement, TKey>(
  * @returns {TElement} The element at the specified index in the sequence.
  * @throws {IndexOutOfBoundsException} If index is less than 0 or greater than or equal to the number of elements in the sequence.
  * @example
- *      const letters = new List(['a', 'b', 'c', 'd']);
- *      const secondLetter = letters.elementAt(1);
+ *      const letters = ['a', 'b', 'c', 'd'];
+ *      const secondLetter = elementAt(letters, 1);
  *      // secondLetter = 'b'
  *
  *      try {
- *          letters.elementAt(4); // Throws IndexOutOfBoundsException
+ *          elementAt(letters, 4); // Throws IndexOutOfBoundsException
  *      } catch (e) {
  *          console.log(e.message); // Output: Index was outside the bounds of the sequence.
  *      }
  *
  *      try {
- *          letters.elementAt(-1); // Throws IndexOutOfBoundsException
+ *          elementAt(letters, -1); // Throws IndexOutOfBoundsException
  *      } catch (e) {
  *          console.log(e.message); // Output: Index was outside the bounds of the sequence.
  *      }
@@ -512,14 +531,14 @@ export const elementAt = <TElement>(
  * @param index The index of the element that will be returned.
  * @returns {TElement|null} The element at the specified index in the sequence or null if the index is out of range.
  * @example
- *      const letters = new List(['a', 'b', 'c', 'd']);
- *      const secondLetter = letters.elementAtOrDefault(1);
+ *      const letters = ['a', 'b', 'c', 'd'];
+ *      const secondLetter = elementAtOrDefault(letters, 1);
  *      // secondLetter = 'b'
  *
- *      const fifthLetter = letters.elementAtOrDefault(4);
+ *      const fifthLetter = elementAtOrDefault(letters, 4);
  *      // fifthLetter = null
  *
- *      const negativeIndex = letters.elementAtOrDefault(-1);
+ *      const negativeIndex = elementAtOrDefault(letters, -1);
  *      // negativeIndex = null
  */
 export const elementAtOrDefault = <TElement>(
@@ -548,16 +567,16 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
  * @param comparator The comparator function that will be used for item comparison. If not provided, the default equality comparison is used.
  * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
  * @example
- *      const numbers1 = new List([1, 2, 3, 4, 5]);
- *      const numbers2 = new List([3, 5, 6, 7]);
- *      const difference = numbers1.except(numbers2).toArray();
+ *      const numbers1 = [1, 2, 3, 4, 5];
+ *      const numbers2 = [3, 5, 6, 7];
+ *      const difference = toArray(except(numbers1, numbers2));
  *      // difference = [1, 2, 4]
  *
  *      // Using custom object comparison
  *      interface Item { id: number; }
- *      const items1 = new List<Item>([{ id: 1 }, { id: 2 }, { id: 3 }]);
- *      const items2 = new List<Item>([{ id: 2 }, { id: 4 }]);
- *      const itemDifference = items1.except(items2, (a, b) => a.id === b.id).toArray();
+ *      const items1 = [{ id: 1 }, { id: 2 }, { id: 3 }];
+ *      const items2 = [{ id: 2 }, { id: 4 }];
+ *      const itemDifference = toArray(except(items1, items2, (a, b) => a.id === b.id));
  *      // itemDifference = [{ id: 1 }, { id: 3 }]
  */
 export const except = <TElement>(
@@ -581,31 +600,33 @@ export const except = <TElement>(
  * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
  * @example
  *      interface Product { code: string; name: string; }
- *      const store1Products = new List<Product>([
+ *      const store1Products = [
  *          { code: 'A1', name: 'Apple' },
  *          { code: 'B2', name: 'Banana' },
  *          { code: 'C3', name: 'Cherry' }
- *      ]);
- *      const store2Products = new List<Product>([
+ *      ];
+ *      const store2Products = [
  *          { code: 'B2', name: 'Banana' }, // Same code as store1
  *          { code: 'D4', name: 'Date' }
- *      ]);
+ *      ];
  *
  *      // Find products in store1 whose codes are not in store2
- *      const uniqueToStore1 = store1Products.exceptBy(
+ *      const uniqueToStore1 = toArray(exceptBy(
+ *          store1Products,
  *          store2Products,
  *          p => p.code // Compare based on the 'code' property
- *      ).toArray();
+ *      ));
  *      // uniqueToStore1 = [ { code: 'A1', name: 'Apple' }, { code: 'C3', name: 'Cherry' } ]
  *
  *      // Example with case-insensitive key comparison
- *      const listA = new List([{ val: 'a' }, { val: 'b' }]);
- *      const listB = new List([{ val: 'B' }, { val: 'c' }]);
- *      const diffCaseInsensitive = listA.exceptBy(
+ *      const listA = [{ val: 'a' }, { val: 'b' }];
+ *      const listB = [{ val: 'B' }, { val: 'c' }];
+ *      const diffCaseInsensitive = toArray(exceptBy(
+ *          listA,
  *          listB,
  *          item => item.val,
  *          (keyA, keyB) => keyA.toLowerCase() === keyB.toLowerCase() // Case-insensitive comparator
- *      ).toArray();
+ *      ));
  *      // diffCaseInsensitive = [ { val: 'a' } ]
  */
 export const exceptBy = <TElement, TKey>(
@@ -626,22 +647,22 @@ export const exceptBy = <TElement, TKey>(
  * @throws {NoElementsException} If the source is empty.
  * @throws {NoMatchingElementException} If no element satisfies the condition.
  * @example
- *      const numbers = new List([10, 20, 30, 40]);
- *      const firstElement = numbers.first();
+ *      const numbers = [10, 20, 30, 40];
+ *      const firstElement = first(numbers);
  *      // firstElement = 10
  *
- *      const firstGreaterThan25 = numbers.first(n => n > 25);
+ *      const firstGreaterThan25 = first(numbers, n => n > 25);
  *      // firstGreaterThan25 = 30
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
- *          emptyList.first(); // Throws NoElementsException
+ *          first(emptyList); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
  *
  *      try {
- *          numbers.first(n => n > 50); // Throws NoMatchingElementException
+ *          first(numbers, n => n > 50); // Throws NoMatchingElementException
  *      } catch (e) {
  *          console.log(e.message); // Output: No element satisfies the condition.
  *      }
@@ -668,18 +689,18 @@ export function first<TElement, TFiltered extends TElement>(
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
  * @returns {TElement|null} The first element of the sequence or null if no element satisfies the condition or the sequence is empty.
  * @example
- *      const numbers = new List([10, 20, 30, 40]);
- *      const firstElement = numbers.firstOrDefault();
+ *      const numbers = [10, 20, 30, 40];
+ *      const firstElement = firstOrDefault(numbers);
  *      // firstElement = 10
  *
- *      const firstGreaterThan25 = numbers.firstOrDefault(n => n > 25);
+ *      const firstGreaterThan25 = firstOrDefault(numbers, n => n > 25);
  *      // firstGreaterThan25 = 30
  *
- *      const firstGreaterThan50 = numbers.firstOrDefault(n => n > 50);
+ *      const firstGreaterThan50 = firstOrDefault(numbers, n => n > 50);
  *      // firstGreaterThan50 = null
  *
- *      const emptyList = new List<number>();
- *      const firstFromEmpty = emptyList.firstOrDefault();
+ *      const emptyList = [] as number[];
+ *      const firstFromEmpty = firstOrDefault(emptyList);
  *      // firstFromEmpty = null
  */
 export function firstOrDefault<TElement, TFiltered extends TElement>(
@@ -702,7 +723,7 @@ export function firstOrDefault<TElement, TFiltered extends TElement>(
  * @param source The source iterable.
  * @param action The action function that will be performed on each element. The second parameter of the action is the index.
  * @example
- *      const names = new List(['Alice', 'Bob', 'Charlie']);
+ *      const names = ['Alice', 'Bob', 'Charlie'];
  *      let output = '';
  *      names.forEach((name, index) => {
  *          output += `${index}: ${name}\n`;
@@ -740,15 +761,15 @@ export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement
  * @returns {IEnumerable<IGroup<TKey, TElement>>} A new enumerable sequence whose elements are groups that contain the elements of the source sequence.
  * @example
  *      interface Pet { name: string; species: string; age: number; }
- *      const pets = new List<Pet>([
+ *      const pets = [
  *          { name: 'Fluffy', species: 'Cat', age: 3 },
  *          { name: 'Buddy', species: 'Dog', age: 5 },
  *          { name: 'Whiskers', species: 'Cat', age: 2 },
  *          { name: 'Rex', species: 'Dog', age: 7 }
- *      ]);
+ *      ];
  *
  *      // Group pets by species
- *      const groupsBySpecies = pets.groupBy(pet => pet.species).toArray();
+ *      const groupsBySpecies = toArray(groupBy(pets, pet => pet.species));
  *      // groupsBySpecies will contain IGroup objects. Example structure:
  *      // [
  *      //   { key: 'Cat', source: Enumerable containing Fluffy and Whiskers },
@@ -756,22 +777,24 @@ export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement
  *      // ]
  *
  *      // To get results as arrays:
- *      const speciesArrays = pets
- *          .groupBy(pet => pet.species)
- *          .select(group => ({ species: group.key, pets: group.source.toArray() }))
- *          .toArray();
+ *      const speciesArrays = toArray(select(
+ *          groupBy(pets, pet => pet.species),
+ *          group => ({ species: group.key, pets: toArray(group.source) })
+ *      ));
  *      // speciesArrays = [
  *      //   { species: 'Cat', pets: [{ name: 'Fluffy', ... }, { name: 'Whiskers', ... }] },
  *      //   { species: 'Dog', pets: [{ name: 'Buddy', ... }, { name: 'Rex', ... }] }
  *      // ]
  *
  *      // Using a custom comparator (e.g., grouping ages into ranges)
- *      const ageGroups = pets.groupBy(
- *          pet => pet.age, // Temporary key selector
- *          (age1, age2) => Math.floor(age1 / 3) === Math.floor(age2 / 3) // Comparator: group by age range (0-2, 3-5, 6-8, etc.)
- *      )
- *          .select(group => ({ ageRangeKey: group.key, pets: group.source.toArray() })) // Note: group.key will be the first age encountered in that range
- *          .toArray();
+ *      const ageGroups = toArray(select(
+ *          groupBy(
+ *              pets,
+ *              pet => pet.age, // Temporary key selector
+ *              (age1, age2) => Math.floor(age1 / 3) === Math.floor(age2 / 3) // Comparator: group by age range (0-2, 3-5, 6-8, etc.)
+ *          ),
+ *          group => ({ ageRangeKey: group.key, pets: toArray(group.source) }) // Note: group.key will be the first age encountered in that range
+ *      ));
  *      // ageGroups might look like:
  *      // [
  *      //   { ageRangeKey: 3, pets: [Fluffy, Whiskers] }, // Ages 3 and 2 fall in the same range (key is 3 as it was encountered first)
@@ -801,29 +824,30 @@ export const groupBy = <TElement, TKey>(
  *      interface Department { id: number; name: string; }
  *      interface Employee { name: string; deptId: number; }
  *
- *      const departments = new List<Department>([
+ *      const departments = [
  *          { id: 1, name: 'HR' },
  *          { id: 2, name: 'Engineering' },
  *          { id: 3, name: 'Sales' }
- *      ]);
+ *      ];
  *
- *      const employees = new List<Employee>([
+ *      const employees = [
  *          { name: 'Alice', deptId: 2 },
  *          { name: 'Bob', deptId: 1 },
  *          { name: 'Charlie', deptId: 2 },
  *          { name: 'David', deptId: 4 } // Belongs to a non-listed department
- *      ]);
+ *      ];
  *
  *      // Group employees by department
- *      const departmentEmployees = departments.groupJoin(
+ *      const departmentEmployees = toArray(groupJoin(
+ *          departments,
  *          employees,
  *          dept => dept.id, // Outer key selector (department ID)
  *          emp => emp.deptId, // Inner key selector (employee department ID)
  *          (dept, emps) => ({ // Result selector
  *              departmentName: dept.name,
- *              employees: emps.select(e => e.name).toArray() // Project employee names
+ *              employees: toArray(select(emps, e => e.name)) // Project employee names
  *          })
- *      ).toArray();
+ *      ));
  *
  *      // departmentEmployees = [
  *      //   { departmentName: 'HR', employees: ['Bob'] },
@@ -849,8 +873,8 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
  * @param source The source iterable.
  * @returns {IEnumerable<[number, TElement]>} A new enumerable sequence whose elements are tuples of the index and the element.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const indexedLetters = letters.index().toArray();
+ *      const letters = ['a', 'b', 'c'];
+ *      const indexedLetters = toArray(index(letters));
  *      // indexedLetters = [[0, 'a'], [1, 'b'], [2, 'c']]
  */
 export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number, TElement]> => {
@@ -867,16 +891,16 @@ export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number
  * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set intersection of the two sequences.
  * @throws {Error} If the iterable is null or undefined.
  * @example
- *      const numbers1 = new List([1, 2, 3, 4, 5, 5]); // Source has duplicates
- *      const numbers2 = new List([3, 5, 6, 7, 5]); // Other has duplicates
- *      const intersection = numbers1.intersect(numbers2).toArray();
+ *      const numbers1 = [1, 2, 3, 4, 5, 5]; // Source has duplicates
+ *      const numbers2 = [3, 5, 6, 7, 5]; // Other has duplicates
+ *      const intersection = toArray(intersect(numbers1, numbers2));
  *      // intersection = [3, 5] (Order matches source, duplicates removed)
  *
  *      // Using custom object comparison
  *      interface Item { id: number; value: string; }
- *      const items1 = new List<Item>([{ id: 1, value: 'A' }, { id: 2, value: 'B' }]);
- *      const items2 = new List<Item>([{ id: 2, value: 'Different B' }, { id: 3, value: 'C' }]);
- *      const itemIntersection = items1.intersect(items2, (a, b) => a.id === b.id).toArray();
+ *      const items1 = [{ id: 1, value: 'A' }, { id: 2, value: 'B' }];
+ *      const items2 = [{ id: 2, value: 'Different B' }, { id: 3, value: 'C' }];
+ *      const itemIntersection = toArray(intersect(items1, items2, (a, b) => a.id === b.id));
  *      // itemIntersection = [{ id: 2, value: 'B' }] (Keeps the element from the first list)
  */
 export const intersect = <TElement>(
@@ -900,31 +924,33 @@ export const intersect = <TElement>(
  * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set intersection of the two sequences.
  * @example
  *      interface Product { code: string; name: string; }
- *      const store1Products = new List<Product>([
+ *      const store1Products = [
  *          { code: 'A1', name: 'Apple' },
  *          { code: 'B2', name: 'Banana' },
  *          { code: 'C3', name: 'Cherry' }
- *      ]);
- *      const store2Products = new List<Product>([
+ *      ];
+ *      const store2Products = [
  *          { code: 'B2', name: 'Banana V2' }, // Same code as store1
  *          { code: 'D4', name: 'Date' }
- *      ]);
+ *      ];
  *
  *      // Find products in store1 whose codes also exist in store2
- *      const commonProducts = store1Products.intersectBy(
+ *      const commonProducts = toArray(intersectBy(
+ *          store1Products,
  *          store2Products,
  *          p => p.code // Compare based on the 'code' property
- *      ).toArray();
+ *      ));
  *      // commonProducts = [ { code: 'B2', name: 'Banana' } ] (Takes the element from store1)
  *
  *      // Example with case-insensitive key comparison
- *      const listA = new List([{ val: 'a' }, { val: 'b' }]);
- *      const listB = new List([{ val: 'B' }, { val: 'c' }]);
- *      const intersectCaseInsensitive = listA.intersectBy(
+ *      const listA = [{ val: 'a' }, { val: 'b' }];
+ *      const listB = [{ val: 'B' }, { val: 'c' }];
+ *      const intersectCaseInsensitive = toArray(intersectBy(
+ *          listA,
  *          listB,
  *          item => item.val,
  *          (keyA, keyB) => keyA.toLowerCase() === keyB.toLowerCase() // Case-insensitive comparator
- *      ).toArray();
+ *      ));
  *      // intersectCaseInsensitive = [ { val: 'b' } ] (Keeps 'b' from listA as it matches 'B')
  */
 export const intersectBy = <TElement, TKey>(
@@ -943,20 +969,20 @@ export const intersectBy = <TElement, TKey>(
  * @param separator The element that will be interspersed between each element of the sequence.
  * @returns {IEnumerable<TElement|TSeparator>} A new enumerable sequence whose elements are the elements of the source sequence interspersed with the specified element.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const interspersedLetters = letters.intersperse('-').toArray();
+ *      const letters = ['a', 'b', 'c'];
+ *      const interspersedLetters = toArray(intersperse(letters, '-'));
  *      // interspersedLetters = ['a', '-', 'b', '-', 'c']
  *
- *      const numbers = new List([1, 2, 3]);
- *      const interspersedNumbers = numbers.intersperse(0).toArray();
+ *      const numbers = [1, 2, 3];
+ *      const interspersedNumbers = toArray(intersperse(numbers, 0));
  *      // interspersedNumbers = [1, 0, 2, 0, 3]
  *
- *      const emptyList = new List<string>();
- *      const interspersedEmpty = emptyList.intersperse('-').toArray();
+ *      const emptyList = [] as string[];
+ *      const interspersedEmpty = toArray(intersperse(emptyList, '-'));
  *      // interspersedEmpty = []
  *
- *      const singleItemList = new List(['a']);
- *      const interspersedSingle = singleItemList.intersperse('-').toArray();
+ *      const singleItemList = ['a'];
+ *      const interspersedSingle = toArray(intersperse(singleItemList, '-'));
  *      // interspersedSingle = ['a']
  */
 export const intersperse = <TElement, TSeparator>(
@@ -981,21 +1007,22 @@ export const intersperse = <TElement, TSeparator>(
  *      interface Department { id: number; name: string; location: string }
  *      interface Employee { name: string; deptId: number; role: string }
  *
- *      const departments = new List<Department>([
+ *      const departments = [
  *          { id: 1, name: 'HR', location: 'Building A' },
  *          { id: 2, name: 'Engineering', location: 'Building B' },
  *          { id: 3, name: 'Marketing', location: 'Building A' } // No employees here
- *      ]);
+ *      ];
  *
- *      const employees = new List<Employee>([
+ *      const employees = [
  *          { name: 'Alice', deptId: 2, role: 'Developer' },
  *          { name: 'Bob', deptId: 1, role: 'Manager' },
  *          { name: 'Charlie', deptId: 2, role: 'Tester' },
  *          { name: 'David', deptId: 4, role: 'Intern' } // Department 4 not in departments list
- *      ]);
+ *      ];
  *
  *      // Inner Join (default: leftJoin = false)
- *      const innerJoinResult = departments.join(
+ *      const innerJoinResult = toArray(join(
+ *          departments,
  *          employees,
  *          dept => dept.id,           // Outer key: department ID
  *          emp => emp.deptId,         // Inner key: employee department ID
@@ -1003,7 +1030,7 @@ export const intersperse = <TElement, TSeparator>(
  *              employeeName: emp.name,
  *              departmentName: dept.name
  *          })
- *      ).toArray();
+ *      ));
  *      // innerJoinResult = [
  *      //   { employeeName: 'Bob', departmentName: 'HR' },
  *      //   { employeeName: 'Alice', departmentName: 'Engineering' },
@@ -1012,7 +1039,8 @@ export const intersperse = <TElement, TSeparator>(
  *      // Note: Marketing dept and David (dept 4) are excluded.
  *
  *      // Left Join (leftJoin = true)
- *      const leftJoinResult = departments.join(
+ *      const leftJoinResult = toArray(join(
+ *          departments,
  *          employees,
  *          dept => dept.id,
  *          emp => emp.deptId,
@@ -1022,7 +1050,7 @@ export const intersperse = <TElement, TSeparator>(
  *          }),
  *          Comparators.equalityComparator, // Default comparator can be explicit or omitted
  *          true                       // Set leftJoin to true
- *      ).toArray();
+ *      ));
  *      // leftJoinResult = [
  *      //   { departmentName: 'HR', employeeName: 'Bob' },
  *      //   { departmentName: 'Engineering', employeeName: 'Alice' },
@@ -1052,22 +1080,22 @@ export const join = <TElement, TInner, TKey, TResult>(
  * @throws {NoElementsException} If the source is empty.
  * @throws {NoMatchingElementException} If no element satisfies the condition.
  * @example
- *      const numbers = new List([10, 20, 30, 25, 40]);
- *      const lastElement = numbers.last();
+ *      const numbers = [10, 20, 30, 25, 40];
+ *      const lastElement = last(numbers);
  *      // lastElement = 40
  *
- *      const lastLessThan30 = numbers.last(n => n < 30);
+ *      const lastLessThan30 = last(numbers, n => n < 30);
  *      // lastLessThan30 = 25
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
- *          emptyList.last(); // Throws NoElementsException
+ *          last(emptyList); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
  *
  *      try {
- *          numbers.last(n => n > 50); // Throws NoMatchingElementException
+ *          last(numbers, n => n > 50); // Throws NoMatchingElementException
  *      } catch (e) {
  *          console.log(e.message); // Output: No element satisfies the condition.
  *      }
@@ -1094,18 +1122,18 @@ export function last<TElement, TFiltered extends TElement>(
  * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
  * @returns {TElement|null} The last element of the sequence or null if the sequence is empty or no element satisfies the condition.
  * @example
- *      const numbers = new List([10, 20, 30, 25, 40]);
- *      const lastElement = numbers.lastOrDefault();
+ *      const numbers = [10, 20, 30, 25, 40];
+ *      const lastElement = lastOrDefault(numbers);
  *      // lastElement = 40
  *
- *      const lastLessThan30 = numbers.lastOrDefault(n => n < 30);
+ *      const lastLessThan30 = lastOrDefault(numbers, n => n < 30);
  *      // lastLessThan30 = 25
  *
- *      const lastGreaterThan50 = numbers.lastOrDefault(n => n > 50);
+ *      const lastGreaterThan50 = lastOrDefault(numbers, n => n > 50);
  *      // lastGreaterThan50 = null
  *
- *      const emptyList = new List<number>();
- *      const lastFromEmpty = emptyList.lastOrDefault();
+ *      const emptyList = [] as number[];
+ *      const lastFromEmpty = lastOrDefault(emptyList);
  *      // lastFromEmpty = null
  */
 export function lastOrDefault<TElement, TFiltered extends TElement>(
@@ -1130,16 +1158,16 @@ export function lastOrDefault<TElement, TFiltered extends TElement>(
  * @returns {number} The maximum value in the sequence.
  * @throws {NoElementsException} If the source is empty.
  * @example
- *      const numbers = new List([10, 50, 20, 45, 30]);
- *      const maxNumber = numbers.max();
+ *      const numbers = [10, 50, 20, 45, 30];
+ *      const maxNumber = max(numbers);
  *      // maxNumber = 50
  *
  *      interface Item { value: number; }
- *      const items = new List<Item>([{ value: 100 }, { value: 50 }, { value: 200 }]);
- *      const maxValue = items.max(item => item.value);
+ *      const items = [{ value: 100 }, { value: 50 }, { value: 200 }];
+ *      const maxValue = max(items, item => item.value);
  *      // maxValue = 200
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
  *          emptyList.max(); // Throws NoElementsException
  *      } catch (e) {
@@ -1163,26 +1191,27 @@ export const max = <TElement>(
  * @throws {NoElementsException} If the source is empty.
  * @example
  *      interface Product { name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { name: 'Laptop', price: 1200 },
  *          { name: 'Mouse', price: 25 },
  *          { name: 'Keyboard', price: 75 },
  *          { name: 'Monitor', price: 300 }
- *      ]);
+ *      ];
  *
  *      // Find the most expensive product
- *      const mostExpensive = products.maxBy(p => p.price);
+ *      const mostExpensive = maxBy(products, p => p.price);
  *      // mostExpensive = { name: 'Laptop', price: 1200 }
  *
  *      // Using a custom comparator (e.g., longest name)
- *      const productWithLongestName = products.maxBy(
+ *      const productWithLongestName = maxBy(
+ *          products,
  *          p => p.name.length // Key is the length of the name
  *      );
  *      // productWithLongestName = { name: 'Keyboard', price: 75 }
  *
- *      const emptyList = new List<Product>();
+ *      const emptyList = [] as Product[];
  *      try {
- *          emptyList.maxBy(p => p.price); // Throws NoElementsException
+ *          maxBy(emptyList, p => p.price); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
@@ -1202,18 +1231,18 @@ export const maxBy = <TElement, TKey>(
  * @returns {number} The minimum value in the sequence.
  * @throws {NoElementsException} If the source is empty.
  * @example
- *      const numbers = new List([10, 50, 20, 45, 30]);
- *      const minNumber = numbers.min();
+ *      const numbers = [10, 50, 20, 45, 30];
+ *      const minNumber = min(numbers);
  *      // minNumber = 10
  *
  *      interface Item { value: number; }
- *      const items = new List<Item>([{ value: 100 }, { value: 50 }, { value: 200 }]);
- *      const minValue = items.min(item => item.value);
+ *      const items = [{ value: 100 }, { value: 50 }, { value: 200 }];
+ *      const minValue = min(items, item => item.value);
  *      // minValue = 50
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
- *          emptyList.min(); // Throws NoElementsException
+ *          min(emptyList); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
@@ -1235,26 +1264,27 @@ export const min = <TElement>(
  * @throws {NoElementsException} If the source is empty.
  * @example
  *      interface Product { name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { name: 'Laptop', price: 1200 },
  *          { name: 'Mouse', price: 25 },
  *          { name: 'Keyboard', price: 75 },
  *          { name: 'Monitor', price: 300 }
- *      ]);
+ *      ];
  *
  *      // Find the cheapest product
- *      const cheapest = products.minBy(p => p.price);
+ *      const cheapest = minBy(products, p => p.price);
  *      // cheapest = { name: 'Mouse', price: 25 }
  *
  *      // Using a custom comparator (e.g., the shortest name)
- *      const productWithShortestName = products.minBy(
+ *      const productWithShortestName = minBy(
+ *          products,
  *          p => p.name.length // Key is the length of the name
  *      );
  *      // productWithShortestName = { name: 'Mouse', price: 25 }
  *
- *      const emptyList = new List<Product>();
+ *      const emptyList = [] as Product[];
  *      try {
- *          emptyList.minBy(p => p.price); // Throws NoElementsException
+ *          minBy(emptyList, p => p.price); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
@@ -1274,27 +1304,27 @@ export const minBy = <TElement, TKey>(
  * @param predicate The predicate function that will be used to check each element for a condition.
  * @returns {boolean} true if no elements satisfy the predicate, or if the sequence is empty and no predicate is provided; otherwise, false.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
+ *      const numbers = [1, 2, 3, 4, 5];
  *
  *      // Check if none are negative
- *      const noneNegative = numbers.none(n => n < 0);
+ *      const noneNegative = none(numbers, n => n < 0);
  *      // noneNegative = true
  *
  *      // Check if none are greater than 10
- *      const noneGreaterThan10 = numbers.none(n => n > 10);
+ *      const noneGreaterThan10 = none(numbers, n => n > 10);
  *      // noneGreaterThan10 = true
  *
  *      // Check if none are even (this will be false)
- *      const noneEven = numbers.none(n => n % 2 === 0);
+ *      const noneEven = none(numbers, n => n % 2 === 0);
  *      // noneEven = false
  *
  *      // Check if an empty list has no elements (no predicate)
- *      const emptyList = new List<number>();
- *      const emptyNone = emptyList.none();
+ *      const emptyList = [] as number[];
+ *      const emptyNone = none(emptyList);
  *      // emptyNone = true
  *
  *      // Check if a non-empty list has no elements (no predicate)
- *      const nonEmptyNone = numbers.none();
+ *      const nonEmptyNone = none(numbers);
  *      // nonEmptyNone = false
  */
 export const none = <TElement>(
@@ -1313,23 +1343,23 @@ export const none = <TElement>(
  * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
  * @example
  *      // --- Basic Usage with Primitives (string type name) ---
- *      const mixedList = new List<any>([1, 'apple', true, 2.5, 'banana', false, null, undefined]);
+ *      const mixedList = [1, 'apple', true, 2.5, 'banana', false, null, undefined];
  *
- *      const stringsOnly = mixedList.ofType('string').toArray();
+ *      const stringsOnly = toArray(ofType(mixedList, 'string'));
  *      // stringsOnly = ['apple', 'banana']
  *
- *      const numbersOnly = mixedList.ofType('number').toArray();
+ *      const numbersOnly = toArray(ofType(mixedList, 'number'));
  *      // numbersOnly = [1, 2.5]
  *
- *      const booleansOnly = mixedList.ofType('boolean').toArray();
+ *      const booleansOnly = toArray(ofType(mixedList, 'boolean'));
  *      // booleansOnly = [true, false]
  *
  *      // Note: 'object' will match non-null objects, including arrays, dates, custom objects, etc.
- *      const objectsOnly = mixedList.ofType('object').toArray();
+ *      const objectsOnly = toArray(ofType(mixedList, 'object'));
  *      // objectsOnly = [] (in this specific list, as null is considered object but often filtered implicitly)
  *
- *      const listWithObject = new List<any>([1, { name: 'obj' }, new Date(), [1,2] ]);
- *      const objectsInList = listWithObject.ofType('object').toArray();
+ *      const listWithObject = [1, { name: 'obj' }, new Date(), [1, 2]];
+ *      const objectsInList = toArray(ofType(listWithObject, 'object'));
  *      // objectsInList = [ { name: 'obj' }, Date(...), [1, 2] ]
  *
  *      // --- Usage with Constructor Functions ---
@@ -1337,27 +1367,27 @@ export const none = <TElement>(
  *      class Dog extends Animal { constructor(name: string, public breed: string) { super(name); } }
  *      class Cat extends Animal { constructor(name: string, public lives: number) { super(name); } }
  *
- *      const animals = new List<Animal | string>([
+ *      const animals = [
  *          new Dog('Buddy', 'Golden Retriever'),
  *          new Cat('Whiskers', 9),
  *          'Not an animal',
  *          new Dog('Rex', 'German Shepherd'),
  *          null // Will be filtered out
- *      ]);
+ *      ];
  *
  *      // Get only Dog instances
- *      const dogs = animals.ofType(Dog).toArray();
+ *      const dogs = toArray(ofType(animals, Dog));
  *      // dogs = [ Dog { name: 'Buddy', breed: 'Golden Retriever' }, Dog { name: 'Rex', breed: 'German Shepherd' } ]
  *      // TypeScript knows `dogs` is of type Dog[]
  *
  *      // Get only Cat instances
- *      const cats = animals.ofType(Cat).toArray();
+ *      const cats = toArray(ofType(animals, Cat));
  *      // cats = [ Cat { name: 'Whiskers', lives: 9 } ]
  *      // TypeScript knows `cats` is of type Cat[]
  *
  *      // --- Inheritance Handling ---
  *      // Get all instances of Animal (includes Dogs and Cats)
- *      const allAnimals = animals.ofType(Animal).toArray();
+ *      const allAnimals = toArray(ofType(animals, Animal));
  *      // allAnimals = [
  *      //   Dog { name: 'Buddy', breed: 'Golden Retriever' },
  *      //   Cat { name: 'Whiskers', lives: 9 },
@@ -1366,19 +1396,19 @@ export const none = <TElement>(
  *      // TypeScript knows `allAnimals` is of type Animal[]
  *
  *      // --- Using with built-in constructors ---
- *      const variousData = new List<any>([new Date(), 123, "hello", new Date(0), true]);
- *      const datesOnly = variousData.ofType(Date).toArray();
+ *      const variousData = [new Date(), 123, "hello", new Date(0), true];
+ *      const datesOnly = toArray(ofType(variousData, Date));
  *      // datesOnly = [ Date(...), Date(0) ] // Contains the two Date objects
  *
- *      const numbersFromAny = variousData.ofType(Number).toArray();
+ *      const numbersFromAny = toArray(ofType(variousData, Number));
  *      // numbersFromAny = [ 123 ]
  *
  *      // --- Edge Cases ---
- *      const nullsAndUndefined = new List<any>([null, undefined, 0, '']);
- *      const objects = nullsAndUndefined.ofType('object').toArray(); // 'object' typically matches non-null objects
+ *      const nullsAndUndefined = [null, undefined, 0, ''];
+ *      const objects = toArray(ofType(nullsAndUndefined, 'object')); // 'object' typically matches non-null objects
  *      // objects = []
  *
- *      const undefinedOnly = nullsAndUndefined.ofType('undefined').toArray();
+ *      const undefinedOnly = toArray(ofType(nullsAndUndefined, 'undefined'));
  *      // undefinedOnly = [undefined]
  */
 export const ofType = <TElement, TResult extends ObjectType>(
@@ -1396,19 +1426,19 @@ export const ofType = <TElement, TResult extends ObjectType>(
  * @param comparator The comparator function that will be used for comparing two keys. If not specified, the default order comparison will be used.
  * @returns {IOrderedEnumerable<TElement>} A new enumerable sequence whose elements are sorted in ascending order.
  * @example
- *      const numbers = new List([50, 10, 40, 30, 20]);
- *      const sortedNumbers = numbers.orderBy(n => n).toArray();
+ *      const numbers = [50, 10, 40, 30, 20];
+ *      const sortedNumbers = toArray(orderBy(numbers, n => n));
  *      // sortedNumbers = [10, 20, 30, 40, 50]
  *
  *      interface Person { name: string; age: number; }
- *      const people = new List<Person>([
+ *      const people = [
  *          { name: 'Charlie', age: 30 },
  *          { name: 'Alice', age: 25 },
  *          { name: 'Bob', age: 35 }
- *      ]);
+ *      ];
  *
  *      // Order by age (ascending)
- *      const peopleByAge = people.orderBy(p => p.age).toArray();
+ *      const peopleByAge = toArray(orderBy(people, p => p.age));
  *      // peopleByAge = [
  *      //   { name: 'Alice', age: 25 },
  *      //   { name: 'Charlie', age: 30 },
@@ -1416,7 +1446,7 @@ export const ofType = <TElement, TResult extends ObjectType>(
  *      // ]
  *
  *      // Order by name (string comparison, ascending)
- *      const peopleByName = people.orderBy(p => p.name).toArray();
+ *      const peopleByName = toArray(orderBy(people, p => p.name));
  *      // peopleByName = [
  *      //   { name: 'Alice', age: 25 },
  *      //   { name: 'Bob', age: 35 },
@@ -1424,11 +1454,12 @@ export const ofType = <TElement, TResult extends ObjectType>(
  *      // ]
  *
  *      // Using a custom comparator (e.g., sort numbers as strings)
- *      const numbersToSortAsString = new List([1, 10, 2, 20]);
- *      const sortedAsString = numbersToSortAsString.orderBy(
+ *      const numbersToSortAsString = [1, 10, 2, 20];
+ *      const sortedAsString = toArray(orderBy(
+ *          numbersToSortAsString,
  *          n => n,
  *          (a, b) => String(a).localeCompare(String(b)) // String comparison
- *      ).toArray();
+ *      ));
  *      // sortedAsString = [1, 10, 2, 20] (standard numeric sort would be [1, 2, 10, 20])
  */
 export const orderBy = <TElement, TKey>(
@@ -1447,19 +1478,19 @@ export const orderBy = <TElement, TKey>(
  * @param comparator The comparator function that will be used for comparing two keys. If not specified, the default order comparison will be used.
  * @returns {IOrderedEnumerable<TElement>} A new enumerable sequence whose elements are sorted in descending order.
  * @example
- *      const numbers = new List([50, 10, 40, 30, 20]);
- *      const sortedNumbersDesc = numbers.orderByDescending(n => n).toArray();
+ *      const numbers = [50, 10, 40, 30, 20];
+ *      const sortedNumbersDesc = toArray(orderByDescending(numbers, n => n));
  *      // sortedNumbersDesc = [50, 40, 30, 20, 10]
  *
  *      interface Person { name: string; age: number; }
- *      const people = new List<Person>([
+ *      const people = [
  *          { name: 'Charlie', age: 30 },
  *          { name: 'Alice', age: 25 },
  *          { name: 'Bob', age: 35 }
- *      ]);
+ *      ];
  *
  *      // Order by age (descending)
- *      const peopleByAgeDesc = people.orderByDescending(p => p.age).toArray();
+ *      const peopleByAgeDesc = toArray(orderByDescending(people, p => p.age));
  *      // peopleByAgeDesc = [
  *      //   { name: 'Bob', age: 35 },
  *      //   { name: 'Charlie', age: 30 },
@@ -1467,7 +1498,7 @@ export const orderBy = <TElement, TKey>(
  *      // ]
  *
  *      // Order by name (string comparison, descending)
- *      const peopleByNameDesc = people.orderByDescending(p => p.name).toArray();
+ *      const peopleByNameDesc = toArray(orderByDescending(people, p => p.name));
  *      // peopleByNameDesc = [
  *      //   { name: 'Charlie', age: 30 },
  *      //   { name: 'Bob', age: 35 },
@@ -1489,26 +1520,26 @@ export const orderByDescending = <TElement, TKey>(
  * @param resultSelector The optional function to create a result element from the current and the next element. Defaults to creating a tuple `[current, next]`.
  * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of applying the `resultSelector` to adjacent elements.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
+ *      const numbers = [1, 2, 3, 4, 5];
  *
  *      // Default behavior: creates tuples
- *      const pairs = numbers.pairwise().toArray();
+ *      const pairs = toArray(pairwise(numbers));
  *      // pairs = [[1, 2], [2, 3], [3, 4], [4, 5]]
  *
  *      // Custom result selector: calculate differences
- *      const differences = numbers.pairwise((current, next) => next - current).toArray();
+ *      const differences = toArray(pairwise(numbers, (current, next) => next - current));
  *      // differences = [1, 1, 1, 1]
  *
  *      // Custom result selector: create strings
- *      const pairStrings = numbers.pairwise((current, next) => `${current}-${next}`).toArray();
+ *      const pairStrings = toArray(pairwise(numbers, (current, next) => `${current}-${next}`));
  *      // pairStrings = ["1-2", "2-3", "3-4", "4-5"]
  *
- *      const shortList = new List([10]);
- *      const noPairs = shortList.pairwise().toArray();
+ *      const shortList = [10];
+ *      const noPairs = toArray(pairwise(shortList));
  *      // noPairs = []
  *
- *      const emptyList = new List<number>();
- *      const emptyPairs = emptyList.pairwise().toArray();
+ *      const emptyList = [] as number[];
+ *      const emptyPairs = toArray(pairwise(emptyList));
  *      // emptyPairs = []
  */
 export const pairwise = <TElement>(
@@ -1526,30 +1557,30 @@ export const pairwise = <TElement>(
  * @param predicate The predicate function that will be used to check each element for a condition.
  * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing two enumerable sequences: the first for elements satisfying the predicate, the second for the rest.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+ *      const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
  *
- *      const [evens, odds] = numbers.partition(n => n % 2 === 0);
+ *      const [evens, odds] = partition(numbers, n => n % 2 === 0);
  *
- *      const evensArray = evens.toArray();
+ *      const evensArray = toArray(evens);
  *      // evensArray = [2, 4, 6, 8, 10]
  *
- *      const oddsArray = odds.toArray();
+ *      const oddsArray = toArray(odds);
  *      // oddsArray = [1, 3, 5, 7, 9]
  *
  *      interface Person { name: string; age: number; }
- *      const people = new List<Person>([
+ *      const people = [
  *          { name: 'Alice', age: 25 },
  *          { name: 'Bob', age: 17 },
  *          { name: 'Charlie', age: 30 },
  *          { name: 'Diana', age: 15 }
- *      ]);
+ *      ];
  *
- *      const [adults, minors] = people.partition(p => p.age >= 18);
+ *      const [adults, minors] = partition(people, p => p.age >= 18);
  *
- *      const adultNames = adults.select(p => p.name).toArray();
+ *      const adultNames = toArray(select(adults, p => p.name));
  *      // adultNames = ['Alice', 'Charlie']
  *
- *      const minorNames = minors.select(p => p.name).toArray();
+ *      const minorNames = toArray(select(minors, p => p.name));
  *      // minorNames = ['Bob', 'Diana']
  */
 export function partition<TElement, TFiltered extends TElement>(
@@ -1576,31 +1607,35 @@ export function partition<TElement, TFiltered extends TElement>(
  * @returns {IEnumerable<IEnumerable<TElement>>} An enumerable of enumerable sequences, each containing a permutation of the distinct elements of the source sequence.
  * @throws {InvalidArgumentException} If size is less than or equal to 0.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const allPermutations = letters.permutations()
- *          .select(p => p.toArray().join('')) // Convert each permutation sequence to a string
- *          .toArray();
+ *      const letters = ['a', 'b', 'c'];
+ *      const allPermutations = toArray(select(
+ *          permutations(letters),
+ *          p => toArray(p).join('') // Convert each permutation sequence to a string
+ *      ));
  *      // allPermutations = ["abc", "acb", "bac", "bca", "cab", "cba"]
  *
- *      const permutationsOfTwo = letters.permutations(2)
- *          .select(p => p.toArray().join(''))
- *          .toArray();
+ *      const permutationsOfTwo = toArray(select(
+ *          permutations(letters, 2),
+ *          p => toArray(p).join('')
+ *      ));
  *      // permutationsOfTwo = ["ab", "ac", "ba", "bc", "ca", "cb"]
  *
  *      // With duplicates in source - only distinct elements are permuted
- *      const lettersWithDuplicates = new List(['a', 'a', 'b']);
- *      const permsFromDup = lettersWithDuplicates.permutations() // Equivalent to permutations of ['a', 'b']
- *          .select(p => p.toArray().join(''))
- *          .toArray();
+ *      const lettersWithDuplicates = ['a', 'a', 'b'];
+ *      const permsFromDup = toArray(select(
+ *          permutations(lettersWithDuplicates), // Equivalent to permutations of ['a', 'b']
+ *          p => toArray(p).join('')
+ *      ));
  *      // permsFromDup = ["ab", "ba"]
  *
- *      const permsOfOne = letters.permutations(1)
- *          .select(p => p.toArray().join(''))
- *          .toArray();
+ *      const permsOfOne = toArray(select(
+ *          permutations(letters, 1),
+ *          p => toArray(p).join('')
+ *      ));
  *      // permsOfOne = ["a", "b", "c"]
  *
  *      try {
- *          letters.permutations(0); // Throws InvalidArgumentException
+ *          permutations(letters, 0); // Throws InvalidArgumentException
  *      } catch (e) {
  *          console.log(e.message); // Output: Size must be greater than 0.
  *      }
@@ -1619,12 +1654,12 @@ export const permutations = <TElement>(
  * @param element The element to add to the sequence.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that starts with the specified element.
  * @example
- *      const numbers = new List([1, 2, 3]);
- *      const prepended = numbers.prepend(0).toArray();
+ *      const numbers = [1, 2, 3];
+ *      const prepended = toArray(prepend(numbers, 0));
  *      // prepended = [0, 1, 2, 3]
  *
- *      const emptyList = new List<string>();
- *      const prependedToEmpty = emptyList.prepend("first").toArray();
+ *      const emptyList = [] as string[];
+ *      const prependedToEmpty = toArray(prepend(emptyList, "first"));
  *      // prependedToEmpty = ["first"]
  */
 export const prepend = <TElement>(
@@ -1641,16 +1676,16 @@ export const prepend = <TElement>(
  * @returns {number} The product of the sequence. Returns 1 if the sequence is empty.
  * @throws {NoElementsException} If the source is empty.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const totalProduct = numbers.product();
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const totalProduct = product(numbers);
  *      // totalProduct = 120 (1 * 2 * 3 * 4 * 5)
  *
  *      interface Item { value: number; }
- *      const items = new List<Item>([{ value: 2 }, { value: 5 }, { value: 10 }]);
- *      const itemValueProduct = items.product(item => item.value);
+ *      const items = [{ value: 2 }, { value: 5 }, { value: 10 }];
+ *      const itemValueProduct = product(items, item => item.value);
  *      // itemValueProduct = 100 (2 * 5 * 10)
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
  *          emptyList.product(); // Throws NoElementsException
  *      } catch (e) {
@@ -1694,16 +1729,16 @@ export const repeat = <TElement>(element: TElement, count: number): IEnumerable<
  * @param source The source iterable.
  * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are in the reverse order of the source sequence.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const reversedNumbers = numbers.reverse().toArray();
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const reversedNumbers = toArray(reverse(numbers));
  *      // reversedNumbers = [5, 4, 3, 2, 1]
  *
- *      const letters = new List(['a', 'b', 'c']);
- *      const reversedLetters = letters.reverse().toArray();
+ *      const letters = ['a', 'b', 'c'];
+ *      const reversedLetters = toArray(reverse(letters));
  *      // reversedLetters = ['c', 'b', 'a']
  *
- *      const emptyList = new List<number>();
- *      const reversedEmpty = emptyList.reverse().toArray();
+ *      const emptyList = [] as number[];
+ *      const reversedEmpty = toArray(reverse(emptyList));
  *      // reversedEmpty = []
  */
 export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
@@ -1720,28 +1755,28 @@ export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElem
  * @returns {IEnumerable<TAccumulate>} A new enumerable sequence whose elements are the result of each intermediate computation.
  * @throws {NoElementsException} If the source is empty and seed is not provided.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
+ *      const numbers = [1, 2, 3, 4, 5];
  *
  *      // Running sum without a seed (the first element is the initial value and first result)
- *      const runningSumNoSeed = numbers.scan((acc, current) => acc + current).toArray();
+ *      const runningSumNoSeed = toArray(scan(numbers, (acc, current) => acc + current));
  *      // runningSumNoSeed = [1, 3, 6, 10, 15]
  *
  *      // Running sum with seed (seed is initial value, but not in output)
- *      const runningSumWithSeed = numbers.scan((acc, current) => acc + current, 100).toArray();
+ *      const runningSumWithSeed = toArray(scan(numbers, (acc, current) => acc + current, 100));
  *      // runningSumWithSeed = [101, 103, 106, 110, 115]
  *
  *      // Building intermediate strings
- *      const letters = new List(['a', 'b', 'c']);
- *      const intermediateStrings = letters.scan((acc, current) => acc + current, '').toArray();
+ *      const letters = ['a', 'b', 'c'];
+ *      const intermediateStrings = toArray(scan(letters, (acc, current) => acc + current, ''));
  *      // intermediateStrings = ['a', 'ab', 'abc']
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
- *          emptyList.scan((a, b) => a + b).toArray(); // Throws NoElementsException
+ *          toArray(scan(emptyList, (a, b) => a + b)); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
- *      const scanEmptyWithSeed = emptyList.scan((a, b) => a + b, 0).toArray();
+ *      const scanEmptyWithSeed = toArray(scan(emptyList, (a, b) => a + b, 0));
  *      // scanEmptyWithSeed = []
  */
 export const scan = <TElement, TAccumulate = TElement>(
@@ -1759,20 +1794,20 @@ export const scan = <TElement, TAccumulate = TElement>(
  * @param selector The selector function that will be used to project each element into a new form. The second parameter is the index.
  * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of the selector function.
  * @example
- *      const numbers = new List([1, 2, 3, 4]);
- *      const squares = numbers.select(n => n * n).toArray();
+ *      const numbers = [1, 2, 3, 4];
+ *      const squares = toArray(select(numbers, n => n * n));
  *      // squares = [1, 4, 9, 16]
  *
  *      interface Person { firstName: string; lastName: string; }
- *      const people = new List<Person>([
+ *      const people = [
  *          { firstName: 'John', lastName: 'Doe' },
  *          { firstName: 'Jane', lastName: 'Smith' }
- *      ]);
- *      const fullNames = people.select(p => `${p.firstName} ${p.lastName}`).toArray();
+ *      ];
+ *      const fullNames = toArray(select(people, p => `${p.firstName} ${p.lastName}`));
  *      // fullNames = ["John Doe", "Jane Smith"]
  *
  *      // Using the index
- *      const indexedValues = people.select((p, index) => `${index}: ${p.firstName}`).toArray();
+ *      const indexedValues = toArray(select(people, (p, index) => `${index}: ${p.firstName}`));
  *      // indexedValues = ["0: John", "1: Jane"]
  */
 export const select = <TElement, TResult>(
@@ -1790,23 +1825,23 @@ export const select = <TElement, TResult>(
  * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the flattened result of the selector function.
  * @example
  *      interface Customer { name: string; orders: string[]; }
- *      const customers = new List<Customer>([
+ *      const customers = [
  *          { name: 'Alice', orders: ['Apple', 'Banana'] },
  *          { name: 'Bob', orders: ['Cherry'] },
  *          { name: 'Charlie', orders: [] } // No orders
- *      ]);
+ *      ];
  *
  *      // Get a single list of all orders from all customers
- *      const allOrders = customers.selectMany(c => c.orders).toArray();
+ *      const allOrders = toArray(selectMany(customers, c => c.orders));
  *      // allOrders = ['Apple', 'Banana', 'Cherry']
  *
  *      // Example: splitting strings and flattening
- *      const sentences = new List(['Hello world', 'How are you']);
- *      const words = sentences.selectMany(s => s.split(' ')).toArray();
+ *      const sentences = ['Hello world', 'How are you'];
+ *      const words = toArray(selectMany(sentences, s => split(s, ' ')));
  *      // words = ['Hello', 'world', 'How', 'are', 'you']
  *
  *      // Using index in selector
- *      const indexedFlatten = customers.selectMany((c, index) => c.orders.map(o => `${index}-${o}`)).toArray();
+ *      const indexedFlatten = toArray(selectMany(customers, (c, index) => c.orders.map(o => `${index}-${o}`)));
  *      // indexedFlatten = ['0-Apple', '0-Banana', '1-Cherry']
  */
 export const selectMany = <TElement, TResult>(
@@ -1824,29 +1859,29 @@ export const selectMany = <TElement, TResult>(
  * @param comparator The equality comparer that will be used to compare the elements. If not specified, the default equality comparer will be used.
  * @returns {boolean} true if the two source sequences are of equal length and their corresponding elements are equal, according to the specified equality comparer; otherwise, false.
  * @example
- *      const list1 = new List([1, 2, 3]);
- *      const list2 = new List([1, 2, 3]);
- *      const list3 = new List([1, 3, 2]); // Different order
- *      const list4 = new List([1, 2]); // Different length
+ *      const list1 = [1, 2, 3];
+ *      const list2 = [1, 2, 3];
+ *      const list3 = [1, 3, 2]; // Different order
+ *      const list4 = [1, 2]; // Different length
  *      const array1 = [1, 2, 3]; // Can compare with other iterables
  *
- *      const isEqual12 = list1.sequenceEqual(list2);
+ *      const isEqual12 = sequenceEqual(list1, list2);
  *      // isEqual12 = true
  *
- *      const isEqual13 = list1.sequenceEqual(list3);
+ *      const isEqual13 = sequenceEqual(list1, list3);
  *      // isEqual13 = false
  *
- *      const isEqual14 = list1.sequenceEqual(list4);
+ *      const isEqual14 = sequenceEqual(list1, list4);
  *      // isEqual14 = false
  *
- *      const isEqual1Array = list1.sequenceEqual(array1);
+ *      const isEqual1Array = sequenceEqual(list1, array1);
  *      // isEqual1Array = true
  *
  *      // Custom comparison for objects
  *      interface Item { id: number; }
- *      const items1 = new List<Item>([{ id: 1 }, { id: 2 }]);
- *      const items2 = new List<Item>([{ id: 1 }, { id: 2 }]);
- *      const items3 = new List<Item>([{ id: 1 }, { id: 3 }]);
+ *      const items1 = [{ id: 1 }, { id: 2 }];
+ *      const items2 = [{ id: 1 }, { id: 2 }];
+ *      const items3 = [{ id: 1 }, { id: 3 }];
  *
  *      const areItemsEqualById = items1.sequenceEqual(items2, (a, b) => a.id === b.id);
  *      // areItemsEqualById = true
@@ -1869,12 +1904,12 @@ export const sequenceEqual = <TElement>(
  * @param source The source iterable.
  * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are shuffled.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const shuffledNumbers = numbers.shuffle().toArray();
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const shuffledNumbers = toArray(shuffle(numbers));
  *      // shuffledNumbers will be a random permutation of [1, 2, 3, 4, 5], e.g., [3, 1, 5, 2, 4]
  *
  *      // Shuffling is not stable; subsequent calls will likely produce different orders
- *      const shuffledAgain = numbers.shuffle().toArray();
+ *      const shuffledAgain = toArray(shuffle(numbers));
  *      // shuffledAgain will likely be different from shuffledNumbers
  */
 export const shuffle = <TElement>(
@@ -1895,36 +1930,36 @@ export const shuffle = <TElement>(
  * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies the condition.
  * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
  * @example
- *      const singleItemList = new List([42]);
- *      const theOnlyItem = singleItemList.single();
+ *      const singleItemList = [42];
+ *      const theOnlyItem = single(singleItemList);
  *      // theOnlyItem = 42
  *
- *      const numbers = new List([10, 20, 30, 40]);
- *      const theOnlyThirty = numbers.single(n => n === 30);
+ *      const numbers = [10, 20, 30, 40];
+ *      const theOnlyThirty = single(numbers, n => n === 30);
  *      // theOnlyThirty = 30
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
- *          emptyList.single(); // Throws NoElementsException
+ *          single(emptyList); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message);
  *      }
  *
- *      const multipleItems = new List([1, 2]);
+ *      const multipleItems = [1, 2];
  *      try {
- *          multipleItems.single(); // Throws MoreThanOneElementException
- *      } catch (e) {
- *          console.log(e.message);
- *      }
- *
- *      try {
- *          numbers.single(n => n > 50); // Throws NoMatchingElementException
+ *          single(multipleItems); // Throws MoreThanOneElementException
  *      } catch (e) {
  *          console.log(e.message);
  *      }
  *
  *      try {
- *          numbers.single(n => n > 15); // Throws MoreThanOneMatchingElementException
+ *          single(numbers, n => n > 50); // Throws NoMatchingElementException
+ *      } catch (e) {
+ *          console.log(e.message);
+ *      }
+ *
+ *      try {
+ *          single(numbers, n => n > 15); // Throws MoreThanOneMatchingElementException
  *      } catch (e) {
  *          console.log(e.message);
  *      }
@@ -1954,28 +1989,28 @@ export function single<TElement, TFiltered extends TElement>(
  * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
  * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
  * @example
- *      const singleItemList = new List([42]);
- *      const theOnlyItem = singleItemList.singleOrDefault();
+ *      const singleItemList = [42];
+ *      const theOnlyItem = singleOrDefault(singleItemList);
  *      // theOnlyItem = 42
  *
- *      const numbers = new List([10, 20, 30, 40]);
- *      const theOnlyThirty = numbers.singleOrDefault(n => n === 30);
+ *      const numbers = [10, 20, 30, 40];
+ *      const theOnlyThirty = singleOrDefault(numbers, n => n === 30);
  *      // theOnlyThirty = 30
  *
- *      const emptyList = new List<number>();
- *      const singleFromEmpty = emptyList.singleOrDefault();
+ *      const emptyList = [] as number[];
+ *      const singleFromEmpty = singleOrDefault(emptyList);
  *      // singleFromEmpty = null
  *
- *      const singleNoMatch = numbers.singleOrDefault(n => n > 50);
+ *      const singleNoMatch = singleOrDefault(numbers, n => n > 50);
  *      // singleNoMatch = null
  *
- *      const multipleItems = new List([1, 2]);
+ *      const multipleItems = [1, 2];
  *      try {
- *          multipleItems.singleOrDefault(); // Throws MoreThanOneElementException
+ *          singleOrDefault(multipleItems); // Throws MoreThanOneElementException
  *      } catch (e) { console.log(e.message); }
  *
  *      try {
- *          numbers.singleOrDefault(n => n > 15); // Throws MoreThanOneMatchingElementException
+ *          singleOrDefault(numbers, n => n > 15); // Throws MoreThanOneMatchingElementException
  *      } catch (e) {
  *          console.log(e.message);
  *      }
@@ -2002,17 +2037,17 @@ export function singleOrDefault<TElement, TFiltered extends TElement>(
  * @param count The number of elements to skip before returning the remaining elements. If the count is zero or negative, all elements are returned.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements that occur after the specified number of skipped elements.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6]);
- *      const skipFirstThree = numbers.skip(3).toArray();
+ *      const numbers = [1, 2, 3, 4, 5, 6];
+ *      const skipFirstThree = toArray(skip(numbers, 3));
  *      // skipFirstThree = [4, 5, 6]
  *
- *      const skipZero = numbers.skip(0).toArray();
+ *      const skipZero = toArray(skip(numbers, 0));
  *      // skipZero = [1, 2, 3, 4, 5, 6]
  *
- *      const skipMoreThanAvailable = numbers.skip(10).toArray();
+ *      const skipMoreThanAvailable = toArray(skip(numbers, 10));
  *      // skipMoreThanAvailable = []
  *
- *      const skipNegative = numbers.skip(-5).toArray(); // Negative count is treated as 0
+ *      const skipNegative = toArray(skip(numbers, -5)); // Negative count is treated as 0
  *      // skipNegative = [1, 2, 3, 4, 5, 6]
  */
 export const skip = <TElement>(
@@ -2029,17 +2064,17 @@ export const skip = <TElement>(
  * @param count The number of elements to omit from the end of the collection. If the count is zero or negative, all elements are returned.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from source with the last count elements omitted.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6]);
- *      const skipLastTwo = numbers.skipLast(2).toArray();
+ *      const numbers = [1, 2, 3, 4, 5, 6];
+ *      const skipLastTwo = toArray(skipLast(numbers, 2));
  *      // skipLastTwo = [1, 2, 3, 4]
  *
- *      const skipLastZero = numbers.skipLast(0).toArray();
+ *      const skipLastZero = toArray(skipLast(numbers, 0));
  *      // skipLastZero = [1, 2, 3, 4, 5, 6]
  *
- *      const skipLastMoreThanAvailable = numbers.skipLast(10).toArray();
+ *      const skipLastMoreThanAvailable = toArray(skipLast(numbers, 10));
  *      // skipLastMoreThanAvailable = []
  *
- *      const skipLastNegative = numbers.skipLast(-3).toArray(); // Negative count is treated as 0
+ *      const skipLastNegative = toArray(skipLast(numbers, -3)); // Negative count is treated as 0
  *      // skipLastNegative = [1, 2, 3, 4, 5, 6]
  */
 export const skipLast = <TElement>(
@@ -2057,22 +2092,22 @@ export const skipLast = <TElement>(
  * @param predicate The predicate function (accepting element and index) that will be used to test each element.
  * @returns {IEnumerable<TElement>} A new enumerable sequence containing elements starting from the first element that does not satisfy the predicate.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 1, 2]);
+ *      const numbers = [1, 2, 3, 4, 5, 1, 2];
  *
  *      // Skip while less than 4
- *      const skipWhileLessThan4 = numbers.skipWhile(n => n < 4).toArray();
+ *      const skipWhileLessThan4 = toArray(skipWhile(numbers, n => n < 4));
  *      // skipWhileLessThan4 = [4, 5, 1, 2] (Stops skipping at 4)
  *
  *      // Skip based on index
- *      const skipWhileIndexLessThan3 = numbers.skipWhile((n, index) => index < 3).toArray();
+ *      const skipWhileIndexLessThan3 = toArray(skipWhile(numbers, (n, index) => index < 3));
  *      // skipWhileIndexLessThan3 = [4, 5, 1, 2] (Skips elements at index 0, 1, 2)
  *
  *      // Condition never met
- *      const skipWhileAlwaysTrue = numbers.skipWhile(n => true).toArray();
+ *      const skipWhileAlwaysTrue = toArray(skipWhile(numbers, n => true));
  *      // skipWhileAlwaysTrue = []
  *
  *      // Condition immediately false
- *      const skipWhileAlwaysFalse = numbers.skipWhile(n => false).toArray();
+ *      const skipWhileAlwaysFalse = toArray(skipWhile(numbers, n => false));
  *      // skipWhileAlwaysFalse = [1, 2, 3, 4, 5, 1, 2]
  */
 export const skipWhile = <TElement>(
@@ -2092,27 +2127,27 @@ export const skipWhile = <TElement>(
  * @param predicate The predicate function that will be used to test each element.
  * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple of two enumerable sequences.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 1, 5, 6]);
+ *      const numbers = [1, 2, 3, 4, 1, 5, 6];
  *
  *      // Span while numbers are less than 4
- *      const [lessThan4, rest1] = numbers.span(n => n < 4);
- *      const lessThan4Array = lessThan4.toArray();
+ *      const [lessThan4, rest1] = span(numbers, n => n < 4);
+ *      const lessThan4Array = toArray(lessThan4);
  *      // lessThan4Array = [1, 2, 3]
- *      const rest1Array = rest1.toArray();
+ *      const rest1Array = toArray(rest1);
  *      // rest1Array = [4, 1, 5, 6] (Starts from the first element failing the condition)
  *
  *      // Span while condition is always true
- *      const [allElements, rest2] = numbers.span(n => true);
- *      const allElementsArray = allElements.toArray();
+ *      const [allElements, rest2] = span(numbers, n => true);
+ *      const allElementsArray = toArray(allElements);
  *      // allElementsArray = [1, 2, 3, 4, 1, 5, 6]
- *      const rest2Array = rest2.toArray();
+ *      const rest2Array = toArray(rest2);
  *      // rest2Array = []
  *
  *      // Span while the condition is initially false
- *      const [initialSpan, rest3] = numbers.span(n => n > 10);
- *      const initialSpanArray = initialSpan.toArray();
+ *      const [initialSpan, rest3] = span(numbers, n => n > 10);
+ *      const initialSpanArray = toArray(initialSpan);
  *      // initialSpanArray = []
- *      const rest3Array = rest3.toArray();
+ *      const rest3Array = toArray(rest3);
  *      // rest3Array = [1, 2, 3, 4, 1, 5, 6]
  */
 export function span<TElement, TFiltered extends TElement>(
@@ -2139,22 +2174,22 @@ export function span<TElement, TFiltered extends TElement>(
  * @returns {IEnumerable<TElement>} A new enumerable sequence containing elements at the specified step intervals.
  * @throws {InvalidArgumentException} If the step is less than 1.
  * @example
- *      const numbers = new List([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+ *      const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
  *
  *      // Take every 2nd element (step = 2)
- *      const step2 = numbers.step(2).toArray();
+ *      const step2 = toArray(step(numbers, 2));
  *      // step2 = [0, 2, 4, 6, 8, 10]
  *
  *      // Take every 3rd element (step = 3)
- *      const step3 = numbers.step(3).toArray();
+ *      const step3 = toArray(step(numbers, 3));
  *      // step3 = [0, 3, 6, 9]
  *
  *      // Step = 1 includes all elements
- *      const step1 = numbers.step(1).toArray();
+ *      const step1 = toArray(step(numbers, 1));
  *      // step1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
  *
  *      try {
- *          numbers.step(0); // Throws InvalidArgumentException
+ *          step(numbers, 0); // Throws InvalidArgumentException
  *      } catch (e) {
  *          console.log(e.message); // Output: Step must be greater than 0.
  *      }
@@ -2173,21 +2208,21 @@ export const step = <TElement>(
  * @returns {number} The sum of the values in the sequence. Returns 0 if the sequence is empty.
  * @throws {NoElementsException} If the source is empty.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5]);
- *      const totalSum = numbers.sum();
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const totalSum = sum(numbers);
  *      // totalSum = 15
  *
  *      interface Item { value: number; quantity: number; }
- *      const items = new List<Item>([
+ *      const items = [
  *          { value: 10, quantity: 2 }, // Total value = 20
  *          { value: 5, quantity: 3 }  // Total value = 15
- *      ]);
- *      const totalItemValue = items.sum(item => item.value * item.quantity);
+ *      ];
+ *      const totalItemValue = sum(items, item => item.value * item.quantity);
  *      // totalItemValue = 35
  *
- *      const emptyList = new List<number>();
+ *      const emptyList = [] as number[];
  *      try {
- *          emptyList.sum(); // Throws NoElementsException
+ *          sum(emptyList); // Throws NoElementsException
  *      } catch (e) {
  *          console.log(e.message); // Output: The sequence contains no elements.
  *      }
@@ -2206,18 +2241,18 @@ export const sum = <TElement>(
  * @param count The number of elements to return. If the count is zero or negative, an empty sequence is returned. If the count is greater than the number of elements, all elements are returned.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the specified number of elements from the start of the input sequence.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6]);
+ *      const numbers = [1, 2, 3, 4, 5, 6];
  *
- *      const takeFirstThree = numbers.take(3).toArray();
+ *      const takeFirstThree = toArray(take(numbers, 3));
  *      // takeFirstThree = [1, 2, 3]
  *
- *      const takeZero = numbers.take(0).toArray();
+ *      const takeZero = toArray(take(numbers, 0));
  *      // takeZero = []
  *
- *      const takeMoreThanAvailable = numbers.take(10).toArray();
+ *      const takeMoreThanAvailable = toArray(take(numbers, 10));
  *      // takeMoreThanAvailable = [1, 2, 3, 4, 5, 6]
  *
- *      const takeNegative = numbers.take(-2).toArray(); // Negative count is treated as 0
+ *      const takeNegative = toArray(take(numbers, -2)); // Negative count is treated as 0
  *      // takeNegative = []
  */
 export const take = <TElement>(
@@ -2234,18 +2269,18 @@ export const take = <TElement>(
  * @param count The number of elements to return. If the count is zero or negative, an empty sequence is returned. If the count is greater than the number of elements, all elements are returned.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the specified number of elements from the end of the input sequence.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6]);
+ *      const numbers = [1, 2, 3, 4, 5, 6];
  *
- *      const takeLastTwo = numbers.takeLast(2).toArray();
+ *      const takeLastTwo = toArray(takeLast(numbers, 2));
  *      // takeLastTwo = [5, 6]
  *
- *      const takeLastZero = numbers.takeLast(0).toArray();
+ *      const takeLastZero = toArray(takeLast(numbers, 0));
  *      // takeLastZero = []
  *
- *      const takeLastMoreThanAvailable = numbers.takeLast(10).toArray();
+ *      const takeLastMoreThanAvailable = toArray(takeLast(numbers, 10));
  *      // takeLastMoreThanAvailable = [1, 2, 3, 4, 5, 6] (Order is preserved)
  *
- *      const takeLastNegative = numbers.takeLast(-3).toArray(); // Negative count is treated as 0
+ *      const takeLastNegative = toArray(takeLast(numbers, -3)); // Negative count is treated as 0
  *      // takeLastNegative = []
  */
 export const takeLast = <TElement>(
@@ -2262,22 +2297,22 @@ export const takeLast = <TElement>(
  * @param predicate The predicate function (accepting element and index) that will be used to test each element.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 1, 5, 6]);
+ *      const numbers = [1, 2, 3, 4, 1, 5, 6];
  *
  *      // Take while less than 4
- *      const takeWhileLessThan4 = numbers.takeWhile(n => n < 4).toArray();
+ *      const takeWhileLessThan4 = toArray(takeWhile(numbers, n => n < 4));
  *      // takeWhileLessThan4 = [1, 2, 3] (Stops taking at 4)
  *
  *      // Take based on index
- *      const takeWhileIndexLessThan3 = numbers.takeWhile((n, index) => index < 3).toArray();
+ *      const takeWhileIndexLessThan3 = toArray(takeWhile(numbers, (n, index) => index < 3));
  *      // takeWhileIndexLessThan3 = [1, 2, 3] (Takes elements at index 0, 1, 2)
  *
  *      // Condition never met (the first element fails)
- *      const takeWhileAlwaysFalse = numbers.takeWhile(n => n > 10).toArray();
+ *      const takeWhileAlwaysFalse = toArray(takeWhile(numbers, n => n > 10));
  *      // takeWhileAlwaysFalse = []
  *
  *      // Condition always true
- *      const takeWhileAlwaysTrue = numbers.takeWhile(n => true).toArray();
+ *      const takeWhileAlwaysTrue = toArray(takeWhile(numbers, n => true));
  *      // takeWhileAlwaysTrue = [1, 2, 3, 4, 1, 5, 6]
  */
 export function takeWhile<TElement, TFiltered extends TElement>(
@@ -2302,12 +2337,12 @@ export function takeWhile<TElement, TFiltered extends TElement>(
  * @param source The source iterable.
  * @returns {TElement[]} An array that contains the elements from the input sequence.
  * @example
- *      const numbers = new List([1, 2, 3]);
- *      const numberArray = numbers.toArray();
+ *      const numbers = [1, 2, 3];
+ *      const numberArray = toArray(numbers);
  *      // numberArray = [1, 2, 3] (a standard JavaScript Array)
  *
- *      const squares = numbers.select(n => n * n); // squares is an IEnumerable
- *      const squaresArray = squares.toArray(); // squaresArray forces evaluation
+ *      const squares = select(numbers, n => n * n); // squares is an IEnumerable
+ *      const squaresArray = toArray(squares); // squaresArray forces evaluation
  *      // squaresArray = [1, 4, 9]
  */
 export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
@@ -2322,12 +2357,9 @@ export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {CircularLinkedList<TElement>} A new circular linked list that contains the elements from the input sequence.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const circularList = letters.toCircularLinkedList();
+ *      const letters = ['a', 'b', 'c'];
+ *      const circularList = toCircularLinkedList(letters);
  *      // circularList is a CircularLinkedList instance containing 'a', 'b', 'c'
- *      // circularList.firstNode?.value === 'a'
- *      // circularList.lastNode?.value === 'c'
- *      // circularList.lastNode?.next === circularList.firstNode // Circular nature
  */
 export const toCircularLinkedList = <TElement>(
     source: Iterable<TElement>,
@@ -2347,29 +2379,29 @@ export const toCircularLinkedList = <TElement>(
  * @returns {Dictionary<TKey, TValue>} A new dictionary that contains the elements from the input sequence.
  * @example
  *      interface Product { id: number; name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { id: 1, name: 'Apple', price: 0.5 },
  *          { id: 2, name: 'Banana', price: 0.3 },
  *          { id: 3, name: 'Cherry', price: 1.0 }
- *      ]);
+ *      ];
  *
  *      // Create a dictionary mapping ID to Product Name
- *      const productDict = products.toDictionary(p => p.id, p => p.name);
+ *      const productDict = toDictionary(products, p => p.id, p => p.name);
  *      // productDict.get(2) === 'Banana'
  *      // productDict.size === 3
  *
  *      // Example with KeyValuePair source
- *      const pairs = new List([
+ *      const pairs = [
  *          new KeyValuePair('one', 1),
  *          new KeyValuePair('two', 2)
- *      ]);
- *      const dictFromPairs = pairs.toDictionary(kv => kv.key, kv => kv.value);
+ *      ];
+ *      const dictFromPairs = toDictionary(pairs, kv => kv.key, kv => kv.value);
  *      // dictFromPairs.get('one') === 1
  *
  *      // Example causing error due to a duplicate key
- *      const duplicateKeys = new List([{ key: 'a', val: 1 }, { key: 'a', val: 2 }]);
+ *      const duplicateKeys = [{ key: 'a', val: 1 }, { key: 'a', val: 2 }];
  *      try {
- *          duplicateKeys.toDictionary(item => item.key, item => item.val);
+ *          toDictionary(duplicateKeys, item => item.key, item => item.val);
  *      } catch (e) {
  *          console.log(e.message); // Output likely: "An item with the same key has already been added."
  *      }
@@ -2390,12 +2422,12 @@ export const toDictionary = <TElement, TKey, TValue>(
  * @param source The source iterable.
  * @returns {EnumerableSet<TElement>} An enumerable set that contains the distinct elements from the input sequence.
  * @example
- *      const numbers = new List([1, 2, 2, 3, 1, 4, 5, 5]);
- *      const numberSet = numbers.toEnumerableSet();
+ *      const numbers = [1, 2, 2, 3, 1, 4, 5, 5];
+ *      const numberSet = toEnumerableSet(numbers);
  *      // numberSet contains {1, 2, 3, 4, 5}
  *      // numberSet.size === 5
  *      // numberSet.contains(2) === true
- *      // numberSet.toArray() results in [1, 2, 3, 4, 5] (order depends on Set implementation)
+ *      // toArray(numberSet) results in [1, 2, 3, 4, 5] (order depends on Set implementation)
  */
 export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>
@@ -2414,12 +2446,12 @@ export const toEnumerableSet = <TElement>(
  * @returns {ImmutableDictionary<TKey, TValue>} A new immutable dictionary that contains the elements from the input sequence.
  * @example
  *      interface Product { id: number; name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { id: 1, name: 'Apple', price: 0.5 },
  *          { id: 2, name: 'Banana', price: 0.3 }
- *      ]);
+ *      ];
  *
- *      const immutableProductDict = products.toImmutableDictionary(p => p.id, p => p.name);
+ *      const immutableProductDict = toImmutableDictionary(products, p => p.id, p => p.name);
  *      // immutableProductDict.get(1) === 'Apple'
  *      // immutableProductDict.size === 2
  *      // Attempting immutableProductDict.add(3, 'Cherry') would throw an error or return a new dictionary.
@@ -2441,8 +2473,8 @@ export const toImmutableDictionary = <TElement, TKey, TValue>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {ImmutableList<TElement>} A new immutable list that contains the elements from the input sequence.
  * @example
- *      const numbers = new List([1, 2, 3]);
- *      const immutableList = numbers.toImmutableList();
+ *      const numbers = [1, 2, 3];
+ *      const immutableList = toImmutableList(numbers);
  *      // immutableList contains [1, 2, 3]
  *      // immutableList.size === 3
  *      // immutableList.get(0) === 1
@@ -2463,13 +2495,13 @@ export const toImmutableList = <TElement>(
  * @param comparator The order comparator function that will be used to compare two elements. If not specified, the default order comparer will be used.
  * @returns {ImmutablePriorityQueue<TElement>} A new immutable priority queue that contains the elements from the input sequence.
  * @example
- *      const numbers = new List([5, 1, 3, 4, 2]);
+ *      const numbers = [5, 1, 3, 4, 2];
  *      // Default comparator assumes min-heap (smaller numbers have higher priority)
- *      const immutableMinQueue = numbers.toImmutablePriorityQueue();
+ *      const immutableMinQueue = toImmutablePriorityQueue(numbers);
  *      // immutableMinQueue.peek() === 1
  *
  *      // Custom comparator for max-heap
- *      const immutableMaxQueue = numbers.toImmutablePriorityQueue((a, b) => b - a); // Larger numbers first
+ *      const immutableMaxQueue = toImmutablePriorityQueue(numbers, (a, b) => b - a); // Larger numbers first
  *      // immutableMaxQueue.peek() === 5
  *
  *      // Attempting immutableMinQueue.enqueue(0) would return a new queue.
@@ -2489,8 +2521,8 @@ export const toImmutablePriorityQueue = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {ImmutableQueue<TElement>} A new immutable queue that contains the elements from the input sequence.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const immutableQueue = letters.toImmutableQueue();
+ *      const letters = ['a', 'b', 'c'];
+ *      const immutableQueue = toImmutableQueue(letters);
  *      // immutableQueue.peek() === 'a'
  *      // immutableQueue.size === 3
  *      // Attempting immutableQueue.enqueue('d') would return a new queue.
@@ -2509,8 +2541,8 @@ export const toImmutableQueue = <TElement>(
  * @param source The source iterable.
  * @returns {ImmutableSet<TElement>} A new immutable set that contains the distinct elements from the input sequence.
  * @example
- *      const numbers = new List([1, 2, 2, 3, 1]);
- *      const immutableSet = numbers.toImmutableSet();
+ *      const numbers = [1, 2, 2, 3, 1];
+ *      const immutableSet = toImmutableSet(numbers);
  *      // immutableSet contains {1, 2, 3}
  *      // immutableSet.size === 3
  *      // immutableSet.contains(2) === true
@@ -2534,16 +2566,16 @@ export const toImmutableSet = <TElement>(
  * @returns {ImmutableSortedDictionary<TKey, TValue>} A new immutable sorted dictionary that contains the elements from the input sequence.
  * @example
  *      interface Product { id: number; name: string; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { id: 3, name: 'Cherry' },
  *          { id: 1, name: 'Apple' },
  *          { id: 2, name: 'Banana' }
- *      ]);
+ *      ];
  *
- *      const immutableSortedDict = products.toImmutableSortedDictionary(p => p.id, p => p.name);
+ *      const immutableSortedDict = toImmutableSortedDictionary(products, p => p.id, p => p.name);
  *      // Keys will be sorted: 1, 2, 3
  *      // immutableSortedDict.get(2) === 'Banana'
- *      // immutableSortedDict.keys().toArray() === [1, 2, 3]
+ *      // toArray(immutableSortedDict.keys()) === [1, 2, 3]
  *      // Attempting immutableSortedDict.add(4, 'Date') would return a new dictionary.
  */
 export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
@@ -2564,10 +2596,10 @@ export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
  * @param comparator The order comparator function that will be used to compare two elements for sorting. If not specified, the default order comparer will be used.
  * @returns {ImmutableSortedSet<TElement>} A new immutable sorted set that contains the distinct, sorted elements from the input sequence.
  * @example
- *      const numbers = new List([5, 1, 3, 1, 4, 2, 5]);
- *      const immutableSortedSet = numbers.toImmutableSortedSet();
+ *      const numbers = [5, 1, 3, 1, 4, 2, 5];
+ *      const immutableSortedSet = toImmutableSortedSet(numbers);
  *      // immutableSortedSet contains {1, 2, 3, 4, 5} in sorted order
- *      // immutableSortedSet.toArray() === [1, 2, 3, 4, 5]
+ *      // toArray(immutableSortedSet) === [1, 2, 3, 4, 5]
  *      // immutableSortedSet.contains(3) === true
  *      // immutableSortedSet.size === 5
  *      // Attempting immutableSortedSet.add(0) would return a new set.
@@ -2587,8 +2619,8 @@ export const toImmutableSortedSet = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {ImmutableStack<TElement>} A new immutable stack that contains the elements from the input sequence.
  * @example
- *      const letters = new List(['a', 'b', 'c']); // 'c' is the last element
- *      const immutableStack = letters.toImmutableStack();
+ *      const letters = ['a', 'b', 'c']; // 'c' is the last element
+ *      const immutableStack = toImmutableStack(letters);
  *      // immutableStack.peek() === 'c'
  *      // immutableStack.size === 3
  *      // Attempting immutableStack.push('d') would return a new stack.
@@ -2608,12 +2640,9 @@ export const toImmutableStack = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {LinkedList<TElement>} A new linked list that contains the elements from the input sequence.
  * @example
- *      const numbers = new List([10, 20, 30]);
- *      const linkedList = numbers.toLinkedList();
+ *      const numbers = [10, 20, 30];
+ *      const linkedList = toLinkedList(numbers);
  *      // linkedList is a LinkedList instance
- *      // linkedList.firstNode?.value === 10
- *      // linkedList.lastNode?.value === 30
- *      // linkedList.size() === 3
  */
 export const toLinkedList = <TElement>(
     source: Iterable<TElement>,
@@ -2630,17 +2659,17 @@ export const toLinkedList = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {List<TElement>} A new list that contains the elements from the input sequence.
  * @example
- *      const numbers = Enumerable.range(1, 3); // Creates IEnumerable [1, 2, 3]
- *      const list = numbers.toList();
+ *      const numbers = range(Enumerable, 1, 3); // Creates IEnumerable [1, 2, 3]
+ *      const list = toList(numbers);
  *      // list is a List instance containing [1, 2, 3]
  *      // list.get(0) === 1
  *      // list.size() === 3
  *
  *      // Creates a copy of an existing list
- *      const originalList = new List(['a', 'b']);
- *      const newList = originalList.toList();
+ *      const originalList = ['a', 'b'];
+ *      const newList = toList(originalList);
  *      // newList !== originalList (it's a new instance)
- *      // newList.toArray() results in ['a', 'b']
+ *      // toArray(newList) results in ['a', 'b']
  */
 export const toList = <TElement>(
     source: Iterable<TElement>,
@@ -2661,26 +2690,26 @@ export const toList = <TElement>(
  * @returns {ILookup<TKey, TValue>} A new lookup that contains the elements from the input sequence, grouped by key.
  * @example
  *      interface Pet { name: string; species: string; age: number; }
- *      const pets = new List<Pet>([
+ *      const pets = [
  *          { name: 'Fluffy', species: 'Cat', age: 3 },
  *          { name: 'Buddy', species: 'Dog', age: 5 },
  *          { name: 'Whiskers', species: 'Cat', age: 2 },
  *          { name: 'Rex', species: 'Dog', age: 7 }
- *      ]);
+ *      ];
  *
  *      // Group pet names by species
- *      const lookup = pets.toLookup(pet => pet.species, pet => pet.name);
+ *      const lookup = toLookup(pets, pet => pet.species, pet => pet.name);
  *
  *      // lookup.count() === 2 (number of distinct keys: 'Cat', 'Dog')
  *      // lookup.contains('Cat') === true
  *
- *      const catNames = lookup.get('Cat').toArray();
+ *      const catNames = toArray(get(lookup, 'Cat'));
  *      // catNames = ['Fluffy', 'Whiskers']
  *
- *      const dogNames = lookup.get('Dog').toArray();
+ *      const dogNames = toArray(get(lookup, 'Dog'));
  *      // dogNames = ['Buddy', 'Rex']
  *
- *      const fishNames = lookup.get('Fish').toArray(); // Key not present
+ *      const fishNames = toArray(get(lookup, 'Fish')); // Key not present
  *      // fishNames = []
  */
 export const toLookup = <TElement, TKey, TValue>(
@@ -2703,22 +2732,22 @@ export const toLookup = <TElement, TKey, TValue>(
  * @returns {Map<TKey, TValue>} A Map representation of this sequence.
  * @example
  *      interface Product { id: number; name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { id: 1, name: 'Apple', price: 0.5 },
  *          { id: 2, name: 'Banana', price: 0.3 },
  *          { id: 3, name: 'Cherry', price: 1.0 }
- *      ]);
+ *      ];
  *
  *      // Create a Map mapping ID to Product Name
- *      const productMap = products.toMap(p => p.id, p => p.name);
+ *      const productMap = toMap(products, p => p.id, p => p.name);
  *      // productMap instanceof Map === true
  *      // productMap.get(2) === 'Banana'
  *      // productMap.size === 3
  *
  *      // Example causing error due to a duplicate key
- *      const duplicateKeys = new List([{ key: 'a', val: 1 }, { key: 'a', val: 2 }]);
+ *      const duplicateKeys = [{ key: 'a', val: 1 }, { key: 'a', val: 2 }];
  *      try {
- *          duplicateKeys.toMap(item => item.key, item => item.val);
+ *          toMap(duplicateKeys, item => item.key, item => item.val);
  *      } catch (e) {
  *          console.log(e.message); // Map structure prevents duplicate keys by default. Behavior might depend on the underlying Map implementation if custom logic is used.
  *      }
@@ -2742,24 +2771,24 @@ export const toMap = <TElement, TKey, TValue>(
  * @returns {Record<TKey, TValue>} An object that contains the elements of the sequence.
  * @example
  *      interface Product { id: string; name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { id: 'A1', name: 'Apple', price: 0.5 },
  *          { id: 'B2', name: 'Banana', price: 0.3 },
  *          { id: 'C3', name: 'Cherry', price: 1.0 }
- *      ]);
+ *      ];
  *
  *      // Create an object mapping ID to Product Price
- *      const productObject = products.toObject(p => p.id, p => p.price);
+ *      const productObject = toObject(products, p => p.id, p => p.price);
  *      // productObject = { A1: 0.5, B2: 0.3, C3: 1.0 }
  *      // productObject['B2'] === 0.3
  *
  *      // Example with duplicate keys (last one wins)
- *      const duplicateKeys = new List([
+ *      const duplicateKeys = [
  *          { key: 'a', val: 1 },
  *          { key: 'b', val: 2 },
  *          { key: 'a', val: 3 } // This value for 'a' will overwrite the first one
- *      ]);
- *      const objectFromDups = duplicateKeys.toObject(item => item.key, item => item.val);
+ *      ];
+ *      const objectFromDups = toObject(duplicateKeys, item => item.key, item => item.val);
  *      // objectFromDups = { a: 3, b: 2 }
  */
 export const toObject = <TElement, TKey extends string | number | symbol, TValue>(
@@ -2778,15 +2807,15 @@ export const toObject = <TElement, TKey extends string | number | symbol, TValue
  * @param comparator The order comparator function that will be used to compare two elements. If not specified, the default order comparer will be used (min-heap).
  * @returns {PriorityQueue<TElement>} A new priority queue that contains the elements from the input sequence.
  * @example
- *      const numbers = new List([5, 1, 3, 4, 2]);
+ *      const numbers = [5, 1, 3, 4, 2];
  *      // Default comparator assumes min-heap (smaller numbers have higher priority)
- *      const minQueue = numbers.toPriorityQueue();
+ *      const minQueue = toPriorityQueue(numbers);
  *      // minQueue.peek() === 1
  *      // minQueue.dequeue() === 1
  *      // minQueue.peek() === 2
  *
  *      // Custom comparator for max-heap
- *      const maxQueue = numbers.toPriorityQueue((a, b) => b - a); // Larger numbers first
+ *      const maxQueue = toPriorityQueue(numbers, (a, b) => b - a); // Larger numbers first
  *      // maxQueue.peek() === 5
  *      // maxQueue.dequeue() === 5
  *      // maxQueue.peek() === 4
@@ -2806,8 +2835,8 @@ export const toPriorityQueue = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {Queue<TElement>} A new queue that contains the elements from the input sequence.
  * @example
- *      const letters = new List(['a', 'b', 'c']);
- *      const queue = letters.toQueue();
+ *      const letters = ['a', 'b', 'c'];
+ *      const queue = toQueue(letters);
  *      // queue.peek() === 'a'
  *      // queue.size() === 3
  *      // queue.dequeue() === 'a'
@@ -2827,8 +2856,8 @@ export const toQueue = <TElement>(
  * @param source The source iterable.
  * @returns {Set<TElement>} A new Set that contains the distinct elements from the input sequence.
  * @example
- *      const numbers = new List([1, 2, 2, 3, 1, 4, 5, 5]);
- *      const numberSet = numbers.toSet();
+ *      const numbers = [1, 2, 2, 3, 1, 4, 5, 5];
+ *      const numberSet = toSet(numbers);
  *      // numberSet instanceof Set === true
  *      // numberSet contains {1, 2, 3, 4, 5}
  *      // numberSet.size === 5
@@ -2853,21 +2882,21 @@ export const toSet = <TElement>(
  * @returns {SortedDictionary<TKey, TValue>} A new sorted dictionary that contains the elements from the input sequence.
  * @example
  *      interface Product { id: number; name: string; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { id: 3, name: 'Cherry' },
  *          { id: 1, name: 'Apple' },
  *          { id: 2, name: 'Banana' }
- *      ]);
+ *      ];
  *
- *      const sortedDict = products.toSortedDictionary(p => p.id, p => p.name);
+ *      const sortedDict = toSortedDictionary(products, p => p.id, p => p.name);
  *      // Keys will be sorted: 1, 2, 3
  *      // sortedDict.get(2) === 'Banana'
- *      // sortedDict.keys().toArray() results in [1, 2, 3]
+ *      // toArray(sortedDict.keys()) results in [1, 2, 3]
  *
  *      // Example causing error due to duplicate key
- *      const duplicateKeys = new List([{ key: 'a', val: 1 }, { key: 'a', val: 2 }]);
+ *      const duplicateKeys = [{ key: 'a', val: 1 }, { key: 'a', val: 2 }];
  *      try {
- *          duplicateKeys.toSortedDictionary(item => item.key, item => item.val);
+ *          toSortedDictionary(duplicateKeys, item => item.key, item => item.val);
  *      } catch (e) {
  *          console.log(e.message); // Output likely: "An item with the same key has already been added."
  *      }
@@ -2890,10 +2919,10 @@ export const toSortedDictionary = <TElement, TKey, TValue>(
  * @param comparator The order comparator function that will be used to compare two elements for sorting. If not specified, the default order comparer will be used.
  * @returns {SortedSet<TElement>} A new sorted set that contains the distinct, sorted elements from the input sequence.
  * @example
- *      const numbers = new List([5, 1, 3, 1, 4, 2, 5]);
- *      const sortedSet = numbers.toSortedSet();
+ *      const numbers = [5, 1, 3, 1, 4, 2, 5];
+ *      const sortedSet = toSortedSet(numbers);
  *      // sortedSet contains {1, 2, 3, 4, 5} in sorted order
- *      // sortedSet.toArray() results in [1, 2, 3, 4, 5]
+ *      // toArray(sortedSet) results in [1, 2, 3, 4, 5]
  *      // sortedSet.contains(3) === true
  *      // sortedSet.size() === 5
  */
@@ -2912,8 +2941,8 @@ export const toSortedSet = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {Stack<TElement>} A new stack that contains the elements from the input sequence.
  * @example
- *      const letters = new List(['a', 'b', 'c']); // 'c' is the last element
- *      const stack = letters.toStack();
+ *      const letters = ['a', 'b', 'c']; // 'c' is the last element
+ *      const stack = toStack(letters);
  *      // stack.peek() === 'c'
  *      // stack.size() === 3
  *      // stack.pop() === 'c'
@@ -2935,16 +2964,16 @@ export const toStack = <TElement>(
  * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding duplicates. Order is preserved from the original sequences, with elements from the first sequence appearing before elements from the second.
  * @example
- *      const numbers1 = new List([1, 2, 3, 3]);
- *      const numbers2 = new List([3, 4, 5, 4]);
- *      const unionResult = numbers1.union(numbers2).toArray();
+ *      const numbers1 = [1, 2, 3, 3];
+ *      const numbers2 = [3, 4, 5, 4];
+ *      const unionResult = toArray(union(numbers1, numbers2));
  *      // unionResult = [1, 2, 3, 4, 5] (Order: elements from numbers1 first, then unique from numbers2)
  *
  *      // Using custom object comparison
  *      interface Item { id: number; value: string; }
- *      const items1 = new List<Item>([{ id: 1, value: 'A' }, { id: 2, value: 'B' }]);
- *      const items2 = new List<Item>([{ id: 2, value: 'B_alt' }, { id: 3, value: 'C' }]);
- *      const itemUnion = items1.union(items2, (a, b) => a.id === b.id).toArray();
+ *      const items1 = [{ id: 1, value: 'A' }, { id: 2, value: 'B' }];
+ *      const items2 = [{ id: 2, value: 'B_alt' }, { id: 3, value: 'C' }];
+ *      const itemUnion = toArray(union(items1, items2, (a, b) => a.id === b.id));
  *      // itemUnion = [
  *      //   { id: 1, value: 'A' }, // From items1
  *      //   { id: 2, value: 'B' }, // From items1 (id=2 from items2 is considered duplicate by comparator)
@@ -2970,20 +2999,21 @@ export const union = <TElement>(
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding elements with duplicate keys based on the selector. Order is preserved.
  * @example
  *      interface Product { code: string; name: string; }
- *      const store1Products = new List<Product>([
+ *      const store1Products = [
  *          { code: 'A1', name: 'Apple' },
  *          { code: 'B2', name: 'Banana' }
- *      ]);
- *      const store2Products = new List<Product>([
+ *      ];
+ *      const store2Products = [
  *          { code: 'B2', name: 'Banana V2' }, // Duplicate code 'B2'
  *          { code: 'C3', name: 'Cherry' }
- *      ]);
+ *      ];
  *
  *      // Union based on product code
- *      const allUniqueProducts = store1Products.unionBy(
+ *      const allUniqueProducts = toArray(unionBy(
+ *          store1Products,
  *          store2Products,
  *          p => p.code // Select code as the key for comparison
- *      ).toArray();
+ *      ));
  *      // allUniqueProducts = [
  *      //   { code: 'A1', name: 'Apple' },   // From store1
  *      //   { code: 'B2', name: 'Banana' },  // From store1 (item with code 'B2' from store2 is ignored)
@@ -2991,13 +3021,14 @@ export const union = <TElement>(
  *      // ]
  *
  *      // Example with case-insensitive key comparison
- *      const listA = new List([{ val: 'a', id: 1 }, { val: 'b', id: 2 }]);
- *      const listB = new List([{ val: 'B', id: 3 }, { val: 'c', id: 4 }]); // 'B' has same key as 'b' case-insensitively
- *      const unionCaseInsensitive = listA.unionBy(
+ *      const listA = [{ val: 'a', id: 1 }, { val: 'b', id: 2 }];
+ *      const listB = [{ val: 'B', id: 3 }, { val: 'c', id: 4 }]; // 'B' has same key as 'b' case-insensitively
+ *      const unionCaseInsensitive = toArray(unionBy(
+ *          listA,
  *          listB,
  *          item => item.val,
  *          (keyA, keyB) => keyA.toLowerCase() === keyB.toLowerCase() // Case-insensitive comparator
- *      ).toArray();
+ *      ));
  *      // unionCaseInsensitive = [
  *      //  { val: 'a', id: 1 }, // From listA
  *      //  { val: 'b', id: 2 }, // From listA ('B' from listB is ignored)
@@ -3020,14 +3051,14 @@ export const unionBy = <TElement, TKey>(
  * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
  * @returns {IEnumerable<TElement>} A new enumerable sequence that contains elements from the input sequence that satisfy the condition.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8]);
+ *      const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
  *
  *      // Get only even numbers
- *      const evens = numbers.where(n => n % 2 === 0).toArray();
+ *      const evens = toArray(where(numbers, n => n % 2 === 0));
  *      // evens = [2, 4, 6, 8]
  *
  *      // Get numbers greater than 3 at an odd index
- *      const complexFilter = numbers.where((n, index) => n > 3 && index % 2 !== 0).toArray();
+ *      const complexFilter = toArray(where(numbers, (n, index) => n > 3 && index % 2 !== 0));
  *      // Indices: 0, 1, 2, 3, 4, 5, 6, 7
  *      // Elements:1, 2, 3, 4, 5, 6, 7, 8
  *      // Filter checks:
@@ -3038,12 +3069,12 @@ export const unionBy = <TElement, TKey>(
  *      // complexFilter = [4, 6, 8]
  *
  *      interface Product { name: string; price: number; }
- *      const products = new List<Product>([
+ *      const products = [
  *          { name: 'Apple', price: 0.5 },
  *          { name: 'Banana', price: 0.3 },
  *          { name: 'Cherry', price: 1.0 }
- *      ]);
- *      const cheapProducts = products.where(p => p.price < 0.6).toArray();
+ *      ];
+ *      const cheapProducts = toArray(where(products, p => p.price < 0.6));
  *      // cheapProducts = [ { name: 'Apple', price: 0.5 }, { name: 'Banana', price: 0.3 } ]
  */
 export function where<TElement, TFiltered extends TElement>(
@@ -3070,32 +3101,35 @@ export function where<TElement, TFiltered extends TElement>(
  * @returns {IEnumerable<IEnumerable<TElement>>} A new enumerable sequence where each element is a window (as an IEnumerable) of the specified size.
  * @throws {InvalidArgumentException} If size is less than or equal to 0.
  * @example
- *      const numbers = new List([1, 2, 3, 4, 5, 6]);
+ *      const numbers = [1, 2, 3, 4, 5, 6];
  *
  *      // Get windows of size 3
- *      const windowsOf3 = numbers.windows(3)
- *          .select(window => window.toArray()) // Convert each window IEnumerable to an array for clarity
- *          .toArray();
+ *      const windowsOf3 = toArray(select(
+ *          windows(numbers, 3),
+ *          window => toArray(window) // Convert each window IEnumerable to an array for clarity
+ *      ));
  *      // windowsOf3 = [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]]
  *
  *      // Get windows of size 1
- *      const windowsOf1 = numbers.windows(1)
- *          .select(window => window.toArray())
- *          .toArray();
+ *      const windowsOf1 = toArray(select(
+ *          windows(numbers, 1),
+ *          window => toArray(window)
+ *      ));
  *      // windowsOf1 = [[1], [2], [3], [4], [5], [6]]
  *
  *      // Size larger than the list returns an empty sequence
- *      const windowsOf10 = numbers.windows(10).toArray();
+ *      const windowsOf10 = toArray(windows(numbers, 10));
  *      // windowsOf10 = []
  *
  *      // Size equal to the list returns one window
- *      const windowsOf6 = numbers.windows(6)
- *          .select(window => window.toArray())
- *          .toArray();
+ *      const windowsOf6 = toArray(select(
+ *          windows(numbers, 6),
+ *          window => toArray(window)
+ *      ));
  *      // windowsOf6 = [[1, 2, 3, 4, 5, 6]]
  *
  *      try {
- *          numbers.windows(0); // Throws InvalidArgumentException
+ *          windows(numbers, 0); // Throws InvalidArgumentException
  *      } catch (e) {
  *          console.log(e.message); // Output: Size must be greater than 0.
  *      }
@@ -3118,23 +3152,25 @@ export const windows = <TElement>(
  * @param zipper The function that specifies how to merge the elements from the two sequences into a result element.
  * @returns {IEnumerable<TResult>} A new enumerable sequence that contains the result of applying the zipper function to corresponding elements.
  * @example
- *      const numbers = new List([1, 2, 3]);
- *      const letters = new List(['A', 'B', 'C']);
+ *      const numbers = [1, 2, 3];
+ *      const letters = ['A', 'B', 'C'];
  *
  *      // Combine numbers and letters into strings using the zipper
- *      const combinedStrings = numbers.zip(
- *      letters,
+ *      const combinedStrings = toArray(zip(
+ *          numbers,
+ *          letters,
  *          (num, char) => `${num}-${char}` // Zipper function
- *      ).toArray();
+ *      ));
  *      // combinedStrings = ["1-A", "2-B", "3-C"]
  *
  *      // Sum corresponding elements using the zipper
- *      const listA = new List([10, 20, 30]);
- *      const listB = new List([5, 15, 25, 35]); // listB is longer
- *      const sums = listA.zip(
- *      listB,
+ *      const listA = [10, 20, 30];
+ *      const listB = [5, 15, 25, 35]; // listB is longer
+ *      const sums = toArray(zip(
+ *          listA,
+ *          listB,
  *          (a, b) => a + b // Zipper function
- *      ).toArray();
+ *      ));
  *      // sums = [15, 35, 55] (Length limited by the shorter listA)
  */
 export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
