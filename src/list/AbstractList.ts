@@ -3,7 +3,7 @@ import { IList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
@@ -37,21 +37,25 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         }
     }
 
-    public override first(predicate?: Predicate<TElement>): TElement {
+    public override first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public override first(predicate?: Predicate<TElement>): TElement;
+    public override first<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
         if (!predicate) {
             if (this.isEmpty()) {
                 throw new NoElementsException();
             }
             return this.get(0);
         }
-        return super.first(predicate);
+        return super.first(predicate as Predicate<TElement>);
     }
 
-    public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
+    public override firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public override firstOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         if (!predicate) {
             return this.isEmpty() ? null : this.get(0);
         }
-        return super.firstOrDefault(predicate);
+        return super.firstOrDefault(predicate as Predicate<TElement>);
     }
 
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
@@ -75,14 +79,16 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return -1;
     }
 
-    public override last(predicate?: Predicate<TElement>): TElement {
+    public override last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public override last(predicate?: Predicate<TElement>): TElement;
+    public override last<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
         if (!predicate) {
             if (this.isEmpty()) {
                 throw new NoElementsException();
             }
             return this.get(this.size() - 1);
         }
-        return super.last(predicate);
+        return super.last(predicate as Predicate<TElement>);
     }
 
     public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
@@ -104,11 +110,13 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
         return -1;
     }
 
-    public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
+    public override lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public override lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         if (!predicate) {
             return this.isEmpty() ? null : this.get(this.size() - 1);
         }
-        return super.lastOrDefault(predicate);
+        return super.lastOrDefault(predicate as Predicate<TElement>);
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {

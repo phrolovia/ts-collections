@@ -1,11 +1,10 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import {
     CircularLinkedList,
-    Enumerable,
+    Enumerable, type IEnumerable,
     ImmutableList,
     PriorityQueue,
-    ReadonlyCollection,
-    Stack
+    ReadonlyCollection, Stack
 } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
@@ -16,7 +15,12 @@ import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOn
 import { NoElementsException } from "../../src/shared/NoElementsException";
 import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
-import { ApiResponse, isError, isSuccess } from "../models/ApiResponse";
+import {
+    ApiResponse, ApiResponseSuccess,
+    isError,
+    isLoading,
+    isSuccess
+} from "../models/ApiResponse";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
@@ -32,7 +36,7 @@ describe("List", () => {
         { status: "success", data: Person.Bella },
         { status: "error", error: "Server error" },
         { status: "success", data: Person.Mel },
-        { status: "loading" }
+        { status: "loading", estimatedTime: 4000 }
     ]);
     const responseArray = responses.toArray();
 
@@ -1006,6 +1010,8 @@ describe("List", () => {
             expect(first).to.eq(undefined);
         });
         test("should narrow items with type guard", () => {
+            const firstError = responses.first(isError);
+            expect(firstError).to.haveOwnProperty('error');
         });
     });
 
@@ -1039,6 +1045,10 @@ describe("List", () => {
             const list = new List(data);
             const first = list.select((d) => d.b).firstOrDefault();
             expect(first).to.eq(undefined);
+        });
+        test("should narrow items with type guard", () => {
+            const firstError = responses.firstOrDefault(isError);
+            expect(firstError).to.haveOwnProperty('error');
         });
     });
 
@@ -2062,6 +2072,11 @@ describe("List", () => {
             const last = list.select((d) => d.b).last();
             expect(last).to.eq(null);
         });
+        test("should narrow items with type guard", () => {
+            const lastError = responses.last(isError);
+            expect(lastError).to.haveOwnProperty('error');
+            expect(lastError.error).to.eq("Server error");
+        });
     });
 
     describe("#lastIndexOf()", () => {
@@ -2120,6 +2135,11 @@ describe("List", () => {
             const list = new List(data);
             const last = list.select((d) => d.b).lastOrDefault();
             expect(last).to.eq(null);
+        });
+        test("should narrow items with type guard", () => {
+            const lastError = responses.lastOrDefault(isError);
+            expect(lastError).to.haveOwnProperty('error');
+            expect(lastError!.error).to.eq("Server error");
         });
     });
 
@@ -2466,6 +2486,17 @@ describe("List", () => {
             const [evens, odds] = list.partition((n) => n % 2 === 0);
             expect(evens.toArray()).to.deep.equal([2, 4, 6, 8, 10]);
             expect(odds.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+        });
+        test("should narrow items with type guard", () => {
+            const [successes, rest] = responses.partition(isSuccess);
+            expect(successes.select(s => s.data).toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Bella,
+                Person.Mel
+            ]);
+            expect(rest.count()).to.eq(3);
+            expectTypeOf(successes).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(rest).toEqualTypeOf<IEnumerable<Exclude<ApiResponse<Person>, ApiResponseSuccess<Person>>>>();
         });
     });
 
@@ -3032,6 +3063,10 @@ describe("List", () => {
             const single = list.single();
             expect(single).to.eq(null);
         });
+        test("should narrow items with type guard", () => {
+            const loading = responses.single(isLoading);
+            expectTypeOf(loading).toHaveProperty("estimatedTime");
+        });
     });
     describe("#singleOrDefault()", () => {
         const list = new List<number>();
@@ -3082,6 +3117,10 @@ describe("List", () => {
             const sod2 = list2.singleOrDefault();
             expect(sod).to.eq(undefined);
             expect(sod2).to.eq(null);
+        });
+        test("should narrow items with type guard", () => {
+            const loading = responses.singleOrDefault(isLoading);
+            expectTypeOf(loading!).toHaveProperty("estimatedTime");
         });
     });
 
@@ -3197,6 +3236,13 @@ describe("List", () => {
             const [first, second] = list.span((n) => n < 100);
             expect(first.none()).to.eq(true);
             expect(second.none()).to.eq(true);
+        });
+        test("should narrow items with type guard", () => {
+            const [initialSuccesses, remainder] = responses.span(isSuccess);
+            expect(initialSuccesses.toArray()).to.deep.equal([{ status: "success", data: Person.Alice }]);
+            expect(remainder.count()).to.eq(5);
+            expectTypeOf(initialSuccesses).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(remainder).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
         });
     });
 
@@ -3326,6 +3372,13 @@ describe("List", () => {
             expect(list2.get(1)).to.eq("banana");
             expect(list2.get(2)).to.eq("mango");
             expect(list2.count()).to.eq(3);
+        });
+        test("should narrow items with type guard", () => {
+            const result = responses.takeWhile(isSuccess);
+            expect(result.toArray()).to.deep.equal([
+                { status: "success", data: Person.Alice }
+            ]);
+            expectTypeOf(result).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
         });
     });
 
@@ -4275,7 +4328,7 @@ describe("List", () => {
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
         });
-        test("should return type-guarded elements", () => {
+        test("should narrow elements", () => {
             const success = responses.where(isSuccess).select(p => p.data);
             const successArray = responseArray.filter(isSuccess).map(p => p.data);
             expect(success.count()).to.eq(3);

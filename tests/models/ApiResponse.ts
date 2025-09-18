@@ -1,5 +1,6 @@
 export interface ApiResponseLoading {
     status: "loading";
+    estimatedTime: number; // in milliseconds
 }
 
 export interface ApiResponseSuccess<T> {
