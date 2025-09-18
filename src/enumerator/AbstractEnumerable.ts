@@ -123,7 +123,7 @@ import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
@@ -222,12 +222,16 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return exceptBy(this, iterable, keySelector, keyComparator);
     }
 
-    public first(predicate?: Predicate<TElement>): TElement {
-        return first(this, predicate);
+    public first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public first(predicate?: Predicate<TElement>): TElement;
+    public first<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
+        return first(this, predicate as Predicate<TElement> | undefined);
     }
 
-    public firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return firstOrDefault(this, predicate);
+    public firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public firstOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
+        return firstOrDefault(this, predicate as Predicate<TElement> | undefined);
     }
 
     public forEach(action: IndexedAction<TElement>) {
@@ -266,12 +270,16 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
-    public last(predicate?: Predicate<TElement>): TElement {
-        return last(this, predicate);
+    public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public last(predicate?: Predicate<TElement>): TElement;
+    public last<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
+        return last(this, predicate as Predicate<TElement> | undefined);
     }
 
-    public lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return lastOrDefault(this, predicate);
+    public lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
+        return lastOrDefault(this, predicate as Predicate<TElement> | undefined);
     }
 
     public max(selector?: Selector<TElement, number>): number {
@@ -310,8 +318,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return pairwise(this, resultSelector);
     }
 
-    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
-        return partition(this, predicate);
+    public partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
+    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+    public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] {
+        return partition(this, predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -351,12 +361,16 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return shuffle(this);
     }
 
-    public single(predicate?: Predicate<TElement>): TElement {
-        return single(this, predicate);
+    public single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public single(predicate?: Predicate<TElement>): TElement;
+    public single<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
+        return single(this, predicate as Predicate<TElement> | undefined);
     }
 
-    public singleOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return singleOrDefault(this, predicate);
+    public singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public singleOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public singleOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
+        return singleOrDefault(this, predicate as Predicate<TElement> | undefined);
     }
 
     public skip(count: number): IEnumerable<TElement> {
@@ -371,8 +385,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return skipWhile(this, predicate);
     }
 
-    public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
-        return span(this, predicate);
+    public span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
+    public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+    public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
+        return span(this, predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
     public step(stepNumber: number): IEnumerable<TElement> {
@@ -391,8 +407,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return takeLast(this, count);
     }
 
-    public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
-        return takeWhile(this, predicate);
+    public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return takeWhile(this, predicate as IndexedPredicate<TElement>);
     }
 
     public toArray(): TElement[] {

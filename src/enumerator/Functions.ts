@@ -26,7 +26,7 @@ import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { ImmutableStack } from "../stack/ImmutableStack";
@@ -646,11 +646,19 @@ export const exceptBy = <TElement, TKey>(
  *          console.log(e.message); // Output: No element satisfies the condition.
  *      }
  */
-export const first = <TElement>(
+export function first<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): TFiltered;
+export function first<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
-): TElement => {
-    return from(source).first(predicate);
+): TElement;
+export function first<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): TElement | TFiltered {
+    return from(source).first(predicate as Predicate<TElement> | undefined);
 }
 
 /**
@@ -674,11 +682,19 @@ export const first = <TElement>(
  *      const firstFromEmpty = emptyList.firstOrDefault();
  *      // firstFromEmpty = null
  */
-export const firstOrDefault = <TElement>(
+export function firstOrDefault<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): TFiltered | null;
+export function firstOrDefault<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
-): TElement | null => {
-    return from(source).firstOrDefault(predicate);
+): TElement | null;
+export function firstOrDefault<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): TElement | TFiltered | null {
+    return from(source).firstOrDefault(predicate as Predicate<TElement> | undefined);
 }
 
 /**
@@ -1056,11 +1072,19 @@ export const join = <TElement, TInner, TKey, TResult>(
  *          console.log(e.message); // Output: No element satisfies the condition.
  *      }
  */
-export const last = <TElement>(
+export function last<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): TFiltered;
+export function last<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
-): TElement => {
-    return from(source).last(predicate);
+): TElement;
+export function last<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): TElement | TFiltered {
+    return from(source).last(predicate as Predicate<TElement> | undefined);
 }
 
 /**
@@ -1084,11 +1108,19 @@ export const last = <TElement>(
  *      const lastFromEmpty = emptyList.lastOrDefault();
  *      // lastFromEmpty = null
  */
-export const lastOrDefault = <TElement>(
+export function lastOrDefault<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): TFiltered | null;
+export function lastOrDefault<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
-): TElement | null => {
-    return from(source).lastOrDefault(predicate);
+): TElement | null;
+export function lastOrDefault<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): TElement | TFiltered | null {
+    return from(source).lastOrDefault(predicate as Predicate<TElement> | undefined);
 }
 
 /**
@@ -1520,11 +1552,19 @@ export const pairwise = <TElement>(
  *      const minorNames = minors.select(p => p.name).toArray();
  *      // minorNames = ['Bob', 'Diana']
  */
-export const partition = <TElement>(
+export function partition<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
+export function partition<TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement>
-): [IEnumerable<TElement>, IEnumerable<TElement>] => {
-    return from(source).partition(predicate);
+): [IEnumerable<TElement>, IEnumerable<TElement>];
+export function partition<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
+    return from(source).partition(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
 }
 
 /**
@@ -1889,11 +1929,19 @@ export const shuffle = <TElement>(
  *          console.log(e.message);
  *      }
  */
-export const single = <TElement>(
+export function single<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): TFiltered;
+export function single<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
-): TElement => {
-    return from(source).single(predicate);
+): TElement;
+export function single<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): TElement | TFiltered {
+    return from(source).single(predicate as Predicate<TElement> | undefined);
 }
 
 /**
@@ -1932,11 +1980,19 @@ export const single = <TElement>(
  *          console.log(e.message);
  *      }
  */
-export const singleOrDefault = <TElement>(
+export function singleOrDefault<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): TFiltered | null;
+export function singleOrDefault<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
-): TElement | null => {
-    return from(source).singleOrDefault(predicate);
+): TElement | null;
+export function singleOrDefault<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): TElement | TFiltered | null {
+    return from(source).singleOrDefault(predicate as Predicate<TElement> | undefined);
 }
 
 /**
@@ -2059,11 +2115,19 @@ export const skipWhile = <TElement>(
  *      const rest3Array = rest3.toArray();
  *      // rest3Array = [1, 2, 3, 4, 1, 5, 6]
  */
-export const span = <TElement>(
+export function span<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: TypePredicate<TElement, TFiltered>
+): [IEnumerable<TFiltered>, IEnumerable<TElement>];
+export function span<TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement>
-): [IEnumerable<TElement>, IEnumerable<TElement>] => {
-    return from(source).span(predicate);
+): [IEnumerable<TElement>, IEnumerable<TElement>];
+export function span<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>
+): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
+    return from(source).span(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
 }
 
 /**
@@ -2216,11 +2280,19 @@ export const takeLast = <TElement>(
  *      const takeWhileAlwaysTrue = numbers.takeWhile(n => true).toArray();
  *      // takeWhileAlwaysTrue = [1, 2, 3, 4, 1, 5, 6]
  */
-export const takeWhile = <TElement>(
+export function takeWhile<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: IndexedTypePredicate<TElement, TFiltered>
+): IEnumerable<TFiltered>;
+export function takeWhile<TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement>
-): IEnumerable<TElement> => {
-    return from(source).takeWhile(predicate);
+): IEnumerable<TElement>;
+export function takeWhile<TElement, TFiltered extends TElement>(
+    source: Iterable<TElement>,
+    predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
+): IEnumerable<TElement> | IEnumerable<TFiltered> {
+    return from(source).takeWhile(predicate as IndexedPredicate<TElement>);
 }
 
 /**

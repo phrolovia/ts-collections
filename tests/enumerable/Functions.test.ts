@@ -1815,6 +1815,98 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("type guard overloads", () => {
+        const createResponses = () => new List<ApiResponse<Person>>([
+            { status: "success", data: Person.Alice },
+            { status: "error", error: "Not found" },
+            { status: "success", data: Person.Bella },
+            { status: "error", error: "Server error" },
+            { status: "success", data: Person.Mel },
+            { status: "loading" }
+        ]);
+
+        test("should narrow element-returning methods", () => {
+            const responses = createResponses();
+
+            const firstSuccess = responses.first(isSuccess);
+            expect(firstSuccess.data).to.eq(Person.Alice);
+            expectTypeOf(firstSuccess).toEqualTypeOf<ApiResponseSuccess<Person>>();
+
+            const maybeFirstSuccess = responses.firstOrDefault(isSuccess);
+            expect(maybeFirstSuccess?.data).to.eq(Person.Alice);
+            expectTypeOf(maybeFirstSuccess).toEqualTypeOf<ApiResponseSuccess<Person> | null>();
+
+            const lastSuccess = responses.last(isSuccess);
+            expect(lastSuccess.data).to.eq(Person.Mel);
+            expectTypeOf(lastSuccess).toEqualTypeOf<ApiResponseSuccess<Person>>();
+
+            const maybeLastSuccess = responses.lastOrDefault(isSuccess);
+            expect(maybeLastSuccess?.data).to.eq(Person.Mel);
+            expectTypeOf(maybeLastSuccess).toEqualTypeOf<ApiResponseSuccess<Person> | null>();
+
+            const singleResponses = new List<ApiResponse<Person>>([
+                { status: "error", error: "Validation" },
+                { status: "success", data: Person.Bella }
+            ]);
+
+            const singleSuccess = singleResponses.single(isSuccess);
+            expect(singleSuccess.data).to.eq(Person.Bella);
+            expectTypeOf(singleSuccess).toEqualTypeOf<ApiResponseSuccess<Person>>();
+
+            const maybeSingleSuccess = singleResponses.singleOrDefault(isSuccess);
+            expect(maybeSingleSuccess?.data).to.eq(Person.Bella);
+            expectTypeOf(maybeSingleSuccess).toEqualTypeOf<ApiResponseSuccess<Person> | null>();
+
+            const functionFirst = first(responses, isSuccess);
+            expect(functionFirst.data).to.eq(Person.Alice);
+            expectTypeOf(functionFirst).toEqualTypeOf<ApiResponseSuccess<Person>>();
+        });
+
+        test("should narrow partition and span outputs", () => {
+            const responses = createResponses();
+
+            const [successes, rest] = responses.partition(isSuccess);
+            expect(successes.select(s => s.data).toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Bella,
+                Person.Mel
+            ]);
+            expect(rest.count()).to.eq(3);
+            expectTypeOf(successes).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(rest).toEqualTypeOf<IEnumerable<Exclude<ApiResponse<Person>, ApiResponseSuccess<Person>>>>();
+
+            const [initialSuccesses, remainder] = responses.span(isSuccess);
+            expect(initialSuccesses.toArray()).to.deep.equal([{ status: "success", data: Person.Alice }]);
+            expect(remainder.count()).to.eq(5);
+            expectTypeOf(initialSuccesses).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(remainder).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
+
+            const partitionFromFunction = partition(responses, isSuccess);
+            expectTypeOf(partitionFromFunction[0]).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(partitionFromFunction[1]).toEqualTypeOf<IEnumerable<Exclude<ApiResponse<Person>, ApiResponseSuccess<Person>>>>();
+
+            const spanFromFunction = span(responses, isSuccess);
+            expectTypeOf(spanFromFunction[0]).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(spanFromFunction[1]).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
+        });
+
+        test("should narrow takeWhile sequences", () => {
+            const responses = createResponses();
+
+            const taken = responses.takeWhile((response): response is ApiResponseSuccess<Person> => response.status === "success");
+            expect(taken.toArray()).to.deep.equal([
+                { status: "success", data: Person.Alice }
+            ]);
+            expectTypeOf(taken).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+
+            const functionTaken = takeWhile(responses, (response): response is ApiResponseSuccess<Person> => response.status === "success");
+            expect(functionTaken.toArray()).to.deep.equal([
+                { status: "success", data: Person.Alice }
+            ]);
+            expectTypeOf(functionTaken).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+        });
+    });
+
     describe("#windows()", () => {
         test("should return a sequence of windows", () => {
             const sequence = [1, 2, 3, 4, 5];

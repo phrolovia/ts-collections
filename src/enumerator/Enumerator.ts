@@ -45,7 +45,7 @@ import { NoMatchingElementException } from "../shared/NoMatchingElementException
 import { ClassType, ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
@@ -244,7 +244,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.exceptByGenerator(iterable, keySelector, keyComparator));
     }
 
-    public first(predicate?: Predicate<TElement>): TElement {
+    public first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public first(predicate?: Predicate<TElement>): TElement;
+    public first<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
         for (const item of this) {
             if (!predicate || predicate(item)) {
                 return item;
@@ -253,7 +255,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         throw predicate ? Enumerator.NO_MATCHING_ELEMENT_EXCEPTION : Enumerator.NO_ELEMENTS_EXCEPTION;
     }
 
-    public firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
+    public firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public firstOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         for (const item of this) {
             if (!predicate || predicate(item)) {
                 return item;
@@ -302,7 +306,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin));
     }
 
-    public last(predicate?: Predicate<TElement>): TElement {
+    public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public last(predicate?: Predicate<TElement>): TElement;
+    public last<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
         let found = false;
         let result: TElement | null = null;
 
@@ -322,7 +328,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return result as TElement;
     }
 
-    public lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
+    public lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         let result: TElement | null = null;
         for (const item of this) {
             if (!predicate || predicate(item)) {
@@ -434,7 +442,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.pairwiseGenerator(resultSelector ??= (first, second) => [first, second]));
     }
 
-    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+    public partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
+    public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+    public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] {
         const trueItems = new List<TElement>();
         const falseItems = new List<TElement>();
         for (const item of this) {
@@ -444,7 +454,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 falseItems.add(item);
             }
         }
-        return [new Enumerable(trueItems), new Enumerable(falseItems)];
+        return [new Enumerable(trueItems), new Enumerable(falseItems)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -513,7 +523,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.shuffleGenerator());
     }
 
-    public single(predicate?: Predicate<TElement>): TElement {
+    public single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public single(predicate?: Predicate<TElement>): TElement;
+    public single<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
         let result: TElement | null = null;
         let found = false;
         let hasAnyElements = false;
@@ -540,7 +552,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return result as TElement;
     }
 
-    public singleOrDefault(predicate?: Predicate<TElement>): TElement | null {
+    public singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public singleOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public singleOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         let result: TElement | null = null;
         let found = false;
 
@@ -570,7 +584,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.skipWhileGenerator(predicate));
     }
 
-    public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>] {
+    public span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
+    public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+    public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
         const span = new List<TElement>();
         const rest = new List<TElement>();
         let found = false;
@@ -584,7 +600,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 rest.add(item);
             }
         }
-        return [new Enumerable(span), new Enumerable(rest)];
+        return [new Enumerable(span), new Enumerable(rest)] as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
     public step(step: number): IEnumerable<TElement> {
@@ -615,8 +631,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.takeLastGenerator(count));
     }
 
-    public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
-        return new Enumerator(() => this.takeWhileGenerator(predicate));
+    public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return new Enumerator(() => this.takeWhileGenerator(predicate as IndexedPredicate<TElement>));
     }
 
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {

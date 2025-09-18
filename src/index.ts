@@ -166,6 +166,6 @@ export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";
-export type { Predicate } from "./shared/Predicate";
+export type { Predicate, TypePredicate } from "./shared/Predicate";
 export type { Selector } from "./shared/Selector";
 export type { Zipper } from "./shared/Zipper";

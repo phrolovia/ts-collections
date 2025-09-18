@@ -123,7 +123,7 @@ import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { Dictionary } from "./Dictionary";
@@ -242,12 +242,16 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return exceptBy(this, iterable, keySelector, keyComparator);
     }
 
-    public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
-        return first(this, predicate);
+    public first<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered;
+    public first(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue>;
+    public first<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered {
+        return first(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
     }
 
-    public firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null {
-        return firstOrDefault(this, predicate);
+    public firstOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered | null;
+    public firstOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null;
+    public firstOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered | null {
+        return firstOrDefault(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
     }
 
     public forEach(action: IndexedAction<KeyValuePair<TKey, TValue>>): void {
@@ -287,12 +291,16 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
-    public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
-        return last(this, predicate);
+    public last<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered;
+    public last(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue>;
+    public last<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered {
+        return last(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
     }
 
-    public lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null {
-        return lastOrDefault(this, predicate);
+    public lastOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered | null;
+    public lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null;
+    public lastOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered | null {
+        return lastOrDefault(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
     }
 
     public max(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
@@ -331,8 +339,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return pairwise(this, resultSelector);
     }
 
-    public partition(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
-        return partition(this, predicate);
+    public partition<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>];
+    public partition(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
+    public partition<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] {
+        return partition(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
@@ -372,12 +382,16 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return shuffle(this);
     }
 
-    public single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> {
-        return single(this, predicate);
+    public single<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered;
+    public single(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue>;
+    public single<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered {
+        return single(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
     }
 
-    public singleOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null {
-        return singleOrDefault(this, predicate);
+    public singleOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered | null;
+    public singleOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null;
+    public singleOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered | null {
+        return singleOrDefault(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
     }
 
     public skip(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -392,8 +406,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return skipWhile(this, predicate);
     }
 
-    public span(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
-        return span(this, predicate);
+    public span<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<KeyValuePair<TKey, TValue>>];
+    public span(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
+    public span<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
+        return span(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     }
 
     public step(stepNumber: number): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -412,8 +428,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return takeLast(this, count);
     }
 
-    public takeWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
-        return takeWhile(this, predicate);
+    public takeWhile<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;
+    public takeWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
+    public takeWhile<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
+        return takeWhile(this, predicate as IndexedPredicate<KeyValuePair<TKey, TValue>>);
     }
 
     public toArray(): KeyValuePair<TKey, TValue>[] {
