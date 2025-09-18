@@ -1,7 +1,7 @@
-import { describe } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { AsyncEnumerable } from "../../src/enumerator/AsyncEnumerable";
-import { Enumerable, List } from "../../src/imports";
+import { Enumerable, type IEnumerable, List } from "../../src/imports";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
 import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
@@ -9,6 +9,7 @@ import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOn
 import { NoElementsException } from "../../src/shared/NoElementsException";
 import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
+import { ApiResponse, ApiResponseSuccess, isError, isLoading, isSuccess } from "../models/ApiResponse";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
@@ -22,6 +23,21 @@ describe("AsyncEnumerable", () => {
         for (let ix = 0; ix < numbers.length; ++ix) {
             await suspend(delay);
             yield numbers[ix];
+        }
+    };
+
+    const apiResponseProducer = async function* (delay: number = 1): AsyncIterable<ApiResponse<Person>> {
+        const responses: ApiResponse<Person>[] = [
+            { status: "success", data: Person.Alice },
+            { status: "error", error: "Not found" },
+            { status: "success", data: Person.Bella },
+            { status: "error", error: "Server error" },
+            { status: "success", data: Person.Mel },
+            { status: "loading", estimatedTime: 4000 }
+        ];
+        for (let ix = 0; ix < responses.length; ++ix) {
+            await suspend(delay);
+            yield responses[ix];
         }
     };
 
@@ -554,6 +570,11 @@ describe("AsyncEnumerable", () => {
             expect(result).to.eq(undefined);
             expect(result2).to.eq(null);
         });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const firstError = await enumerable.first(isError);
+            expect(firstError).to.haveOwnProperty('error');
+        });
     });
 
     describe("#firstOrDefault()", () => {
@@ -589,6 +610,11 @@ describe("AsyncEnumerable", () => {
             const result2 = await enumerable2.firstOrDefault();
             expect(result).to.eq(undefined);
             expect(result2).to.eq(null);
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const firstError = await enumerable.firstOrDefault(isError);
+            expect(firstError).to.haveOwnProperty('error');
         });
     });
 
@@ -1152,6 +1178,11 @@ describe("AsyncEnumerable", () => {
             expect(result).to.eq(null);
             expect(result2).to.eq(undefined);
         });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const lastError = await enumerable.last(isError);
+            expect(lastError).to.haveOwnProperty('error');
+        });
     });
 
     describe("#lastOrDefault()", () => {
@@ -1180,6 +1211,11 @@ describe("AsyncEnumerable", () => {
             const result2 = await enumerable2.lastOrDefault();
             expect(result).to.eq(undefined);
             expect(result2).to.eq(null);
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const lastError = await enumerable.lastOrDefault(isError);
+            expect(lastError).to.haveOwnProperty('error');
         });
     });
 
@@ -1351,6 +1387,12 @@ describe("AsyncEnumerable", () => {
             const [even, odd] = await enumerable.partition(n => n % 2 === 0);
             expect(even.toArray()).to.deep.equal([0, 2, 4, 6, 8]);
             expect(odd.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const [errors, rest] = await enumerable.partition(isError);
+            expect(errors.all(isError)).to.be.true;
+            expect(rest.all(r => !isError(r))).to.be.true;
         });
     });
 
@@ -1562,6 +1604,11 @@ describe("AsyncEnumerable", () => {
             expect(result).to.eq(undefined);
             expect(result2).to.eq(null);
         });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const loading = await enumerable.single(isLoading);
+            expect(loading).to.haveOwnProperty('estimatedTime');
+        });
     });
 
     describe("#singleOrDefault()", () => {
@@ -1604,6 +1651,11 @@ describe("AsyncEnumerable", () => {
             const result2 = await enumerable2.singleOrDefault();
             expect(result).to.eq(null);
             expect(result2).to.eq(undefined);
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const loading = await enumerable.singleOrDefault(isLoading);
+            expect(loading).to.haveOwnProperty('estimatedTime');
         });
     });
 
@@ -1690,6 +1742,14 @@ describe("AsyncEnumerable", () => {
             const result = await enumerable.span(n => n < 0);
             expect(result[0].toArray()).to.deep.equal([]);
             expect(result[1].toArray()).to.deep.equal([]);
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const [initialSuccesses, remainder] = await enumerable.span(isSuccess);
+            expect(initialSuccesses.toArray()).to.deep.equal([{ status: "success", data: Person.Alice }]);
+            expect(remainder.count()).to.eq(5);
+            expectTypeOf(initialSuccesses).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(remainder).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
         });
     });
 
@@ -1797,6 +1857,14 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.takeWhile(n => n < 0).toArray();
             expect(result).to.deep.equal([]);
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const result = await enumerable.takeWhile(isSuccess).toArray();
+            expect(result).to.deep.equal([
+                { status: "success", data: Person.Alice }
+            ]);
+            expectTypeOf(result).toEqualTypeOf<Array<ApiResponseSuccess<Person>>>();
         });
     });
 
@@ -2051,6 +2119,17 @@ describe("AsyncEnumerable", () => {
                 expect(num).to.be.lessThan(30);
                 expect(num % 3 === 0).to.be.true;
             }
+        });
+        test("should narrow items with type guard", async () => {
+            const enumerable = new AsyncEnumerable(apiResponseProducer());
+            const success = await enumerable.where(isSuccess).toArray();
+            const types = success.map(i => i.status);
+            expect(success.length).to.eq(3);
+            expect(types).to.deep.equal([
+                "success",
+                "success",
+                "success"
+            ]);
         });
     });
 

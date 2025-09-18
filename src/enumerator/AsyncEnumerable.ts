@@ -3,14 +3,14 @@ import { AsyncEnumerator, IAsyncEnumerable, IEnumerable, IOrderedAsyncEnumerable
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
@@ -134,12 +134,16 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.exceptBy(enumerable, keySelector, comparator);
     }
 
-    public first(predicate?: Predicate<TElement>): Promise<TElement> {
-        return this.#enumerator.first(predicate);
+    public first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
+    public first(predicate?: Predicate<TElement>): Promise<TElement>;
+    public first<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered> {
+        return this.#enumerator.first(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered>;
     }
 
-    public firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
-        return this.#enumerator.firstOrDefault(predicate);
+    public firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
+    public firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
+    public firstOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered | null> {
+        return this.#enumerator.firstOrDefault(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered | null>;
     }
 
     public forEach(action: IndexedAction<TElement>): Promise<void> {
@@ -174,12 +178,16 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.join(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
     }
 
-    public last(predicate?: Predicate<TElement>): Promise<TElement> {
-        return this.#enumerator.last(predicate);
+    public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
+    public last(predicate?: Predicate<TElement>): Promise<TElement>;
+    public last<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered> {
+        return this.#enumerator.last(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered>;
     }
 
-    public lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
-        return this.#enumerator.lastOrDefault(predicate);
+    public lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
+    public lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
+    public lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered | null> {
+        return this.#enumerator.lastOrDefault(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered | null>;
     }
 
     public max(selector?: Selector<TElement, number>): Promise<number> {
@@ -218,8 +226,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.pairwise(resultSelector);
     }
 
-    public partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
-        return this.#enumerator.partition(predicate);
+    public partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>;
+    public partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+    public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> | Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> {
+        return this.#enumerator.partition(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     }
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
@@ -258,12 +268,16 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.shuffle();
     }
 
-    public single(predicate?: Predicate<TElement>): Promise<TElement> {
-        return this.#enumerator.single(predicate);
+    public single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
+    public single(predicate?: Predicate<TElement>): Promise<TElement>;
+    public single<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered> {
+        return this.#enumerator.single(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered>;
     }
 
-    public singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null> {
-        return this.#enumerator.singleOrDefault(predicate);
+    public singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
+    public singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
+    public singleOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered | null> {
+        return this.#enumerator.singleOrDefault(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered | null>;
     }
 
     public skip(count: number): IAsyncEnumerable<TElement> {
@@ -278,8 +292,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.skipWhile(predicate);
     }
 
-    public span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
-        return this.#enumerator.span(predicate);
+    public span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>;
+    public span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+    public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
+        return this.#enumerator.span(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     }
 
     public step(step: number): IAsyncEnumerable<TElement> {
@@ -298,8 +314,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.takeLast(count);
     }
 
-    public takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
-        return this.#enumerator.takeWhile(predicate);
+    public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+    public takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
+        return this.#enumerator.takeWhile(predicate as IndexedPredicate<TElement>);
     }
 
     public async toArray(): Promise<TElement[]> {
@@ -318,8 +336,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.unionBy(enumerable, keySelector, comparator);
     }
 
-    public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
-        return this.#enumerator.where(predicate);
+    public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+    public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
+        return this.#enumerator.where(predicate as IndexedPredicate<TElement>);
     }
 
     public windows(size: number): IAsyncEnumerable<IEnumerable<TElement>> {
