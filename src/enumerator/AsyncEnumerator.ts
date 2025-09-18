@@ -429,7 +429,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>;
     public async partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
-    public async partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> | Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> {
+    public async partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> {
         const predicateFn = predicate as Predicate<TElement>;
         const trueElements: TElement[] = [];
         const falseElements: TElement[] = [];
@@ -576,7 +576,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>;
     public async span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
-    public async span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
+    public async span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>]> {
         const predicateFn = predicate as Predicate<TElement>;
         const span = new List<TElement>();
         const rest = new List<TElement>();
