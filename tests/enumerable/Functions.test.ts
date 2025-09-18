@@ -1,4 +1,5 @@
-import { describe, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
+import type { IEnumerable } from "../../src/imports";
 import {
     aggregate,
     aggregateBy,
@@ -118,6 +119,7 @@ import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOn
 import { NoElementsException } from "../../src/shared/NoElementsException";
 import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
 import { Helper } from "../helpers/Helper";
+import { ApiResponse, ApiResponseLoading, ApiResponseSuccess, isLoading, isSuccess } from "../models/ApiResponse";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
 import { School } from "../models/School";
@@ -126,6 +128,15 @@ import { AbstractShape, Circle, Polygon, Rectangle, Square, Triangle } from "../
 import { Student } from "../models/Student";
 
 describe("Enumerable Standalone Functions", () => {
+    const responses = new List<ApiResponse<Person>>([
+        { status: "success", data: Person.Alice },
+        { status: "error", error: "Not found" },
+        { status: "success", data: Person.Bella },
+        { status: "error", error: "Server error" },
+        { status: "success", data: Person.Mel },
+        { status: "loading", estimatedTime: 4000 }
+    ]);
+
     describe("#aggregate()", () => {
         test("should return 6", () => {
             const sequence = [4, 8, 8, 3, 9, 0, 7, 8, 2];
@@ -545,6 +556,11 @@ describe("Enumerable Standalone Functions", () => {
         test("should throw error if no element matches the predicate", () => {
             expect(() => first([1, 2, 3, 4, 5], n => n > 5)).toThrowError(new NoMatchingElementException());
         });
+        test("should narrow items with type guard", () => {
+            const firstSuccess = first(responses, isSuccess);
+            expect(firstSuccess.data).to.eq(Person.Alice);
+            expectTypeOf(firstSuccess).toEqualTypeOf<ApiResponseSuccess<Person>>();
+        });
     });
 
     describe("#firstOrDefault()", () => {
@@ -561,6 +577,11 @@ describe("Enumerable Standalone Functions", () => {
         });
         test("should return null if no element matches the predicate", () => {
             expect(firstOrDefault([1, 2, 3, 4, 5], n => n > 5)).to.be.null;
+        });
+        test("should narrow items with type guard", () => {
+            const firstSuccess = firstOrDefault(responses, isSuccess);
+            expect(firstSuccess?.data).to.eq(Person.Alice);
+            expectTypeOf(firstSuccess).toEqualTypeOf<ApiResponseSuccess<Person> | null>();
         });
     });
 
@@ -811,6 +832,11 @@ describe("Enumerable Standalone Functions", () => {
         test("should throw error if no element matches the predicate", () => {
             expect(() => last([1, 2, 3, 4, 5], n => n > 5)).toThrowError(new NoMatchingElementException());
         });
+        test("should narrow items with type guard", () => {
+            const lastSuccess = last(responses, isSuccess);
+            expect(lastSuccess.data).to.eq(Person.Mel);
+            expectTypeOf(lastSuccess).toEqualTypeOf<ApiResponseSuccess<Person>>();
+        });
     });
 
     describe("#lastOrDefault()", () => {
@@ -827,6 +853,11 @@ describe("Enumerable Standalone Functions", () => {
         });
         test("should return null if no element matches the predicate", () => {
             expect(lastOrDefault([1, 2, 3, 4, 5], n => n > 5)).to.be.null;
+        });
+        test("should narrow items with type guard", () => {
+            const lastSuccess = lastOrDefault(responses, isSuccess);
+            expect(lastSuccess?.data).to.eq(Person.Mel);
+            expectTypeOf(lastSuccess).toEqualTypeOf<ApiResponseSuccess<Person> | null>();
         });
     });
 
@@ -1076,6 +1107,17 @@ describe("Enumerable Standalone Functions", () => {
             expect(result[0].toArray()).to.deep.equal([2, 4, 6, 8]);
             expect(result[1].toArray()).to.deep.equal([1, 3, 5, 7, 9]);
         });
+        test("should narrow items with type guard", () => {
+            const [successes, rest] = partition(responses, isSuccess);
+            expect(successes.select(s => s.data).toArray()).to.deep.equal([
+                Person.Alice,
+                Person.Bella,
+                Person.Mel
+            ]);
+            expect(rest.count()).to.eq(3);
+            expectTypeOf(successes).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(rest).toEqualTypeOf<IEnumerable<Exclude<ApiResponse<Person>, ApiResponseSuccess<Person>>>>();
+        });
     });
 
     describe("#permutations()", () => {
@@ -1277,6 +1319,11 @@ describe("Enumerable Standalone Functions", () => {
             const result = single([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi], p => p.name === "Alice");
             expect(result).to.eq(Person.Alice);
         });
+        test("should narrow items with type guard", () => {
+            const loading = single(responses, isLoading);
+            expect(loading.estimatedTime).to.eq(4000);
+            expectTypeOf(loading).toEqualTypeOf<ApiResponseLoading>();
+        });
     });
 
     describe("#singleOrDefault()", () => {
@@ -1299,13 +1346,18 @@ describe("Enumerable Standalone Functions", () => {
             const result = singleOrDefault([Person.Alice, Person.Mel, Person.Lenka, Person.Noemi], p => p.name === "Alice");
             expect(result).to.eq(Person.Alice);
         });
+        test("should narrow items with type guard", () => {
+            const loading = singleOrDefault(responses, isLoading);
+            expect(loading?.estimatedTime).to.eq(4000);
+            expectTypeOf(loading).toEqualTypeOf<ApiResponseLoading | null>();
+        });
     });
 
     describe("#skip()", () => {
         test("should return an IEnumerable with elements [4,5]", () => {
             const list = new List([1, 2, 3, 4, 5]);
             const list2 = skip(list, 3).toList();
-            expect(list2.size()).to.eq(2);
+            expect(list2.size()).to.eq( 2);
             expect(list2.get(0)).to.eq(4);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
@@ -1360,6 +1412,13 @@ describe("Enumerable Standalone Functions", () => {
             const result = span(list, n => n < 3);
             expect(result[0].toArray()).to.deep.equal([1, 2]);
             expect(result[1].toArray()).to.deep.equal([3, 4, 5]);
+        });
+        test("should narrow items with type guard", () => {
+            const [initialSuccesses, remainder] = span(responses, isSuccess);
+            expect(initialSuccesses.toArray()).to.deep.equal([{ status: "success", data: Person.Alice }]);
+            expect(remainder.count()).to.eq(5);
+            expectTypeOf(initialSuccesses).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+            expectTypeOf(remainder).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
         });
     });
 
@@ -1463,6 +1522,13 @@ describe("Enumerable Standalone Functions", () => {
             const list2 = takeWhile(list, n => n < 10).toList();
             expect(list2.size()).to.eq(5);
             expect(list2.length).to.eq(5);
+        });
+        test("should narrow items with type guard", () => {
+            const result = takeWhile(responses, isSuccess);
+            expect(result.toArray()).to.deep.equal([
+                { status: "success", data: Person.Alice }
+            ]);
+            expectTypeOf(result).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
         });
     });
 
@@ -1777,6 +1843,39 @@ describe("Enumerable Standalone Functions", () => {
             expect(list2.get(0)).to.eq(2);
             expect(list2.get(1)).to.eq(5);
             expect(list2.length).to.eq(2);
+        });
+
+        test("should narrow the filtered sequence when using a type guard", () => {
+            const responses = new List<ApiResponse<Person>>([
+                { status: "success", data: Person.Alice },
+                { status: "error", error: "Not found" },
+                { status: "success", data: Person.Bella },
+                { status: "error", error: "Server error" },
+                { status: "success", data: Person.Mel },
+                { status: "loading", estimatedTime: 4000 }
+            ]);
+
+            const successesFromMethod = responses.where(isSuccess);
+            const namesFromMethod = successesFromMethod.select(result => result.data.name).toArray();
+
+            expect(namesFromMethod).to.deep.equal([
+                Person.Alice.name,
+                Person.Bella.name,
+                Person.Mel.name
+            ]);
+
+            expectTypeOf(successesFromMethod).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+
+            const successesFromFunction = where(responses, isSuccess);
+            const namesFromFunction = successesFromFunction.select(result => result.data.name).toArray();
+
+            expect(namesFromFunction).to.deep.equal([
+                Person.Alice.name,
+                Person.Bella.name,
+                Person.Mel.name
+            ]);
+
+            expectTypeOf(successesFromFunction).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
         });
     });
 
