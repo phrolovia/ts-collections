@@ -2,7 +2,7 @@ import { AbstractRandomAccessImmutableCollection, contains, IReadonlyList, List,
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 
 export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: ReadonlyList<TElement>;
@@ -83,12 +83,16 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         yield* this.#list.entries();
     }
 
-    public override first(predicate?: Predicate<TElement>): TElement {
-        return this.#list.first(predicate);
+    public override first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public override first(predicate?: Predicate<TElement>): TElement;
+    public override first<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
+        return this.#list.first(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
     }
 
-    public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return this.#list.firstOrDefault(predicate);
+    public override firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public override firstOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
+        return this.#list.firstOrDefault(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
     }
 
     public get(index: number): TElement {
@@ -115,16 +119,20 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         return this.#list.indexOf(element, comparator);
     }
 
-    public override last(predicate?: Predicate<TElement>): TElement {
-        return this.#list.last(predicate);
+    public override last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+    public override last(predicate?: Predicate<TElement>): TElement;
+    public override last<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
+        return this.#list.last(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
     }
 
     public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
         return this.#list.lastIndexOf(element, comparator);
     }
 
-    public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null {
-        return this.#list.lastOrDefault(predicate);
+    public override lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+    public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
+    public override lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
+        return this.#list.lastOrDefault(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
     }
 
     /**

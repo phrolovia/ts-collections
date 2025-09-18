@@ -2,14 +2,14 @@ import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { IEnumerable } from "./IEnumerable";
@@ -205,12 +205,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {NoElementsException} If the source is empty.
      * @throws {NoMatchingElementException} If no element satisfies the condition.
      */
+    first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
     first(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
      * Gets the first element of the sequence or a default value if the no element satisfies the condition.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
      */
+    firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
     firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
@@ -301,6 +303,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {NoElementsException} If the source is empty.
      * @throws {NoMatchingElementException} If no element satisfies the condition.
      */
+    last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
     last(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
@@ -308,6 +311,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
      * @throws {Error} If the source is null or undefined.
      */
+    lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
     lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
@@ -392,6 +396,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
      * @param predicate The predicate function that will be used to check each element for a condition.
      */
+    partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>;
     partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
@@ -463,6 +468,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {NoMatchingElementException} If no element satisfies the condition.
      * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the condition.
      */
+    single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
     single(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
@@ -471,6 +477,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {MoreThanOneElementException} If the source contains more than one element.
      * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the condition.
      */
+    singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
     singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
@@ -501,6 +508,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A tuple of two enumerable sequences, the first one containing the elements that satisfy the condition,
      * and the second one containing the rest of the elements regardless of the condition.
      */
+    span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>;
     span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
@@ -541,6 +549,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Returns elements from a sequence as long as a specified condition is true and then skips the remaining elements.
      * @param predicate The predicate function that will be used to test each element.
      */
+    takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
     takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
@@ -577,6 +586,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Filters a sequence of values based on a predicate.
      * @param predicate The predicate function that will be used to test each element.
      */
+    where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
     where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**

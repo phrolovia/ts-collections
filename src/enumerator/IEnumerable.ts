@@ -25,14 +25,14 @@ import {
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate } from "../shared/IndexedPredicate";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate } from "../shared/Predicate";
+import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 
@@ -500,6 +500,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *          console.log(e.message); // Output: No element satisfies the condition.
      *      }
      */
+    first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
     first(predicate?: Predicate<TElement>): TElement;
 
     /**
@@ -522,6 +523,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const firstFromEmpty = emptyList.firstOrDefault();
      *      // firstFromEmpty = null
      */
+    firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
     firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
@@ -832,6 +834,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *          console.log(e.message); // Output: No element satisfies the condition.
      *      }
      */
+    last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
     last(predicate?: Predicate<TElement>): TElement;
 
     /**
@@ -854,6 +857,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const lastFromEmpty = emptyList.lastOrDefault();
      *      // lastFromEmpty = null
      */
+    lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
     lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
@@ -1227,6 +1231,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const minorNames = minors.select(p => p.name).toArray();
      *      // minorNames = ['Bob', 'Diana']
      */
+    partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
     partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
 
     /**
@@ -1516,6 +1521,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *          console.log(e.message);
      *      }
      */
+    single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
     single(predicate?: Predicate<TElement>): TElement;
 
     /**
@@ -1553,6 +1559,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *          console.log(e.message);
      *      }
      */
+    singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
     singleOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
@@ -1656,6 +1663,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const rest3Array = rest3.toArray();
      *      // rest3Array = [1, 2, 3, 4, 1, 5, 6]
      */
+    span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
     span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
 
     /**
@@ -1783,6 +1791,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const takeWhileAlwaysTrue = numbers.takeWhile(n => true).toArray();
      *      // takeWhileAlwaysTrue = [1, 2, 3, 4, 1, 5, 6]
      */
+    takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
@@ -2345,7 +2354,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Filters a sequence of values based on a predicate.
      * @template TElement
-     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
+     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out. When the predicate acts as a type guard, the resulting sequence is narrowed to the guarded type.
      * @returns {IEnumerable<TElement>} A new enumerable sequence that contains elements from the input sequence that satisfy the condition.
      * @example
      *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8]);
@@ -2374,6 +2383,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const cheapProducts = products.where(p => p.price < 0.6).toArray();
      *      // cheapProducts = [ { name: 'Apple', price: 0.5 }, { name: 'Banana', price: 0.3 } ]
      */
+    where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
