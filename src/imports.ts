@@ -33,6 +33,7 @@ export { ReadonlyList } from "./list/ReadonlyList";
 export { Queue } from "./queue/Queue";
 export { Stack } from "./stack/Stack";
 export { CircularQueue } from "./queue/CircularQueue";
+export { ImmutableCircularQueue } from "./queue/ImmutableCircularQueue";
 export { LinkedList } from "./list/LinkedList";
 export { CircularLinkedList } from "./list/CircularLinkedList";
 export { ImmutableList } from "./list/ImmutableList";
@@ -156,3 +157,4 @@ export {
     windows,
     zip
 } from "./enumerator/Functions";
+

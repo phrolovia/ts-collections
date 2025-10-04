@@ -40,6 +40,7 @@ export {
     Enumerator,
     Group,
     Heap,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
@@ -169,3 +170,4 @@ export type { PairwiseSelector } from "./shared/PairwiseSelector";
 export type { Predicate, TypePredicate } from "./shared/Predicate";
 export type { Selector } from "./shared/Selector";
 export type { Zipper } from "./shared/Zipper";
+
