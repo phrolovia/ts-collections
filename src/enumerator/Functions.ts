@@ -4,11 +4,13 @@ import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictiona
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
 import { CircularLinkedList } from "../list/CircularLinkedList";
+import { CircularQueue } from "../queue/CircularQueue";
 import { ImmutableList } from "../list/ImmutableList";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
 import { ILookup } from "../lookup/ILookup";
 import { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
 import { ImmutableQueue } from "../queue/ImmutableQueue";
 import { PriorityQueue } from "../queue/PriorityQueue";
 import { Queue } from "../queue/Queue";
@@ -2369,6 +2371,41 @@ export const toCircularLinkedList = <TElement>(
 }
 
 /**
+ * Creates a new circular queue from the elements of the source sequence.
+ * The queue retains only the most recent values up to the specified capacity, discarding older entries when full.
+ * Forces evaluation of the source sequence.
+ * @template TElement
+ * @param source The source iterable.
+ * @param capacity Optional capacity for the resulting queue. If omitted, the queue's default capacity is used.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
+ * @returns {CircularQueue<TElement>} A new circular queue that contains the retained elements from the input sequence.
+ * @example
+ *      const numbers = [1, 2, 3, 4];
+ *      const circular = toCircularQueue(numbers, 3);
+ *      // circular.toArray() === [2, 3, 4]
+ *      // circular.capacity === 3
+ */
+export function toCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): CircularQueue<TElement>;
+export function toCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    capacity: number,
+    comparator?: EqualityComparator<TElement>
+): CircularQueue<TElement>;
+export function toCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    capacityOrComparator?: number | EqualityComparator<TElement>,
+    comparator?: EqualityComparator<TElement>
+): CircularQueue<TElement> {
+    if (typeof capacityOrComparator === 'number') {
+        return from(source).toCircularQueue(capacityOrComparator, comparator);
+    }
+    return from(source).toCircularQueue(capacityOrComparator);
+}
+
+/**
  * Creates a new dictionary from the elements of the sequence.
  * Forces evaluation of the sequence. Throws if duplicate keys are encountered.
  * @template TKey, TValue
@@ -2433,6 +2470,41 @@ export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>
 ): EnumerableSet<TElement> => {
     return from(source).toEnumerableSet();
+}
+
+/**
+ * Creates a new immutable circular queue from the elements of the source sequence.
+ * The queue keeps only the most recent values up to the specified capacity and discards older entries when the capacity is exceeded.
+ * Forces evaluation of the source sequence.
+ * @template TElement
+ * @param source The source iterable.
+ * @param capacity Optional capacity for the resulting queue. If omitted, the queue's default capacity is used.
+ * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
+ * @returns {ImmutableCircularQueue<TElement>} A new immutable circular queue that contains the retained elements from the input sequence.
+ * @example
+ *      const letters = ['a', 'b', 'c', 'd'];
+ *      const queue = toImmutableCircularQueue(letters, 3);
+ *      // queue.toArray() === ['b', 'c', 'd']
+ *      // queue.capacity === 3
+ */
+export function toImmutableCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): ImmutableCircularQueue<TElement>;
+export function toImmutableCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    capacity: number,
+    comparator?: EqualityComparator<TElement>
+): ImmutableCircularQueue<TElement>;
+export function toImmutableCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    capacityOrComparator?: number | EqualityComparator<TElement>,
+    comparator?: EqualityComparator<TElement>
+): ImmutableCircularQueue<TElement> {
+    if (typeof capacityOrComparator === 'number') {
+        return from(source).toImmutableCircularQueue(capacityOrComparator, comparator);
+    }
+    return from(source).toImmutableCircularQueue(capacityOrComparator);
 }
 
 /**
@@ -3184,3 +3256,6 @@ export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
         return from(source).zip(other);
     }
 }
+
+
+

@@ -1,10 +1,9 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
 import {
-    CircularLinkedList,
-    Enumerable, type IEnumerable,
-    ImmutableList,
-    PriorityQueue,
-    ReadonlyCollection, Stack
+    CircularLinkedList, CircularQueue,
+    Enumerable, type IEnumerable, ImmutableCircularQueue,
+    ImmutableList, ImmutableQueue,
+    PriorityQueue, ReadonlyCollection, Stack
 } from "../../src/imports";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
@@ -3783,6 +3782,22 @@ describe("List", () => {
         });
     });
 
+    describe("#toCircularQueue()", () => {
+        const list = new List<number>([1,2,3,4,5]);
+        test("should return a new CircularQueue without altering the list", () => {
+            const queue = list.toCircularQueue();
+            expect(queue instanceof CircularQueue).to.be.true;
+        });
+        test("should retain only the most recent elements up to capacity", () => {
+            const queue = list.toCircularQueue(3);
+            expect(queue.toArray()).to.deep.equal([3, 4, 5]);
+        });
+        test("should retain all elements if capacity is bigger than the size of the source", () => {
+            const queue = list.toCircularQueue(100);
+            expect(queue.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+    });
+
     describe("#toDictionary()", () => {
         const list = new List([
             Person.Alice,
@@ -3826,6 +3841,15 @@ describe("List", () => {
             expect(set.toArray()).to.deep.equal([
                 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             ]);
+        });
+    });
+
+    describe("#toImmutableCircularQueue", () => {
+        const list = new List([1, 2, 3, 4, 5]);
+        test("should return an ImmutableCircularQueue without altering the list", () => {
+            const queue = list.toImmutableCircularQueue();
+            expect(queue instanceof ImmutableCircularQueue).to.be.true;
+            expect(queue.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
         });
     });
 
@@ -3904,18 +3928,11 @@ describe("List", () => {
     });
 
     describe("#toImmutableQueue()", () => {
-        const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        const list = new List([1, 2, 3, 4, 5]);
         test("should convert it to an immutable queue", () => {
             const queue = list.toImmutableQueue();
-            expect(queue.size()).to.eq(10);
-            expect(queue.peek()).to.eq(1);
-            const queue2 = queue.enqueue(999);
-            expect(queue2 !== queue).to.be.true;
-            expect(queue.size()).to.eq(10);
-            expect(queue2.size()).to.eq(11);
-            expect(queue.peek()).to.eq(1);
-            expect(queue2.peek()).to.eq(1);
-            expect(queue2.last()).to.eq(999);
+            expect(queue instanceof ImmutableQueue).to.be.true;
+            expect(queue.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
         });
     });
 

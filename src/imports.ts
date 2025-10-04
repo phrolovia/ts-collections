@@ -130,12 +130,14 @@ export {
     takeWhile,
     toArray,
     toCircularLinkedList,
+    toCircularQueue,
     toDictionary,
     toEnumerableSet,
     toImmutableDictionary,
     toImmutableList,
     toImmutableQueue,
     toImmutablePriorityQueue,
+    toImmutableCircularQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
@@ -157,4 +159,3 @@ export {
     windows,
     zip
 } from "./enumerator/Functions";
-

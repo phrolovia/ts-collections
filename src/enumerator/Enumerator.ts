@@ -1,6 +1,7 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     CircularLinkedList,
+    CircularQueue,
     Collections,
     Dictionary,
     Enumerable,
@@ -12,6 +13,7 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
+    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -653,6 +655,27 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new CircularLinkedList<TElement>(this, comparator);
     }
 
+    public toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): CircularQueue<TElement> {
+        let capacity: number | undefined;
+        let comparer: EqualityComparator<TElement> | undefined;
+
+        if (typeof capacityOrComparator === "number") {
+            capacity = capacityOrComparator;
+            comparer = comparator;
+        } else {
+            comparer = capacityOrComparator;
+        }
+
+        const queue = new CircularQueue<TElement>(capacity, comparer);
+        queue.addAll(this);
+        return queue;
+    }
+
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         const dictionary = new Dictionary<TKey, TValue>(Enumerable.empty(), valueComparator);
         for (const item of this) {
@@ -665,6 +688,27 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return new EnumerableSet<TElement>(this);
+    }
+
+    public toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): ImmutableCircularQueue<TElement> {
+        let capacity: number | undefined;
+        let comparer: EqualityComparator<TElement> | undefined;
+
+        if (typeof capacityOrComparator === "number") {
+            capacity = capacityOrComparator;
+            comparer = comparator;
+        } else {
+            comparer = capacityOrComparator;
+        }
+
+        return capacity !== undefined
+            ? ImmutableCircularQueue.create<TElement>(capacity, this, comparer)
+            : ImmutableCircularQueue.create<TElement>(this, comparer);
     }
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
@@ -1344,3 +1388,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 }
+
+
+
+
+
