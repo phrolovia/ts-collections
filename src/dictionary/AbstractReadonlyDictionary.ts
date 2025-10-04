@@ -8,6 +8,7 @@ import {
     cast,
     chunk,
     CircularLinkedList,
+    CircularQueue,
     combinations,
     concat,
     contains,
@@ -31,6 +32,7 @@ import {
     IEnumerable,
     IGroup,
     ILookup,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
@@ -86,8 +88,10 @@ import {
     takeWhile,
     toArray,
     toCircularLinkedList,
+    toCircularQueue,
     toDictionary,
     toEnumerableSet,
+    toImmutableCircularQueue,
     toImmutableDictionary,
     toImmutableList,
     toImmutablePriorityQueue,
@@ -113,23 +117,23 @@ import {
     windows,
     zip
 } from "../imports";
-import { Accumulator } from "../shared/Accumulator";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
-import { IndexedSelector } from "../shared/IndexedSelector";
-import { InferredType } from "../shared/InferredType";
-import { JoinSelector } from "../shared/JoinSelector";
-import { ObjectType } from "../shared/ObjectType";
-import { OrderComparator } from "../shared/OrderComparator";
-import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate, TypePredicate } from "../shared/Predicate";
-import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
-import { Dictionary } from "./Dictionary";
-import { IReadonlyDictionary } from "./IReadonlyDictionary";
-import { KeyValuePair } from "./KeyValuePair";
-import { SortedDictionary } from "./SortedDictionary";
+import {Accumulator} from "../shared/Accumulator";
+import {EqualityComparator} from "../shared/EqualityComparator";
+import {IndexedAction} from "../shared/IndexedAction";
+import {IndexedPredicate, IndexedTypePredicate} from "../shared/IndexedPredicate";
+import {IndexedSelector} from "../shared/IndexedSelector";
+import {InferredType} from "../shared/InferredType";
+import {JoinSelector} from "../shared/JoinSelector";
+import {ObjectType} from "../shared/ObjectType";
+import {OrderComparator} from "../shared/OrderComparator";
+import {PairwiseSelector} from "../shared/PairwiseSelector";
+import {Predicate, TypePredicate} from "../shared/Predicate";
+import {Selector} from "../shared/Selector";
+import {Zipper} from "../shared/Zipper";
+import {Dictionary} from "./Dictionary";
+import {IReadonlyDictionary} from "./IReadonlyDictionary";
+import {KeyValuePair} from "./KeyValuePair";
+import {SortedDictionary} from "./SortedDictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -163,10 +167,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return append(this, element);
     }
 
-    public asObject<TObjectKey extends string | number | symbol>(): Record<TObjectKey, TValue> {
+    public asObject<TObjectKey extends PropertyKey>(): Record<TObjectKey, TValue> {
         const keySelector = ((pair: KeyValuePair<TKey, TValue>) => {
             if (typeof pair.key === "string" || typeof pair.key === "number" || typeof pair.key === "symbol") {
-                return pair.key as string | number | symbol;
+                return pair.key as PropertyKey;
             }
             return String(pair.key);
         });
@@ -442,12 +446,40 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return toCircularLinkedList(this, comparator);
     }
 
+    public toCircularQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): CircularQueue<KeyValuePair<TKey, TValue>>;
+    public toCircularQueue(capacity: number, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): CircularQueue<KeyValuePair<TKey, TValue>>;
+    public toCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<KeyValuePair<TKey, TValue>>,
+        comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>
+    ): CircularQueue<KeyValuePair<TKey, TValue>> {
+        if (typeof capacityOrComparator === "number") {
+            comparator ??= this.keyValueComparator;
+            return toCircularQueue(this, capacityOrComparator, comparator);
+        }
+        const comparer = capacityOrComparator ?? this.keyValueComparator;
+        return toCircularQueue(this, comparer);
+    }
+
     public toDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): Dictionary<TDictKey, TDictValue> {
         return toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
     public toEnumerableSet(): EnumerableSet<KeyValuePair<TKey, TValue>> {
         return toEnumerableSet(this);
+    }
+
+    public toImmutableCircularQueue(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableCircularQueue<KeyValuePair<TKey, TValue>>;
+    public toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): ImmutableCircularQueue<KeyValuePair<TKey, TValue>>;
+    public toImmutableCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<KeyValuePair<TKey, TValue>>,
+        comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>
+    ): ImmutableCircularQueue<KeyValuePair<TKey, TValue>> {
+        if (typeof capacityOrComparator === "number") {
+            comparator ??= this.keyValueComparator;
+            return toImmutableCircularQueue(this, capacityOrComparator, comparator);
+        }
+        const comparer = capacityOrComparator ?? this.keyValueComparator;
+        return toImmutableCircularQueue(this, comparer);
     }
 
     public toImmutableDictionary<TDictKey, TDictValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDictKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TDictValue>, valueComparator?: EqualityComparator<TDictValue>): ImmutableDictionary<TDictKey, TDictValue> {
@@ -503,7 +535,7 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return toMap(this, keySelector, valueSelector);
     }
 
-    public toObject<TObjectKey extends string | number | symbol, TObjectValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TObjectKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TObjectValue>): Record<TObjectKey, TObjectValue> {
+    public toObject<TObjectKey extends PropertyKey, TObjectValue>(keySelector: Selector<KeyValuePair<TKey, TValue>, TObjectKey>, valueSelector: Selector<KeyValuePair<TKey, TValue>, TObjectValue>): Record<TObjectKey, TObjectValue> {
         return toObject(this, keySelector, valueSelector);
     }
 

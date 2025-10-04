@@ -42,6 +42,7 @@ export {
     Heap,
     ImmutableCircularQueue,
     ImmutableDictionary,
+    ImmutableHeap,
     ImmutableList,
     ImmutablePriorityQueue,
     ImmutableQueue,

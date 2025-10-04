@@ -511,7 +511,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return toMap(this, keySelector, valueSelector);
     }
 
-    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+    public toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return toObject(this, keySelector, valueSelector);
     }
 

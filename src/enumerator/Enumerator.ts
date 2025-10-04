@@ -769,7 +769,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return map;
     }
 
-    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+    public toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         const obj: Record<TKey, TValue> = {} as Record<TKey, TValue>;
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);

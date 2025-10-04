@@ -446,7 +446,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toMap(keySelector, valueSelector);
     }
 
-    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+    public toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return this.#enumerator.toObject(keySelector, valueSelector);
     }
 

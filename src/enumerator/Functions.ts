@@ -2863,7 +2863,7 @@ export const toMap = <TElement, TKey, TValue>(
  *      const objectFromDups = toObject(duplicateKeys, item => item.key, item => item.val);
  *      // objectFromDups = { a: 3, b: 2 }
  */
-export const toObject = <TElement, TKey extends string | number | symbol, TValue>(
+export const toObject = <TElement, TKey extends PropertyKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
     valueSelector: Selector<TElement, TValue>
