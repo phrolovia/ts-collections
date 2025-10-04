@@ -379,12 +379,36 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toCircularLinkedList(comparator);
     }
 
+    public toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): CircularQueue<TElement> {
+        if (typeof capacityOrComparator === "number") {
+            return this.#enumerator.toCircularQueue(capacityOrComparator, comparator);
+        }
+        return this.#enumerator.toCircularQueue(capacityOrComparator);
+    }
+
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         return this.#enumerator.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return this.#enumerator.toEnumerableSet();
+    }
+
+    public toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): ImmutableCircularQueue<TElement> {
+        if (typeof capacityOrComparator === "number") {
+            return this.#enumerator.toImmutableCircularQueue(capacityOrComparator, comparator);
+        }
+        return this.#enumerator.toImmutableCircularQueue(capacityOrComparator);
     }
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
@@ -399,17 +423,6 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toImmutablePriorityQueue(comparator);
     }
 
-    public toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
-    public toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
-    public toImmutableCircularQueue(
-        capacityOrComparator?: number | EqualityComparator<TElement>,
-        comparator?: EqualityComparator<TElement>
-    ): ImmutableCircularQueue<TElement> {
-        if (typeof capacityOrComparator === "number") {
-            return this.#enumerator.toImmutableCircularQueue(capacityOrComparator, comparator);
-        }
-        return this.#enumerator.toImmutableCircularQueue(capacityOrComparator as EqualityComparator<TElement> | undefined);
-    }
     public toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {
         return this.#enumerator.toImmutableQueue(comparator);
     }
@@ -450,17 +463,6 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toObject(keySelector, valueSelector);
     }
 
-    public toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
-    public toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
-    public toCircularQueue(
-        capacityOrComparator?: number | EqualityComparator<TElement>,
-        comparator?: EqualityComparator<TElement>
-    ): CircularQueue<TElement> {
-        if (typeof capacityOrComparator === "number") {
-            return this.#enumerator.toCircularQueue(capacityOrComparator, comparator);
-        }
-        return this.#enumerator.toCircularQueue(capacityOrComparator as EqualityComparator<TElement> | undefined);
-    }
     public toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement> {
         return this.#enumerator.toPriorityQueue(comparator);
     }

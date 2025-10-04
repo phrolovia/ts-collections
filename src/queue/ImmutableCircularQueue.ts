@@ -20,7 +20,8 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
             : source.slice(Math.max(0, source.length - normalizedCapacity));
     }
 
-    public static create<TElement>(capacity?: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public static create<TElement>(): ImmutableCircularQueue<TElement>;
+    public static create<TElement>(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
     public static create<TElement>(capacity: number, elements: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
     public static create<TElement>(elements: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
     public static create<TElement>(
@@ -38,12 +39,10 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
             elements = capacityOrElements;
         }
 
-        if (elementsOrComparator !== undefined) {
-            if (typeof elementsOrComparator === "function") {
-                comparer = elementsOrComparator as EqualityComparator<TElement>;
-            } else {
-                elements = elementsOrComparator as Iterable<TElement>;
-            }
+        if (typeof elementsOrComparator === "function") {
+            comparer = elementsOrComparator as EqualityComparator<TElement>;
+        } else if (elementsOrComparator !== undefined) {
+            elements = elementsOrComparator as Iterable<TElement>;
         }
 
         if (comparator !== undefined) {
