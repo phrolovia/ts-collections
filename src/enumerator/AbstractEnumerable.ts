@@ -11,6 +11,7 @@ import {
     cast,
     chunk,
     CircularLinkedList,
+    CircularQueue,
     combinations,
     concat,
     contains,
@@ -33,6 +34,7 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
+    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -80,11 +82,13 @@ import {
     takeWhile,
     toArray,
     toCircularLinkedList,
+    toCircularQueue,
     toDictionary,
     toEnumerableSet,
     toImmutableDictionary,
     toImmutableList,
     toImmutablePriorityQueue,
+    toImmutableCircularQueue,
     toImmutableQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
@@ -421,12 +425,40 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return toCircularLinkedList(this, comparator);
     }
 
+    public toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): CircularQueue<TElement> {
+        if (typeof capacityOrComparator === "number") {
+            comparator ??= this.comparer;
+            return toCircularQueue(this, capacityOrComparator, comparator);
+        }
+        const comparer = capacityOrComparator ?? this.comparer;
+        return toCircularQueue(this, comparer);
+    }
+
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         return toDictionary(this, keySelector, valueSelector, valueComparator);
     }
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return toEnumerableSet(this);
+    }
+
+    public toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): ImmutableCircularQueue<TElement> {
+        if (typeof capacityOrComparator === "number") {
+            comparator ??= this.comparer;
+            return toImmutableCircularQueue(this, capacityOrComparator, comparator);
+        }
+        const comparer = capacityOrComparator ?? this.comparer;
+        return toImmutableCircularQueue(this, comparer);
     }
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
@@ -479,7 +511,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return toMap(this, keySelector, valueSelector);
     }
 
-    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+    public toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return toObject(this, keySelector, valueSelector);
     }
 
@@ -552,3 +584,8 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     abstract [Symbol.iterator](): Iterator<TElement>;
 }
+
+
+
+
+

@@ -643,7 +643,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return result;
     }
 
-    public async toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
+    public async toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
         const obj: Record<TKey, TValue> = {} as Record<TKey, TValue>;
         for await (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
@@ -1172,15 +1172,15 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         const window: TElement[] = new Array(size);
         let index = 0;
         let count = 0;
-        
+
         for await (const element of this) {
             window[index] = element;
             index = (index + 1) % size;
-            
+
             if (count < size) {
                 count++;
             }
-            
+
             if (count === size) {
                 const result: TElement[] = [];
                 for (let i = 0; i < size; i++) {

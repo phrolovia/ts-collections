@@ -1,6 +1,7 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     CircularLinkedList,
+    CircularQueue,
     Dictionary,
     EnumerableSet,
     IGroup,
@@ -8,6 +9,7 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
+    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -1827,6 +1829,23 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): CircularLinkedList<TElement>;
 
     /**
+     * Creates a new circular queue from the elements of the sequence.
+     * The queue retains only the most recent values up to the provided capacity, discarding older entries when the capacity is exceeded.
+     * Forces evaluation of the sequence.
+     * @template TElement
+     * @param capacity Optional capacity for the resulting queue. If omitted, the default capacity is used.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
+     * @returns {CircularQueue<TElement>} A new circular queue that contains the retained elements from the input sequence.
+     * @example
+     *      const numbers = new List([1, 2, 3, 4]);
+     *      const circular = numbers.toCircularQueue(3);
+     *      // circular.toArray() === [2, 3, 4]
+     *      // circular.capacity === 3
+     */
+    toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+
+    /**
      * Creates a new dictionary from the elements of the sequence.
      * Forces evaluation of the sequence. Throws if duplicate keys are encountered.
      * @template TKey, TValue
@@ -1879,6 +1898,23 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      // numberSet.toArray() results in [1, 2, 3, 4, 5] (order depends on Set implementation)
      */
     toEnumerableSet(): EnumerableSet<TElement>;
+
+    /**
+     * Creates a new immutable circular queue from the elements of the sequence.
+     * The queue preserves only the most recent values up to the provided capacity, discarding older entries when necessary.
+     * Forces evaluation of the sequence.
+     * @template TElement
+     * @param capacity Optional capacity for the resulting queue. If omitted, the default capacity is used.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
+     * @returns {ImmutableCircularQueue<TElement>} A new immutable circular queue that contains the retained elements from the input sequence.
+     * @example
+     *      const letters = new List(['a', 'b', 'c', 'd']);
+     *      const queue = letters.toImmutableCircularQueue(3);
+     *      // queue.toArray() === ['b', 'c', 'd']
+     *      // queue.capacity === 3
+     */
+    toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
 
     /**
      * Creates a new immutable dictionary from the elements of the sequence.

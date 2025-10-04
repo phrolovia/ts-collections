@@ -1,6 +1,7 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     CircularLinkedList,
+    CircularQueue,
     Dictionary,
     EnumerableSet,
     Enumerator,
@@ -10,6 +11,7 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
+    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -377,12 +379,36 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toCircularLinkedList(comparator);
     }
 
+    public toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+    public toCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): CircularQueue<TElement> {
+        if (typeof capacityOrComparator === "number") {
+            return this.#enumerator.toCircularQueue(capacityOrComparator, comparator);
+        }
+        return this.#enumerator.toCircularQueue(capacityOrComparator);
+    }
+
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
         return this.#enumerator.toDictionary(keySelector, valueSelector, valueComparator);
     }
 
     public toEnumerableSet(): EnumerableSet<TElement> {
         return this.#enumerator.toEnumerableSet();
+    }
+
+    public toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+    public toImmutableCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): ImmutableCircularQueue<TElement> {
+        if (typeof capacityOrComparator === "number") {
+            return this.#enumerator.toImmutableCircularQueue(capacityOrComparator, comparator);
+        }
+        return this.#enumerator.toImmutableCircularQueue(capacityOrComparator);
     }
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
@@ -433,7 +459,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.toMap(keySelector, valueSelector);
     }
 
-    public toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
+    public toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue> {
         return this.#enumerator.toObject(keySelector, valueSelector);
     }
 
@@ -483,3 +509,9 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.zip(iterable, zipper);
     }
 }
+
+
+
+
+
+

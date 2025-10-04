@@ -13,19 +13,8 @@ export class CircularQueue<TElement> extends Queue<TElement> {
     readonly #capacity: number = 32;
 
     /**
-     * Constructs a circular queue with the default capacity of 32.
-     */
-    public constructor();
-
-    /**
      * Constructs a circular queue with the given capacity.
-     * @param capacity The capacity of the queue.
-     */
-    public constructor(capacity: number);
-
-    /**
-     * Constructs a circular queue with the given capacity.
-     * @param capacity The capacity of the queue.
+     * @param capacity The capacity of the queue. If not defined, the default capacity will be 32.
      * @param comparator The comparator used to compare the elements of the queue.
      */
     public constructor(capacity?: number, comparator?: EqualityComparator<TElement>) {

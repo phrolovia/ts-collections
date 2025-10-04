@@ -1,3 +1,4 @@
+import { describe, expect, test } from "vitest";
 import { Collections } from "../../src/core/Collections";
 import { Enumerable, List, RedBlackTree } from "../../src/imports";
 import { LinkedList } from "../../src/list/LinkedList";
@@ -298,6 +299,13 @@ describe("Collections", () => {
             Collections.swap(array, 1, 4);
             expect(array[1]).to.eq(5);
             expect(array[4]).to.eq(2);
+        });
+        test("should throw error if indices are out of bounds [Array]", () => {
+            const array = [1, 2, 3];
+            expect(() => Collections.swap(array, 0, 3)).toThrow(new IndexOutOfBoundsException(3));
+            expect(() => Collections.swap(array, 0, -1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => Collections.swap(array, -1, 1)).toThrow(new IndexOutOfBoundsException(-1));
+            expect(() => Collections.swap(array, 4, 1)).toThrow(new IndexOutOfBoundsException(4));
         });
     });
 });

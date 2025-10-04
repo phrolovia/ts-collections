@@ -33,6 +33,7 @@ export { ReadonlyList } from "./list/ReadonlyList";
 export { Queue } from "./queue/Queue";
 export { Stack } from "./stack/Stack";
 export { CircularQueue } from "./queue/CircularQueue";
+export { ImmutableCircularQueue } from "./queue/ImmutableCircularQueue";
 export { LinkedList } from "./list/LinkedList";
 export { CircularLinkedList } from "./list/CircularLinkedList";
 export { ImmutableList } from "./list/ImmutableList";
@@ -54,6 +55,7 @@ export { EnumerableSet } from "./set/EnumerableSet";
 export { ImmutableSet } from "./set/ImmutableSet";
 export { ImmutableSortedSet } from "./set/ImmutableSortedSet";
 export { Heap } from "./heap/Heap";
+export { ImmutableHeap } from "./heap/ImmutableHeap";
 export { PriorityQueue } from "./queue/PriorityQueue";
 export { ImmutableQueue } from "./queue/ImmutableQueue";
 export { ImmutablePriorityQueue } from "./queue/ImmutablePriorityQueue";
@@ -129,12 +131,14 @@ export {
     takeWhile,
     toArray,
     toCircularLinkedList,
+    toCircularQueue,
     toDictionary,
     toEnumerableSet,
     toImmutableDictionary,
     toImmutableList,
     toImmutableQueue,
     toImmutablePriorityQueue,
+    toImmutableCircularQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
     toImmutableSortedSet,
