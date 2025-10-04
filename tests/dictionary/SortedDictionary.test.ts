@@ -814,7 +814,7 @@ describe("SortedDictionary", () => {
             dictionary.add(Person.Eliza.name, Person.Eliza);
             dictionary.add(Person.Suzuha.name, Person.Suzuha);
             const pairs = dictionary.pairwise().toArray();
-            const tuples = [];
+            const tuples: [string, string][] = [];
             for (const pair of pairs) {
                 const [p1, p2] = pair;
                 tuples.push([p1.key, p2.value.surname]);
@@ -1575,7 +1575,7 @@ describe("SortedDictionary", () => {
             expect(dictionary.size()).to.eq(3);
             expect(dictionary.length).to.eq(3);
         });
-        test("should return true if key already exists and item is not added", () => {
+        test("should return false if key already exists and item is not added", () => {
             expect(dictionary.tryAdd(Person.Alice, Person.Alice.name)).to.eq(false);
             expect(dictionary.size()).to.eq(3);
             expect(dictionary.length).to.eq(3);

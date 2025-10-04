@@ -10,6 +10,7 @@ import {
     cast,
     chunk,
     CircularLinkedList,
+    CircularQueue,
     combinations,
     concat,
     contains,
@@ -34,6 +35,7 @@ import {
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
+    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -87,11 +89,13 @@ import {
     takeWhile,
     toArray,
     toCircularLinkedList,
+    toCircularQueue,
     toDictionary,
     toEnumerableSet,
     toImmutableDictionary,
     toImmutableList,
     toImmutablePriorityQueue,
+    toImmutableCircularQueue,
     toImmutableQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
@@ -1573,6 +1577,23 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#toCircularQueue()", () => {
+        test("should return a circular queue", () => {
+            const queue = toCircularQueue([1, 2, 3]);
+            expect(queue instanceof CircularQueue).to.be.true;
+            expect(queue.toArray()).to.deep.equal([1, 2, 3]);
+            expect(queue.size()).to.eq(3);
+            expect(queue.length).to.eq(3);
+        });
+
+        test("should respect the provided capacity", () => {
+            const queue = toCircularQueue([1, 2, 3, 4], 2);
+            expect(queue.toArray()).to.deep.equal([3, 4]);
+            expect(queue.size()).to.eq(2);
+            expect(queue.length).to.eq(2);
+        });
+    });
+
     describe("#toDictionary()", () => {
         test("should return a dictionary with keys [1,2,3,4,5] and values [1,4,9,16,25]", () => {
             const dictionary = toDictionary([1, 2, 3, 4, 5], n => n, n => n * n);
@@ -1591,6 +1612,22 @@ describe("Enumerable Standalone Functions", () => {
             expect(enumerableSet instanceof EnumerableSet).to.be.true;
             expect(enumerableSet.size()).to.eq(5);
             expect(enumerableSet.length).to.eq(5);
+        });
+    });
+
+    describe("#toImmutableCircularQueue()", () => {
+        test("should return an immutable circular queue", () => {
+            const queue = toImmutableCircularQueue([1, 2, 3]);
+            expect(queue instanceof ImmutableCircularQueue).to.be.true;
+            expect(queue.toArray()).to.deep.equal([1, 2, 3]);
+            expect(queue.size()).to.eq(3);
+            expect(queue.length).to.eq(3);
+        });
+
+        test("should retain only the most recent elements up to capacity", () => {
+            const queue = toImmutableCircularQueue([1, 2, 3, 4], 3);
+            expect(queue.toArray()).to.deep.equal([2, 3, 4]);
+            expect(queue.capacity).to.equal(3);
         });
     });
 

@@ -17,7 +17,7 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
      * @template TValue The type of the values of the dictionary.
      * @returns {Record<string|number|symbol, TValue>} An object representation of this dictionary.
      */
-    asObject<TObjectKey extends string | number | symbol>(): Record<TObjectKey, TValue>;
+    asObject<TObjectKey extends PropertyKey>(): Record<TObjectKey, TValue>;
 
     /**
      * Checks whether this dictionary contains the specified key.
