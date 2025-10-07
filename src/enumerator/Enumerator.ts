@@ -289,6 +289,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<[number, TElement]>(() => this.indexGenerator());
     }
 
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond> {
+        return new Enumerator(() => this.interleaveGenerator(iterable));
+    }
+
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.intersectGenerator(iterable, comparator));
@@ -485,6 +489,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public reverse(): IEnumerable<TElement> {
         return new Enumerator(() => this.reverseGenerator());
+    }
+
+    public rotate(shift: number): IEnumerable<TElement> {
+        return new Enumerator(() => this.rotateGenerator(shift));
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
@@ -1041,6 +1049,23 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* interleaveGenerator<TSecond>(other: Iterable<TSecond>): IterableIterator<TElement | TSecond> {
+        const sourceIterator = this[Symbol.iterator]();
+        const otherIterator = other[Symbol.iterator]();
+        let e1 = sourceIterator.next();
+        let e2 = otherIterator.next();
+        while (!e1.done || !e2.done) {
+            if (!e1.done) {
+                yield e1.value;
+                e1 = sourceIterator.next();
+            }
+            if (!e2.done) {
+                yield e2.value;
+                e2 = otherIterator.next();
+            }
+        }
+    }
+
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
@@ -1135,6 +1160,60 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* reverseGenerator(): IterableIterator<TElement> {
         yield* Array.from(this).reverse();
+    }
+
+    private* rotateGenerator(shift: number): IterableIterator<TElement> {
+        if (shift === 0) {
+            return yield* this;
+        }
+        if (shift > 0) {
+            return yield* this.rotateLeftGenerator(shift);
+        }
+        return yield* this.rotateRightGenerator(shift);
+    }
+
+    private* rotateLeftGenerator(shift: number): IterableIterator<TElement> {
+        const iterator = this[Symbol.iterator]() as IterableIterator<TElement, TElement, TElement>;
+        const head: TElement[] = [];
+        let taken = 0;
+        while (taken < shift) {
+            const next = iterator.next();
+            if (next.done) {
+                if (head.length === 0) {
+                    return;
+                }
+                const k = shift % head.length;
+                for (let i = k; i < head.length; ++i) {
+                    yield head[i];
+                }
+                for (let i = 0; i < k; ++i) {
+                    yield head[i];
+                }
+                return;
+            }
+            head.push(next.value);
+            taken++;
+        }
+
+        for (let next = iterator.next(); !next.done; next = iterator.next()) {
+            yield next.value;
+        }
+        return yield* head;
+    }
+
+    private* rotateRightGenerator(shift: number): IterableIterator<TElement> {
+        const buffer: TElement[] = [];
+        for (const item of this) {
+            buffer.push(item);
+        }
+        if (buffer.length === 0) {
+            return;
+        }
+        const r = (-shift) % buffer.length;
+        const k = (buffer.length - r) % buffer.length;
+        for (let i = 0; i < buffer.length; ++i) {
+            yield buffer[(i + k) % buffer.length];
+        }
     }
 
     private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IterableIterator<TAccumulate> {

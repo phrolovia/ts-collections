@@ -41,6 +41,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -63,6 +64,7 @@ import {
     product,
     Queue,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -257,6 +259,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return index(this);
     }
 
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond> {
+        return interleave(this, iterable);
+    }
+
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         comparator = comparator ?? this.comparer;
         return intersect(this, iterable, comparator);
@@ -342,6 +348,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public reverse(): IEnumerable<TElement> {
         return reverse(this);
+    }
+
+    public rotate(shift: number): IEnumerable<TElement> {
+        return rotate(this, shift);
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {

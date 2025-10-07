@@ -883,6 +883,10 @@ export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number
     return from(source).index();
 }
 
+export const interleave = <TElement, TSecond>(source: Iterable<TElement>, other: Iterable<TSecond>): IEnumerable<TElement | TSecond> => {
+    return from(source).interleave(other);
+}
+
 /**
  * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
  * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
@@ -1745,6 +1749,10 @@ export const repeat = <TElement>(element: TElement, count: number): IEnumerable<
  */
 export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
     return from(source).reverse();
+}
+
+export const rotate = <TElement>(source: Iterable<TElement>, shift: number): IEnumerable<TElement> => {
+    return from(source).rotate(shift);
 }
 
 /**

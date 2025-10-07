@@ -1,5 +1,4 @@
 import { describe, expectTypeOf, test } from "vitest";
-import type { IEnumerable } from "../../src/imports";
 import {
     aggregate,
     aggregateBy,
@@ -32,6 +31,7 @@ import {
     forEach,
     groupBy,
     groupJoin,
+    IEnumerable,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
@@ -42,6 +42,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -68,6 +69,7 @@ import {
     range,
     repeat,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -681,6 +683,16 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#interleave()", () => {
+        test("should return an interleaved list", () => {
+            const set = new Set([1, 2, 3]);
+            const queue = new Queue([false, true, false]);
+            const result = interleave(set, queue).toArray();
+            const expected = [1, false, 2, true, 3, false];
+            expect(result).to.deep.equal(expected);
+        });
+    })
+
     describe("#intersect()", () => {
         test("should return [4,5]", () => {
             const first = [1, 2, 3, 4, 5];
@@ -1187,6 +1199,18 @@ describe("Enumerable Standalone Functions", () => {
             const result = reverse(sequence);
             expect(sequence).to.deep.equal([1, 2, 3, 4, 5]);
             expect(result.toArray()).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+    });
+
+    describe("#rotate", () => {
+        const sequence = [1, 2, 3, 4, 5];
+        test("should left rotate the sequence by 2", () => {
+            const result = rotate(sequence, 2).toArray();
+            expect(result).to.deep.equal([3, 4, 5, 1, 2]);
+        });
+        test("should right rotate the sequence by 2", () => {
+            const result = rotate(sequence, -2).toArray();
+            expect(result).to.deep.equal([4, 5, 1, 2, 3]);
         });
     });
 

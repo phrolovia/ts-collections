@@ -213,6 +213,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.index();
     }
 
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond> {
+        return this.#enumerator.interleave(iterable);
+    }
+
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
         return this.#enumerator.intersect(iterable, comparator);
     }
@@ -297,6 +301,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public reverse(): IEnumerable<TElement> {
         return this.#enumerator.reverse();
+    }
+
+    public rotate(shift: number): IEnumerable<TElement> {
+        return this.#enumerator.rotate(shift);
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {

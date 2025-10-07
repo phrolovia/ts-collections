@@ -1588,6 +1588,43 @@ describe("List", () => {
         });
     });
 
+    describe("#interleave()", () => {
+        test("should create an interleaved list", () => {
+            const list1 = new List([1,2,3,4,5]);
+            const array = ["a", "b", "c"];
+            const result = list1.interleave(array).toArray();
+            const expected = [1, "a", 2, "b", 3, "c", 4, 5];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should create an interleaved list #2", () => {
+            const list1 = new List([1,2,3]);
+            const array = ["a", "b", "c", "d", "e"];
+            const result = list1.interleave(array).toArray();
+            const expected = [1, "a", 2, "b", 3, "c", "d", "e"];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return empty list", () => {
+            const list1 = new List([]);
+            const array = [] as string[];
+            const result = list1.interleave(array).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should return second list if first list is empty", () => {
+            const list1 = new List([]);
+            const list2 = new List([1,2,3]);
+            const result = list1.interleave(list2).toArray();
+            const expected = [1, 2, 3];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return first list if second list is empty", () => {
+            const list1 = new List([1,2,3]);
+            const list2 = new List([]);
+            const result = list1.interleave(list2).toArray();
+            const expected = [1, 2, 3];
+            expect(result).to.deep.equal(expected);
+        });
+    })
+
     describe("#intersect()", () => {
         test("should return an array of [4,5]", () => {
             const list1 = new List([1, 2, 3, 4, 5]);
@@ -2827,6 +2864,29 @@ describe("List", () => {
             expect(list.get(2)).to.eq(list2.get(2));
             expect(list.get(3)).to.eq(list2.get(1));
             expect(list.get(4)).to.eq(list2.get(0));
+        });
+    });
+
+    describe("#rotate()", () => {
+        test("should left rotate the list by 2", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(2).toArray();
+            expect(rotated).to.deep.equal([3, 4, 5, 1, 2]);
+        });
+        test("should right rotate the list by 2", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(-2).toArray();
+            expect(rotated).to.deep.equal([4, 5, 1, 2, 3]);
+        });
+        test("should right rotate by 3", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(13).toArray();
+            expect(rotated).to.deep.equal([4, 5, 1, 2, 3]);
+        });
+        test("should return the same order as source", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(0).toArray();
+            expect(rotated).to.deep.equal([1, 2, 3, 4, 5]);
         });
     });
 

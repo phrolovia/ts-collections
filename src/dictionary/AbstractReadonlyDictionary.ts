@@ -42,6 +42,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -68,6 +69,7 @@ import {
     product,
     Queue,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -274,6 +276,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return index(this);
     }
 
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<KeyValuePair<TKey, TValue> | TSecond> {
+        return interleave(this, iterable);
+    }
+
     public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         comparator ??= this.keyValueComparer;
         return intersect(this, iterable, comparator);
@@ -363,6 +369,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
         return reverse(this);
+    }
+
+    public rotate(shift: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return rotate(this, shift);
     }
 
     public scan<TAccumulate = KeyValuePair<TKey, TValue>>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {

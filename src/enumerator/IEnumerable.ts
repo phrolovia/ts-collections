@@ -653,6 +653,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     index(): IEnumerable<[number, TElement]>;
 
+    interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond>;
+
     /**
      * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
      * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
@@ -1335,6 +1337,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      // reversedEmpty = []
      */
     reverse(): IEnumerable<TElement>;
+
+    rotate(shift: number): IEnumerable<TElement>;
 
     /**
      * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
