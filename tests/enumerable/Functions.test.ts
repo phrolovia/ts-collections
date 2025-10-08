@@ -20,6 +20,8 @@ import {
     Dictionary,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     empty,
@@ -447,6 +449,47 @@ describe("Enumerable Standalone Functions", () => {
             const uniqueSequence = distinctBy([Person.Mel, Person.Noemi, Person.Noemi2, LittleMel], p => p.name, (a, b) => a.toLowerCase() === b.toLowerCase());
             expect(count(uniqueSequence)).to.eq(2);
             expect(uniqueSequence.toArray()).to.deep.equal([Person.Mel, Person.Noemi]);
+        });
+    });
+
+    describe("#distinctUntilChanged()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = [1, 1, 2, 2, 2, 1, 3, 3];
+            const distinct = distinctUntilChanged(list).toArray();
+            expect(distinct).to.deep.equal([1, 2, 1, 3]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = [] as string[];
+            const distinct = distinctUntilChanged(list).toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const list = ["a", "a", "A", "b"];
+            const distinctWithoutComparator = distinctUntilChanged(list).toArray();
+            const distinctWithComparator = distinctUntilChanged(list, (e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal(["a", "A", "b"]);
+            expect(distinctWithComparator).to.deep.equal(["a", "b"]);
+        });
+    });
+
+    describe("#distinctUntilChangedBy()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = [Person.Alice, Person.Alice, Person.Noemi, Person.Noemi2, Person.Rui];
+            const distinct = distinctUntilChangedBy(list, p => p.name).toArray();
+            expect(distinct).to.deep.equal([Person.Alice, Person.Noemi, Person.Rui]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = [] as never[];
+            const distinct = distinctUntilChangedBy(list, k => k).toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const littleAlice = new Person("alice", "Rivermist", 9);
+            const list = [Person.Alice, littleAlice, Person.Ayana];
+            const distinctWithoutComparator = distinctUntilChangedBy(list, p => p.name).toArray();
+            const distinctWithComparator = distinctUntilChanged(list, (e1, e2) => e1.name.toLowerCase().localeCompare(e2.name.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal([Person.Alice, littleAlice, Person.Ayana]);
+            expect(distinctWithComparator).to.deep.equal([Person.Alice, Person.Ayana]);
         });
     });
 

@@ -211,6 +211,16 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.unionByGenerator(Enumerable.empty(), keySelector, keyCompare));
     }
 
+    public distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        const comparer = comparator ?? Comparators.equalityComparator;
+        return new Enumerator(() => this.distinctUntilChangedGenerator(k => k, comparer));
+    }
+
+    public distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        const comparer = keyComparator ?? Comparators.equalityComparator;
+        return new Enumerator(() => this.distinctUntilChangedGenerator(keySelector, comparer));
+    }
+
     public elementAt(index: number): TElement {
         if (index < 0) {
             throw new IndexOutOfBoundsException(index);
@@ -936,6 +946,28 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             yield* iterator as IterableIterator<TElement>;
         } else {
             yield value ?? null;
+        }
+    }
+
+    private* distinctUntilChangedGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey>): IterableIterator<TElement> {
+        const iterator = this[Symbol.iterator]();
+        let next = iterator.next();
+        if (next.done) {
+            return yield* [];
+        }
+        let previousValue = next.value;
+        yield previousValue;
+        while (!next.done) {
+            next = iterator.next();
+            if (next.done) {
+                return;
+            }
+            const prevKey = keySelector(previousValue);
+            const nextKey = keySelector(next.value);
+            if (!keyComparator(prevKey, nextKey)) {
+                yield next.value;
+                previousValue = next.value;
+            }
         }
     }
 

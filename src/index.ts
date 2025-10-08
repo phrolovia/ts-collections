@@ -79,6 +79,8 @@ export {
     defaultIfEmpty,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     empty,

@@ -18,6 +18,8 @@ import {
     defaultIfEmpty,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     EnumerableSet,
@@ -230,6 +232,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public distinctBy<TDistinctKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDistinctKey>, comparator?: EqualityComparator<TDistinctKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return distinctBy(this, keySelector, comparator);
+    }
+
+    public distinctUntilChanged(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return distinctUntilChanged(this, comparator);
+    }
+
+    public distinctUntilChangedBy<TDistinctKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDistinctKey>, keyComparator?: EqualityComparator<TDistinctKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return distinctUntilChangedBy(this, keySelector, keyComparator);
     }
 
     public elementAt(index: number): KeyValuePair<TKey, TValue> {

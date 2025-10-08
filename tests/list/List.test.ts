@@ -786,6 +786,47 @@ describe("List", () => {
         });
     });
 
+    describe("#distinctUntilChanged()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = new List([1, 1, 2, 2, 2, 1, 3, 3]);
+            const distinct = list.distinctUntilChanged().toArray();
+            expect(distinct).to.deep.equal([1, 2, 1, 3]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = new List([]);
+            const distinct = list.distinctUntilChanged().toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const list = new List(["a", "a", "A", "b"]);
+            const distinctWithoutComparator = list.distinctUntilChanged().toArray();
+            const distinctWithComparator = list.distinctUntilChanged((e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal(["a", "A", "b"]);
+            expect(distinctWithComparator).to.deep.equal(["a", "b"]);
+        });
+    });
+
+    describe("#distinctUntilChangedBy()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = new List([Person.Alice, Person.Alice, Person.Noemi, Person.Noemi2, Person.Rui]);
+            const distinct = list.distinctUntilChangedBy(p => p.name).toArray();
+            expect(distinct).to.deep.equal([Person.Alice, Person.Noemi, Person.Rui]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = new List([]);
+            const distinct = list.distinctUntilChangedBy(k => k).toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const littleAlice = new Person("alice", "Rivermist", 9);
+            const list = new List([Person.Alice, littleAlice, Person.Ayana]);
+            const distinctWithoutComparator = list.distinctUntilChangedBy(p => p.name).toArray();
+            const distinctWithComparator = list.distinctUntilChanged((e1, e2) => e1.name.toLowerCase().localeCompare(e2.name.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal([Person.Alice, littleAlice, Person.Ayana]);
+            expect(distinctWithComparator).to.deep.equal([Person.Alice, Person.Ayana]);
+        });
+    });
+
     describe("#elementAt()", () => {
         const list = new List([1, 48, 6, 195, 47]);
         test("should return 48", () => {

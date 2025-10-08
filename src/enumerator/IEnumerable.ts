@@ -368,6 +368,10 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
+    distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
+
+    distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
+
     /**
      * Returns the element at the specified index in the sequence.
      * @template TElement

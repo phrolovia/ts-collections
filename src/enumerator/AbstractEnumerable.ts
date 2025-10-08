@@ -21,6 +21,8 @@ import {
     defaultIfEmpty,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     except,
@@ -210,6 +212,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         return distinctBy(this, keySelector, keyComparator);
+    }
+
+    public distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return distinctUntilChanged(this, comparator);
+    }
+
+    public distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return distinctUntilChangedBy(this, keySelector, keyComparator);
     }
 
     public elementAt(index: number): TElement {

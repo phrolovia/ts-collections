@@ -494,6 +494,18 @@ export const distinctBy = <TElement, TKey>(
     return from(source).distinctBy(keySelector, keyComparator);
 }
 
+export const distinctUntilChanged = <TElement>(source: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> => {
+    return from(source).distinctUntilChanged(comparator);
+}
+
+export const distinctUntilChangedBy = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    keyComparator?: EqualityComparator<TKey>
+): IEnumerable<TElement> => {
+    return from(source).distinctUntilChangedBy(keySelector, keyComparator);
+}
+
 /**
  * Returns the element at the specified index in the sequence.
  * @template TElement
