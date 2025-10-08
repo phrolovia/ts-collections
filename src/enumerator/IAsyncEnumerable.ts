@@ -1,4 +1,27 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
+import {
+    CircularLinkedList,
+    CircularQueue,
+    Dictionary,
+    EnumerableSet,
+    ILookup,
+    ImmutableCircularQueue,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutablePriorityQueue,
+    ImmutableQueue,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
+    ImmutableStack,
+    LinkedList,
+    List,
+    PriorityQueue,
+    Queue,
+    SortedDictionary,
+    SortedSet,
+    Stack
+} from "../imports";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
@@ -153,6 +176,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
+     * Returns elements where each yielded value differs from the immediately previous element.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     */
+    distinctUntilChanged(comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
+
+    /**
+     * Returns elements where each yielded value differs from the immediately previous element based on a key selector.
+     * @template TKey The type of the key returned by the key selector.
+     * @param keySelector The key selector function that will be used for selecting the key for each element.
+     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     */
+    distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
+
+    /**
      * Returns the element at the specified index in the sequence.
      * @param index The index of the element that will be returned.
      * @throws {IndexOutOfBoundsException} If index is less than 0 or greater than or equal to the number of elements in the sequence.
@@ -244,6 +281,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<[number, TElement]>} An enumerable of tuples, each containing the index and the element from the source sequence.
      */
     index(): IAsyncEnumerable<[number, TElement]>;
+
+    /**
+     * Interleaves elements from the current sequence with elements from another sequence.
+     * @param iterable The iterable sequence to interleave with the source sequence.
+     */
+    interleave<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<TElement | TSecond>;
 
     /**
      * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
@@ -366,6 +409,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>>;
 
     /**
+     * Sorts the elements of the sequence in ascending order using the provided comparator.
+     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     */
+    order(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
+
+    /**
      * Sorts the elements of a sequence in ascending order by using a specified comparer.
      * @param keySelector The key selector function that will be used for selecting the key for an element.
      * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
@@ -378,6 +427,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement>;
+
+    /**
+     * Sorts the elements of the sequence in descending order using the provided comparator.
+     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     */
+    orderDescending(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
 
     /**
      * Produces a tuple of the element and the following element.
@@ -426,6 +481,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Inverts the order of the elements in the sequence.
      */
     reverse(): IAsyncEnumerable<TElement>;
+
+    /**
+     * Rotates the elements in the sequence by the specified amount.
+     * @param shift The number of positions by which the sequence will be rotated. Positive values rotate to the left; negative values rotate to the right.
+     */
+    rotate(shift: number): IAsyncEnumerable<TElement>;
 
     /**
      * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
@@ -553,9 +614,124 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
+     * Invokes the specified action on each element while yielding the original elements.
+     * @param action The action function that will be performed on each element.
+     */
+    tap(action: IndexedAction<TElement>): IAsyncEnumerable<TElement>;
+
+    /**
      * Creates a new array from the elements of the sequence.
      */
     toArray(): Promise<TElement[]>;
+
+    /**
+     * Creates a circular linked list containing the elements of the sequence.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     */
+    toCircularLinkedList(comparator?: EqualityComparator<TElement>): Promise<CircularLinkedList<TElement>>;
+
+    toCircularQueue(comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
+    toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
+
+    /**
+     * Creates a dictionary from the sequence by using the specified key and value selectors.
+     * @template TKey The type of the keys in the dictionary.
+     * @template TValue The type of the values in the dictionary.
+     * @param keySelector Selector used to select the key for each element.
+     * @param valueSelector Selector used to select the value for each element.
+     * @param valueComparator Optional comparator for equality comparison of values.
+     */
+    toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<Dictionary<TKey, TValue>>;
+
+    /**
+     * Creates an enumerable set containing the elements of the sequence.
+     */
+    toEnumerableSet(): Promise<EnumerableSet<TElement>>;
+
+    toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
+    toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
+
+    /**
+     * Creates an immutable dictionary from the sequence by using the specified key and value selectors.
+     * @template TKey The type of the key returned by the key selector.
+     * @template TValue The type of the value returned by the value selector.
+     * @param keySelector Selector used to select the key for each element.
+     * @param valueSelector Selector used to select the value for each element.
+     * @param valueComparator Optional comparator for equality comparison of values.
+     */
+    toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableDictionary<TKey, TValue>>;
+
+    /**
+     * Creates an immutable list containing the elements of the sequence.
+     */
+    toImmutableList(comparator?: EqualityComparator<TElement>): Promise<ImmutableList<TElement>>;
+
+    /**
+     * Creates an immutable priority queue containing the elements of the sequence.
+     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     */
+    toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): Promise<ImmutablePriorityQueue<TElement>>;
+
+    /**
+     * Creates an immutable queue containing the elements of the sequence.
+     */
+    toImmutableQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableQueue<TElement>>;
+
+    /**
+     * Creates an immutable set containing the elements of the sequence.
+     */
+    toImmutableSet(): Promise<ImmutableSet<TElement>>;
+
+    /**
+     * Creates an immutable sorted dictionary from the sequence by using the specified key and value selectors.
+     * @template TKey The type of the keys in the dictionary.
+     * @template TValue The type of the values in the dictionary.
+     * @param keySelector Selector used to select the key for each element.
+     * @param valueSelector Selector used to select the value for each element.
+     * @param keyComparator Comparator used for ordering of keys.
+     * @param valueComparator Comparator used for equality comparison of values.
+     */
+    toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableSortedDictionary<TKey, TValue>>;
+
+    /**
+     * Creates an immutable sorted set containing the elements of the sequence.
+     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     */
+    toImmutableSortedSet(comparator?: OrderComparator<TElement>): Promise<ImmutableSortedSet<TElement>>;
+
+    /**
+     * Creates an immutable stack containing the elements of the sequence.
+     */
+    toImmutableStack(comparator?: EqualityComparator<TElement>): Promise<ImmutableStack<TElement>>;
+
+    /**
+     * Creates a linked list containing the elements of the sequence.
+     */
+    toLinkedList(comparator?: EqualityComparator<TElement>): Promise<LinkedList<TElement>>;
+
+    /**
+     * Creates a list containing the elements of the sequence.
+     */
+    toList(comparator?: EqualityComparator<TElement>): Promise<List<TElement>>;
+
+    /**
+     * Creates a lookup from the sequence by using the specified key and value selectors.
+     * @template TKey The type of the key returned by the key selector.
+     * @template TValue The type of the value returned by the value selector.
+     * @param keySelector Selector used to select the key for each element.
+     * @param valueSelector Selector used to select the value for each element.
+     * @param keyComparator Comparator used for ordering of keys.
+     */
+    toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>>;
+
+    /**
+     * Creates a map from the sequence by using the specified key and value selectors.
+     * @template TKey The type of the keys in the map.
+     * @template TValue The type of the values in the map.
+     * @param keySelector Selector used to select the key for each element.
+     * @param valueSelector Selector used to select the value for each element.
+     */
+    toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Map<TKey, TValue>>;
 
     /**
      * Converts this enumerable to an object.
@@ -566,6 +742,44 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Record<TKey, TValue>>} An object that contains the elements of the sequence.
      */
     toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
+
+    /**
+     * Creates a priority queue containing the elements of the sequence.
+     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     */
+    toPriorityQueue(comparator?: OrderComparator<TElement>): Promise<PriorityQueue<TElement>>;
+
+    /**
+     * Creates a queue containing the elements of the sequence.
+     */
+    toQueue(comparator?: EqualityComparator<TElement>): Promise<Queue<TElement>>;
+
+    /**
+     * Creates a set containing the elements of the sequence.
+     */
+    toSet(): Promise<Set<TElement>>;
+
+    /**
+     * Creates a sorted dictionary from the sequence by using the specified key and value selectors.
+     * @template TKey The type of the keys in the dictionary.
+     * @template TValue The type of the values in the dictionary.
+     * @param keySelector Selector used to select the key for each element.
+     * @param valueSelector Selector used to select the value for each element.
+     * @param keyComparator Comparator used for ordering of keys.
+     * @param valueComparator Comparator used for equality comparison of values.
+     */
+    toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<SortedDictionary<TKey, TValue>>;
+
+    /**
+     * Creates a sorted set containing the elements of the sequence.
+     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     */
+    toSortedSet(comparator?: OrderComparator<TElement>): Promise<SortedSet<TElement>>;
+
+    /**
+     * Creates a stack containing the elements of the sequence.
+     */
+    toStack(comparator?: EqualityComparator<TElement>): Promise<Stack<TElement>>;
 
     /**
      * Produces the set union of two sequences by using an equality comparer.

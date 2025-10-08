@@ -1,17 +1,37 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     AsyncEnumerable,
+    CircularLinkedList,
+    CircularQueue,
     Collections,
+    Dictionary,
     Enumerable,
+    EnumerableSet,
     Group,
     IAsyncEnumerable,
     IEnumerable,
     IGroup,
+    ILookup,
+    ImmutableCircularQueue,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutablePriorityQueue,
+    ImmutableQueue,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
+    ImmutableStack,
     IOrderedAsyncEnumerable,
+    LinkedList,
     List,
     OrderedAsyncEnumerator,
-    SortedSet
+    PriorityQueue,
+    Queue,
+    SortedDictionary,
+    SortedSet,
+    Stack
 } from "../imports";
+import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
@@ -195,7 +215,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         const asyncEnumerable = new AsyncEnumerator(async function* () {
             yield* [] as TElement[];
         });
-        return new AsyncEnumerator<TElement>(() => this.unionByGenerator(asyncEnumerable,keySelector, keyComparator));
+        return new AsyncEnumerator<TElement>(() => this.unionByGenerator(asyncEnumerable, keySelector, keyComparator));
+    }
+
+    public distinctUntilChanged(comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
+        const comparer = comparator ?? Comparators.equalityComparator;
+        return new AsyncEnumerator<TElement>(() => this.distinctUntilChangedGenerator(item => item, comparer));
+    }
+
+    public distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
+        const comparer = keyComparator ?? Comparators.equalityComparator;
+        return new AsyncEnumerator<TElement>(() => this.distinctUntilChangedGenerator(keySelector, comparer));
     }
 
     public async elementAt(index: number): Promise<TElement> {
@@ -294,6 +324,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public index(): IAsyncEnumerable<[number, TElement]> {
         return new AsyncEnumerator<[number, TElement]>(() => this.indexGenerator());
+    }
+
+    public interleave<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<TElement | TSecond> {
+        return new AsyncEnumerator<TElement | TSecond>(() => this.interleaveGenerator(iterable));
     }
 
     public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> |  OrderComparator<TElement>): IAsyncEnumerable<TElement> {
@@ -415,12 +449,20 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement> {
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, item => item, true, false, comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
         return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
         return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement> {
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, item => item, false, false, comparator);
     }
 
     public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]> {
@@ -472,6 +514,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public reverse(): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.reverseGenerator());
+    }
+
+    public rotate(shift: number): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.rotateGenerator(shift));
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate> {
@@ -627,6 +673,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.takeWhileGenerator(predicate as IndexedPredicate<TElement>));
     }
 
+    public tap(action: IndexedAction<TElement>): IAsyncEnumerable<TElement> {
+        return new AsyncEnumerator<TElement>(() => this.tapGenerator(action));
+    }
+
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
         return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
     }
@@ -643,6 +693,117 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return result;
     }
 
+    public async toCircularLinkedList(comparator?: EqualityComparator<TElement>): Promise<CircularLinkedList<TElement>> {
+        return new CircularLinkedList<TElement>(await this.toArray(), comparator);
+    }
+
+    public async toCircularQueue(comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
+    public async toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
+    public async toCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): Promise<CircularQueue<TElement>> {
+        let capacity: number | undefined;
+        let comparer: EqualityComparator<TElement> | undefined;
+
+        if (typeof capacityOrComparator === "number") {
+            capacity = capacityOrComparator;
+            comparer = comparator;
+        } else {
+            comparer = capacityOrComparator;
+        }
+
+        const queue = new CircularQueue<TElement>(capacity, comparer);
+        queue.addAll(await this.toArray());
+        return queue;
+    }
+
+    public async toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<Dictionary<TKey, TValue>> {
+        const dictionary = new Dictionary<TKey, TValue>([], valueComparator);
+        for await (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            dictionary.add(key, value);
+        }
+        return dictionary;
+    }
+
+    public async toEnumerableSet(): Promise<EnumerableSet<TElement>> {
+        return new EnumerableSet<TElement>(await this.toArray());
+    }
+
+    public async toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
+    public async toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
+    public async toImmutableCircularQueue(
+        capacityOrComparator?: number | EqualityComparator<TElement>,
+        comparator?: EqualityComparator<TElement>
+    ): Promise<ImmutableCircularQueue<TElement>> {
+        const items = await this.toArray();
+        if (typeof capacityOrComparator === "number") {
+            return ImmutableCircularQueue.create(capacityOrComparator, items, comparator);
+        }
+        return ImmutableCircularQueue.create(items, capacityOrComparator);
+    }
+
+    public async toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableDictionary<TKey, TValue>> {
+        const dictionary = await this.toDictionary(keySelector, valueSelector, valueComparator);
+        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
+        return ImmutableDictionary.create(pairs);
+    }
+
+    public async toImmutableList(comparator?: EqualityComparator<TElement>): Promise<ImmutableList<TElement>> {
+        return ImmutableList.create(await this.toArray(), comparator);
+    }
+
+    public async toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): Promise<ImmutablePriorityQueue<TElement>> {
+        return ImmutablePriorityQueue.create(await this.toArray(), comparator);
+    }
+
+    public async toImmutableQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableQueue<TElement>> {
+        return ImmutableQueue.create(await this.toArray(), comparator);
+    }
+
+    public async toImmutableSet(): Promise<ImmutableSet<TElement>> {
+        return ImmutableSet.create(await this.toArray());
+    }
+
+    public async toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableSortedDictionary<TKey, TValue>> {
+        const dictionary = await this.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
+        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
+        return ImmutableSortedDictionary.create(pairs);
+    }
+
+    public async toImmutableSortedSet(comparator?: OrderComparator<TElement>): Promise<ImmutableSortedSet<TElement>> {
+        return ImmutableSortedSet.create(await this.toArray(), comparator);
+    }
+
+    public async toImmutableStack(comparator?: EqualityComparator<TElement>): Promise<ImmutableStack<TElement>> {
+        return ImmutableStack.create(await this.toArray(), comparator);
+    }
+
+    public async toLinkedList(comparator?: EqualityComparator<TElement>): Promise<LinkedList<TElement>> {
+        return new LinkedList<TElement>(await this.toArray(), comparator);
+    }
+
+    public async toList(comparator?: EqualityComparator<TElement>): Promise<List<TElement>> {
+        return new List<TElement>(await this.toArray(), comparator);
+    }
+
+    public async toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>> {
+        const sequence = Enumerable.from(await this.toArray());
+        return Lookup.create(sequence, keySelector, valueSelector, keyComparator);
+    }
+
+    public async toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Map<TKey, TValue>> {
+        const map = new Map<TKey, TValue>();
+        for await (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            map.set(key, value);
+        }
+        return map;
+    }
+
     public async toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
         const obj: Record<TKey, TValue> = {} as Record<TKey, TValue>;
         for await (const item of this) {
@@ -650,6 +811,36 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             obj[key] = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
         }
         return obj;
+    }
+
+    public async toPriorityQueue(comparator?: OrderComparator<TElement>): Promise<PriorityQueue<TElement>> {
+        return new PriorityQueue<TElement>(await this.toArray(), comparator);
+    }
+
+    public async toQueue(comparator?: EqualityComparator<TElement>): Promise<Queue<TElement>> {
+        return new Queue<TElement>(await this.toArray(), comparator);
+    }
+
+    public async toSet(): Promise<Set<TElement>> {
+        return new Set(await this.toArray());
+    }
+
+    public async toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<SortedDictionary<TKey, TValue>> {
+        const dictionary = new SortedDictionary<TKey, TValue>([], keyComparator, valueComparator);
+        for await (const item of this) {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            dictionary.add(key, value);
+        }
+        return dictionary;
+    }
+
+    public async toSortedSet(comparator?: OrderComparator<TElement>): Promise<SortedSet<TElement>> {
+        return new SortedSet<TElement>(await this.toArray(), comparator);
+    }
+
+    public async toStack(comparator?: EqualityComparator<TElement>): Promise<Stack<TElement>> {
+        return new Stack<TElement>(await this.toArray(), comparator);
     }
 
     public union(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
@@ -728,6 +919,19 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     seen.add(key);
                     yield combination;
                 }
+            }
+        }
+    }
+
+    private async* distinctUntilChangedGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TElement> {
+        let hasLast = false;
+        let lastKey: TKey | undefined;
+        for await (const element of this) {
+            const key = keySelector(element);
+            if (!hasLast || !keyComparator(lastKey as TKey, key)) {
+                hasLast = true;
+                lastKey = key;
+                yield element;
             }
         }
     }
@@ -868,6 +1072,24 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
+    private async* interleaveGenerator<TSecond>(other: AsyncIterable<TSecond>): AsyncIterableIterator<TElement | TSecond> {
+        const sourceIterator = this[Symbol.asyncIterator]();
+        const otherIterator = other[Symbol.asyncIterator]();
+        let nextSource = await sourceIterator.next();
+        let nextOther = await otherIterator.next();
+
+        while (!nextSource.done || !nextOther.done) {
+            if (!nextSource.done) {
+                yield nextSource.value;
+                nextSource = await sourceIterator.next();
+            }
+            if (!nextOther.done) {
+                yield nextOther.value;
+                nextOther = await otherIterator.next();
+            }
+        }
+    }
+
     private async* intersectByGenerator<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
@@ -964,6 +1186,61 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     private async* reverseGenerator(): AsyncIterableIterator<TElement> {
         yield* (await this.toArray()).reverse();
+    }
+
+    private async* rotateGenerator(shift: number): AsyncIterableIterator<TElement> {
+        if (shift === 0) {
+            return yield* this;
+        }
+        if (shift > 0) {
+            return yield* this.rotateLeftGenerator(shift);
+        }
+        return yield* this.rotateRightGenerator(shift);
+    }
+
+    private async* rotateLeftGenerator(shift: number): AsyncIterableIterator<TElement> {
+        const iterator = this[Symbol.asyncIterator]() as AsyncIterator<TElement, TElement, TElement>;
+        const head: TElement[] = [];
+        let taken = 0;
+
+        while (taken < shift) {
+            const next = await iterator.next();
+            if (next.done) {
+                if (head.length === 0) {
+                    return;
+                }
+                const remainder = shift % head.length;
+                for (let i = remainder; i < head.length; ++i) {
+                    yield head[i];
+                }
+                for (let i = 0; i < remainder; ++i) {
+                    yield head[i];
+                }
+                return;
+            }
+            head.push(next.value);
+            ++taken;
+        }
+
+        for (let next = await iterator.next(); !next.done; next = await iterator.next()) {
+            yield next.value;
+        }
+
+        for (const element of head) {
+            yield element;
+        }
+    }
+
+    private async* rotateRightGenerator(shift: number): AsyncIterableIterator<TElement> {
+        const buffer = await this.toArray();
+        if (buffer.length === 0) {
+            return;
+        }
+        const r = (-shift) % buffer.length;
+        const k = (buffer.length - r) % buffer.length;
+        for (let index = 0; index < buffer.length; ++index) {
+            yield buffer[(index + k) % buffer.length];
+        }
     }
 
     private async* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): AsyncIterableIterator<TAccumulate> {
@@ -1122,6 +1399,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 break;
             }
             ++index;
+        }
+    }
+
+    private async* tapGenerator(action: IndexedAction<TElement>): AsyncIterableIterator<TElement> {
+        let index = 0;
+        for await (const element of this) {
+            action(element, index++);
+            yield element;
         }
     }
 
