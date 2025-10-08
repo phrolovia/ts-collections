@@ -358,7 +358,6 @@ describe("AsyncEnumerable", () => {
         test("should cycle through the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(3));
             const result = await enumerable.cycle(1).toArray();
-            console.log(result)
             expect(result).to.deep.equal([0, 1, 2]);
         });
         test("should cycle through the enumerable #2", {timeout: 5000}, async () => {

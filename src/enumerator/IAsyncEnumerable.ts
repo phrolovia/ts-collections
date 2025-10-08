@@ -42,115 +42,130 @@ import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
 export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
 
     /**
-     * Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
-     * If resultSelector function is specified, it will be used to select the result value.
-     * @param accumulator The accumulator function that will be applied over the sequence.
-     * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
-     * @param resultSelector The function that will be used to select the result value.
-     * @throws {NoElementsException} If the source is empty and seed is not provided.
+     * Asynchronously combines the elements of the sequence by applying an accumulator to each element and optionally projecting the final result.
+     * @template TAccumulate Type of the intermediate accumulator. Defaults to `TElement` when no seed is provided.
+     * @template TResult Type returned when a `resultSelector` is supplied.
+     * @param accumulator Function that merges the running accumulator with the next element.
+     * @param seed Optional initial accumulator value. When omitted, the first element is used as the starting accumulator.
+     * @param resultSelector Optional projection applied to the final accumulator before it is resolved.
+     * @returns {Promise<TAccumulate|TResult>} A promise that resolves to the final accumulator (or its projection).
+     * @throws {NoElementsException} Thrown when the sequence is empty and no `seed` is provided.
+     * @remarks The source sequence is enumerated asynchronously exactly once. Supply a `seed` to avoid exceptions on empty sequences and to control the accumulator type.
      */
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
 
-
     /**
-     * Groups the elements of the sequence according to a specified key selector function and applies an accumulator function over each group.
-     * @template TKey The type of the key returned by the key selector.
-     * @template TAccumulate The type of the accumulated value.
-     * @param keySelector The key selector function that will be used for selecting the key for each element.
-     * @param seedSelector The seed selector function that will be used to get the initial value for each group, or a constant value that will be used as the initial value for all groups.
-     * @param accumulator The accumulator function that will be applied over each group.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
-     * @returns {IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>} An enumerable sequence of key-value pairs, where each key is a unique key from the source sequence and each value is the accumulated value for that key.
+     * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.
+     * @template TKey Type returned by `keySelector` and used to organise groups.
+     * @template TAccumulate Type of the accumulated value created for each group.
+     * @param keySelector Selector that derives the grouping key for each element.
+     * @param seedSelector Either an initial accumulator value applied to every group or a factory invoked with the group key to produce that value.
+     * @param accumulator Function that merges the current accumulator with the next element in the group.
+     * @param keyComparator Optional equality comparator used to match group keys.
+     * @returns {IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>} An async sequence containing one key-value pair per group and its aggregated result.
+     * @remarks When `seedSelector` is a function, it is evaluated once per group to obtain the initial accumulator.
      */
     aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>
 
     /**
-     * Determines if all elements of the sequence satisfy the specified predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition.
+     * Determines whether every element in the sequence satisfies the supplied predicate.
+     * @param predicate Function that evaluates each element and returns `true` when it satisfies the condition.
+     * @returns {Promise<boolean>} `true` when all elements satisfy the predicate; otherwise, `false`.
+     * @remarks Enumeration stops as soon as the predicate returns `false`.
      */
     all(predicate: Predicate<TElement>): Promise<boolean>;
 
     /**
-     * Determines if any element of the sequence satisfies the specified predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, it will return true if sequence has elements, otherwise false.
+     * Determines whether the sequence contains at least one element that matches the optional predicate.
+     * @param predicate Optional function used to test elements. When omitted, the method resolves to `true` if the sequence contains any element.
+     * @returns {Promise<boolean>} `true` when a matching element is found; otherwise, `false`.
+     * @remarks When the predicate is omitted, only the first element is inspected, making this more efficient than awaiting `count() > 0`.
      */
     any(predicate?: Predicate<TElement>): Promise<boolean>;
 
     /**
-     * Appends the specified element to the end of the sequence.
-     * @param element The element that will be appended to the end of the sequence
+     * Creates an async sequence that yields the current elements followed by the supplied element.
+     * @param element Element appended to the end of the sequence.
+     * @returns {IAsyncEnumerable<TElement>} A new async enumerable whose final item is the provided element.
+     * @remarks The source sequence is not modified; enumeration is deferred until the returned sequence is iterated.
      */
     append(element: TElement): IAsyncEnumerable<TElement>;
 
     /**
-     * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
-     * @param selector The selector function that will select a numeric value from the sequence elements.
-     * @throws {NoElementsException} If the source is empty.
+     * Computes the arithmetic mean of the numeric values produced for each element in the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @returns {Promise<number>} A promise that resolves to the arithmetic mean of the selected values.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks Provide a selector when the elements are not already numeric. All values are enumerated exactly once.
      */
     average(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
-     * Casts the elements of the sequence to the specified type.
-     * @template TResult
-     * @returns {IAsyncEnumerable<TResult>} The elements of the sequence cast to the specified type.
+     * Reinterprets each element in the async sequence as the specified result type.
+     * @template TResult Target type exposed by the returned sequence.
+     * @returns {IAsyncEnumerable<TResult>} An async sequence that yields the same elements typed as `TResult`.
+     * @remarks No runtime conversion occurs; ensure the underlying elements are compatible with `TResult` to avoid downstream failures.
      */
     cast<TResult>(): IAsyncEnumerable<TResult>;
 
     /**
-     * Splits the elements of the sequence into chunks of size at most the specified size.
-     * @param size The maximum size of each chunk.
-     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     * Splits the sequence into contiguous subsequences containing at most the specified number of elements.
+     * @param size Maximum number of elements to include in each chunk. Must be greater than 0.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} An async sequence whose elements are chunks of the original sequence.
+     * @throws {InvalidArgumentException} Thrown when `size` is less than 1.
+     * @remarks Each chunk is yielded as an `IEnumerable<TElement>`. The final chunk may contain fewer elements than `size`.
      */
     chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
-     * Returns all combinations of the elements of the sequence.
-     * The outputs will not include duplicate combinations.
-     * @template TElement
-     * @param size The size of the combinations. If not specified, it will return all possible combinations.
-     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A new enumerable sequence whose elements are combinations of the source sequence.
-     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     * Generates the unique combinations that can be built from the elements in the async sequence.
+     * @param size Optional number of elements that each combination must contain. When omitted, combinations of every possible length are produced.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} An async sequence of combinations built from the source elements.
+     * @throws {InvalidArgumentException} Thrown when `size` is negative.
+     * @remarks The source sequence is materialised before combinations are produced, so very large inputs can be expensive. Duplicate combinations produced by repeated elements are emitted only once.
      */
     combinations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
-     * Concatenates two sequences.
-     * @param other The enumerable sequence that will be concatenated to the first sequence.
+     * Appends the specified async iterable to the end of the sequence.
+     * @param other Additional elements that are yielded after the current sequence.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the elements of the current sequence followed by those from `other`.
+     * @remarks Enumeration of both sequences is deferred until the result is iterated.
      */
     concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Determines where the sequence contains the specified element.
-     * @param element The element whose existence will be checked.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * Determines whether the async sequence contains a specific element using an optional comparator.
+     * @param element Element to locate in the sequence.
+     * @param comparator Optional equality comparator used to match elements. Defaults to the library's standard equality comparison.
+     * @returns {Promise<boolean>} `true` when the element is found; otherwise, `false`.
      */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
     /**
-     * Returns the number of elements in the sequence.
-     *
-     * <b>Note:</b> If you want to check whether a sequence contains any elements, do not use <code>sequence.count() > 0</code>. Use <code>sequence.any()</code> instead.
-     * @param predicate The predicate function that will be used to check each element for a condition.
+     * Counts the number of elements in the async sequence, optionally restricted by a predicate.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, all elements are counted.
+     * @returns {Promise<number>} A promise that resolves to the number of elements that satisfy the predicate.
+     * @remarks Prefer calling `any()` to test for existence instead of comparing this result with zero.
      */
     count(predicate?: Predicate<TElement>): Promise<number>;
 
     /**
-     * Returns an enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
-     * @template TKey
-     * @param keySelector The key selector function that will be used for selecting the key for each element.
-     * @param comparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
-     * @returns {IAsyncEnumerable<KeyValuePair<TKey, number>>} An enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
+     * Counts the occurrences of elements grouped by a derived key.
+     * @template TKey Type produced by `keySelector`.
+     * @param keySelector Selector used to derive the grouping key for each element.
+     * @param comparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<KeyValuePair<TKey, number>>} An async sequence of key/count pairs describing how many elements share each key.
+     * @remarks Each key appears exactly once in the result with its associated occurrence count.
      */
     countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>>;
 
     /**
-     * Returns a new enumerable sequence that repeats the elements of the source sequence a specified number of times.
-     * If count is not specified, the sequence will be repeated indefinitely.
-     * If the sequence is empty, an error will be thrown.
-     * @template TElement
-     * @param count The number of times the source sequence will be repeated.
-     * @returns {IAsyncEnumerable<TElement>} A new enumerable sequence that repeats the elements of the source sequence.
-     * @throws {NoElementsException} If the source is empty.
+     * Repeats the async sequence the specified number of times, or indefinitely when no count is provided.
+     * @param count Optional number of times to repeat the sequence. When omitted, the sequence repeats without end.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the original elements cyclically.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks When `count` is `undefined`, consume the result with care because it represents an infinite sequence.
      */
     cycle(count?: number): IAsyncEnumerable<TElement>;
 

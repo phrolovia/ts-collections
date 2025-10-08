@@ -39,16 +39,17 @@ import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 /**
- * Applies an accumulator function over the sequence. If seed is specified, it is used as the initial value.
- * If the resultSelector function is specified, it will be used to select the result value.
- * @template TAccumulate
- * @template TResult
+ * Combines the elements of the sequence by applying an accumulator to each element and optionally projecting the final result.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TAccumulate Type of the intermediate accumulator. Defaults to `TElement` when no seed is provided.
+ * @template TResult Type returned when a `resultSelector` is supplied.
  * @param source The source iterable.
- * @param accumulator The accumulator function that will be applied over the sequence.
- * @param seed The value that will be used as the initial value. If not specified, the first element of the sequence will be used as the seed value.
- * @param resultSelector The function that will be used to select the result value.
- * @returns {TAccumulate|TResult} The final accumulator value.
- * @throws {NoElementsException} If the source is empty and seed is not provided.
+ * @param accumulator Function that merges the running accumulator with the next element.
+ * @param seed Optional initial accumulator value. When omitted, the first element is used as the starting accumulator.
+ * @param resultSelector Optional projection applied to the final accumulator before it is returned.
+ * @returns {TAccumulate|TResult} The final accumulator (or its projection).
+ * @throws {NoElementsException} Thrown when `source` has no elements and no `seed` is provided.
+ * @remarks The source sequence is enumerated exactly once. Supply a `seed` to avoid exceptions on empty sequences and to control the accumulator type.
  */
 export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulate>(
     source: Iterable<TElement>,
@@ -60,12 +61,17 @@ export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulat
 };
 
 /**
- * Applies an accumulator function over the sequence, grouping the results by a key from the key selector function.
+ * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type returned by `keySelector` and used to organise groups.
+ * @template TAccumulate Type of the accumulated value created for each group.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param seedSelector Initial accumulator value or a function that will be used to select the initial accumulator value.
- * @param accumulator The accumulator function that will be applied over the sequence.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
+ * @param keySelector Selector that derives the grouping key for each element.
+ * @param seedSelector Either an initial accumulator value applied to every group or a factory invoked with the group key to produce that value.
+ * @param accumulator Function that merges the current accumulator with the next element in the group.
+ * @param keyComparator Optional equality comparator used to match group keys.
+ * @returns {IEnumerable<KeyValuePair<TKey, TAccumulate>>} A sequence containing one key-value pair per group and its aggregated result.
+ * @remarks When `seedSelector` is a factory function, it is evaluated once per group to obtain the initial accumulator.
  */
 export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
     source: IEnumerable<TElement>,
@@ -78,10 +84,12 @@ export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
 };
 
 /**
- * Determines if all elements of the sequence satisfy the specified predicate.
+ * Determines whether every element in the sequence satisfies the supplied predicate.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition.
- * @returns {boolean} true if all elements of the sequence satisfy the specified predicate; otherwise, false.
+ * @param predicate Function that evaluates each element and returns `true` when it satisfies the condition.
+ * @returns {boolean} `true` when all elements satisfy the predicate; otherwise, `false`.
+ * @remarks Enumeration stops as soon as the predicate returns `false`.
  */
 export const all = <TElement>(
     source: Iterable<TElement>,
@@ -91,11 +99,12 @@ export const all = <TElement>(
 };
 
 /**
- * Determines if any element of the sequence satisfies the specified predicate.
+ * Determines whether the sequence contains at least one element that matches the optional predicate.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition.
- * If not specified, it will return true if the sequence has elements, otherwise false.
- * @returns {boolean} true if any element of the sequence satisfies the specified predicate; otherwise, false.
+ * @param predicate Optional function used to test elements. When omitted, the function returns `true` if `source` contains any element.
+ * @returns {boolean} `true` when a matching element is found; otherwise, `false`.
+ * @remarks When the predicate is omitted, only the first element is inspected, making this more efficient than `count(source) > 0`.
  */
 export const any = <TElement>(
     source: Iterable<TElement>,
@@ -105,11 +114,12 @@ export const any = <TElement>(
 };
 
 /**
- * Appends the specified element to the end of the sequence.
- * @template TElement
+ * Creates a sequence that yields the current elements followed by the supplied element.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param element The element that will be appended to the end of the sequence
- * @returns {IEnumerable<TElement>} A new enumerable sequence that ends with the specified element.
+ * @param element Element appended to the end of the sequence.
+ * @returns {IEnumerable<TElement>} A new enumerable whose final item is the provided element.
+ * @remarks The source sequence is not modified; enumeration is deferred until the returned sequence is iterated.
  */
 export const append = <TElement>(
     source: Iterable<TElement>,
@@ -119,11 +129,13 @@ export const append = <TElement>(
 };
 
 /**
- * Computes the average of the sequence. The sequence should be either a sequence consisting of numbers, or an appropriate selector function should be provided.
+ * Computes the arithmetic mean of the numeric values produced for each element in the sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param selector The selector function that will select a numeric value from the sequence elements.
- * @returns {number} The average of the sequence.
- * @throws {NoElementsException} If the source is empty.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @returns {number} The arithmetic mean of the selected values.
+ * @throws {NoElementsException} Thrown when `source` is empty.
+ * @remarks Provide a selector when the elements are not already numeric. All values are enumerated exactly once.
  */
 export const average = <TElement>(
     source: Iterable<TElement>,
@@ -133,10 +145,12 @@ export const average = <TElement>(
 };
 
 /**
- * Casts the elements of the sequence to the specified type.
- * @template TResult
+ * Reinterprets each element in the sequence as the specified result type.
+ * @template TResult Target type exposed by the returned sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+ * @returns {IEnumerable<TResult>} A sequence that yields the same elements typed as `TResult`.
+ * @remarks No runtime conversion occurs; ensure the underlying elements are compatible with `TResult` to avoid downstream failures.
  */
 export const cast = <TResult, TElement = unknown>(
     source: Iterable<TElement>
@@ -145,12 +159,13 @@ export const cast = <TResult, TElement = unknown>(
 };
 
 /**
- * Splits the elements of the sequence into chunks of size at most the specified size.
- * @template TElement
+ * Splits the sequence into contiguous subsequences containing at most the specified number of elements.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param size The maximum size of each chunk.
- * @return {IEnumerable<IEnumerable<TElement>>} A new enumerable sequence whose elements are chunks of the original sequence.
- * @throws {InvalidArgumentException} If size is less than or equal to 0.
+ * @param size Maximum number of elements to include in each chunk. Must be greater than 0.
+ * @returns {IEnumerable<IEnumerable<TElement>>} A sequence where each element is a chunk of the original sequence.
+ * @throws {InvalidArgumentException} Thrown when `size` is less than 1.
+ * @remarks The final chunk may contain fewer elements than `size`. Enumeration is deferred until the returned sequence is iterated.
  */
 export const chunk = <TElement>(
     source: Iterable<TElement>,
@@ -160,13 +175,13 @@ export const chunk = <TElement>(
 };
 
 /**
- * Returns all combinations of the elements of the sequence.
- * The outputs will not include duplicate combinations.
- * @template TElement
+ * Generates the unique combinations that can be built from the elements in the sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param size The size of the combinations. If not specified, it will return all possible combinations.
- * @returns {IEnumerable<IEnumerable<TElement>>} A new enumerable sequence whose elements are combinations of the source sequence.
- * @throws {InvalidArgumentException} If size is less than or equal to 0.
+ * @param size Optional number of elements that each combination must contain. When omitted, combinations of every possible length are produced.
+ * @returns {IEnumerable<IEnumerable<TElement>>} A sequence of combinations built from the source elements.
+ * @throws {InvalidArgumentException} Thrown when `size` is negative.
+ * @remarks The source sequence is materialised before combinations are produced, so very large inputs can be expensive. Duplicate combinations produced by repeated elements are emitted only once.
  */
 export const combinations = <TElement>(
     source: Iterable<TElement>,
@@ -176,11 +191,12 @@ export const combinations = <TElement>(
 };
 
 /**
- * Concatenates two sequences.
- * @template TElement
+ * Appends the specified iterable to the end of the sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param other The iterable sequence that will be concatenated to the first sequence.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements of both sequences.
+ * @param other Additional elements that are yielded after the current sequence.
+ * @returns {IEnumerable<TElement>} A sequence containing the elements of the current sequence followed by those from `other`.
+ * @remarks Enumeration of both sequences is deferred until the result is iterated.
  */
 export const concat = <TElement>(
     source: Iterable<TElement>,
@@ -190,11 +206,12 @@ export const concat = <TElement>(
 };
 
 /**
- * Determines whether the sequence contains the specified element.
+ * Determines whether the sequence contains a specific element using an optional comparator.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param element The element whose existence will be checked.
- * @param comparator The comparator function that will be used for equality comparison. If not provided, the default equality comparison is used.
- * @returns {boolean} true if the sequence contains the specified element; otherwise, false.
+ * @param element Element to locate in the sequence.
+ * @param comparator Optional equality comparator used to match elements. Defaults to the library's standard equality comparison.
+ * @returns {boolean} `true` when the element is found; otherwise, `false`.
  */
 export const contains = <TElement>(
     source: Iterable<TElement>,
@@ -205,12 +222,12 @@ export const contains = <TElement>(
 };
 
 /**
- * Returns the number of elements in the sequence.
- *
- * <b>Note:</b> If you want to check whether a sequence contains any elements, do not use <code>sequence.count() > 0</code>. Use <code>sequence.any()</code> instead.
+ * Counts the number of elements in the sequence, optionally restricted by a predicate.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition.
- * @returns {number} The number of elements in the sequence.
+ * @param predicate Optional predicate that determines which elements are counted. When omitted, all elements are counted.
+ * @returns {number} The number of elements that satisfy the predicate.
+ * @remarks Prefer calling `any(source)` to test for existence instead of comparing this result with zero.
  */
 export const count = <TElement>(
     source: Iterable<TElement>,
@@ -220,12 +237,14 @@ export const count = <TElement>(
 };
 
 /**
- * Returns an enumerable sequence of key value pair objects that contain the key and the number of occurrences of the key in the source sequence.
- * @template TKey
+ * Counts the occurrences of elements grouped by a derived key.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type produced by `keySelector`.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param comparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<KeyValuePair<TKey, number>>} A new enumerable sequence that contains key value pair objects.
+ * @param keySelector Selector used to derive the grouping key for each element.
+ * @param comparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<KeyValuePair<TKey, number>>} A sequence of key/count pairs describing how many elements share each key.
+ * @remarks Each key appears exactly once in the result with its associated occurrence count.
  */
 export const countBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -236,14 +255,13 @@ export const countBy = <TElement, TKey>(
 };
 
 /**
- * Returns a new enumerable sequence that repeats the elements of the source sequence a specified number of times.
- * If the count is not specified, the sequence will be repeated indefinitely.
- * If the sequence is empty, an error will be thrown.
- * @template TElement
+ * Repeats the sequence the specified number of times, or indefinitely when no count is provided.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param count The number of times the source sequence will be repeated.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that repeats the elements of the source sequence.
- * @throws {NoElementsException} If the source is empty.
+ * @param count Optional number of times to repeat the sequence. When omitted, the sequence repeats without end.
+ * @returns {IEnumerable<TElement>} A sequence that yields the original elements cyclically.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @remarks When `count` is `undefined`, consume the result with care because it represents an infinite sequence.
  */
 export const cycle = <TElement>(
     source: Iterable<TElement>,
@@ -1732,6 +1750,3 @@ export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
         return from(source).zip(other);
     }
 };
-
-
-
