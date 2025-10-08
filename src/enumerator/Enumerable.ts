@@ -379,6 +379,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.takeWhile(predicate as IndexedPredicate<TElement>);
     }
 
+    public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {
+        return this.#enumerator.tap(action);
+    }
+
     public toArray(): TElement[] {
         return this.#enumerator.toArray();
     }

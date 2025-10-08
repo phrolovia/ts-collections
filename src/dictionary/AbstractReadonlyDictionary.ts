@@ -88,6 +88,7 @@ import {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
@@ -446,6 +447,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public takeWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
     public takeWhile<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
         return takeWhile(this, predicate as IndexedPredicate<KeyValuePair<TKey, TValue>>);
+    }
+
+    public tap(action: IndexedAction<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return tap(this, action);
     }
 
     public toArray(): KeyValuePair<TKey, TValue>[] {

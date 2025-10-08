@@ -3441,6 +3441,23 @@ describe("List", () => {
         });
     });
 
+    describe("#tap()", () => {
+        test("should tap into sequence without modifying it", () => {
+            const list = new List([1,2,3,4,5]);
+            const squares: [number, number][] = [];
+            const list2 = list.tap((n, nx) => squares.push([nx, n*n])).toImmutableList();
+            const expectedTap = [
+                [0, 1],
+                [1, 4],
+                [2, 9],
+                [3, 16],
+                [4, 25]
+            ];
+            expect(squares).to.deep.equal(expectedTap);
+            expect(list2.toArray()).to.deep.equal([1,2,3,4,5]);
+        });
+    });
+
     describe("#thenBy()", () => {
         test("should order people by age [asc] then by name[asc]", () => {
             const people = new List([

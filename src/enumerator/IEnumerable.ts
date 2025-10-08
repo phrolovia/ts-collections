@@ -1800,6 +1800,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
+    tap(action: IndexedAction<TElement>): IEnumerable<TElement>;
+
     /**
      * Creates a new array from the elements of the sequence.
      * This forces evaluation of the entire sequence.

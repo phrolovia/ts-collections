@@ -31,10 +31,10 @@ import {
     groupBy,
     groupJoin,
     IEnumerable,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
-    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
@@ -82,15 +82,16 @@ import {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
     toDictionary,
     toEnumerableSet,
+    toImmutableCircularQueue,
     toImmutableDictionary,
     toImmutableList,
     toImmutablePriorityQueue,
-    toImmutableCircularQueue,
     toImmutableQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
@@ -425,6 +426,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
         return takeWhile(this, predicate as IndexedPredicate<TElement>);
+    }
+
+    public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {
+        return tap(this, action);
     }
 
     public toArray(): TElement[] {

@@ -494,7 +494,6 @@ export const distinctBy = <TElement, TKey>(
     return from(source).distinctBy(keySelector, keyComparator);
 }
 
-
 /**
  * Returns the element at the specified index in the sequence.
  * @template TElement
@@ -2339,6 +2338,10 @@ export function takeWhile<TElement, TFiltered extends TElement>(
 ): IEnumerable<TElement> | IEnumerable<TFiltered> {
     return from(source).takeWhile(predicate as IndexedPredicate<TElement>);
 }
+
+export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IEnumerable<TElement> => {
+    return from(source).tap(action);
+};
 
 /**
  * Creates a new array from the elements of the sequence.

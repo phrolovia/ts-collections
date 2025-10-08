@@ -647,6 +647,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.takeWhileGenerator(predicate as IndexedPredicate<TElement>));
     }
 
+    public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {
+        return new Enumerator(() => this.tapGenerator(action));
+    }
+
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
     }
@@ -1371,6 +1375,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             } else {
                 break;
             }
+        }
+    }
+
+    private* tapGenerator(action: IndexedAction<TElement>): IterableIterator<TElement> {
+        let index = 0;
+        for (const item of this) {
+            action(item, index++);
+            yield item;
         }
     }
 

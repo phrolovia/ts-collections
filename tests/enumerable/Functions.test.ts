@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import {
     aggregate,
     aggregateBy,
@@ -89,6 +89,7 @@ import {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
@@ -1559,6 +1560,23 @@ describe("Enumerable Standalone Functions", () => {
             expectTypeOf(result).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
         });
     });
+
+    describe("#tap()", () => {
+        test("should tap into sequence without modifying it", () => {
+            const list = [1,2,3,4,5];
+            const squares: [number, number][] = [];
+            const list2 = tap(list, (n, nx) => squares.push([nx, n*n])).toArray();
+            const expectedTap = [
+                [0, 1],
+                [1, 4],
+                [2, 9],
+                [3, 16],
+                [4, 25]
+            ];
+            expect(squares).to.deep.equal(expectedTap);
+            expect(list2).to.deep.equal([1,2,3,4,5]);
+        });
+    })
 
     describe("#toArray()", () => {
         test("should return an array of numbers", () => {
