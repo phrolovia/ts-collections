@@ -61,8 +61,10 @@ import {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
@@ -348,12 +350,20 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return ofType(this, type);
     }
 
+    public order(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
+        return order(this, comparator);
+    }
+
     public orderBy<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return orderBy(this, keySelector, comparator);
     }
 
     public orderByDescending<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return orderByDescending(this, keySelector, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
+        return orderDescending(this, comparator);
     }
 
     public pairwise(resultSelector?: PairwiseSelector<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): IEnumerable<[KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>]> {

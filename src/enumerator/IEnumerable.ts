@@ -1095,6 +1095,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>>;
 
+    order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
+
     /**
      * Sorts the elements of a sequence in ascending order by using a specified comparer.
      * @template TElement
@@ -1174,6 +1176,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      // ]
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
+
+    orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
     /**
      * Produces a sequence of tuples containing the element and the following element.

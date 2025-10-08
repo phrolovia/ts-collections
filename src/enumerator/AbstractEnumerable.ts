@@ -56,8 +56,10 @@ import {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
@@ -327,12 +329,20 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return ofType(this, type);
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return order(this, comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return orderBy(this, keySelector, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return orderByDescending(this, keySelector, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return orderDescending(this, comparator);
     }
 
     public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {

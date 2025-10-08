@@ -1435,6 +1435,13 @@ export const ofType = <TElement, TResult extends ObjectType>(
     return from(source).ofType(type);
 }
 
+export const order = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: OrderComparator<TElement>
+): IOrderedEnumerable<TElement> => {
+    return from(source).order(comparator);
+}
+
 /**
  * Sorts the elements of a sequence in ascending order by using a specified comparer.
  * @template TElement
@@ -1529,6 +1536,13 @@ export const orderByDescending = <TElement, TKey>(
 ): IOrderedEnumerable<TElement> => {
     return from(source).orderByDescending(keySelector, comparator);
 }
+
+export const orderDescending = <TElement>(
+    source: Iterable<TElement>,
+    comparator?: OrderComparator<TElement>
+): IOrderedEnumerable<TElement> => {
+    return from(source).orderDescending(comparator);
+};
 
 /**
  * Produces a sequence of tuples containing the element and the following element.

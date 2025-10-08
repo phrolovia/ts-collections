@@ -277,12 +277,20 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.ofType(type);
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return this.#enumerator.order(comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return this.#enumerator.orderBy(keySelector, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return this.#enumerator.orderByDescending(keySelector, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return this.#enumerator.orderDescending(comparator);
     }
 
     public pairwise(resulSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {

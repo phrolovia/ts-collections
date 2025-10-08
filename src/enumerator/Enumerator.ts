@@ -446,12 +446,20 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, k => k, true, false, comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, k => k, false, false, comparator);
     }
 
     public pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {

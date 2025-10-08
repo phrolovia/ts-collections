@@ -2497,6 +2497,21 @@ describe("List", () => {
         });
     });
 
+    describe("#order()", () => {
+        test("should order numbers", () => {
+            const unsorted = new List([4, 2, 3, 1, 5]);
+            const sorted = unsorted.order().toArray();
+            expect(sorted).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+        test("should use provided comparator", () => {
+            const source = new List(["b", "a"]);
+            const sorted1 = source.order((e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = source.order((e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["a", "b"])
+            expect(sorted2).to.deep.equal(["b", "a"]);
+        });
+    });
+
     describe("#orderBy()", () => {
         test("should order people by age [asc]", () => {
             const people = new List([
@@ -2518,6 +2533,7 @@ describe("List", () => {
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
         });
     });
+
     describe("#orderByDescending()", () => {
         test("should order people by age [desc]", () => {
             const people = new List([
@@ -2537,6 +2553,21 @@ describe("List", () => {
             const orderedPeopleAges = orderedPeople.select((p) => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#orderDescending()", () => {
+        test("should order numbers", () => {
+            const unsorted = new List([4, 2, 3, 1, 5]);
+            const sorted = unsorted.orderDescending().toArray();
+            expect(sorted).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+        test("should use provided comparator", () => {
+            const source = new List(["b", "a"]);
+            const sorted1 = source.orderDescending((e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = source.orderDescending((e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["b", "a"])
+            expect(sorted2).to.deep.equal(["a", "b"]);
         });
     });
 

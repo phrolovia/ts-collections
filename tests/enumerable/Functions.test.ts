@@ -59,8 +59,10 @@ import {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
@@ -1128,6 +1130,21 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#order()", () => {
+        test("should order numbers", () => {
+            const unsorted =[4, 2, 3, 1, 5];
+            const sorted = order(unsorted).toArray();
+            expect(sorted).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+        test("should use provided comparator", () => {
+            const source = ["b", "a"];
+            const sorted1 = order(source, (e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = order(source, (e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["a", "b"])
+            expect(sorted2).to.deep.equal(["b", "a"]);
+        });
+    });
+
     describe("#orderBy()", () => {
         const people = [Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola];
         test("should order the list by age", () => {
@@ -1145,6 +1162,21 @@ describe("Enumerable Standalone Functions", () => {
             const orderedAges = select(orderedPeople, p => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
             expect(orderedAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#orderDescending()", () => {
+        test("should order numbers", () => {
+            const unsorted = [4, 2, 3, 1, 5];
+            const sorted = orderDescending(unsorted).toArray();
+            expect(sorted).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+        test("should use provided comparator", () => {
+            const source = ["b", "a"];
+            const sorted1 = orderDescending(source, (e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = orderDescending(source, (e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["b", "a"])
+            expect(sorted2).to.deep.equal(["a", "b"]);
         });
     });
 
