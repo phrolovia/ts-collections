@@ -237,19 +237,37 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Gets the first element of the sequence.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
+     * Gets the first element that satisfies the provided type guard predicate and narrows the resulting type.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
+     * @returns {Promise<TFiltered>} A promise that resolves to the first matching element.
      * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the condition.
+     * @throws {NoMatchingElementException} If no element satisfies the predicate.
      */
     first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
+
+    /**
+     * Gets the first element of the sequence, optionally filtered by a predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
+     * @returns {Promise<TElement>} A promise that resolves to the first element of the sequence.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     */
     first(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
-     * Gets the first element of the sequence or a default value if the no element satisfies the condition.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
+     * Gets the first element that satisfies the provided type guard predicate, or resolves to null when no such element exists.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
+     * @returns {Promise<TFiltered | null>} A promise that resolves to the first matching element or null if none matches.
      */
     firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
+
+    /**
+     * Gets the first element of the sequence or resolves to null when the sequence is empty or no element satisfies the predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
+     * @returns {Promise<TElement | null>} A promise that resolves to the first matching element or null when no match is found.
+     */
     firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
@@ -341,20 +359,37 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult>;
 
     /**
-     * Returns the last element of the sequence.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
+     * Returns the last element that satisfies the provided type guard predicate and narrows the resulting type.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
+     * @returns {Promise<TFiltered>} A promise that resolves to the last matching element.
      * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the condition.
+     * @throws {NoMatchingElementException} If no element satisfies the predicate.
      */
     last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
+
+    /**
+     * Returns the last element of the sequence, optionally filtered by a predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence is returned.
+     * @returns {Promise<TElement>} A promise that resolves to the last element of the sequence.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     */
     last(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
-     * Returns the last element of the sequence or a default value if the no element satisfies the condition.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
-     * @throws {Error} If the source is null or undefined.
+     * Returns the last element that satisfies the provided type guard predicate, or resolves to null when no such element exists.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
+     * @returns {Promise<TFiltered | null>} A promise that resolves to the last matching element, or null if none matches.
      */
     lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
+
+    /**
+     * Returns the last element of the sequence or resolves to null when the sequence is empty or no element satisfies the predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence is returned.
+     * @returns {Promise<TElement | null>} A promise that resolves to the last matching element or null when no match is found.
+     */
     lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
@@ -448,10 +483,18 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]>;
 
     /**
-     * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
-     * @param predicate The predicate function that will be used to check each element for a condition.
+     * Splits the sequence into two sequences based on a type guard predicate, narrowing the element type of the first sequence.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The first resulting sequence contains the elements that satisfy the predicate, the second contains the remainder.
+     * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>} A promise that resolves to a tuple of sequences.
      */
     partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>;
+
+    /**
+     * Splits the sequence into two sequences based on a boolean predicate.
+     * @param predicate The predicate function that will be used to decide whether an element belongs to the first sequence.
+     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A promise that resolves to a tuple containing the matching and non-matching elements.
+     */
     partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
@@ -522,23 +565,49 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     shuffle(): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {MoreThanOneElementException} If the source contains more than one element.
-     * @throws {NoMatchingElementException} If no element satisfies the condition.
-     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the condition.
+     * Returns the only element that satisfies the provided type guard predicate and narrows the resulting type.
+     * Throws an exception if there is not exactly one matching element.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
+     * @returns {Promise<TFiltered>} A promise that resolves to the single matching element.
+     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
+     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
+     * @throws {NoMatchingElementException} If no element satisfies the predicate.
+     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the predicate.
      */
     single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
+
+    /**
+     * Returns the only element of a sequence, optionally filtered by a predicate.
+     * Throws an exception if there is not exactly one matching element.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
+     * @returns {Promise<TElement>} A promise that resolves to the single element of the sequence.
+     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
+     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
+     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies it.
+     */
     single(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
-     * Returns the only element of a sequence, or a default value if the sequence is empty. This method throws an exception if there is more than one element in the sequence.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @throws {MoreThanOneElementException} If the source contains more than one element.
-     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the condition.
+     * Returns the only element that satisfies the provided type guard predicate, or resolves to null when no such element exists.
+     * Throws an exception if more than one matching element is found.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
+     * @returns {Promise<TFiltered | null>} A promise that resolves to the single matching element or null if none matches.
+     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
+     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies it.
      */
     singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
+
+    /**
+     * Returns the only element of a sequence, or null if the sequence is empty or no element satisfies the predicate.
+     * Throws an exception if more than one matching element exists.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
+     * @returns {Promise<TElement | null>} A promise that resolves to the single element of the sequence or null when no such element exists.
+     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
+     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies it.
+     */
     singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
@@ -560,16 +629,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Splits the sequence into two sequences based on a predicate.
-     * The first sequence contains the elements from the start of the input sequence that satisfy the predicate,
-     * and it continues until the predicate no longer holds.
-     * The second sequence contains the remaining elements.
-     * @template TElement
-     * @param predicate The predicate function that will be used to test each element.
-     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A tuple of two enumerable sequences, the first one containing the elements that satisfy the condition,
-     * and the second one containing the rest of the elements regardless of the condition.
+     * Splits the sequence into two sequences while a type guard predicate continues to return true for consecutive elements.
+     * Once the predicate returns false, the remaining elements are emitted in the second sequence.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The first resulting sequence is narrowed to the guarded type.
+     * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>} A promise that resolves to a tuple containing the guarded prefix and the remainder of the sequence.
      */
     span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>;
+
+    /**
+     * Splits the sequence into two sequences while a predicate continues to return true for consecutive elements.
+     * Once the predicate returns false, the remaining elements are emitted in the second sequence.
+     * @param predicate The predicate function that will be used to test each element.
+     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A promise that resolves to a tuple containing the matching prefix and the remainder of the sequence.
+     */
     span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
@@ -607,10 +680,18 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     takeLast(count: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns elements from a sequence as long as a specified condition is true and then skips the remaining elements.
-     * @param predicate The predicate function that will be used to test each element.
+     * Returns consecutive elements from the sequence while a type guard predicate evaluates to true, narrowing the resulting element type.
+     * @template TFiltered
+     * @param predicate The predicate function (receiving element and index) that acts as a type guard. Iteration stops once the predicate returns false.
+     * @returns {IAsyncEnumerable<TFiltered>} An async enumerable containing the leading elements that satisfy the predicate.
      */
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+
+    /**
+     * Returns consecutive elements from the sequence while a predicate evaluates to true.
+     * @param predicate The predicate function (receiving element and index) that will be used to test each element.
+     * @returns {IAsyncEnumerable<TElement>} An async enumerable containing the leading elements that satisfy the predicate.
+     */
     takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
@@ -630,7 +711,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): Promise<CircularLinkedList<TElement>>;
 
+    /**
+     * Creates a circular queue containing the elements of the sequence using the queue's default capacity.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the sequence elements.
+     */
     toCircularQueue(comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
+
+    /**
+     * Creates a circular queue containing the elements of the sequence and limits it to the specified capacity.
+     * When more elements are provided than the capacity allows, only the most recent items are retained.
+     * @param capacity The maximum number of elements that the resulting queue can hold.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing up to `capacity` most recent elements.
+     */
     toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
     /**
@@ -648,7 +742,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     toEnumerableSet(): Promise<EnumerableSet<TElement>>;
 
+    /**
+     * Creates an immutable circular queue containing the elements of the sequence using the queue's default capacity.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the sequence elements.
+     */
     toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
+
+    /**
+     * Creates an immutable circular queue containing the elements of the sequence and limits it to the specified capacity.
+     * When more elements are provided than the capacity allows, only the most recent items are retained.
+     * @param capacity The maximum number of elements that the resulting queue can hold.
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing up to `capacity` most recent elements.
+     */
     toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
     /**
@@ -797,10 +904,18 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Filters a sequence of values based on a predicate.
-     * @param predicate The predicate function that will be used to test each element.
+     * Filters a sequence of values based on a type guard predicate, narrowing the resulting element type.
+     * @template TFiltered
+     * @param predicate The predicate function (accepting element and index) that acts as a type guard. Return true to keep the element, false to filter it out.
+     * @returns {IAsyncEnumerable<TFiltered>} An async enumerable containing elements matching the guarded type.
      */
     where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+
+    /**
+     * Filters a sequence of values based on a predicate.
+     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
+     * @returns {IAsyncEnumerable<TElement>} An async enumerable containing elements that satisfy the predicate.
+     */
     where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**

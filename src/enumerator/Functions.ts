@@ -494,10 +494,30 @@ export const distinctBy = <TElement, TKey>(
     return from(source).distinctBy(keySelector, keyComparator);
 }
 
+/**
+ * Removes consecutive duplicate elements from the sequence by comparing each element with the immediately previous element.
+ * @template TElement
+ * @param source The source iterable.
+ * @param comparator The comparator function that will be used for equality comparison. If not provided, the default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal values.
+ * @example
+ *      const readings = [1, 1, 2, 2, 3];
+ *      const stableReadings = toArray(distinctUntilChanged(readings));
+ *      // stableReadings = [1, 2, 3]
+ */
 export const distinctUntilChanged = <TElement>(source: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> => {
     return from(source).distinctUntilChanged(comparator);
 }
 
+/**
+ * Removes consecutive duplicate elements from the sequence by comparing keys produced for each element.
+ * @template TElement
+ * @template TKey
+ * @param source The source iterable.
+ * @param keySelector The key selector function that will be used to project each element before comparison.
+ * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal keys.
+ */
 export const distinctUntilChangedBy = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -894,6 +914,19 @@ export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number
     return from(source).index();
 }
 
+/**
+ * Interleaves the source sequence with another iterable, yielding elements in alternating order.
+ * @template TElement
+ * @template TSecond
+ * @param source The source iterable.
+ * @param other The iterable sequence whose elements will be interleaved with the source sequence.
+ * @returns {IEnumerable<TElement | TSecond>} A new enumerable sequence that alternates between elements from the source and the provided iterable.
+ * @example
+ *      const letters = ['A', 'B', 'C'];
+ *      const numbers = [1, 2, 3, 4];
+ *      const mixed = toArray(interleave(letters, numbers));
+ *      // mixed = ['A', 1, 'B', 2, 'C', 3, 4]
+ */
 export const interleave = <TElement, TSecond>(source: Iterable<TElement>, other: Iterable<TSecond>): IEnumerable<TElement | TSecond> => {
     return from(source).interleave(other);
 }
@@ -1435,6 +1468,13 @@ export const ofType = <TElement, TResult extends ObjectType>(
     return from(source).ofType(type);
 }
 
+/**
+ * Sorts the elements of the sequence in ascending order by using the provided comparator.
+ * @template TElement
+ * @param source The source iterable.
+ * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
+ * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in ascending order.
+ */
 export const order = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1537,6 +1577,13 @@ export const orderByDescending = <TElement, TKey>(
     return from(source).orderByDescending(keySelector, comparator);
 }
 
+/**
+ * Sorts the elements of the sequence in descending order by using the provided comparator.
+ * @template TElement
+ * @param source The source iterable.
+ * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
+ * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in descending order.
+ */
 export const orderDescending = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1776,6 +1823,18 @@ export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElem
     return from(source).reverse();
 }
 
+/**
+ * Rotates the elements in the sequence by the specified amount while preserving the sequence length.
+ * Positive values rotate elements towards the end (left rotation), and negative values rotate towards the beginning (right rotation).
+ * @template TElement
+ * @param source The source iterable.
+ * @param shift The number of positions by which the sequence will be rotated.
+ * @returns {IEnumerable<TElement>} A new enumerable sequence containing the rotated elements.
+ * @example
+ *      const numbers = [1, 2, 3, 4, 5];
+ *      const rotateLeft = toArray(rotate(numbers, 2));
+ *      // rotateLeft = [3, 4, 5, 1, 2]
+ */
 export const rotate = <TElement>(source: Iterable<TElement>, shift: number): IEnumerable<TElement> => {
     return from(source).rotate(shift);
 }
@@ -2365,6 +2424,13 @@ export function takeWhile<TElement, TFiltered extends TElement>(
     return from(source).takeWhile(predicate as IndexedPredicate<TElement>);
 }
 
+/**
+ * Invokes the specified action on each element while yielding the original sequence unchanged.
+ * @template TElement
+ * @param source The source iterable.
+ * @param action The action to perform for each element. The second parameter is the element index.
+ * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.
+ */
 export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IEnumerable<TElement> => {
     return from(source).tap(action);
 };

@@ -368,8 +368,55 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
+    /**
+     * Removes consecutive duplicate elements from the sequence by comparing each element with the immediately previous element.
+     * @template TElement
+     * @param comparator The comparator function that will be used for equality comparison. If not provided, the default equality comparison is used.
+     * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal values.
+     * @example
+     *      const readings = new List([1, 1, 2, 2, 3, 1, 1]);
+     *      const stableReadings = readings.distinctUntilChanged().toArray();
+     *      // stableReadings = [1, 2, 3, 1]
+     *
+     *      interface LogEntry { level: string; message: string; }
+     *      const logs = new List<LogEntry>([
+     *          { level: 'info', message: 'Booting' },
+     *          { level: 'info', message: 'Booting' },
+     *          { level: 'warn', message: 'Slow response' },
+     *          { level: 'warn', message: 'Slow response' },
+     *          { level: 'info', message: 'Recovered' }
+     *      ]);
+     *      const levelChanges = logs.distinctUntilChanged((a, b) => a.level === b.level).toArray();
+     *      // levelChanges = [
+     *      //   { level: 'info', message: 'Booting' },
+     *      //   { level: 'warn', message: 'Slow response' },
+     *      //   { level: 'info', message: 'Recovered' }
+     *      // ]
+     */
     distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
+    /**
+     * Removes consecutive duplicate elements from the sequence by comparing keys produced for each element.
+     * @template TElement
+     * @template TKey
+     * @param keySelector The key selector function that will be used to project each element before comparison.
+     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
+     * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal keys.
+     * @example
+     *      interface Reading { value: number; unit: string; }
+     *      const readings = new List<Reading>([
+     *          { value: 20, unit: 'C' },
+     *          { value: 20, unit: 'c' },
+     *          { value: 68, unit: 'F' }
+     *      ]);
+     *      const normalised = readings.distinctUntilChangedBy(
+     *          r => r.unit.toLowerCase()
+     *      ).toArray();
+     *      // normalised = [
+     *      //   { value: 20, unit: 'C' },
+     *      //   { value: 68, unit: 'F' }
+     *      // ]
+     */
     distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
     /**
@@ -479,57 +526,65 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement>;
 
     /**
-     * Gets the first element of the sequence.
-     * @template TElement
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
-     * @returns {TElement} The first element of the sequence.
+     * Gets the first element that satisfies the provided type guard predicate and narrows the resulting sequence type.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
+     * @returns {TFiltered} The first element that satisfies the predicate.
      * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the condition.
+     * @throws {NoMatchingElementException} If no element satisfies the predicate.
      * @example
-     *      const numbers = new List([10, 20, 30, 40]);
-     *      const firstElement = numbers.first();
-     *      // firstElement = 10
-     *
-     *      const firstGreaterThan25 = numbers.first(n => n > 25);
-     *      // firstGreaterThan25 = 30
-     *
-     *      const emptyList = new List<number>();
-     *      try {
-     *          emptyList.first(); // Throws NoElementsException
-     *      } catch (e) {
-     *          console.log(e.message); // Output: The sequence contains no elements.
-     *      }
-     *
-     *      try {
-     *          numbers.first(n => n > 50); // Throws NoMatchingElementException
-     *      } catch (e) {
-     *          console.log(e.message); // Output: No element satisfies the condition.
-     *      }
+     *      type Shape = { kind: 'circle'; radius: number } | { kind: 'square'; size: number };
+     *      const shapes = new List<Shape>([
+     *          { kind: 'square', size: 5 },
+     *          { kind: 'circle', radius: 2 }
+     *      ]);
+     *      const firstCircle = shapes.first<Shape & { kind: 'circle' }>(
+     *          (shape): shape is Shape & { kind: 'circle' } => shape.kind === 'circle'
+     *      );
+     *      // firstCircle = { kind: 'circle', radius: 2 }
      */
     first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+
+    /**
+     * Gets the first element of the sequence, optionally filtered by a predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
+     * @returns {TElement} The first element of the sequence.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     * @example
+     *      const numbers = new List([10, 20, 30, 40]);
+     *      const firstElement = numbers.first(); // 10
+     *      const firstGreaterThan25 = numbers.first(n => n > 25); // 30
+     */
     first(predicate?: Predicate<TElement>): TElement;
 
     /**
-     * Gets the first element of the sequence or a default value if the no element satisfies the condition.
-     * @template TElement
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
-     * @returns {TElement|null} The first element of the sequence or null if no element satisfies the condition or the sequence is empty.
+     * Gets the first element that satisfies the provided type guard predicate, or null when no such element exists.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
+     * @returns {TFiltered|null} The first matching element, or null if none matches.
      * @example
-     *      const numbers = new List([10, 20, 30, 40]);
-     *      const firstElement = numbers.firstOrDefault();
-     *      // firstElement = 10
-     *
-     *      const firstGreaterThan25 = numbers.firstOrDefault(n => n > 25);
-     *      // firstGreaterThan25 = 30
-     *
-     *      const firstGreaterThan50 = numbers.firstOrDefault(n => n > 50);
-     *      // firstGreaterThan50 = null
-     *
-     *      const emptyList = new List<number>();
-     *      const firstFromEmpty = emptyList.firstOrDefault();
-     *      // firstFromEmpty = null
+     *      interface ApiResult { status: 'ok' | 'error'; payload?: string; }
+     *      const results = new List<ApiResult>([
+     *          { status: 'error' },
+     *          { status: 'ok', payload: 'done' }
+     *      ]);
+     *      const okResult = results.firstOrDefault(
+     *          (result): result is ApiResult & { status: 'ok' } => result.status === 'ok'
+     *      );
+     *      // okResult = { status: 'ok', payload: 'done' }
      */
     firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+
+    /**
+     * Gets the first element of the sequence or null if the sequence is empty or no element satisfies the predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
+     * @returns {TElement|null} The first element of the sequence, or null when the sequence is empty or no match is found.
+     * @example
+     *      const numbers = new List([10, 20, 30, 40]);
+     *      const firstElement = numbers.firstOrDefault(); // 10
+     *      const firstGreaterThan50 = numbers.firstOrDefault(n => n > 50); // null
+     */
     firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
@@ -654,9 +709,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      const letters = new List(['a', 'b', 'c']);
      *      const indexedLetters = letters.index().toArray();
      *      // indexedLetters = [[0, 'a'], [1, 'b'], [2, 'c']]
-     */
-    index(): IEnumerable<[number, TElement]>;
+    */
+   index(): IEnumerable<[number, TElement]>;
 
+    /**
+     * Interleaves the source sequence with another iterable, yielding elements in alternating order.
+     * @template TElement
+     * @template TSecond
+     * @param iterable The iterable sequence whose elements will be interleaved with the source sequence.
+     * @returns {IEnumerable<TElement | TSecond>} A new enumerable sequence that alternates between elements from the source and the provided iterable.
+     * @example
+     *      const letters = new List(['A', 'B', 'C']);
+     *      const numbers = new List([1, 2, 3, 4]);
+     *      const result = letters.interleave(numbers).toArray();
+     *      // result = ['A', 1, 'B', 2, 'C', 3, 4]
+     */
     interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond>;
 
     /**
@@ -815,57 +882,66 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
                                 resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult>;
 
     /**
-     * Returns the last element of the sequence.
-     * @template TElement
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
-     * @returns {TElement} The last element of the sequence.
+     * Returns the last element that satisfies the provided type guard predicate and narrows the resulting type.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
+     * @returns {TFiltered} The last matching element.
      * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the condition.
+     * @throws {NoMatchingElementException} If no element satisfies the predicate.
      * @example
-     *      const numbers = new List([10, 20, 30, 25, 40]);
-     *      const lastElement = numbers.last();
-     *      // lastElement = 40
-     *
-     *      const lastLessThan30 = numbers.last(n => n < 30);
-     *      // lastLessThan30 = 25
-     *
-     *      const emptyList = new List<number>();
-     *      try {
-     *          emptyList.last(); // Throws NoElementsException
-     *      } catch (e) {
-     *          console.log(e.message); // Output: The sequence contains no elements.
-     *      }
-     *
-     *      try {
-     *          numbers.last(n => n > 50); // Throws NoMatchingElementException
-     *      } catch (e) {
-     *          console.log(e.message); // Output: No element satisfies the condition.
-     *      }
+     *      type Event = { type: 'start' } | { type: 'stop'; code: number };
+     *      const events = new List<Event>([
+     *          { type: 'start' },
+     *          { type: 'stop', code: 1 },
+     *          { type: 'stop', code: 2 }
+     *      ]);
+     *      const lastStop = events.last<Event & { type: 'stop' }>(
+     *          (evt): evt is Event & { type: 'stop' } => evt.type === 'stop'
+     *      );
+     *      // lastStop = { type: 'stop', code: 2 }
      */
     last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+
+    /**
+     * Returns the last element of the sequence, optionally filtered by a predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence is returned.
+     * @returns {TElement} The last element of the sequence.
+     * @throws {NoElementsException} If the source is empty.
+     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     * @example
+     *      const numbers = new List([10, 20, 30, 25, 40]);
+     *      const lastElement = numbers.last(); // 40
+     *      const lastLessThan30 = numbers.last(n => n < 30); // 25
+     */
     last(predicate?: Predicate<TElement>): TElement;
 
     /**
-     * Returns the last element of the sequence or a default value if the no element satisfies the condition.
-     * @template TElement
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
-     * @returns {TElement|null} The last element of the sequence or null if the sequence is empty or no element satisfies the condition.
+     * Returns the last element that satisfies the provided type guard predicate, or null when no such element exists.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
+     * @returns {TFiltered|null} The last matching element, or null if none matches.
      * @example
-     *      const numbers = new List([10, 20, 30, 25, 40]);
-     *      const lastElement = numbers.lastOrDefault();
-     *      // lastElement = 40
-     *
-     *      const lastLessThan30 = numbers.lastOrDefault(n => n < 30);
-     *      // lastLessThan30 = 25
-     *
-     *      const lastGreaterThan50 = numbers.lastOrDefault(n => n > 50);
-     *      // lastGreaterThan50 = null
-     *
-     *      const emptyList = new List<number>();
-     *      const lastFromEmpty = emptyList.lastOrDefault();
-     *      // lastFromEmpty = null
+     *      interface Response { status: 'ok' | 'error'; timestamp: number; }
+     *      const responses = new List<Response>([
+     *          { status: 'ok', timestamp: 1 },
+     *          { status: 'error', timestamp: 2 }
+     *      ]);
+     *      const lastOk = responses.lastOrDefault(
+     *          (value): value is Response & { status: 'ok' } => value.status === 'ok'
+     *      );
+     *      // lastOk = { status: 'ok', timestamp: 1 }
      */
     lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+
+    /**
+     * Returns the last element of the sequence or null if the sequence is empty or no element satisfies the predicate.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence is returned.
+     * @returns {TElement|null} The last element of the sequence, or null when the sequence is empty or no match is found.
+     * @example
+     *      const numbers = new List([10, 20, 30, 25, 40]);
+     *      const lastElement = numbers.lastOrDefault(); // 40
+     *      const lastGreaterThan50 = numbers.lastOrDefault(n => n > 50); // null
+     */
     lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
@@ -1095,6 +1171,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>>;
 
+    /**
+     * Sorts the elements of the sequence in ascending order by using the provided comparator.
+     * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
+     * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in ascending order.
+     * @example
+     *      const numbers = new List([5, 1, 3]);
+     *      const sorted = numbers.order().toArray();
+     *      // sorted = [1, 3, 5]
+     */
     order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
     /**
@@ -1177,6 +1262,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
 
+    /**
+     * Sorts the elements of the sequence in descending order by using the provided comparator.
+     * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
+     * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in descending order.
+     * @example
+     *      const numbers = new List([5, 1, 3]);
+     *      const sortedDesc = numbers.orderDescending().toArray();
+     *      // sortedDesc = [5, 3, 1]
+     */
     orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
     /**
@@ -1208,42 +1302,36 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      *      // emptyPairs = []
      */
     pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
-
-
     /**
-     * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
+     * Splits the sequence into two sequences based on a type guard predicate, narrowing the type of the matching partition.
      * Note: This method iterates the source sequence immediately and stores the results.
-     * @template TElement
-     * @param predicate The predicate function that will be used to check each element for a condition.
-     * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing two enumerable sequences: the first for elements satisfying the predicate, the second for the rest.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The first resulting sequence contains elements that satisfy the predicate, while the second contains the rest.
+     * @returns {[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]} A tuple containing two enumerable sequences: the first narrowed to the guarded type, the second containing the remaining elements.
      * @example
-     *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-     *
-     *      const [evens, odds] = numbers.partition(n => n % 2 === 0);
-     *
-     *      const evensArray = evens.toArray();
-     *      // evensArray = [2, 4, 6, 8, 10]
-     *
-     *      const oddsArray = odds.toArray();
-     *      // oddsArray = [1, 3, 5, 7, 9]
-     *
-     *      interface Person { name: string; age: number; }
-     *      const people = new List<Person>([
-     *          { name: 'Alice', age: 25 },
-     *          { name: 'Bob', age: 17 },
-     *          { name: 'Charlie', age: 30 },
-     *          { name: 'Diana', age: 15 }
+     *      type Animal = { kind: 'cat'; name: string } | { kind: 'dog'; name: string };
+     *      const animals = new List<Animal>([
+     *          { kind: 'cat', name: 'Milo' },
+     *          { kind: 'dog', name: 'Rex' },
+     *          { kind: 'cat', name: 'Luna' }
      *      ]);
-     *
-     *      const [adults, minors] = people.partition(p => p.age >= 18);
-     *
-     *      const adultNames = adults.select(p => p.name).toArray();
-     *      // adultNames = ['Alice', 'Charlie']
-     *
-     *      const minorNames = minors.select(p => p.name).toArray();
-     *      // minorNames = ['Bob', 'Diana']
+     *      const [cats, nonCats] = animals.partition(
+     *          (animal): animal is Animal & { kind: 'cat' } => animal.kind === 'cat'
+     *      );
+     *      // cats contains Milo and Luna; nonCats contains Rex.
      */
     partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
+
+    /**
+     * Splits the sequence into two sequences based on a boolean predicate.
+     * Note: This method iterates the source sequence immediately and stores the results.
+     * @param predicate The predicate function that will be used to decide whether an element belongs to the first sequence.
+     * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing two enumerable sequences: the first for elements satisfying the predicate, the second for the rest.
+     * @example
+     *      const numbers = new List([1, 2, 3, 4, 5, 6]);
+     *      const [evens, odds] = numbers.partition(n => n % 2 === 0);
+     *      // evens = [2, 4, 6], odds = [1, 3, 5]
+     */
     partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
 
     /**
@@ -1346,6 +1434,18 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     reverse(): IEnumerable<TElement>;
 
+    /**
+     * Rotates the elements in the sequence by the specified amount while preserving the sequence length.
+     * Positive values rotate elements towards the end (left rotation), and negative values rotate towards the beginning (right rotation).
+     * @param shift The number of positions by which the sequence will be rotated.
+     * @returns {IEnumerable<TElement>} A new enumerable sequence containing the rotated elements.
+     * @example
+     *      const numbers = new List([1, 2, 3, 4, 5]);
+     *      const rotateLeft = numbers.rotate(2).toArray();
+     *      // rotateLeft = [3, 4, 5, 1, 2]
+     *      const rotateRight = numbers.rotate(-1).toArray();
+     *      // rotateRight = [5, 1, 2, 3, 4]
+     */
     rotate(shift: number): IEnumerable<TElement>;
 
     /**
@@ -1491,9 +1591,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     shuffle(): IEnumerable<TElement>;
 
     /**
-     * Returns the only element of a sequence and throws an exception if there is not exactly one element in the sequence.
-     * Can optionally apply a predicate to filter the sequence first.
-     * @template TElement
+     * Returns the only element that satisfies the provided type guard predicate, guaranteeing the guarded type.
+     * Throws an exception if there is not exactly one matching element.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
+     * @returns {TFiltered} The single matching element.
+     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
+     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
+     * @throws {NoMatchingElementException} If no element satisfies the predicate.
+     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the predicate.
+     */
+    single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
+
+    /**
+     * Returns the only element of a sequence, optionally filtered by a predicate.
+     * Throws an exception if there is not exactly one matching element.
      * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
      * @returns {TElement} The single element of the sequence (or the single element satisfying the predicate).
      * @throws {NoElementsException} If the source (or filtered sequence) is empty.
@@ -1501,79 +1613,30 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies the condition.
      * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
      * @example
-     *      const singleItemList = new List([42]);
-     *      const theOnlyItem = singleItemList.single();
-     *      // theOnlyItem = 42
-     *
      *      const numbers = new List([10, 20, 30, 40]);
-     *      const theOnlyThirty = numbers.single(n => n === 30);
-     *      // theOnlyThirty = 30
-     *
-     *      const emptyList = new List<number>();
-     *      try {
-     *          emptyList.single(); // Throws NoElementsException
-     *      } catch (e) {
-     *          console.log(e.message);
-     *      }
-     *
-     *      const multipleItems = new List([1, 2]);
-     *      try {
-     *          multipleItems.single(); // Throws MoreThanOneElementException
-     *      } catch (e) {
-     *          console.log(e.message);
-     *      }
-     *
-     *      try {
-     *          numbers.single(n => n > 50); // Throws NoMatchingElementException
-     *      } catch (e) {
-     *          console.log(e.message);
-     *      }
-     *
-     *      try {
-     *          numbers.single(n => n > 15); // Throws MoreThanOneMatchingElementException
-     *      } catch (e) {
-     *          console.log(e.message);
-     *      }
+     *      const theOnlyThirty = numbers.single(n => n === 30); // 30
      */
-    single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
     single(predicate?: Predicate<TElement>): TElement;
 
     /**
-     * Returns the only element of a sequence, or a default value (null) if the sequence is empty.
-     * Throws an exception if there is more than one element in the sequence (or more than one matching the predicate).
-     * @template TElement
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
-     * @returns {TElement|null} The single element of the sequence (or the single element satisfying the predicate), or null if the sequence (or filtered sequence) is empty.
+     * Returns the only element that satisfies the provided type guard predicate, or null when no such element exists.
+     * Throws an exception if more than one matching element is found.
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
+     * @returns {TFiltered|null} The single matching element, or null if none matches.
      * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
      * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
-     * @example
-     *      const singleItemList = new List([42]);
-     *      const theOnlyItem = singleItemList.singleOrDefault();
-     *      // theOnlyItem = 42
-     *
-     *      const numbers = new List([10, 20, 30, 40]);
-     *      const theOnlyThirty = numbers.singleOrDefault(n => n === 30);
-     *      // theOnlyThirty = 30
-     *
-     *      const emptyList = new List<number>();
-     *      const singleFromEmpty = emptyList.singleOrDefault();
-     *      // singleFromEmpty = null
-     *
-     *      const singleNoMatch = numbers.singleOrDefault(n => n > 50);
-     *      // singleNoMatch = null
-     *
-     *      const multipleItems = new List([1, 2]);
-     *      try {
-     *          multipleItems.singleOrDefault(); // Throws MoreThanOneElementException
-     *      } catch (e) { console.log(e.message); }
-     *
-     *      try {
-     *          numbers.singleOrDefault(n => n > 15); // Throws MoreThanOneMatchingElementException
-     *      } catch (e) {
-     *          console.log(e.message);
-     *      }
      */
     singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
+
+    /**
+     * Returns the only element of a sequence, or null if the sequence is empty or no element satisfies the predicate.
+     * Throws an exception if more than one matching element exists.
+     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
+     * @returns {TElement|null} The single element of the sequence (or the single element satisfying the predicate), or null when no such element exists.
+     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
+     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
+     */
     singleOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
@@ -1646,38 +1709,26 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
-     * Splits the sequence into two sequences based on a predicate.
-     * The first sequence contains the elements from the start of the input sequence that satisfy the predicate continuously.
-     * The second sequence contains the remaining elements, starting from the first element that failed the predicate.
+     * Splits the sequence into two sequences while a type guard predicate continues to return true for consecutive elements.
+     * Once an element fails the predicate, it and the remaining elements are yielded in the second sequence.
      * Note: This method iterates the source sequence immediately and stores the results.
-     * @template TElement
+     * @template TFiltered
+     * @param predicate The predicate that acts as a type guard. The first returned sequence is narrowed to the guarded type.
+     * @returns {[IEnumerable<TFiltered>, IEnumerable<TElement>]} A tuple containing the initial span of guarded elements and the remaining elements.
+     */
+    span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
+
+    /**
+     * Splits the sequence into two sequences while a predicate continues to return true for consecutive elements.
+     * Once an element fails the predicate, it and the remaining elements are yielded in the second sequence.
+     * Note: This method iterates the source sequence immediately and stores the results.
      * @param predicate The predicate function that will be used to test each element.
      * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple of two enumerable sequences.
      * @example
      *      const numbers = new List([1, 2, 3, 4, 1, 5, 6]);
-     *
-     *      // Span while numbers are less than 4
-     *      const [lessThan4, rest1] = numbers.span(n => n < 4);
-     *      const lessThan4Array = lessThan4.toArray();
-     *      // lessThan4Array = [1, 2, 3]
-     *      const rest1Array = rest1.toArray();
-     *      // rest1Array = [4, 1, 5, 6] (Starts from the first element failing the condition)
-     *
-     *      // Span while condition is always true
-     *      const [allElements, rest2] = numbers.span(n => true);
-     *      const allElementsArray = allElements.toArray();
-     *      // allElementsArray = [1, 2, 3, 4, 1, 5, 6]
-     *      const rest2Array = rest2.toArray();
-     *      // rest2Array = []
-     *
-     *      // Span while the condition is initially false
-     *      const [initialSpan, rest3] = numbers.span(n => n > 10);
-     *      const initialSpanArray = initialSpan.toArray();
-     *      // initialSpanArray = []
-     *      const rest3Array = rest3.toArray();
-     *      // rest3Array = [1, 2, 3, 4, 1, 5, 6]
+     *      const [lessThan4, rest] = numbers.span(n => n < 4);
+     *      // lessThan4 = [1, 2, 3], rest = [4, 1, 5, 6]
      */
-    span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
     span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
 
     /**
@@ -1782,32 +1833,33 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     takeLast(count: number): IEnumerable<TElement>;
 
     /**
-     * Returns elements from a sequence as long as a specified condition is true and then skips the remaining elements.
-     * @template TElement
-     * @param predicate The predicate function (accepting element and index) that will be used to test each element.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
-     * @example
-     *      const numbers = new List([1, 2, 3, 4, 1, 5, 6]);
-     *
-     *      // Take while less than 4
-     *      const takeWhileLessThan4 = numbers.takeWhile(n => n < 4).toArray();
-     *      // takeWhileLessThan4 = [1, 2, 3] (Stops taking at 4)
-     *
-     *      // Take based on index
-     *      const takeWhileIndexLessThan3 = numbers.takeWhile((n, index) => index < 3).toArray();
-     *      // takeWhileIndexLessThan3 = [1, 2, 3] (Takes elements at index 0, 1, 2)
-     *
-     *      // Condition never met (the first element fails)
-     *      const takeWhileAlwaysFalse = numbers.takeWhile(n => n > 10).toArray();
-     *      // takeWhileAlwaysFalse = []
-     *
-     *      // Condition always true
-     *      const takeWhileAlwaysTrue = numbers.takeWhile(n => true).toArray();
-     *      // takeWhileAlwaysTrue = [1, 2, 3, 4, 1, 5, 6]
+     * Returns consecutive elements from the sequence while a type guard predicate evaluates to true, narrowing the resulting sequence type.
+     * @template TFiltered
+     * @param predicate The predicate (receiving element and index) that acts as a type guard. Iteration stops once the predicate returns false.
+     * @returns {IEnumerable<TFiltered>} A new enumerable sequence containing the leading elements that satisfy the predicate.
      */
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+
+    /**
+     * Returns consecutive elements from the sequence while a predicate evaluates to true.
+     * @param predicate The predicate function (receiving element and index) that will be used to test each element.
+     * @returns {IEnumerable<TElement>} A new enumerable sequence containing the leading elements that satisfy the predicate.
+     * @example
+     *      const numbers = new List([1, 2, 3, 4, 1, 5, 6]);
+     *      const firstLessThanFour = numbers.takeWhile(n => n < 4).toArray();
+     *      // firstLessThanFour = [1, 2, 3]
+     */
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
+    /**
+     * Invokes the specified action on each element while yielding the original sequence unchanged.
+     * @param action The action to perform for each element. The second parameter is the element index.
+     * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.
+     * @example
+     *      const numbers = new List([1, 2, 3]);
+     *      numbers.tap(n => console.log(n)).sum();
+     *      // Logs 1, 2, 3 and then returns the sum (6).
+     */
     tap(action: IndexedAction<TElement>): IEnumerable<TElement>;
 
     /**
@@ -1843,20 +1895,25 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): CircularLinkedList<TElement>;
 
     /**
-     * Creates a new circular queue from the elements of the sequence.
-     * The queue retains only the most recent values up to the provided capacity, discarding older entries when the capacity is exceeded.
+     * Creates a new circular queue from the elements of the sequence using the queue's default capacity.
      * Forces evaluation of the sequence.
-     * @template TElement
-     * @param capacity Optional capacity for the resulting queue. If omitted, the default capacity is used.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
-     * @returns {CircularQueue<TElement>} A new circular queue that contains the retained elements from the input sequence.
+     * @returns {CircularQueue<TElement>} A new circular queue containing all elements from the input sequence.
+     */
+    toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
+
+    /**
+     * Creates a new circular queue from the elements of the sequence and enforces the specified capacity.
+     * When the number of source elements exceeds the capacity, only the most recent items are retained.
+     * Forces evaluation of the sequence.
+     * @param capacity The maximum number of elements that the resulting queue can hold.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
+     * @returns {CircularQueue<TElement>} A new circular queue that contains up to `capacity` most recent elements from the input sequence.
      * @example
      *      const numbers = new List([1, 2, 3, 4]);
      *      const circular = numbers.toCircularQueue(3);
      *      // circular.toArray() === [2, 3, 4]
-     *      // circular.capacity === 3
      */
-    toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
     toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
 
     /**
@@ -1914,20 +1971,25 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     toEnumerableSet(): EnumerableSet<TElement>;
 
     /**
-     * Creates a new immutable circular queue from the elements of the sequence.
-     * The queue preserves only the most recent values up to the provided capacity, discarding older entries when necessary.
+     * Creates a new immutable circular queue from the elements of the sequence using the queue's default capacity.
      * Forces evaluation of the sequence.
-     * @template TElement
-     * @param capacity Optional capacity for the resulting queue. If omitted, the default capacity is used.
      * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
-     * @returns {ImmutableCircularQueue<TElement>} A new immutable circular queue that contains the retained elements from the input sequence.
+     * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing all elements from the input sequence.
+     */
+    toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
+
+    /**
+     * Creates a new immutable circular queue from the elements of the sequence and limits it to the specified capacity.
+     * When the number of source elements exceeds the capacity, only the most recent items are retained.
+     * Forces evaluation of the sequence.
+     * @param capacity The maximum number of elements that the resulting queue can hold.
+     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
+     * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue that contains up to `capacity` most recent elements from the input sequence.
      * @example
      *      const letters = new List(['a', 'b', 'c', 'd']);
      *      const queue = letters.toImmutableCircularQueue(3);
      *      // queue.toArray() === ['b', 'c', 'd']
-     *      // queue.capacity === 3
      */
-    toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
     toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
 
     /**
@@ -2402,38 +2464,22 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
     /**
+     * Filters a sequence of values based on a type guard predicate, narrowing the resulting element type.
+     * @template TFiltered
+     * @param predicate The predicate function (accepting element and index) that acts as a type guard. Return true to keep the element, false to filter it out.
+     * @returns {IEnumerable<TFiltered>} A new enumerable sequence that contains elements matching the guarded type.
+     */
+    where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+
+    /**
      * Filters a sequence of values based on a predicate.
-     * @template TElement
-     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out. When the predicate acts as a type guard, the resulting sequence is narrowed to the guarded type.
+     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
      * @returns {IEnumerable<TElement>} A new enumerable sequence that contains elements from the input sequence that satisfy the condition.
      * @example
      *      const numbers = new List([1, 2, 3, 4, 5, 6, 7, 8]);
-     *
-     *      // Get only even numbers
      *      const evens = numbers.where(n => n % 2 === 0).toArray();
      *      // evens = [2, 4, 6, 8]
-     *
-     *      // Get numbers greater than 3 at an odd index
-     *      const complexFilter = numbers.where((n, index) => n > 3 && index % 2 !== 0).toArray();
-     *      // Indices: 0, 1, 2, 3, 4, 5, 6, 7
-     *      // Elements:1, 2, 3, 4, 5, 6, 7, 8
-     *      // Filter checks:
-     *      // - index 1 (value 2): 2 > 3 is false
-     *      // - index 3 (value 4): 4 > 3 is true, index 3 is odd. Keep 4.
-     *      // - index 5 (value 6): 6 > 3 is true, index 5 is odd. Keep 6.
-     *      // - index 7 (value 8): 8 > 3 is true, index 7 is odd. Keep 8.
-     *      // complexFilter = [4, 6, 8]
-     *
-     *      interface Product { name: string; price: number; }
-     *      const products = new List<Product>([
-     *          { name: 'Apple', price: 0.5 },
-     *          { name: 'Banana', price: 0.3 },
-     *          { name: 'Cherry', price: 1.0 }
-     *      ]);
-     *      const cheapProducts = products.where(p => p.price < 0.6).toArray();
-     *      // cheapProducts = [ { name: 'Apple', price: 0.5 }, { name: 'Banana', price: 0.3 } ]
      */
-    where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
