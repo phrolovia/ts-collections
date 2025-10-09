@@ -728,7 +728,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing at most {@link count} elements from the start of the source.
      * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
      */
-
     take(count: number): IAsyncEnumerable<TElement>;
 
     /**
@@ -737,7 +736,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing at most {@link count} elements from the end of the source.
      * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
      */
-
     takeLast(count: number): IAsyncEnumerable<TElement>;
 
     /**
@@ -747,7 +745,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TFiltered>} A deferred async sequence containing the contiguous prefix that satisfies {@link predicate}.
      * @remarks Elements after the first failing element are not inspected.
      */
-
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
 
     /**
@@ -756,7 +753,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing the contiguous prefix that satisfies {@link predicate}.
      * @remarks Elements after the first failing element are not inspected.
      */
-
     takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
@@ -765,7 +761,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} The original async sequence, enabling fluent chaining.
      * @remarks The action executes lazily as the sequence is iterated asynchronously, making it suitable for logging or instrumentation.
      */
-
     tap(action: IndexedAction<TElement>): IAsyncEnumerable<TElement>;
 
     /**
@@ -773,7 +768,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<TElement[]>} A promise that resolves with all elements from the source sequence in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the array is returned. Subsequent changes to the source are not reflected in the result.
      */
-
     toArray(): Promise<TElement[]>;
 
     /**
@@ -782,7 +776,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<CircularLinkedList<TElement>>} A promise that resolves to a circular linked list containing all elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the list is created, and elements are stored in iteration order.
      */
-
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): Promise<CircularLinkedList<TElement>>;
 
     /**
@@ -791,7 +784,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the most recent elements from the source, up to the default capacity.
      * @remarks The entire sequence is consumed asynchronously. Once the queue reaches its capacity (currently 32), older items are discarded as new elements are enqueued.
      */
-
     toCircularQueue(comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
     /**
@@ -801,7 +793,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the most recent elements from the source, bounded by {@link capacity}.
      * @remarks The entire sequence is consumed asynchronously. When the source contains more than {@link capacity} elements, earlier items are discarded.
      */
-
     toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
     /**
@@ -815,7 +806,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
-
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<Dictionary<TKey, TValue>>;
 
     /**
@@ -823,7 +813,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<EnumerableSet<TElement>>} A promise that resolves to a set populated with the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's equality semantics.
      */
-
     toEnumerableSet(): Promise<EnumerableSet<TElement>>;
 
     /**
@@ -832,7 +821,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the most recent elements from the source, up to the default capacity.
      * @remarks The entire sequence is consumed asynchronously. Earlier items are discarded when the number of elements exceeds the queue's capacity (currently 32).
      */
-
     toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
     /**
@@ -842,7 +830,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the most recent elements from the source, bounded by {@link capacity}.
      * @remarks The entire sequence is consumed asynchronously. When the source contains more than {@link capacity} elements, earlier items are discarded.
      */
-
     toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
     /**
@@ -856,7 +843,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
-
     toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableDictionary<TKey, TValue>>;
 
     /**
@@ -865,7 +851,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableList<TElement>>} A promise that resolves to an immutable list containing all elements from the source in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the list is returned.
      */
-
     toImmutableList(comparator?: EqualityComparator<TElement>): Promise<ImmutableList<TElement>>;
 
     /**
@@ -874,7 +859,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutablePriorityQueue<TElement>>} A promise that resolves to an immutable priority queue containing all elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned. Elements are ordered according to {@link comparator} or the default ordering.
      */
-
     toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): Promise<ImmutablePriorityQueue<TElement>>;
 
     /**
@@ -883,7 +867,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableQueue<TElement>>} A promise that resolves to an immutable queue containing all elements from the source in enqueue order.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned.
      */
-
     toImmutableQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableQueue<TElement>>;
 
     /**
@@ -891,7 +874,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableSet<TElement>>} A promise that resolves to an immutable set built from the distinct elements of the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's equality semantics.
      */
-
     toImmutableSet(): Promise<ImmutableSet<TElement>>;
 
     /**
@@ -906,7 +888,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
-
     toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableSortedDictionary<TKey, TValue>>;
 
     /**
@@ -915,7 +896,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableSortedSet<TElement>>} A promise that resolves to an immutable sorted set containing the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's ordering semantics.
      */
-
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): Promise<ImmutableSortedSet<TElement>>;
 
     /**
@@ -924,7 +904,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableStack<TElement>>} A promise that resolves to an immutable stack whose top element corresponds to the last element of the source.
      * @remarks The entire sequence is consumed asynchronously before the stack is returned.
      */
-
     toImmutableStack(comparator?: EqualityComparator<TElement>): Promise<ImmutableStack<TElement>>;
 
     /**
@@ -933,7 +912,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<LinkedList<TElement>>} A promise that resolves to a linked list containing all elements from the source in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the list is returned.
      */
-
     toLinkedList(comparator?: EqualityComparator<TElement>): Promise<LinkedList<TElement>>;
 
     /**
@@ -942,7 +920,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<List<TElement>>} A promise that resolves to a list containing all elements from the source in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the list is returned.
      */
-
     toList(comparator?: EqualityComparator<TElement>): Promise<List<TElement>>;
 
     /**
@@ -955,7 +932,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ILookup<TKey, TValue>>} A promise that resolves to a lookup grouping the projected values by key.
      * @remarks The entire sequence is consumed asynchronously. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
      */
-
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>>;
 
     /**
@@ -967,7 +943,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Map<TKey, TValue>>} A promise that resolves to a map populated with the projected key/value pairs.
      * @remarks The entire sequence is consumed asynchronously. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
      */
-
     toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Map<TKey, TValue>>;
 
     /**
@@ -979,8 +954,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Record<TKey, TValue>>} A promise that resolves to an object populated with the projected key/value pairs.
      * @remarks The entire sequence is consumed asynchronously. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
      */
-
-    toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
+    toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
 
     /**
      * Materialises the asynchronous sequence into a priority queue.
@@ -988,7 +962,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<PriorityQueue<TElement>>} A promise that resolves to a priority queue containing all elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned. Elements are ordered according to {@link comparator} or the default ordering.
      */
-
     toPriorityQueue(comparator?: OrderComparator<TElement>): Promise<PriorityQueue<TElement>>;
 
     /**
@@ -997,7 +970,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Queue<TElement>>} A promise that resolves to a queue containing all elements from the source in enqueue order.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned.
      */
-
     toQueue(comparator?: EqualityComparator<TElement>): Promise<Queue<TElement>>;
 
     /**
@@ -1005,7 +977,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Set<TElement>>} A promise that resolves to a set containing the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
      */
-
     toSet(): Promise<Set<TElement>>;
 
     /**
@@ -1020,7 +991,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
-
     toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<SortedDictionary<TKey, TValue>>;
 
     /**
@@ -1029,7 +999,6 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<SortedSet<TElement>>} A promise that resolves to a sorted set containing the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's ordering semantics.
      */
-
     toSortedSet(comparator?: OrderComparator<TElement>): Promise<SortedSet<TElement>>;
 
     /**
@@ -1038,21 +1007,27 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Stack<TElement>>} A promise that resolves to a stack whose top element corresponds to the last element of the source.
      * @remarks The entire sequence is consumed asynchronously before the stack is returned.
      */
-
     toStack(comparator?: EqualityComparator<TElement>): Promise<Stack<TElement>>;
 
     /**
-     * Produces the set union of two sequences by using an equality comparer.
-     * @param enumerable The enumerable sequence whose distinct elements form the second set for the union.
-     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, default equality comparer will be used.
+     * Creates a set-style union between this asynchronous sequence and {@link enumerable} using an equality comparator.
+     * @param enumerable Additional asynchronous sequence whose elements are consumed after the source when forming the union.
+     * @param comparator Optional equality comparator that determines whether two elements are considered the same. Defaults to the library's standard equality comparator.
+     * @returns {IAsyncEnumerable<TElement>} A deferred asynchronous sequence containing the distinct elements from this sequence followed by elements from {@link enumerable} that are not already present according to {@link comparator}.
+     * @throws {unknown} Re-throws any error thrown while iterating either async sequence or executing {@link comparator}.
+     * @remarks Elements from the original sequence always appear before contributions from {@link enumerable}. The method buffers only the comparison data needed to detect duplicates and consumes each input at most once.
      */
     union(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Produces the set union of two sequences by using the specified key selector function.
-     * @param enumerable The enumerable sequence whose distinct elements form the second set for the union.
-     * @param keySelector The key selector function that will be used to select the key for each element.
-     * @param comparator The equality comparator function that will be used to compare two keys. If not specified, default equality comparer will be used.
+     * Creates a set-style union between this asynchronous sequence and {@link enumerable} by comparing keys projected from each element.
+     * @template TKey Type of key generated by {@link keySelector}.
+     * @param enumerable Additional asynchronous sequence whose elements are consumed after the source when forming the union.
+     * @param keySelector Projection that produces a comparison key for each element.
+     * @param comparator Optional equality comparator that determines whether two keys are considered the same. Defaults to the library's standard equality comparator.
+     * @returns {IAsyncEnumerable<TElement>} A deferred asynchronous sequence containing the distinct elements from this sequence followed by elements from {@link enumerable} whose keys were not previously observed.
+     * @throws {unknown} Re-throws any error thrown while iterating either async sequence or executing {@link keySelector} or {@link comparator}.
+     * @remarks Keys are buffered to ensure uniqueness while elements remain streamable. Provide {@link comparator} when keys require structural equality semantics.
      */
     unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 

@@ -1279,7 +1279,6 @@ export const sum = <TElement>(
  * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the start of {@link source}.
  * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
  */
-
 export const take = <TElement>(
     source: Iterable<TElement>,
     count: number
@@ -1295,7 +1294,6 @@ export const take = <TElement>(
  * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the end of {@link source}.
  * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
  */
-
 export const takeLast = <TElement>(
     source: Iterable<TElement>,
     count: number
@@ -1311,8 +1309,6 @@ export const takeLast = <TElement>(
  * @returns {IEnumerable<TElement>} A deferred sequence containing the contiguous prefix that satisfies {@link predicate}.
  * @remarks Elements after the first failing element are not inspected.
  */
-
-
 export function takeWhile<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedTypePredicate<TElement, TFiltered>
@@ -1336,7 +1332,6 @@ export function takeWhile<TElement, TFiltered extends TElement>(
  * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.
  * @remarks The action executes lazily as the sequence is iterated, making it suitable for logging or instrumentation.
  */
-
 export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IEnumerable<TElement> => {
     return from(source).tap(action);
 };
@@ -1348,7 +1343,6 @@ export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<
  * @returns {TElement[]} An array containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately. Subsequent changes to {@link source} are not reflected in the returned array.
  */
-
 export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
     return from(source).toArray();
 };
@@ -1361,7 +1355,6 @@ export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
  * @returns {CircularLinkedList<TElement>} A circular linked list containing all elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately, and elements are stored in iteration order.
  */
-
 export const toCircularLinkedList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1378,8 +1371,6 @@ export const toCircularLinkedList = <TElement>(
  * @returns {CircularQueue<TElement>} A circular queue containing the most recent elements from {@link source}, bounded by {@link capacity}.
  * @remarks The entire sequence is enumerated immediately. When {@link source} contains more than {@link capacity} elements, earlier items are discarded.
  */
-
-
 export function toCircularQueue<TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1413,7 +1404,6 @@ export function toCircularQueue<TElement>(
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately and entries are inserted in iteration order.
  */
-
 export const toDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1430,7 +1420,6 @@ export const toDictionary = <TElement, TKey, TValue>(
  * @returns {EnumerableSet<TElement>} A set populated with the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
  */
-
 export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>
 ): EnumerableSet<TElement> => {
@@ -1446,8 +1435,6 @@ export const toEnumerableSet = <TElement>(
  * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from {@link source}, bounded by {@link capacity}.
  * @remarks The entire sequence is enumerated immediately. When {@link source} contains more than {@link capacity} elements, earlier items are discarded.
  */
-
-
 export function toImmutableCircularQueue<TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1481,7 +1468,6 @@ export function toImmutableCircularQueue<TElement>(
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toImmutableDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1499,7 +1485,6 @@ export const toImmutableDictionary = <TElement, TKey, TValue>(
  * @returns {ImmutableList<TElement>} An immutable list containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toImmutableList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1515,7 +1500,6 @@ export const toImmutableList = <TElement>(
  * @returns {ImmutablePriorityQueue<TElement>} An immutable priority queue containing all elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
  */
-
 export const toImmutablePriorityQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1531,7 +1515,6 @@ export const toImmutablePriorityQueue = <TElement>(
  * @returns {ImmutableQueue<TElement>} An immutable queue containing all elements from {@link source} in enqueue order.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toImmutableQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1546,7 +1529,6 @@ export const toImmutableQueue = <TElement>(
  * @returns {ImmutableSet<TElement>} An immutable set built from the distinct elements of {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
  */
-
 export const toImmutableSet = <TElement>(
     source: Iterable<TElement>
 ): ImmutableSet<TElement> => {
@@ -1567,7 +1549,6 @@ export const toImmutableSet = <TElement>(
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1586,7 +1567,6 @@ export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
  * @returns {ImmutableSortedSet<TElement>} An immutable sorted set containing the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
  */
-
 export const toImmutableSortedSet = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1602,7 +1582,6 @@ export const toImmutableSortedSet = <TElement>(
  * @returns {ImmutableStack<TElement>} An immutable stack whose top element corresponds to the last element of {@link source}.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toImmutableStack = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1618,7 +1597,6 @@ export const toImmutableStack = <TElement>(
  * @returns {LinkedList<TElement>} A linked list containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toLinkedList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1634,7 +1612,6 @@ export const toLinkedList = <TElement>(
  * @returns {List<TElement>} A list containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1654,7 +1631,6 @@ export const toList = <TElement>(
  * @returns {ILookup<TKey, TValue>} A lookup grouping the projected values by key.
  * @remarks The entire sequence is enumerated immediately. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
  */
-
 export const toLookup = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1675,7 +1651,6 @@ export const toLookup = <TElement, TKey, TValue>(
  * @returns {Map<TKey, TValue>} A map populated with the projected key/value pairs.
  * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
  */
-
 export const toMap = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1695,7 +1670,6 @@ export const toMap = <TElement, TKey, TValue>(
  * @returns {Record<TKey, TValue>} An object populated with the projected key/value pairs.
  * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
  */
-
 export const toObject = <TElement, TKey extends PropertyKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1712,7 +1686,6 @@ export const toObject = <TElement, TKey extends PropertyKey, TValue>(
  * @returns {PriorityQueue<TElement>} A priority queue containing all elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
  */
-
 export const toPriorityQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1728,7 +1701,6 @@ export const toPriorityQueue = <TElement>(
  * @returns {Queue<TElement>} A queue containing all elements from {@link source} in enqueue order.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1743,7 +1715,6 @@ export const toQueue = <TElement>(
  * @returns {Set<TElement>} A set containing the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
  */
-
 export const toSet = <TElement>(
     source: Iterable<TElement>
 ): Set<TElement> => {
@@ -1764,7 +1735,6 @@ export const toSet = <TElement>(
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1783,7 +1753,6 @@ export const toSortedDictionary = <TElement, TKey, TValue>(
  * @returns {SortedSet<TElement>} A sorted set containing the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
  */
-
 export const toSortedSet = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1799,7 +1768,6 @@ export const toSortedSet = <TElement>(
  * @returns {Stack<TElement>} A stack whose top element corresponds to the last element of {@link source}.
  * @remarks The entire sequence is enumerated immediately.
  */
-
 export const toStack = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1808,13 +1776,14 @@ export const toStack = <TElement>(
 };
 
 /**
- * Produces the set union of two sequences by using an equality comparer.
- * The result contains all unique elements from both sequences.
- * @template TElement
- * @param source The source iterable.
- * @param other The iterable sequence whose distinct elements form the second set for the union.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding duplicates. Order is preserved from the original sequences, with elements from the first sequence appearing before elements from the second.
+ * Creates a set-style union between {@link source} and {@link other} using an equality comparator.
+ * @template TElement Type of elements contained by the input sequences.
+ * @param source The initial sequence whose distinct elements lead the union.
+ * @param other Additional sequence whose elements are appended after {@link source} when forming the union.
+ * @param comparator Optional equality comparator that determines whether two elements are considered the same. Defaults to the library's standard equality comparator.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from {@link source} followed by elements from {@link other} that are not already present according to {@link comparator}.
+ * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link comparator}.
+ * @remarks Elements yielded by {@link source} always appear before contributions from {@link other}. Only comparison data required to detect duplicates is buffered, and each input is enumerated at most once.
  */
 export const union = <TElement>(
     source: Iterable<TElement>,
@@ -1825,14 +1794,16 @@ export const union = <TElement>(
 };
 
 /**
- * Produces the set union of two sequences by using a key selector function.
- * The result contains all elements from both sequences whose selected keys are unique.
- * @template TElement, TKey
- * @param source The source iterable.
- * @param other The iterable sequence whose distinct elements form the second set for the union.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param comparator The equality comparator function that will be used to compare two keys. If not specified, the default equality comparer will be used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding elements with duplicate keys based on the selector. Order is preserved.
+ * Creates a set-style union between {@link source} and {@link other} by comparing keys projected from each element.
+ * @template TElement Type of elements contained by the input sequences.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The initial sequence whose distinct elements lead the union.
+ * @param other Additional sequence whose elements are appended after {@link source} when forming the union.
+ * @param keySelector Projection that produces a comparison key for each element.
+ * @param comparator Optional equality comparator that determines whether two keys are considered the same. Defaults to the library's standard equality comparator.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from {@link source} followed by elements from {@link other} whose keys were not previously observed.
+ * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link keySelector} or {@link comparator}.
+ * @remarks Keys are buffered to ensure uniqueness while elements remain lazily produced. Provide {@link comparator} when keys require structural equality semantics.
  */
 export const unionBy = <TElement, TKey>(
     source: Iterable<TElement>,

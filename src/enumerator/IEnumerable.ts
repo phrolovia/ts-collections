@@ -733,7 +733,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the start of the source.
      * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
      */
-
     take(count: number): IEnumerable<TElement>;
 
     /**
@@ -742,7 +741,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the end of the source.
      * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
      */
-
     takeLast(count: number): IEnumerable<TElement>;
 
     /**
@@ -752,7 +750,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TFiltered>} A deferred sequence containing the contiguous prefix that satisfies {@link predicate}.
      * @remarks Elements after the first failing element are not inspected.
      */
-
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
 
     /**
@@ -761,7 +758,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A deferred sequence containing the contiguous prefix that satisfies {@link predicate}.
      * @remarks Elements after the first failing element are not inspected.
      */
-
     takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
@@ -770,7 +766,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.
      * @remarks The action executes lazily as the sequence is iterated, making it suitable for logging or instrumentation.
      */
-
     tap(action: IndexedAction<TElement>): IEnumerable<TElement>;
 
     /**
@@ -778,7 +773,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {TElement[]} An array containing all elements from the source sequence in iteration order.
      * @remarks The entire sequence is enumerated immediately. Subsequent changes to the source are not reflected in the returned array.
      */
-
     toArray(): TElement[];
 
     /**
@@ -787,7 +781,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {CircularLinkedList<TElement>} A circular linked list containing all elements from the source.
      * @remarks The entire sequence is enumerated immediately, and elements are stored in iteration order.
      */
-
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): CircularLinkedList<TElement>;
 
     /**
@@ -796,7 +789,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {CircularQueue<TElement>} A circular queue containing the most recent elements from the source, up to the default capacity.
      * @remarks The entire sequence is enumerated immediately. Once the queue reaches its capacity (currently 32), older items are discarded as new elements are enqueued.
      */
-
     toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
 
     /**
@@ -806,7 +798,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {CircularQueue<TElement>} A circular queue containing the most recent elements from the source, bounded by {@link capacity}.
      * @remarks The entire sequence is enumerated immediately. When the source contains more than {@link capacity} elements, earlier items are discarded.
      */
-
     toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
 
     /**
@@ -820,7 +811,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is enumerated immediately and entries are inserted in iteration order.
      */
-
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue>;
 
     /**
@@ -828,7 +818,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {EnumerableSet<TElement>} A set populated with the distinct elements from the source.
      * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
      */
-
     toEnumerableSet(): EnumerableSet<TElement>;
 
     /**
@@ -837,7 +826,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from the source, up to the default capacity.
      * @remarks The entire sequence is enumerated immediately. Earlier items are discarded when the number of elements exceeds the queue's capacity (currently 32).
      */
-
     toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
 
     /**
@@ -847,7 +835,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from the source, bounded by {@link capacity}.
      * @remarks The entire sequence is enumerated immediately. When the source contains more than {@link capacity} elements, earlier items are discarded.
      */
-
     toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
 
     /**
@@ -861,7 +848,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue>;
 
     /**
@@ -870,7 +856,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableList<TElement>} An immutable list containing all elements from the source in iteration order.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement>;
 
     /**
@@ -879,7 +864,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutablePriorityQueue<TElement>} An immutable priority queue containing all elements from the source.
      * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
      */
-
     toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement>;
 
     /**
@@ -888,7 +872,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableQueue<TElement>} An immutable queue containing all elements from the source in enqueue order.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement>;
 
     /**
@@ -896,7 +879,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableSet<TElement>} An immutable set built from the distinct elements of the source.
      * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
      */
-
     toImmutableSet(): ImmutableSet<TElement>;
 
     /**
@@ -911,7 +893,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue>;
 
     /**
@@ -920,7 +901,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableSortedSet<TElement>} An immutable sorted set containing the distinct elements from the source.
      * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
      */
-
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement>;
 
     /**
@@ -929,7 +909,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ImmutableStack<TElement>} An immutable stack whose top element corresponds to the last element of the source.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toImmutableStack(comparator?: EqualityComparator<TElement>): ImmutableStack<TElement>;
 
     /**
@@ -938,7 +917,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {LinkedList<TElement>} A linked list containing all elements from the source in iteration order.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement>;
 
     /**
@@ -947,7 +925,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {List<TElement>} A list containing all elements from the source in iteration order.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toList(comparator?: EqualityComparator<TElement>): List<TElement>;
 
     /**
@@ -960,7 +937,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {ILookup<TKey, TValue>} A lookup grouping the projected values by key.
      * @remarks The entire sequence is enumerated immediately. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
      */
-
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue>;
 
     /**
@@ -972,7 +948,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {Map<TKey, TValue>} A map populated with the projected key/value pairs.
      * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
      */
-
     toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue>;
 
     /**
@@ -984,8 +959,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {Record<TKey, TValue>} An object populated with the projected key/value pairs.
      * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
      */
-
-    toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue>;
+    toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Record<TKey, TValue>;
 
     /**
      * Materialises the sequence into a priority queue.
@@ -993,7 +967,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {PriorityQueue<TElement>} A priority queue containing all elements from the source.
      * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
      */
-
     toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement>;
 
     /**
@@ -1002,7 +975,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {Queue<TElement>} A queue containing all elements from the source in enqueue order.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement>;
 
     /**
@@ -1010,7 +982,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {Set<TElement>} A set containing the distinct elements from the source.
      * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
      */
-
     toSet(): Set<TElement>;
 
     /**
@@ -1025,7 +996,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue>;
 
     /**
@@ -1034,7 +1004,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {SortedSet<TElement>} A sorted set containing the distinct elements from the source.
      * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
      */
-
     toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement>;
 
     /**
@@ -1043,27 +1012,27 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {Stack<TElement>} A stack whose top element corresponds to the last element of the source.
      * @remarks The entire sequence is enumerated immediately.
      */
-
     toStack(comparator?: EqualityComparator<TElement>): Stack<TElement>;
 
     /**
-     * Produces the set union of two sequences by using an equality comparer.
-     * The result contains all unique elements from both sequences.
-     * @template TElement
-     * @param iterable The iterable sequence whose distinct elements form the second set for the union.
-     * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding duplicates. Order is preserved from the original sequences, with elements from the first sequence appearing before elements from the second.
+     * Creates a set-style union between this sequence and {@link iterable} using an equality comparator.
+     * @param iterable Additional sequence whose elements are appended after the source when forming the union.
+     * @param comparator Optional equality comparator that determines whether two elements are considered the same. Defaults to the library's standard equality comparator.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from this sequence followed by elements from {@link iterable} that are not already present according to {@link comparator}.
+     * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link comparator}.
+     * @remarks Elements from the original sequence always appear before contributions from {@link iterable}. The method caches only the comparison keys needed to detect duplicates and enumerates each input at most once.
      */
     union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
     /**
-     * Produces the set union of two sequences by using a key selector function.
-     * The result contains all elements from both sequences whose selected keys are unique.
-     * @template TElement, TKey
-     * @param iterable The iterable sequence whose distinct elements form the second set for the union.
-     * @param keySelector The key selector function that will be used to select the key for an element.
-     * @param comparator The equality comparator function that will be used to compare two keys. If not specified, the default equality comparer will be used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from both input sequences, excluding elements with duplicate keys based on the selector. Order is preserved.
+     * Creates a set-style union between this sequence and {@link iterable} by comparing keys projected from each element.
+     * @template TKey Type of key generated by {@link keySelector}.
+     * @param iterable Additional sequence whose elements are appended after the source when forming the union.
+     * @param keySelector Projection that produces a comparison key for each element.
+     * @param comparator Optional equality comparator that determines whether two keys are considered the same. Defaults to the library's standard equality comparator.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from this sequence followed by elements from {@link iterable} whose keys were not previously observed.
+     * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link keySelector} or {@link comparator}.
+     * @remarks Keys are buffered to ensure uniqueness while the elements themselves remain lazily produced. Provide {@link comparator} when keys require structural equality semantics.
      */
     unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
