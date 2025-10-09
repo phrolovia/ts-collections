@@ -169,125 +169,129 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     cycle(count?: number): IEnumerable<TElement>;
 
     /**
-     * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
-     * @template TElement
-     * @param value The value to return if the sequence is empty. Defaults to null if not provided.
-     * @returns {IEnumerable<TElement | null>} The specified sequence or the specified value in a singleton collection if the sequence is empty.
+     * Supplies fallback content when the sequence contains no elements.
+     * @param value Optional value returned in a singleton sequence when the source is empty. Defaults to `null`.
+     * @returns {IEnumerable<TElement | null>} The original sequence when it has elements; otherwise, a singleton sequence containing the provided value.
+     * @remarks Use this to ensure downstream operators always receive at least one element.
      */
     defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null>;
 
     /**
-     * Returns distinct elements from the sequence.
-     * @template TElement
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
+     * Eliminates duplicate elements from the sequence using an optional comparator.
+     * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
+     * @returns {IEnumerable<TElement>} A sequence that yields each distinct element once.
+     * @remarks Elements are compared by value; when using custom types, provide an appropriate comparator to avoid reference-based comparisons.
      */
     distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
     /**
-     * Returns distinct elements from the sequence based on a key selector.
-     * @template TElement, TKey
-     * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
+     * Eliminates duplicate elements by comparing keys computed for each element.
+     * @template TKey Key type returned by `keySelector`.
+     * @param keySelector Selector used to project each element to the key used for distinctness.
+     * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
+     * @returns {IEnumerable<TElement>} A sequence that contains the first occurrence of each unique key.
+     * @remarks When keys are expensive to compute, consider memoisation because each element's key is evaluated exactly once.
      */
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
     /**
-     * Removes consecutive duplicate elements from the sequence by comparing each element with the immediately previous element.
-     * @template TElement
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, the default equality comparison is used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal values.
+     * Removes consecutive duplicate elements by comparing each element with its predecessor.
+     * @param comparator Optional equality comparator used to determine whether adjacent elements are equal. Defaults to the library's standard equality comparison.
+     * @returns {IEnumerable<TElement>} A sequence that yields the first element of each run of equal values.
+     * @remarks Unlike {@link distinct}, this only filters out adjacent duplicates and preserves earlier occurrences of repeated values.
      */
     distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
     /**
-     * Removes consecutive duplicate elements from the sequence by comparing keys produced for each element.
-     * @template TElement
-     * @template TKey
-     * @param keySelector The key selector function that will be used to project each element before comparison.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal keys.
+     * Removes consecutive duplicate elements by comparing keys projected from each element.
+     * @template TKey Key type returned by `keySelector`.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
+     * @returns {IEnumerable<TElement>} A sequence that yields the first element in each run of elements whose keys change.
+     * @remarks Enumeration stops comparing elements once a different key is encountered, making this useful for collapsing grouped data.
      */
     distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
     /**
-     * Returns the element at the specified index in the sequence.
-     * @template TElement
-     * @param index The index of the element that will be returned.
-     * @returns {TElement} The element at the specified index in the sequence.
-     * @throws {IndexOutOfBoundsException} If index is less than 0 or greater than or equal to the number of elements in the sequence.
+     * Retrieves the element at the specified zero-based index.
+     * @param index Zero-based position of the element to retrieve.
+     * @returns {TElement} The element located at the requested index.
+     * @throws {IndexOutOfBoundsException} Thrown when `index` is negative or greater than or equal to the number of elements in the sequence.
+     * @remarks Enumeration stops once the requested element is found; remaining elements are not evaluated.
      */
     elementAt(index: number): TElement;
 
     /**
-     * Returns the element at the specified index in the sequence or a default value if the index is out of range.
-     * @template TElement
-     * @param index The index of the element that will be returned.
-     * @returns {TElement|null} The element at the specified index in the sequence or null if the index is out of range.
+     * Retrieves the element at the specified zero-based index or returns `null` when the index is out of range.
+     * @param index Zero-based position of the element to retrieve.
+     * @returns {TElement | null} The element at `index`, or `null` when the sequence is shorter than `index + 1` or when `index` is negative.
+     * @remarks Use this overload when out-of-range access should produce a sentinel value instead of throwing an exception.
      */
     elementAtOrDefault(index: number): TElement | null;
 
     /**
-     * Produces the set difference of two sequences by using the specified equality comparer or order comparer to compare values.
-     * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
-     * @template TElement
-     * @param iterable The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
-     * @param comparator The comparator function that will be used for item comparison. If not provided, the default equality comparison is used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
+     * Returns the elements of this sequence that are not present in the specified iterable.
+     * @param iterable Sequence whose elements should be removed from the current sequence.
+     * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+     * @returns {IEnumerable<TElement>} A sequence containing the elements from this sequence that do not appear in `iterable`.
+     * @remarks The original ordering and duplicate occurrences from this sequence are preserved. The `iterable` is fully enumerated to build the exclusion set.
      */
     except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement>;
 
     /**
-     * Produces the set difference of two sequences by using the specified key selector function to compare elements.
-     * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
-     * @template TElement, TKey
-     * @typeParam TElement The type of the elements in the source sequence.
-     * @typeParam TKey The type of the key that will be used for comparison.
-     * @param iterable The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
-     * @param keySelector The key selector function that will be used for selecting a key which will be used for comparison.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
+     * Returns the elements of this sequence whose projected keys are not present in the specified iterable.
+     * @template TKey Type produced by `keySelector`.
+     * @param iterable Sequence whose elements define the keys that should be excluded.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+     * @returns {IEnumerable<TElement>} A sequence that contains the elements from this sequence whose keys are absent from `iterable`.
+     * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. The exclusion keys are materialised by fully enumerating `iterable`.
      */
     exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement>;
 
     /**
-     * Gets the first element that satisfies the provided type guard predicate and narrows the resulting sequence type.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
-     * @returns {TFiltered} The first element that satisfies the predicate.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the predicate.
+     * Returns the first element that satisfies the provided type guard.
+     * @template TFiltered Subtype confirmed by the type guard.
+     * @param predicate Type guard evaluated against each element until it returns true.
+     * @returns {TFiltered} The first element that satisfies the type guard.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when no element satisfies the type guard.
+     * @remarks Enumeration stops immediately once a matching element is found.
      */
     first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
 
     /**
-     * Gets the first element of the sequence, optionally filtered by a predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
-     * @returns {TElement} The first element of the sequence.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     * Returns the first element in the sequence, optionally filtered by a predicate.
+     * @param predicate Predicate evaluated against each element; when omitted, the first element is returned.
+     * @returns {TElement} The first element of the sequence that satisfies the predicate (or the very first element when none is provided).
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+     * @remarks Enumeration stops immediately once a matching element is found.
      */
     first(predicate?: Predicate<TElement>): TElement;
 
     /**
-     * Gets the first element that satisfies the provided type guard predicate, or null when no such element exists.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
-     * @returns {TFiltered|null} The first matching element, or null if none matches.
+     * Returns the first element that satisfies the provided type guard, or `null` when no such element exists.
+     * @template TFiltered Subtype confirmed by the type guard.
+     * @param predicate Type guard evaluated against each element until it returns true.
+     * @returns {TFiltered | null} The first element that satisfies the type guard, or `null` when none match.
+     * @remarks Enumeration stops immediately once a matching element is found.
      */
     firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
 
     /**
-     * Gets the first element of the sequence or null if the sequence is empty or no element satisfies the predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
-     * @returns {TElement|null} The first element of the sequence, or null when the sequence is empty or no match is found.
+     * Returns the first element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
+     * @param predicate Predicate evaluated against each element; when omitted, the first element is returned.
+     * @returns {TElement | null} The first matching element, or `null` when no match is found.
+     * @remarks This method never throws; it communicates absence through the `null` return value.
      */
     firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
-     * Iterates over the sequence and performs the specified action on each element.
-     * @param action The action function that will be performed on each element. The second parameter of the action is the index.
+     * Executes the provided callback for every element in the sequence.
+     * @param action Callback invoked for each element; receives the element and its zero-based index.
+     * @returns {void}
+     * @remarks Enumeration starts immediately. Avoid mutating the underlying collection while iterating.
      */
     forEach(action: IndexedAction<TElement>): void;
 

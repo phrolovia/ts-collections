@@ -170,124 +170,130 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     cycle(count?: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
-     * @param defaultValue The value to return if the sequence is empty.
+     * Supplies fallback content when the async sequence contains no elements.
+     * @param defaultValue Optional value returned in a singleton sequence when the source is empty. Defaults to `null`.
+     * @returns {IAsyncEnumerable<TElement | null>} The original sequence when it has elements; otherwise, a singleton sequence containing the provided value.
+     * @remarks Use this to guarantee that downstream async operators receive at least one element.
      */
     defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null>;
 
     /**
-     * Returns distinct elements from the sequence.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * Eliminates duplicate elements from the async sequence using an optional comparator.
+     * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that yields each distinct element once.
+     * @remarks Elements are compared by value; when using custom types, provide an appropriate comparator to avoid reference-based comparisons.
      */
     distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns distinct elements from the sequence based on a key selector function.
-     * @template TKey The type of the key returned by the key selector.
-     * @param keySelector The key selector function that will be used for selecting the key for each element.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
-     * @returns {IAsyncEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence based on the key selector.
+     * Eliminates duplicate elements by comparing keys computed for each async element.
+     * @template TKey Key type returned by `keySelector`.
+     * @param keySelector Selector used to project each element to the key used for distinctness.
+     * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that contains the first occurrence of each unique key.
+     * @remarks Each element's key is evaluated exactly once; cache expensive key computations when possible.
      */
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns elements where each yielded value differs from the immediately previous element.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * Removes consecutive duplicate elements by comparing each yielded value with its predecessor.
+     * @param comparator Optional equality comparator used to determine whether adjacent elements are equal. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the first element of each run of equal values.
+     * @remarks Unlike {@link distinct}, this only filters adjacent duplicates and preserves earlier occurrences of repeated values.
      */
     distinctUntilChanged(comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns elements where each yielded value differs from the immediately previous element based on a key selector.
-     * @template TKey The type of the key returned by the key selector.
-     * @param keySelector The key selector function that will be used for selecting the key for each element.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * Removes consecutive duplicate elements by comparing keys projected from each element.
+     * @template TKey Key type returned by `keySelector`.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the first element in each run of elements whose keys change.
+     * @remarks Enumeration stops comparing elements once a different key is encountered, making this useful for collapsing grouped async data.
      */
     distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns the element at the specified index in the sequence.
-     * @param index The index of the element that will be returned.
-     * @throws {IndexOutOfBoundsException} If index is less than 0 or greater than or equal to the number of elements in the sequence.
-     * @throws {NoSuchElementException} If the source is empty.
+     * Asynchronously retrieves the element at the specified zero-based index.
+     * @param index Zero-based position of the element to retrieve.
+     * @returns {Promise<TElement>} A promise that resolves to the element located at the requested index.
+     * @throws {IndexOutOfBoundsException} Thrown when `index` is negative or greater than or equal to the number of elements in the sequence.
+     * @throws {NoSuchElementException} Thrown when the sequence terminates unexpectedly before yielding the requested element.
+     * @remarks Enumeration stops once the requested element is found; remaining elements are not evaluated.
      */
     elementAt(index: number): Promise<TElement>;
 
     /**
-     * Returns the element at the specified index in the sequence or a default value if the index is out of range.
-     * @param index The index of the element that will be returned.
+     * Asynchronously retrieves the element at the specified zero-based index or resolves to `null` when the index is out of range.
+     * @param index Zero-based position of the element to retrieve.
+     * @returns {Promise<TElement | null>} A promise that resolves to the element at `index`, or `null` when the sequence is shorter than `index + 1` or when `index` is negative.
+     * @remarks Use this overload when out-of-range access should produce a sentinel value instead of throwing an exception.
      */
     elementAtOrDefault(index: number): Promise<TElement | null>;
 
     /**
-     * Produces the set difference of two sequences by using the specified equality comparer or order comparer to compare values.
-     *
-     * About the difference between comparator and orderComparator:
-     * - If both comparator and orderComparator are specified, the order comparator will be used for internal operations.
-     * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
-     * - If no comparator is specified, it will use the <b>default equality</b> comparer.
-     *
-     * If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.
-     *
-     * Example:
-     * ```
-     *     var numberList1 = new List([1, 2, 2, 3, 3, 3, 4, 5]);
-     *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
-     *     var result = numberList1.except(numberList2).toArray(); // [1, 3, 4]
-     * ```
-     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be removed.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @throws {Error} If the enumerable is null or undefined.
+     * Returns the elements of this async sequence that are not present in the specified async iterable.
+     * @param enumerable Async sequence whose elements should be removed from the current sequence.
+     * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the elements from this sequence that do not appear in `enumerable`.
+     * @remarks The original ordering and duplicate occurrences from this sequence are preserved. The `enumerable` is fully enumerated to build the exclusion set.
      */
     except(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Produces the set difference of two sequences by using the specified key selector function and comparator.
-     * @template TKey The type of the key returned by the key selector.
-     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be removed.
-     * @param keySelector The key selector function that will be used for selecting the key for each element.
-     * @param comparator The comparator function that will be used for equality comparison or order comparison of selected keys. If not provided, default equality comparison is used.
-     * @returns {IAsyncEnumerable<TElement>} A sequence that contains the set difference of the elements from the source sequence and the enumerable sequence.
-     * @throws {Error} If the enumerable is null or undefined.
+     * Returns the elements of this async sequence whose projected keys are not present in the specified async iterable.
+     * @template TKey Type produced by `keySelector`.
+     * @param enumerable Async sequence whose elements define the keys that should be excluded.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param comparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that contains the elements from this sequence whose keys are absent from `enumerable`.
+     * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. The exclusion keys are materialised by fully enumerating `enumerable`.
      */
     exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Gets the first element that satisfies the provided type guard predicate and narrows the resulting type.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
-     * @returns {Promise<TFiltered>} A promise that resolves to the first matching element.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the predicate.
+     * Asynchronously returns the first element that satisfies the provided type guard.
+     * @template TFiltered Subtype confirmed by the type guard.
+     * @param predicate Type guard evaluated against each element until it returns true.
+     * @returns {Promise<TFiltered>} A promise that resolves to the first element satisfying the type guard.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when no element satisfies the type guard.
+     * @remarks Enumeration stops immediately once a matching element is found.
      */
     first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
 
     /**
-     * Gets the first element of the sequence, optionally filtered by a predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
-     * @returns {Promise<TElement>} A promise that resolves to the first element of the sequence.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     * Asynchronously returns the first element in the sequence, optionally filtered by a predicate.
+     * @param predicate Predicate evaluated against each element; when omitted, the first element is returned.
+     * @returns {Promise<TElement>} A promise that resolves to the first element satisfying the predicate (or the very first element when none is provided).
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+     * @remarks Enumeration stops immediately once a matching element is found.
      */
     first(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
-     * Gets the first element that satisfies the provided type guard predicate, or resolves to null when no such element exists.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
-     * @returns {Promise<TFiltered | null>} A promise that resolves to the first matching element or null if none matches.
+     * Asynchronously returns the first element that satisfies the provided type guard, or `null` when no such element exists.
+     * @template TFiltered Subtype confirmed by the type guard.
+     * @param predicate Type guard evaluated against each element until it returns true.
+     * @returns {Promise<TFiltered | null>} A promise that resolves to the first element satisfying the type guard, or `null` when none match.
+     * @remarks Enumeration stops immediately once a matching element is found.
      */
     firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
 
     /**
-     * Gets the first element of the sequence or resolves to null when the sequence is empty or no element satisfies the predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence is returned.
-     * @returns {Promise<TElement | null>} A promise that resolves to the first matching element or null when no match is found.
+     * Asynchronously returns the first element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
+     * @param predicate Predicate evaluated against each element; when omitted, the first element is returned.
+     * @returns {Promise<TElement | null>} A promise that resolves to the first matching element, or `null` when no match is found.
+     * @remarks This method never rejects for missing elements; it communicates absence through the `null` result.
      */
     firstOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
-     * Iterates over the sequence and performs the specified action on each element.
-     * @param action The action function that will be performed on each element.
+     * Executes the provided callback for every element in the async sequence.
+     * @param action Callback invoked for each element; receives the element and its zero-based index.
+     * @returns {Promise<void>} A promise that resolves when iteration completes.
+     * @remarks Enumeration starts immediately. Avoid mutating the underlying collection while iterating.
      */
     forEach(action: IndexedAction<TElement>): Promise<void>;
 

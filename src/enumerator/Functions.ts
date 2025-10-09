@@ -271,11 +271,12 @@ export const cycle = <TElement>(
 };
 
 /**
- * Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
- * @template TElement
+ * Supplies fallback content when the sequence contains no elements.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param value The value to return if the sequence is empty. Defaults to null if not provided.
- * @returns {IEnumerable<TElement | null>} The specified sequence or the specified value in a singleton collection if the sequence is empty.
+ * @param value Optional value returned in a singleton sequence when the source is empty. Defaults to `null`.
+ * @returns {IEnumerable<TElement | null>} The original sequence when it has elements; otherwise, a singleton sequence containing the provided value.
+ * @remarks Use this to ensure downstream operators always receive at least one element.
  */
 export const defaultIfEmpty = <TElement>(
     source: Iterable<TElement>,
@@ -285,11 +286,12 @@ export const defaultIfEmpty = <TElement>(
 };
 
 /**
- * Returns distinct elements from the sequence.
- * @template TElement
+ * Eliminates duplicate elements from the sequence using an optional comparator.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
+ * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<TElement>} A sequence that yields each distinct element once.
+ * @remarks Elements are compared by value; provide a comparator for custom reference types.
  */
 export const distinct = <TElement>(
     source: Iterable<TElement>,
@@ -299,12 +301,14 @@ export const distinct = <TElement>(
 };
 
 /**
- * Returns distinct elements from the sequence based on a key selector.
- * @template TElement, TKey
+ * Eliminates duplicate elements by comparing keys computed for each element.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Key type returned by `keySelector`.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used for selecting a key which will be used for distinctness comparison.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains distinct elements from the source sequence.
+ * @param keySelector Selector used to project each element to the key used for distinctness.
+ * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<TElement>} A sequence that contains the first occurrence of each unique key.
+ * @remarks Each element's key is evaluated exactly once; cache expensive key computations when possible.
  */
 export const distinctBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -315,24 +319,27 @@ export const distinctBy = <TElement, TKey>(
 };
 
 /**
- * Removes consecutive duplicate elements from the sequence by comparing each element with the immediately previous element.
- * @template TElement
+ * Removes consecutive duplicate elements by comparing each element with its predecessor.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param comparator The comparator function that will be used for equality comparison. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal values.
+ * @param comparator Optional equality comparator used to determine whether adjacent elements are equal. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<TElement>} A sequence that yields the first element of each run of equal values.
+ * @remarks Unlike {@link distinct}, this only filters adjacent duplicates and preserves earlier occurrences of repeated values.
  */
 export const distinctUntilChanged = <TElement>(source: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> => {
     return from(source).distinctUntilChanged(comparator);
 };
 
 /**
- * Removes consecutive duplicate elements from the sequence by comparing keys produced for each element.
- * @template TElement
- * @template TKey
+ * Removes consecutive duplicate elements by comparing keys projected from each element.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Key type returned by `keySelector`.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to project each element before comparison.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that yields the first element of each run of equal keys.*/
+ * @param keySelector Selector used to project each element to the key used for comparison.
+ * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<TElement>} A sequence that yields the first element in each run of elements whose keys change.
+ * @remarks Enumeration stops comparing elements once a different key is encountered, making this useful for collapsing grouped data.
+ */
 export const distinctUntilChangedBy = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -342,12 +349,13 @@ export const distinctUntilChangedBy = <TElement, TKey>(
 };
 
 /**
- * Returns the element at the specified index in the sequence.
- * @template TElement
+ * Retrieves the element at the specified zero-based index.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param index The index of the element that will be returned.
- * @returns {TElement} The element at the specified index in the sequence.
- * @throws {IndexOutOfBoundsException} If index is less than 0 or greater than or equal to the number of elements in the sequence.
+ * @param index Zero-based position of the element to retrieve.
+ * @returns {TElement} The element located at the requested index.
+ * @throws {IndexOutOfBoundsException} Thrown when `index` is negative or greater than or equal to the number of elements in {@link source}.
+ * @remarks Enumeration stops once the requested element is found; remaining elements are not evaluated.
  */
 export const elementAt = <TElement>(
     source: Iterable<TElement>,
@@ -357,11 +365,12 @@ export const elementAt = <TElement>(
 };
 
 /**
- * Returns the element at the specified index in the sequence or a default value if the index is out of range.
- * @template TElement
+ * Retrieves the element at the specified zero-based index or returns `null` when the index is out of range.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param index The index of the element that will be returned.
- * @returns {TElement|null} The element at the specified index in the sequence or null if the index is out of range.
+ * @param index Zero-based position of the element to retrieve.
+ * @returns {TElement | null} The element at `index`, or `null` when {@link source} is shorter than `index + 1` or when `index` is negative.
+ * @remarks Use this overload when out-of-range access should produce a sentinel value instead of throwing an exception.
  */
 export const elementAtOrDefault = <TElement>(
     source: Iterable<TElement>,
@@ -372,21 +381,22 @@ export const elementAtOrDefault = <TElement>(
 
 /**
  * Creates an empty sequence.
- *
- * @template TElement The type of elements in the sequence.
- * @returns {IEnumerable<TElement>} An empty sequence.*/
+ * @template TElement Type of elements that the returned sequence can produce.
+ * @returns {IEnumerable<TElement>} A reusable, cached empty sequence.
+ * @remarks The returned instance is immutable and can be shared safely across callers.
+ */
 export const empty = <TElement>(): IEnumerable<TElement> => {
     return Enumerable.empty();
 };
 
 /**
- * Produces the set difference of two sequences by using the specified equality comparer or order comparer to compare values.
- * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
- * @template TElement
+ * Returns the elements of {@link source} that are not present in {@link other}.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
- * @param comparator The comparator function that will be used for item comparison. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
+ * @param other Sequence whose elements should be removed from {@link source}.
+ * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+ * @returns {IEnumerable<TElement>} A sequence containing the elements from {@link source} that do not appear in {@link other}.
+ * @remarks The original ordering and duplicate occurrences from {@link source} are preserved. {@link other} is fully enumerated to build the exclusion set.
  */
 export const except = <TElement>(
     source: Iterable<TElement>,
@@ -397,16 +407,15 @@ export const except = <TElement>(
 };
 
 /**
- * Produces the set difference of two sequences by using the specified key selector function to compare elements.
- * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
- * @template TElement, TKey
- * @typeParam TElement The type of the elements in the source sequence.
- * @typeParam TKey The type of the key that will be used for comparison.
+ * Returns the elements of {@link source} whose projected keys are not present in {@link other}.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type produced by `keySelector`.
  * @param source The source iterable.
- * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be removed.
- * @param keySelector The key selector function that will be used for selecting a key which will be used for comparison.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set difference of the two sequences.
+ * @param other Sequence whose elements define the keys that should be excluded.
+ * @param keySelector Selector used to project each element to the key used for comparison.
+ * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+ * @returns {IEnumerable<TElement>} A sequence that contains the elements from {@link source} whose keys are absent from {@link other}.
+ * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. {@link other} is fully enumerated to materialise the exclusion keys.
  */
 export const exceptBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -418,13 +427,15 @@ export const exceptBy = <TElement, TKey>(
 };
 
 /**
- * Gets the first element of the sequence.
- * @template TElement
+ * Returns the first element in the sequence, optionally filtered by a predicate or type guard.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TFiltered Subtype confirmed when a type guard predicate is supplied.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
- * @returns {TElement} The first element of the sequence.
- * @throws {NoElementsException} If the source is empty.
- * @throws {NoMatchingElementException} If no element satisfies the condition.
+ * @param predicate Predicate evaluated against each element; when omitted, the first element is returned. When a type guard is supplied, the returned value is narrowed to `TFiltered`.
+ * @returns {TElement | TFiltered} The first element that satisfies the predicate (or the very first element when none is provided).
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+ * @remarks Enumeration stops immediately once a matching element is found.
  */
 export function first<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -442,11 +453,13 @@ export function first<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Gets the first element of the sequence or a default value if the no element satisfies the condition.
- * @template TElement
+ * Returns the first element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TFiltered Subtype confirmed when a type guard predicate is supplied.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the first element of the sequence will be returned.
- * @returns {TElement|null} The first element of the sequence or null if no element satisfies the condition or the sequence is empty.
+ * @param predicate Predicate evaluated against each element; when omitted, the first element is returned. When a type guard is supplied, the returned value is narrowed to `TFiltered`.
+ * @returns {TElement | TFiltered | null} The first matching element, or `null` when no match is found.
+ * @remarks This function never throws for missing elements; it communicates absence through the `null` return value.
  */
 export function firstOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -464,9 +477,12 @@ export function firstOrDefault<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Iterates over the sequence and performs the specified action on each element.
+ * Executes the provided callback for every element in the sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param action The action function that will be performed on each element. The second parameter of the action is the index.
+ * @param action Callback invoked for each element; receives the element and its zero-based index.
+ * @returns {void}
+ * @remarks Enumeration starts immediately. Avoid mutating the underlying collection while iterating.
  */
 export const forEach = <TElement>(
     source: Iterable<TElement>,
@@ -476,10 +492,12 @@ export const forEach = <TElement>(
 };
 
 /**
- * Creates an enumerable sequence from the given source.
- * @template TElement The type of elements in the sequence.
- * @param source The source iterable that will be converted to an enumerable sequence.
- * @returns {IEnumerable<TElement>} An enumerable sequence that contains the elements of the source.*/
+ * Wraps an iterable with the library's `IEnumerable` implementation.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The iterable to expose as an enumerable sequence.
+ * @returns {IEnumerable<TElement>} An enumerable view over the given iterable.
+ * @remarks The returned sequence defers enumeration of {@link source} until iterated.
+ */
 export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
     return Enumerable.from(source);
 };
