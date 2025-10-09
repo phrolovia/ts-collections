@@ -2124,6 +2124,10 @@ export function toCircularQueue<TElement>(
 ): CircularQueue<TElement>;
 export function toCircularQueue<TElement>(
     source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): CircularQueue<TElement>;
+export function toCircularQueue<TElement>(
+    source: Iterable<TElement>,
     capacityOrComparator?: number | EqualityComparator<TElement>,
     comparator?: EqualityComparator<TElement>
 ): CircularQueue<TElement> {
