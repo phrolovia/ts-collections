@@ -53,6 +53,7 @@ import { Zipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -211,6 +212,16 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.unionByGenerator(Enumerable.empty(), keySelector, keyCompare));
     }
 
+    public distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        const comparer = comparator ?? Comparators.equalityComparator;
+        return new Enumerator(() => this.distinctUntilChangedGenerator(k => k, comparer));
+    }
+
+    public distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        const comparer = keyComparator ?? Comparators.equalityComparator;
+        return new Enumerator(() => this.distinctUntilChangedGenerator(keySelector, comparer));
+    }
+
     public elementAt(index: number): TElement {
         if (index < 0) {
             throw new IndexOutOfBoundsException(index);
@@ -287,6 +298,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public index(): IEnumerable<[number, TElement]> {
         return new Enumerator<[number, TElement]>(() => this.indexGenerator());
+    }
+
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond> {
+        return new Enumerator(() => this.interleaveGenerator(iterable));
     }
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -432,12 +447,20 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<InferredType<TResult>>(() => this.ofTypeGenerator(type));
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, k => k, true, false, comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return OrderedEnumerator.createOrderedEnumerable(this, k => k, false, false, comparator);
     }
 
     public pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
@@ -466,6 +489,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.permutationsGenerator(size));
     }
 
+    public pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult {
+        return operator(this);
+    }
+
     public prepend(element: TElement): IEnumerable<TElement> {
         return new Enumerator(() => this.prependGenerator(element));
     }
@@ -485,6 +512,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public reverse(): IEnumerable<TElement> {
         return new Enumerator(() => this.reverseGenerator());
+    }
+
+    public rotate(shift: number): IEnumerable<TElement> {
+        return new Enumerator(() => this.rotateGenerator(shift));
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
@@ -639,6 +670,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.takeWhileGenerator(predicate as IndexedPredicate<TElement>));
     }
 
+    public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {
+        return new Enumerator(() => this.tapGenerator(action));
+    }
+
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
     }
@@ -713,8 +748,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
         const dictionary = this.toDictionary(keySelector, valueSelector, valueComparator);
-        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
-        return ImmutableDictionary.create(pairs);
+        return ImmutableDictionary.create(dictionary);
     }
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
@@ -735,8 +769,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
         const dictionary = this.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
-        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
-        return ImmutableSortedDictionary.create(pairs);
+        return ImmutableSortedDictionary.create(dictionary);
     }
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
@@ -927,6 +960,28 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* distinctUntilChangedGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey>): IterableIterator<TElement> {
+        const iterator = this[Symbol.iterator]();
+        let next = iterator.next();
+        if (next.done) {
+            return yield* [];
+        }
+        let previousValue = next.value;
+        yield previousValue;
+        while (!next.done) {
+            next = iterator.next();
+            if (next.done) {
+                return;
+            }
+            const prevKey = keySelector(previousValue);
+            const nextKey = keySelector(next.value);
+            if (!keyComparator(prevKey, nextKey)) {
+                yield next.value;
+                previousValue = next.value;
+            }
+        }
+    }
+
     private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
@@ -1041,6 +1096,23 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private* interleaveGenerator<TSecond>(other: Iterable<TSecond>): IterableIterator<TElement | TSecond> {
+        const sourceIterator = this[Symbol.iterator]();
+        const otherIterator = other[Symbol.iterator]();
+        let e1 = sourceIterator.next();
+        let e2 = otherIterator.next();
+        while (!e1.done || !e2.done) {
+            if (!e1.done) {
+                yield e1.value;
+                e1 = sourceIterator.next();
+            }
+            if (!e2.done) {
+                yield e2.value;
+                e2 = otherIterator.next();
+            }
+        }
+    }
+
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
@@ -1135,6 +1207,60 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* reverseGenerator(): IterableIterator<TElement> {
         yield* Array.from(this).reverse();
+    }
+
+    private* rotateGenerator(shift: number): IterableIterator<TElement> {
+        if (shift === 0) {
+            return yield* this;
+        }
+        if (shift > 0) {
+            return yield* this.rotateLeftGenerator(shift);
+        }
+        return yield* this.rotateRightGenerator(shift);
+    }
+
+    private* rotateLeftGenerator(shift: number): IterableIterator<TElement> {
+        const iterator = this[Symbol.iterator]() as IterableIterator<TElement, TElement, TElement>;
+        const head: TElement[] = [];
+        let taken = 0;
+        while (taken < shift) {
+            const next = iterator.next();
+            if (next.done) {
+                if (head.length === 0) {
+                    return;
+                }
+                const k = shift % head.length;
+                for (let i = k; i < head.length; ++i) {
+                    yield head[i];
+                }
+                for (let i = 0; i < k; ++i) {
+                    yield head[i];
+                }
+                return;
+            }
+            head.push(next.value);
+            taken++;
+        }
+
+        for (let next = iterator.next(); !next.done; next = iterator.next()) {
+            yield next.value;
+        }
+        return yield* head;
+    }
+
+    private* rotateRightGenerator(shift: number): IterableIterator<TElement> {
+        const buffer: TElement[] = [];
+        for (const item of this) {
+            buffer.push(item);
+        }
+        if (buffer.length === 0) {
+            return;
+        }
+        const r = (-shift) % buffer.length;
+        const k = (buffer.length - r) % buffer.length;
+        for (let i = 0; i < buffer.length; ++i) {
+            yield buffer[(i + k) % buffer.length];
+        }
     }
 
     private* scanGenerator<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IterableIterator<TAccumulate> {
@@ -1292,6 +1418,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             } else {
                 break;
             }
+        }
+    }
+
+    private* tapGenerator(action: IndexedAction<TElement>): IterableIterator<TElement> {
+        let index = 0;
+        for (const item of this) {
+            action(item, index++);
+            yield item;
         }
     }
 

@@ -79,6 +79,8 @@ export {
     defaultIfEmpty,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     empty,
@@ -91,6 +93,7 @@ export {
     groupBy,
     groupJoin,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -103,16 +106,20 @@ export {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     product,
     range,
     repeat,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -129,6 +136,7 @@ export {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
@@ -170,6 +178,7 @@ export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";
+export type { AsyncPipeOperator, PipeOperator } from "./shared/PipeOperator";
 export type { Predicate, TypePredicate } from "./shared/Predicate";
 export type { Selector } from "./shared/Selector";
 export type { Zipper } from "./shared/Zipper";

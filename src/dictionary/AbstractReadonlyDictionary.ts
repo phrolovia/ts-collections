@@ -18,6 +18,8 @@ import {
     defaultIfEmpty,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     EnumerableSet,
@@ -42,6 +44,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -58,16 +61,20 @@ import {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     PriorityQueue,
     product,
     Queue,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -86,6 +93,7 @@ import {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
@@ -134,6 +142,7 @@ import {Dictionary} from "./Dictionary";
 import {IReadonlyDictionary} from "./IReadonlyDictionary";
 import {KeyValuePair} from "./KeyValuePair";
 import {SortedDictionary} from "./SortedDictionary";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -229,6 +238,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return distinctBy(this, keySelector, comparator);
     }
 
+    public distinctUntilChanged(comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return distinctUntilChanged(this, comparator);
+    }
+
+    public distinctUntilChangedBy<TDistinctKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TDistinctKey>, keyComparator?: EqualityComparator<TDistinctKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return distinctUntilChangedBy(this, keySelector, keyComparator);
+    }
+
     public elementAt(index: number): KeyValuePair<TKey, TValue> {
         return elementAt(this, index);
     }
@@ -272,6 +289,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public index(): IEnumerable<[number, KeyValuePair<TKey, TValue>]> {
         return index(this);
+    }
+
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<KeyValuePair<TKey, TValue> | TSecond> {
+        return interleave(this, iterable);
     }
 
     public intersect(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -331,12 +352,20 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return ofType(this, type);
     }
 
+    public order(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
+        return order(this, comparator);
+    }
+
     public orderBy<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return orderBy(this, keySelector, comparator);
     }
 
     public orderByDescending<TOrderKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TOrderKey>, comparator?: OrderComparator<TOrderKey>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
         return orderByDescending(this, keySelector, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<KeyValuePair<TKey, TValue>>): IOrderedEnumerable<KeyValuePair<TKey, TValue>> {
+        return orderDescending(this, comparator);
     }
 
     public pairwise(resultSelector?: PairwiseSelector<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): IEnumerable<[KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>]> {
@@ -353,6 +382,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return permutations(this, size);
     }
 
+    public pipe<TResult>(operator: PipeOperator<KeyValuePair<TKey, TValue>, TResult>): TResult {
+        return pipe(this, operator);
+    }
+
     public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return prepend(this, element);
     }
@@ -363,6 +396,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
         return reverse(this);
+    }
+
+    public rotate(shift: number): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return rotate(this, shift);
     }
 
     public scan<TAccumulate = KeyValuePair<TKey, TValue>>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
@@ -436,6 +473,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public takeWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
     public takeWhile<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
         return takeWhile(this, predicate as IndexedPredicate<KeyValuePair<TKey, TValue>>);
+    }
+
+    public tap(action: IndexedAction<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return tap(this, action);
     }
 
     public toArray(): KeyValuePair<TKey, TValue>[] {

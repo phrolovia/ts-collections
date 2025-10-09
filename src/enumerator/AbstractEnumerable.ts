@@ -21,6 +21,8 @@ import {
     defaultIfEmpty,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     except,
@@ -31,16 +33,17 @@ import {
     groupBy,
     groupJoin,
     IEnumerable,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
-    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -53,16 +56,20 @@ import {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     PriorityQueue,
     product,
     Queue,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -80,15 +87,16 @@ import {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
     toDictionary,
     toEnumerableSet,
+    toImmutableCircularQueue,
     toImmutableDictionary,
     toImmutableList,
     toImmutablePriorityQueue,
-    toImmutableCircularQueue,
     toImmutableQueue,
     toImmutableSet,
     toImmutableSortedDictionary,
@@ -132,6 +140,7 @@ import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
@@ -209,6 +218,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return distinctBy(this, keySelector, keyComparator);
     }
 
+    public distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return distinctUntilChanged(this, comparator);
+    }
+
+    public distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return distinctUntilChangedBy(this, keySelector, keyComparator);
+    }
+
     public elementAt(index: number): TElement {
         return elementAt(this, index);
     }
@@ -255,6 +272,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public index(): IEnumerable<[number, TElement]> {
         return index(this);
+    }
+
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond> {
+        return interleave(this, iterable);
     }
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -310,12 +331,20 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return ofType(this, type);
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return order(this, comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return orderBy(this, keySelector, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return orderByDescending(this, keySelector, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return orderDescending(this, comparator);
     }
 
     public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
@@ -332,6 +361,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return permutations(this, size);
     }
 
+    public pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult {
+        return pipe(this, operator);
+    }
+
     public prepend(element: TElement): IEnumerable<TElement> {
         return prepend(this, element);
     }
@@ -342,6 +375,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public reverse(): IEnumerable<TElement> {
         return reverse(this);
+    }
+
+    public rotate(shift: number): IEnumerable<TElement> {
+        return rotate(this, shift);
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
@@ -415,6 +452,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
         return takeWhile(this, predicate as IndexedPredicate<TElement>);
+    }
+
+    public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {
+        return tap(this, action);
     }
 
     public toArray(): TElement[] {

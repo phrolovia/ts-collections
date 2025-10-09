@@ -1,7 +1,29 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { AsyncEnumerable } from "../../src/enumerator/AsyncEnumerable";
-import { Enumerable, type IEnumerable, List } from "../../src/imports";
+import {
+    CircularLinkedList,
+    CircularQueue,
+    Dictionary,
+    Enumerable,
+    EnumerableSet,
+    ImmutableCircularQueue,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutablePriorityQueue,
+    ImmutableQueue,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
+    ImmutableStack,
+    LinkedList,
+    List,
+    PriorityQueue,
+    Queue,
+    SortedDictionary,
+    SortedSet,
+    Stack
+} from "../../src/imports";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
 import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
@@ -335,7 +357,6 @@ describe("AsyncEnumerable", () => {
         test("should cycle through the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(3));
             const result = await enumerable.cycle(1).toArray();
-            console.log(result)
             expect(result).to.deep.equal([0, 1, 2]);
         });
         test("should cycle through the enumerable #2", {timeout: 5000}, async () => {
@@ -402,6 +423,32 @@ describe("AsyncEnumerable", () => {
             ));
             const result = await enumerable.distinctBy(p => p.name, (n1, n2) => n1.toLowerCase() === n2.toLowerCase()).toArray();
             expect(result).to.deep.equal([Person.Mel, Person.Noemi]);
+        });
+    });
+
+    describe("#distinctUntilChanged()", () => {
+        test("should remove consecutive duplicates", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 1, 2, 2, 3, 1]));
+            const result = await enumerable.distinctUntilChanged().toArray();
+            expect(result).to.deep.equal([1, 2, 3, 1]);
+        });
+        test("should use custom comparator", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer(["Alpha", "ALPHA", "beta", "BETA", "beta"]));
+            const result = await enumerable.distinctUntilChanged((a, b) => a.toLowerCase() === b.toLowerCase()).toArray();
+            expect(result).to.deep.equal(["Alpha", "beta"]);
+        });
+    });
+
+    describe("#distinctUntilChangedBy()", () => {
+        test("should remove consecutive duplicates using selector", {timeout: 5000}, async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Alice,
+                new Person("alice", "Smith", 23),
+                Person.Mel,
+                Person.Mel
+            ]));
+            const result = await enumerable.distinctUntilChangedBy(p => p.name.toLowerCase()).toArray();
+            expect(result).to.deep.equal([Person.Alice, Person.Mel]);
         });
     });
 
@@ -929,6 +976,21 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#interleave()", () => {
+        test("should interleave values from both sequences", {timeout: 5000}, async () => {
+            const numbers = new AsyncEnumerable(numberProducer(3));
+            const letters = new AsyncEnumerable(stringProducer(["a", "b", "c"]));
+            const result = await numbers.interleave(letters).toArray();
+            expect(result).to.deep.equal([0, "a", 1, "b", 2, "c"]);
+        });
+        test("should interleave when sequences have different lengths", {timeout: 5000}, async () => {
+            const numbers = new AsyncEnumerable(numberProducer(5));
+            const letters = new AsyncEnumerable(stringProducer(["x", "y"]));
+            const result = await numbers.interleave(letters).toArray();
+            expect(result).to.deep.equal([0, "x", 1, "y", 2, 3, 4]);
+        });
+    });
+
     describe("#intersect()", () => {
         test("should return the intersection of two enumerables", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10, 10, 0));
@@ -1334,6 +1396,19 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#order()", () => {
+        test("should sort values in ascending order", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5, 1, 0));
+            const sorted = await enumerable.order().toArray();
+            expect(sorted).to.deep.equal([0, 1, 2, 3, 4]);
+        });
+        test("should use provided comparator", async () => {
+            const enumerable = new AsyncEnumerable(stringProducer(["b", "aa", "c"]));
+            const sorted = await enumerable.order((a, b) => b.length - a.length).toArray();
+            expect(sorted).to.deep.equal(["aa", "b", "c"]);
+        });
+    });
+
     describe("#orderBy()", () => {
         test("should sort the enumerable in ascending order", async () => {
             const enumerable = new AsyncEnumerable(personProducer([
@@ -1365,6 +1440,19 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const sorted = await enumerable.orderByDescending(n => n).toArray();
             expect(sorted).to.deep.equal([9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+        });
+    });
+
+    describe("#orderDescending()", () => {
+        test("should sort values in descending order", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5));
+            const sorted = await enumerable.orderDescending().toArray();
+            expect(sorted).to.deep.equal([4, 3, 2, 1, 0]);
+        });
+        test("should use provided comparator", async () => {
+            const enumerable = new AsyncEnumerable(stringProducer(["bbb", "a", "cc"]));
+            const sorted = await enumerable.orderDescending((a, b) => a.length - b.length).toArray();
+            expect(sorted).to.deep.equal(["bbb", "cc", "a"]);
         });
     });
 
@@ -1413,6 +1501,22 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#pipe()", () => {
+        test("should execute the given operator function", async () => {
+            const list1A = new AsyncEnumerable(numberProducer(3));
+            const list1B = new AsyncEnumerable(numberProducer(3));
+            const list2A = new AsyncEnumerable(numberProducer(7));
+            const list2B = new AsyncEnumerable(numberProducer(7));
+            const avgOfEvenSquares = (source: AsyncIterable<number>): Promise<number> => new AsyncEnumerable(source).where(n => n % 2 === 0).select(n => n * n).average();
+            const result1 = await list1A.where(n => n % 2 === 0).select(n => n * n).average();
+            const result2 = await list2A.where(n => n % 2 === 0).select(n => n * n).average();
+            const pipeResult1 = await list1B.pipe(avgOfEvenSquares);
+            const pipeResult2 = await list2B.pipe(avgOfEvenSquares);
+            expect(pipeResult1).to.eq(result1);
+            expect(pipeResult2).to.eq(result2);
+        });
+    });
+
     describe("#prepend()", () => {
         test("should prepend an element to the beginning of the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -1457,6 +1561,19 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.reverse().toArray();
             expect(result).to.deep.equal([9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+        });
+    });
+
+    describe("#rotate()", () => {
+        test("should rotate elements to the left", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const result = await enumerable.rotate(2).toArray();
+            expect(result).to.deep.equal([3, 4, 1, 2]);
+        });
+        test("should rotate elements to the right", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const result = await enumerable.rotate(-1).toArray();
+            expect(result).to.deep.equal([4, 1, 2, 3]);
         });
     });
 
@@ -1868,6 +1985,16 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#tap()", () => {
+        test("should execute action for each element without changing sequence", async () => {
+            const observed: Array<[number, number]> = [];
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.tap((value, index) => observed.push([index, value])).toArray();
+            expect(result).to.deep.equal([0, 1, 2]);
+            expect(observed).to.deep.equal([[0, 0], [1, 1], [2, 2]]);
+        });
+    });
+
     describe("#thenBy()", () => {
         test("should order people by age [asc] then by name[asc]", async () => {
             const enumerable = new AsyncEnumerable(personProducer(
@@ -2236,6 +2363,215 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(arrayProducer([5, 3, 1, 4, 2]));
             const result = await enumerable.toArray();
             expect(result).to.deep.equal([5, 3, 1, 4, 2]);
+        });
+    });
+
+    describe("#toCircularLinkedList()", () => {
+        test("should convert to circular linked list", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.toCircularLinkedList();
+            expect(result).to.be.instanceOf(CircularLinkedList);
+            expect(Array.from(result)).to.deep.equal([0, 1, 2]);
+        });
+    });
+
+    describe("#toCircularQueue()", () => {
+        test("should respect capacity when creating circular queue", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(5));
+            const result = await enumerable.toCircularQueue(3);
+            expect(result).to.be.instanceOf(CircularQueue);
+            expect(Array.from(result)).to.deep.equal([2, 3, 4]);
+        });
+    });
+
+    describe("#toDictionary()", () => {
+        test("should create dictionary from elements", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi]));
+            const dictionary = await enumerable.toDictionary(p => p.name, p => p.age);
+            expect(dictionary).to.be.instanceOf(Dictionary);
+            expect(dictionary.get("Alice")).to.eq(Person.Alice.age);
+            expect(dictionary.get("Noemi")).to.eq(Person.Noemi.age);
+        });
+    });
+
+    describe("#toEnumerableSet()", () => {
+        test("should create enumerable set", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3]));
+            const set = await enumerable.toEnumerableSet();
+            expect(set).to.be.instanceOf(EnumerableSet);
+            expect(Array.from(set)).to.deep.equal([1, 2, 3]);
+        });
+    });
+
+    describe("#toImmutableCircularQueue()", () => {
+        test("should create immutable circular queue", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(4));
+            const queue = await enumerable.toImmutableCircularQueue(2);
+            expect(queue).to.be.instanceOf(ImmutableCircularQueue);
+            expect(Array.from(queue)).to.deep.equal([2, 3]);
+        });
+    });
+
+    describe("#toImmutableDictionary()", () => {
+        test("should create immutable dictionary", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi]));
+            const dictionary = await enumerable.toImmutableDictionary(p => p.name, p => p.age);
+            expect(dictionary).to.be.instanceOf(ImmutableDictionary);
+            expect(dictionary.get("Alice")).to.eq(Person.Alice.age);
+        });
+    });
+
+    describe("#toImmutableList()", () => {
+        test("should create immutable list", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const result = await enumerable.toImmutableList();
+            expect(result).to.be.instanceOf(ImmutableList);
+            expect(Array.from(result)).to.deep.equal([0, 1, 2]);
+        });
+    });
+
+    describe("#toImmutablePriorityQueue()", () => {
+        test("should create immutable priority queue", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const queue = await enumerable.toImmutablePriorityQueue();
+            expect(queue).to.be.instanceOf(ImmutablePriorityQueue);
+            expect(queue.peek()).to.eq(0);
+        });
+    });
+
+    describe("#toImmutableQueue()", () => {
+        test("should create immutable queue", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const queue = await enumerable.toImmutableQueue();
+            expect(queue).to.be.instanceOf(ImmutableQueue);
+            expect(Array.from(queue)).to.deep.equal([0, 1, 2]);
+        });
+    });
+
+    describe("#toImmutableSet()", () => {
+        test("should create immutable set", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3]));
+            const set = await enumerable.toImmutableSet();
+            expect(set).to.be.instanceOf(ImmutableSet);
+            expect(Array.from(set)).to.deep.equal([1, 2, 3]);
+        });
+    });
+
+    describe("#toImmutableSortedDictionary()", () => {
+        test("should create immutable sorted dictionary", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Noemi, Person.Alice]));
+            const dictionary = await enumerable.toImmutableSortedDictionary(p => p.name, p => p.age);
+            expect(dictionary).to.be.instanceOf(ImmutableSortedDictionary);
+            expect(Array.from(dictionary.entries())).to.deep.equal([["Alice", Person.Alice.age], ["Noemi", Person.Noemi.age]]);
+        });
+    });
+
+    describe("#toImmutableSortedSet()", () => {
+        test("should create immutable sorted set", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([3, 1, 2]));
+            const set = await enumerable.toImmutableSortedSet();
+            expect(set).to.be.instanceOf(ImmutableSortedSet);
+            expect(Array.from(set)).to.deep.equal([1, 2, 3]);
+        });
+    });
+
+    describe("#toImmutableStack()", () => {
+        test("should create immutable stack", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const stack = await enumerable.toImmutableStack();
+            expect(stack).to.be.instanceOf(ImmutableStack);
+            expect(Array.from(stack)).to.deep.equal([2, 1, 0]);
+        });
+    });
+
+    describe("#toLinkedList()", () => {
+        test("should create linked list", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const list = await enumerable.toLinkedList();
+            expect(list).to.be.instanceOf(LinkedList);
+            expect(Array.from(list)).to.deep.equal([0, 1, 2]);
+        });
+    });
+
+    describe("#toList()", () => {
+        test("should create list", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const list = await enumerable.toList();
+            expect(list).to.be.instanceOf(List);
+            expect(Array.from(list)).to.deep.equal([0, 1, 2]);
+        });
+    });
+
+    describe("#toLookup()", () => {
+        test("should group values by key", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi, Person.Noemi2]));
+            const lookup = await enumerable.toLookup(p => p.name, p => p.age);
+            expect(lookup.hasKey("Noemi")).to.be.true;
+            expect(lookup.size()).to.eq(2);
+            expect(lookup.get("Noemi").toArray()).to.deep.equal([Person.Noemi.age, Person.Noemi2.age]);
+        });
+    });
+
+    describe("#toMap()", () => {
+        test("should create map", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi]));
+            const map = await enumerable.toMap(p => p.name, p => p.age);
+            expect(map).to.be.instanceOf(Map);
+            expect(map.get("Alice")).to.eq(Person.Alice.age);
+        });
+    });
+
+    describe("#toPriorityQueue()", () => {
+        test("should create priority queue", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const queue = await enumerable.toPriorityQueue();
+            expect(queue).to.be.instanceOf(PriorityQueue);
+            expect(queue.peek()).to.eq(0);
+        });
+    });
+
+    describe("#toQueue()", () => {
+        test("should create queue", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const queue = await enumerable.toQueue();
+            expect(queue).to.be.instanceOf(Queue);
+            expect(Array.from(queue)).to.deep.equal([0, 1, 2]);
+        });
+    });
+
+    describe("#toSet()", () => {
+        test("should create set", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3]));
+            const set = await enumerable.toSet();
+            expect(set).to.be.instanceOf(Set);
+            expect(Array.from(set)).to.deep.equal([1, 2, 3]);
+        });
+    });
+
+    describe("#toSortedDictionary()", () => {
+        test("should create sorted dictionary", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([Person.Noemi, Person.Alice]));
+            const dictionary = await enumerable.toSortedDictionary(p => p.name, p => p.age);
+            expect(dictionary).to.be.instanceOf(SortedDictionary);
+            expect(Array.from(dictionary.entries())).to.deep.equal([["Alice", Person.Alice.age], ["Noemi", Person.Noemi.age]]);
+        });
+    });
+
+    describe("#toSortedSet()", () => {
+        test("should create sorted set", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([3, 1, 2]));
+            const set = await enumerable.toSortedSet();
+            expect(set).to.be.instanceOf(SortedSet);
+            expect(Array.from(set)).to.deep.equal([1, 2, 3]);
+        });
+    });
+
+    describe("#toStack()", () => {
+        test("should create stack", async () => {
+            const enumerable = new AsyncEnumerable(numberProducer(3));
+            const stack = await enumerable.toStack();
+            expect(stack).to.be.instanceOf(Stack);
+            expect(Array.from(stack)).to.deep.equal([2, 1, 0]);
         });
     });
 
