@@ -1,650 +1,720 @@
 # ts-collections
 
-A TypeScript library providing a comprehensive set of data structures with a focus on type safety and performance.
+A comprehensive TypeScript library providing a rich set of common data structures and utility functions, designed for performance, immutability, and ease of use.
 
 ## Table of Contents
-- [Installation](#installation)
-- [Data Structures](#data-structures)
-  - [List](#list)
-    - [List](#list-1)
-    - [LinkedList](#linkedlist)
-    - [CircularLinkedList](#circularlinkedlist)
-  - [Dictionary](#dictionary)
-    - [Dictionary](#dictionary-1)
-    - [SortedDictionary](#sorteddictionary)
-  - [Set](#set)
-    - [EnumerableSet](#enumerableset)
-    - [SortedSet](#sortedset)
-  - [Queue](#queue)
-    - [Queue](#queue-1)
-    - [CircularQueue](#circularqueue)
-    - [PriorityQueue](#priorityqueue)
-  - [Stack](#stack)
-    - [Stack](#stack-1)
-  - [Heap](#heap)
-    - [Heap](#heap-1)
-  - [Tree](#tree)
-    - [RedBlackTree](#redblacktree)
-  - [Lookup](#lookup)
-    - [Lookup](#lookup-1)
-  - [Observable Collections](#observable-collections)
-    - [ObservableCollection](#observablecollection)
-    - [ReadonlyObservableCollection](#readonlyobservablecollection)
-  - [Readonly Collections](#readonly-collections)
-    - [ReadonlyCollection](#readonlycollection)
-    - [ReadonlyDictionary](#readonlydictionary)
-    - [ReadonlyList](#readonlylist)
-  - [Immutable Data Structures](#immutable-data-structures)
-    - [ImmutableList](#immutablelist)
-    - [ImmutableDictionary](#immutabledictionary)
-    - [ImmutableSortedDictionary](#immutablesorteddictionary)
-    - [ImmutableSet](#immutableset)
-    - [ImmutableSortedSet](#immutablesortedset)
-    - [ImmutableQueue](#immutablequeue)
-    - [ImmutablePriorityQueue](#immutablepriorityqueue)
-    - [ImmutableStack](#immutablestack)
-- [Enumerable Support](#enumerable-support)
+*   [Getting Started](#getting-started)
+*   [List-like Collections](#list-like-collections)
+    *   [List](#list)
+    *   [LinkedList](#linkedlist)
+    *   [CircularLinkedList](#circularlinkedlist)
+    *   [ImmutableList](#immutablelist)
+*   [Stack-like Collections](#stack-like-collections)
+    *   [Stack](#stack)
+    *   [ImmutableStack](#immutablestack)
+*   [Queue-like Collections](#queue-like-collections)
+    *   [Queue](#queue)
+    *   [CircularQueue](#circularqueue)
+    *   [PriorityQueue](#priorityqueue)
+    *   [ImmutableQueue](#immutablequeue)
+    *   [ImmutableCircularQueue](#immutablecircularqueue)
+    *   [ImmutablePriorityQueue](#immutablepriorityqueue)
+*   [Set-like Collections](#set-like-collections)
+    *   [EnumerableSet](#enumerableset)
+    *   [ImmutableSet](#immutableset)
+    *   [SortedSet](#sortedset)
+    *   [ImmutableSortedSet](#immutablesortedset)
+*   [Dictionary-like Collections](#dictionary-like-collections)
+    *   [Dictionary](#dictionary)
+    *   [ImmutableDictionary](#immutabledictionary)
+    *   [SortedDictionary](#sorteddictionary)
+    *   [ImmutableSortedDictionary](#immutabledictionary)
+    *   [Lookup](#lookup)
+*   [Tree-based Collections](#tree-based-collections)
+    *   [RedBlackTree](#redblacktree)
+*   [Heap-based Collections](#heap-based-collections)
+    *   [Heap](#heap)
+    *   [ImmutableHeap](#immutableheap)
+*   [Readonly Collections](#readonly-collections)
+    *   [ReadonlyCollection](#readonlycollection)
+    *   [ReadonlyList](#readonlylist)
+    *   [ReadonlyDictionary](#readonlydictionary)
+*   [Enumerators](#enumerators)
+    *   [Enumerable](#enumerable)
+    *   [AsyncEnumerable](#asyncenumerable)
+*   [API]
+---
 
-## Installation
+## Getting Started
 
 ```shell
 npm i @mirei/ts-collections
 ```
 
-## Data Structures
-
-### List
+## List-like Collections
 
 Lists are ordered collections that allow duplicate elements and provide index-based access.
 
-#### List
+### List
 
 A dynamic array-based implementation of a list.
 
-- **When to use**: When you need fast random access by index and efficient operations at the end of the collection.
-- **Key features**:
-  - Fast random access by index (O(1))
-  - Efficient add/remove at the end (O(1) amortized)
-  - Less efficient add/remove at arbitrary positions (O(n))
-- **Example usage**:
+*   **Definition**: A resizable array that allows for efficient random access and modification.
+*   **How to use**:
+    ```typescript
+    import { List } from '@mirei/ts-collections';
 
-```typescript
-const list = new List([1, 2, 3, 4, 5]);
-list.add(6);                // Add element at the end
-list.addAt(0, 0);           // Add element at specific index
-list.get(3);                // Get element at index 3
-list.removeAt(0);           // Remove element at index 0
-list.sort();                // Sort the list
-```
+    const list = new List([1, 2, 3]);
+    list.add(4); // [1, 2, 3, 4]
+    list.removeAt(0); // [2, 3, 4]
+    console.log(list.get(1)); // 3
+    ```
+*   **Pros**:
+    *   Fast random access by index (O(1)).
+    *   Efficient addition/removal at the end (amortized O(1)).
+    *   Good cache locality.
+*   **Cons**:
+    *   Inefficient insertions/deletions in the middle or at the beginning (O(n)).
+    *   Resizing can incur performance overhead.
 
-#### LinkedList
+### LinkedList
 
 A doubly-linked list implementation.
 
-- **When to use**: When you need efficient insertions and deletions at both ends or in the middle of the list.
-- **Key features**:
-  - O(1) operations at both ends (add, remove)
-  - O(1) insertion/deletion after finding a position
-  - O(n) random access by index
-  - Supports queue and stack operations (addFirst, addLast, removeFirst, removeLast)
-- **Example usage**:
+*   **Definition**: A linear collection of elements where each element (node) points to the next and previous elements.
+*   **How to use**:
+    ```typescript
+    import { LinkedList } from '@mirei/ts-collections';
 
-```typescript
-const linkedList = new LinkedList([1, 2, 3]);
-linkedList.addFirst(0);     // Add at beginning
-linkedList.addLast(4);      // Add at end
-linkedList.removeFirst();   // Remove from beginning
-linkedList.removeLast();    // Remove from end
-```
+    const linkedList = new LinkedList([1, 2, 3]);
+    linkedList.addFirst(0); // [0, 1, 2, 3]
+    linkedList.addLast(4); // [0, 1, 2, 3, 4]
+    linkedList.removeFirst(); // [1, 2, 3, 4]
+    ```
+*   **Pros**:
+    *   Efficient insertions and deletions at any position (O(1) if the position is known, O(n) otherwise).
+    *   No resizing overhead.
+*   **Cons**:
+    *   Slow random access by index (O(n)).
+    *   Higher memory overhead due to storing pointers.
 
-#### CircularLinkedList
+### CircularLinkedList
 
 A circular doubly-linked list implementation where the last node points to the first node and the first node points to the last node, forming a circle.
 
-- **When to use**: When you need a linked list with circular traversal capabilities or when you need to efficiently access both ends of the list.
-- **Key features**:
-  - O(1) operations at both ends (addFirst, addLast, removeFirst, removeLast)
-  - Circular structure allows wrapping around from the end to the beginning
-  - Supports efficient traversal in both directions
-  - Optimized node access by traversing from the closer end
-- **Example usage**:
+*   **Definition**: A linked list where the last element points back to the first element, creating a continuous loop.
+*   **How to use**:
+    ```typescript
+    import { CircularLinkedList } from '@mirei/ts-collections';
 
-```typescript
-const circularList = new CircularLinkedList([1, 2, 3]);
-circularList.addFirst(0);     // Add at beginning
-circularList.addLast(4);      // Add at end
-circularList.removeFirst();   // Remove from beginning
-circularList.removeLast();    // Remove from end
-// Get a range of elements that can wrap around the list
-const range = circularList.getRange(2, 4);
-```
+    const circularList = new CircularLinkedList([1, 2, 3]);
+    circularList.addFirst(0); // [0, 1, 2, 3]
+    circularList.addLast(4); // [0, 1, 2, 3, 4]
+    // Traversal can wrap around
+    ```
+*   **Pros**:
+    *   Efficient operations at both ends (O(1)).
+    *   Allows continuous traversal without explicit checks for the end of the list.
+    *   Useful for cyclic data structures or round-robin scheduling.
+*   **Cons**:
+    *   Slow random access by index (O(n)).
+    *   More complex to implement and manage than a standard linked list.
 
-### Dictionary
+### ImmutableList
 
-Dictionaries are collections of key-value pairs where each key is unique.
+An immutable version of `List`. Any operation that would modify the list returns a new `ImmutableList` instance, leaving the original unchanged.
 
-#### Dictionary
+*   **Definition**: A list whose contents cannot be changed after creation. Operations that appear to modify it instead return a new list.
+*   **How to use**:
+    ```typescript
+    import { ImmutableList } from '@mirei/ts-collections';
 
-A hash-based implementation of a dictionary using JavaScript's Map.
+    const list = ImmutableList.create([1, 2, 3]);
+    const newList = list.add(4); // list is still [1, 2, 3], newList is [1, 2, 3, 4]
+    ```
+*   **Pros**:
+    *   Predictable behavior and easier reasoning about state.
+    *   Thread-safe (no concurrent modification issues).
+    *   Facilitates functional programming paradigms.
+*   **Cons**:
+    *   Can incur performance overhead due to frequent object creation for modifications.
+    *   Higher memory usage if many intermediate versions are kept.
 
-- **When to use**: When you need fast lookups by key and don't need the keys to be ordered.
-- **Key features**:
-  - Fast lookups, insertions, and deletions (O(1) average)
-  - Keys are not ordered
-  - Supports custom equality comparators
-- **Example usage**:
-
-```typescript
-const dict = new Dictionary<string, number>();
-dict.add("one", 1);         // Add a key-value pair
-dict.put("two", 2);         // Add or update a key-value pair
-dict.get("one");            // Get value by key
-dict.remove("one");         // Remove a key-value pair
-dict.containsKey("two");    // Check if key exists
-```
-
-#### SortedDictionary
-
-A dictionary implementation that keeps keys sorted using a Red-Black Tree.
-
-- **When to use**: When you need a dictionary with keys maintained in sorted order.
-- **Key features**:
-  - Guaranteed O(log n) lookups, insertions, and deletions
-  - Keys are always sorted
-  - Supports custom key comparators
-- **Example usage**:
-
-```typescript
-const sortedDict = new SortedDictionary<number, string>();
-sortedDict.add(3, "three");
-sortedDict.add(1, "one");
-sortedDict.add(2, "two");
-// Iteration will be in order: 1, 2, 3
-for (const pair of sortedDict) {
-    console.log(pair.key, pair.value);
-}
-```
-
-### Set
-
-Sets are collections of unique elements.
-
-#### EnumerableSet
-
-A set implementation based on JavaScript's Set.
-
-- **When to use**: When you need a collection of unique elements with fast lookups.
-- **Key features**:
-  - Fast lookups, insertions, and deletions (O(1) average)
-  - Elements are not ordered
-  - Supports set operations (union, intersection, difference)
-- **Example usage**:
-
-```typescript
-const set = new EnumerableSet([1, 2, 3]);
-set.add(4);                 // Add an element
-set.contains(2);            // Check if element exists
-set.remove(1);              // Remove an element
-set.intersectWith([2, 3, 5]); // Keep only elements that are in both sets
-```
-
-#### SortedSet
-
-A set implementation that keeps elements sorted using a Red-Black Tree.
-
-- **When to use**: When you need a set with elements maintained in sorted order.
-- **Key features**:
-  - Guaranteed O(log n) lookups, insertions, and deletions
-  - Elements are always sorted
-  - Supports custom element comparators
-  - Supports range operations (headSet, tailSet, subSet)
-- **Example usage**:
-
-```typescript
-const sortedSet = new SortedSet([3, 1, 4, 2]);
-// Iteration will be in order: 1, 2, 3, 4
-for (const element of sortedSet) {
-    console.log(element);
-}
-// Get subsets
-const headSet = sortedSet.headSet(3);  // Elements less than 3
-const tailSet = sortedSet.tailSet(2);  // Elements greater than or equal to 2
-```
-
-### Queue
-
-Queues are FIFO (First-In-First-Out) collections.
-
-#### Queue
-
-A standard queue implementation using a LinkedList.
-
-- **When to use**: When you need a FIFO data structure.
-- **Key features**:
-  - O(1) operations at both ends (enqueue, dequeue)
-  - Supports peeking at the front element without removing it
-- **Example usage**:
-
-```typescript
-const queue = new Queue([1, 2, 3]);
-queue.enqueue(4);           // Add to the end
-const front = queue.peek(); // Look at the front element
-const item = queue.dequeue(); // Remove and return the front element
-```
-
-#### CircularQueue
-
-A fixed-size queue that overwrites the oldest elements when full.
-
-- **When to use**: When you need a queue with a fixed capacity that automatically removes old elements.
-- **Key features**:
-  - Fixed capacity (default 32)
-  - Automatically removes oldest elements when full
-  - O(1) operations at both ends
-- **Example usage**:
-
-```typescript
-const circularQueue = new CircularQueue<number>(5); // Capacity of 5
-for (let i = 0; i < 10; i++) {
-    circularQueue.enqueue(i);
-}
-// Queue will contain only the 5 most recent elements: 5, 6, 7, 8, 9
-```
-
-#### PriorityQueue
-
-A queue where elements are dequeued according to priority.
-
-- **When to use**: When you need to process elements in order of priority rather than insertion order.
-- **Key features**:
-  - O(log n) insertion and removal
-  - Highest priority element is always at the front
-  - Supports custom priority comparators
-- **Example usage**:
-
-```typescript
-// Min priority queue (smallest element first)
-const priorityQueue = new PriorityQueue<number>([3, 1, 4, 2]);
-priorityQueue.enqueue(5);
-// Elements will be dequeued in order: 1, 2, 3, 4, 5
-```
-
-### Stack
+## Stack-like Collections
 
 Stacks are LIFO (Last-In-First-Out) collections.
 
-#### Stack
+### Stack
 
-A standard stack implementation using a LinkedList.
+A standard stack implementation.
 
-- **When to use**: When you need a LIFO data structure.
-- **Key features**:
-  - O(1) operations at the top (push, pop)
-  - Supports peeking at the top element without removing it
-- **Example usage**:
+*   **Definition**: A collection that follows the Last-In, First-Out (LIFO) principle. Elements are added and removed from the same end, called the "top".
+*   **How to use**:
+    ```typescript
+    import { Stack } from '@mirei/ts-collections';
 
-```typescript
-const stack = new Stack([1, 2, 3]);
-stack.push(4);              // Add to the top
-const top = stack.peek();   // Look at the top element
-const item = stack.pop();   // Remove and return the top element
-```
+    const stack = new Stack<number>();
+    stack.push(1); // [1]
+    stack.push(2); // [1, 2]
+    console.log(stack.peek()); // 2
+    console.log(stack.pop()); // 2, stack is now [1]
+    ```
+*   **Pros**:
+    *   Extremely fast push and pop operations (O(1)).
+    *   Simple to understand and implement.
+*   **Cons**:
+    *   Limited access pattern (only top element is easily accessible).
 
-### Heap
+### ImmutableStack
 
-A binary heap is a complete binary tree where each node's value is greater than or equal to (max heap) or less than or equal to (min heap) the values of its children.
+An immutable version of `Stack`. Any operation that would modify the stack returns a new `ImmutableStack` instance, leaving the original unchanged.
 
-#### Heap
+*   **Definition**: A stack whose contents cannot be changed after creation. Operations that appear to modify it instead return a new stack.
+*   **How to use**:
+    ```typescript
+    import { ImmutableStack } from '@mirei/ts-collections';
 
-A binary heap implementation.
+    const stack = ImmutableStack.create([1, 2]);
+    const newStack = stack.push(3); // stack is [1, 2], newStack is [1, 2, 3]
+    ```
+*   **Pros**:
+    *   Benefits of immutability (predictability, thread-safety).
+    *   Useful in functional programming and state management.
+*   **Cons**:
+    *   Performance overhead for modifications due to new object creation.
 
-- **When to use**: When you need to efficiently find and remove the minimum or maximum element.
-- **Key features**:
-  - O(1) access to the minimum/maximum element
-  - O(log n) insertion and removal
-  - Supports custom comparators to create min or max heaps
-- **Example usage**:
+## Queue-like Collections
 
-```typescript
-// Min heap (smallest element at the root)
-const minHeap = new Heap<number>((a, b) => a - b);
-minHeap.add(3);
-minHeap.add(1);
-minHeap.add(4);
-const min = minHeap.peek(); // Get the minimum element (1)
-minHeap.poll();             // Remove and return the minimum element
-```
+Queues are FIFO (First-In-First-Out) collections.
 
-### Tree
+### Queue
 
-Trees are hierarchical data structures.
+A standard queue implementation.
 
-#### RedBlackTree
+*   **Definition**: A collection that follows the First-In, First-Out (FIFO) principle. Elements are added to one end (rear) and removed from the other (front).
+*   **How to use**:
+    ```typescript
+    import { Queue } from '@mirei/ts-collections';
 
-A self-balancing binary search tree implementation.
+    const queue = new Queue<string>();
+    queue.enqueue("first"); // ["first"]
+    queue.enqueue("second"); // ["first", "second"]
+    console.log(queue.peek()); // "first"
+    console.log(queue.dequeue()); // "first", queue is now ["second"]
+    ```
+*   **Pros**:
+    *   Extremely fast enqueue and dequeue operations (O(1)).
+    *   Simple and efficient for managing ordered tasks or data streams.
+*   **Cons**:
+    *   Limited access pattern (only front element is easily accessible).
 
-- **When to use**: When you need a balanced tree for efficient lookups, insertions, and deletions.
-- **Key features**:
-  - Guaranteed O(log n) lookups, insertions, and deletions
-  - Elements are always sorted
-  - Supports custom element comparators
-- **Example usage**:
+### CircularQueue
 
-```typescript
-const tree = new RedBlackTree<number>();
-tree.insert(3);
-tree.insert(1);
-tree.insert(4);
-tree.search(1);             // Check if element exists
-tree.delete(3);             // Remove an element
-```
+A fixed-size queue that overwrites the oldest elements when full.
+
+*   **Definition**: A queue with a fixed capacity. When the queue is full and a new element is enqueued, the oldest element is automatically removed to make space.
+*   **How to use**:
+    ```typescript
+    import { CircularQueue } from '@mirei/ts-collections';
+
+    const circularQueue = new CircularQueue<number>(3); // Capacity of 3
+    circularQueue.enqueue(1); // [1]
+    circularQueue.enqueue(2); // [1, 2]
+    circularQueue.enqueue(3); // [1, 2, 3]
+    circularQueue.enqueue(4); // [2, 3, 4] (1 is overwritten)
+    ```
+*   **Pros**:
+    *   Memory efficient for fixed-size buffers.
+    *   Useful for logging, history, or streaming data where only the most recent N items are needed.
+*   **Cons**:
+    *   Fixed capacity can lead to data loss if not managed carefully.
+
+### PriorityQueue
+
+A queue where elements are dequeued according to their priority.
+
+*   **Definition**: A queue-like structure where each element has a priority. Elements with higher priority are served before elements with lower priority.
+*   **How to use**:
+    ```typescript
+    import { PriorityQueue } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    // Min-priority queue (smallest number has highest priority)
+    const pq = new PriorityQueue<number>(Comparer.instance.compare);
+    pq.enqueue(3);
+    pq.enqueue(1);
+    pq.enqueue(4);
+    console.log(pq.dequeue()); // 1
+    console.log(pq.dequeue()); // 3
+    ```
+*   **Pros**:
+    *   Efficient retrieval of the highest (or lowest) priority element (O(1) peek, O(log n) dequeue).
+    *   Useful for task scheduling, event simulation, or graph algorithms (e.g., Dijkstra's).
+*   **Cons**:
+    *   Enqueue and dequeue operations are O(log n), slower than a regular queue.
+
+### ImmutableQueue
+
+An immutable version of `Queue`. Any operation that would modify the queue returns a new `ImmutableQueue` instance, leaving the original unchanged.
+
+*   **Definition**: A queue whose contents cannot be changed after creation. Operations that appear to modify it instead return a new queue.
+*   **How to use**:
+    ```typescript
+    import { ImmutableQueue } from '@mirei/ts-collections';
+
+    const queue = ImmutableQueue.create([1, 2]);
+    const newQueue = queue.enqueue(3); // queue is [1, 2], newQueue is [1, 2, 3]
+    ```
+*   **Pros**:
+    *   Benefits of immutability.
+    *   Useful in scenarios requiring persistent queue states.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+### ImmutableCircularQueue
+
+An immutable version of `CircularQueue`. Any operation that would modify the queue returns a new `ImmutableCircularQueue` instance, leaving the original unchanged.
+
+*   **Definition**: An immutable circular queue.
+*   **How to use**:
+    ```typescript
+    import { ImmutableCircularQueue } from '@mirei/ts-collections';
+
+    const queue = ImmutableCircularQueue.create([1, 2], 3);
+    const newQueue = queue.enqueue(3); // queue is [1, 2], newQueue is [1, 2, 3]
+    const newerQueue = newQueue.enqueue(4); // newQueue is [1, 2, 3], newerQueue is [2, 3, 4]
+    ```
+*   **Pros**:
+    *   Combines benefits of circular queues and immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+### ImmutablePriorityQueue
+
+An immutable version of `PriorityQueue`. Any operation that would modify the queue returns a new `ImmutablePriorityQueue` instance, leaving the original unchanged.
+
+*   **Definition**: An immutable priority queue.
+*   **How to use**:
+    ```typescript
+    import { ImmutablePriorityQueue } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    const pq = ImmutablePriorityQueue.create([3, 1, 4], Comparer.instance.compare);
+    const newPq = pq.enqueue(2); // pq is [1, 3, 4], newPq is [1, 2, 3, 4]
+    ```
+*   **Pros**:
+    *   Combines benefits of priority queues and immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+## Set-like Collections
+
+Sets are collections of unique elements.
+
+### EnumerableSet
+
+A set implementation based on JavaScript's `Set`.
+
+*   **Definition**: A collection that stores unique elements, disallowing duplicates.
+*   **How to use**:
+    ```typescript
+    import { EnumerableSet } from '@mirei/ts-collections';
+
+    const set = new EnumerableSet([1, 2, 2, 3]); // set is {1, 2, 3}
+    set.add(4); // {1, 2, 3, 4}
+    console.log(set.has(2)); // true
+    set.delete(1); // {2, 3, 4}
+    ```
+*   **Pros**:
+    *   Fast lookups, insertions, and deletions (average O(1)).
+    *   Guarantees uniqueness of elements.
+    *   Supports standard set operations (union, intersection, difference).
+*   **Cons**:
+    *   Elements are not stored in any particular order.
+
+### ImmutableSet
+
+An immutable version of `EnumerableSet`. Any operation that would modify the set returns a new `ImmutableSet` instance, leaving the original unchanged.
+
+*   **Definition**: An immutable set.
+*   **How to use**:
+    ```typescript
+    import { ImmutableSet } from '@mirei/ts-collections';
+
+    const set = ImmutableSet.create([1, 2]);
+    const newSet = set.add(3); // set is {1, 2}, newSet is {1, 2, 3}
+    ```
+*   **Pros**:
+    *   Benefits of immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+### SortedSet
+
+A set implementation that keeps elements sorted using a Red-Black Tree.
+
+*   **Definition**: A set that maintains its elements in a sorted order.
+*   **How to use**:
+    ```typescript
+    import { SortedSet } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    const sortedSet = new SortedSet([3, 1, 4, 2], Comparer.instance.compare);
+    // Iteration will be in order: 1, 2, 3, 4
+    ```
+*   **Pros**:
+    *   Elements are always sorted, allowing for efficient range queries.
+    *   Guaranteed O(log n) for insertions, deletions, and lookups.
+*   **Cons**:
+    *   Slower than `EnumerableSet` for basic operations due to sorting overhead.
+
+### ImmutableSortedSet
+
+An immutable version of `SortedSet`. Any operation that would modify the set returns a new `ImmutableSortedSet` instance, leaving the original unchanged.
+
+*   **Definition**: An immutable sorted set.
+*   **How to use**:
+    ```typescript
+    import { ImmutableSortedSet } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    const sortedSet = ImmutableSortedSet.create([3, 1, 4], Comparer.instance.compare);
+    const newSortedSet = sortedSet.add(2); // sortedSet is {1, 3, 4}, newSortedSet is {1, 2, 3, 4}
+    ```
+*   **Pros**:
+    *   Combines benefits of sorted sets and immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+## Dictionary-like Collections
+
+Dictionaries are collections of key-value pairs where each key is unique.
+
+### Dictionary
+
+A hash-based implementation of a dictionary using JavaScript's `Map`.
+
+*   **Definition**: A collection that stores key-value pairs, where each key is unique and maps to a single value.
+*   **How to use**:
+    ```typescript
+    import { Dictionary } from '@mirei/ts-collections';
+
+    const dict = new Dictionary<string, number>();
+    dict.set("apple", 1);
+    dict.set("banana", 2);
+    console.log(dict.get("apple")); // 1
+    dict.delete("banana");
+    ```
+*   **Pros**:
+    *   Fast lookups, insertions, and deletions (average O(1)).
+    *   Keys can be of any type (objects, primitives).
+*   **Cons**:
+    *   Keys are not ordered.
+
+### ImmutableDictionary
+
+An immutable version of `Dictionary`. Any operation that would modify the dictionary returns a new `ImmutableDictionary` instance, leaving the original unchanged.
+
+*   **Definition**: An immutable dictionary.
+*   **How to use**:
+    ```typescript
+    import { ImmutableDictionary } from '@mirei/ts-collections';
+
+    const dict = ImmutableDictionary.create<string, number>();
+    const newDict = dict.set("apple", 1); // dict is empty, newDict is {"apple": 1}
+    ```
+*   **Pros**:
+    *   Benefits of immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+### SortedDictionary
+
+A dictionary implementation that keeps keys sorted using a Red-Black Tree.
+
+*   **Definition**: A dictionary that maintains its key-value pairs in a sorted order based on its keys.
+*   **How to use**:
+    ```typescript
+    import { SortedDictionary } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    const sortedDict = new SortedDictionary<number, string>(Comparer.instance.compare);
+    sortedDict.set(3, "three");
+    sortedDict.set(1, "one");
+    sortedDict.set(2, "two");
+    // Iteration will be in key order: 1, 2, 3
+    ```
+*   **Pros**:
+    *   Keys are always sorted, allowing for efficient range queries and ordered iteration.
+    *   Guaranteed O(log n) for insertions, deletions, and lookups.
+*   **Cons**:
+    *   Slower than `Dictionary` for basic operations due to sorting overhead.
+
+### ImmutableSortedDictionary
+
+An immutable version of `SortedDictionary`. Any operation that would modify the dictionary returns a new `ImmutableSortedDictionary` instance, leaving the original unchanged.
+
+*   **Definition**: An immutable sorted dictionary.
+*   **How to use**:
+    ```typescript
+    import { ImmutableSortedDictionary } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    const dict = ImmutableSortedDictionary.create<number, string>(Comparer.instance.compare);
+    const newDict = dict.set(3, "three").set(1, "one"); // dict is empty, newDict has {1: "one", 3: "three"}
+    ```
+*   **Pros**:
+    *   Combines benefits of sorted dictionaries and immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
 
 ### Lookup
 
-A lookup is a collection that maps keys to collections of values.
+A collection that maps keys to collections of values.
 
-#### Lookup
+*   **Definition**: A data structure that groups elements by a key, where each key can be associated with multiple values. Similar to `Map<K, V[]>` but with specialized methods.
+*   **How to use**:
+    ```typescript
+    import { Lookup } from '@mirei/ts-collections';
 
-A lookup implementation using a RedBlackTree.
+    const data = [
+        { category: "A", value: 1 },
+        { category: "B", value: 2 },
+        { category: "A", value: 3 }
+    ];
+    const lookup = Lookup.create(
+        data,
+        item => item.category,
+        item => item.value
+    );
+    console.log(lookup.get("A").toArray()); // [1, 3]
+    ```
+*   **Pros**:
+    *   Efficiently groups data by a key.
+    *   Provides a convenient way to access all values associated with a specific key.
+*   **Cons**:
+    *   Can be less memory efficient than a simple `Map` if keys have very few associated values.
 
-- **When to use**: When you need to group elements by a key and access all elements with a specific key.
-- **Key features**:
-  - O(log n) lookups by key
-  - Each key maps to a collection of values
-  - Supports custom key comparators
-- **Example usage**:
+## Tree-based Collections
 
-```typescript
-const data = [
-    { category: "A", value: 1 },
-    { category: "B", value: 2 },
-    { category: "A", value: 3 }
-];
-const lookup = Lookup.create(
-    data,
-    item => item.category,
-    item => item.value
-);
-const categoryA = lookup.get("A"); // Returns collection with values 1 and 3
-```
+### RedBlackTree
 
-### Observable Collections
+A self-balancing binary search tree implementation.
 
-Observable collections are collections that notify subscribers when changes occur.
+*   **Definition**: A type of self-balancing binary search tree, which guarantees that the tree remains balanced during insertions and deletions, ensuring logarithmic time complexity for operations.
+*   **How to use**:
+    ```typescript
+    import { RedBlackTree } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
 
-#### ObservableCollection
+    const tree = new RedBlackTree<number>(Comparer.instance.compare);
+    tree.insert(5);
+    tree.insert(3);
+    tree.insert(7);
+    console.log(tree.search(3)); // true
+    tree.delete(5);
+    ```
+*   **Pros**:
+    *   Guaranteed O(log n) time complexity for search, insertion, and deletion.
+    *   Maintains sorted order of elements.
+    *   Efficient for large datasets where frequent modifications and lookups are needed.
+*   **Cons**:
+    *   More complex to implement than a basic binary search tree.
+    *   Higher constant factors for operations compared to hash-based structures.
 
-A collection that notifies subscribers when elements are added, removed, or modified.
+## Heap-based Collections
 
-- **When to use**: When you need to track changes to a collection and react to those changes.
-- **Key features**:
-  - Notifies subscribers when elements are added, removed, or modified
-  - Provides information about what changed (old items, new items, action type)
-  - Wraps a List for efficient operations
-- **Example usage**:
+### Heap
 
-```typescript
-const collection = new ObservableCollection([1, 2, 3]);
-collection.collectionChanged = (sender, args) => {
-    console.log("Collection changed:", args.action);
-    console.log("New items:", args.newItems);
-    console.log("Old items:", args.oldItems);
-};
-collection.add(4);          // Triggers collectionChanged event
-collection.remove(2);       // Triggers collectionChanged event
-collection.clear();         // Triggers collectionChanged event
-```
+A binary heap implementation.
 
-#### ReadonlyObservableCollection
+*   **Definition**: A specialized tree-based data structure that satisfies the heap property: if P is a parent node of C, then the value of P is either greater than or equal to (max heap) or less than or equal to (min heap) the value of C.
+*   **How to use**:
+    ```typescript
+    import { Heap } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
 
-A read-only wrapper around an ObservableCollection that forwards collection change events.
+    // Min-heap
+    const minHeap = new Heap<number>(Comparer.instance.compare);
+    minHeap.add(5);
+    minHeap.add(1);
+    minHeap.add(3);
+    console.log(minHeap.peek()); // 1
+    minHeap.poll(); // Removes 1
+    ```
+*   **Pros**:
+    *   Efficiently finds the minimum or maximum element (O(1) peek).
+    *   Efficient insertion and deletion of the min/max element (O(log n)).
+    *   Foundation for priority queues and heap sort.
+*   **Cons**:
+    *   Only the root element is easily accessible.
+    *   Not suitable for general searching or ordered traversal.
 
-- **When to use**: When you need to provide read-only access to an observable collection while still allowing subscribers to be notified of changes.
-- **Key features**:
-  - Provides read-only access to the underlying collection
-  - Forwards collection change events from the wrapped collection
-  - Prevents modification of the collection through this wrapper
-- **Example usage**:
+### ImmutableHeap
 
-```typescript
-const observableCollection = new ObservableCollection([1, 2, 3]);
-const readonlyCollection = new ReadonlyObservableCollection(observableCollection);
-readonlyCollection.collectionChanged = (sender, args) => {
-    console.log("Collection changed:", args.action);
-};
-// Changes to the original collection are still observable through the readonly wrapper
-observableCollection.add(4); // Triggers collectionChanged event on readonlyCollection
-```
+An immutable version of `Heap`. Any operation that would modify the heap returns a new `ImmutableHeap` instance, leaving the original unchanged.
 
-### Readonly Collections
+*   **Definition**: An immutable heap.
+*   **How to use**:
+    ```typescript
+    import { ImmutableHeap } from '@mirei/ts-collections';
+    import { Comparer } from '@mirei/ts-collections/shared';
+
+    const heap = ImmutableHeap.create([5, 1, 3], Comparer.instance.compare);
+    const newHeap = heap.add(2); // heap is [1, 3, 5], newHeap is [1, 2, 3, 5]
+    ```
+*   **Pros**:
+    *   Combines benefits of heaps and immutability.
+*   **Cons**:
+    *   Performance overhead for modifications.
+
+## Readonly Collections
 
 Readonly collections are wrappers that provide read-only access to underlying collections.
 
-#### ReadonlyCollection
+### ReadonlyCollection
 
-A wrapper around an ICollection that provides read-only access to the underlying collection.
+A wrapper around an `ICollection` that provides read-only access to the underlying collection.
 
-- **When to use**: When you need to provide read-only access to a collection to prevent modifications.
-- **Key features**:
-  - Provides read-only access to the underlying collection
-  - Delegates all operations to the wrapped collection
-  - Prevents modification of the collection through this wrapper
-- **Example usage**:
+*   **Definition**: A generic read-only view of any collection, preventing modifications through this wrapper.
+*   **How to use**:
+    ```typescript
+    import { List, ReadonlyCollection } from '@mirei/ts-collections';
 
-```typescript
-const list = new List([1, 2, 3]);
-const readonlyCollection = new ReadonlyCollection(list);
-readonlyCollection.contains(2);  // Returns true
-// readonlyCollection.add(4);    // Error: Method not available
-// Changes to the original collection are reflected in the readonly wrapper
-list.add(4);
-readonlyCollection.contains(4);  // Returns true
+    const mutableList = new List([1, 2, 3]);
+    const readonlyView = new ReadonlyCollection(mutableList);
+
+    console.log(readonlyView.contains(2)); // true
+    // readonlyView.add(4); // Error: Property 'add' does not exist on type 'ReadonlyCollection<number>'
+
+    mutableList.add(4); // Modify the underlying collection
+    console.log(readonlyView.contains(4)); // true (reflects changes in underlying collection)
+    ```
+*   **Pros**:
+    *   Provides a safe way to expose collection data without allowing external modification.
+    *   Ensures data integrity when passing collections to functions that should not alter them.
+*   **Cons**:
+    *   Does not prevent modification of the *underlying* collection if a reference to it exists elsewhere.
+    *   Adds a thin layer of abstraction.
+
+### ReadonlyList
+
+A wrapper around an `IList` that provides read-only access to the underlying list.
+
+*   **Definition**: A read-only view specifically for list-like collections, offering index-based access without modification capabilities.
+*   **How to use**:
+    ```typescript
+    import { List, ReadonlyList } from '@mirei/ts-collections';
+
+    const mutableList = new List([10, 20, 30]);
+    const readonlyListView = new ReadonlyList(mutableList);
+
+    console.log(readonlyListView.get(1)); // 20
+    // readonlyListView.removeAt(0); // Error: Property 'removeAt' does not exist
+    ```
+*   **Pros**:
+    *   Combines the benefits of `ReadonlyCollection` with index-based access specific to lists.
+    *   Useful for exposing list data in a controlled manner.
+*   **Cons**:
+    *   Same limitations as `ReadonlyCollection` regarding underlying mutability.
+
+### ReadonlyDictionary
+
+A wrapper around an `IDictionary` that provides read-only access to the underlying dictionary.
+
+*   **Definition**: A read-only view for dictionary-like collections, allowing key-based lookups but preventing additions, updates, or deletions.
+*   **How to use**:
+    ```typescript
+    import { Dictionary, ReadonlyDictionary } from '@mirei/ts-collections';
+
+    const mutableDict = new Dictionary<string, number>();
+    mutableDict.set("a", 1).set("b", 2);
+    const readonlyDictView = new ReadonlyDictionary(mutableDict);
+
+    console.log(readonlyDictView.get("a")); // 1
+    console.log(readonlyDictView.containsKey("c")); // false
+    // readonlyDictView.set("c", 3); // Error: Property 'set' does not exist
+    ```
+*   **Pros**:
+    *   Provides a secure way to share dictionary data without risk of modification.
+    *   Maintains the key-value lookup efficiency.
+*   **Cons**:
+    *   Same limitations as `ReadonlyCollection` regarding underlying mutability.
+
+## Enumerators
+
+Enumerators provide LINQ-like capabilities for querying and manipulating data.
+
+### Enumerable
+
+Provides LINQ-like query capabilities for synchronous collections.
+
+*   **Definition**: A utility class that extends iterable collections with a rich set of functional programming methods for querying, filtering, transforming, and aggregating data.
+*   **How to use**:
+    ```typescript
+    import { Enumerable } from '@mirei/ts-collections';
+
+    const numbers = [1, 2, 3, 4, 5];
+    const evenNumbersSquared = Enumerable.from(numbers)
+                                         .where(n => n % 2 === 0)
+                                         .select(n => n * n)
+                                         .toArray(); // [4, 16]
+    ```
+*   **Pros**:
+    *   Powerful and expressive syntax for data manipulation.
+    *   Lazy evaluation for many operations, improving performance.
+    *   Promotes functional programming style.
+*   **Cons**:
+    *   Can be less performant than direct loop implementations for very simple operations.
+    *   Steeper learning curve for those unfamiliar with LINQ or functional programming.
+*   **Standalone Functions**:
+    * All methods in the IEnumerable interface have their standalone versions available.
+    * See [API](#API) page for full list of functions.
+    * Example usage:
+    ```typescript
+    import { where } from '@mirei/ts-collections';
+
+    const numbers = [1, 2, 3, 4, 5];
+    const evenNumbers = where(numbers, n => n % 2 === 0).toArray(); // [2, 4]
+    ```
+
+### AsyncEnumerable
+
+Provides LINQ-like query capabilities for asynchronous collections (e.g., `AsyncIterable`).
+
+*   **Definition**: Similar to `Enumerable`, but designed to work with asynchronous data sources, allowing for LINQ-like operations on `AsyncIterable` streams.
+*   **How to use**:
+    ```typescript
+    import { AsyncEnumerable } from '@mirei/ts-collections';
+
+    async function* generateNumbers() {
+        for (let i = 1; i <= 5; i++) {
+            await new Promise(resolve => setTimeout(resolve, 10));
+            yield i;
+        }
+    }
+
+    async function processAsyncData() {
+        const asyncNumbers = AsyncEnumerable.from(generateNumbers());
+        const result = await asyncNumbers
+                               .where(n => n % 2 !== 0)
+                               .select(n => n * 2)
+                               .toArray(); // [2, 6, 10]
+        console.log(result);
+    }
+    processAsyncData();
+    ```
+*   **Pros**:
+    *   Enables elegant and declarative manipulation of asynchronous data streams.
+    *   Integrates seamlessly with `async/await`.
+*   **Cons**:
+    *   Adds complexity compared to synchronous enumerables.
+    *   Performance can be affected by the asynchronous nature of the underlying data source.
+
+## API
+
+Full API documentation can be found here:
+
 ```
-
-#### ReadonlyDictionary
-
-A wrapper around an IDictionary that provides read-only access to the underlying dictionary.
-
-- **When to use**: When you need to provide read-only access to a dictionary to prevent modifications.
-- **Key features**:
-  - Provides read-only access to the underlying dictionary
-  - Delegates all operations to the wrapped dictionary
-  - Prevents modification of the dictionary through this wrapper
-- **Example usage**:
-
-```typescript
-const dict = new Dictionary<string, number>();
-dict.add("one", 1);
-dict.add("two", 2);
-const readonlyDict = new ReadonlyDictionary(dict);
-readonlyDict.get("one");         // Returns 1
-readonlyDict.containsKey("two"); // Returns true
-// readonlyDict.add("three", 3); // Error: Method not available
-// Changes to the original dictionary are reflected in the readonly wrapper
-dict.add("three", 3);
-readonlyDict.containsKey("three"); // Returns true
-```
-
-#### ReadonlyList
-
-A wrapper around an IList that provides read-only access to the underlying list.
-
-- **When to use**: When you need to provide read-only access to a list to prevent modifications.
-- **Key features**:
-  - Provides read-only access to the underlying list
-  - Delegates all operations to the wrapped list
-  - Supports index-based access
-  - Prevents modification of the list through this wrapper
-- **Example usage**:
-
-```typescript
-const list = new List([1, 2, 3]);
-const readonlyList = new ReadonlyList(list);
-readonlyList.get(0);           // Returns 1
-readonlyList.indexOf(2);       // Returns 1
-// readonlyList.add(4);        // Error: Method not available
-// Changes to the original list are reflected in the readonly wrapper
-list.add(4);
-readonlyList.contains(4);      // Returns true
-```
-
-### Immutable Data Structures
-
-Immutable data structures are collections that cannot be modified after they are created. Any operation that would modify the structure instead returns a new instance with the modification applied, leaving the original structure unchanged.
-
-#### ImmutableList
-
-An immutable version of List.
-
-- **When to use**: When you need a list that cannot be modified, or when you want to ensure that a list passed to a function is not modified.
-- **Key features**:
-  - All operations that would modify the list return a new list
-  - Supports all standard list operations
-- **Example usage**:
-
-```typescript
-const list = ImmutableList.create([1, 2, 3]);
-const newList = list.add(4);      // Original list is unchanged
-const filtered = list.removeIf(x => x % 2 === 0); // Returns new list with odd numbers only
-```
-
-#### ImmutableDictionary
-
-An immutable version of Dictionary.
-
-- **When to use**: When you need a dictionary that cannot be modified, or when you want to ensure that a dictionary passed to a function is not modified.
-- **Key features**:
-  - All operations that would modify the dictionary return a new dictionary
-  - Supports all standard dictionary operations
-- **Example usage**:
-
-```typescript
-const dict = ImmutableDictionary.create<string, number>();
-const dict2 = dict.add("one", 1);  // Original dictionary is unchanged
-const dict3 = dict2.put("two", 2); // Returns new dictionary with the added key-value pair
-```
-
-#### ImmutableSortedDictionary
-
-An immutable version of SortedDictionary.
-
-- **When to use**: When you need a sorted dictionary that cannot be modified.
-- **Key features**:
-  - All operations that would modify the dictionary return a new dictionary
-  - Keys are always sorted
-- **Example usage**:
-
-```typescript
-const sortedDict = ImmutableSortedDictionary.create<number, string>();
-const dict2 = sortedDict.add(3, "three");
-const dict3 = dict2.add(1, "one");
-// Iteration will be in order: 1, 3
-```
-
-#### ImmutableSet
-
-An immutable version of EnumerableSet.
-
-- **When to use**: When you need a set that cannot be modified.
-- **Key features**:
-  - All operations that would modify the set return a new set
-  - Supports all standard set operations
-- **Example usage**:
-
-```typescript
-const set = ImmutableSet.create([1, 2, 3]);
-const set2 = set.add(4);          // Original set is unchanged
-const set3 = set2.remove(1);      // Returns new set without the element 1
-```
-
-#### ImmutableSortedSet
-
-An immutable version of SortedSet.
-
-- **When to use**: When you need a sorted set that cannot be modified.
-- **Key features**:
-  - All operations that would modify the set return a new set
-  - Elements are always sorted
-- **Example usage**:
-
-```typescript
-const sortedSet = ImmutableSortedSet.create([3, 1, 4, 2]);
-const set2 = sortedSet.add(5);    // Original set is unchanged
-// Iteration will be in order: 1, 2, 3, 4, 5
-```
-
-#### ImmutableQueue
-
-An immutable version of Queue.
-
-- **When to use**: When you need a queue that cannot be modified.
-- **Key features**:
-  - All operations that would modify the queue return a new queue
-  - Supports all standard queue operations
-- **Example usage**:
-
-```typescript
-const queue = ImmutableQueue.create([1, 2, 3]);
-const queue2 = queue.add(4);      // Original queue is unchanged
-// Elements will be dequeued in order: 1, 2, 3, 4
-```
-
-#### ImmutableStack
-
-An immutable version of Stack.
-
-- **When to use**: When you need a stack that cannot be modified.
-- **Key features**:
-  - All operations that would modify the stack return a new stack
-  - Supports all standard stack operations
-- **Example usage**:
-
-```typescript
-const stack = ImmutableStack.create([1, 2, 3]);
-const stack2 = stack.add(4);      // Original stack is unchanged
-// Elements will be popped in order: 4, 3, 2, 1
-```
-
-#### ImmutablePriorityQueue
-
-An immutable version of PriorityQueue.
-
-- **When to use**: When you need a priority queue that cannot be modified, or when you want to ensure that elements are processed in priority order without modifying the original collection.
-- **Key features**:
-  - All operations that would modify the queue return a new queue
-  - Elements are dequeued according to priority
-  - Supports custom priority comparators
-  - Provides both queue operations (enqueue/dequeue) and collection operations (add/remove)
-- **Example usage**:
-
-```typescript
-// Min priority queue (smallest element first)
-const queue = ImmutablePriorityQueue.create([3, 1, 4, 2]);
-const queue2 = queue.enqueue(5);  // Original queue is unchanged
-const front = queue2.peek();      // Returns 1 (smallest element)
-const queue3 = queue2.dequeue();  // Returns new queue without the highest priority element
-```
-
-## Enumerable Support
-
-All collections in this library implement the `IEnumerable` interface, providing LINQ-like operations for querying and manipulating data.
-
-### Example Usage
-
-```typescript
-const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-const list2 = list.select(n => n * n)
-                  .takeWhile(n => n <= 25)
-                  .skipWhile(n => n < 10)
-                  .orderByDescending(n => n)
-                  .toList();
-const array = list.takeLast(5).toArray();
-```
-
-You can also use Enumerable with plain arrays.
-
-```typescript
-const array = Enumerable.from([1, 2, 3, 4, 5])
-                        .where(n => n % 2 !== 0)
-                        .toArray();
+https://phrolovia.github.io/ts-collections/
 ```
