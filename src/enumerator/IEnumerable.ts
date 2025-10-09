@@ -50,6 +50,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {TAccumulate|TResult} The final accumulator (or its projection).
      * @throws {NoElementsException} Thrown when the sequence is empty and no `seed` is provided.
      * @remarks The source sequence is enumerated exactly once. Supply a `seed` to avoid exceptions on empty sequences and to control the accumulator type.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const sum = numbers.aggregate((acc, x) => acc + x);
+     * console.log(sum); // 15
+     *
+     * const product = numbers.aggregate((acc, x) => acc * x, 1);
+     * console.log(product); // 120
+     * ```
      */
     aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
 
@@ -63,6 +72,27 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keyComparator Optional equality comparator used to match group keys.
      * @returns {IEnumerable<KeyValuePair<TKey, TAccumulate>>} A sequence containing one key-value pair per group and its aggregated result.
      * @remarks When `seedSelector` is a function, it is evaluated once per group to obtain the initial accumulator.
+     * @example
+     * ```typescript
+     * const products = from([
+     *   { name: 'Apple', category: 'Fruit', price: 1.2 },
+     *   { name: 'Banana', category: 'Fruit', price: 0.5 },
+     *   { name: 'Carrot', category: 'Vegetable', price: 0.8 },
+     *   { name: 'Broccoli', category: 'Vegetable', price: 1.5 },
+     * ]);
+     *
+     * const totalPriceByCategory = products.aggregateBy(
+     *   p => p.category,
+     *   0,
+     *   (acc, p) => acc + p.price
+     * ).toArray();
+     *
+     * console.log(totalPriceByCategory);
+     * // [
+     * //   { key: 'Fruit', value: 1.7 },
+     * //   { key: 'Vegetable', value: 2.3 }
+     * // ]
+     * ```
      */
     aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>>;
 
@@ -71,6 +101,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Function that evaluates each element and returns `true` when it satisfies the condition.
      * @returns {boolean} `true` when all elements satisfy the predicate; otherwise, `false`.
      * @remarks Enumeration stops as soon as the predicate returns `false`.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const allPositive = numbers.all(x => x > 0);
+     * console.log(allPositive); // true
+     *
+     * const mixedNumbers = from([-1, 2, 3, -4, 5]);
+     * const allPositive2 = mixedNumbers.all(x => x > 0);
+     * console.log(allPositive2); // false
+     * ```
      */
     all(predicate: Predicate<TElement>): boolean;
 
@@ -79,6 +119,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Optional function used to test elements. When omitted, the method returns `true` if the sequence contains any element.
      * @returns {boolean} `true` when a matching element is found; otherwise, `false`.
      * @remarks When the predicate is omitted, only the first element is inspected, making this more efficient than `count() > 0`.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasEvenNumber = numbers.any(x => x % 2 === 0);
+     * console.log(hasEvenNumber); // true
+     *
+     * const oddNumbers = from([1, 3, 5]);
+     * const hasEvenNumber2 = oddNumbers.any(x => x % 2 === 0);
+     * console.log(hasEvenNumber2); // false
+     * ```
      */
     any(predicate?: Predicate<TElement>): boolean;
 
@@ -87,6 +137,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param element Element appended to the end of the sequence.
      * @returns {IEnumerable<TElement>} A new enumerable whose final item is the provided element.
      * @remarks The source sequence is not modified; enumeration is deferred until the returned sequence is iterated.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * const appended = numbers.append(4).toArray();
+     * console.log(appended); // [1, 2, 3, 4]
+     * ```
      */
     append(element: TElement): IEnumerable<TElement>;
 
@@ -96,6 +152,20 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {number} The arithmetic mean of the selected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks Provide a selector when the elements are not already numeric. All values are enumerated exactly once.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const avg = numbers.average();
+     * console.log(avg); // 3
+     *
+     * const people = from([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Charlie', age: 35 },
+     * ]);
+     * const avgAge = people.average(p => p.age);
+     * console.log(avgAge); // 30
+     * ```
      */
     average(selector?: Selector<TElement, number>): number;
 
