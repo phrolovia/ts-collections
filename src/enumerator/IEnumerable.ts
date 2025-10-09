@@ -1075,6 +1075,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     permutations(size?: number): IEnumerable<IEnumerable<TElement>>;
 
+    /**
+     * Applies a user-defined pipeline to this sequence and returns the operator's result.
+     * @template TResult Result type produced by {@link operator}.
+     * @param operator Function that receives the enumerable view of this sequence and returns an arbitrary result.
+     * @returns {TResult} The value produced by {@link operator} after optionally enumerating the sequence.
+     * @throws {unknown} Re-throws any error thrown by {@link operator} or during enumeration initiated by the operator.
+     * @remarks The operator controls when and how the sequence is iterated, enabling custom aggregations, projections, or interop with external APIs while preserving fluent syntax.
+     */
     pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult;
 
     /**

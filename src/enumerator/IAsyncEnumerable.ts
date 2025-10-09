@@ -1073,6 +1073,14 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
+    /**
+     * Applies a user-defined asynchronous pipeline to this sequence and resolves with the operator's result.
+     * @template TResult Result type produced by {@link operator}.
+     * @param operator Function that receives the async enumerable view of this sequence and returns a promise or value.
+     * @returns {Promise<TResult>} A promise that resolves to the value produced by {@link operator} after it consumes the sequence as needed.
+     * @throws {unknown} Re-throws any error thrown by {@link operator} or surfaced while asynchronously enumerating the sequence.
+     * @remarks The operator determines when and how the sequence is consumed, enabling custom asynchronous workflows and integrations while preserving fluent syntax.
+     */
     pipe<TResult>(operator: AsyncPipeOperator<TElement, TResult>): Promise<TResult>;
 
     /**
