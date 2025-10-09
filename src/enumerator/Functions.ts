@@ -546,6 +546,12 @@ export const distinctUntilChangedBy = <TElement, TKey>(
  * @returns {TElement} The element located at the requested index.
  * @throws {IndexOutOfBoundsException} Thrown when `index` is negative or greater than or equal to the number of elements in {@link source}.
  * @remarks Enumeration stops once the requested element is found; remaining elements are not evaluated.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const element = elementAt(numbers, 2);
+ * console.log(element); // 3
+ * ```
  */
 export const elementAt = <TElement>(
     source: Iterable<TElement>,
@@ -561,6 +567,15 @@ export const elementAt = <TElement>(
  * @param index Zero-based position of the element to retrieve.
  * @returns {TElement | null} The element at `index`, or `null` when {@link source} is shorter than `index + 1` or when `index` is negative.
  * @remarks Use this overload when out-of-range access should produce a sentinel value instead of throwing an exception.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const element = elementAtOrDefault(numbers, 2);
+ * console.log(element); // 3
+ *
+ * const element2 = elementAtOrDefault(numbers, 10);
+ * console.log(element2); // null
+ * ```
  */
 export const elementAtOrDefault = <TElement>(
     source: Iterable<TElement>,
@@ -574,6 +589,11 @@ export const elementAtOrDefault = <TElement>(
  * @template TElement Type of elements that the returned sequence can produce.
  * @returns {IEnumerable<TElement>} A reusable, cached empty sequence.
  * @remarks The returned instance is immutable and can be shared safely across callers.
+ * @example
+ * ```typescript
+ * const emptySequence = empty<number>();
+ * console.log(emptySequence.toArray()); // []
+ * ```
  */
 export const empty = <TElement>(): IEnumerable<TElement> => {
     return Enumerable.empty();
@@ -587,6 +607,13 @@ export const empty = <TElement>(): IEnumerable<TElement> => {
  * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
  * @returns {IEnumerable<TElement>} A sequence containing the elements from {@link source} that do not appear in {@link other}.
  * @remarks The original ordering and duplicate occurrences from {@link source} are preserved. {@link other} is fully enumerated to build the exclusion set.
+ * @example
+ * ```typescript
+ * const numbers1 = [1, 2, 3, 4, 5];
+ * const numbers2 = [3, 5, 7];
+ * const result = except(numbers1, numbers2).toArray();
+ * console.log(result); // [1, 2, 4]
+ * ```
  */
 export const except = <TElement>(
     source: Iterable<TElement>,
@@ -606,6 +633,24 @@ export const except = <TElement>(
  * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
  * @returns {IEnumerable<TElement>} A sequence that contains the elements from {@link source} whose keys are absent from {@link other}.
  * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. {@link other} is fully enumerated to materialise the exclusion keys.
+ * @example
+ * ```typescript
+ * const products1 = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ *   { name: 'Carrot', category: 'Vegetable' },
+ * ];
+ * const products2 = [
+ *   { name: 'Broccoli', category: 'Vegetable' },
+ * ];
+ *
+ * const result = exceptBy(products1, products2, p => p.category).toArray();
+ * console.log(result);
+ * // [
+ * //   { name: 'Apple', category: 'Fruit' },
+ * //   { name: 'Banana', category: 'Fruit' }
+ * // ]
+ * ```
  */
 export const exceptBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -626,6 +671,15 @@ export const exceptBy = <TElement, TKey>(
  * @throws {NoElementsException} Thrown when the sequence is empty.
  * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
  * @remarks Enumeration stops immediately once a matching element is found.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const firstElement = first(numbers);
+ * console.log(firstElement); // 1
+ *
+ * const firstEven = first(numbers, x => x % 2 === 0);
+ * console.log(firstEven); // 2
+ * ```
  */
 export function first<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -650,6 +704,23 @@ export function first<TElement, TFiltered extends TElement>(
  * @param predicate Predicate evaluated against each element; when omitted, the first element is returned. When a type guard is supplied, the returned value is narrowed to `TFiltered`.
  * @returns {TElement | TFiltered | null} The first matching element, or `null` when no match is found.
  * @remarks This function never throws for missing elements; it communicates absence through the `null` return value.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const firstElement = firstOrDefault(numbers);
+ * console.log(firstElement); // 1
+ *
+ * const firstEven = firstOrDefault(numbers, x => x % 2 === 0);
+ * console.log(firstEven); // 2
+ *
+ * const empty: number[] = [];
+ * const firstOfEmpty = firstOrDefault(empty);
+ * console.log(firstOfEmpty); // null
+ *
+ * const noEvens = [1, 3, 5];
+ * const firstEven2 = firstOrDefault(noEvens, x => x % 2 === 0);
+ * console.log(firstEven2); // null
+ * ```
  */
 export function firstOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -673,6 +744,14 @@ export function firstOrDefault<TElement, TFiltered extends TElement>(
  * @param action Callback invoked for each element; receives the element and its zero-based index.
  * @returns {void}
  * @remarks Enumeration starts immediately. Avoid mutating the underlying collection while iterating.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * forEach(numbers, (x, i) => console.log(`Index ${i}: ${x}`));
+ * // Index 0: 1
+ * // Index 1: 2
+ * // Index 2: 3
+ * ```
  */
 export const forEach = <TElement>(
     source: Iterable<TElement>,
@@ -687,6 +766,12 @@ export const forEach = <TElement>(
  * @param source The iterable to expose as an enumerable sequence.
  * @returns {IEnumerable<TElement>} An enumerable view over the given iterable.
  * @remarks The returned sequence defers enumeration of {@link source} until iterated.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const enumerable = from(numbers);
+ * console.log(enumerable.toArray()); // [1, 2, 3]
+ * ```
  */
 export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
     return Enumerable.from(source);
@@ -701,6 +786,21 @@ export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement
  * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<IGroup<TKey, TElement>>} A sequence of groups, each exposing the key and the elements that share it.
  * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
+ * @example
+ * ```typescript
+ * const products = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ *   { name: 'Carrot', category: 'Vegetable' },
+ * ];
+ *
+ * const grouped = groupBy(products, p => p.category);
+ * for (const group of grouped) {
+ *   console.log(group.key, group.toArray());
+ * }
+ * // Fruit [ { name: 'Apple', category: 'Fruit' }, { name: 'Banana', category: 'Fruit' } ]
+ * // Vegetable [ { name: 'Carrot', category: 'Vegetable' } ]
+ * ```
  */
 export const groupBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -724,6 +824,32 @@ export const groupBy = <TElement, TKey>(
  * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<TResult>} A sequence produced by applying {@link resultSelector} to each outer element and its matching inner elements.
  * @remarks The inner sequence is enumerated once to build an in-memory lookup before outer elements are processed. Each outer element is then evaluated lazily and preserves the original outer ordering.
+ * @example
+ * ```typescript
+ * const categories = [
+ *   { id: 1, name: 'Fruit' },
+ *   { id: 2, name: 'Vegetable' },
+ * ];
+ * const products = [
+ *   { name: 'Apple', categoryId: 1 },
+ *   { name: 'Banana', categoryId: 1 },
+ *   { name: 'Carrot', categoryId: 2 },
+ * ];
+ *
+ * const joined = groupJoin(
+ *   categories,
+ *   products,
+ *   c => c.id,
+ *   p => p.categoryId,
+ *   (c, ps) => ({ ...c, products: ps.toArray() })
+ * ).toArray();
+ *
+ * console.log(joined);
+ * // [
+ * //   { id: 1, name: 'Fruit', products: [ { name: 'Apple', categoryId: 1 }, { name: 'Banana', categoryId: 1 } ] },
+ * //   { id: 2, name: 'Vegetable', products: [ { name: 'Carrot', categoryId: 2 } ] }
+ * // ]
+ * ```
  */
 export const groupJoin = <TElement, TInner, TKey, TResult>(
     source: Iterable<TElement>,

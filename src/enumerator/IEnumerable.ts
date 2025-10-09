@@ -407,6 +407,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {TElement} The element located at the requested index.
      * @throws {IndexOutOfBoundsException} Thrown when `index` is negative or greater than or equal to the number of elements in the sequence.
      * @remarks Enumeration stops once the requested element is found; remaining elements are not evaluated.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const element = numbers.elementAt(2);
+     * console.log(element); // 3
+     * ```
      */
     elementAt(index: number): TElement;
 
@@ -415,6 +421,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param index Zero-based position of the element to retrieve.
      * @returns {TElement | null} The element at `index`, or `null` when the sequence is shorter than `index + 1` or when `index` is negative.
      * @remarks Use this overload when out-of-range access should produce a sentinel value instead of throwing an exception.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const element = numbers.elementAtOrDefault(2);
+     * console.log(element); // 3
+     *
+     * const element2 = numbers.elementAtOrDefault(10);
+     * console.log(element2); // null
+     * ```
      */
     elementAtOrDefault(index: number): TElement | null;
 
@@ -424,6 +439,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IEnumerable<TElement>} A sequence containing the elements from this sequence that do not appear in `iterable`.
      * @remarks The original ordering and duplicate occurrences from this sequence are preserved. The `iterable` is fully enumerated to build the exclusion set.
+     * @example
+     * ```typescript
+     * const numbers1 = from([1, 2, 3, 4, 5]);
+     * const numbers2 = [3, 5, 7];
+     * const result = numbers1.except(numbers2).toArray();
+     * console.log(result); // [1, 2, 4]
+     * ```
      */
     except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement>;
 
@@ -435,6 +457,24 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IEnumerable<TElement>} A sequence that contains the elements from this sequence whose keys are absent from `iterable`.
      * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. The exclusion keys are materialised by fully enumerating `iterable`.
+     * @example
+     * ```typescript
+     * const products1 = from([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     * const products2 = [
+     *   { name: 'Broccoli', category: 'Vegetable' },
+     * ];
+     *
+     * const result = products1.exceptBy(products2, p => p.category).toArray();
+     * console.log(result);
+     * // [
+     * //   { name: 'Apple', category: 'Fruit' },
+     * //   { name: 'Banana', category: 'Fruit' }
+     * // ]
+     * ```
      */
     exceptBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IEnumerable<TElement>;
 
@@ -446,6 +486,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @throws {NoMatchingElementException} Thrown when no element satisfies the type guard.
      * @remarks Enumeration stops immediately once a matching element is found.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const firstElement = numbers.first();
+     * console.log(firstElement); // 1
+     *
+     * const firstEven = numbers.first(x => x % 2 === 0);
+     * console.log(firstEven); // 2
+     * ```
      */
     first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
 
@@ -465,6 +514,23 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Type guard evaluated against each element until it returns true.
      * @returns {TFiltered | null} The first element that satisfies the type guard, or `null` when none match.
      * @remarks Enumeration stops immediately once a matching element is found.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const firstElement = numbers.firstOrDefault();
+     * console.log(firstElement); // 1
+     *
+     * const firstEven = numbers.firstOrDefault(x => x % 2 === 0);
+     * console.log(firstEven); // 2
+     *
+     * const empty = from<number>([]);
+     * const firstOfEmpty = empty.firstOrDefault();
+     * console.log(firstOfEmpty); // null
+     *
+     * const noEvens = from([1, 3, 5]);
+     * const firstEven2 = noEvens.firstOrDefault(x => x % 2 === 0);
+     * console.log(firstEven2); // null
+     * ```
      */
     firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
 
@@ -481,6 +547,14 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param action Callback invoked for each element; receives the element and its zero-based index.
      * @returns {void}
      * @remarks Enumeration starts immediately. Avoid mutating the underlying collection while iterating.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * numbers.forEach((x, i) => console.log(`Index ${i}: ${x}`));
+     * // Index 0: 1
+     * // Index 1: 2
+     * // Index 2: 3
+     * ```
      */
     forEach(action: IndexedAction<TElement>): void;
 
@@ -491,6 +565,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
      * @returns {IEnumerable<IGroup<TKey, TElement>>} A sequence of groups, each exposing the key and the elements that share it.
      * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
+     * @example
+     * ```typescript
+     * const products = from([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     *
+     * const grouped = products.groupBy(p => p.category);
+     * for (const group of grouped) {
+     *   console.log(group.key, group.toArray());
+     * }
+     * // Fruit [ { name: 'Apple', category: 'Fruit' }, { name: 'Banana', category: 'Fruit' } ]
+     * // Vegetable [ { name: 'Carrot', category: 'Vegetable' } ]
+     * ```
      */
     groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>>;
 
@@ -506,6 +595,31 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
      * @returns {IEnumerable<TResult>} A sequence produced by applying {@link resultSelector} to each outer element and its matching inner elements.
      * @remarks The inner sequence is enumerated once to build an in-memory lookup before outer elements are processed. Each outer element is then evaluated lazily and preserves the original outer ordering.
+     * @example
+     * ```typescript
+     * const categories = from([
+     *   { id: 1, name: 'Fruit' },
+     *   { id: 2, name: 'Vegetable' },
+     * ]);
+     * const products = from([
+     *   { name: 'Apple', categoryId: 1 },
+     *   { name: 'Banana', categoryId: 1 },
+     *   { name: 'Carrot', categoryId: 2 },
+     * ]);
+     *
+     * const joined = categories.groupJoin(
+     *   products,
+     *   c => c.id,
+     *   p => p.categoryId,
+     *   (c, ps) => ({ ...c, products: ps.toArray() })
+     * ).toArray();
+     *
+     * console.log(joined);
+     * // [
+     * //   { id: 1, name: 'Fruit', products: [ { name: 'Apple', categoryId: 1 }, { name: 'Banana', categoryId: 1 } ] },
+     * //   { id: 2, name: 'Vegetable', products: [ { name: 'Carrot', categoryId: 2 } ] }
+     * // ]
+     * ```
      */
     groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>,
                                      resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult>;
