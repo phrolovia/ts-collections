@@ -748,8 +748,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
         const dictionary = this.toDictionary(keySelector, valueSelector, valueComparator);
-        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
-        return ImmutableDictionary.create(pairs);
+        return ImmutableDictionary.create(dictionary);
     }
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
@@ -770,8 +769,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
         const dictionary = this.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
-        const pairs = dictionary.keys().zip(dictionary.values()).select(x => new KeyValuePair(x[0], x[1]));
-        return ImmutableSortedDictionary.create(pairs);
+        return ImmutableSortedDictionary.create(dictionary);
     }
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {

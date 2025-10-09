@@ -491,7 +491,7 @@ describe("Enumerable Standalone Functions", () => {
             const littleAlice = new Person("alice", "Rivermist", 9);
             const list = [Person.Alice, littleAlice, Person.Ayana];
             const distinctWithoutComparator = distinctUntilChangedBy(list, p => p.name).toArray();
-            const distinctWithComparator = distinctUntilChanged(list, (e1, e2) => e1.name.toLowerCase().localeCompare(e2.name.toLowerCase()) === 0).toArray();
+            const distinctWithComparator = distinctUntilChangedBy(list, p => p.name, (e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
             expect(distinctWithoutComparator).to.deep.equal([Person.Alice, littleAlice, Person.Ayana]);
             expect(distinctWithComparator).to.deep.equal([Person.Alice, Person.Ayana]);
         });

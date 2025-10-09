@@ -821,7 +821,7 @@ describe("List", () => {
             const littleAlice = new Person("alice", "Rivermist", 9);
             const list = new List([Person.Alice, littleAlice, Person.Ayana]);
             const distinctWithoutComparator = list.distinctUntilChangedBy(p => p.name).toArray();
-            const distinctWithComparator = list.distinctUntilChanged((e1, e2) => e1.name.toLowerCase().localeCompare(e2.name.toLowerCase()) === 0).toArray();
+            const distinctWithComparator = list.distinctUntilChangedBy(p => p.name, (e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
             expect(distinctWithoutComparator).to.deep.equal([Person.Alice, littleAlice, Person.Ayana]);
             expect(distinctWithComparator).to.deep.equal([Person.Alice, Person.Ayana]);
         });

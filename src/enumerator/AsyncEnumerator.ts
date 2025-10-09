@@ -970,14 +970,23 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* distinctUntilChangedGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TElement> {
-        let hasLast = false;
-        let lastKey: TKey | undefined;
-        for await (const element of this) {
-            const key = keySelector(element);
-            if (!hasLast || !keyComparator(lastKey as TKey, key)) {
-                hasLast = true;
-                lastKey = key;
-                yield element;
+        const iterator = this[Symbol.asyncIterator]();
+        let next = await iterator.next();
+        if (next.done) {
+            return yield* [];
+        }
+        let previousValue = next.value;
+        yield previousValue;
+        while (!next.done) {
+            next = await iterator.next();
+            if (next.done) {
+                return;
+            }
+            const prevKey = keySelector(previousValue);
+            const nextKey = keySelector(next.value);
+            if (!keyComparator(prevKey, nextKey)) {
+                yield next.value;
+                previousValue = next.value;
             }
         }
     }
