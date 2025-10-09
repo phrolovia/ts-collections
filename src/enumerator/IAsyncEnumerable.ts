@@ -310,6 +310,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param defaultValue Optional value returned in a singleton sequence when the source is empty. Defaults to `null`.
      * @returns {IAsyncEnumerable<TElement | null>} The original sequence when it has elements; otherwise, a singleton sequence containing the provided value.
      * @remarks Use this to guarantee that downstream async operators receive at least one element.
+     * @example
+     * ```typescript
+     * const empty = fromAsync([]);
+     * const withDefault = await empty.defaultIfEmpty(0).toArray();
+     * console.log(withDefault); // [0]
+     *
+     * const numbers = fromAsync([1, 2, 3]);
+     * const withDefault2 = await numbers.defaultIfEmpty(0).toArray();
+     * console.log(withDefault2); // [1, 2, 3]
+     * ```
      */
     defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null>;
 
@@ -318,6 +328,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields each distinct element once.
      * @remarks Elements are compared by value; when using custom types, provide an appropriate comparator to avoid reference-based comparisons.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 2, 3, 1, 4, 5, 5]);
+     * const distinctNumbers = await numbers.distinct().toArray();
+     * console.log(distinctNumbers); // [1, 2, 3, 4, 5]
+     * ```
      */
     distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
@@ -328,6 +344,21 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that contains the first occurrence of each unique key.
      * @remarks Each element's key is evaluated exactly once; cache expensive key computations when possible.
+     * @example
+     * ```typescript
+     * const products = fromAsync([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     *
+     * const distinctByCategory = await products.distinctBy(p => p.category).toArray();
+     * console.log(distinctByCategory);
+     * // [
+     * //   { name: 'Apple', category: 'Fruit' },
+     * //   { name: 'Carrot', category: 'Vegetable' }
+     * // ]
+     * ```
      */
     distinctBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
@@ -336,6 +367,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used to determine whether adjacent elements are equal. Defaults to the library's standard equality comparison.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the first element of each run of equal values.
      * @remarks Unlike {@link distinct}, this only filters adjacent duplicates and preserves earlier occurrences of repeated values.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 1, 2, 2, 2, 1, 3, 3]);
+     * const distinctUntilChangedNumbers = await numbers.distinctUntilChanged().toArray();
+     * console.log(distinctUntilChangedNumbers); // [1, 2, 1, 3]
+     * ```
      */
     distinctUntilChanged(comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
@@ -346,6 +383,24 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the first element in each run of elements whose keys change.
      * @remarks Enumeration stops comparing elements once a different key is encountered, making this useful for collapsing grouped async data.
+     * @example
+     * ```typescript
+     * const products = fromAsync([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     *   { name: 'Broccoli', category: 'Vegetable' },
+     *   { name: 'Orange', category: 'Fruit' },
+     * ]);
+     *
+     * const distinctByCategory = await products.distinctUntilChangedBy(p => p.category).toArray();
+     * console.log(distinctByCategory);
+     * // [
+     * //   { name: 'Apple', category: 'Fruit' },
+     * //   { name: 'Carrot', category: 'Vegetable' },
+     * //   { name: 'Orange', category: 'Fruit' }
+     * // ]
+     * ```
      */
     distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 

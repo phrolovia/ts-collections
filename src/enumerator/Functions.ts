@@ -412,6 +412,16 @@ export const cycle = <TElement>(
  * @param value Optional value returned in a singleton sequence when the source is empty. Defaults to `null`.
  * @returns {IEnumerable<TElement | null>} The original sequence when it has elements; otherwise, a singleton sequence containing the provided value.
  * @remarks Use this to ensure downstream operators always receive at least one element.
+ * @example
+ * ```typescript
+ * const empty = [];
+ * const withDefault = defaultIfEmpty(empty, 0).toArray();
+ * console.log(withDefault); // [0]
+ *
+ * const numbers = [1, 2, 3];
+ * const withDefault2 = defaultIfEmpty(numbers, 0).toArray();
+ * console.log(withDefault2); // [1, 2, 3]
+ * ```
  */
 export const defaultIfEmpty = <TElement>(
     source: Iterable<TElement>,
@@ -427,6 +437,12 @@ export const defaultIfEmpty = <TElement>(
  * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<TElement>} A sequence that yields each distinct element once.
  * @remarks Elements are compared by value; provide a comparator for custom reference types.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 2, 3, 1, 4, 5, 5];
+ * const distinctNumbers = distinct(numbers).toArray();
+ * console.log(distinctNumbers); // [1, 2, 3, 4, 5]
+ * ```
  */
 export const distinct = <TElement>(
     source: Iterable<TElement>,
@@ -444,6 +460,21 @@ export const distinct = <TElement>(
  * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<TElement>} A sequence that contains the first occurrence of each unique key.
  * @remarks Each element's key is evaluated exactly once; cache expensive key computations when possible.
+ * @example
+ * ```typescript
+ * const products = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ *   { name: 'Carrot', category: 'Vegetable' },
+ * ];
+ *
+ * const distinctByCategory = distinctBy(products, p => p.category).toArray();
+ * console.log(distinctByCategory);
+ * // [
+ * //   { name: 'Apple', category: 'Fruit' },
+ * //   { name: 'Carrot', category: 'Vegetable' }
+ * // ]
+ * ```
  */
 export const distinctBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -460,6 +491,12 @@ export const distinctBy = <TElement, TKey>(
  * @param comparator Optional equality comparator used to determine whether adjacent elements are equal. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<TElement>} A sequence that yields the first element of each run of equal values.
  * @remarks Unlike {@link distinct}, this only filters adjacent duplicates and preserves earlier occurrences of repeated values.
+ * @example
+ * ```typescript
+ * const numbers = [1, 1, 2, 2, 2, 1, 3, 3];
+ * const distinctUntilChangedNumbers = distinctUntilChanged(numbers).toArray();
+ * console.log(distinctUntilChangedNumbers); // [1, 2, 1, 3]
+ * ```
  */
 export const distinctUntilChanged = <TElement>(source: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> => {
     return from(source).distinctUntilChanged(comparator);
@@ -474,6 +511,24 @@ export const distinctUntilChanged = <TElement>(source: Iterable<TElement>, compa
  * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<TElement>} A sequence that yields the first element in each run of elements whose keys change.
  * @remarks Enumeration stops comparing elements once a different key is encountered, making this useful for collapsing grouped data.
+ * @example
+ * ```typescript
+ * const products = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ *   { name: 'Carrot', category: 'Vegetable' },
+ *   { name: 'Broccoli', category: 'Vegetable' },
+ *   { name: 'Orange', category: 'Fruit' },
+ * ];
+ *
+ * const distinctByCategory = distinctUntilChangedBy(products, p => p.category).toArray();
+ * console.log(distinctByCategory);
+ * // [
+ * //   { name: 'Apple', category: 'Fruit' },
+ * //   { name: 'Carrot', category: 'Vegetable' },
+ * //   { name: 'Orange', category: 'Fruit' }
+ * // ]
+ * ```
  */
 export const distinctUntilChangedBy = <TElement, TKey>(
     source: Iterable<TElement>,
