@@ -1148,6 +1148,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TAccumulate>} A deferred sequence containing every intermediate accumulator produced by {@link accumulator}.
      * @throws {NoElementsException} Thrown when the sequence is empty and {@link seed} is not provided.
      * @remarks The source is enumerated exactly once. When {@link seed} is supplied, it is not emitted; only accumulator results appear in the output.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const runningTotal = numbers.scan((acc, x) => acc + x).toArray();
+     * console.log(runningTotal); // [1, 3, 6, 10, 15]
+     * ```
      */
     scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate>;
 
@@ -1157,6 +1163,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param selector Projection invoked for each element together with its index.
      * @returns {IEnumerable<TResult>} A deferred sequence containing the values produced by {@link selector}.
      * @remarks Enumeration is deferred. The index argument increments sequentially starting at zero.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const squares = numbers.select(x => x * x).toArray();
+     * console.log(squares); // [1, 4, 9, 16, 25]
+     * ```
      */
     select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult>;
 
@@ -1166,6 +1178,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param selector Projection that returns an iterable for each element and its index.
      * @returns {IEnumerable<TResult>} A deferred sequence containing the concatenated contents of the iterables produced by {@link selector}.
      * @remarks Each inner iterable is enumerated in order before moving to the next source element. Use this to expand one-to-many relationships.
+     * @example
+     * ```typescript
+     * const lists = from([[1, 2], [3, 4], [5]]);
+     * const flattened = lists.selectMany(x => x).toArray();
+     * console.log(flattened); // [1, 2, 3, 4, 5]
+     * ```
      */
     selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult>;
 
@@ -1175,6 +1193,18 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional equality comparator used to compare element pairs. Defaults to the library's standard equality comparator.
      * @returns {boolean} `true` when both sequences have the same length and all corresponding elements are equal; otherwise, `false`.
      * @remarks Enumeration stops as soon as a mismatch or length difference is observed. Both sequences are fully enumerated only when they are equal.
+     * @example
+     * ```typescript
+     * const numbers1 = from([1, 2, 3]);
+     * const numbers2 = [1, 2, 3];
+     * const numbers3 = [1, 2, 4];
+     *
+     * const areEqual1 = numbers1.sequenceEqual(numbers2);
+     * console.log(areEqual1); // true
+     *
+     * const areEqual2 = numbers1.sequenceEqual(numbers3);
+     * console.log(areEqual2); // false
+     * ```
      */
     sequenceEqual(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): boolean;
 
@@ -1182,6 +1212,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Returns a deferred sequence whose elements appear in random order.
      * @returns {IEnumerable<TElement>} A sequence containing the same elements as the source but shuffled.
      * @remarks The implementation materialises all elements into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const shuffled = numbers.shuffle().toArray();
+     * console.log(shuffled); // e.g., [3, 1, 5, 2, 4]
+     * ```
      */
     shuffle(): IEnumerable<TElement>;
 
@@ -1194,6 +1230,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {NoMatchingElementException} Thrown when no element satisfies {@link predicate}.
      * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
      * @remarks The source is fully enumerated to ensure exactly one matching element exists.
+     * @example
+     * ```typescript
+     * const numbers = from([5]);
+     * const singleElement = numbers.single();
+     * console.log(singleElement); // 5
+     *
+     * const numbers2 = from([1, 2, 3, 4, 5]);
+     * const singleEven = numbers2.single(x => x > 4);
+     * console.log(singleEven); // 5
+     * ```
      */
     single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
 
@@ -1216,6 +1262,24 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {TFiltered | null} The single matching element, or `null` when no element satisfies {@link predicate}.
      * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
      * @remarks The source is fully enumerated to confirm uniqueness of the matching element.
+     * @example
+     * ```typescript
+     * const numbers = from([5]);
+     * const singleElement = numbers.singleOrDefault();
+     * console.log(singleElement); // 5
+     *
+     * const numbers2 = from([1, 2, 3, 4, 5]);
+     * const singleEven = numbers2.singleOrDefault(x => x > 4);
+     * console.log(singleEven); // 5
+     *
+     * const empty = from<number>([]);
+     * const singleOfEmpty = empty.singleOrDefault();
+     * console.log(singleOfEmpty); // null
+     *
+     * const noMatch = from([1, 2, 3]);
+     * const singleNoMatch = noMatch.singleOrDefault(x => x > 4);
+     * console.log(singleNoMatch); // null
+     * ```
      */
     singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
 
@@ -1234,6 +1298,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param count Number of elements to bypass. Values less than or equal to zero result in no elements being skipped.
      * @returns {IEnumerable<TElement>} A deferred sequence containing the elements that remain after skipping {@link count} items.
      * @remarks Enumeration is deferred. Only the skipped prefix is traversed without yielding.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const skipped = numbers.skip(2).toArray();
+     * console.log(skipped); // [3, 4, 5]
+     * ```
      */
     skip(count: number): IEnumerable<TElement>;
 
@@ -1242,6 +1312,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param count Number of trailing elements to exclude. Values less than or equal to zero leave the sequence unchanged.
      * @returns {IEnumerable<TElement>} A deferred sequence excluding the last {@link count} elements.
      * @remarks The implementation buffers up to {@link count} elements to determine which items to drop, which can increase memory usage for large values.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const skipped = numbers.skipLast(2).toArray();
+     * console.log(skipped); // [1, 2, 3]
+     * ```
      */
     skipLast(count: number): IEnumerable<TElement>;
 
@@ -1250,6 +1326,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Predicate receiving the element and its index. The first element for which it returns `false` is included in the result.
      * @returns {IEnumerable<TElement>} A deferred sequence starting with the first element that fails {@link predicate}.
      * @remarks The predicate receives a zero-based index that increments only while elements are being skipped.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5, 1, 2]);
+     * const skipped = numbers.skipWhile(x => x < 4).toArray();
+     * console.log(skipped); // [4, 5, 1, 2]
+     * ```
      */
     skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
@@ -1259,6 +1341,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Type guard evaluated for each element until it first returns `false`.
      * @returns {[IEnumerable<TFiltered>, IEnumerable<TElement>]} A tuple containing the contiguous matching prefix and the remainder of the sequence.
      * @remarks The source is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 1, 2]);
+     * const [first, second] = numbers.span(x => x < 3);
+     * console.log(first.toArray()); // [1, 2]
+     * console.log(second.toArray()); // [3, 4, 1, 2]
+     * ```
      */
     span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
 
@@ -1276,6 +1365,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A deferred sequence containing elements whose zero-based index is divisible by {@link step}.
      * @throws {InvalidArgumentException} Thrown when {@link step} is less than 1.
      * @remarks The source is enumerated exactly once; elements that are not yielded are still visited.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+     * const stepped = numbers.step(3).toArray();
+     * console.log(stepped); // [1, 4, 7]
+     * ```
      */
     step(step: number): IEnumerable<TElement>;
 
@@ -1285,6 +1380,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {number} The sum of the projected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks The source is enumerated exactly once. Supply {@link selector} when elements are not already numeric.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const total = numbers.sum();
+     * console.log(total); // 15
+     *
+     * const people = from([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     * ]);
+     * const totalAge = people.sum(p => p.age);
+     * console.log(totalAge); // 55
+     * ```
      */
     sum(selector?: Selector<TElement, number>): number;
 

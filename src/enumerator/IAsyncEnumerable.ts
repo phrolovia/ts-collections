@@ -1146,6 +1146,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TAccumulate>} An async sequence containing every intermediate accumulator produced by {@link accumulator}.
      * @throws {NoElementsException} Thrown when the sequence is empty and {@link seed} is not provided.
      * @remarks The source is consumed asynchronously exactly once. Supplying {@link seed} prevents exceptions on empty sources but the seed itself is not emitted.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const runningTotal = await numbers.scan((acc, x) => acc + x).toArray();
+     * console.log(runningTotal); // [1, 3, 6, 10, 15]
+     * ```
      */
     scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate>;
 
@@ -1155,6 +1161,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param selector Projection invoked for each element together with its index.
      * @returns {IAsyncEnumerable<TResult>} An async sequence containing the values produced by {@link selector}.
      * @remarks Enumeration is deferred. The index argument increments sequentially starting at zero.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const squares = await numbers.select(x => x * x).toArray();
+     * console.log(squares); // [1, 4, 9, 16, 25]
+     * ```
      */
     select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult>;
 
@@ -1164,6 +1176,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param selector Projection that returns an iterable for each element and its index.
      * @returns {IAsyncEnumerable<TResult>} An async sequence containing the concatenated contents of the iterables produced by {@link selector}.
      * @remarks Each inner iterable is fully enumerated in order before the next source element is processed, preserving the relative ordering of results.
+     * @example
+     * ```typescript
+     * const lists = fromAsync([[1, 2], [3, 4], [5]]);
+     * const flattened = await lists.selectMany(x => x).toArray();
+     * console.log(flattened); // [1, 2, 3, 4, 5]
+     * ```
      */
     selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult>;
 
@@ -1173,6 +1191,18 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used to compare element pairs. Defaults to the library's standard equality comparator.
      * @returns {Promise<boolean>} A promise that resolves to `true` when both sequences have the same length and all corresponding elements are equal; otherwise, `false`.
      * @remarks Enumeration stops as soon as a mismatch or length difference is observed. Both sequences are fully enumerated only when they are equal.
+     * @example
+     * ```typescript
+     * const numbers1 = fromAsync([1, 2, 3]);
+     * const numbers2 = [1, 2, 3];
+     * const numbers3 = [1, 2, 4];
+     *
+     * const areEqual1 = await numbers1.sequenceEqual(numbers2);
+     * console.log(areEqual1); // true
+     *
+     * const areEqual2 = await numbers1.sequenceEqual(numbers3);
+     * console.log(areEqual2); // false
+     * ```
      */
     sequenceEqual(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
@@ -1180,6 +1210,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Returns a deferred asynchronous sequence whose elements appear in random order.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the same elements as the source but shuffled.
      * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const shuffled = await numbers.shuffle().toArray();
+     * console.log(shuffled); // e.g., [3, 1, 5, 2, 4]
+     * ```
      */
     shuffle(): IAsyncEnumerable<TElement>;
 
@@ -1192,6 +1228,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {NoMatchingElementException} Thrown when no element satisfies {@link predicate}.
      * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
      * @remarks The source is fully enumerated asynchronously to ensure exactly one matching element exists.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([5]);
+     * const singleElement = await numbers.single();
+     * console.log(singleElement); // 5
+     *
+     * const numbers2 = fromAsync([1, 2, 3, 4, 5]);
+     * const singleEven = await numbers2.single(x => x > 4);
+     * console.log(singleEven); // 5
+     * ```
      */
     single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
 
@@ -1214,6 +1260,24 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<TFiltered | null>} A promise that resolves to the single matching element, or `null` when no element satisfies {@link predicate}.
      * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
      * @remarks The source is fully enumerated asynchronously to confirm uniqueness of the matching element.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([5]);
+     * const singleElement = await numbers.singleOrDefault();
+     * console.log(singleElement); // 5
+     *
+     * const numbers2 = fromAsync([1, 2, 3, 4, 5]);
+     * const singleEven = await numbers2.singleOrDefault(x => x > 4);
+     * console.log(singleEven); // 5
+     *
+     * const empty = fromAsync<number>([]);
+     * const singleOfEmpty = await empty.singleOrDefault();
+     * console.log(singleOfEmpty); // null
+     *
+     * const noMatch = fromAsync([1, 2, 3]);
+     * const singleNoMatch = await noMatch.singleOrDefault(x => x > 4);
+     * console.log(singleNoMatch); // null
+     * ```
      */
     singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
 
@@ -1232,6 +1296,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param count Number of elements to bypass. Values less than or equal to zero result in no elements being skipped.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the elements that remain after skipping {@link count} items.
      * @remarks Enumeration advances through the skipped prefix without yielding any of those elements.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const skipped = await numbers.skip(2).toArray();
+     * console.log(skipped); // [3, 4, 5]
+     * ```
      */
     skip(count: number): IAsyncEnumerable<TElement>;
 
@@ -1240,6 +1310,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param count Number of trailing elements to exclude. Values less than or equal to zero leave the sequence unchanged.
      * @returns {IAsyncEnumerable<TElement>} An async sequence excluding the last {@link count} elements.
      * @remarks The implementation buffers up to {@link count} elements to determine which items to drop, which can increase memory usage for large counts.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const skipped = await numbers.skipLast(2).toArray();
+     * console.log(skipped); // [1, 2, 3]
+     * ```
      */
     skipLast(count: number): IAsyncEnumerable<TElement>;
 
@@ -1248,6 +1324,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Predicate receiving the element and its zero-based index. The first element for which it returns `false` is included in the result.
      * @returns {IAsyncEnumerable<TElement>} An async sequence starting with the first element that fails {@link predicate}.
      * @remarks The predicate's index parameter increments only while elements are being skipped.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5, 1, 2]);
+     * const skipped = await numbers.skipWhile(x => x < 4).toArray();
+     * console.log(skipped); // [4, 5, 1, 2]
+     * ```
      */
     skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
@@ -1257,6 +1339,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Type guard evaluated for each element until it first returns `false`.
      * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>} A promise that resolves to the contiguous matching prefix and the remainder of the sequence.
      * @remarks The source is fully enumerated asynchronously and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 1, 2]);
+     * const [first, second] = await numbers.span(x => x < 3);
+     * console.log(first.toArray()); // [1, 2]
+     * console.log(second.toArray()); // [3, 4, 1, 2]
+     * ```
      */
     span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>;
 
@@ -1274,6 +1363,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing elements whose zero-based index is divisible by {@link step}.
      * @throws {InvalidArgumentException} Thrown when {@link step} is less than 1.
      * @remarks The source is enumerated asynchronously exactly once; elements that are not yielded are still visited to honour the stepping interval.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+     * const stepped = await numbers.step(3).toArray();
+     * console.log(stepped); // [1, 4, 7]
+     * ```
      */
     step(step: number): IAsyncEnumerable<TElement>;
 
@@ -1283,6 +1378,19 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<number>} A promise that resolves to the sum of the projected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks The source is enumerated asynchronously exactly once. Supply {@link selector} when elements are not already numeric.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const total = await numbers.sum();
+     * console.log(total); // 15
+     *
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     * ]);
+     * const totalAge = await people.sum(p => p.age);
+     * console.log(totalAge); // 55
+     * ```
      */
     sum(selector?: Selector<TElement, number>): Promise<number>;
 
