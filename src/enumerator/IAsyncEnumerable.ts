@@ -1399,6 +1399,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param count Number of elements to emit; values less than or equal to zero produce an empty sequence.
      * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing at most {@link count} elements from the start of the source.
      * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const firstTwo = await numbers.take(2).toArray();
+     * console.log(firstTwo); // [1, 2]
+     *
+     * const emptyTake = await numbers.take(0).toArray();
+     * console.log(emptyTake); // []
+     * ```
      */
     take(count: number): IAsyncEnumerable<TElement>;
 
@@ -1407,6 +1416,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param count Number of elements to keep from the end; values less than or equal to zero produce an empty sequence.
      * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing at most {@link count} elements from the end of the source.
      * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const lastTwo = await numbers.takeLast(2).toArray();
+     * console.log(lastTwo); // [4, 5]
+     *
+     * const emptyTakeLast = await numbers.takeLast(0).toArray();
+     * console.log(emptyTakeLast); // []
+     * ```
      */
     takeLast(count: number): IAsyncEnumerable<TElement>;
 
@@ -1416,6 +1434,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Type guard invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
      * @returns {IAsyncEnumerable<TFiltered>} A deferred async sequence containing the contiguous prefix that satisfies {@link predicate}.
      * @remarks Elements after the first failing element are not inspected.
+     * @example
+     * ```typescript
+     * const mixed: (number | string)[] = [1, 2, 'three', 4, 5];
+     * const numbers = await fromAsync(mixed).takeWhile((x): x is number => typeof x === 'number').toArray();
+     * console.log(numbers); // [1, 2]
+     * ```
      */
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
 
@@ -1424,6 +1448,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Predicate invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
      * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing the contiguous prefix that satisfies {@link predicate}.
      * @remarks Elements after the first failing element are not inspected.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5, 1, 2]);
+     * const taken = await numbers.takeWhile(x => x < 4).toArray();
+     * console.log(taken); // [1, 2, 3]
+     *
+     * const takenWithIndex = await numbers.takeWhile((x, i) => i < 3).toArray();
+     * console.log(takenWithIndex); // [1, 2, 3]
+     * ```
      */
     takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
@@ -1432,6 +1465,19 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param action Callback receiving the element and its zero-based index.
      * @returns {IAsyncEnumerable<TElement>} The original async sequence, enabling fluent chaining.
      * @remarks The action executes lazily as the sequence is iterated asynchronously, making it suitable for logging or instrumentation.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const tapped = await numbers
+     *   .tap(x => console.log(`Processing: ${x}`))
+     *   .select(x => x * 2)
+     *   .toArray();
+     * console.log(tapped); // [2, 4, 6]
+     * // Expected console output:
+     * // Processing: 1
+     * // Processing: 2
+     * // Processing: 3
+     * ```
      */
     tap(action: IndexedAction<TElement>): IAsyncEnumerable<TElement>;
 
@@ -1439,6 +1485,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Materialises the asynchronous sequence into an array.
      * @returns {Promise<TElement[]>} A promise that resolves with all elements from the source sequence in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the array is returned. Subsequent changes to the source are not reflected in the result.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const array = await numbers.toArray();
+     * console.log(array); // [1, 2, 3]
+     * ```
      */
     toArray(): Promise<TElement[]>;
 
@@ -1447,6 +1499,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting list.
      * @returns {Promise<CircularLinkedList<TElement>>} A promise that resolves to a circular linked list containing all elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the list is created, and elements are stored in iteration order.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const circularList = await numbers.toCircularLinkedList();
+     * console.log(circularList.toArray()); // [1, 2, 3]
+     * ```
      */
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): Promise<CircularLinkedList<TElement>>;
 
@@ -1455,6 +1513,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting queue.
      * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the most recent elements from the source, up to the default capacity.
      * @remarks The entire sequence is consumed asynchronously. Once the queue reaches its capacity (currently 32), older items are discarded as new elements are enqueued.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const circularQueue = await numbers.toCircularQueue();
+     * console.log(circularQueue.toArray()); // [1, 2, 3]
+     * ```
      */
     toCircularQueue(comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
@@ -1464,6 +1528,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting queue.
      * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the most recent elements from the source, bounded by {@link capacity}.
      * @remarks The entire sequence is consumed asynchronously. When the source contains more than {@link capacity} elements, earlier items are discarded.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const circularQueue = await numbers.toCircularQueue(3);
+     * console.log(circularQueue.toArray()); // [3, 4, 5]
+     * ```
      */
     toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
@@ -1477,13 +1547,28 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<Dictionary<TKey, TValue>>} A promise that resolves to a dictionary populated with the projected key/value pairs.
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { id: 1, name: 'Alice' },
+     *   { id: 2, name: 'Bob' },
+     * ]);
+     * const dictionary = await people.toDictionary(p => p.id, p => p.name);
+     * console.log(dictionary.get(1)); // 'Alice'
+     * console.log(dictionary.get(2)); // 'Bob'
+     * ```
      */
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<Dictionary<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into an enumerable set containing the distinct elements.
      * @returns {Promise<EnumerableSet<TElement>>} A promise that resolves to a set populated with the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's equality semantics.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 2, 3, 1]);
+     * const set = await numbers.toEnumerableSet();
+     * console.log(set.toArray()); // [1, 2, 3]
+     * ```
      */
     toEnumerableSet(): Promise<EnumerableSet<TElement>>;
 
@@ -1492,6 +1577,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting queue.
      * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the most recent elements from the source, up to the default capacity.
      * @remarks The entire sequence is consumed asynchronously. Earlier items are discarded when the number of elements exceeds the queue's capacity (currently 32).
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const immutableCircularQueue = await numbers.toImmutableCircularQueue();
+     * console.log(immutableCircularQueue.toArray()); // [1, 2, 3]
+     * ```
      */
     toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
@@ -1501,6 +1592,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting queue.
      * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the most recent elements from the source, bounded by {@link capacity}.
      * @remarks The entire sequence is consumed asynchronously. When the source contains more than {@link capacity} elements, earlier items are discarded.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const immutableCircularQueue = await numbers.toImmutableCircularQueue(3);
+     * console.log(immutableCircularQueue.toArray()); // [3, 4, 5]
+     * ```
      */
     toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
@@ -1514,14 +1611,29 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableDictionary<TKey, TValue>>} A promise that resolves to an immutable dictionary populated with the projected key/value pairs.
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { id: 1, name: 'Alice' },
+     *   { id: 2, name: 'Bob' },
+     * ]);
+     * const immutableDictionary = await people.toImmutableDictionary(p => p.id, p => p.name);
+     * console.log(immutableDictionary.get(1)); // 'Alice'
+     * console.log(immutableDictionary.get(2)); // 'Bob'
+     * ```
      */
     toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableDictionary<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into an immutable list.
      * @param comparator Optional equality comparator used by the resulting list.
      * @returns {Promise<ImmutableList<TElement>>} A promise that resolves to an immutable list containing all elements from the source in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the list is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const immutableList = await numbers.toImmutableList();
+     * console.log(immutableList.toArray()); // [1, 2, 3]
+     * ```
      */
     toImmutableList(comparator?: EqualityComparator<TElement>): Promise<ImmutableList<TElement>>;
 
@@ -1530,6 +1642,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional order comparator used to compare elements in the resulting queue.
      * @returns {Promise<ImmutablePriorityQueue<TElement>>} A promise that resolves to an immutable priority queue containing all elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned. Elements are ordered according to {@link comparator} or the default ordering.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 4, 1, 5, 9, 2, 6]);
+     * const immutablePriorityQueue = await numbers.toImmutablePriorityQueue();
+     * console.log(immutablePriorityQueue.toArray()); // [1, 1, 2, 3, 4, 5, 6, 9] (sorted)
+     * ```
      */
     toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): Promise<ImmutablePriorityQueue<TElement>>;
 
@@ -1538,6 +1656,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting queue.
      * @returns {Promise<ImmutableQueue<TElement>>} A promise that resolves to an immutable queue containing all elements from the source in enqueue order.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const immutableQueue = await numbers.toImmutableQueue();
+     * console.log(immutableQueue.toArray()); // [1, 2, 3]
+     * ```
      */
     toImmutableQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableQueue<TElement>>;
 
@@ -1545,6 +1669,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Materialises the asynchronous sequence into an immutable set containing the distinct elements.
      * @returns {Promise<ImmutableSet<TElement>>} A promise that resolves to an immutable set built from the distinct elements of the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's equality semantics.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 2, 3, 1]);
+     * const immutableSet = await numbers.toImmutableSet();
+     * console.log(immutableSet.toArray()); // [1, 2, 3]
+     * ```
      */
     toImmutableSet(): Promise<ImmutableSet<TElement>>;
 
@@ -1559,14 +1689,29 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<ImmutableSortedDictionary<TKey, TValue>>} A promise that resolves to an immutable sorted dictionary populated with the projected key/value pairs.
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { id: 2, name: 'Bob' },
+     *   { id: 1, name: 'Alice' },
+     * ]);
+     * const immutableSortedDictionary = await people.toImmutableSortedDictionary(p => p.id, p => p.name);
+     * console.log(immutableSortedDictionary.keys().toArray()); // [1, 2]
+     * console.log(immutableSortedDictionary.get(1)); // 'Alice'
+     * ```
      */
     toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableSortedDictionary<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into an immutable sorted set of distinct elements.
      * @param comparator Optional order comparator used to sort the elements.
      * @returns {Promise<ImmutableSortedSet<TElement>>} A promise that resolves to an immutable sorted set containing the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's ordering semantics.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 4, 1, 5, 9, 2, 6]);
+     * const immutableSortedSet = await numbers.toImmutableSortedSet();
+     * console.log(immutableSortedSet.toArray()); // [1, 2, 3, 4, 5, 6, 9]
+     * ```
      */
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): Promise<ImmutableSortedSet<TElement>>;
 
@@ -1575,6 +1720,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting stack.
      * @returns {Promise<ImmutableStack<TElement>>} A promise that resolves to an immutable stack whose top element corresponds to the last element of the source.
      * @remarks The entire sequence is consumed asynchronously before the stack is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const immutableStack = await numbers.toImmutableStack();
+     * console.log(immutableStack.peek()); // 3
+     * console.log(immutableStack.pop().peek()); // 2
+     * ```
      */
     toImmutableStack(comparator?: EqualityComparator<TElement>): Promise<ImmutableStack<TElement>>;
 
@@ -1583,6 +1735,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting list.
      * @returns {Promise<LinkedList<TElement>>} A promise that resolves to a linked list containing all elements from the source in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the list is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const linkedList = await numbers.toLinkedList();
+     * console.log(linkedList.toArray()); // [1, 2, 3]
+     * ```
      */
     toLinkedList(comparator?: EqualityComparator<TElement>): Promise<LinkedList<TElement>>;
 
@@ -1591,6 +1749,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting list.
      * @returns {Promise<List<TElement>>} A promise that resolves to a list containing all elements from the source in iteration order.
      * @remarks The entire sequence is consumed asynchronously before the list is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const list = await numbers.toList();
+     * console.log(list.toArray()); // [1, 2, 3]
+     * ```
      */
     toList(comparator?: EqualityComparator<TElement>): Promise<List<TElement>>;
 
@@ -1603,9 +1767,19 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param keyComparator Optional order comparator used to compare keys in the resulting lookup.
      * @returns {Promise<ILookup<TKey, TValue>>} A promise that resolves to a lookup grouping the projected values by key.
      * @remarks The entire sequence is consumed asynchronously. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
+     * @example
+     * ```typescript
+     * const products = fromAsync([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     * const lookup = await products.toLookup(p => p.category, p => p.name);
+     * console.log(lookup.get('Fruit').toArray()); // ['Apple', 'Banana']
+     * console.log(lookup.get('Vegetable').toArray()); // ['Carrot']
+     * ```
      */
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into a `Map` keyed by the provided selector.
      * @template TKey Type of key returned by {@link keySelector}.
@@ -1614,9 +1788,18 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param valueSelector Selector used to derive the value for each element.
      * @returns {Promise<Map<TKey, TValue>>} A promise that resolves to a map populated with the projected key/value pairs.
      * @remarks The entire sequence is consumed asynchronously. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { id: 1, name: 'Alice' },
+     *   { id: 2, name: 'Bob' },
+     * ]);
+     * const map = await people.toMap(p => p.id, p => p.name);
+     * console.log(map.get(1)); // 'Alice'
+     * console.log(map.get(2)); // 'Bob'
+     * ```
      */
     toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Map<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into a plain object keyed by the provided selector.
      * @template TKey extends string | number | symbol Property key type returned by {@link keySelector}.
@@ -1625,14 +1808,30 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param valueSelector Selector used to derive the value for each element.
      * @returns {Promise<Record<TKey, TValue>>} A promise that resolves to an object populated with the projected key/value pairs.
      * @remarks The entire sequence is consumed asynchronously. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { id: 1, name: 'Alice' },
+     *   { id: 2, name: 'Bob' },
+     * ]);
+     * const obj = await people.toObject(p => p.id, p => p.name);
+     * console.log(obj[1]); // 'Alice'
+     * console.log(obj[2]); // 'Bob'
+     * ```
      */
     toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into a priority queue.
      * @param comparator Optional order comparator used to compare elements in the resulting queue.
      * @returns {Promise<PriorityQueue<TElement>>} A promise that resolves to a priority queue containing all elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned. Elements are ordered according to {@link comparator} or the default ordering.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 4, 1, 5, 9, 2, 6]);
+     * const priorityQueue = await numbers.toPriorityQueue();
+     * console.log(priorityQueue.dequeue()); // 1
+     * console.log(priorityQueue.dequeue()); // 1
+     * ```
      */
     toPriorityQueue(comparator?: OrderComparator<TElement>): Promise<PriorityQueue<TElement>>;
 
@@ -1641,6 +1840,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting queue.
      * @returns {Promise<Queue<TElement>>} A promise that resolves to a queue containing all elements from the source in enqueue order.
      * @remarks The entire sequence is consumed asynchronously before the queue is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const queue = await numbers.toQueue();
+     * console.log(queue.dequeue()); // 1
+     * console.log(queue.dequeue()); // 2
+     * ```
      */
     toQueue(comparator?: EqualityComparator<TElement>): Promise<Queue<TElement>>;
 
@@ -1648,6 +1854,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Materialises the asynchronous sequence into a native `Set`.
      * @returns {Promise<Set<TElement>>} A promise that resolves to a set containing the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 2, 3, 1]);
+     * const set = await numbers.toSet();
+     * console.log(Array.from(set)); // [1, 2, 3]
+     * ```
      */
     toSet(): Promise<Set<TElement>>;
 
@@ -1662,14 +1874,29 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<SortedDictionary<TKey, TValue>>} A promise that resolves to a sorted dictionary populated with the projected key/value pairs.
      * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
      * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { id: 2, name: 'Bob' },
+     *   { id: 1, name: 'Alice' },
+     * ]);
+     * const sortedDictionary = await people.toSortedDictionary(p => p.id, p => p.name);
+     * console.log(sortedDictionary.keys().toArray()); // [1, 2]
+     * console.log(sortedDictionary.get(1)); // 'Alice'
+     * ```
      */
     toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<SortedDictionary<TKey, TValue>>;
-
     /**
      * Materialises the asynchronous sequence into a sorted set of distinct elements.
      * @param comparator Optional order comparator used to sort the elements.
      * @returns {Promise<SortedSet<TElement>>} A promise that resolves to a sorted set containing the distinct elements from the source.
      * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's ordering semantics.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 4, 1, 5, 9, 2, 6]);
+     * const sortedSet = await numbers.toSortedSet();
+     * console.log(sortedSet.toArray()); // [1, 2, 3, 4, 5, 6, 9]
+     * ```
      */
     toSortedSet(comparator?: OrderComparator<TElement>): Promise<SortedSet<TElement>>;
 
@@ -1678,6 +1905,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used by the resulting stack.
      * @returns {Promise<Stack<TElement>>} A promise that resolves to a stack whose top element corresponds to the last element of the source.
      * @remarks The entire sequence is consumed asynchronously before the stack is returned.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const stack = await numbers.toStack();
+     * console.log(stack.peek()); // 3
+     * console.log(stack.pop().peek()); // 2
+     * ```
      */
     toStack(comparator?: EqualityComparator<TElement>): Promise<Stack<TElement>>;
 

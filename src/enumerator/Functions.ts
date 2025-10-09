@@ -1971,6 +1971,15 @@ export const sum = <TElement>(
  * @param count Number of elements to emit; values less than or equal to zero produce an empty sequence.
  * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the start of {@link source}.
  * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const firstTwo = take(numbers, 2).toArray();
+ * console.log(firstTwo); // [1, 2]
+ *
+ * const emptyTake = take(numbers, 0).toArray();
+ * console.log(emptyTake); // []
+ * ```
  */
 export const take = <TElement>(
     source: Iterable<TElement>,
@@ -1986,6 +1995,15 @@ export const take = <TElement>(
  * @param count Number of elements to keep from the end; values less than or equal to zero produce an empty sequence.
  * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the end of {@link source}.
  * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const lastTwo = takeLast(numbers, 2).toArray();
+ * console.log(lastTwo); // [4, 5]
+ *
+ * const emptyTakeLast = takeLast(numbers, 0).toArray();
+ * console.log(emptyTakeLast); // []
+ * ```
  */
 export const takeLast = <TElement>(
     source: Iterable<TElement>,
@@ -2001,11 +2019,16 @@ export const takeLast = <TElement>(
  * @param predicate Predicate invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
  * @returns {IEnumerable<TElement>} A deferred sequence containing the contiguous prefix that satisfies {@link predicate}.
  * @remarks Elements after the first failing element are not inspected.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5, 1, 2];
+ * const taken = takeWhile(numbers, x => x < 4).toArray();
+ * console.log(taken); // [1, 2, 3]
+ *
+ * const takenWithIndex = takeWhile(numbers, (x, i) => i < 3).toArray();
+ * console.log(takenWithIndex); // [1, 2, 3]
+ * ```
  */
-export function takeWhile<TElement, TFiltered extends TElement>(
-    source: Iterable<TElement>,
-    predicate: IndexedTypePredicate<TElement, TFiltered>
-): IEnumerable<TFiltered>;
 export function takeWhile<TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement>
@@ -2024,6 +2047,18 @@ export function takeWhile<TElement, TFiltered extends TElement>(
  * @param action Callback receiving the element and its zero-based index.
  * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.
  * @remarks The action executes lazily as the sequence is iterated, making it suitable for logging or instrumentation.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const tapped = tap(numbers, x => console.log(`Processing: ${x}`))
+ *   .select(x => x * 2)
+ *   .toArray();
+ * console.log(tapped); // [2, 4, 6]
+ * // Expected console output:
+ * // Processing: 1
+ * // Processing: 2
+ * // Processing: 3
+ * ```
  */
 export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IEnumerable<TElement> => {
     return from(source).tap(action);
@@ -2035,6 +2070,12 @@ export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<
  * @param source The source iterable.
  * @returns {TElement[]} An array containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately. Subsequent changes to {@link source} are not reflected in the returned array.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const array = toArray(numbers);
+ * console.log(array); // [1, 2, 3]
+ * ```
  */
 export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
     return from(source).toArray();
@@ -2047,6 +2088,12 @@ export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
  * @param comparator Optional equality comparator used by the resulting list.
  * @returns {CircularLinkedList<TElement>} A circular linked list containing all elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately, and elements are stored in iteration order.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const circularList = toCircularLinkedList(numbers);
+ * console.log(circularList.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toCircularLinkedList = <TElement>(
     source: Iterable<TElement>,
@@ -2063,11 +2110,13 @@ export const toCircularLinkedList = <TElement>(
  * @param comparator Optional equality comparator used by the resulting queue.
  * @returns {CircularQueue<TElement>} A circular queue containing the most recent elements from {@link source}, bounded by {@link capacity}.
  * @remarks The entire sequence is enumerated immediately. When {@link source} contains more than {@link capacity} elements, earlier items are discarded.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const circularQueue = toCircularQueue(numbers, 3);
+ * console.log(circularQueue.toArray()); // [3, 4, 5]
+ * ```
  */
-export function toCircularQueue<TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-): CircularQueue<TElement>;
 export function toCircularQueue<TElement>(
     source: Iterable<TElement>,
     capacity: number,
@@ -2096,6 +2145,16 @@ export function toCircularQueue<TElement>(
  * @returns {Dictionary<TKey, TValue>} A dictionary populated with the projected key/value pairs.
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately and entries are inserted in iteration order.
+ * @example
+ * ```typescript
+ * const people = [
+ *   { id: 1, name: 'Alice' },
+ *   { id: 2, name: 'Bob' },
+ * ];
+ * const dictionary = toDictionary(people, p => p.id, p => p.name);
+ * console.log(dictionary.get(1)); // 'Alice'
+ * console.log(dictionary.get(2)); // 'Bob'
+ * ```
  */
 export const toDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -2112,6 +2171,12 @@ export const toDictionary = <TElement, TKey, TValue>(
  * @param source The source iterable.
  * @returns {EnumerableSet<TElement>} A set populated with the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 2, 3, 1];
+ * const set = toEnumerableSet(numbers);
+ * console.log(set.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>
@@ -2120,6 +2185,24 @@ export const toEnumerableSet = <TElement>(
 };
 
 /**
+ * Materialises {@link source} into an immutable circular queue that uses the implementation\'s default capacity.
+ * @template TElement Type of elements within {@link source}.
+ * @param source The source iterable.
+ * @param comparator Optional equality comparator used by the resulting queue.
+ * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from {@link source}, up to the default capacity.
+ * @remarks The entire sequence is enumerated immediately. Earlier items are discarded when the number of elements exceeds the queue\'s capacity (currently 32).
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const immutableCircularQueue = toImmutableCircularQueue(numbers);
+ * console.log(immutableCircularQueue.toArray()); // [1, 2, 3]
+ * ```
+ */
+export function toImmutableCircularQueue<TElement>(
+    source: Iterable<TElement>,
+    comparator?: EqualityComparator<TElement>
+): ImmutableCircularQueue<TElement>;
+/**
  * Materialises {@link source} into an immutable circular queue with the specified capacity.
  * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
@@ -2127,11 +2210,13 @@ export const toEnumerableSet = <TElement>(
  * @param comparator Optional equality comparator used by the resulting queue.
  * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from {@link source}, bounded by {@link capacity}.
  * @remarks The entire sequence is enumerated immediately. When {@link source} contains more than {@link capacity} elements, earlier items are discarded.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const immutableCircularQueue = toImmutableCircularQueue(numbers, 3);
+ * console.log(immutableCircularQueue.toArray()); // [3, 4, 5]
+ * ```
  */
-export function toImmutableCircularQueue<TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-): ImmutableCircularQueue<TElement>;
 export function toImmutableCircularQueue<TElement>(
     source: Iterable<TElement>,
     capacity: number,
@@ -2160,6 +2245,16 @@ export function toImmutableCircularQueue<TElement>(
  * @returns {ImmutableDictionary<TKey, TValue>} An immutable dictionary populated with the projected key/value pairs.
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const people = [
+ *   { id: 1, name: 'Alice' },
+ *   { id: 2, name: 'Bob' },
+ * ];
+ * const immutableDictionary = toImmutableDictionary(people, p => p.id, p => p.name);
+ * console.log(immutableDictionary.get(1)); // 'Alice'
+ * console.log(immutableDictionary.get(2)); // 'Bob'
+ * ```
  */
 export const toImmutableDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -2177,6 +2272,12 @@ export const toImmutableDictionary = <TElement, TKey, TValue>(
  * @param comparator Optional equality comparator used by the resulting list.
  * @returns {ImmutableList<TElement>} An immutable list containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const immutableList = toImmutableList(numbers);
+ * console.log(immutableList.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toImmutableList = <TElement>(
     source: Iterable<TElement>,
@@ -2192,6 +2293,12 @@ export const toImmutableList = <TElement>(
  * @param comparator Optional order comparator used to compare elements in the resulting queue.
  * @returns {ImmutablePriorityQueue<TElement>} An immutable priority queue containing all elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
+ * @example
+ * ```typescript
+ * const numbers = [3, 1, 4, 1, 5, 9, 2, 6];
+ * const immutablePriorityQueue = toImmutablePriorityQueue(numbers);
+ * console.log(immutablePriorityQueue.toArray()); // [1, 1, 2, 3, 4, 5, 6, 9] (sorted)
+ * ```
  */
 export const toImmutablePriorityQueue = <TElement>(
     source: Iterable<TElement>,
@@ -2207,6 +2314,12 @@ export const toImmutablePriorityQueue = <TElement>(
  * @param comparator Optional equality comparator used by the resulting queue.
  * @returns {ImmutableQueue<TElement>} An immutable queue containing all elements from {@link source} in enqueue order.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const immutableQueue = toImmutableQueue(numbers);
+ * console.log(immutableQueue.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toImmutableQueue = <TElement>(
     source: Iterable<TElement>,
@@ -2221,6 +2334,12 @@ export const toImmutableQueue = <TElement>(
  * @param source The source iterable.
  * @returns {ImmutableSet<TElement>} An immutable set built from the distinct elements of {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 2, 3, 1];
+ * const immutableSet = toImmutableSet(numbers);
+ * console.log(immutableSet.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toImmutableSet = <TElement>(
     source: Iterable<TElement>
@@ -2241,6 +2360,16 @@ export const toImmutableSet = <TElement>(
  * @returns {ImmutableSortedDictionary<TKey, TValue>} An immutable sorted dictionary populated with the projected key/value pairs.
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const people = [
+ *   { id: 2, name: 'Bob' },
+ *   { id: 1, name: 'Alice' },
+ * ];
+ * const immutableSortedDictionary = toImmutableSortedDictionary(people, p => p.id, p => p.name);
+ * console.log(immutableSortedDictionary.keys().toArray()); // [1, 2]
+ * console.log(immutableSortedDictionary.get(1)); // 'Alice'
+ * ```
  */
 export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -2259,6 +2388,12 @@ export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
  * @param comparator Optional order comparator used to sort the elements.
  * @returns {ImmutableSortedSet<TElement>} An immutable sorted set containing the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
+ * @example
+ * ```typescript
+ * const numbers = [3, 1, 4, 1, 5, 9, 2, 6];
+ * const immutableSortedSet = toImmutableSortedSet(numbers);
+ * console.log(immutableSortedSet.toArray()); // [1, 2, 3, 4, 5, 6, 9]
+ * ```
  */
 export const toImmutableSortedSet = <TElement>(
     source: Iterable<TElement>,
@@ -2274,6 +2409,13 @@ export const toImmutableSortedSet = <TElement>(
  * @param comparator Optional equality comparator used by the resulting stack.
  * @returns {ImmutableStack<TElement>} An immutable stack whose top element corresponds to the last element of {@link source}.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const immutableStack = toImmutableStack(numbers);
+ * console.log(immutableStack.peek()); // 3
+ * console.log(immutableStack.pop().peek()); // 2
+ * ```
  */
 export const toImmutableStack = <TElement>(
     source: Iterable<TElement>,
@@ -2289,6 +2431,12 @@ export const toImmutableStack = <TElement>(
  * @param comparator Optional equality comparator used by the resulting list.
  * @returns {LinkedList<TElement>} A linked list containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const linkedList = toLinkedList(numbers);
+ * console.log(linkedList.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toLinkedList = <TElement>(
     source: Iterable<TElement>,
@@ -2304,6 +2452,12 @@ export const toLinkedList = <TElement>(
  * @param comparator Optional equality comparator used by the resulting list.
  * @returns {List<TElement>} A list containing all elements from {@link source} in iteration order.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const list = toList(numbers);
+ * console.log(list.toArray()); // [1, 2, 3]
+ * ```
  */
 export const toList = <TElement>(
     source: Iterable<TElement>,
@@ -2323,6 +2477,17 @@ export const toList = <TElement>(
  * @param keyComparator Optional order comparator used to compare keys in the resulting lookup.
  * @returns {ILookup<TKey, TValue>} A lookup grouping the projected values by key.
  * @remarks The entire sequence is enumerated immediately. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
+ * @example
+ * ```typescript
+ * const products = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ *   { name: 'Carrot', category: 'Vegetable' },
+ * ];
+ * const lookup = toLookup(products, p => p.category, p => p.name);
+ * console.log(lookup.get('Fruit').toArray()); // ['Apple', 'Banana']
+ * console.log(lookup.get('Vegetable').toArray()); // ['Carrot']
+ * ```
  */
 export const toLookup = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -2343,6 +2508,16 @@ export const toLookup = <TElement, TKey, TValue>(
  * @param valueSelector Selector used to derive the value for each element.
  * @returns {Map<TKey, TValue>} A map populated with the projected key/value pairs.
  * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
+ * @example
+ * ```typescript
+ * const people = [
+ *   { id: 1, name: 'Alice' },
+ *   { id: 2, name: 'Bob' },
+ * ];
+ * const map = toMap(people, p => p.id, p => p.name);
+ * console.log(map.get(1)); // 'Alice'
+ * console.log(map.get(2)); // 'Bob'
+ * ```
  */
 export const toMap = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -2362,6 +2537,16 @@ export const toMap = <TElement, TKey, TValue>(
  * @param valueSelector Selector used to derive the value for each element.
  * @returns {Record<TKey, TValue>} An object populated with the projected key/value pairs.
  * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
+ * @example
+ * ```typescript
+ * const people = [
+ *   { id: 1, name: 'Alice' },
+ *   { id: 2, name: 'Bob' },
+ * ];
+ * const obj = toObject(people, p => p.id, p => p.name);
+ * console.log(obj[1]); // 'Alice'
+ * console.log(obj[2]); // 'Bob'
+ * ```
  */
 export const toObject = <TElement, TKey extends PropertyKey, TValue>(
     source: Iterable<TElement>,
@@ -2378,6 +2563,13 @@ export const toObject = <TElement, TKey extends PropertyKey, TValue>(
  * @param comparator Optional order comparator used to compare elements in the resulting queue.
  * @returns {PriorityQueue<TElement>} A priority queue containing all elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
+ * @example
+ * ```typescript
+ * const numbers = [3, 1, 4, 1, 5, 9, 2, 6];
+ * const priorityQueue = toPriorityQueue(numbers);
+ * console.log(priorityQueue.dequeue()); // 1
+ * console.log(priorityQueue.dequeue()); // 1
+ * ```
  */
 export const toPriorityQueue = <TElement>(
     source: Iterable<TElement>,
@@ -2393,6 +2585,13 @@ export const toPriorityQueue = <TElement>(
  * @param comparator Optional equality comparator used by the resulting queue.
  * @returns {Queue<TElement>} A queue containing all elements from {@link source} in enqueue order.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const queue = toQueue(numbers);
+ * console.log(queue.dequeue()); // 1
+ * console.log(queue.dequeue()); // 2
+ * ```
  */
 export const toQueue = <TElement>(
     source: Iterable<TElement>,
@@ -2407,6 +2606,12 @@ export const toQueue = <TElement>(
  * @param source The source iterable.
  * @returns {Set<TElement>} A set containing the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 2, 3, 1];
+ * const set = toSet(numbers);
+ * console.log(Array.from(set)); // [1, 2, 3]
+ * ```
  */
 export const toSet = <TElement>(
     source: Iterable<TElement>
@@ -2427,6 +2632,16 @@ export const toSet = <TElement>(
  * @returns {SortedDictionary<TKey, TValue>} A sorted dictionary populated with the projected key/value pairs.
  * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const people = [
+ *   { id: 2, name: 'Bob' },
+ *   { id: 1, name: 'Alice' },
+ * ];
+ * const sortedDictionary = toSortedDictionary(people, p => p.id, p => p.name);
+ * console.log(sortedDictionary.keys().toArray()); // [1, 2]
+ * console.log(sortedDictionary.get(1)); // 'Alice'
+ * ```
  */
 export const toSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
@@ -2445,6 +2660,12 @@ export const toSortedDictionary = <TElement, TKey, TValue>(
  * @param comparator Optional order comparator used to sort the elements.
  * @returns {SortedSet<TElement>} A sorted set containing the distinct elements from {@link source}.
  * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
+ * @example
+ * ```typescript
+ * const numbers = [3, 1, 4, 1, 5, 9, 2, 6];
+ * const sortedSet = toSortedSet(numbers);
+ * console.log(sortedSet.toArray()); // [1, 2, 3, 4, 5, 6, 9]
+ * ```
  */
 export const toSortedSet = <TElement>(
     source: Iterable<TElement>,
@@ -2460,6 +2681,13 @@ export const toSortedSet = <TElement>(
  * @param comparator Optional equality comparator used by the resulting stack.
  * @returns {Stack<TElement>} A stack whose top element corresponds to the last element of {@link source}.
  * @remarks The entire sequence is enumerated immediately.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const stack = toStack(numbers);
+ * console.log(stack.peek()); // 3
+ * console.log(stack.pop().peek()); // 2
+ * ```
  */
 export const toStack = <TElement>(
     source: Iterable<TElement>,
