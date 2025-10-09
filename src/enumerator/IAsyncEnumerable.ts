@@ -1688,6 +1688,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} A deferred asynchronous sequence containing the distinct elements from this sequence followed by elements from {@link enumerable} that are not already present according to {@link comparator}.
      * @throws {unknown} Re-throws any error thrown while iterating either async sequence or executing {@link comparator}.
      * @remarks Elements from the original sequence always appear before contributions from {@link enumerable}. The method buffers only the comparison data needed to detect duplicates and consumes each input at most once.
+     * @example
+     * ```typescript
+     * const numbers1 = fromAsync([1, 2, 3, 4, 5]);
+     * const numbers2 = [3, 5, 6, 7];
+     * const unioned = await numbers1.union(numbers2).toArray();
+     * console.log(unioned); // [1, 2, 3, 4, 5, 6, 7]
+     * ```
      */
     union(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement>;
 
@@ -1700,6 +1707,25 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} A deferred asynchronous sequence containing the distinct elements from this sequence followed by elements from {@link enumerable} whose keys were not previously observed.
      * @throws {unknown} Re-throws any error thrown while iterating either async sequence or executing {@link keySelector} or {@link comparator}.
      * @remarks Keys are buffered to ensure uniqueness while elements remain streamable. Provide {@link comparator} when keys require structural equality semantics.
+     * @example
+     * ```typescript
+     * const products1 = fromAsync([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     * ]);
+     * const products2 = [
+     *   { name: 'Carrot', category: 'Vegetable' },
+     *   { name: 'Apple', category: 'Fruit' },
+     * ];
+     *
+     * const unioned = await products1.unionBy(products2, p => p.category).toArray();
+     * console.log(unioned);
+     * // [
+     * //   { name: 'Apple', category: 'Fruit' },
+     * //   { name: 'Banana', category: 'Fruit' },
+     * //   { name: 'Carrot', category: 'Vegetable' }
+     * // ]
+     * ```
      */
     unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
@@ -1710,6 +1736,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TFiltered>} A deferred async sequence containing only elements that satisfy the type guard.
      * @throws {unknown} Re-throws any error thrown while iterating the source or awaiting {@link predicate}.
      * @remarks Enumeration is lazy; {@link predicate} executes on demand and may run concurrently when the consumer requests multiple elements in parallel.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const evenNumbers = await numbers.where(x => x % 2 === 0).toArray();
+     * console.log(evenNumbers); // [2, 4]
+     * ```
      */
     where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
 
@@ -1729,6 +1761,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1.
      * @throws {unknown} Re-throws any error thrown while asynchronously iterating the source sequence.
      * @remarks Windows overlap and are yielded only after enough source elements are observed to fill {@link size}. Trailing partial windows are omitted.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const windows = numbers.windows(3);
+     * const result = await windows.select(w => w.toArray()).toArray();
+     * console.log(result); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+     * ```
      */
     windows(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
@@ -1739,6 +1778,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<[TElement, TSecond]>} A deferred async sequence of `[source, other]` tuples truncated to the length of the shorter input.
      * @throws {unknown} Re-throws any error thrown while iterating either async sequence.
      * @remarks Enumeration is lazy; pairs are produced on demand and iteration stops when either sequence completes. Use the overload that accepts a `zipper` when you need to project custom results.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const letters = fromAsync(['a', 'b', 'c']);
+     * const zipped = await numbers.zip(letters).toArray();
+     * console.log(zipped); // [[1, 'a'], [2, 'b'], [3, 'c']]
+     *
+     * const zippedWithSelector = await numbers.zip(letters, (num, letter) => `${num}-${letter}`).toArray();
+     * console.log(zippedWithSelector); // ['1-a', '2-b', '3-c']
+     * ```
      */
     zip<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
 

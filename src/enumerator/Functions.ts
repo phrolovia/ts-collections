@@ -2477,6 +2477,13 @@ export const toStack = <TElement>(
  * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from {@link source} followed by elements from {@link other} that are not already present according to {@link comparator}.
  * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link comparator}.
  * @remarks Elements yielded by {@link source} always appear before contributions from {@link other}. Only comparison data required to detect duplicates is buffered, and each input is enumerated at most once.
+ * @example
+ * ```typescript
+ * const numbers1 = [1, 2, 3, 4, 5];
+ * const numbers2 = [3, 5, 6, 7];
+ * const unioned = union(numbers1, numbers2).toArray();
+ * console.log(unioned); // [1, 2, 3, 4, 5, 6, 7]
+ * ```
  */
 export const union = <TElement>(
     source: Iterable<TElement>,
@@ -2497,6 +2504,25 @@ export const union = <TElement>(
  * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from {@link source} followed by elements from {@link other} whose keys were not previously observed.
  * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link keySelector} or {@link comparator}.
  * @remarks Keys are buffered to ensure uniqueness while elements remain lazily produced. Provide {@link comparator} when keys require structural equality semantics.
+ * @example
+ * ```typescript
+ * const products1 = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ * ];
+ * const products2 = [
+ *   { name: 'Carrot', category: 'Vegetable' },
+ *   { name: 'Apple', category: 'Fruit' },
+ * ];
+ *
+ * const unioned = unionBy(products1, products2, p => p.category).toArray();
+ * console.log(unioned);
+ * // [
+ * //   { name: 'Apple', category: 'Fruit' },
+ * //   { name: 'Banana', category: 'Fruit' },
+ * //   { name: 'Carrot', category: 'Vegetable' }
+ * // ]
+ * ```
  */
 export const unionBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -2516,6 +2542,12 @@ export const unionBy = <TElement, TKey>(
  * @returns {IEnumerable<TFiltered>} A deferred sequence containing only elements that satisfy the type guard.
  * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link predicate}.
  * @remarks Enumeration is lazy; {@link predicate} executes on demand and may be invoked again when consumers restart iteration.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const evenNumbers = where(numbers, x => x % 2 === 0).toArray();
+ * console.log(evenNumbers); // [2, 4]
+ * ```
  */
 export function where<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -2550,6 +2582,12 @@ export function where<TElement, TFiltered extends TElement>(
  * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1.
  * @throws {unknown} Re-throws any error thrown while iterating {@link source}.
  * @remarks Windows overlap and are yielded only after enough source elements are observed to fill {@link size}. Trailing partial windows are omitted.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const windows = windows(numbers, 3);
+ * console.log(windows.select(w => w.toArray()).toArray()); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+ * ```
  */
 export const windows = <TElement>(
     source: Iterable<TElement>,
@@ -2569,6 +2607,16 @@ export const windows = <TElement>(
  * @returns {IEnumerable<TResult>} A deferred sequence of projected results truncated to the length of the shorter input.
  * @throws {unknown} Re-throws any error thrown while iterating either input sequence or executing {@link zipper}.
  * @remarks Enumeration is lazy; pairs are produced on demand and iteration stops as soon as either input completes.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const letters = ['a', 'b', 'c'];
+ * const zipped = zip(numbers, letters).toArray();
+ * console.log(zipped); // [[1, 'a'], [2, 'b'], [3, 'c']]
+ *
+ * const zippedWithSelector = zip(numbers, letters, (num, letter) => `${num}-${letter}`).toArray();
+ * console.log(zippedWithSelector); // ['1-a', '2-b', '3-c']
+ * ```
  */
 export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
     source: Iterable<TElement>,

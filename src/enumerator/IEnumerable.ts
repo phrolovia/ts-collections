@@ -1690,6 +1690,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from this sequence followed by elements from {@link iterable} that are not already present according to {@link comparator}.
      * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link comparator}.
      * @remarks Elements from the original sequence always appear before contributions from {@link iterable}. The method caches only the comparison keys needed to detect duplicates and enumerates each input at most once.
+     * @example
+     * ```typescript
+     * const numbers1 = from([1, 2, 3, 4, 5]);
+     * const numbers2 = [3, 5, 6, 7];
+     * const unioned = numbers1.union(numbers2).toArray();
+     * console.log(unioned); // [1, 2, 3, 4, 5, 6, 7]
+     * ```
      */
     union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement>;
 
@@ -1702,6 +1709,25 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from this sequence followed by elements from {@link iterable} whose keys were not previously observed.
      * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link keySelector} or {@link comparator}.
      * @remarks Keys are buffered to ensure uniqueness while the elements themselves remain lazily produced. Provide {@link comparator} when keys require structural equality semantics.
+     * @example
+     * ```typescript
+     * const products1 = from([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     * ]);
+     * const products2 = [
+     *   { name: 'Carrot', category: 'Vegetable' },
+     *   { name: 'Apple', category: 'Fruit' },
+     * ];
+     *
+     * const unioned = products1.unionBy(products2, p => p.category).toArray();
+     * console.log(unioned);
+     * // [
+     * //   { name: 'Apple', category: 'Fruit' },
+     * //   { name: 'Banana', category: 'Fruit' },
+     * //   { name: 'Carrot', category: 'Vegetable' }
+     * // ]
+     * ```
      */
     unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
@@ -1712,6 +1738,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TFiltered>} A deferred sequence containing only elements that satisfy the type guard.
      * @throws {unknown} Re-throws any error thrown while iterating the source or executing {@link predicate}.
      * @remarks Enumeration is lazy; {@link predicate} executes on demand and may be invoked again if consumers restart iteration.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const evenNumbers = numbers.where(x => x % 2 === 0).toArray();
+     * console.log(evenNumbers); // [2, 4]
+     * ```
      */
     where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
 
@@ -1731,6 +1763,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1.
      * @throws {unknown} Re-throws any error thrown while iterating the source sequence.
      * @remarks Windows overlap and are yielded only after enough source elements are observed to fill {@link size}. Trailing partial windows are omitted.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const windows = numbers.windows(3);
+     * console.log(windows.select(w => w.toArray()).toArray()); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+     * ```
      */
     windows(size: number): IEnumerable<IEnumerable<TElement>>;
 
@@ -1741,6 +1779,16 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<[TElement, TSecond]>} A deferred sequence of `[source, other]` tuples truncated to the length of the shorter input.
      * @throws {unknown} Re-throws any error thrown while iterating either sequence.
      * @remarks Enumeration is lazy; pairs are produced on demand and iteration stops when either sequence completes. Use the overload that accepts a `zipper` when you need to project custom results.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * const letters = ['a', 'b', 'c'];
+     * const zipped = numbers.zip(letters).toArray();
+     * console.log(zipped); // [[1, 'a'], [2, 'b'], [3, 'c']]
+     *
+     * const zippedWithSelector = numbers.zip(letters, (num, letter) => `${num}-${letter}`).toArray();
+     * console.log(zippedWithSelector); // ['1-a', '2-b', '3-c']
+     * ```
      */
     zip<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
 
