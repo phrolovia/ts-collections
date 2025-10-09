@@ -1005,14 +1005,15 @@ export const rotate = <TElement>(source: Iterable<TElement>, shift: number): IEn
 };
 
 /**
- * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
- * If seed is specified, it is used as the initial value for the accumulator, but it is not included in the result sequence.
- * @template TAccumulate
+ * Accumulates the sequence and emits each intermediate result.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TAccumulate Accumulator type produced by {@link accumulator}; defaults to `TElement` when {@link seed} is omitted.
  * @param source The source iterable.
- * @param accumulator The accumulator function that will be applied over the sequence.
- * @param seed The value that will be used as the initial value. If not specified, the first element of the sequence will be used as the seed value and also included as the first element of the result.
- * @returns {IEnumerable<TAccumulate>} A new enumerable sequence whose elements are the result of each intermediate computation.
- * @throws {NoElementsException} If the source is empty and seed is not provided.
+ * @param accumulator Function that merges the current accumulator value with the next element to produce the subsequent accumulator.
+ * @param seed Optional initial accumulator. When omitted, the first element supplies the initial accumulator and is emitted as the first result.
+ * @returns {IEnumerable<TAccumulate>} A deferred sequence containing every intermediate accumulator produced by {@link accumulator}.
+ * @throws {NoElementsException} Thrown when {@link source} is empty and {@link seed} is not provided.
+ * @remarks {@link source} is enumerated exactly once. Supplying {@link seed} prevents exceptions on empty sources but the seed itself is not emitted.
  */
 export const scan = <TElement, TAccumulate = TElement>(
     source: Iterable<TElement>,
@@ -1023,11 +1024,13 @@ export const scan = <TElement, TAccumulate = TElement>(
 };
 
 /**
- * Projects each element of a sequence into a new form.
- * @template TResult
+ * Transforms each element and its zero-based index into a new value.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TResult Result type produced by {@link selector}.
  * @param source The source iterable.
- * @param selector The selector function that will be used to project each element into a new form. The second parameter is the index.
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of the selector function.
+ * @param selector Projection invoked for each element together with its index.
+ * @returns {IEnumerable<TResult>} A deferred sequence containing the values produced by {@link selector}.
+ * @remarks Enumeration is deferred. The index argument increments sequentially starting at zero.
  */
 export const select = <TElement, TResult>(
     source: Iterable<TElement>,
@@ -1037,11 +1040,13 @@ export const select = <TElement, TResult>(
 };
 
 /**
- * Projects each element of a sequence into a new form (which is an iterable) and flattens the resulting sequences into one sequence.
- * @template TResult
+ * Projects each element and index into an iterable and flattens the results into a single sequence.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TResult Element type produced by the flattened iterables.
  * @param source The source iterable.
- * @param selector The selector function that will be used to project each element into a new iterable form. The second parameter is the index.
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the flattened result of the selector function.
+ * @param selector Projection that returns an iterable for each element and its index.
+ * @returns {IEnumerable<TResult>} A deferred sequence containing the concatenated contents of the iterables produced by {@link selector}.
+ * @remarks Each inner iterable is fully enumerated in order before the next source element is processed, preserving the relative ordering of results.
  */
 export const selectMany = <TElement, TResult>(
     source: Iterable<TElement>,
@@ -1051,12 +1056,13 @@ export const selectMany = <TElement, TResult>(
 };
 
 /**
- * Determines whether two sequences are equal by comparing the elements by using an equality comparer for their type.
- * Compares elements pairwise in order. Sequences must have the same length and equal elements at corresponding positions.
+ * Determines whether {@link source} and another iterable contain equal elements in the same order.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @param other The iterable sequence to compare to the source sequence.
- * @param comparator The equality comparer that will be used to compare the elements. If not specified, the default equality comparer will be used.
- * @returns {boolean} true if the two source sequences are of equal length and their corresponding elements are equal, according to the specified equality comparer; otherwise, false.
+ * @param other Iterable to compare against the source sequence.
+ * @param comparator Optional equality comparator used to compare element pairs. Defaults to the library's standard equality comparator.
+ * @returns {boolean} `true` when both sequences have the same length and all corresponding elements are equal; otherwise, `false`.
+ * @remarks Enumeration stops as soon as a mismatch or length difference is observed. Both sequences are fully enumerated only when they are equal.
  */
 export const sequenceEqual = <TElement>(
     source: Iterable<TElement>,
@@ -1067,11 +1073,11 @@ export const sequenceEqual = <TElement>(
 };
 
 /**
- * Returns a new enumerable sequence whose elements are shuffled randomly.
- * Note: This method internally converts the sequence to an array to shuffle it.
- * @template TElement
+ * Returns a deferred sequence whose elements appear in random order.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are shuffled.
+ * @returns {IEnumerable<TElement>} A sequence containing the same elements as {@link source} but shuffled.
+ * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
  */
 export const shuffle = <TElement>(
     source: Iterable<TElement>
@@ -1080,21 +1086,34 @@ export const shuffle = <TElement>(
 };
 
 /**
- * Returns the only element of a sequence and throws an exception if there is not exactly one element in the sequence.
- * Can optionally apply a predicate to filter the sequence first.
- * @template TElement
+ * Returns the only element that satisfies the provided type guard predicate.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
- * @returns {TElement} The single element of the sequence (or the single element satisfying the predicate).
- * @throws {NoElementsException} If the source (or filtered sequence) is empty.
- * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
- * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies the condition.
- * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
+ * @param predicate Type guard evaluated for each element. The returned value is narrowed to `TFiltered`.
+ * @returns {TFiltered} The single element that satisfies {@link predicate}.
+ * @throws {NoElementsException} Thrown when {@link source} is empty.
+ * @throws {NoMatchingElementException} Thrown when no element satisfies {@link predicate}.
+ * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
+ * @remarks {@link source} is fully enumerated to ensure exactly one matching element exists.
  */
 export function single<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): TFiltered;
+
+/**
+ * Returns the only element in the sequence or the only element that satisfies an optional predicate.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable.
+ * @param predicate Optional predicate evaluated for each element. When provided, the result must be the unique element for which it returns `true`.
+ * @returns {TElement} The single element in {@link source} or the single element that satisfies {@link predicate}.
+ * @throws {NoElementsException} Thrown when {@link source} is empty.
+ * @throws {MoreThanOneElementException} Thrown when more than one element exists and {@link predicate} is omitted.
+ * @throws {NoMatchingElementException} Thrown when {@link predicate} is provided and no element satisfies it.
+ * @throws {MoreThanOneMatchingElementException} Thrown when {@link predicate} is provided and more than one element satisfies it.
+ * @remarks {@link source} is fully enumerated to validate uniqueness.
+ */
 export function single<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
@@ -1107,19 +1126,30 @@ export function single<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Returns the only element of a sequence, or a default value (null) if the sequence is empty.
- * Throws an exception if there is more than one element in the sequence (or more than one matching the predicate).
- * @template TElement
+ * Returns the only element that satisfies the provided type guard predicate, or `null` when no such element exists.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
- * @returns {TElement|null} The single element of the sequence (or the single element satisfying the predicate), or null if the sequence (or filtered sequence) is empty.
- * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
- * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
+ * @param predicate Type guard evaluated for each element. The returned value is narrowed to `TFiltered` when not `null`.
+ * @returns {TFiltered | null} The single matching element, or `null` when no element satisfies {@link predicate}.
+ * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
+ * @remarks {@link source} is fully enumerated to confirm uniqueness of the matching element.
  */
 export function singleOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): TFiltered | null;
+
+/**
+ * Returns the only element in the sequence or the only element that satisfies an optional predicate, or `null` when no such element exists.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable.
+ * @param predicate Optional predicate evaluated for each element. When provided, the result must be the unique element for which it returns `true`.
+ * @returns {TElement | null} The single element or matching element, or `null` when no element satisfies the conditions.
+ * @throws {MoreThanOneElementException} Thrown when more than one element exists and {@link predicate} is omitted.
+ * @throws {MoreThanOneMatchingElementException} Thrown when {@link predicate} is provided and more than one element satisfies it.
+ * @remarks Unlike {@link single}, this method communicates the absence of a matching element by returning `null`.
+ */
 export function singleOrDefault<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
@@ -1132,11 +1162,12 @@ export function singleOrDefault<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
- * @template TElement
+ * Skips a specified number of elements before yielding the remainder of the sequence.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @param count The number of elements to skip before returning the remaining elements. If the count is zero or negative, all elements are returned.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements that occur after the specified number of skipped elements.
+ * @param count Number of elements to bypass. Values less than or equal to zero result in no elements being skipped.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing the elements that remain after skipping {@link count} items.
+ * @remarks Enumeration advances through the skipped prefix without yielding any of those elements.
  */
 export const skip = <TElement>(
     source: Iterable<TElement>,
@@ -1146,11 +1177,12 @@ export const skip = <TElement>(
 };
 
 /**
- * Returns a new enumerable sequence that contains the elements from the source with the last count elements of the source sequence omitted.
- * @template TElement
+ * Omits a specified number of elements from the end of the sequence.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @param count The number of elements to omit from the end of the collection. If the count is zero or negative, all elements are returned.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from source with the last count elements omitted.
+ * @param count Number of trailing elements to exclude. Values less than or equal to zero leave the sequence unchanged.
+ * @returns {IEnumerable<TElement>} A deferred sequence excluding the last {@link count} elements.
+ * @remarks The implementation buffers up to {@link count} elements to determine which items to drop, which can increase memory usage for large counts.
  */
 export const skipLast = <TElement>(
     source: Iterable<TElement>,
@@ -1160,12 +1192,12 @@ export const skipLast = <TElement>(
 };
 
 /**
- * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
- * The element that first fails the condition is included in the result.
- * @template TElement
+ * Skips elements while a predicate returns `true` and then yields the remaining elements.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @param predicate The predicate function (accepting element and index) that will be used to test each element.
- * @returns {IEnumerable<TElement>} A new enumerable sequence containing elements starting from the first element that does not satisfy the predicate.
+ * @param predicate Predicate receiving the element and its zero-based index. The first element for which it returns `false` is included in the result.
+ * @returns {IEnumerable<TElement>} A deferred sequence starting with the first element that fails {@link predicate}.
+ * @remarks The predicate's index parameter increments only while elements are being skipped.
  */
 export const skipWhile = <TElement>(
     source: Iterable<TElement>,
@@ -1175,19 +1207,27 @@ export const skipWhile = <TElement>(
 };
 
 /**
- * Splits the sequence into two sequences based on a predicate.
- * The first sequence contains the elements from the start of the input sequence that satisfy the predicate continuously.
- * The second sequence contains the remaining elements, starting from the first element that failed the predicate.
- * Note: This method iterates the source sequence immediately and stores the results.
- * @template TElement
+ * Splits the sequence into the maximal leading span that satisfies a type guard and the remaining elements.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to test each element.
- * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple of two enumerable sequences.
+ * @param predicate Type guard evaluated for each element until it first returns `false`.
+ * @returns {[IEnumerable<TFiltered>, IEnumerable<TElement>]} A tuple containing the contiguous matching prefix and the remainder of the sequence.
+ * @remarks {@link source} is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
  */
 export function span<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): [IEnumerable<TFiltered>, IEnumerable<TElement>];
+
+/**
+ * Splits the sequence into the maximal leading span that satisfies a predicate and the remaining elements.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable.
+ * @param predicate Predicate evaluated for each element until it first returns `false`.
+ * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing the contiguous matching prefix and the remainder of the sequence.
+ * @remarks {@link source} is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
+ */
 export function span<TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement>
@@ -1200,13 +1240,13 @@ export function span<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Selects elements from a sequence at regular intervals (steps).
- * Includes the first element (index 0) and then every 'step'-th element after that.
- * @template TElement
+ * Returns every n-th element of the sequence, starting with the first.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @param step The number of elements to skip between included elements. Must be 1 or greater.
- * @returns {IEnumerable<TElement>} A new enumerable sequence containing elements at the specified step intervals.
- * @throws {InvalidArgumentException} If the step is less than 1.
+ * @param step Positive interval indicating how many elements to skip between yielded items.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing elements whose zero-based index is divisible by {@link step}.
+ * @throws {InvalidArgumentException} Thrown when {@link step} is less than 1.
+ * @remarks {@link source} is enumerated exactly once; elements that are not yielded are still visited to honour the stepping interval.
  */
 export const step = <TElement>(
     source: Iterable<TElement>,
@@ -1216,11 +1256,13 @@ export const step = <TElement>(
 };
 
 /**
- * Returns the sum of the values in the sequence. Assumes elements are numbers or uses a selector to get numbers.
+ * Computes the sum of the numeric values produced for each element.
+ * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
- * @param selector The selector function that will be used to select the numeric value to sum. If not specified, the element itself is used.
- * @returns {number} The sum of the values in the sequence. Returns 0 if the sequence is empty.
- * @throws {NoElementsException} If the source is empty.
+ * @param selector Optional projection that extracts the numeric value. Defaults to interpreting the element itself as a number.
+ * @returns {number} The sum of the projected values.
+ * @throws {NoElementsException} Thrown when {@link source} is empty.
+ * @remarks {@link source} is enumerated exactly once. Supply {@link selector} when elements are not already numeric.
  */
 export const sum = <TElement>(
     source: Iterable<TElement>,

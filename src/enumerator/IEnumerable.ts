@@ -580,155 +580,150 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     rotate(shift: number): IEnumerable<TElement>;
 
     /**
-     * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
-     * If seed is specified, it is used as the initial value for the accumulator, but it is not included in the result sequence.
-     * @template TAccumulate
-     * @param accumulator The accumulator function that will be applied over the sequence.
-     * @param seed The value that will be used as the initial value. If not specified, the first element of the sequence will be used as the seed value and also included as the first element of the result.
-     * @returns {IEnumerable<TAccumulate>} A new enumerable sequence whose elements are the result of each intermediate computation.
-     * @throws {NoElementsException} If the source is empty and seed is not provided.
+     * Produces a running aggregate of the sequence and yields each intermediate accumulator.
+     * @template TAccumulate Result type produced by {@link accumulator}. Defaults to `TElement` when {@link seed} is omitted.
+     * @param accumulator Function that combines the current accumulator value with the next element to produce the next accumulator.
+     * @param seed Optional initial accumulator. When omitted, the first element becomes the initial accumulator and is emitted as the first result.
+     * @returns {IEnumerable<TAccumulate>} A deferred sequence containing every intermediate accumulator produced by {@link accumulator}.
+     * @throws {NoElementsException} Thrown when the sequence is empty and {@link seed} is not provided.
+     * @remarks The source is enumerated exactly once. When {@link seed} is supplied, it is not emitted; only accumulator results appear in the output.
      */
     scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate>;
 
     /**
-     * Projects each element of a sequence into a new form.
-     * @template TResult
-     * @param selector The selector function that will be used to project each element into a new form. The second parameter is the index.
-     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of the selector function.
+     * Projects each element and its zero-based index into a new form.
+     * @template TResult Result type produced by {@link selector}.
+     * @param selector Projection invoked for each element together with its index.
+     * @returns {IEnumerable<TResult>} A deferred sequence containing the values produced by {@link selector}.
+     * @remarks Enumeration is deferred. The index argument increments sequentially starting at zero.
      */
     select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult>;
 
     /**
-     * Projects each element of a sequence into a new form (which is an iterable) and flattens the resulting sequences into one sequence.
-     * @template TResult
-     * @param selector The selector function that will be used to project each element into a new iterable form. The second parameter is the index.
-     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the flattened result of the selector function.
+     * Projects each element and index into an iterable and flattens the results into a single sequence.
+     * @template TResult Element type of the flattened sequence.
+     * @param selector Projection that returns an iterable for each element and its index.
+     * @returns {IEnumerable<TResult>} A deferred sequence containing the concatenated contents of the iterables produced by {@link selector}.
+     * @remarks Each inner iterable is enumerated in order before moving to the next source element. Use this to expand one-to-many relationships.
      */
     selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IEnumerable<TResult>;
 
     /**
-     * Determines whether two sequences are equal by comparing the elements by using an equality comparer for their type.
-     * Compares elements pairwise in order. Sequences must have the same length and equal elements at corresponding positions.
-     * @param iterable The iterable sequence to compare to the source sequence.
-     * @param comparator The equality comparer that will be used to compare the elements. If not specified, the default equality comparer will be used.
-     * @returns {boolean} true if the two source sequences are of equal length and their corresponding elements are equal, according to the specified equality comparer; otherwise, false.
+     * Determines whether the sequence and another iterable contain equal elements in the same order.
+     * @param iterable The iterable to compare against the source sequence.
+     * @param comparator Optional equality comparator used to compare element pairs. Defaults to the library's standard equality comparator.
+     * @returns {boolean} `true` when both sequences have the same length and all corresponding elements are equal; otherwise, `false`.
+     * @remarks Enumeration stops as soon as a mismatch or length difference is observed. Both sequences are fully enumerated only when they are equal.
      */
     sequenceEqual(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): boolean;
 
     /**
-     * Returns a new enumerable sequence whose elements are shuffled randomly.
-     * Note: This method internally converts the sequence to an array to shuffle it.
-     * @template TElement
-     * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are shuffled.
+     * Returns a deferred sequence whose elements appear in random order.
+     * @returns {IEnumerable<TElement>} A sequence containing the same elements as the source but shuffled.
+     * @remarks The implementation materialises all elements into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
      */
     shuffle(): IEnumerable<TElement>;
 
     /**
-     * Returns the only element that satisfies the provided type guard predicate, guaranteeing the guarded type.
-     * Throws an exception if there is not exactly one matching element.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
-     * @returns {TFiltered} The single matching element.
-     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
-     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
-     * @throws {NoMatchingElementException} If no element satisfies the predicate.
-     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the predicate.
+     * Returns the only element that satisfies the provided type guard predicate.
+     * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard evaluated for each element. The returned value is narrowed to `TFiltered`.
+     * @returns {TFiltered} The single element that satisfies {@link predicate}.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when no element satisfies {@link predicate}.
+     * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
+     * @remarks The source is fully enumerated to ensure exactly one matching element exists.
      */
     single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
 
     /**
-     * Returns the only element of a sequence, optionally filtered by a predicate.
-     * Throws an exception if there is not exactly one matching element.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
-     * @returns {TElement} The single element of the sequence (or the single element satisfying the predicate).
-     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
-     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
-     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies the condition.
-     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
-
+     * Returns the only element in the sequence or the only element that satisfies an optional predicate.
+     * @param predicate Optional predicate evaluated for each element. When provided, the result must be the unique element for which it returns `true`.
+     * @returns {TElement} The single element in the sequence or the single element that satisfies {@link predicate}.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {MoreThanOneElementException} Thrown when more than one element exists and {@link predicate} is omitted.
+     * @throws {NoMatchingElementException} Thrown when {@link predicate} is provided and no element satisfies it.
+     * @throws {MoreThanOneMatchingElementException} Thrown when {@link predicate} is provided and more than one element satisfies it.
+     * @remarks The source is fully enumerated to validate uniqueness.
      */
     single(predicate?: Predicate<TElement>): TElement;
 
     /**
-     * Returns the only element that satisfies the provided type guard predicate, or null when no such element exists.
-     * Throws an exception if more than one matching element is found.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The returned element is guaranteed to match the guarded type when found.
-     * @returns {TFiltered|null} The single matching element, or null if none matches.
-     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
-     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
+     * Returns the only element that satisfies the provided type guard predicate, or `null` when no such element exists.
+     * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard evaluated for each element. The returned value is narrowed to `TFiltered` when not `null`.
+     * @returns {TFiltered | null} The single matching element, or `null` when no element satisfies {@link predicate}.
+     * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
+     * @remarks The source is fully enumerated to confirm uniqueness of the matching element.
      */
     singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
 
     /**
-     * Returns the only element of a sequence, or null if the sequence is empty or no element satisfies the predicate.
-     * Throws an exception if more than one matching element exists.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, checks the entire sequence.
-     * @returns {TElement|null} The single element of the sequence (or the single element satisfying the predicate), or null when no such element exists.
-     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
-     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies the condition.
+     * Returns the only element in the sequence or the only element that satisfies an optional predicate, or `null` when no such element exists.
+     * @param predicate Optional predicate evaluated for each element. When provided, the result must be the unique element for which it returns `true`.
+     * @returns {TElement | null} The single element or matching element, or `null` when no element satisfies the conditions.
+     * @throws {MoreThanOneElementException} Thrown when more than one element exists and {@link predicate} is omitted.
+     * @throws {MoreThanOneMatchingElementException} Thrown when {@link predicate} is provided and more than one element satisfies it.
+     * @remarks The source is fully enumerated. Unlike {@link single}, this method returns `null` instead of throwing when no matching element is found.
      */
     singleOrDefault(predicate?: Predicate<TElement>): TElement | null;
 
     /**
-     * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
-     * @template TElement
-     * @param count The number of elements to skip before returning the remaining elements. If the count is zero or negative, all elements are returned.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements that occur after the specified number of skipped elements.
+     * Skips a specified number of elements before yielding the remainder of the sequence.
+     * @param count Number of elements to bypass. Values less than or equal to zero result in no elements being skipped.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing the elements that remain after skipping {@link count} items.
+     * @remarks Enumeration is deferred. Only the skipped prefix is traversed without yielding.
      */
     skip(count: number): IEnumerable<TElement>;
 
     /**
-     * Returns a new enumerable sequence that contains the elements from the source with the last count elements of the source sequence omitted.
-     * @template TElement
-     * @param count The number of elements to omit from the end of the collection. If the count is zero or negative, all elements are returned.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from source with the last count elements omitted.
+     * Omits a specified number of elements from the end of the sequence.
+     * @param count Number of trailing elements to exclude. Values less than or equal to zero leave the sequence unchanged.
+     * @returns {IEnumerable<TElement>} A deferred sequence excluding the last {@link count} elements.
+     * @remarks The implementation buffers up to {@link count} elements to determine which items to drop, which can increase memory usage for large values.
      */
     skipLast(count: number): IEnumerable<TElement>;
 
     /**
-     * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
-     * The element that first fails the condition is included in the result.
-     * @template TElement
-     * @param predicate The predicate function (accepting element and index) that will be used to test each element.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence containing elements starting from the first element that does not satisfy the predicate.
+     * Skips elements while a predicate returns `true` and then yields the remaining elements.
+     * @param predicate Predicate receiving the element and its index. The first element for which it returns `false` is included in the result.
+     * @returns {IEnumerable<TElement>} A deferred sequence starting with the first element that fails {@link predicate}.
+     * @remarks The predicate receives a zero-based index that increments only while elements are being skipped.
      */
     skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
-     * Splits the sequence into two sequences while a type guard predicate continues to return true for consecutive elements.
-     * Once an element fails the predicate, it and the remaining elements are yielded in the second sequence.
-     * Note: This method iterates the source sequence immediately and stores the results.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The first returned sequence is narrowed to the guarded type.
-     * @returns {[IEnumerable<TFiltered>, IEnumerable<TElement>]} A tuple containing the initial span of guarded elements and the remaining elements.
+     * Splits the sequence into the maximal leading span that satisfies a type guard and the remaining elements.
+     * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard evaluated for each element until it first returns `false`.
+     * @returns {[IEnumerable<TFiltered>, IEnumerable<TElement>]} A tuple containing the contiguous matching prefix and the remainder of the sequence.
+     * @remarks The source is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
 
     /**
-     * Splits the sequence into two sequences while a predicate continues to return true for consecutive elements.
-     * Once an element fails the predicate, it and the remaining elements are yielded in the second sequence.
-     * Note: This method iterates the source sequence immediately and stores the results.
-     * @param predicate The predicate function that will be used to test each element.
-     * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple of two enumerable sequences.
+     * Splits the sequence into the maximal leading span that satisfies a predicate and the remaining elements.
+     * @param predicate Predicate evaluated for each element until it first returns `false`.
+     * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing the contiguous matching prefix and the remainder of the sequence.
+     * @remarks The source is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
 
     /**
-     * Selects elements from a sequence at regular intervals (steps).
-     * Includes the first element (index 0) and then every 'step'-th element after that.
-     * @template TElement
-     * @param step The number of elements to skip between included elements. Must be 1 or greater.
-     * @returns {IEnumerable<TElement>} A new enumerable sequence containing elements at the specified step intervals.
-     * @throws {InvalidArgumentException} If the step is less than 1.
+     * Returns every n-th element of the sequence, starting with the first.
+     * @param step Positive interval indicating how many elements to skip between yielded items.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing elements whose zero-based index is divisible by {@link step}.
+     * @throws {InvalidArgumentException} Thrown when {@link step} is less than 1.
+     * @remarks The source is enumerated exactly once; elements that are not yielded are still visited.
      */
     step(step: number): IEnumerable<TElement>;
 
     /**
-     * Returns the sum of the values in the sequence. Assumes elements are numbers or uses a selector to get numbers.
-     * @param selector The selector function that will be used to select the numeric value to sum. If not specified, the element itself is used.
-     * @returns {number} The sum of the values in the sequence. Returns 0 if the sequence is empty.
-     * @throws {NoElementsException} If the source is empty.
+     * Computes the sum of the numeric values produced for each element.
+     * @param selector Optional projection that extracts the numeric value. Defaults to interpreting the element itself as a number.
+     * @returns {number} The sum of the projected values.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks The source is enumerated exactly once. Supply {@link selector} when elements are not already numeric.
      */
     sum(selector?: Selector<TElement, number>): number;
 

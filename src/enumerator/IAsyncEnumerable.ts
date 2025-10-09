@@ -575,138 +575,150 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     rotate(shift: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Applies an accumulator function over the sequence and yields the result of each intermediate computation.
-     * If seed is specified, it is used as the initial value for the accumulator; but it is not included in the result.
-     * @param accumulator The accumulator function that will be applied over the sequence.
-     * @param seed The value that will be used as the initial value. If not specified, first element of the sequence will be used as seed value.
-     * @throws {NoElementsException} If the source is empty and seed is not provided.
+     * Accumulates the asynchronous sequence and emits each intermediate result.
+     * @template TAccumulate Accumulator type produced by {@link accumulator}; defaults to `TElement` when {@link seed} is omitted.
+     * @param accumulator Function that merges the current accumulator value with the next element to produce the subsequent accumulator.
+     * @param seed Optional initial accumulator. When omitted, the first element supplies the initial accumulator and is emitted as the first result.
+     * @returns {IAsyncEnumerable<TAccumulate>} An async sequence containing every intermediate accumulator produced by {@link accumulator}.
+     * @throws {NoElementsException} Thrown when the sequence is empty and {@link seed} is not provided.
+     * @remarks The source is consumed asynchronously exactly once. Supplying {@link seed} prevents exceptions on empty sources but the seed itself is not emitted.
      */
     scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate>;
 
     /**
-     * Projects each element of a sequence into a new form.
-     * @param selector The selector function that will be used to project each element into a new form.
+     * Transforms each element and its zero-based index into a new value.
+     * @template TResult Result type produced by {@link selector}.
+     * @param selector Projection invoked for each element together with its index.
+     * @returns {IAsyncEnumerable<TResult>} An async sequence containing the values produced by {@link selector}.
+     * @remarks Enumeration is deferred. The index argument increments sequentially starting at zero.
      */
     select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult>;
 
     /**
-     * Projects each element of a sequence into a new form and flattens the resulting sequences into one sequence.
-     * @param selector The selector function that will be used to project each element into a new form.
+     * Projects each element and index into an iterable and flattens the results into a single asynchronous sequence.
+     * @template TResult Element type produced by the flattened iterables.
+     * @param selector Projection that returns an iterable for each element and its index.
+     * @returns {IAsyncEnumerable<TResult>} An async sequence containing the concatenated contents of the iterables produced by {@link selector}.
+     * @remarks Each inner iterable is fully enumerated in order before the next source element is processed, preserving the relative ordering of results.
      */
     selectMany<TResult>(selector: IndexedSelector<TElement, Iterable<TResult>>): IAsyncEnumerable<TResult>;
 
     /**
-     * Determines whether two sequences are equal by comparing the elements by using an equality comparer for their type.
-     * @param enumerable The enumerable sequence to compare to the source sequence.
-     * @param comparator The equality comparer that will be used to compare the elements. If not specified, default equality comparer will be used.
+     * Determines whether the asynchronous sequence and another async iterable contain equal elements in the same order.
+     * @param enumerable Async iterable to compare against the source sequence.
+     * @param comparator Optional equality comparator used to compare element pairs. Defaults to the library's standard equality comparator.
+     * @returns {Promise<boolean>} A promise that resolves to `true` when both sequences have the same length and all corresponding elements are equal; otherwise, `false`.
+     * @remarks Enumeration stops as soon as a mismatch or length difference is observed. Both sequences are fully enumerated only when they are equal.
      */
     sequenceEqual(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
     /**
-     * Returns a new enumerable sequence whose elements are shuffled.
+     * Returns a deferred asynchronous sequence whose elements appear in random order.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the same elements as the source but shuffled.
+     * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
      */
     shuffle(): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns the only element that satisfies the provided type guard predicate and narrows the resulting type.
-     * Throws an exception if there is not exactly one matching element.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
-     * @returns {Promise<TFiltered>} A promise that resolves to the single matching element.
-     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
-     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
-     * @throws {NoMatchingElementException} If no element satisfies the predicate.
-     * @throws {MoreThanOneMatchingElementException} If more than one element satisfies the predicate.
+     * Returns the only element that satisfies the provided type guard predicate.
+     * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard evaluated for each element. The resolved element is narrowed to `TFiltered`.
+     * @returns {Promise<TFiltered>} A promise that resolves to the single element satisfying {@link predicate}.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when no element satisfies {@link predicate}.
+     * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
+     * @remarks The source is fully enumerated asynchronously to ensure exactly one matching element exists.
      */
     single<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
 
     /**
-     * Returns the only element of a sequence, optionally filtered by a predicate.
-     * Throws an exception if there is not exactly one matching element.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @returns {Promise<TElement>} A promise that resolves to the single element of the sequence.
-     * @throws {NoElementsException} If the source (or filtered sequence) is empty.
-     * @throws {MoreThanOneElementException} If the source (or filtered sequence) contains more than one element.
-     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
-     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies it.
+     * Returns the only element in the sequence or the only element that satisfies an optional predicate.
+     * @param predicate Optional predicate evaluated for each element. When provided, the result must be the unique element for which it returns `true`.
+     * @returns {Promise<TElement>} A promise that resolves to the single element in the sequence or the single element that satisfies {@link predicate}.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {MoreThanOneElementException} Thrown when more than one element exists and {@link predicate} is omitted.
+     * @throws {NoMatchingElementException} Thrown when {@link predicate} is provided and no element satisfies it.
+     * @throws {MoreThanOneMatchingElementException} Thrown when {@link predicate} is provided and more than one element satisfies it.
+     * @remarks The source is fully enumerated asynchronously to validate uniqueness.
      */
     single(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
-     * Returns the only element that satisfies the provided type guard predicate, or resolves to null when no such element exists.
-     * Throws an exception if more than one matching element is found.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
-     * @returns {Promise<TFiltered | null>} A promise that resolves to the single matching element or null if none matches.
-     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
-     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies it.
+     * Returns the only element that satisfies the provided type guard predicate, or `null` when no such element exists.
+     * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard evaluated for each element. The resolved element is narrowed to `TFiltered` when not `null`.
+     * @returns {Promise<TFiltered | null>} A promise that resolves to the single matching element, or `null` when no element satisfies {@link predicate}.
+     * @throws {MoreThanOneMatchingElementException} Thrown when more than one element satisfies {@link predicate}.
+     * @remarks The source is fully enumerated asynchronously to confirm uniqueness of the matching element.
      */
     singleOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
 
     /**
-     * Returns the only element of a sequence, or null if the sequence is empty or no element satisfies the predicate.
-     * Throws an exception if more than one matching element exists.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the only element of the sequence will be returned.
-     * @returns {Promise<TElement | null>} A promise that resolves to the single element of the sequence or null when no such element exists.
-     * @throws {MoreThanOneElementException} If the source contains more than one element (and no predicate is used).
-     * @throws {MoreThanOneMatchingElementException} If a predicate is specified and more than one element satisfies it.
+     * Returns the only element in the sequence or the only element that satisfies an optional predicate, or resolves to `null` when no such element exists.
+     * @param predicate Optional predicate evaluated for each element. When provided, the result must be the unique element for which it returns `true`.
+     * @returns {Promise<TElement | null>} A promise that resolves to the single element or matching element, or `null` when no element satisfies the conditions.
+     * @throws {MoreThanOneElementException} Thrown when more than one element exists and {@link predicate} is omitted.
+     * @throws {MoreThanOneMatchingElementException} Thrown when {@link predicate} is provided and more than one element satisfies it.
+     * @remarks Unlike {@link single}, this method communicates the absence of a matching element by resolving to `null`.
      */
     singleOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
-     * Bypasses a specified number of elements in a sequence and then returns the remaining elements.
-     * @param count The number of elements to skip before returning the remaining elements.
+     * Skips a specified number of elements before yielding the remainder of the asynchronous sequence.
+     * @param count Number of elements to bypass. Values less than or equal to zero result in no elements being skipped.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the elements that remain after skipping {@link count} items.
+     * @remarks Enumeration advances through the skipped prefix without yielding any of those elements.
      */
     skip(count: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns a new enumerable sequence that contains the elements from source with the last count elements of the source sequence omitted.
-     * @param count The number of elements to omit from the end of the collection.
+     * Omits a specified number of elements from the end of the sequence.
+     * @param count Number of trailing elements to exclude. Values less than or equal to zero leave the sequence unchanged.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence excluding the last {@link count} elements.
+     * @remarks The implementation buffers up to {@link count} elements to determine which items to drop, which can increase memory usage for large counts.
      */
     skipLast(count: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
-     * @param predicate The predicate function that will be used to test each element.
+     * Skips elements while a predicate returns `true` and then yields the remaining elements.
+     * @param predicate Predicate receiving the element and its zero-based index. The first element for which it returns `false` is included in the result.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence starting with the first element that fails {@link predicate}.
+     * @remarks The predicate's index parameter increments only while elements are being skipped.
      */
     skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Splits the sequence into two sequences while a type guard predicate continues to return true for consecutive elements.
-     * Once the predicate returns false, the remaining elements are emitted in the second sequence.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The first resulting sequence is narrowed to the guarded type.
-     * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>} A promise that resolves to a tuple containing the guarded prefix and the remainder of the sequence.
+     * Splits the sequence into the maximal leading span that satisfies a type guard and the remaining elements.
+     * @template TFiltered extends TElement Narrowed element type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard evaluated for each element until it first returns `false`.
+     * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>} A promise that resolves to the contiguous matching prefix and the remainder of the sequence.
+     * @remarks The source is fully enumerated asynchronously and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]>;
 
     /**
-     * Splits the sequence into two sequences while a predicate continues to return true for consecutive elements.
-     * Once the predicate returns false, the remaining elements are emitted in the second sequence.
-     * @param predicate The predicate function that will be used to test each element.
-     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A promise that resolves to a tuple containing the matching prefix and the remainder of the sequence.
+     * Splits the sequence into the maximal leading span that satisfies a predicate and the remaining elements.
+     * @param predicate Predicate evaluated for each element until it first returns `false`.
+     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A promise that resolves to the contiguous matching prefix and the remainder of the sequence.
+     * @remarks The source is fully enumerated asynchronously and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
-     * Skips elements in a sequence according to a specified step size.
-     *
-     * Example:
-     * ```typescript
-     *    const numberList = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-     *    const result = numberList.step(2).toArray(); // [1, 3, 5, 7, 9]
-     *    const result2 = numberList.step(3).toArray(); // [1, 4, 7, 10]
-     * ```
-     * @template TElement
-     * @param step The number of elements to skip between each element.
-     * @returns {IAsyncEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence with the elements skipped according to the specified step size.
+     * Returns every n-th element of the sequence, starting with the first.
+     * @param step Positive interval indicating how many elements to skip between yielded items.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing elements whose zero-based index is divisible by {@link step}.
+     * @throws {InvalidArgumentException} Thrown when {@link step} is less than 1.
+     * @remarks The source is enumerated asynchronously exactly once; elements that are not yielded are still visited to honour the stepping interval.
      */
     step(step: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns the sum of the values in the sequence.
-     * @param selector The selector function that will be used to select the value to sum. If not specified, the value itself will be used.
-     * @throws {NoElementsException} If the source is empty.
+     * Computes the sum of the numeric values produced for each element.
+     * @param selector Optional projection that extracts the numeric value. Defaults to interpreting the element itself as a number.
+     * @returns {Promise<number>} A promise that resolves to the sum of the projected values.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks The source is enumerated asynchronously exactly once. Supply {@link selector} when elements are not already numeric.
      */
     sum(selector?: Selector<TElement, number>): Promise<number>;
 
