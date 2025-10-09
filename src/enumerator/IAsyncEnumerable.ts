@@ -298,84 +298,88 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     forEach(action: IndexedAction<TElement>): Promise<void>;
 
     /**
-     * Groups the elements of the sequence according to a specified key selector function.
-     * @param keySelector The key selector function that will be used for grouping.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * Partitions the async sequence into groups based on keys projected from each element.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Selector used to derive the grouping key for each element.
+     * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<IGroup<TKey, TElement>>} An async sequence of groups, each exposing the key and the elements that share it.
+     * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
      */
     groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<IGroup<TKey, TElement>>;
 
     /**
-     * Correlates the elements of two sequences based on equality of keys and groups the results.
-     * @param inner The enumerable sequence to join to the first sequence.
-     * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
-     * @param innerKeySelector The key selector function that will be used for selecting the key for an element from the second sequence.
-     * @param resultSelector The result selector function that will be used to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
+     * Correlates each element of the async sequence with a collection of matching elements from another async sequence.
+     * @template TInner Type of elements in the inner sequence.
+     * @template TKey Type of key produced by the key selectors.
+     * @template TResult Type of element returned by {@link resultSelector}.
+     * @param inner Async sequence whose elements are grouped and joined with the outer elements.
+     * @param outerKeySelector Selector that extracts the join key from each outer element.
+     * @param innerKeySelector Selector that extracts the join key from each inner element.
+     * @param resultSelector Projection that combines an outer element with an `IEnumerable` of matching inner elements.
+     * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+     * @returns {IAsyncEnumerable<TResult>} An async sequence produced by applying {@link resultSelector} to each outer element and its matching inner elements.
+     * @remarks The inner sequence is enumerated once to build an in-memory lookup before outer elements are processed. Each outer element is then evaluated lazily and preserves the original outer ordering.
      */
     groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult>;
 
     /**
-     * Returns an enumerable of tuples, each containing the index and the element from the source sequence.
-     * @template TElement
-     * @returns {IAsyncEnumerable<[number, TElement]>} An enumerable of tuples, each containing the index and the element from the source sequence.
+     * Enumerates the async sequence while exposing the zero-based index alongside each element.
+     * @returns {IAsyncEnumerable<[number, TElement]>} An async sequence of `[index, element]` tuples.
+     * @remarks The index is assigned in the order elements are produced. Enumeration is deferred until the result is iterated.
      */
     index(): IAsyncEnumerable<[number, TElement]>;
 
     /**
-     * Interleaves elements from the current sequence with elements from another sequence.
-     * @param iterable The iterable sequence to interleave with the source sequence.
+     * Interleaves the async sequence with another iterable, yielding elements in alternating order.
+     * @template TSecond Type of elements in the second iterable.
+     * @param iterable Async iterable whose elements are alternated with the current sequence.
+     * @returns {IAsyncEnumerable<TElement | TSecond>} An async sequence that alternates between elements from this sequence and `iterable`.
+     * @remarks If one sequence is longer, the remaining elements are appended after the shorter sequence is exhausted. Enumeration is deferred.
      */
     interleave<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<TElement | TSecond>;
 
     /**
-     * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
-     *
-     * About the difference between comparator and orderComparator:
-     * - If both comparator and orderComparator are specified, the order comparator will be used for internal operations.
-     * - If only one of the comparators is specified, the specified comparator will be used for internal operations.
-     * - If no comparator is specified, it will use the <b>default equality</b> comparer.
-     *
-     * If the elements of the enumerable can be sorted, it is advised to use the orderComparator due to its better performance.
-     *
-     * Example:
-     * ```
-     *     var numberList1 = new List([1, 2, 2, 3, 3, 3, 4, 5]);
-     *     var numberList2 = new List([2, 5, 5, 6, 7, 8, 8]);
-     *     var result = numberList1.except(numberList2).toArray(); // [2, 5]
-     * ```
-     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be returned.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @throws {Error} If the enumerable is null or undefined.
+     * Returns the elements common to this async sequence and the specified iterable.
+     * @param enumerable Async sequence whose elements are compared against the current sequence.
+     * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the intersection of the two sequences.
+     * @remarks The original ordering of this sequence is preserved. The `enumerable` is fully enumerated to build the inclusion set prior to yielding results.
      */
     intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Produces the set intersection of two sequences by using the specified key selector function and comparator.
-     * @template TKey The type of the key returned by the key selector.
-     * @param enumerable The enumerable sequence whose distinct elements that also appear in the first sequence will be returned.
-     * @param keySelector The key selector function that will be used for selecting the key for each element.
-     * @param comparator The comparator function that will be used for equality comparison or order comparison of selected keys. If not provided, default equality comparison is used.
-     * @returns {IAsyncEnumerable<TElement>} A sequence that contains the elements that form the set intersection of the source sequence and the enumerable sequence.
-     * @throws {Error} If the enumerable is null or undefined.
+     * Returns the elements whose keys are common to this async sequence and the specified iterable.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param enumerable Async sequence whose elements define the keys considered part of the intersection.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param comparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the intersection of the two sequences based on matching keys.
+     * @remarks The `enumerable` is fully enumerated to materialise the inclusion keys before yielding results. Source ordering is preserved.
      */
     intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Intersperses a specified element between each element of the sequence.
-     * @template TElement, TSeparator
-     * @param separator The element that will be interspersed between each element of the sequence.
-     * @returns {IAsyncEnumerable<TElement|TSeparator>} A new enumerable sequence whose elements are the elements of the source sequence interspersed with the specified element.
+     * Inserts the specified separator between adjoining elements.
+     * @template TSeparator Type of separator to insert. Defaults to `TElement`.
+     * @param separator Value inserted between consecutive elements.
+     * @returns {IAsyncEnumerable<TElement | TSeparator>} An async sequence containing the original elements with separators interleaved.
+     * @remarks No separator precedes the first element or follows the last element.
      */
     intersperse<TSeparator = TElement>(separator: TSeparator): IAsyncEnumerable<TElement | TSeparator>;
 
     /**
-     * Correlates the elements of two sequences based on equality of keys
-     * @param inner The enumerable sequence to join to the first sequence.
-     * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
-     * @param innerKeySelector The key selector function that will be used for selecting the key for an element from the second sequence.
-     * @param resultSelector The result selector function that will be used to create a result element from two matching elements.
-     * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, default equality comparison is used.
-     * @param leftJoin If true, the result sequence will have the value of null for unmatched inner elements.
+     * Produces a projection from the async sequence and a second async sequence by matching elements that share an identical join key.
+     * @template TInner Type of elements in the inner sequence.
+     * @template TKey Type of key produced by the key selectors.
+     * @template TResult Type of element returned by {@link resultSelector}.
+     * @param inner Async sequence whose elements are joined with the outer sequence.
+     * @param outerKeySelector Selector that extracts the join key from each outer element.
+     * @param innerKeySelector Selector that extracts the join key from each inner element.
+     * @param resultSelector Projection that combines an outer element with a matching inner element. When {@link leftJoin} is `true` and no match exists, `null` is supplied as the inner value.
+     * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison when omitted.
+     * @param leftJoin When `true`, outer elements with no matching inner element are included once with `null` provided to {@link resultSelector}. Defaults to `false` (inner join).
+     * @returns {IAsyncEnumerable<TResult>} An async sequence generated by applying {@link resultSelector} to each matching pair (and unmatched outer elements when {@link leftJoin} is enabled).
+     * @remarks The inner sequence is fully enumerated to build an in-memory lookup before outer elements are processed. The outer sequence is then enumerated lazily and its original ordering is preserved.
      */
     join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult>;
 

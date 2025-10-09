@@ -503,12 +503,14 @@ export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement
 };
 
 /**
- * Groups the elements of the sequence according to a specified key selector function.
- * @template TKey, TElement
+ * Partitions the sequence into groups based on keys projected from each element.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used for grouping.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<IGroup<TKey, TElement>>} A new enumerable sequence whose elements are groups that contain the elements of the source sequence.
+ * @param keySelector Selector used to derive the grouping key for each element.
+ * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<IGroup<TKey, TElement>>} A sequence of groups, each exposing the key and the elements that share it.
+ * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
  */
 export const groupBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -519,16 +521,19 @@ export const groupBy = <TElement, TKey>(
 };
 
 /**
- * Correlates the elements of two sequences based on equality of keys and groups the results.
- * The result contains elements from the first (outer) sequence and a collection of matching elements from the second (inner) sequence.
- * @template TInner, TKey, TResult, TElement
- * @param source The source iterable.
- * @param innerEnumerable The enumerable sequence to join to the first sequence.
- * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
- * @param innerKeySelector The key selector function that will be used for selecting the key for an element from the second sequence.
- * @param resultSelector The result selector function that will be used to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of the group join operation.
+ * Correlates each element of the sequence with a collection of matching elements from another sequence.
+ * @template TElement Type of elements within the outer sequence.
+ * @template TInner Type of elements within the inner sequence.
+ * @template TKey Type of key produced by the key selectors.
+ * @template TResult Type of element returned by {@link resultSelector}.
+ * @param source The outer sequence.
+ * @param innerEnumerable Sequence whose elements are grouped and joined with the outer elements.
+ * @param outerKeySelector Selector that extracts the join key from each outer element.
+ * @param innerKeySelector Selector that extracts the join key from each inner element.
+ * @param resultSelector Projection that combines an outer element with an `IEnumerable` of matching inner elements.
+ * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+ * @returns {IEnumerable<TResult>} A sequence produced by applying {@link resultSelector} to each outer element and its matching inner elements.
+ * @remarks The inner sequence is enumerated once to build an in-memory lookup before outer elements are processed. Each outer element is then evaluated lazily and preserves the original outer ordering.
  */
 export const groupJoin = <TElement, TInner, TKey, TResult>(
     source: Iterable<TElement>,
@@ -542,36 +547,37 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
 };
 
 /**
- * Returns an enumerable of tuples, each containing the index and the element from the source sequence.
- * @template TElement
+ * Enumerates the sequence while exposing the zero-based index alongside each element.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @returns {IEnumerable<[number, TElement]>} A new enumerable sequence whose elements are tuples of the index and the element.
+ * @returns {IEnumerable<[number, TElement]>} A sequence of `[index, element]` tuples.
+ * @remarks The index is assigned in the order elements are produced. Enumeration is deferred until the result is iterated.
  */
 export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number, TElement]> => {
     return from(source).index();
 };
 
 /**
- * Interleaves the source sequence with another iterable, yielding elements in alternating order.
- * @template TElement
- * @template TSecond
+ * Interleaves the sequence with another iterable, yielding elements in alternating order.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TSecond Type of elements in the second iterable.
  * @param source The source iterable.
- * @param other The iterable sequence whose elements will be interleaved with the source sequence.
- * @returns {IEnumerable<TElement | TSecond>} A new enumerable sequence that alternates between elements from the source and the provided iterable.
+ * @param other Iterable whose elements are alternated with the current sequence.
+ * @returns {IEnumerable<TElement | TSecond>} A sequence that alternates between elements from {@link source} and {@link other}.
+ * @remarks If one sequence is longer, the remaining elements are appended after the shorter sequence is exhausted. Enumeration is deferred.
  */
 export const interleave = <TElement, TSecond>(source: Iterable<TElement>, other: Iterable<TSecond>): IEnumerable<TElement | TSecond> => {
     return from(source).interleave(other);
 };
 
 /**
- * Produces the set intersection of two sequences by using the specified equality comparer or order comparer to compare values.
- * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
- * @template TElement
+ * Returns the elements common to {@link source} and {@link other}.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
- * @param comparator The comparator function that will be used for item comparison. If not provided, a default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set intersection of the two sequences.
- * @throws {Error} If the iterable is null or undefined.
+ * @param other Iterable whose elements are compared against {@link source}.
+ * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+ * @returns {IEnumerable<TElement>} A sequence containing the intersection of the two sequences.
+ * @remarks The original ordering of {@link source} is preserved. {@link other} is fully enumerated to build the inclusion set prior to yielding results.
  */
 export const intersect = <TElement>(
     source: Iterable<TElement>,
@@ -582,16 +588,15 @@ export const intersect = <TElement>(
 };
 
 /**
- * Produces the set intersection of two sequences by using the specified key selector function to compare elements.
- * If the elements of the iterable can be sorted, it is advised to use an order comparator for better performance.
- * @template TElement, TKey
- * @typeParam TElement The type of the elements in the source sequence.
- * @typeParam TKey The type of the key that will be used for comparison.
+ * Returns the elements whose keys are common to {@link source} and {@link other}.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
  * @param source The source iterable.
- * @param other The iterable sequence whose distinct elements that also appear in the first sequence will be returned.
- * @param keySelector The key selector function that will be used for selecting a key which will be used for comparison.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are the set intersection of the two sequences.
+ * @param other Iterable whose elements define the keys considered part of the intersection.
+ * @param keySelector Selector used to project each element to the key used for comparison.
+ * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
+ * @returns {IEnumerable<TElement>} A sequence containing the intersection of the two sequences based on matching keys.
+ * @remarks {@link other} is fully enumerated to materialise the inclusion keys before yielding results. Source ordering is preserved.
  */
 export const intersectBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -603,11 +608,13 @@ export const intersectBy = <TElement, TKey>(
 };
 
 /**
- * Intersperses a specified element between each element of the sequence.
- * @template TElement, TSeparator
+ * Inserts the specified separator between adjoining elements.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TSeparator Type of separator to insert.
  * @param source The source iterable.
- * @param separator The element that will be interspersed between each element of the sequence.
- * @returns {IEnumerable<TElement|TSeparator>} A new enumerable sequence whose elements are the elements of the source sequence interspersed with the specified element.
+ * @param separator Value inserted between consecutive elements.
+ * @returns {IEnumerable<TElement | TSeparator>} A sequence containing the original elements with separators interleaved.
+ * @remarks No separator precedes the first element or follows the last element.
  */
 export const intersperse = <TElement, TSeparator>(
     source: Iterable<TElement>,
@@ -617,16 +624,20 @@ export const intersperse = <TElement, TSeparator>(
 };
 
 /**
- * Correlates the elements of two sequences based on equality of keys.
- * @template TInner, TKey, TResult, TElement
- * @param source The source iterable.
- * @param innerEnumerable The enumerable sequence to join to the first sequence.
- * @param outerKeySelector The key selector function that will be used for selecting the key for an element from the first sequence.
- * @param innerKeySelector The key selector function that will be used for selecting the key for an element from the second sequence.
- * @param resultSelector The result selector function that will be used to create a result element from two matching elements.
- * @param keyComparator The comparator function that will be used for equality comparison of selected keys. If not provided, the default equality comparison is used.
- * @param leftJoin If true, the result sequence will include outer elements that have no matching inner element, with null provided as the inner element to the resultSelector. Defaults to false.
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of the join operation.
+ * Produces a projection from the sequence and a second sequence by matching elements that share an identical join key.
+ * @template TElement Type of elements within the outer sequence.
+ * @template TInner Type of elements within the inner sequence.
+ * @template TKey Type of key produced by the key selectors.
+ * @template TResult Type of element returned by {@link resultSelector}.
+ * @param source The outer sequence.
+ * @param innerEnumerable Sequence whose elements are joined with the outer sequence.
+ * @param outerKeySelector Selector that extracts the join key from each outer element.
+ * @param innerKeySelector Selector that extracts the join key from each inner element.
+ * @param resultSelector Projection that combines an outer element with a matching inner element. When {@link leftJoin} is `true` and no match exists, `null` is supplied as the inner value.
+ * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison when omitted.
+ * @param leftJoin When `true`, outer elements with no matching inner element are included once with `null` provided to {@link resultSelector}. Defaults to `false` (inner join).
+ * @returns {IEnumerable<TResult>} A sequence generated by applying {@link resultSelector} to each matching pair (and unmatched outer elements when {@link leftJoin} is enabled).
+ * @remarks The inner sequence is fully enumerated to build an in-memory lookup before outer elements are processed. The outer sequence is then enumerated lazily and its original ordering is preserved.
  */
 export const join = <TElement, TInner, TKey, TResult>(
     source: Iterable<TElement>,
