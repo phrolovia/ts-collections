@@ -713,8 +713,4 @@ Provides LINQ-like query capabilities for asynchronous collections (e.g., `Async
 
 ## API
 
-Full API documentation can be found here:
-
-```
-https://phrolovia.github.io/ts-collections/
-```
+Full API documentation can be found [here](https://phrolovia.github.io/ts-collections/).
