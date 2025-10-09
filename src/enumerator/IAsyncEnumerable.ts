@@ -1032,54 +1032,53 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
 
     /**
-     * Filters a sequence of values based on a type guard predicate, narrowing the resulting element type.
-     * @template TFiltered
-     * @param predicate The predicate function (accepting element and index) that acts as a type guard. Return true to keep the element, false to filter it out.
-     * @returns {IAsyncEnumerable<TFiltered>} An async enumerable containing elements matching the guarded type.
+     * Filters the asynchronous sequence using a type guard predicate and narrows the resulting element type.
+     * @template TFiltered extends TElement
+     * @param predicate Type guard invoked with each element and its zero-based index. Return `true` to keep the element in the results.
+     * @returns {IAsyncEnumerable<TFiltered>} A deferred async sequence containing only elements that satisfy the type guard.
+     * @throws {unknown} Re-throws any error thrown while iterating the source or awaiting {@link predicate}.
+     * @remarks Enumeration is lazy; {@link predicate} executes on demand and may run concurrently when the consumer requests multiple elements in parallel.
      */
     where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
 
     /**
-     * Filters a sequence of values based on a predicate.
-     * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
-     * @returns {IAsyncEnumerable<TElement>} An async enumerable containing elements that satisfy the predicate.
+     * Filters the asynchronous sequence using a predicate that can inspect both the element and its position.
+     * @param predicate Predicate invoked with each element and its zero-based index. Return `true` to keep the element in the results.
+     * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing only the elements that satisfy {@link predicate}.
+     * @throws {unknown} Re-throws any error thrown while iterating the source or awaiting {@link predicate}.
+     * @remarks Enumeration is lazy; {@link predicate} executes on demand and iteration stops as soon as the consumer stops awaiting further elements.
      */
     where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns an enumerable sequence of windows of the specified size.
-     * If the size is less than or equal to 0, an error will be thrown.
-     * If the size is greater than the number of elements in the sequence, an empty sequence will be returned.
-     *
-     * The windows will overlap, meaning that each element will be included in multiple windows.
-     *
-     * Example:
-     * ```typescript
-     *   const numberList = new List([1, 2, 3, 4, 5]);
-     *   const result = numberList.windows(3).toArray(); // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
-     *   const result2 = numberList.windows(1).toArray(); // [[1], [2], [3], [4], [5]]
-     *   const result3 = numberList.windows(5).toArray(); // [[1, 2, 3, 4, 5]]
-     *   const result4 = numberList.windows(6).toArray(); // []
-     *   const result5 = numberList.windows(0).toArray(); // Error
-     *   const result6 = numberList.windows(-1).toArray(); // Error
-     * ```
-     * @template TElement
-     * @param size The size of the windows.
-     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A new enumerable sequence that contains the specified number of elements from the start of the input sequence.
-     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     * Produces an asynchronous sequence of sliding windows of fixed size over the source sequence.
+     * @param size Length of each window; must be at least 1.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A deferred async sequence where each element exposes one contiguous window from the source.
+     * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1.
+     * @throws {unknown} Re-throws any error thrown while asynchronously iterating the source sequence.
+     * @remarks Windows overlap and are yielded only after enough source elements are observed to fill {@link size}. Trailing partial windows are omitted.
      */
     windows(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
-     * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
-     * @param iterable The iterable sequence to merge with the first sequence.
+     * Combines this asynchronous sequence with {@link iterable} and yields tuples of aligned elements.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @param iterable The secondary async sequence whose elements are paired with the source elements.
+     * @returns {IAsyncEnumerable<[TElement, TSecond]>} A deferred async sequence of `[source, other]` tuples truncated to the length of the shorter input.
+     * @throws {unknown} Re-throws any error thrown while iterating either async sequence.
+     * @remarks Enumeration is lazy; pairs are produced on demand and iteration stops when either sequence completes. Use the overload that accepts a `zipper` when you need to project custom results.
      */
     zip<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
 
     /**
-     * Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
-     * @param iterable The iterable sequence to merge with the first sequence.
-     * @param zipper The function that specifies how to merge the elements from the two sequences. If this is not specified, the merge result will be a tuple of two elements.
+     * Combines this asynchronous sequence with {@link iterable} and projects each aligned pair using {@link zipper}.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @template TResult Result type produced by {@link zipper}.
+     * @param iterable The secondary async sequence whose elements are paired with the source elements.
+     * @param zipper Projection invoked with each `[source, other]` pair to produce the resulting element. When omitted, the overload returning tuples should be used instead.
+     * @returns {IAsyncEnumerable<TResult>} A deferred async sequence of projected results truncated to the length of the shorter input.
+     * @throws {unknown} Re-throws any error thrown while iterating either async sequence or executing the `zipper` function.
+     * @remarks Enumeration is lazy; the `zipper` function executes on demand for each pair and iteration stops when either sequence completes.
      */
     zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
 }

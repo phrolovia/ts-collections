@@ -1815,16 +1815,28 @@ export const unionBy = <TElement, TKey>(
 };
 
 /**
- * Filters a sequence of values based on a predicate.
- * @template TElement
- * @param source The source iterable.
- * @param predicate The predicate function (accepting element and index) that will be used to test each element. Return true to keep the element, false to filter it out.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains elements from the input sequence that satisfy the condition.
+ * Filters {@link source} using a type guard predicate and narrows the resulting element type.
+ * @template TElement Type of elements within {@link source}.
+ * @template TFiltered extends TElement Narrowed element type produced by {@link predicate}.
+ * @param source The iterable to filter.
+ * @param predicate Type guard invoked with each element and its zero-based index. Return `true` to keep the element in the results.
+ * @returns {IEnumerable<TFiltered>} A deferred sequence containing only elements that satisfy the type guard.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link predicate}.
+ * @remarks Enumeration is lazy; {@link predicate} executes on demand and may be invoked again when consumers restart iteration.
  */
 export function where<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedTypePredicate<TElement, TFiltered>
 ): IEnumerable<TFiltered>;
+/**
+ * Filters {@link source} using a predicate that can inspect both the element and its position.
+ * @template TElement Type of elements within {@link source}.
+ * @param source The iterable to filter.
+ * @param predicate Predicate invoked with each element and its zero-based index. Return `true` to keep the element in the results.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing only the elements that satisfy {@link predicate}.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link predicate}.
+ * @remarks Enumeration is lazy; {@link predicate} executes on demand and iteration stops as soon as the consumer stops reading.
+ */
 export function where<TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement>
@@ -1837,13 +1849,14 @@ export function where<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Returns an enumerable sequence of sliding windows of the specified size over the source sequence.
- * Each window is an IEnumerable itself.
- * @template TElement
- * @param source The source iterable.
- * @param size The size of the windows. Must be 1 or greater.
- * @returns {IEnumerable<IEnumerable<TElement>>} A new enumerable sequence where each element is a window (as an IEnumerable) of the specified size.
- * @throws {InvalidArgumentException} If size is less than or equal to 0.
+ * Produces a sequence of sliding windows of fixed size over {@link source}.
+ * @template TElement Type of elements within {@link source}.
+ * @param source The iterable to window.
+ * @param size Length of each window; must be at least 1.
+ * @returns {IEnumerable<IEnumerable<TElement>>} A deferred sequence where each element exposes one contiguous window from {@link source}.
+ * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source}.
+ * @remarks Windows overlap and are yielded only after enough source elements are observed to fill {@link size}. Trailing partial windows are omitted.
  */
 export const windows = <TElement>(
     source: Iterable<TElement>,
@@ -1853,15 +1866,16 @@ export const windows = <TElement>(
 };
 
 /**
- * Applies a specified function (zipper) to the corresponding elements of two sequences, producing a sequence of the results.
- * If the two sequences are of different lengths, the resulting sequence will have the length of the shorter sequence.
- * @template TElement The type of elements in the first sequence.
- * @template TSecond The type of elements in the second sequence.
- * @template TResult The type of elements in the result sequence, as determined by the zipper function.
- * @param source The source iterable.
- * @param other The iterable sequence to merge with the first sequence.
- * @param zipper The function that specifies how to merge the elements from the two sequences into a result element.
- * @returns {IEnumerable<TResult>} A new enumerable sequence that contains the result of applying the zipper function to corresponding elements.
+ * Combines {@link source} with {@link other} and optionally projects each aligned pair using {@link zipper}.
+ * @template TElement Type of elements within {@link source}.
+ * @template TSecond Type of elements within {@link other}.
+ * @template TResult Result type produced by {@link zipper}; defaults to `[TElement, TSecond]` when {@link zipper} is omitted.
+ * @param source The primary sequence whose elements lead each pair.
+ * @param other The secondary sequence whose elements are paired with {@link source}.
+ * @param zipper Optional projection invoked with each `[source, other]` pair. When omitted, the tuples `[source, other]` are emitted.
+ * @returns {IEnumerable<TResult>} A deferred sequence of projected results truncated to the length of the shorter input.
+ * @throws {unknown} Re-throws any error thrown while iterating either input sequence or executing {@link zipper}.
+ * @remarks Enumeration is lazy; pairs are produced on demand and iteration stops as soon as either input completes.
  */
 export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
     source: Iterable<TElement>,
