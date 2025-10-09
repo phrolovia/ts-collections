@@ -631,6 +631,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Enumerates the async sequence while exposing the zero-based index alongside each element.
      * @returns {IAsyncEnumerable<[number, TElement]>} An async sequence of `[index, element]` tuples.
      * @remarks The index is assigned in the order elements are produced. Enumeration is deferred until the result is iterated.
+     * @example
+     * ```typescript
+     * const letters = fromAsync(['a', 'b', 'c']);
+     * const indexed = await letters.index().toArray();
+     * console.log(indexed); // [[0, 'a'], [1, 'b'], [2, 'c']]
+     * ```
      */
     index(): IAsyncEnumerable<[number, TElement]>;
 
@@ -640,6 +646,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param iterable Async iterable whose elements are alternated with the current sequence.
      * @returns {IAsyncEnumerable<TElement | TSecond>} An async sequence that alternates between elements from this sequence and `iterable`.
      * @remarks If one sequence is longer, the remaining elements are appended after the shorter sequence is exhausted. Enumeration is deferred.
+     * @example
+     * ```typescript
+     * const numbers1 = fromAsync([1, 3, 5]);
+     * const numbers2 = [2, 4, 6];
+     * const interleaved = await numbers1.interleave(numbers2).toArray();
+     * console.log(interleaved); // [1, 2, 3, 4, 5, 6]
+     * ```
      */
     interleave<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<TElement | TSecond>;
 
@@ -649,6 +662,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the intersection of the two sequences.
      * @remarks The original ordering of this sequence is preserved. The `enumerable` is fully enumerated to build the inclusion set prior to yielding results.
+     * @example
+     * ```typescript
+     * const numbers1 = fromAsync([1, 2, 3, 4, 5]);
+     * const numbers2 = [3, 5, 7];
+     * const result = await numbers1.intersect(numbers2).toArray();
+     * console.log(result); // [3, 5]
+     * ```
      */
     intersect(enumerable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement>;
 
@@ -660,6 +680,24 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the intersection of the two sequences based on matching keys.
      * @remarks The `enumerable` is fully enumerated to materialise the inclusion keys before yielding results. Source ordering is preserved.
+     * @example
+     * ```typescript
+     * const products1 = fromAsync([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     * const products2 = [
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Broccoli', category: 'Vegetable' },
+     * ];
+     *
+     * const result = await products1.intersectBy(products2, p => p.category).toArray();
+     * console.log(result);
+     * // [
+     * //   { name: 'Apple', category: 'Fruit' },
+     * //   { name: 'Carrot', category: 'Vegetable' }
+     * // ]
+     * ```
      */
     intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement>;
 
@@ -669,6 +707,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param separator Value inserted between consecutive elements.
      * @returns {IAsyncEnumerable<TElement | TSeparator>} An async sequence containing the original elements with separators interleaved.
      * @remarks No separator precedes the first element or follows the last element.
+     * @example
+     * ```typescript
+     * const letters = fromAsync(['a', 'b', 'c']);
+     * const interspersed = await letters.intersperse('-').toArray();
+     * console.log(interspersed); // ['a', '-', 'b', '-', 'c']
+     * ```
      */
     intersperse<TSeparator = TElement>(separator: TSeparator): IAsyncEnumerable<TElement | TSeparator>;
 
@@ -685,6 +729,32 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param leftJoin When `true`, outer elements with no matching inner element are included once with `null` provided to {@link resultSelector}. Defaults to `false` (inner join).
      * @returns {IAsyncEnumerable<TResult>} An async sequence generated by applying {@link resultSelector} to each matching pair (and unmatched outer elements when {@link leftJoin} is enabled).
      * @remarks The inner sequence is fully enumerated to build an in-memory lookup before outer elements are processed. The outer sequence is then enumerated lazily and its original ordering is preserved.
+     * @example
+     * ```typescript
+     * const categories = fromAsync([
+     *   { id: 1, name: 'Fruit' },
+     *   { id: 2, name: 'Vegetable' },
+     * ]);
+     * const products = fromAsync([
+     *   { name: 'Apple', categoryId: 1 },
+     *   { name: 'Banana', categoryId: 1 },
+     *   { name: 'Carrot', categoryId: 2 },
+     * ]);
+     *
+     * const joined = await categories.join(
+     *   products,
+     *   c => c.id,
+     *   p => p.categoryId,
+     *   (c, p) => ({ category: c.name, product: p.name })
+     * ).toArray();
+     *
+     * console.log(joined);
+     * // [
+     * //   { category: 'Fruit', product: 'Apple' },
+     * //   { category: 'Fruit', product: 'Banana' },
+     * //   { category: 'Vegetable', product: 'Carrot' }
+     * // ]
+     * ```
      */
     join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult>;
 
@@ -696,6 +766,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @throws {NoMatchingElementException} Thrown when no element satisfies the type guard.
      * @remarks The entire sequence is enumerated to locate the final match.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const lastElement = await numbers.last();
+     * console.log(lastElement); // 5
+     *
+     * const lastEven = await numbers.last(x => x % 2 === 0);
+     * console.log(lastEven); // 4
+     * ```
      */
     last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
 
@@ -715,6 +794,23 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Type guard evaluated against each element. Every matching element becomes a candidate, and the final match is returned.
      * @returns {Promise<TFiltered | null>} A promise that resolves to the last element that satisfies the type guard, or `null` when none match.
      * @remarks The entire sequence is enumerated to locate the final match. This overload never rejects for missing elements; it communicates absence through the `null` result.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const lastElement = await numbers.lastOrDefault();
+     * console.log(lastElement); // 5
+     *
+     * const lastEven = await numbers.lastOrDefault(x => x % 2 === 0);
+     * console.log(lastEven); // 4
+     *
+     * const empty = fromAsync<number>([]);
+     * const lastOfEmpty = await empty.lastOrDefault();
+     * console.log(lastOfEmpty); // null
+     *
+     * const noEvens = fromAsync([1, 3, 5]);
+     * const lastEven2 = await noEvens.lastOrDefault(x => x % 2 === 0);
+     * console.log(lastEven2); // null
+     * ```
      */
     lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
 
@@ -732,6 +828,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<number>} A promise that resolves to the maximum of the projected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks The entire sequence is enumerated exactly once. Provide a selector when the elements are not already numeric.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 5, 2, 4, 3]);
+     * const maxNumber = await numbers.max();
+     * console.log(maxNumber); // 5
+     *
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Charlie', age: 28 },
+     * ]);
+     * const maxAge = await people.max(p => p.age);
+     * console.log(maxAge); // 30
+     * ```
      */
     max(selector?: Selector<TElement, number>): Promise<number>;
 
@@ -743,6 +853,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<TElement>} A promise that resolves to the element whose key is maximal.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks When multiple elements share the maximal key, the first such element in the sequence is returned.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Charlie', age: 28 },
+     * ]);
+     * const oldestPerson = await people.maxBy(p => p.age);
+     * console.log(oldestPerson); // { name: 'Bob', age: 30 }
+     * ```
      */
     maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
 
@@ -752,6 +872,20 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<number>} A promise that resolves to the minimum of the projected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks The entire sequence is enumerated exactly once. Provide a selector when the elements are not already numeric.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 5, 2, 4]);
+     * const minNumber = await numbers.min();
+     * console.log(minNumber); // 1
+     *
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Charlie', age: 22 },
+     * ]);
+     * const minAge = await people.min(p => p.age);
+     * console.log(minAge); // 22
+     * ```
      */
     min(selector?: Selector<TElement, number>): Promise<number>;
 
@@ -763,6 +897,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<TElement>} A promise that resolves to the element whose key is minimal.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks When multiple elements share the minimal key, the first such element in the sequence is returned.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Charlie', age: 22 },
+     * ]);
+     * const youngestPerson = await people.minBy(p => p.age);
+     * console.log(youngestPerson); // { name: 'Charlie', age: 22 }
+     * ```
      */
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
 
@@ -771,6 +915,16 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Optional predicate evaluated against each element. When omitted, the method resolves to `true` if the sequence is empty.
      * @returns {Promise<boolean>} A promise that resolves to `true` when no element satisfies the predicate (or when the sequence is empty and no predicate is provided); otherwise, `false`.
      * @remarks This is more efficient than negating `any` with a predicate because iteration stops as soon as a matching element is found.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 3, 5]);
+     * const noEvens = await numbers.none(x => x % 2 === 0);
+     * console.log(noEvens); // true
+     *
+     * const mixedNumbers = fromAsync([1, 2, 3, 5]);
+     * const noEvens2 = await mixedNumbers.none(x => x % 2 === 0);
+     * console.log(noEvens2); // false
+     * ```
      */
     none(predicate?: Predicate<TElement>): Promise<boolean>;
 
