@@ -1272,12 +1272,14 @@ export const sum = <TElement>(
 };
 
 /**
- * Returns a specified number of contiguous elements from the start of a sequence.
- * @template TElement
+ * Returns up to the specified number of leading elements from {@link source}.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param count The number of elements to return. If the count is zero or negative, an empty sequence is returned. If the count is greater than the number of elements, all elements are returned.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the specified number of elements from the start of the input sequence.
+ * @param count Number of elements to emit; values less than or equal to zero produce an empty sequence.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the start of {@link source}.
+ * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
  */
+
 export const take = <TElement>(
     source: Iterable<TElement>,
     count: number
@@ -1286,12 +1288,14 @@ export const take = <TElement>(
 };
 
 /**
- * Returns a specified number of contiguous elements from the end of a sequence.
- * @template TElement
+ * Returns up to the specified number of trailing elements from {@link source}.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param count The number of elements to return. If the count is zero or negative, an empty sequence is returned. If the count is greater than the number of elements, all elements are returned.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the specified number of elements from the end of the input sequence.
+ * @param count Number of elements to keep from the end; values less than or equal to zero produce an empty sequence.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing at most {@link count} elements from the end of {@link source}.
+ * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
  */
+
 export const takeLast = <TElement>(
     source: Iterable<TElement>,
     count: number
@@ -1300,12 +1304,15 @@ export const takeLast = <TElement>(
 };
 
 /**
- * Returns elements from a sequence as long as a specified condition is true and then skips the remaining elements.
- * @template TElement
+ * Returns consecutive leading elements while a predicate returns `true`.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param predicate The predicate function (accepting element and index) that will be used to test each element.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
+ * @param predicate Predicate invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing the contiguous prefix that satisfies {@link predicate}.
+ * @remarks Elements after the first failing element are not inspected.
  */
+
+
 export function takeWhile<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedTypePredicate<TElement, TFiltered>
@@ -1322,34 +1329,39 @@ export function takeWhile<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Invokes the specified action on each element while yielding the original sequence unchanged.
- * @template TElement
+ * Invokes the specified action for each element while yielding the original elements unchanged.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param action The action to perform for each element. The second parameter is the element index.
- * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.*/
+ * @param action Callback receiving the element and its zero-based index.
+ * @returns {IEnumerable<TElement>} The original sequence, enabling fluent chaining.
+ * @remarks The action executes lazily as the sequence is iterated, making it suitable for logging or instrumentation.
+ */
+
 export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IEnumerable<TElement> => {
     return from(source).tap(action);
 };
 
 /**
- * Creates a new array from the elements of the sequence.
- * This forces evaluation of the entire sequence.
- * @template TElement
+ * Materialises {@link source} into an array.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @returns {TElement[]} An array that contains the elements from the input sequence.
+ * @returns {TElement[]} An array containing all elements from {@link source} in iteration order.
+ * @remarks The entire sequence is enumerated immediately. Subsequent changes to {@link source} are not reflected in the returned array.
  */
+
 export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
     return from(source).toArray();
 };
 
 /**
- * Creates a new circular linked list from the elements of the sequence.
- * Forces evaluation of the sequence.
- * @template TElement The type of elements in the sequence.
+ * Materialises {@link source} into a circular linked list.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {CircularLinkedList<TElement>} A new circular linked list that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting list.
+ * @returns {CircularLinkedList<TElement>} A circular linked list containing all elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately, and elements are stored in iteration order.
  */
+
 export const toCircularLinkedList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1358,15 +1370,16 @@ export const toCircularLinkedList = <TElement>(
 };
 
 /**
- * Creates a new circular queue from the elements of the source sequence.
- * The queue retains only the most recent values up to the specified capacity, discarding older entries when full.
- * Forces evaluation of the source sequence.
- * @template TElement
+ * Materialises {@link source} into a circular queue with the specified capacity.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param capacity Optional capacity for the resulting queue. If omitted, the queue's default capacity is used.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {CircularQueue<TElement>} A new circular queue that contains the retained elements from the input sequence.
+ * @param capacity Maximum number of elements retained by the resulting queue.
+ * @param comparator Optional equality comparator used by the resulting queue.
+ * @returns {CircularQueue<TElement>} A circular queue containing the most recent elements from {@link source}, bounded by {@link capacity}.
+ * @remarks The entire sequence is enumerated immediately. When {@link source} contains more than {@link capacity} elements, earlier items are discarded.
  */
+
+
 export function toCircularQueue<TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1388,15 +1401,19 @@ export function toCircularQueue<TElement>(
 }
 
 /**
- * Creates a new dictionary from the elements of the sequence.
- * Forces evaluation of the sequence. Throws if duplicate keys are encountered.
- * @template TKey, TValue
+ * Materialises {@link source} into a dictionary keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey Type of key returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param valueSelector The value selector function that will be used to select the value for an element.
- * @param valueComparator The value comparator function that will be used to compare two values. If not specified, the default equality comparer will be used.
- * @returns {Dictionary<TKey, TValue>} A new dictionary that contains the elements from the input sequence.
+ * @param keySelector Selector used to derive the key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @param valueComparator Optional equality comparator used by the resulting dictionary to compare values.
+ * @returns {Dictionary<TKey, TValue>} A dictionary populated with the projected key/value pairs.
+ * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+ * @remarks The entire sequence is enumerated immediately and entries are inserted in iteration order.
  */
+
 export const toDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1407,12 +1424,13 @@ export const toDictionary = <TElement, TKey, TValue>(
 };
 
 /**
- * Creates a new enumerable set from the elements of the sequence. Duplicate elements are ignored.
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into an enumerable set containing the distinct elements.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @returns {EnumerableSet<TElement>} An enumerable set that contains the distinct elements from the input sequence.
+ * @returns {EnumerableSet<TElement>} A set populated with the distinct elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
  */
+
 export const toEnumerableSet = <TElement>(
     source: Iterable<TElement>
 ): EnumerableSet<TElement> => {
@@ -1420,15 +1438,16 @@ export const toEnumerableSet = <TElement>(
 };
 
 /**
- * Creates a new immutable circular queue from the elements of the source sequence.
- * The queue keeps only the most recent values up to the specified capacity and discards older entries when the capacity is exceeded.
- * Forces evaluation of the source sequence.
- * @template TElement
+ * Materialises {@link source} into an immutable circular queue with the specified capacity.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param capacity Optional capacity for the resulting queue. If omitted, the queue's default capacity is used.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {ImmutableCircularQueue<TElement>} A new immutable circular queue that contains the retained elements from the input sequence.
+ * @param capacity Maximum number of elements retained by the resulting queue.
+ * @param comparator Optional equality comparator used by the resulting queue.
+ * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from {@link source}, bounded by {@link capacity}.
+ * @remarks The entire sequence is enumerated immediately. When {@link source} contains more than {@link capacity} elements, earlier items are discarded.
  */
+
+
 export function toImmutableCircularQueue<TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1450,15 +1469,19 @@ export function toImmutableCircularQueue<TElement>(
 }
 
 /**
- * Creates a new immutable dictionary from the elements of the sequence.
- * Forces evaluation of the sequence. Throws if duplicate keys are encountered.
- * @template TKey, TValue
+ * Materialises {@link source} into an immutable dictionary keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey Type of key returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param valueSelector The value selector function that will be used to select the value for an element.
- * @param valueComparator The value comparator function that will be used to compare two values. If not specified, the default equality comparer will be used.
- * @returns {ImmutableDictionary<TKey, TValue>} A new immutable dictionary that contains the elements from the input sequence.
+ * @param keySelector Selector used to derive the key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @param valueComparator Optional equality comparator used by the resulting dictionary to compare values.
+ * @returns {ImmutableDictionary<TKey, TValue>} An immutable dictionary populated with the projected key/value pairs.
+ * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toImmutableDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1469,13 +1492,14 @@ export const toImmutableDictionary = <TElement, TKey, TValue>(
 };
 
 /**
- * Creates a new immutable list from the elements of the sequence.
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into an immutable list.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {ImmutableList<TElement>} A new immutable list that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting list.
+ * @returns {ImmutableList<TElement>} An immutable list containing all elements from {@link source} in iteration order.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toImmutableList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1484,13 +1508,14 @@ export const toImmutableList = <TElement>(
 };
 
 /**
- * Creates a new immutable priority queue from the elements of the sequence.
- * Forces evaluation of the sequence. Elements are ordered based on the comparator.
- * @template TElement
+ * Materialises {@link source} into an immutable priority queue.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The order comparator function that will be used to compare two elements. If not specified, the default order comparer will be used.
- * @returns {ImmutablePriorityQueue<TElement>} A new immutable priority queue that contains the elements from the input sequence.
+ * @param comparator Optional order comparator used to compare elements in the resulting queue.
+ * @returns {ImmutablePriorityQueue<TElement>} An immutable priority queue containing all elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
  */
+
 export const toImmutablePriorityQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1499,13 +1524,14 @@ export const toImmutablePriorityQueue = <TElement>(
 };
 
 /**
- * Creates a new immutable queue from the elements of the sequence (FIFO).
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into an immutable FIFO queue.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {ImmutableQueue<TElement>} A new immutable queue that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting queue.
+ * @returns {ImmutableQueue<TElement>} An immutable queue containing all elements from {@link source} in enqueue order.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toImmutableQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1514,12 +1540,13 @@ export const toImmutableQueue = <TElement>(
 };
 
 /**
- * Creates a new immutable set from the elements of the sequence. Duplicate elements are ignored.
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into an immutable set containing the distinct elements.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @returns {ImmutableSet<TElement>} A new immutable set that contains the distinct elements from the input sequence.
+ * @returns {ImmutableSet<TElement>} An immutable set built from the distinct elements of {@link source}.
+ * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's equality semantics.
  */
+
 export const toImmutableSet = <TElement>(
     source: Iterable<TElement>
 ): ImmutableSet<TElement> => {
@@ -1527,16 +1554,20 @@ export const toImmutableSet = <TElement>(
 };
 
 /**
- * Creates a new immutable sorted dictionary from the elements of the sequence.
- * Forces evaluation of the sequence. Keys are sorted. Throws if duplicate keys are encountered.
- * @template TKey, TValue
+ * Materialises {@link source} into an immutable sorted dictionary keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey Type of key returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param valueSelector The value selector function that will be used to select the value for an element.
- * @param keyComparator The key comparator function that will be used to compare two keys for sorting. If not specified, the default order comparer will be used.
- * @param valueComparator The value comparator function that will be used to compare two values. If not specified, the default equality comparer will be used.
- * @returns {ImmutableSortedDictionary<TKey, TValue>} A new immutable sorted dictionary that contains the elements from the input sequence.
+ * @param keySelector Selector used to derive the key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @param keyComparator Optional order comparator used to sort keys in the resulting dictionary.
+ * @param valueComparator Optional equality comparator used to compare values in the resulting dictionary.
+ * @returns {ImmutableSortedDictionary<TKey, TValue>} An immutable sorted dictionary populated with the projected key/value pairs.
+ * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1548,13 +1579,14 @@ export const toImmutableSortedDictionary = <TElement, TKey, TValue>(
 };
 
 /**
- * Creates a new immutable sorted set from the elements of the sequence. Duplicate elements are ignored.
- * Forces evaluation of the sequence. Elements are sorted.
- * @template TElement
+ * Materialises {@link source} into an immutable sorted set of distinct elements.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The order comparator function that will be used to compare two elements for sorting. If not specified, the default order comparer will be used.
- * @returns {ImmutableSortedSet<TElement>} A new immutable sorted set that contains the distinct, sorted elements from the input sequence.
+ * @param comparator Optional order comparator used to sort the elements.
+ * @returns {ImmutableSortedSet<TElement>} An immutable sorted set containing the distinct elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
  */
+
 export const toImmutableSortedSet = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1563,13 +1595,14 @@ export const toImmutableSortedSet = <TElement>(
 };
 
 /**
- * Creates a new immutable stack from the elements of the sequence (LIFO).
- * Forces evaluation of the sequence. The last element of the source sequence becomes the top of the stack.
- * @template TElement
+ * Materialises {@link source} into an immutable stack (LIFO).
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {ImmutableStack<TElement>} A new immutable stack that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting stack.
+ * @returns {ImmutableStack<TElement>} An immutable stack whose top element corresponds to the last element of {@link source}.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toImmutableStack = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1578,13 +1611,14 @@ export const toImmutableStack = <TElement>(
 };
 
 /**
- * Creates a new linked list from the elements of the sequence.
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into a linked list.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {LinkedList<TElement>} A new linked list that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting list.
+ * @returns {LinkedList<TElement>} A linked list containing all elements from {@link source} in iteration order.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toLinkedList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1593,13 +1627,14 @@ export const toLinkedList = <TElement>(
 };
 
 /**
- * Creates a new list from the elements of the sequence.
- * Forces evaluation of the sequence.
+ * Materialises {@link source} into a resizable list.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @template TElement
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {List<TElement>} A new list that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting list.
+ * @returns {List<TElement>} A list containing all elements from {@link source} in iteration order.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toList = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1608,16 +1643,18 @@ export const toList = <TElement>(
 };
 
 /**
- * Creates a new lookup from the elements of the sequence. A lookup is similar to a dictionary but allows multiple values per key.
- * Forces evaluation of the sequence.
- * @template TKey
- * @template TValue
+ * Materialises {@link source} into a lookup keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey Type of key returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param valueSelector The value selector function that will be used to select the value for an element.
- * @param keyComparator The key comparator function that will be used to compare two keys. If not specified, the default equality comparer will be used.
- * @returns {ILookup<TKey, TValue>} A new lookup that contains the elements from the input sequence, grouped by key.
+ * @param keySelector Selector used to derive the key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @param keyComparator Optional order comparator used to compare keys in the resulting lookup.
+ * @returns {ILookup<TKey, TValue>} A lookup grouping the projected values by key.
+ * @remarks The entire sequence is enumerated immediately. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
  */
+
 export const toLookup = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1628,15 +1665,17 @@ export const toLookup = <TElement, TKey, TValue>(
 };
 
 /**
- * Converts this enumerable to a JavaScript Map.
- * Forces evaluation of the sequence. Throws if duplicate keys are encountered.
- * @template TKey
- * @template TValue
+ * Materialises {@link source} into a `Map` keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey Type of key returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The selector that will be used to select the property that will be used as the key of the map.
- * @param valueSelector The selector that will be used to select the property that will be used as the value of the map.
- * @returns {Map<TKey, TValue>} A Map representation of this sequence.
+ * @param keySelector Selector used to derive the key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @returns {Map<TKey, TValue>} A map populated with the projected key/value pairs.
+ * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
  */
+
 export const toMap = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1646,15 +1685,17 @@ export const toMap = <TElement, TKey, TValue>(
 };
 
 /**
- * Converts this enumerable to a JavaScript object (Record).
- * Forces evaluation of the sequence. If duplicate keys are encountered, the last value for that key overwrites previous ones.
- * @template TKey
- * @template TValue
+ * Materialises {@link source} into a plain object keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey extends PropertyKey Property key type returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The selector that will be used to select the property that will be used as the key of the object. Must return string, number, or symbol.
- * @param valueSelector The selector that will be used to select the property that will be used as the value of the object.
- * @returns {Record<TKey, TValue>} An object that contains the elements of the sequence.
+ * @param keySelector Selector used to derive the property key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @returns {Record<TKey, TValue>} An object populated with the projected key/value pairs.
+ * @remarks The entire sequence is enumerated immediately. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
  */
+
 export const toObject = <TElement, TKey extends PropertyKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1664,13 +1705,14 @@ export const toObject = <TElement, TKey extends PropertyKey, TValue>(
 };
 
 /**
- * Creates a new priority queue from the elements of the sequence.
- * Forces evaluation of the sequence. Elements are ordered based on the comparator.
- * @template TElement
+ * Materialises {@link source} into a priority queue.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The order comparator function that will be used to compare two elements. If not specified, the default order comparer will be used (min-heap).
- * @returns {PriorityQueue<TElement>} A new priority queue that contains the elements from the input sequence.
+ * @param comparator Optional order comparator used to compare elements in the resulting queue.
+ * @returns {PriorityQueue<TElement>} A priority queue containing all elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately. Elements are ordered according to {@link comparator} or the default ordering.
  */
+
 export const toPriorityQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1679,13 +1721,14 @@ export const toPriorityQueue = <TElement>(
 };
 
 /**
- * Creates a new queue from the elements of the sequence (FIFO).
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into a FIFO queue.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {Queue<TElement>} A new queue that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting queue.
+ * @returns {Queue<TElement>} A queue containing all elements from {@link source} in enqueue order.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toQueue = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1694,12 +1737,13 @@ export const toQueue = <TElement>(
 };
 
 /**
- * Creates a new JavaScript Set from the elements of the sequence. Duplicate elements are ignored.
- * Forces evaluation of the sequence.
- * @template TElement
+ * Materialises {@link source} into a native `Set`.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @returns {Set<TElement>} A new Set that contains the distinct elements from the input sequence.
+ * @returns {Set<TElement>} A set containing the distinct elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
  */
+
 export const toSet = <TElement>(
     source: Iterable<TElement>
 ): Set<TElement> => {
@@ -1707,17 +1751,20 @@ export const toSet = <TElement>(
 };
 
 /**
- * Creates a new sorted dictionary from the elements of the sequence.
- * Forces evaluation of the sequence. Keys are sorted. Throws if duplicate keys are encountered.
- * @template TKey
- * @template TValue
+ * Materialises {@link source} into a sorted dictionary keyed by the provided selector.
+ * @template TElement Type of elements within {@link source}.
+ * @template TKey Type of key returned by {@link keySelector}.
+ * @template TValue Type of value returned by {@link valueSelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param valueSelector The value selector function that will be used to select the value for an element.
- * @param keyComparator The key comparator function that will be used to compare two keys for sorting. If not specified, the default order comparer will be used.
- * @param valueComparator The value comparator function that will be used to compare two values. If not specified, the default equality comparer will be used.
- * @returns {SortedDictionary<TKey, TValue>} A new sorted dictionary that contains the elements from the input sequence.
+ * @param keySelector Selector used to derive the key for each element.
+ * @param valueSelector Selector used to derive the value for each element.
+ * @param keyComparator Optional order comparator used to sort keys in the resulting dictionary.
+ * @param valueComparator Optional equality comparator used to compare values in the resulting dictionary.
+ * @returns {SortedDictionary<TKey, TValue>} A sorted dictionary populated with the projected key/value pairs.
+ * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toSortedDictionary = <TElement, TKey, TValue>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
@@ -1729,13 +1776,14 @@ export const toSortedDictionary = <TElement, TKey, TValue>(
 };
 
 /**
- * Creates a new sorted set from the elements of the sequence. Duplicate elements are ignored.
- * Forces evaluation of the sequence. Elements are sorted.
- * @template TElement
+ * Materialises {@link source} into a sorted set of distinct elements.
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The order comparator function that will be used to compare two elements for sorting. If not specified, the default order comparer will be used.
- * @returns {SortedSet<TElement>} A new sorted set that contains the distinct, sorted elements from the input sequence.
+ * @param comparator Optional order comparator used to sort the elements.
+ * @returns {SortedSet<TElement>} A sorted set containing the distinct elements from {@link source}.
+ * @remarks The entire sequence is enumerated immediately and duplicate elements are collapsed using the set's ordering semantics.
  */
+
 export const toSortedSet = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -1744,13 +1792,14 @@ export const toSortedSet = <TElement>(
 };
 
 /**
- * Creates a new stack from the elements of the sequence (LIFO).
- * Forces evaluation of the sequence. The last element of the source sequence becomes the top of the stack.
- * @template TElement
+ * Materialises {@link source} into a stack (LIFO).
+ * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
- * @param comparator The equality comparator function that will be used to compare two elements. If not specified, the default equality comparer will be used.
- * @returns {Stack<TElement>} A new stack that contains the elements from the input sequence.
+ * @param comparator Optional equality comparator used by the resulting stack.
+ * @returns {Stack<TElement>} A stack whose top element corresponds to the last element of {@link source}.
+ * @remarks The entire sequence is enumerated immediately.
  */
+
 export const toStack = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>

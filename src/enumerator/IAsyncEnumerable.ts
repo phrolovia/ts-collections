@@ -723,224 +723,322 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     sum(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
-     * Returns a specified number of contiguous elements from the start of a sequence.
-     * @param count The number of elements to return.
+     * Returns up to the specified number of leading elements.
+     * @param count Number of elements to emit; values less than or equal to zero produce an empty sequence.
+     * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing at most {@link count} elements from the start of the source.
+     * @remarks Enumeration stops once {@link count} elements have been yielded or the source sequence ends.
      */
+
     take(count: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns a specified number of contiguous elements from the end of a sequence.
-     * @param count The number of elements to return.
+     * Returns up to the specified number of trailing elements.
+     * @param count Number of elements to keep from the end; values less than or equal to zero produce an empty sequence.
+     * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing at most {@link count} elements from the end of the source.
+     * @remarks The implementation buffers up to {@link count} elements to determine the tail, so memory usage grows with {@link count}. The source must be finite.
      */
+
     takeLast(count: number): IAsyncEnumerable<TElement>;
 
     /**
-     * Returns consecutive elements from the sequence while a type guard predicate evaluates to true, narrowing the resulting element type.
-     * @template TFiltered
-     * @param predicate The predicate function (receiving element and index) that acts as a type guard. Iteration stops once the predicate returns false.
-     * @returns {IAsyncEnumerable<TFiltered>} An async enumerable containing the leading elements that satisfy the predicate.
+     * Returns consecutive leading elements while a type guard predicate returns `true`, narrowing the element type.
+     * @template TFiltered extends TElement Result type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
+     * @returns {IAsyncEnumerable<TFiltered>} A deferred async sequence containing the contiguous prefix that satisfies {@link predicate}.
+     * @remarks Elements after the first failing element are not inspected.
      */
+
     takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
 
     /**
-     * Returns consecutive elements from the sequence while a predicate evaluates to true.
-     * @param predicate The predicate function (receiving element and index) that will be used to test each element.
-     * @returns {IAsyncEnumerable<TElement>} An async enumerable containing the leading elements that satisfy the predicate.
+     * Returns consecutive leading elements while a predicate returns `true`.
+     * @param predicate Predicate invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
+     * @returns {IAsyncEnumerable<TElement>} A deferred async sequence containing the contiguous prefix that satisfies {@link predicate}.
+     * @remarks Elements after the first failing element are not inspected.
      */
+
     takeWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Invokes the specified action on each element while yielding the original elements.
-     * @param action The action function that will be performed on each element.
+     * Invokes the specified action for each element while yielding the original elements unchanged.
+     * @param action Callback receiving the element and its zero-based index.
+     * @returns {IAsyncEnumerable<TElement>} The original async sequence, enabling fluent chaining.
+     * @remarks The action executes lazily as the sequence is iterated asynchronously, making it suitable for logging or instrumentation.
      */
+
     tap(action: IndexedAction<TElement>): IAsyncEnumerable<TElement>;
 
     /**
-     * Creates a new array from the elements of the sequence.
+     * Materialises the asynchronous sequence into an array.
+     * @returns {Promise<TElement[]>} A promise that resolves with all elements from the source sequence in iteration order.
+     * @remarks The entire sequence is consumed asynchronously before the array is returned. Subsequent changes to the source are not reflected in the result.
      */
+
     toArray(): Promise<TElement[]>;
 
     /**
-     * Creates a circular linked list containing the elements of the sequence.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
+     * Materialises the asynchronous sequence into a circular linked list.
+     * @param comparator Optional equality comparator used by the resulting list.
+     * @returns {Promise<CircularLinkedList<TElement>>} A promise that resolves to a circular linked list containing all elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the list is created, and elements are stored in iteration order.
      */
+
     toCircularLinkedList(comparator?: EqualityComparator<TElement>): Promise<CircularLinkedList<TElement>>;
 
     /**
-     * Creates a circular queue containing the elements of the sequence using the queue's default capacity.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the sequence elements.
+     * Materialises the asynchronous sequence into a circular queue that uses the implementation's default capacity.
+     * @param comparator Optional equality comparator used by the resulting queue.
+     * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the most recent elements from the source, up to the default capacity.
+     * @remarks The entire sequence is consumed asynchronously. Once the queue reaches its capacity (currently 32), older items are discarded as new elements are enqueued.
      */
+
     toCircularQueue(comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
     /**
-     * Creates a circular queue containing the elements of the sequence and limits it to the specified capacity.
-     * When more elements are provided than the capacity allows, only the most recent items are retained.
-     * @param capacity The maximum number of elements that the resulting queue can hold.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing up to `capacity` most recent elements.
+     * Materialises the asynchronous sequence into a circular queue with the specified capacity.
+     * @param capacity Maximum number of elements retained by the resulting queue.
+     * @param comparator Optional equality comparator used by the resulting queue.
+     * @returns {Promise<CircularQueue<TElement>>} A promise that resolves to a circular queue containing the most recent elements from the source, bounded by {@link capacity}.
+     * @remarks The entire sequence is consumed asynchronously. When the source contains more than {@link capacity} elements, earlier items are discarded.
      */
+
     toCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<CircularQueue<TElement>>;
 
     /**
-     * Creates a dictionary from the sequence by using the specified key and value selectors.
-     * @template TKey The type of the keys in the dictionary.
-     * @template TValue The type of the values in the dictionary.
-     * @param keySelector Selector used to select the key for each element.
-     * @param valueSelector Selector used to select the value for each element.
-     * @param valueComparator Optional comparator for equality comparison of values.
+     * Materialises the asynchronous sequence into a dictionary keyed by the provided selector.
+     * @template TKey Type of key returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @param valueComparator Optional equality comparator used by the resulting dictionary to compare values.
+     * @returns {Promise<Dictionary<TKey, TValue>>} A promise that resolves to a dictionary populated with the projected key/value pairs.
+     * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+     * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
+
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<Dictionary<TKey, TValue>>;
 
     /**
-     * Creates an enumerable set containing the elements of the sequence.
+     * Materialises the asynchronous sequence into an enumerable set containing the distinct elements.
+     * @returns {Promise<EnumerableSet<TElement>>} A promise that resolves to a set populated with the distinct elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's equality semantics.
      */
+
     toEnumerableSet(): Promise<EnumerableSet<TElement>>;
 
     /**
-     * Creates an immutable circular queue containing the elements of the sequence using the queue's default capacity.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the sequence elements.
+     * Materialises the asynchronous sequence into an immutable circular queue that uses the implementation's default capacity.
+     * @param comparator Optional equality comparator used by the resulting queue.
+     * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the most recent elements from the source, up to the default capacity.
+     * @remarks The entire sequence is consumed asynchronously. Earlier items are discarded when the number of elements exceeds the queue's capacity (currently 32).
      */
+
     toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
     /**
-     * Creates an immutable circular queue containing the elements of the sequence and limits it to the specified capacity.
-     * When more elements are provided than the capacity allows, only the most recent items are retained.
-     * @param capacity The maximum number of elements that the resulting queue can hold.
-     * @param comparator The comparator function that will be used for equality comparison. If not provided, default equality comparison is used.
-     * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing up to `capacity` most recent elements.
+     * Materialises the asynchronous sequence into an immutable circular queue with the specified capacity.
+     * @param capacity Maximum number of elements retained by the resulting queue.
+     * @param comparator Optional equality comparator used by the resulting queue.
+     * @returns {Promise<ImmutableCircularQueue<TElement>>} A promise that resolves to an immutable circular queue containing the most recent elements from the source, bounded by {@link capacity}.
+     * @remarks The entire sequence is consumed asynchronously. When the source contains more than {@link capacity} elements, earlier items are discarded.
      */
+
     toImmutableCircularQueue(capacity: number, comparator?: EqualityComparator<TElement>): Promise<ImmutableCircularQueue<TElement>>;
 
     /**
-     * Creates an immutable dictionary from the sequence by using the specified key and value selectors.
-     * @template TKey The type of the key returned by the key selector.
-     * @template TValue The type of the value returned by the value selector.
-     * @param keySelector Selector used to select the key for each element.
-     * @param valueSelector Selector used to select the value for each element.
-     * @param valueComparator Optional comparator for equality comparison of values.
+     * Materialises the asynchronous sequence into an immutable dictionary keyed by the provided selector.
+     * @template TKey Type of key returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @param valueComparator Optional equality comparator used by the resulting dictionary to compare values.
+     * @returns {Promise<ImmutableDictionary<TKey, TValue>>} A promise that resolves to an immutable dictionary populated with the projected key/value pairs.
+     * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+     * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
+
     toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableDictionary<TKey, TValue>>;
 
     /**
-     * Creates an immutable list containing the elements of the sequence.
+     * Materialises the asynchronous sequence into an immutable list.
+     * @param comparator Optional equality comparator used by the resulting list.
+     * @returns {Promise<ImmutableList<TElement>>} A promise that resolves to an immutable list containing all elements from the source in iteration order.
+     * @remarks The entire sequence is consumed asynchronously before the list is returned.
      */
+
     toImmutableList(comparator?: EqualityComparator<TElement>): Promise<ImmutableList<TElement>>;
 
     /**
-     * Creates an immutable priority queue containing the elements of the sequence.
-     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     * Materialises the asynchronous sequence into an immutable priority queue.
+     * @param comparator Optional order comparator used to compare elements in the resulting queue.
+     * @returns {Promise<ImmutablePriorityQueue<TElement>>} A promise that resolves to an immutable priority queue containing all elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the queue is returned. Elements are ordered according to {@link comparator} or the default ordering.
      */
+
     toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): Promise<ImmutablePriorityQueue<TElement>>;
 
     /**
-     * Creates an immutable queue containing the elements of the sequence.
+     * Materialises the asynchronous sequence into an immutable FIFO queue.
+     * @param comparator Optional equality comparator used by the resulting queue.
+     * @returns {Promise<ImmutableQueue<TElement>>} A promise that resolves to an immutable queue containing all elements from the source in enqueue order.
+     * @remarks The entire sequence is consumed asynchronously before the queue is returned.
      */
+
     toImmutableQueue(comparator?: EqualityComparator<TElement>): Promise<ImmutableQueue<TElement>>;
 
     /**
-     * Creates an immutable set containing the elements of the sequence.
+     * Materialises the asynchronous sequence into an immutable set containing the distinct elements.
+     * @returns {Promise<ImmutableSet<TElement>>} A promise that resolves to an immutable set built from the distinct elements of the source.
+     * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's equality semantics.
      */
+
     toImmutableSet(): Promise<ImmutableSet<TElement>>;
 
     /**
-     * Creates an immutable sorted dictionary from the sequence by using the specified key and value selectors.
-     * @template TKey The type of the keys in the dictionary.
-     * @template TValue The type of the values in the dictionary.
-     * @param keySelector Selector used to select the key for each element.
-     * @param valueSelector Selector used to select the value for each element.
-     * @param keyComparator Comparator used for ordering of keys.
-     * @param valueComparator Comparator used for equality comparison of values.
+     * Materialises the asynchronous sequence into an immutable sorted dictionary keyed by the provided selector.
+     * @template TKey Type of key returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @param keyComparator Optional order comparator used to sort keys in the resulting dictionary.
+     * @param valueComparator Optional equality comparator used to compare values in the resulting dictionary.
+     * @returns {Promise<ImmutableSortedDictionary<TKey, TValue>>} A promise that resolves to an immutable sorted dictionary populated with the projected key/value pairs.
+     * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+     * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
+
     toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableSortedDictionary<TKey, TValue>>;
 
     /**
-     * Creates an immutable sorted set containing the elements of the sequence.
-     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     * Materialises the asynchronous sequence into an immutable sorted set of distinct elements.
+     * @param comparator Optional order comparator used to sort the elements.
+     * @returns {Promise<ImmutableSortedSet<TElement>>} A promise that resolves to an immutable sorted set containing the distinct elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's ordering semantics.
      */
+
     toImmutableSortedSet(comparator?: OrderComparator<TElement>): Promise<ImmutableSortedSet<TElement>>;
 
     /**
-     * Creates an immutable stack containing the elements of the sequence.
+     * Materialises the asynchronous sequence into an immutable stack (LIFO).
+     * @param comparator Optional equality comparator used by the resulting stack.
+     * @returns {Promise<ImmutableStack<TElement>>} A promise that resolves to an immutable stack whose top element corresponds to the last element of the source.
+     * @remarks The entire sequence is consumed asynchronously before the stack is returned.
      */
+
     toImmutableStack(comparator?: EqualityComparator<TElement>): Promise<ImmutableStack<TElement>>;
 
     /**
-     * Creates a linked list containing the elements of the sequence.
+     * Materialises the asynchronous sequence into a linked list.
+     * @param comparator Optional equality comparator used by the resulting list.
+     * @returns {Promise<LinkedList<TElement>>} A promise that resolves to a linked list containing all elements from the source in iteration order.
+     * @remarks The entire sequence is consumed asynchronously before the list is returned.
      */
+
     toLinkedList(comparator?: EqualityComparator<TElement>): Promise<LinkedList<TElement>>;
 
     /**
-     * Creates a list containing the elements of the sequence.
+     * Materialises the asynchronous sequence into a resizable list.
+     * @param comparator Optional equality comparator used by the resulting list.
+     * @returns {Promise<List<TElement>>} A promise that resolves to a list containing all elements from the source in iteration order.
+     * @remarks The entire sequence is consumed asynchronously before the list is returned.
      */
+
     toList(comparator?: EqualityComparator<TElement>): Promise<List<TElement>>;
 
     /**
-     * Creates a lookup from the sequence by using the specified key and value selectors.
-     * @template TKey The type of the key returned by the key selector.
-     * @template TValue The type of the value returned by the value selector.
-     * @param keySelector Selector used to select the key for each element.
-     * @param valueSelector Selector used to select the value for each element.
-     * @param keyComparator Comparator used for ordering of keys.
+     * Materialises the asynchronous sequence into a lookup keyed by the provided selector.
+     * @template TKey Type of key returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @param keyComparator Optional order comparator used to compare keys in the resulting lookup.
+     * @returns {Promise<ILookup<TKey, TValue>>} A promise that resolves to a lookup grouping the projected values by key.
+     * @remarks The entire sequence is consumed asynchronously. Elements within each group preserve their original order and the groups are cached for repeated enumeration.
      */
+
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>>;
 
     /**
-     * Creates a map from the sequence by using the specified key and value selectors.
-     * @template TKey The type of the keys in the map.
-     * @template TValue The type of the values in the map.
-     * @param keySelector Selector used to select the key for each element.
-     * @param valueSelector Selector used to select the value for each element.
+     * Materialises the asynchronous sequence into a `Map` keyed by the provided selector.
+     * @template TKey Type of key returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @returns {Promise<Map<TKey, TValue>>} A promise that resolves to a map populated with the projected key/value pairs.
+     * @remarks The entire sequence is consumed asynchronously. When {@link keySelector} produces duplicate keys, later elements overwrite earlier entries.
      */
+
     toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Map<TKey, TValue>>;
 
     /**
-     * Converts this enumerable to an object.
-     * @template TKey
-     * @template TValue
-     * @param keySelector The selector that will be used to select the property that will be used as the key of the object. Can only be a string, number or symbol.
-     * @param valueSelector The selector that will be used to select the property that will be used as the value of the object.
-     * @returns {Promise<Record<TKey, TValue>>} An object that contains the elements of the sequence.
+     * Materialises the asynchronous sequence into a plain object keyed by the provided selector.
+     * @template TKey extends string | number | symbol Property key type returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the property key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @returns {Promise<Record<TKey, TValue>>} A promise that resolves to an object populated with the projected key/value pairs.
+     * @remarks The entire sequence is consumed asynchronously. When {@link keySelector} produces duplicate keys, later values overwrite earlier ones.
      */
+
     toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
 
     /**
-     * Creates a priority queue containing the elements of the sequence.
-     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     * Materialises the asynchronous sequence into a priority queue.
+     * @param comparator Optional order comparator used to compare elements in the resulting queue.
+     * @returns {Promise<PriorityQueue<TElement>>} A promise that resolves to a priority queue containing all elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the queue is returned. Elements are ordered according to {@link comparator} or the default ordering.
      */
+
     toPriorityQueue(comparator?: OrderComparator<TElement>): Promise<PriorityQueue<TElement>>;
 
     /**
-     * Creates a queue containing the elements of the sequence.
+     * Materialises the asynchronous sequence into a FIFO queue.
+     * @param comparator Optional equality comparator used by the resulting queue.
+     * @returns {Promise<Queue<TElement>>} A promise that resolves to a queue containing all elements from the source in enqueue order.
+     * @remarks The entire sequence is consumed asynchronously before the queue is returned.
      */
+
     toQueue(comparator?: EqualityComparator<TElement>): Promise<Queue<TElement>>;
 
     /**
-     * Creates a set containing the elements of the sequence.
+     * Materialises the asynchronous sequence into a native `Set`.
+     * @returns {Promise<Set<TElement>>} A promise that resolves to a set containing the distinct elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using JavaScript's `SameValueZero` semantics.
      */
+
     toSet(): Promise<Set<TElement>>;
 
     /**
-     * Creates a sorted dictionary from the sequence by using the specified key and value selectors.
-     * @template TKey The type of the keys in the dictionary.
-     * @template TValue The type of the values in the dictionary.
-     * @param keySelector Selector used to select the key for each element.
-     * @param valueSelector Selector used to select the value for each element.
-     * @param keyComparator Comparator used for ordering of keys.
-     * @param valueComparator Comparator used for equality comparison of values.
+     * Materialises the asynchronous sequence into a sorted dictionary keyed by the provided selector.
+     * @template TKey Type of key returned by {@link keySelector}.
+     * @template TValue Type of value returned by {@link valueSelector}.
+     * @param keySelector Selector used to derive the key for each element.
+     * @param valueSelector Selector used to derive the value for each element.
+     * @param keyComparator Optional order comparator used to sort keys in the resulting dictionary.
+     * @param valueComparator Optional equality comparator used to compare values in the resulting dictionary.
+     * @returns {Promise<SortedDictionary<TKey, TValue>>} A promise that resolves to a sorted dictionary populated with the projected key/value pairs.
+     * @throws {InvalidArgumentException} Thrown when {@link keySelector} produces duplicate keys.
+     * @remarks The entire sequence is consumed asynchronously before the dictionary is returned.
      */
+
     toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<SortedDictionary<TKey, TValue>>;
 
     /**
-     * Creates a sorted set containing the elements of the sequence.
-     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     * Materialises the asynchronous sequence into a sorted set of distinct elements.
+     * @param comparator Optional order comparator used to sort the elements.
+     * @returns {Promise<SortedSet<TElement>>} A promise that resolves to a sorted set containing the distinct elements from the source.
+     * @remarks The entire sequence is consumed asynchronously before the set is returned, and duplicate elements are collapsed using the set's ordering semantics.
      */
+
     toSortedSet(comparator?: OrderComparator<TElement>): Promise<SortedSet<TElement>>;
 
     /**
-     * Creates a stack containing the elements of the sequence.
+     * Materialises the asynchronous sequence into a stack (LIFO).
+     * @param comparator Optional equality comparator used by the resulting stack.
+     * @returns {Promise<Stack<TElement>>} A promise that resolves to a stack whose top element corresponds to the last element of the source.
+     * @remarks The entire sequence is consumed asynchronously before the stack is returned.
      */
+
     toStack(comparator?: EqualityComparator<TElement>): Promise<Stack<TElement>>;
 
     /**
