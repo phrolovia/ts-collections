@@ -509,64 +509,68 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     orderDescending(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
 
     /**
-     * Produces a tuple of the element and the following element.
-     * @param resultSelector The result selector function that will be used to create a result element from the current and the following element.
-     *
-     * <br/>
-     * Example:
-     * ```
-     *    const numberList = new List([1, 2, 3, 4, 5]);
-     *    const result = numberList.pairwise((current, next) => current + "-" + next).toArray(); // [1-2, 2-3, 3-4, 4-5]
-     * ```
+     * Creates a deferred asynchronous sequence of adjacent element pairs.
+     * @param resultSelector Projection applied to each current/next pair; the value it returns becomes the emitted element.
+     * @returns {IAsyncEnumerable<[TElement, TElement]>} An async sequence with one element per consecutive pair from the source sequence.
+     * @remarks The final element is omitted because it lacks a successor. Iteration is lazy and consumes the source sequence exactly once via its async iterator.
      */
     pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]>;
 
     /**
-     * Splits the sequence into two sequences based on a type guard predicate, narrowing the element type of the first sequence.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The first resulting sequence contains the elements that satisfy the predicate, the second contains the remainder.
-     * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>} A promise that resolves to a tuple of sequences.
+     * Splits the asynchronous sequence into two cached partitions by applying a type guard predicate.
+     * @template TFiltered Type produced when {@link predicate} confirms the element.
+     * @param predicate Type guard invoked for each element. Elements that satisfy the predicate populate the first partition.
+     * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>} A promise that resolves to the matching partition and the partition with the remaining elements.
+     * @remarks The entire source is consumed asynchronously and buffered before the promise resolves, allowing both partitions to be iterated multiple times without replaying the source.
      */
     partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>;
 
     /**
-     * Splits the sequence into two sequences based on a boolean predicate.
-     * @param predicate The predicate function that will be used to decide whether an element belongs to the first sequence.
-     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A promise that resolves to a tuple containing the matching and non-matching elements.
+     * Splits the asynchronous sequence into two cached partitions by applying a boolean predicate.
+     * @param predicate Predicate evaluated for each element. Elements for which it returns `true` populate the first partition.
+     * @returns {Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>} A promise that resolves to the elements that satisfied the predicate and those that did not.
+     * @remarks The entire source is consumed asynchronously and buffered before the promise resolves, allowing both partitions to be iterated multiple times without replaying the source.
      */
     partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
 
     /**
-     * Returns an enumerable sequence of permutations, each containing a permutation of the elements of the source sequence.
-     * @template TElement
-     * @param size If specified, it will return only the permutations of the specified size.
-     * If not specified, it will return permutations of the size of the source sequence.
-     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} An enumerable of enumerable sequences, each containing a permutation of the elements of the source sequence.
-     * @throws {InvalidArgumentException} If size is less than or equal to 0.
+     * Generates permutations from the distinct elements of the asynchronous sequence.
+     * @param size Optional target length for each permutation. When omitted, permutations use all distinct elements of the source.
+     * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A lazy async sequence of permutations, each materialised as an enumerable.
+     * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1 or greater than the number of distinct elements.
+     * @remarks The source is fully enumerated to collect distinct elements before permutations are produced. Expect combinatorial growth in the number of permutations.
      */
     permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
-     * Adds a value to the beginning of the sequence.
-     * @param element The element to add to the sequence.
+     * Returns a deferred asynchronous sequence that yields the supplied element before the source sequence.
+     * @param element Element emitted before the original sequence.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that yields {@link element} followed by the source elements.
+     * @remarks Enumeration is deferred; the source is not iterated until the resulting sequence is consumed.
      */
     prepend(element: TElement): IAsyncEnumerable<TElement>;
 
     /**
-     * Computes the product of the sequence.
-     * @param selector The selector function that will be used to select a numeric value from the sequence elements.
-     * @returns {Promise<number>} The product of the sequence.
+     * Computes the multiplicative aggregate of the values produced for each element in the asynchronous sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to interpreting the element itself as a number.
+     * @returns {Promise<number>} A promise that resolves to the product of all projected values.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks The source is consumed exactly once. Supply {@link selector} when elements are not already numeric.
      */
     product(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
-     * Inverts the order of the elements in the sequence.
+     * Returns a deferred asynchronous sequence that yields the source elements in reverse order.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence that produces the elements of the source in reverse iteration order.
+     * @remarks The implementation materialises the entire sequence into an array before emitting elements, so avoid using it on infinite sequences or when memory usage is a concern.
      */
     reverse(): IAsyncEnumerable<TElement>;
 
     /**
-     * Rotates the elements in the sequence by the specified amount.
-     * @param shift The number of positions by which the sequence will be rotated. Positive values rotate to the left; negative values rotate to the right.
+     * Returns a deferred asynchronous sequence that rotates the elements by the specified offset while preserving length.
+     * @param shift Number of positions to rotate. Positive values move elements toward the end (left rotation); negative values move them toward the beginning (right rotation).
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the same elements shifted by the requested amount.
+     * @remarks The source is consumed asynchronously and buffered to honour the rotation. Rotation amounts larger than the sequence length are normalised by that length, which may require buffering the full sequence.
      */
     rotate(shift: number): IAsyncEnumerable<TElement>;
 

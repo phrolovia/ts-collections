@@ -865,11 +865,12 @@ export const orderDescending = <TElement>(
 };
 
 /**
- * Produces a sequence of tuples containing the element and the following element.
- * @template TElement, TResult
+ * Creates a deferred sequence of adjacent element pairs drawn from the source iterable.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param resultSelector The optional function to create a result element from the current and the next element. Defaults to creating a tuple `[current, next]`.
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are the result of applying the `resultSelector` to adjacent elements.
+ * @param resultSelector Optional projection applied to each current/next pair. Defaults to returning `[current, next]`.
+ * @returns {IEnumerable<[TElement, TElement]>} A sequence with one element per consecutive pair from {@link source}.
+ * @remarks The final element is omitted because it lacks a successor. {@link source} is enumerated lazily and exactly once.
  */
 export const pairwise = <TElement>(
     source: Iterable<TElement>,
@@ -879,17 +880,26 @@ export const pairwise = <TElement>(
 };
 
 /**
- * Produces a tuple of two enumerable sequences, the first one containing the elements that satisfy the condition, and the second one containing the rest of the elements.
- * Note: This method iterates the source sequence immediately and stores the results.
- * @template TElement
+ * Splits the sequence into cached partitions using a type guard predicate.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TFiltered Type produced when {@link predicate} narrows an element.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition.
- * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing two enumerable sequences: the first for elements satisfying the predicate, the second for the rest.
+ * @param predicate Type guard invoked for each element. Elements that satisfy the predicate populate the first partition.
+ * @returns {[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]} A tuple containing the matching partition and the partition with the remaining elements.
+ * @remarks {@link source} is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating the predicate.
  */
 export function partition<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
+/**
+ * Splits the sequence into cached partitions using a boolean predicate.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable.
+ * @param predicate Predicate evaluated for each element. Elements for which it returns `true` populate the first partition.
+ * @returns {[IEnumerable<TElement>, IEnumerable<TElement>]} A tuple containing the elements that satisfied {@link predicate} and those that did not.
+ * @remarks {@link source} is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating the predicate.
+ */
 export function partition<TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement>
@@ -902,13 +912,13 @@ export function partition<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Returns an enumerable sequence of permutations, each containing a permutation of the elements of the source sequence.
- * Note: This method first extracts distinct elements from the source before generating permutations.
- * @template TElement
+ * Generates permutations from the distinct elements of the source iterable.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param size If specified, it will return only the permutations of the specified size. If not specified, it will return permutations of the size of the distinct elements in the source sequence.
- * @returns {IEnumerable<IEnumerable<TElement>>} An enumerable of enumerable sequences, each containing a permutation of the distinct elements of the source sequence.
- * @throws {InvalidArgumentException} If size is less than or equal to 0.
+ * @param size Optional target length for each permutation. When omitted, permutations use all distinct elements of the source.
+ * @returns {IEnumerable<IEnumerable<TElement>>} A lazy sequence of permutations, each materialised as an enumerable.
+ * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1 or greater than the number of distinct elements.
+ * @remarks {@link source} is enumerated to collect distinct elements before permutations are produced. Expect combinatorial growth in the number of permutations.
  */
 export const permutations = <TElement>(
     source: Iterable<TElement>,
@@ -918,11 +928,12 @@ export const permutations = <TElement>(
 };
 
 /**
- * Adds a value to the beginning of the sequence.
- * @template TElement
+ * Returns a deferred sequence that yields the supplied element before the source iterable.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param element The element to add to the sequence.
- * @returns {IEnumerable<TElement>} A new enumerable sequence that starts with the specified element.
+ * @param element Element emitted before the original sequence.
+ * @returns {IEnumerable<TElement>} A sequence that yields {@link element} followed by the elements from {@link source}.
+ * @remarks Enumeration is deferred; {@link source} is not iterated until the resulting sequence is consumed.
  */
 export const prepend = <TElement>(
     source: Iterable<TElement>,
@@ -932,11 +943,13 @@ export const prepend = <TElement>(
 };
 
 /**
- * Computes the product of the sequence. Assumes elements are numbers or uses a selector to get numbers.
+ * Computes the multiplicative aggregate of the values produced for each element in the source iterable.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param selector The selector function that will be used to select a numeric value from the sequence elements.
- * @returns {number} The product of the sequence. Returns 1 if the sequence is empty.
- * @throws {NoElementsException} If the source is empty.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to interpreting the element itself as a number.
+ * @returns {number} The product of all projected values.
+ * @throws {NoElementsException} Thrown when {@link source} is empty.
+ * @remarks {@link source} is enumerated exactly once. Supply {@link selector} when elements are not already numeric.
  */
 export const product = <TElement>(
     source: Iterable<TElement>,
@@ -946,44 +959,46 @@ export const product = <TElement>(
 };
 
 /**
- * Creates a range of numbers starting from the specified start value and containing the specified count of elements.
- * @param {number} start The start value of the range.
- * @param {number} count The number of elements in the range.
- * @returns {IEnumerable<number>} An enumerable range of numbers.*/
+ * Generates a numeric range beginning at the specified start value.
+ * @param start Start value of the range.
+ * @param count Number of sequential values to produce.
+ * @returns {IEnumerable<number>} A sequence of `count` integers starting from {@link start}.
+ * @remarks Enumeration is deferred. When {@link count} is zero or negative, the resulting sequence is empty.
+ */
 export const range = (start: number, count: number): IEnumerable<number> => {
     return Enumerable.range(start, count);
 };
 
 /**
- * Repeats the specified element a specified number of times.
- *
- * @template TElement The type of the element to repeat.
- * @param {TElement} element The element to repeat.
- * @param {number} count The number of times to repeat the element.
- * @returns {IEnumerable<TElement>} An Iterable representing the repeated elements.*/
+ * Creates a sequence that repeats the specified element a fixed number of times.
+ * @template TElement Type of the repeated element.
+ * @param element Element to repeat.
+ * @param count Number of repetitions to produce.
+ * @returns {IEnumerable<TElement>} A sequence containing {@link element} repeated {@link count} times.
+ * @remarks Enumeration is deferred. When {@link count} is zero or negative, the resulting sequence is empty.
+ */
 export const repeat = <TElement>(element: TElement, count: number): IEnumerable<TElement> => {
     return Enumerable.repeat(element, count);
 };
 
 /**
- * Inverts the order of the elements in the sequence.
- *
- * Note: This method internally converts the sequence to an array to reverse it.
- * @template TElement
+ * Returns a deferred sequence that yields the source elements in reverse order.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @returns {IEnumerable<TElement>} A new enumerable sequence whose elements are in the reverse order of the source sequence.
+ * @returns {IEnumerable<TElement>} A sequence that produces the elements of {@link source} in reverse iteration order.
+ * @remarks The implementation materialises the entire sequence into an array before emitting elements, so avoid using it on infinite sequences or when memory usage is a concern.
  */
 export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
     return from(source).reverse();
 };
 
 /**
- * Rotates the elements in the sequence by the specified amount while preserving the sequence length.
- * Positive values rotate elements towards the end (left rotation), and negative values rotate towards the beginning (right rotation).
- * @template TElement
+ * Returns a deferred sequence that rotates the elements by the specified offset while preserving length.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param shift The number of positions by which the sequence will be rotated.
- * @returns {IEnumerable<TElement>} A new enumerable sequence containing the rotated elements.
+ * @param shift Number of positions to rotate. Positive values move elements toward the end (left rotation); negative values move them toward the beginning (right rotation).
+ * @returns {IEnumerable<TElement>} A sequence containing the same elements shifted by the requested amount.
+ * @remarks The source is buffered sufficiently to honour the rotation. Rotation amounts larger than the length of {@link source} are normalised by that length, which may require buffering the full sequence.
  */
 export const rotate = <TElement>(source: Iterable<TElement>, shift: number): IEnumerable<TElement> => {
     return from(source).rotate(shift);
