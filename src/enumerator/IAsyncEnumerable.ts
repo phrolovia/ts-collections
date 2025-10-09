@@ -934,6 +934,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @template TResult
      * @param type The type to filter the elements of the sequence with.
      * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+     * @example
+     * ```typescript
+     * const mixed = fromAsync([1, 'two', 3, 'four', new Date()]);
+     * const numbers = await mixed.ofType('number').toArray();
+     * console.log(numbers); // [1, 3]
+     *
+     * const dates = await mixed.ofType(Date).toArray();
+     * console.log(dates); // [Date object]
+     * ```
      */
     ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>>;
 
@@ -942,6 +951,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
      * @returns {IOrderedAsyncEnumerable<TElement>} An ordered async sequence sorted ascending.
      * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 5, 2, 4]);
+     * const sorted = await numbers.order().toArray();
+     * console.log(sorted); // [1, 2, 3, 4, 5]
+     * ```
      */
     order(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
 
@@ -949,6 +964,21 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Sorts the elements of a sequence in ascending order by using a specified comparer.
      * @param keySelector The key selector function that will be used for selecting the key for an element.
      * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Charlie', age: 22 },
+     * ]);
+     * const sorted = await people.orderBy(p => p.age).toArray();
+     * console.log(sorted);
+     * // [
+     * //   { name: 'Charlie', age: 22 },
+     * //   { name: 'Alice', age: 25 },
+     * //   { name: 'Bob', age: 30 }
+     * // ]
+     * ```
      */
     orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement>;
 
@@ -956,6 +986,21 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Sorts the elements of a sequence in descending order by using a specified comparer.
      * @param keySelector The key selector function that will be used for selecting the key for an element.
      * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
+     * @example
+     * ```typescript
+     * const people = fromAsync([
+     *   { name: 'Charlie', age: 22 },
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     * ]);
+     * const sorted = await people.orderByDescending(p => p.age).toArray();
+     * console.log(sorted);
+     * // [
+     * //   { name: 'Bob', age: 30 },
+     * //   { name: 'Alice', age: 25 },
+     * //   { name: 'Charlie', age: 22 }
+     * // ]
+     * ```
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement>;
 
@@ -964,6 +1009,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
      * @returns {IOrderedAsyncEnumerable<TElement>} An ordered async sequence sorted descending.
      * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([3, 1, 5, 2, 4]);
+     * const sorted = await numbers.orderDescending().toArray();
+     * console.log(sorted); // [5, 4, 3, 2, 1]
+     * ```
      */
     orderDescending(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
 
@@ -972,6 +1023,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param resultSelector Projection applied to each current/next pair; the value it returns becomes the emitted element.
      * @returns {IAsyncEnumerable<[TElement, TElement]>} An async sequence with one element per consecutive pair from the source sequence.
      * @remarks The final element is omitted because it lacks a successor. Iteration is lazy and consumes the source sequence exactly once via its async iterator.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4]);
+     * const pairs = await numbers.pairwise(p => p).toArray();
+     * console.log(pairs); // [[1, 2], [2, 3], [3, 4]]
+     * ```
      */
     pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]>;
 
@@ -981,6 +1038,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Type guard invoked for each element. Elements that satisfy the predicate populate the first partition.
      * @returns {Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>} A promise that resolves to the matching partition and the partition with the remaining elements.
      * @remarks The entire source is consumed asynchronously and buffered before the promise resolves, allowing both partitions to be iterated multiple times without replaying the source.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5, 6]);
+     * const [evens, odds] = await numbers.partition(x => x % 2 === 0);
+     * console.log(evens.toArray()); // [2, 4, 6]
+     * console.log(odds.toArray()); // [1, 3, 5]
+     * ```
      */
     partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]>;
 
@@ -998,6 +1062,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<IEnumerable<TElement>>} A lazy async sequence of permutations, each materialised as an enumerable.
      * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1 or greater than the number of distinct elements.
      * @remarks The source is fully enumerated to collect distinct elements before permutations are produced. Expect combinatorial growth in the number of permutations.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const perms = numbers.permutations(2);
+     * const result = await perms.select(p => p.toArray()).toArray();
+     * console.log(result); // [[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]]
+     * ```
      */
     permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
@@ -1006,6 +1077,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param element Element emitted before the original sequence.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields {@link element} followed by the source elements.
      * @remarks Enumeration is deferred; the source is not iterated until the resulting sequence is consumed.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const prepended = await numbers.prepend(0).toArray();
+     * console.log(prepended); // [0, 1, 2, 3]
+     * ```
      */
     prepend(element: TElement): IAsyncEnumerable<TElement>;
 
@@ -1015,6 +1092,19 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<number>} A promise that resolves to the product of all projected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks The source is consumed exactly once. Supply {@link selector} when elements are not already numeric.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const result = await numbers.product();
+     * console.log(result); // 120
+     *
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     * ]);
+     * const ageProduct = await people.product(p => p.age);
+     * console.log(ageProduct); // 750
+     * ```
      */
     product(selector?: Selector<TElement, number>): Promise<number>;
 
@@ -1022,6 +1112,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * Returns a deferred asynchronous sequence that yields the source elements in reverse order.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that produces the elements of the source in reverse iteration order.
      * @remarks The implementation materialises the entire sequence into an array before emitting elements, so avoid using it on infinite sequences or when memory usage is a concern.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const reversed = await numbers.reverse().toArray();
+     * console.log(reversed); // [5, 4, 3, 2, 1]
+     * ```
      */
     reverse(): IAsyncEnumerable<TElement>;
 
@@ -1030,6 +1126,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param shift Number of positions to rotate. Positive values move elements toward the end (left rotation); negative values move them toward the beginning (right rotation).
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the same elements shifted by the requested amount.
      * @remarks The source is consumed asynchronously and buffered to honour the rotation. Rotation amounts larger than the sequence length are normalised by that length, which may require buffering the full sequence.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const rotated = await numbers.rotate(2).toArray();
+     * console.log(rotated); // [3, 4, 5, 1, 2]
+     *
+     * const rotatedNegative = await numbers.rotate(-2).toArray();
+     * console.log(rotatedNegative); // [4, 5, 1, 2, 3]
+     * ```
      */
     rotate(shift: number): IAsyncEnumerable<TElement>;
 

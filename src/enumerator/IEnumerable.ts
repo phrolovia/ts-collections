@@ -932,6 +932,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param type Type descriptor that determines which elements are retained.
      * @returns {IEnumerable<InferredType<TResult>>} A sequence containing only the elements that match the specified type.
      * @remarks This method performs a runtime type check for each element and yields matching elements lazily.
+     * @example
+     * ```typescript
+     * const mixed = from([1, 'two', 3, 'four', new Date()]);
+     * const numbers = mixed.ofType('number').toArray();
+     * console.log(numbers); // [1, 3]
+     *
+     * const dates = mixed.ofType(Date).toArray();
+     * console.log(dates); // [Date object]
+     * ```
      */
     ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>>;
 
@@ -940,6 +949,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
      * @returns {IOrderedEnumerable<TElement>} An ordered sequence sorted ascending.
      * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+     * @example
+     * ```typescript
+     * const numbers = from([3, 1, 5, 2, 4]);
+     * const sorted = numbers.order().toArray();
+     * console.log(sorted); // [1, 2, 3, 4, 5]
+     * ```
      */
     order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
@@ -950,6 +965,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
      * @returns {IOrderedEnumerable<TElement>} An ordered sequence that preserves the original relative ordering of elements that share the same key.
      * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+     * @example
+     * ```typescript
+     * const people = from([
+     *   { name: 'Bob', age: 30 },
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Charlie', age: 22 },
+     * ]);
+     * const sorted = people.orderBy(p => p.age).toArray();
+     * console.log(sorted);
+     * // [
+     * //   { name: 'Charlie', age: 22 },
+     * //   { name: 'Alice', age: 25 },
+     * //   { name: 'Bob', age: 30 }
+     * // ]
+     * ```
      */
     orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
 
@@ -960,6 +990,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
      * @returns {IOrderedEnumerable<TElement>} An ordered sequence that preserves the original relative ordering of elements that share the same key while ordering keys descending.
      * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+     * @example
+     * ```typescript
+     * const people = from([
+     *   { name: 'Charlie', age: 22 },
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     * ]);
+     * const sorted = people.orderByDescending(p => p.age).toArray();
+     * console.log(sorted);
+     * // [
+     * //   { name: 'Bob', age: 30 },
+     * //   { name: 'Alice', age: 25 },
+     * //   { name: 'Charlie', age: 22 }
+     * // ]
+     * ```
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
 
@@ -968,6 +1013,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
      * @returns {IOrderedEnumerable<TElement>} An ordered sequence sorted descending.
      * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+     * @example
+     * ```typescript
+     * const numbers = from([3, 1, 5, 2, 4]);
+     * const sorted = numbers.orderDescending().toArray();
+     * console.log(sorted); // [5, 4, 3, 2, 1]
+     * ```
      */
     orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
@@ -976,6 +1027,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param resultSelector Optional projection applied to each current/next pair. Defaults to returning `[current, next]`.
      * @returns {IEnumerable<[TElement, TElement]>} A sequence with one element per consecutive pair from the source sequence.
      * @remarks The final element is omitted because it lacks a successor. The source sequence is enumerated lazily and only once.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4]);
+     * const pairs = numbers.pairwise().toArray();
+     * console.log(pairs); // [[1, 2], [2, 3], [3, 4]]
+     * ```
      */
     pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
     /**
@@ -984,6 +1041,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Type guard invoked for each element. Elements that satisfy the predicate populate the first partition.
      * @returns {[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]} A tuple containing the matching partition and the partition with the remaining elements.
      * @remarks The source is fully enumerated immediately and buffered so that both partitions can be iterated repeatedly without re-evaluating the predicate.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5, 6]);
+     * const [evens, odds] = numbers.partition(x => x % 2 === 0);
+     * console.log(evens.toArray()); // [2, 4, 6]
+     * console.log(odds.toArray()); // [1, 3, 5]
+     * ```
      */
     partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
 
@@ -1001,6 +1065,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<IEnumerable<TElement>>} A lazy sequence of permutations, each materialised as an enumerable.
      * @throws {InvalidArgumentException} Thrown when {@link size} is less than 1 or greater than the number of distinct elements.
      * @remarks The source is enumerated to collect distinct elements before permutations are produced. Expect combinatorial growth in the number of permutations.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * const perms = numbers.permutations(2);
+     * console.log(perms.select(p => p.toArray()).toArray()); // [[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]]
+     * ```
      */
     permutations(size?: number): IEnumerable<IEnumerable<TElement>>;
 
@@ -1009,6 +1079,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param element Element emitted before the original sequence.
      * @returns {IEnumerable<TElement>} A sequence that yields {@link element} followed by the source elements.
      * @remarks Enumeration is deferred; the source is not iterated until the resulting sequence is consumed.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * const prepended = numbers.prepend(0).toArray();
+     * console.log(prepended); // [0, 1, 2, 3]
+     * ```
      */
     prepend(element: TElement): IEnumerable<TElement>;
 
@@ -1018,6 +1094,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {number} The product of all projected values.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks The source is enumerated exactly once. Supply {@link selector} when elements are not already numeric.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const result = numbers.product();
+     * console.log(result); // 120
+     *
+     * const people = from([
+     *   { name: 'Alice', age: 25 },
+     *   { name: 'Bob', age: 30 },
+     * ]);
+     * const ageProduct = people.product(p => p.age);
+     * console.log(ageProduct); // 750
+     * ```
      */
     product(selector?: Selector<TElement, number>): number;
 
@@ -1025,6 +1114,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Returns a deferred sequence that yields the source elements in reverse order.
      * @returns {IEnumerable<TElement>} A sequence that produces the elements of the source in reverse iteration order.
      * @remarks The implementation materialises the entire sequence into an array before emitting elements, so avoid using it on infinite sequences or when memory usage is a concern.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const reversed = numbers.reverse().toArray();
+     * console.log(reversed); // [5, 4, 3, 2, 1]
+     * ```
      */
     reverse(): IEnumerable<TElement>;
 
@@ -1033,6 +1128,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param shift Number of positions to rotate. Positive values move elements toward the end (left rotation); negative values move them toward the beginning (right rotation).
      * @returns {IEnumerable<TElement>} A sequence containing the same elements shifted by the requested amount.
      * @remarks The source is buffered sufficiently to honour the rotation. Rotation amounts larger than the sequence length are normalised by that length, so extremely large offsets may still require holding the entire sequence in memory.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const rotated = numbers.rotate(2).toArray();
+     * console.log(rotated); // [3, 4, 5, 1, 2]
+     *
+     * const rotatedNegative = numbers.rotate(-2).toArray();
+     * console.log(rotatedNegative); // [4, 5, 1, 2, 3]
+     * ```
      */
     rotate(shift: number): IEnumerable<TElement>;
 
