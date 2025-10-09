@@ -1080,6 +1080,17 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {Promise<TResult>} A promise that resolves to the value produced by {@link operator} after it consumes the sequence as needed.
      * @throws {unknown} Re-throws any error thrown by {@link operator} or surfaced while asynchronously enumerating the sequence.
      * @remarks The operator determines when and how the sequence is consumed, enabling custom asynchronous workflows and integrations while preserving fluent syntax.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const sum = await numbers.pipe(async e => e.sum());
+     * console.log(sum); // 15
+     *
+     * const filteredAndDoubled = await numbers.pipe(async e =>
+     *   e.where(x => x % 2 === 0).select(x => x * 2).toArray()
+     * );
+     * console.log(filteredAndDoubled); // [4, 8]
+     * ```
      */
     pipe<TResult>(operator: AsyncPipeOperator<TElement, TResult>): Promise<TResult>;
 

@@ -1514,6 +1514,17 @@ export const permutations = <TElement>(
  * @returns {TResult} The value produced by {@link operator} after optionally enumerating {@link source}.
  * @throws {unknown} Re-throws any error thrown by {@link operator} or during enumeration initiated by the operator.
  * @remarks The operator chooses how the sequence is consumed, making this helper convenient for custom aggregations, projections, or interop scenarios.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const sum = pipe(numbers, e => e.sum());
+ * console.log(sum); // 15
+ *
+ * const filteredAndDoubled = pipe(numbers, e =>
+ *   e.where(x => x % 2 === 0).select(x => x * 2).toArray()
+ * );
+ * console.log(filteredAndDoubled); // [4, 8]
+ * ```
  */
 export const pipe = <TElement, TResult>(
     source: Iterable<TElement>,

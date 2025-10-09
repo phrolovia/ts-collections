@@ -1082,6 +1082,17 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {TResult} The value produced by {@link operator} after optionally enumerating the sequence.
      * @throws {unknown} Re-throws any error thrown by {@link operator} or during enumeration initiated by the operator.
      * @remarks The operator controls when and how the sequence is iterated, enabling custom aggregations, projections, or interop with external APIs while preserving fluent syntax.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const sum = numbers.pipe(e => e.sum());
+     * console.log(sum); // 15
+     *
+     * const filteredAndDoubled = numbers.pipe(e =>
+     *   e.where(x => x % 2 === 0).select(x => x * 2).toArray()
+     * );
+     * console.log(filteredAndDoubled); // [4, 8]
+     * ```
      */
     pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult;
 
