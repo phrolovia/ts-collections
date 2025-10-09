@@ -42,7 +42,7 @@ A comprehensive TypeScript library providing a rich set of common data structure
 *   [Enumerators](#enumerators)
     *   [Enumerable](#enumerable)
     *   [AsyncEnumerable](#asyncenumerable)
-*   [API]
+*   [API](#api)
 ---
 
 ## Getting Started
