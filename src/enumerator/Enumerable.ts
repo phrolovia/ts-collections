@@ -39,6 +39,7 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -169,6 +170,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.distinctBy(keySelector, keyComparator);
     }
 
+    public distinctUntilChanged(comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+        return this.#enumerator.distinctUntilChanged(comparator);
+    }
+
+    public distinctUntilChangedBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
+        return this.#enumerator.distinctUntilChangedBy(keySelector, keyComparator);
+    }
+
     public elementAt(index: number): TElement {
         return this.#enumerator.elementAt(index);
     }
@@ -211,6 +220,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public index(): IEnumerable<[number, TElement]> {
         return this.#enumerator.index();
+    }
+
+    public interleave<TSecond>(iterable: Iterable<TSecond>): IEnumerable<TElement | TSecond> {
+        return this.#enumerator.interleave(iterable);
     }
 
     public intersect(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -265,12 +278,20 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.ofType(type);
     }
 
+    public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return this.#enumerator.order(comparator);
+    }
+
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return this.#enumerator.orderBy(keySelector, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         return this.#enumerator.orderByDescending(keySelector, comparator);
+    }
+
+    public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
+        return this.#enumerator.orderDescending(comparator);
     }
 
     public pairwise(resulSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
@@ -287,6 +308,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.permutations(size);
     }
 
+    public pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult {
+        return this.#enumerator.pipe(operator);
+    }
+
     public prepend(element: TElement): IEnumerable<TElement> {
         return this.#enumerator.prepend(element);
     }
@@ -297,6 +322,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public reverse(): IEnumerable<TElement> {
         return this.#enumerator.reverse();
+    }
+
+    public rotate(shift: number): IEnumerable<TElement> {
+        return this.#enumerator.rotate(shift);
     }
 
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
@@ -369,6 +398,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
         return this.#enumerator.takeWhile(predicate as IndexedPredicate<TElement>);
+    }
+
+    public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {
+        return this.#enumerator.tap(action);
     }
 
     public toArray(): TElement[] {

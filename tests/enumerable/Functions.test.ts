@@ -1,5 +1,4 @@
-import { describe, expectTypeOf, test } from "vitest";
-import type { IEnumerable } from "../../src/imports";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import {
     aggregate,
     aggregateBy,
@@ -21,6 +20,8 @@ import {
     Dictionary,
     distinct,
     distinctBy,
+    distinctUntilChanged,
+    distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
     empty,
@@ -30,8 +31,10 @@ import {
     first,
     firstOrDefault,
     forEach,
+    from,
     groupBy,
     groupJoin,
+    IEnumerable,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
@@ -42,6 +45,7 @@ import {
     ImmutableSortedSet,
     ImmutableStack,
     index,
+    interleave,
     intersect,
     intersectBy,
     intersperse,
@@ -56,11 +60,14 @@ import {
     minBy,
     none,
     ofType,
+    order,
     orderBy,
     orderByDescending,
+    orderDescending,
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     PriorityQueue,
     product,
@@ -68,6 +75,7 @@ import {
     range,
     repeat,
     reverse,
+    rotate,
     scan,
     select,
     selectMany,
@@ -87,6 +95,7 @@ import {
     take,
     takeLast,
     takeWhile,
+    tap,
     toArray,
     toCircularLinkedList,
     toCircularQueue,
@@ -447,6 +456,47 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#distinctUntilChanged()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = [1, 1, 2, 2, 2, 1, 3, 3];
+            const distinct = distinctUntilChanged(list).toArray();
+            expect(distinct).to.deep.equal([1, 2, 1, 3]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = [] as string[];
+            const distinct = distinctUntilChanged(list).toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const list = ["a", "a", "A", "b"];
+            const distinctWithoutComparator = distinctUntilChanged(list).toArray();
+            const distinctWithComparator = distinctUntilChanged(list, (e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal(["a", "A", "b"]);
+            expect(distinctWithComparator).to.deep.equal(["a", "b"]);
+        });
+    });
+
+    describe("#distinctUntilChangedBy()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = [Person.Alice, Person.Alice, Person.Noemi, Person.Noemi2, Person.Rui];
+            const distinct = distinctUntilChangedBy(list, p => p.name).toArray();
+            expect(distinct).to.deep.equal([Person.Alice, Person.Noemi, Person.Rui]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = [] as never[];
+            const distinct = distinctUntilChangedBy(list, k => k).toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const littleAlice = new Person("alice", "Rivermist", 9);
+            const list = [Person.Alice, littleAlice, Person.Ayana];
+            const distinctWithoutComparator = distinctUntilChangedBy(list, p => p.name).toArray();
+            const distinctWithComparator = distinctUntilChangedBy(list, p => p.name, (e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal([Person.Alice, littleAlice, Person.Ayana]);
+            expect(distinctWithComparator).to.deep.equal([Person.Alice, Person.Ayana]);
+        });
+    });
+
     describe("#elementAt()", () => {
         test("should return the element at the index", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -680,6 +730,16 @@ describe("Enumerable Standalone Functions", () => {
             expect(indexedList.toArray()).to.deep.equal([[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]);
         });
     });
+
+    describe("#interleave()", () => {
+        test("should return an interleaved list", () => {
+            const set = new Set([1, 2, 3]);
+            const queue = new Queue([false, true, false]);
+            const result = interleave(set, queue).toArray();
+            const expected = [1, false, 2, true, 3, false];
+            expect(result).to.deep.equal(expected);
+        });
+    })
 
     describe("#intersect()", () => {
         test("should return [4,5]", () => {
@@ -1072,6 +1132,21 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#order()", () => {
+        test("should order numbers", () => {
+            const unsorted =[4, 2, 3, 1, 5];
+            const sorted = order(unsorted).toArray();
+            expect(sorted).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+        test("should use provided comparator", () => {
+            const source = ["b", "a"];
+            const sorted1 = order(source, (e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = order(source, (e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["a", "b"])
+            expect(sorted2).to.deep.equal(["b", "a"]);
+        });
+    });
+
     describe("#orderBy()", () => {
         const people = [Person.Alice, Person.Lenka, Person.Jane, Person.Jisu, Person.Kaori, Person.Mel, Person.Rebecca, Person.Reina, Person.Senna, Person.Vanessa, Person.Viola];
         test("should order the list by age", () => {
@@ -1089,6 +1164,21 @@ describe("Enumerable Standalone Functions", () => {
             const orderedAges = select(orderedPeople, p => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
             expect(orderedAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#orderDescending()", () => {
+        test("should order numbers", () => {
+            const unsorted = [4, 2, 3, 1, 5];
+            const sorted = orderDescending(unsorted).toArray();
+            expect(sorted).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+        test("should use provided comparator", () => {
+            const source = ["b", "a"];
+            const sorted1 = orderDescending(source, (e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = orderDescending(source, (e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["b", "a"])
+            expect(sorted2).to.deep.equal(["a", "b"]);
         });
     });
 
@@ -1133,6 +1223,20 @@ describe("Enumerable Standalone Functions", () => {
             const result = permutations("RUI");
             const perms = result.select(p => p.toArray().join(""));
             expect(perms.toArray()).to.deep.equal(["RUI", "RIU", "URI", "UIR", "IRU", "IUR"]);
+        });
+    });
+
+    describe("#pipe()", () => {
+        test("should execute the given operator function", () => {
+            const list1 = [1,2,3,4,5];
+            const list2 = [6,7,8,9,10];
+            const avgOfEvenSquares = (source: Iterable<number>): number => from(source).where(n => n % 2 === 0).select(n => n * n).average();
+            const result1 = where(list1, n => n % 2 === 0).select(n => n * n).average();
+            const result2 = where(list2, n => n % 2 === 0).select(n => n * n).average();
+            const pipeResult1 = pipe(list1, avgOfEvenSquares);
+            const pipeResult2 = pipe(list2, avgOfEvenSquares);
+            expect(pipeResult1).to.eq(result1);
+            expect(pipeResult2).to.eq(result2);
         });
     });
 
@@ -1187,6 +1291,18 @@ describe("Enumerable Standalone Functions", () => {
             const result = reverse(sequence);
             expect(sequence).to.deep.equal([1, 2, 3, 4, 5]);
             expect(result.toArray()).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+    });
+
+    describe("#rotate", () => {
+        const sequence = [1, 2, 3, 4, 5];
+        test("should left rotate the sequence by 2", () => {
+            const result = rotate(sequence, 2).toArray();
+            expect(result).to.deep.equal([3, 4, 5, 1, 2]);
+        });
+        test("should right rotate the sequence by 2", () => {
+            const result = rotate(sequence, -2).toArray();
+            expect(result).to.deep.equal([4, 5, 1, 2, 3]);
         });
     });
 
@@ -1535,6 +1651,23 @@ describe("Enumerable Standalone Functions", () => {
             expectTypeOf(result).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
         });
     });
+
+    describe("#tap()", () => {
+        test("should tap into sequence without modifying it", () => {
+            const list = [1,2,3,4,5];
+            const squares: [number, number][] = [];
+            const list2 = tap(list, (n, nx) => squares.push([nx, n*n])).toArray();
+            const expectedTap = [
+                [0, 1],
+                [1, 4],
+                [2, 9],
+                [3, 16],
+                [4, 25]
+            ];
+            expect(squares).to.deep.equal(expectedTap);
+            expect(list2).to.deep.equal([1,2,3,4,5]);
+        });
+    })
 
     describe("#toArray()", () => {
         test("should return an array of numbers", () => {

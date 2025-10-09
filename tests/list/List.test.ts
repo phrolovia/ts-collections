@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
 import {
     CircularLinkedList, CircularQueue,
-    Enumerable, type IEnumerable, ImmutableCircularQueue,
+    Enumerable, from, type IEnumerable, ImmutableCircularQueue,
     ImmutableList, ImmutableQueue,
     PriorityQueue, ReadonlyCollection, Stack
 } from "../../src/imports";
@@ -783,6 +783,47 @@ describe("List", () => {
                 Person.Hanna,
                 Person.Noemi,
             ]);
+        });
+    });
+
+    describe("#distinctUntilChanged()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = new List([1, 1, 2, 2, 2, 1, 3, 3]);
+            const distinct = list.distinctUntilChanged().toArray();
+            expect(distinct).to.deep.equal([1, 2, 1, 3]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = new List([]);
+            const distinct = list.distinctUntilChanged().toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const list = new List(["a", "a", "A", "b"]);
+            const distinctWithoutComparator = list.distinctUntilChanged().toArray();
+            const distinctWithComparator = list.distinctUntilChanged((e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal(["a", "A", "b"]);
+            expect(distinctWithComparator).to.deep.equal(["a", "b"]);
+        });
+    });
+
+    describe("#distinctUntilChangedBy()", () => {
+        test("should return distinct contiguous elements", () => {
+            const list = new List([Person.Alice, Person.Alice, Person.Noemi, Person.Noemi2, Person.Rui]);
+            const distinct = list.distinctUntilChangedBy(p => p.name).toArray();
+            expect(distinct).to.deep.equal([Person.Alice, Person.Noemi, Person.Rui]);
+        });
+        test("should return empty list if source is empty", () => {
+            const list = new List([]);
+            const distinct = list.distinctUntilChangedBy(k => k).toArray();
+            expect(distinct).to.deep.equal([]);
+        });
+        test("should use provided comparator for key comparison", () => {
+            const littleAlice = new Person("alice", "Rivermist", 9);
+            const list = new List([Person.Alice, littleAlice, Person.Ayana]);
+            const distinctWithoutComparator = list.distinctUntilChangedBy(p => p.name).toArray();
+            const distinctWithComparator = list.distinctUntilChangedBy(p => p.name, (e1, e2) => e1.toLowerCase().localeCompare(e2.toLowerCase()) === 0).toArray();
+            expect(distinctWithoutComparator).to.deep.equal([Person.Alice, littleAlice, Person.Ayana]);
+            expect(distinctWithComparator).to.deep.equal([Person.Alice, Person.Ayana]);
         });
     });
 
@@ -1587,6 +1628,43 @@ describe("List", () => {
             expect(index).to.eq(3);
         });
     });
+
+    describe("#interleave()", () => {
+        test("should create an interleaved list", () => {
+            const list1 = new List([1,2,3,4,5]);
+            const array = ["a", "b", "c"];
+            const result = list1.interleave(array).toArray();
+            const expected = [1, "a", 2, "b", 3, "c", 4, 5];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should create an interleaved list #2", () => {
+            const list1 = new List([1,2,3]);
+            const array = ["a", "b", "c", "d", "e"];
+            const result = list1.interleave(array).toArray();
+            const expected = [1, "a", 2, "b", 3, "c", "d", "e"];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return empty list", () => {
+            const list1 = new List([]);
+            const array = [] as string[];
+            const result = list1.interleave(array).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should return second list if first list is empty", () => {
+            const list1 = new List([]);
+            const list2 = new List([1,2,3]);
+            const result = list1.interleave(list2).toArray();
+            const expected = [1, 2, 3];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return first list if second list is empty", () => {
+            const list1 = new List([1,2,3]);
+            const list2 = new List([]);
+            const result = list1.interleave(list2).toArray();
+            const expected = [1, 2, 3];
+            expect(result).to.deep.equal(expected);
+        });
+    })
 
     describe("#intersect()", () => {
         test("should return an array of [4,5]", () => {
@@ -2419,6 +2497,21 @@ describe("List", () => {
         });
     });
 
+    describe("#order()", () => {
+        test("should order numbers", () => {
+            const unsorted = new List([4, 2, 3, 1, 5]);
+            const sorted = unsorted.order().toArray();
+            expect(sorted).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+        test("should use provided comparator", () => {
+            const source = new List(["b", "a"]);
+            const sorted1 = source.order((e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = source.order((e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["a", "b"])
+            expect(sorted2).to.deep.equal(["b", "a"]);
+        });
+    });
+
     describe("#orderBy()", () => {
         test("should order people by age [asc]", () => {
             const people = new List([
@@ -2440,6 +2533,7 @@ describe("List", () => {
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
         });
     });
+
     describe("#orderByDescending()", () => {
         test("should order people by age [desc]", () => {
             const people = new List([
@@ -2459,6 +2553,21 @@ describe("List", () => {
             const orderedPeopleAges = orderedPeople.select((p) => p.age);
             const expectedAges = [28, 23, 23, 20, 17, 16, 16, 14, 10, 10, 9];
             expect(orderedPeopleAges.toArray()).to.deep.equal(expectedAges);
+        });
+    });
+
+    describe("#orderDescending()", () => {
+        test("should order numbers", () => {
+            const unsorted = new List([4, 2, 3, 1, 5]);
+            const sorted = unsorted.orderDescending().toArray();
+            expect(sorted).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+        test("should use provided comparator", () => {
+            const source = new List(["b", "a"]);
+            const sorted1 = source.orderDescending((e1, e2) => e1.localeCompare(e2)).toArray();
+            const sorted2 = source.orderDescending((e1, e2) => -(e1.localeCompare(e2))).toArray();
+            expect(sorted1).to.deep.equal(["b", "a"])
+            expect(sorted2).to.deep.equal(["a", "b"]);
         });
     });
 
@@ -2582,6 +2691,20 @@ describe("List", () => {
             },
             { timeout: 10000 }
         );
+    });
+
+    describe("#pipe()", () => {
+        test("should execute the given operator function", () => {
+            const list1 = new List([1,2,3,4,5]);
+            const list2 = new List([6,7,8,9,10]);
+            const avgOfEvenSquares = (source: Iterable<number>): number => from(source).where(n => n % 2 === 0).select(n => n * n).average();
+            const result1 = list1.where(n => n % 2 === 0).select(n => n * n).average();
+            const result2 = list2.where(n => n % 2 === 0).select(n => n * n).average();
+            const pipeResult1 = list1.pipe(avgOfEvenSquares);
+            const pipeResult2 = list2.pipe(avgOfEvenSquares);
+            expect(pipeResult1).to.eq(result1);
+            expect(pipeResult2).to.eq(result2);
+        });
     });
 
     describe("#prepend()", () => {
@@ -2827,6 +2950,29 @@ describe("List", () => {
             expect(list.get(2)).to.eq(list2.get(2));
             expect(list.get(3)).to.eq(list2.get(1));
             expect(list.get(4)).to.eq(list2.get(0));
+        });
+    });
+
+    describe("#rotate()", () => {
+        test("should left rotate the list by 2", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(2).toArray();
+            expect(rotated).to.deep.equal([3, 4, 5, 1, 2]);
+        });
+        test("should right rotate the list by 2", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(-2).toArray();
+            expect(rotated).to.deep.equal([4, 5, 1, 2, 3]);
+        });
+        test("should right rotate by 3", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(13).toArray();
+            expect(rotated).to.deep.equal([4, 5, 1, 2, 3]);
+        });
+        test("should return the same order as source", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const rotated = list.rotate(0).toArray();
+            expect(rotated).to.deep.equal([1, 2, 3, 4, 5]);
         });
     });
 
@@ -3378,6 +3524,23 @@ describe("List", () => {
                 { status: "success", data: Person.Alice }
             ]);
             expectTypeOf(result).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
+        });
+    });
+
+    describe("#tap()", () => {
+        test("should tap into sequence without modifying it", () => {
+            const list = new List([1,2,3,4,5]);
+            const squares: [number, number][] = [];
+            const list2 = list.tap((n, nx) => squares.push([nx, n*n])).toImmutableList();
+            const expectedTap = [
+                [0, 1],
+                [1, 4],
+                [2, 9],
+                [3, 16],
+                [4, 25]
+            ];
+            expect(squares).to.deep.equal(expectedTap);
+            expect(list2.toArray()).to.deep.equal([1,2,3,4,5]);
         });
     });
 
