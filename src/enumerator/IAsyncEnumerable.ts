@@ -175,6 +175,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @template TResult Target type exposed by the returned sequence.
      * @returns {IAsyncEnumerable<TResult>} An async sequence that yields the same elements typed as `TResult`.
      * @remarks No runtime conversion occurs; ensure the underlying elements are compatible with `TResult` to avoid downstream failures.
+     * @example
+     * ```typescript
+     * const mixed = fromAsync([1, 'two', 3, 'four']);
+     * const numbers = mixed.cast<number>().where(x => typeof x === 'number');
+     * console.log(await numbers.toArray()); // [1, 3]
+     * ```
      */
     cast<TResult>(): IAsyncEnumerable<TResult>;
 
@@ -184,6 +190,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<IEnumerable<TElement>>} An async sequence whose elements are chunks of the original sequence.
      * @throws {InvalidArgumentException} Thrown when `size` is less than 1.
      * @remarks Each chunk is yielded as an `IEnumerable<TElement>`. The final chunk may contain fewer elements than `size`.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5, 6, 7, 8]);
+     * const chunks = numbers.chunk(3);
+     * const result = await chunks.select(c => c.toArray()).toArray();
+     * console.log(result); // [[1, 2, 3], [4, 5, 6], [7, 8]]
+     * ```
      */
     chunk(size: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
@@ -193,6 +206,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<IEnumerable<TElement>>} An async sequence of combinations built from the source elements.
      * @throws {InvalidArgumentException} Thrown when `size` is negative.
      * @remarks The source sequence is materialised before combinations are produced, so very large inputs can be expensive. Duplicate combinations produced by repeated elements are emitted only once.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const combs = numbers.combinations(2);
+     * const result = await combs.select(c => c.toArray()).toArray();
+     * console.log(result); // [[1, 2], [1, 3], [2, 3]]
+     * ```
      */
     combinations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
@@ -201,6 +221,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param other Additional elements that are yielded after the current sequence.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the elements of the current sequence followed by those from `other`.
      * @remarks Enumeration of both sequences is deferred until the result is iterated.
+     * @example
+     * ```typescript
+     * const numbers1 = fromAsync([1, 2, 3]);
+     * const numbers2 = [4, 5, 6];
+     * const concatenated = await numbers1.concat(numbers2).toArray();
+     * console.log(concatenated); // [1, 2, 3, 4, 5, 6]
+     * ```
      */
     concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement>;
 
@@ -209,6 +236,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param element Element to locate in the sequence.
      * @param comparator Optional equality comparator used to match elements. Defaults to the library's standard equality comparison.
      * @returns {Promise<boolean>} `true` when the element is found; otherwise, `false`.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const hasThree = await numbers.contains(3);
+     * console.log(hasThree); // true
+     *
+     * const hasTen = await numbers.contains(10);
+     * console.log(hasTen); // false
+     * ```
      */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
@@ -217,6 +253,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param predicate Optional predicate that determines which elements are counted. When omitted, all elements are counted.
      * @returns {Promise<number>} A promise that resolves to the number of elements that satisfy the predicate.
      * @remarks Prefer calling `any()` to test for existence instead of comparing this result with zero.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const totalCount = await numbers.count();
+     * console.log(totalCount); // 5
+     *
+     * const evenCount = await numbers.count(x => x % 2 === 0);
+     * console.log(evenCount); // 2
+     * ```
      */
     count(predicate?: Predicate<TElement>): Promise<number>;
 
@@ -227,6 +272,21 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @param comparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
      * @returns {IAsyncEnumerable<KeyValuePair<TKey, number>>} An async sequence of key/count pairs describing how many elements share each key.
      * @remarks Each key appears exactly once in the result with its associated occurrence count.
+     * @example
+     * ```typescript
+     * const products = fromAsync([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     *
+     * const countByCategory = await products.countBy(p => p.category).toArray();
+     * console.log(countByCategory);
+     * // [
+     * //   { key: 'Fruit', value: 2 },
+     * //   { key: 'Vegetable', value: 1 }
+     * // ]
+     * ```
      */
     countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>>;
 
@@ -236,6 +296,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the original elements cyclically.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks When `count` is `undefined`, consume the result with care because it represents an infinite sequence.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3]);
+     * const cycled = await numbers.cycle(2).toArray();
+     * console.log(cycled); // [1, 2, 3, 1, 2, 3]
+     * ```
      */
     cycle(count?: number): IAsyncEnumerable<TElement>;
 

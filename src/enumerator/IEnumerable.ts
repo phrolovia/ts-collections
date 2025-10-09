@@ -174,6 +174,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @template TResult Target type exposed by the returned sequence.
      * @returns {IEnumerable<TResult>} A sequence that yields the same elements typed as `TResult`.
      * @remarks No runtime conversion occurs; ensure the underlying elements are compatible with `TResult` to avoid downstream failures.
+     * @example
+     * ```typescript
+     * const mixed = from([1, 'two', 3, 'four']);
+     * const numbers = mixed.cast<number>().where(x => typeof x === 'number');
+     * console.log(numbers.toArray()); // [1, 3]
+     * ```
      */
     cast<TResult>(): IEnumerable<TResult>;
 
@@ -183,6 +189,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<IEnumerable<TElement>>} A sequence where each element is a chunk of the original sequence.
      * @throws {InvalidArgumentException} Thrown when `size` is less than 1.
      * @remarks The final chunk may contain fewer elements than `size`. Enumeration is deferred until the returned sequence is iterated.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5, 6, 7, 8]);
+     * const chunks = numbers.chunk(3);
+     * console.log(chunks.select(c => c.toArray()).toArray()); // [[1, 2, 3], [4, 5, 6], [7, 8]]
+     * ```
      */
     chunk(size: number): IEnumerable<IEnumerable<TElement>>;
 
@@ -192,6 +204,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<IEnumerable<TElement>>} A sequence of combinations built from the source elements.
      * @throws {InvalidArgumentException} Thrown when `size` is negative.
      * @remarks The source sequence is materialised before combinations are produced, so very large inputs can be expensive. Duplicate combinations produced by repeated elements are emitted only once.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * const combs = numbers.combinations(2);
+     * console.log(combs.select(c => c.toArray()).toArray()); // [[1, 2], [1, 3], [2, 3]]
+     * ```
      */
     combinations(size?: number): IEnumerable<IEnumerable<TElement>>;
 
@@ -200,6 +218,13 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param iterable Additional elements that are yielded after the current sequence.
      * @returns {IEnumerable<TElement>} A sequence containing the elements of the current sequence followed by those from `iterable`.
      * @remarks Enumeration of both sequences is deferred until the result is iterated.
+     * @example
+     * ```typescript
+     * const numbers1 = from([1, 2, 3]);
+     * const numbers2 = [4, 5, 6];
+     * const concatenated = numbers1.concat(numbers2).toArray();
+     * console.log(concatenated); // [1, 2, 3, 4, 5, 6]
+     * ```
      */
     concat(iterable: Iterable<TElement>): IEnumerable<TElement>;
 
@@ -208,6 +233,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param element Element to locate in the sequence.
      * @param comparator Optional equality comparator used to match elements. Defaults to the library's standard equality comparison.
      * @returns {boolean} `true` when the element is found; otherwise, `false`.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasThree = numbers.contains(3);
+     * console.log(hasThree); // true
+     *
+     * const hasTen = numbers.contains(10);
+     * console.log(hasTen); // false
+     * ```
      */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean;
 
@@ -216,6 +250,15 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param predicate Optional predicate that determines which elements are counted. When omitted, all elements are counted.
      * @returns {number} The number of elements that satisfy the predicate.
      * @remarks Prefer calling `any()` to test for existence instead of comparing this result with zero.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const totalCount = numbers.count();
+     * console.log(totalCount); // 5
+     *
+     * const evenCount = numbers.count(x => x % 2 === 0);
+     * console.log(evenCount); // 2
+     * ```
      */
     count(predicate?: Predicate<TElement>): number;
 
@@ -226,6 +269,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
      * @returns {IEnumerable<KeyValuePair<TKey, number>>} A sequence of key/count pairs describing how many elements share each key.
      * @remarks Each key appears exactly once in the result with its associated occurrence count.
+     * @example
+     * ```typescript
+     * const products = from([
+     *   { name: 'Apple', category: 'Fruit' },
+     *   { name: 'Banana', category: 'Fruit' },
+     *   { name: 'Carrot', category: 'Vegetable' },
+     * ]);
+     *
+     * const countByCategory = products.countBy(p => p.category).toArray();
+     * console.log(countByCategory);
+     * // [
+     * //   { key: 'Fruit', value: 2 },
+     * //   { key: 'Vegetable', value: 1 }
+     * // ]
+     * ```
      */
     countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>>;
 
@@ -235,6 +293,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @returns {IEnumerable<TElement>} A sequence that yields the original elements cyclically.
      * @throws {NoElementsException} Thrown when the sequence is empty.
      * @remarks When `count` is `undefined`, consume the result with care because it represents an infinite sequence.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3]);
+     * const cycled = numbers.cycle(2).toArray();
+     * console.log(cycled); // [1, 2, 3, 1, 2, 3]
+     * ```
      */
     cycle(count?: number): IEnumerable<TElement>;
 

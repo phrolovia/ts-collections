@@ -222,6 +222,12 @@ export const average = <TElement>(
  * @param source The source iterable.
  * @returns {IEnumerable<TResult>} A sequence that yields the same elements typed as `TResult`.
  * @remarks No runtime conversion occurs; ensure the underlying elements are compatible with `TResult` to avoid downstream failures.
+ * @example
+ * ```typescript
+ * const mixed = [1, 'two', 3, 'four'];
+ * const numbers = cast<number>(mixed).where(x => typeof x === 'number');
+ * console.log(numbers.toArray()); // [1, 3]
+ * ```
  */
 export const cast = <TResult, TElement = unknown>(
     source: Iterable<TElement>
@@ -237,6 +243,12 @@ export const cast = <TResult, TElement = unknown>(
  * @returns {IEnumerable<IEnumerable<TElement>>} A sequence where each element is a chunk of the original sequence.
  * @throws {InvalidArgumentException} Thrown when `size` is less than 1.
  * @remarks The final chunk may contain fewer elements than `size`. Enumeration is deferred until the returned sequence is iterated.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5, 6, 7, 8];
+ * const chunks = chunk(numbers, 3);
+ * console.log(chunks.select(c => c.toArray()).toArray()); // [[1, 2, 3], [4, 5, 6], [7, 8]]
+ * ```
  */
 export const chunk = <TElement>(
     source: Iterable<TElement>,
@@ -253,6 +265,12 @@ export const chunk = <TElement>(
  * @returns {IEnumerable<IEnumerable<TElement>>} A sequence of combinations built from the source elements.
  * @throws {InvalidArgumentException} Thrown when `size` is negative.
  * @remarks The source sequence is materialised before combinations are produced, so very large inputs can be expensive. Duplicate combinations produced by repeated elements are emitted only once.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const combs = combinations(numbers, 2);
+ * console.log(combs.select(c => c.toArray()).toArray()); // [[1, 2], [1, 3], [2, 3]]
+ * ```
  */
 export const combinations = <TElement>(
     source: Iterable<TElement>,
@@ -268,6 +286,13 @@ export const combinations = <TElement>(
  * @param other Additional elements that are yielded after the current sequence.
  * @returns {IEnumerable<TElement>} A sequence containing the elements of the current sequence followed by those from `other`.
  * @remarks Enumeration of both sequences is deferred until the result is iterated.
+ * @example
+ * ```typescript
+ * const numbers1 = [1, 2, 3];
+ * const numbers2 = [4, 5, 6];
+ * const concatenated = concat(numbers1, numbers2).toArray();
+ * console.log(concatenated); // [1, 2, 3, 4, 5, 6]
+ * ```
  */
 export const concat = <TElement>(
     source: Iterable<TElement>,
@@ -283,6 +308,15 @@ export const concat = <TElement>(
  * @param element Element to locate in the sequence.
  * @param comparator Optional equality comparator used to match elements. Defaults to the library's standard equality comparison.
  * @returns {boolean} `true` when the element is found; otherwise, `false`.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const hasThree = contains(numbers, 3);
+ * console.log(hasThree); // true
+ *
+ * const hasTen = contains(numbers, 10);
+ * console.log(hasTen); // false
+ * ```
  */
 export const contains = <TElement>(
     source: Iterable<TElement>,
@@ -299,6 +333,15 @@ export const contains = <TElement>(
  * @param predicate Optional predicate that determines which elements are counted. When omitted, all elements are counted.
  * @returns {number} The number of elements that satisfy the predicate.
  * @remarks Prefer calling `any(source)` to test for existence instead of comparing this result with zero.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const totalCount = count(numbers);
+ * console.log(totalCount); // 5
+ *
+ * const evenCount = count(numbers, x => x % 2 === 0);
+ * console.log(evenCount); // 2
+ * ```
  */
 export const count = <TElement>(
     source: Iterable<TElement>,
@@ -316,6 +359,21 @@ export const count = <TElement>(
  * @param comparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<KeyValuePair<TKey, number>>} A sequence of key/count pairs describing how many elements share each key.
  * @remarks Each key appears exactly once in the result with its associated occurrence count.
+ * @example
+ * ```typescript
+ * const products = [
+ *   { name: 'Apple', category: 'Fruit' },
+ *   { name: 'Banana', category: 'Fruit' },
+ *   { name: 'Carrot', category: 'Vegetable' },
+ * ];
+ *
+ * const countByCategory = countBy(products, p => p.category).toArray();
+ * console.log(countByCategory);
+ * // [
+ * //   { key: 'Fruit', value: 2 },
+ * //   { key: 'Vegetable', value: 1 }
+ * // ]
+ * ```
  */
 export const countBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -333,6 +391,12 @@ export const countBy = <TElement, TKey>(
  * @returns {IEnumerable<TElement>} A sequence that yields the original elements cyclically.
  * @throws {NoElementsException} Thrown when the sequence is empty.
  * @remarks When `count` is `undefined`, consume the result with care because it represents an infinite sequence.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3];
+ * const cycled = cycle(numbers, 2).toArray();
+ * console.log(cycled); // [1, 2, 3, 1, 2, 3]
+ * ```
  */
 export const cycle = <TElement>(
     source: Iterable<TElement>,
