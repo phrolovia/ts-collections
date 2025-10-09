@@ -237,10 +237,9 @@ A queue where elements are dequeued according to their priority.
 *   **How to use**:
     ```typescript
     import { PriorityQueue } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
     // Min-priority queue (smallest number has highest priority)
-    const pq = new PriorityQueue<number>(Comparer.instance.compare);
+    const pq = new PriorityQueue<number>();
     pq.enqueue(3);
     pq.enqueue(1);
     pq.enqueue(4);
@@ -297,9 +296,8 @@ An immutable version of `PriorityQueue`. Any operation that would modify the que
 *   **How to use**:
     ```typescript
     import { ImmutablePriorityQueue } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const pq = ImmutablePriorityQueue.create([3, 1, 4], Comparer.instance.compare);
+    const pq = ImmutablePriorityQueue.create([3, 1, 4]);
     const newPq = pq.enqueue(2); // pq is [1, 3, 4], newPq is [1, 2, 3, 4]
     ```
 *   **Pros**:
@@ -357,9 +355,8 @@ A set implementation that keeps elements sorted using a Red-Black Tree.
 *   **How to use**:
     ```typescript
     import { SortedSet } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const sortedSet = new SortedSet([3, 1, 4, 2], Comparer.instance.compare);
+    const sortedSet = new SortedSet([3, 1, 4, 2]);
     // Iteration will be in order: 1, 2, 3, 4
     ```
 *   **Pros**:
@@ -376,9 +373,8 @@ An immutable version of `SortedSet`. Any operation that would modify the set ret
 *   **How to use**:
     ```typescript
     import { ImmutableSortedSet } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const sortedSet = ImmutableSortedSet.create([3, 1, 4], Comparer.instance.compare);
+    const sortedSet = ImmutableSortedSet.create([3, 1, 4]);
     const newSortedSet = sortedSet.add(2); // sortedSet is {1, 3, 4}, newSortedSet is {1, 2, 3, 4}
     ```
 *   **Pros**:
@@ -421,7 +417,7 @@ An immutable version of `Dictionary`. Any operation that would modify the dictio
     import { ImmutableDictionary } from '@mirei/ts-collections';
 
     const dict = ImmutableDictionary.create<string, number>();
-    const newDict = dict.set("apple", 1); // dict is empty, newDict is {"apple": 1}
+    const newDict = dict.add("apple", 1); // dict is empty, newDict is {"apple": 1}
     ```
 *   **Pros**:
     *   Benefits of immutability.
@@ -436,9 +432,8 @@ A dictionary implementation that keeps keys sorted using a Red-Black Tree.
 *   **How to use**:
     ```typescript
     import { SortedDictionary } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const sortedDict = new SortedDictionary<number, string>(Comparer.instance.compare);
+    const sortedDict = new SortedDictionary<number, string>();
     sortedDict.set(3, "three");
     sortedDict.set(1, "one");
     sortedDict.set(2, "two");
@@ -458,10 +453,9 @@ An immutable version of `SortedDictionary`. Any operation that would modify the 
 *   **How to use**:
     ```typescript
     import { ImmutableSortedDictionary } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const dict = ImmutableSortedDictionary.create<number, string>(Comparer.instance.compare);
-    const newDict = dict.set(3, "three").set(1, "one"); // dict is empty, newDict has {1: "one", 3: "three"}
+    const dict = ImmutableSortedDictionary.create<number, string>();
+    const newDict = dict.add(3, "three").add(1, "one"); // dict is empty, newDict has {1: "one", 3: "three"}
     ```
 *   **Pros**:
     *   Combines benefits of sorted dictionaries and immutability.
@@ -505,9 +499,8 @@ A self-balancing binary search tree implementation.
 *   **How to use**:
     ```typescript
     import { RedBlackTree } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const tree = new RedBlackTree<number>(Comparer.instance.compare);
+    const tree = new RedBlackTree<number>();
     tree.insert(5);
     tree.insert(3);
     tree.insert(7);
@@ -532,10 +525,9 @@ A binary heap implementation.
 *   **How to use**:
     ```typescript
     import { Heap } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
     // Min-heap
-    const minHeap = new Heap<number>(Comparer.instance.compare);
+    const minHeap = new Heap<number>();
     minHeap.add(5);
     minHeap.add(1);
     minHeap.add(3);
@@ -558,9 +550,8 @@ An immutable version of `Heap`. Any operation that would modify the heap returns
 *   **How to use**:
     ```typescript
     import { ImmutableHeap } from '@mirei/ts-collections';
-    import { Comparer } from '@mirei/ts-collections/shared';
 
-    const heap = ImmutableHeap.create([5, 1, 3], Comparer.instance.compare);
+    const heap = ImmutableHeap.create([5, 1, 3]);
     const newHeap = heap.add(2); // heap is [1, 3, 5], newHeap is [1, 2, 3, 5]
     ```
 *   **Pros**:
