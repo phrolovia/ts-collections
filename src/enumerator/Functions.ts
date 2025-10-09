@@ -685,6 +685,16 @@ export function first<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): TFiltered;
+/**
+ * Returns the first element in the sequence that satisfies an optional predicate.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable.
+ * @param predicate Optional predicate evaluated against each element; when omitted, the first element is returned.
+ * @returns {TElement} The first element that satisfies {@link predicate}, or the very first element when the predicate is missing.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+ * @remarks Enumeration stops immediately once a matching element is found.
+ */
 export function first<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
@@ -726,6 +736,14 @@ export function firstOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): TFiltered | null;
+/**
+ * Returns the first element in the sequence that satisfies an optional predicate, or `null` when none does.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable.
+ * @param predicate Optional predicate evaluated against each element; when omitted, the first element is returned.
+ * @returns {TElement | null} The first element that satisfies {@link predicate}, or `null` when the sequence is empty or no element matches.
+ * @remarks This overload never throws for missing elements; use {@link first} when absence should raise an exception.
+ */
 export function firstOrDefault<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
@@ -1062,6 +1080,16 @@ export function last<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): TFiltered;
+/**
+ * Returns the last element in the sequence that satisfies an optional predicate.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable.
+ * @param predicate Optional predicate evaluated against each element. When omitted, the final element of the sequence is returned.
+ * @returns {TElement} The last element that satisfies {@link predicate}, or the final element when no predicate is supplied.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+ * @remarks The entire sequence is enumerated to locate the final match.
+ */
 export function last<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
@@ -1103,6 +1131,14 @@ export function lastOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: TypePredicate<TElement, TFiltered>
 ): TFiltered | null;
+/**
+ * Returns the last element in the sequence that satisfies an optional predicate, or `null` when none does.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable.
+ * @param predicate Optional predicate evaluated against each element. When omitted, the final element of the sequence is returned.
+ * @returns {TElement | null} The last element that satisfies {@link predicate}, or `null` when the sequence is empty or no element matches.
+ * @remarks Unlike {@link last}, this overload communicates absence through `null` instead of throwing.
+ */
 export function lastOrDefault<TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
@@ -2033,6 +2069,15 @@ export function takeWhile<TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement>
 ): IEnumerable<TElement>;
+/**
+ * Returns consecutive leading elements while a type guard predicate continues to succeed, narrowing the element type.
+ * @template TElement Type of elements within {@link source}.
+ * @template TFiltered extends TElement Narrowed element type produced by {@link predicate}.
+ * @param source The source iterable.
+ * @param predicate Type guard invoked for each element and its zero-based index; iteration stops immediately when it returns `false`.
+ * @returns {IEnumerable<TElement> | IEnumerable<TFiltered>} A deferred sequence containing the contiguous prefix that satisfies {@link predicate}, narrowed to `TFiltered` when appropriate.
+ * @remarks Elements after the first failing element are not inspected. Use this overload when you need the result to reflect the guarded type.
+ */
 export function takeWhile<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
@@ -2122,6 +2167,14 @@ export function toCircularQueue<TElement>(
     capacity: number,
     comparator?: EqualityComparator<TElement>
 ): CircularQueue<TElement>;
+/**
+ * Materialises {@link source} into a circular queue using the implementation's default capacity.
+ * @template TElement Type of elements within {@link source}.
+ * @param source The source iterable.
+ * @param comparator Optional equality comparator used by the resulting queue.
+ * @returns {CircularQueue<TElement>} A circular queue containing the most recent elements from {@link source}, bounded by the default capacity.
+ * @remarks The entire sequence is enumerated immediately. Earlier items are discarded when the number of elements exceeds the queue's capacity.
+ */
 export function toCircularQueue<TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
