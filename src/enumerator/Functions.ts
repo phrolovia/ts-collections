@@ -787,12 +787,13 @@ export const none = <TElement>(
 };
 
 /**
- * Returns the elements that are of the specified type.
- * The type can be specified either as a constructor function or as a string representing a primitive type.
- * @template TResult
+ * Filters the sequence, keeping only elements assignable to the specified type.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TResult Type descriptor used to filter elements (constructor function or primitive type string).
  * @param source The source iterable.
- * @param type The type to filter the elements of the sequence with (e.g., 'string', 'number', Boolean, Date, MyCustomClass).
- * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+ * @param type Type descriptor that determines which elements are retained (e.g., `'string'`, `Number`, `Date`).
+ * @returns {IEnumerable<InferredType<TResult>>} A sequence containing only the elements that match the specified type.
+ * @remarks This function performs a runtime type check for each element and yields matching elements lazily.
  */
 export const ofType = <TElement, TResult extends ObjectType>(
     source: Iterable<TElement>,
@@ -802,11 +803,13 @@ export const ofType = <TElement, TResult extends ObjectType>(
 };
 
 /**
- * Sorts the elements of the sequence in ascending order by using the provided comparator.
- * @template TElement
+ * Sorts the elements of the sequence in ascending order using the provided comparator.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
- * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in ascending order.*/
+ * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
+ * @returns {IOrderedEnumerable<TElement>} An ordered sequence sorted ascending.
+ * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+ */
 export const order = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -847,11 +850,13 @@ export const orderByDescending = <TElement, TKey>(
 };
 
 /**
- * Sorts the elements of the sequence in descending order by using the provided comparator.
- * @template TElement
+ * Sorts the elements of the sequence in descending order using the provided comparator.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
- * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in descending order.*/
+ * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
+ * @returns {IOrderedEnumerable<TElement>} An ordered sequence sorted descending.
+ * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
+ */
 export const orderDescending = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>

@@ -479,8 +479,10 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     ofType<TResult extends ObjectType>(type: TResult): IAsyncEnumerable<InferredType<TResult>>;
 
     /**
-     * Sorts the elements of the sequence in ascending order using the provided comparator.
-     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     * Sorts the elements of the async sequence in ascending order using the provided comparator.
+     * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
+     * @returns {IOrderedAsyncEnumerable<TElement>} An ordered async sequence sorted ascending.
+     * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
      */
     order(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
 
@@ -499,8 +501,10 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement>;
 
     /**
-     * Sorts the elements of the sequence in descending order using the provided comparator.
-     * @param comparator The comparator function that will be used for comparing two elements. If not specified, default order comparison will be used.
+     * Sorts the elements of the async sequence in descending order using the provided comparator.
+     * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
+     * @returns {IOrderedAsyncEnumerable<TElement>} An ordered async sequence sorted descending.
+     * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
      */
     orderDescending(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement>;
 

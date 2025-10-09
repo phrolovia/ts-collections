@@ -470,43 +470,47 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     none(predicate?: Predicate<TElement>): boolean;
 
     /**
-     * Returns the elements that are of the specified type.
-     * The type can be specified either as a constructor function or as a string representing a primitive type.
-     * @template TResult
-     * @param type The type to filter the elements of the sequence with (e.g., 'string', 'number', Boolean, Date, MyCustomClass).
-     * @returns {IEnumerable<TResult>} A new enumerable sequence whose elements are of the specified type.
+     * Filters the sequence, keeping only elements assignable to the specified type.
+     * @template TResult Type descriptor used to filter elements (constructor function or primitive type string).
+     * @param type Type descriptor that determines which elements are retained.
+     * @returns {IEnumerable<InferredType<TResult>>} A sequence containing only the elements that match the specified type.
+     * @remarks This method performs a runtime type check for each element and yields matching elements lazily.
      */
     ofType<TResult extends ObjectType>(type: TResult): IEnumerable<InferredType<TResult>>;
 
     /**
-     * Sorts the elements of the sequence in ascending order by using the provided comparator.
-     * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
-     * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in ascending order.
+     * Sorts the elements of the sequence in ascending order using the provided comparator.
+     * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
+     * @returns {IOrderedEnumerable<TElement>} An ordered sequence sorted ascending.
+     * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
      */
     order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
     /**
-     * Sorts the elements of a sequence in ascending order by using a specified comparer.
-     * @template TElement
-     * @param keySelector The key selector function that will be used for selecting the key for an element.
-     * @param comparator The comparator function that will be used for comparing two keys. If not specified, the default order comparison will be used.
-     * @returns {IOrderedEnumerable<TElement>} A new enumerable sequence whose elements are sorted in ascending order.
+     * Sorts the elements of the sequence in ascending order based on keys projected from each element.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Selector used to project each element to the key used for ordering.
+     * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
+     * @returns {IOrderedEnumerable<TElement>} An ordered sequence that preserves the original relative ordering of elements that share the same key.
+     * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
      */
     orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
 
     /**
-     * Sorts the elements of a sequence in descending order by using a specified comparer.
-     * @template TElement
-     * @param keySelector The key selector function that will be used for selecting the key for an element.
-     * @param comparator The comparator function that will be used for comparing two keys. If not specified, the default order comparison will be used.
-     * @returns {IOrderedEnumerable<TElement>} A new enumerable sequence whose elements are sorted in descending order.
+     * Sorts the elements of the sequence in descending order based on keys projected from each element.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Selector used to project each element to the key used for ordering.
+     * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
+     * @returns {IOrderedEnumerable<TElement>} An ordered sequence that preserves the original relative ordering of elements that share the same key while ordering keys descending.
+     * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
      */
     orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement>;
 
     /**
-     * Sorts the elements of the sequence in descending order by using the provided comparator.
-     * @param comparator The comparator function that will be used for comparing two elements. If not provided, the default order comparison is used.
-     * @returns {IOrderedEnumerable<TElement>} A new ordered enumerable whose elements are sorted in descending order.
+     * Sorts the elements of the sequence in descending order using the provided comparator.
+     * @param comparator Optional order comparator used to compare elements. Defaults to the library's standard order comparison when omitted.
+     * @returns {IOrderedEnumerable<TElement>} An ordered sequence sorted descending.
+     * @remarks Sorting is deferred; the sequence is ordered only when iterated. Use `thenBy`/`thenByDescending` on the returned sequence to specify secondary keys.
      */
     orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement>;
 
