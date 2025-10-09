@@ -652,13 +652,15 @@ export const join = <TElement, TInner, TKey, TResult>(
 };
 
 /**
- * Returns the last element of the sequence.
- * @template TElement
+ * Returns the last element in the sequence, optionally filtered by a predicate or type guard.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TFiltered Subtype confirmed when a type guard predicate is supplied.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
- * @returns {TElement} The last element of the sequence.
- * @throws {NoElementsException} If the source is empty.
- * @throws {NoMatchingElementException} If no element satisfies the condition.
+ * @param predicate Predicate evaluated against each element. When omitted, the last element of the sequence is returned. When a type guard is supplied, the returned value is narrowed to `TFiltered`.
+ * @returns {TElement | TFiltered} The last element that satisfies the predicate (or the final element when no predicate is supplied).
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+ * @remarks The entire sequence is enumerated to locate the final match.
  */
 export function last<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -676,11 +678,13 @@ export function last<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Returns the last element of the sequence or a default value if the no element satisfies the condition.
- * @template TElement
+ * Returns the last element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TFiltered Subtype confirmed when a type guard predicate is supplied.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence will be returned.
- * @returns {TElement|null} The last element of the sequence or null if the sequence is empty or no element satisfies the condition.
+ * @param predicate Predicate evaluated against each element. When omitted, the last element of the sequence is returned. When a type guard is supplied, the returned value is narrowed to `TFiltered`.
+ * @returns {TElement | TFiltered | null} The last element that satisfies the predicate, or `null` when no match is found.
+ * @remarks The entire sequence is enumerated to locate the final match. This function never throws for missing elements; it communicates absence through the `null` return value.
  */
 export function lastOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
@@ -698,11 +702,13 @@ export function lastOrDefault<TElement, TFiltered extends TElement>(
 }
 
 /**
- * Returns the maximum value in the sequence.
+ * Returns the largest numeric value produced for the elements in the sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
- * @returns {number} The maximum value in the sequence.
- * @throws {NoElementsException} If the source is empty.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @returns {number} The maximum of the projected values.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @remarks The entire sequence is enumerated exactly once. Provide a selector when the elements are not already numeric.
  */
 export const max = <TElement>(
     source: Iterable<TElement>,
@@ -712,13 +718,15 @@ export const max = <TElement>(
 };
 
 /**
- * Returns the element with the maximum value that is obtained by applying the key selector function to each element in the sequence.
- * @template TElement
+ * Returns the element whose projected key is greatest according to the provided comparator.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param comparator The comparator function that will be used for comparing two keys. If not specified, the default order comparison will be used.
- * @returns {TElement} The element with the maximum value in the sequence.
- * @throws {NoElementsException} If the source is empty.
+ * @param keySelector Selector used to project each element to the key used for comparison.
+ * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
+ * @returns {TElement} The element whose key is maximal.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @remarks When multiple elements share the maximal key, the first such element in the sequence is returned.
  */
 export const maxBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -729,11 +737,13 @@ export const maxBy = <TElement, TKey>(
 };
 
 /**
- * Returns the minimum value in the sequence.
+ * Returns the smallest numeric value produced for the elements in the sequence.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
- * @returns {number} The minimum value in the sequence.
- * @throws {NoElementsException} If the source is empty.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @returns {number} The minimum of the projected values.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @remarks The entire sequence is enumerated exactly once. Provide a selector when the elements are not already numeric.
  */
 export const min = <TElement>(
     source: Iterable<TElement>,
@@ -743,13 +753,15 @@ export const min = <TElement>(
 };
 
 /**
- * Returns the element with the minimum value that is obtained by applying the key selector function to each element in the sequence.
- * @template TElement
+ * Returns the element whose projected key is smallest according to the provided comparator.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
  * @param source The source iterable.
- * @param keySelector The key selector function that will be used to select the key for an element.
- * @param comparator The comparator function that will be used for comparing two keys. If not specified, the default order comparison will be used.
- * @returns {TElement} The element with the minimum value in the sequence.
- * @throws {NoElementsException} If the source is empty.
+ * @param keySelector Selector used to project each element to the key used for comparison.
+ * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
+ * @returns {TElement} The element whose key is minimal.
+ * @throws {NoElementsException} Thrown when the sequence is empty.
+ * @remarks When multiple elements share the minimal key, the first such element in the sequence is returned.
  */
 export const minBy = <TElement, TKey>(
     source: Iterable<TElement>,
@@ -760,11 +772,12 @@ export const minBy = <TElement, TKey>(
 };
 
 /**
- * Determines whether no elements of the sequence satisfy the specified predicate.
- * If no predicate is specified, it returns true if the sequence is empty, and false otherwise.
+ * Determines whether the sequence contains no elements that satisfy the optional predicate.
+ * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
- * @param predicate The predicate function that will be used to check each element for a condition.
- * @returns {boolean} true if no elements satisfy the predicate, or if the sequence is empty and no predicate is provided; otherwise, false.
+ * @param predicate Optional predicate evaluated against each element. When omitted, the function returns `true` if the sequence is empty.
+ * @returns {boolean} `true` when no element satisfies the predicate (or when the sequence is empty and no predicate is provided); otherwise, `false`.
+ * @remarks This is more efficient than negating `any` with a predicate because iteration stops as soon as a matching element is found.
  */
 export const none = <TElement>(
     source: Iterable<TElement>,

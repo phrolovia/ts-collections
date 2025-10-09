@@ -384,78 +384,88 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult>;
 
     /**
-     * Returns the last element that satisfies the provided type guard predicate and narrows the resulting type.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
-     * @returns {Promise<TFiltered>} A promise that resolves to the last matching element.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If no element satisfies the predicate.
+     * Asynchronously returns the last element that satisfies the provided type guard.
+     * @template TFiltered Subtype confirmed by the type guard.
+     * @param predicate Type guard evaluated against each element. Every matching element becomes a candidate, and the final match is returned.
+     * @returns {Promise<TFiltered>} A promise that resolves to the last element that satisfies the type guard.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when no element satisfies the type guard.
+     * @remarks The entire sequence is enumerated to locate the final match.
      */
     last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
 
     /**
-     * Returns the last element of the sequence, optionally filtered by a predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence is returned.
-     * @returns {Promise<TElement>} A promise that resolves to the last element of the sequence.
-     * @throws {NoElementsException} If the source is empty.
-     * @throws {NoMatchingElementException} If a predicate is specified and no element satisfies it.
+     * Asynchronously returns the last element in the sequence, optionally filtered by a predicate.
+     * @param predicate Predicate evaluated against each element. When omitted, the last element of the sequence is returned.
+     * @returns {Promise<TElement>} A promise that resolves to the last element that satisfies the predicate (or the final element when no predicate is supplied).
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {NoMatchingElementException} Thrown when a predicate is supplied and no element satisfies it.
+     * @remarks The entire sequence is enumerated to locate the final match.
      */
     last(predicate?: Predicate<TElement>): Promise<TElement>;
 
     /**
-     * Returns the last element that satisfies the provided type guard predicate, or resolves to null when no such element exists.
-     * @template TFiltered
-     * @param predicate The predicate that acts as a type guard. The resolved element is guaranteed to match the guarded type when found.
-     * @returns {Promise<TFiltered | null>} A promise that resolves to the last matching element, or null if none matches.
+     * Asynchronously returns the last element that satisfies the provided type guard, or `null` when no such element exists.
+     * @template TFiltered Subtype confirmed by the type guard.
+     * @param predicate Type guard evaluated against each element. Every matching element becomes a candidate, and the final match is returned.
+     * @returns {Promise<TFiltered | null>} A promise that resolves to the last element that satisfies the type guard, or `null` when none match.
+     * @remarks The entire sequence is enumerated to locate the final match. This overload never rejects for missing elements; it communicates absence through the `null` result.
      */
     lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered | null>;
 
     /**
-     * Returns the last element of the sequence or resolves to null when the sequence is empty or no element satisfies the predicate.
-     * @param predicate The predicate function that will be used to check each element for a condition. If not specified, the last element of the sequence is returned.
-     * @returns {Promise<TElement | null>} A promise that resolves to the last matching element or null when no match is found.
+     * Asynchronously returns the last element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
+     * @param predicate Predicate evaluated against each element. When omitted, the last element of the sequence is returned.
+     * @returns {Promise<TElement | null>} A promise that resolves to the last element that satisfies the predicate, or `null` when no match is found.
+     * @remarks The entire sequence is enumerated to locate the final match. This overload never rejects for missing elements; it communicates absence through the `null` result.
      */
     lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
 
     /**
-     * Returns the maximum value in the sequence.
-     * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
-     * @throws {NoElementsException} If the source is empty.
+     * Asynchronously returns the largest numeric value produced for the elements in the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @returns {Promise<number>} A promise that resolves to the maximum of the projected values.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks The entire sequence is enumerated exactly once. Provide a selector when the elements are not already numeric.
      */
     max(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
-     * Returns the element with the maximum value that is obtained by applying the key selector function to each element in the sequence.
-     * @template TElement
-     * @param keySelector The key selector function that will be used to select the key for an element.
-     * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
-     * @returns {Promise<TElement>} The element with the maximum value in the sequence.
-     * @throws {NoElementsException} If the source is empty.
+     * Asynchronously returns the element whose projected key is greatest according to the provided comparator.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
+     * @returns {Promise<TElement>} A promise that resolves to the element whose key is maximal.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks When multiple elements share the maximal key, the first such element in the sequence is returned.
      */
     maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
 
     /**
-     * Returns the minimum value in the sequence.
-     * @param selector The selector function that will be used to select the value to compare. If not specified, the value itself will be used.
-     * @throws {NoElementsException} If the source is empty.
+     * Asynchronously returns the smallest numeric value produced for the elements in the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @returns {Promise<number>} A promise that resolves to the minimum of the projected values.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks The entire sequence is enumerated exactly once. Provide a selector when the elements are not already numeric.
      */
     min(selector?: Selector<TElement, number>): Promise<number>;
 
     /**
-     * Returns the element with the minimum value that is obtained by applying the key selector function to each element in the sequence.
-     * @template TElement
-     * @param keySelector The key selector function that will be used to select the key for an element.
-     * @param comparator The comparator function that will be used for comparing two keys. If not specified, default order comparison will be used.
-     * @returns {Promise<TElement>} The element with the minimum value in the sequence.
-     * @throws {NoElementsException} If the source is empty.
+     * Asynchronously returns the element whose projected key is smallest according to the provided comparator.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Selector used to project each element to the key used for comparison.
+     * @param comparator Optional order comparator used to compare keys. Defaults to the library's standard order comparison when omitted.
+     * @returns {Promise<TElement>} A promise that resolves to the element whose key is minimal.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks When multiple elements share the minimal key, the first such element in the sequence is returned.
      */
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
 
     /**
-     * Determines whether no elements of the sequence satisfy the specified predicate.
-     * If no predicate is specified, it will return true if the sequence is empty.
-     * @param predicate The predicate function that will be used to check each element for a condition.
-     * @returns {Promise<boolean>} true if no elements of the sequence satisfy the specified predicate; otherwise, false.
+     * Determines whether the async sequence contains no elements that satisfy the optional predicate.
+     * @param predicate Optional predicate evaluated against each element. When omitted, the method resolves to `true` if the sequence is empty.
+     * @returns {Promise<boolean>} A promise that resolves to `true` when no element satisfies the predicate (or when the sequence is empty and no predicate is provided); otherwise, `false`.
+     * @remarks This is more efficient than negating `any` with a predicate because iteration stops as soon as a matching element is found.
      */
     none(predicate?: Predicate<TElement>): Promise<boolean>;
 
