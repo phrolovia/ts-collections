@@ -37,6 +37,7 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -1073,6 +1074,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     permutations(size?: number): IEnumerable<IEnumerable<TElement>>;
+
+    pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult;
 
     /**
      * Returns a deferred sequence that yields the supplied element before the source sequence.

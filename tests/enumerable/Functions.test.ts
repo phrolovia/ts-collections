@@ -31,6 +31,7 @@ import {
     first,
     firstOrDefault,
     forEach,
+    from,
     groupBy,
     groupJoin,
     IEnumerable,
@@ -66,6 +67,7 @@ import {
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     PriorityQueue,
     product,
@@ -1221,6 +1223,20 @@ describe("Enumerable Standalone Functions", () => {
             const result = permutations("RUI");
             const perms = result.select(p => p.toArray().join(""));
             expect(perms.toArray()).to.deep.equal(["RUI", "RIU", "URI", "UIR", "IRU", "IUR"]);
+        });
+    });
+
+    describe("#pipe()", () => {
+        test("should execute the given operator function", () => {
+            const list1 = [1,2,3,4,5];
+            const list2 = [6,7,8,9,10];
+            const avgOfEvenSquares = (source: Iterable<number>): number => from(source).where(n => n % 2 === 0).select(n => n * n).average();
+            const result1 = where(list1, n => n % 2 === 0).select(n => n * n).average();
+            const result2 = where(list2, n => n % 2 === 0).select(n => n * n).average();
+            const pipeResult1 = pipe(list1, avgOfEvenSquares);
+            const pipeResult2 = pipe(list2, avgOfEvenSquares);
+            expect(pipeResult1).to.eq(result1);
+            expect(pipeResult2).to.eq(result2);
         });
     });
 

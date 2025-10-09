@@ -68,6 +68,7 @@ import {
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     PriorityQueue,
     product,
@@ -141,6 +142,7 @@ import {Dictionary} from "./Dictionary";
 import {IReadonlyDictionary} from "./IReadonlyDictionary";
 import {KeyValuePair} from "./KeyValuePair";
 import {SortedDictionary} from "./SortedDictionary";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -378,6 +380,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
         return permutations(this, size);
+    }
+
+    public pipe<TResult>(operator: PipeOperator<KeyValuePair<TKey, TValue>, TResult>): TResult {
+        return pipe(this, operator);
     }
 
     public prepend(element: KeyValuePair<TKey, TValue>): IEnumerable<KeyValuePair<TKey, TValue>> {

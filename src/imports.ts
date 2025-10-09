@@ -113,6 +113,7 @@ export {
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     product,
     range,

@@ -39,6 +39,7 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -305,6 +306,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
         return this.#enumerator.permutations(size);
+    }
+
+    public pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult {
+        return this.#enumerator.pipe(operator);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

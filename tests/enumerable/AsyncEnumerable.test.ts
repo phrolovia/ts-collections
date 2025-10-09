@@ -7,7 +7,6 @@ import {
     Dictionary,
     Enumerable,
     EnumerableSet,
-    type IEnumerable,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -1499,6 +1498,22 @@ describe("AsyncEnumerable", () => {
         test("should throw if size is less than 1", () => {
             const enumerable = new AsyncEnumerable(numberProducer(3));
             expect(() => enumerable.permutations(0).toArray()).toThrowError("Size must be greater than 0.");
+        });
+    });
+
+    describe("#pipe()", () => {
+        test("should execute the given operator function", async () => {
+            const list1A = new AsyncEnumerable(numberProducer(3));
+            const list1B = new AsyncEnumerable(numberProducer(3));
+            const list2A = new AsyncEnumerable(numberProducer(7));
+            const list2B = new AsyncEnumerable(numberProducer(7));
+            const avgOfEvenSquares = (source: AsyncIterable<number>): Promise<number> => new AsyncEnumerable(source).where(n => n % 2 === 0).select(n => n * n).average();
+            const result1 = await list1A.where(n => n % 2 === 0).select(n => n * n).average();
+            const result2 = await list2A.where(n => n % 2 === 0).select(n => n * n).average();
+            const pipeResult1 = await list1B.pipe(avgOfEvenSquares);
+            const pipeResult2 = await list2B.pipe(avgOfEvenSquares);
+            expect(pipeResult1).to.eq(result1);
+            expect(pipeResult2).to.eq(result2);
         });
     });
 

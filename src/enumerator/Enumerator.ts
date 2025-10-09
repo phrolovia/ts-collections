@@ -53,6 +53,7 @@ import { Zipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -486,6 +487,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             throw new InvalidArgumentException("Size must be greater than 0.", "size");
         }
         return new Enumerator(() => this.permutationsGenerator(size));
+    }
+
+    public pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult {
+        return operator(this);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

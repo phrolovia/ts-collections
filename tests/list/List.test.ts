@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
 import {
     CircularLinkedList, CircularQueue,
-    Enumerable, type IEnumerable, ImmutableCircularQueue,
+    Enumerable, from, type IEnumerable, ImmutableCircularQueue,
     ImmutableList, ImmutableQueue,
     PriorityQueue, ReadonlyCollection, Stack
 } from "../../src/imports";
@@ -2691,6 +2691,20 @@ describe("List", () => {
             },
             { timeout: 10000 }
         );
+    });
+
+    describe("#pipe()", () => {
+        test("should execute the given operator function", () => {
+            const list1 = new List([1,2,3,4,5]);
+            const list2 = new List([6,7,8,9,10]);
+            const avgOfEvenSquares = (source: Iterable<number>): number => from(source).where(n => n % 2 === 0).select(n => n * n).average();
+            const result1 = list1.where(n => n % 2 === 0).select(n => n * n).average();
+            const result2 = list2.where(n => n % 2 === 0).select(n => n * n).average();
+            const pipeResult1 = list1.pipe(avgOfEvenSquares);
+            const pipeResult2 = list2.pipe(avgOfEvenSquares);
+            expect(pipeResult1).to.eq(result1);
+            expect(pipeResult2).to.eq(result2);
+        });
     });
 
     describe("#prepend()", () => {

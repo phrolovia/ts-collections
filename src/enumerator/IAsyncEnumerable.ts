@@ -38,6 +38,7 @@ import { Zipper } from "../shared/Zipper";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
+import { AsyncPipeOperator } from "../shared/PipeOperator";
 
 export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
 
@@ -1071,6 +1072,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
+
+    pipe<TResult>(operator: AsyncPipeOperator<TElement, TResult>): Promise<TResult>;
 
     /**
      * Returns a deferred asynchronous sequence that yields the supplied element before the source sequence.

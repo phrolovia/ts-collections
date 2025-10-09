@@ -63,6 +63,7 @@ import {
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     PriorityQueue,
     product,
@@ -139,6 +140,7 @@ import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
+import {PipeOperator} from "../shared/PipeOperator";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
@@ -357,6 +359,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
         return permutations(this, size);
+    }
+
+    public pipe<TResult>(operator: PipeOperator<TElement, TResult>): TResult {
+        return pipe(this, operator);
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {

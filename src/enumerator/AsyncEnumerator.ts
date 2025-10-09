@@ -56,6 +56,7 @@ import { Zipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
+import { AsyncPipeOperator } from "../shared/PipeOperator";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -492,6 +493,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<IEnumerable<TElement>>(() => this.permutationsGenerator(size));
     }
 
+    public pipe<TResult>(operator: AsyncPipeOperator<TElement, TResult>): Promise<TResult> {
+        return operator(this);
+    }
+
     public prepend(element: TElement): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.prependGenerator(element));
     }
@@ -923,19 +928,6 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* distinctUntilChangedGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TElement> {
-        let hasLast = false;
-        let lastKey: TKey | undefined;
-        for await (const element of this) {
-            const key = keySelector(element);
-            if (!hasLast || !keyComparator(lastKey as TKey, key)) {
-                hasLast = true;
-                lastKey = key;
-                yield element;
-            }
-        }
-    }
-
     private async* concatGenerator(other: AsyncIterable<TElement>): AsyncIterableIterator<TElement> {
         yield* this;
         yield* other;
@@ -974,6 +966,19 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
         if (!hasElements) {
             yield defaultValue ?? null;
+        }
+    }
+
+    private async* distinctUntilChangedGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TElement> {
+        let hasLast = false;
+        let lastKey: TKey | undefined;
+        for await (const element of this) {
+            const key = keySelector(element);
+            if (!hasLast || !keyComparator(lastKey as TKey, key)) {
+                hasLast = true;
+                lastKey = key;
+                yield element;
+            }
         }
     }
 

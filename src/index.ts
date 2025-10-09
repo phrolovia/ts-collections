@@ -113,6 +113,7 @@ export {
     pairwise,
     partition,
     permutations,
+    pipe,
     prepend,
     product,
     range,
@@ -177,6 +178,7 @@ export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";
+export type { AsyncPipeOperator, PipeOperator } from "./shared/PipeOperator";
 export type { Predicate, TypePredicate } from "./shared/Predicate";
 export type { Selector } from "./shared/Selector";
 export type { Zipper } from "./shared/Zipper";

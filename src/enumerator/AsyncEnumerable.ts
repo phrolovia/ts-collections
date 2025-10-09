@@ -40,6 +40,7 @@ import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
+import { AsyncPipeOperator } from "../shared/PipeOperator";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     readonly #enumerator: AsyncEnumerator<TElement>;
@@ -280,6 +281,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
         return this.#enumerator.permutations(size);
+    }
+
+    public pipe<TResult>(operator: AsyncPipeOperator<TElement, TResult>): Promise<TResult> {
+        return this.#enumerator.pipe(operator);
     }
 
     public prepend(element: TElement): IAsyncEnumerable<TElement> {

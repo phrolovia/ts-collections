@@ -37,6 +37,7 @@ import { Enumerable } from "./Enumerable";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
+import {PipeOperator} from "../shared/PipeOperator";
 
 /**
  * Combines the elements of the sequence by applying an accumulator to each element and optionally projecting the final result.
@@ -1503,6 +1504,13 @@ export const permutations = <TElement>(
 ): IEnumerable<IEnumerable<TElement>> => {
     return from(source).permutations(size);
 };
+
+export const pipe = <TElement, TResult>(
+    source: Iterable<TElement>,
+    operator: PipeOperator<TElement, TResult>
+): TResult => {
+    return from(source).pipe(operator);
+}
 
 /**
  * Returns a deferred sequence that yields the supplied element before the source iterable.
