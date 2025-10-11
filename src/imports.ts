@@ -166,5 +166,6 @@ export {
     unionBy,
     where,
     windows,
-    zip
+    zip,
+    zipMany
 } from "./enumerator/Functions";

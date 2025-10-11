@@ -166,7 +166,8 @@ export {
     unionBy,
     where,
     windows,
-    zip
+    zip,
+    zipMany
 } from "./imports";
 export { KeyValuePair } from "./dictionary/KeyValuePair";
 export type { Accumulator } from "./shared/Accumulator";

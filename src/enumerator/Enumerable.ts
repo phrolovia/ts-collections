@@ -38,8 +38,9 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import {Zipper, ZipperMany} from "../shared/Zipper";
 import {PipeOperator} from "../shared/PipeOperator";
+import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -540,6 +541,27 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return this.#enumerator.zip(iterable, zipper);
+    }
+
+    public zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndMaybeZipper: [...TIterable] | [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
+        const lastArg = iterablesAndMaybeZipper[iterablesAndMaybeZipper.length - 1];
+        const hasZipper = iterablesAndMaybeZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndMaybeZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+            return this.#enumerator.zipMany(...iterables, zipper);
+        } else {
+            const iterables = iterablesAndMaybeZipper as [...TIterable];
+            return this.#enumerator.zipMany(...iterables);
+        }
     }
 }
 

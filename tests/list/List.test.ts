@@ -4596,6 +4596,21 @@ describe("List", () => {
         });
     });
 
+    describe("#zipMany()", () => {
+        test("should zip multiple lists", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List(["a", "b", "c"]);
+            const list3 = new List([false, true, false]);
+            const zipped = list1.zipMany(list2, list3).toArray();
+            console.log(zipped);
+            expect(zipped).to.deep.equal(
+                [[1, "a", false],
+                [2, "b", true],
+                [3, "c", false]]
+            );
+        });
+    });
+
     describe("[Symbol.iterator]", () => {
         const list = new List([1, 2, 3, 4]);
         test("should be for-of iterable", () => {

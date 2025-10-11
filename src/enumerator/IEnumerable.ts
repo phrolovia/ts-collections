@@ -36,8 +36,9 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
-import {PipeOperator} from "../shared/PipeOperator";
+import { Zipper, ZipperMany } from "../shared/Zipper";
+import { PipeOperator } from "../shared/PipeOperator";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -2066,4 +2067,11 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @remarks Enumeration is lazy; the `zipper` function executes on demand for each pair and iteration stops when either sequence completes.
      */
     zip<TSecond, TResult>(iterable: Iterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
+
+    zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
 }
