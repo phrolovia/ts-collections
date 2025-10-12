@@ -68,6 +68,7 @@ export {
     any,
     append,
     average,
+    cartesian,
     cast,
     chunk,
     combinations,

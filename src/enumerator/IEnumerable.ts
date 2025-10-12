@@ -171,6 +171,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     average(selector?: Selector<TElement, number>): number;
 
+    cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
+
     /**
      * Reinterprets each element in the sequence as the specified result type.
      * @template TResult Target type exposed by the returned sequence.

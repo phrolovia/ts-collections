@@ -127,6 +127,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.average(selector);
     }
 
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
+        return this.#enumerator.cartesian(iterable);
+    }
+
     public cast<TResult>(): IEnumerable<TResult> {
         return this.#enumerator.cast();
     }

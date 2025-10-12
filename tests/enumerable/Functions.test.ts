@@ -6,6 +6,7 @@ import {
     any,
     append,
     average,
+    cartesian,
     cast,
     chunk,
     CircularLinkedList,
@@ -266,6 +267,28 @@ describe("Enumerable Standalone Functions", () => {
             const strings = cast<string>(where(mixedSequence, n => typeof n === "string"));
             expect(numbers.toArray()).to.deep.equal([1, 3, 5]);
             expect(strings.toArray()).to.deep.equal(["2", "4"]);
+        });
+    });
+
+    describe("#cartesian()", () => {
+        test("should return cartesian product of two lists", () => {
+            const list1 = [1, 2];
+            const list2 = ["x", "y", "z"];
+            const result = cartesian(list1, list2).toArray();
+            const expected = [[1,"x"], [1,"y"], [1,"z"], [2,"x"], [2,"y"], [2,"z"]];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return empty list if first list is empty", () => {
+            const list1 = [] as never[];
+            const list2 = ["x", "y", "z"];
+            const result = cartesian(list1, list2).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should return empty list if second list is empty", () => {
+            const list1 = [1,2];
+            const list2 = [] as never[];
+            const result = cartesian(list1, list2).toArray();
+            expect(result).to.deep.equal([]);
         });
     });
 

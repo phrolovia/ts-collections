@@ -5,6 +5,7 @@ import {
     any,
     append,
     average,
+    cartesian,
     cast,
     chunk,
     CircularLinkedList,
@@ -191,6 +192,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return average(this, selector);
+    }
+
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> {
+        return cartesian(this, iterable);
     }
 
     public cast<TResult>(): IEnumerable<TResult> {

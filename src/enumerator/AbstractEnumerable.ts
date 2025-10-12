@@ -8,6 +8,7 @@ import {
     any,
     append,
     average,
+    cartesian,
     cast,
     chunk,
     CircularLinkedList,
@@ -173,6 +174,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public average(selector?: Selector<TElement, number>): number {
         return average(this, selector);
+    }
+
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
+        return cartesian(this, iterable);
     }
 
     public cast<TResult>(): IEnumerable<TResult> {

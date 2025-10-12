@@ -217,6 +217,13 @@ export const average = <TElement>(
     return from(source).average(selector);
 };
 
+export const cartesian = <TElement, TSecond>(
+    source: Iterable<TElement>,
+    other: Iterable<TSecond>
+): IEnumerable<[TElement, TSecond]> => {
+    return from(source).cartesian(other);
+}
+
 /**
  * Reinterprets each element in the sequence as the specified result type.
  * @template TResult Target type exposed by the returned sequence.

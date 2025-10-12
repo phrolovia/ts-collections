@@ -140,6 +140,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return total / count;
     }
 
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
+        return new Enumerator(() => this.cartesianGenerator(iterable));
+    }
+
     public cast<TResult>(): IEnumerable<TResult> {
         return new Enumerator<TResult>(() => this.castGenerator());
     }
@@ -892,6 +896,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* appendGenerator(element: TElement): IterableIterator<TElement> {
         yield* this;
         yield element;
+    }
+
+    private* cartesianGenerator<TSecond>(iterable: Iterable<TSecond>): IterableIterator<[TElement, TSecond]> {
+        const cache = Array.isArray(iterable) ? iterable as TSecond[] : [...iterable];
+        if (cache.length === 0) {
+            return;
+        }
+        for (const element of this) {
+            for (let cx = 0; cx < cache.length; cx++) {
+                yield [element, cache[cx]];
+            }
+        }
     }
 
     private* castGenerator<TResult>(): IterableIterator<TResult> {
