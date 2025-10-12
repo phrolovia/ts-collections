@@ -36,7 +36,7 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipperMany } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 
@@ -2072,6 +2072,6 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
         ...iterables: [...TIterable]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
     zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndZipper: [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<TResult>;
 }

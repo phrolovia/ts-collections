@@ -138,7 +138,7 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 import {Predicate, TypePredicate} from "../shared/Predicate";
 import {Selector} from "../shared/Selector";
-import { Zipper, ZipperMany } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import {Dictionary} from "./Dictionary";
 import {IReadonlyDictionary} from "./IReadonlyDictionary";
 import {KeyValuePair} from "./KeyValuePair";
@@ -645,20 +645,20 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         ...iterables: [...TIterable]
     ): IEnumerable<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>]>;
     public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndZipper: [...TIterable, ZipperMany<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<TResult>;
     public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndMaybeZipper: [...TIterable] | [...TIterable, ZipperMany<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
-        const lastArg = iterablesAndMaybeZipper[iterablesAndMaybeZipper.length - 1];
-        const hasZipper = iterablesAndMaybeZipper.length > 0 && typeof lastArg === "function";
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
         if (hasZipper) {
-            const iterables = iterablesAndMaybeZipper.slice(0, -1) as [...TIterable];
-            const zipper = lastArg as ZipperMany<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>;
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>;
             return zipMany(this, ...iterables, zipper);
-        } else {
-            return zipMany(this, ...(iterablesAndMaybeZipper as [...TIterable]));
         }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return zipMany(this, ...iterables);
     }
 
     public get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>> {

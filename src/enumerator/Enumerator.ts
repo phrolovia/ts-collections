@@ -49,7 +49,7 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipperMany } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -873,19 +873,19 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         ...iterables: [...TIterable]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
     public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndZipper: [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<TResult>;
     public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndMaybeZipper: [...TIterable] | [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
-        const lastArg = iterablesAndMaybeZipper[iterablesAndMaybeZipper.length - 1];
-        const hasZipper = iterablesAndMaybeZipper.length > 0 && typeof lastArg === "function";
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
         if (hasZipper) {
-            const iterables = iterablesAndMaybeZipper.slice(0, -1) as [...TIterable];
-            const zipper = lastArg as ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
             return new Enumerator<TResult>(() => this.zipManyWithZipperGenerator(iterables, zipper));
         }
-        const iterables = iterablesAndMaybeZipper as [...TIterable];
+        const iterables = iterablesAndZipper as [...TIterable];
         return new Enumerator<[TElement, ...UnpackIterableTuple<TIterable>]>(() => this.zipManyWithoutZipperGenerator(iterables));
     }
 
@@ -1545,7 +1545,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* zipManyWithZipperGenerator<TIterable extends readonly Iterable<unknown>[], TResult>(
         iterables: readonly [...TIterable],
-        zipper: ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>
+        zipper: ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>
     ): IterableIterator<TResult> {
         for (const values of this.zipManyWithoutZipperGenerator(iterables)) {
             yield zipper(values as readonly [TElement, ...UnpackIterableTuple<TIterable>]);

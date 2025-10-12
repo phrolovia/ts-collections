@@ -138,7 +138,7 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipperMany } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 import { PipeOperator } from "../shared/PipeOperator";
@@ -613,21 +613,20 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         ...iterables: [...TIterable]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
     public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndZipper: [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<TResult>;
     public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
-        ...iterablesAndMaybeZipper: [...TIterable] | [...TIterable, ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
-        const lastArg = iterablesAndMaybeZipper[iterablesAndMaybeZipper.length - 1];
-        const hasZipper = iterablesAndMaybeZipper.length > 0 && typeof lastArg === "function";
-
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
         if (hasZipper) {
-            const iterables = iterablesAndMaybeZipper.slice(0, -1) as [...TIterable];
-            const zipper = lastArg as ZipperMany<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
             return zipMany(this, ...iterables, zipper);
-        } else {
-            return zipMany(this, ...(iterablesAndMaybeZipper as [...TIterable]));
         }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return zipMany(this, ...iterables);
     }
 
     protected getIterableSize(iterable: Iterable<TElement>): number {
