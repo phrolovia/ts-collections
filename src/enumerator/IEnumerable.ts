@@ -171,6 +171,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     average(selector?: Selector<TElement, number>): number;
 
+    /**
+     * Produces the cartesian product between this sequence and {@link iterable}.
+     * @template TSecond Type of elements emitted by {@link iterable}.
+     * @param iterable The secondary sequence paired with every element from the source.
+     * @returns {IEnumerable<[TElement, TSecond]>} A deferred sequence that yields each ordered pair `[source, other]`.
+     * @throws {unknown} Re-throws any error raised while iterating the source or {@link iterable}.
+     * @remarks The secondary sequence is fully buffered before iteration starts so that it can be replayed for every source element. The resulting sequence stops when the source sequence completes.
+     * @example
+     * ```typescript
+     * const pairs = from([1, 2]).cartesian(['A', 'B']).toArray();
+     * console.log(pairs); // [[1, 'A'], [1, 'B'], [2, 'A'], [2, 'B']]
+     * ```
+     */
     cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
 
     /**
@@ -2070,9 +2083,40 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     zip<TSecond, TResult>(iterable: Iterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
 
+    /**
+     * Zips this sequence with the iterables supplied in {@link iterables}, producing aligned tuples.
+     * @template TIterable Extends `readonly Iterable<unknown>[]`; the element type of each iterable contributes to the resulting tuple.
+     * @param iterables Additional sequences to zip with the source.
+     * @returns {IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>} A deferred sequence of tuples truncated to the length of the shortest input.
+     * @throws {unknown} Re-throws any error raised while iterating the source or any of the supplied iterables.
+     * @remarks Iteration stops as soon as any participating iterable is exhausted. Tuple element types are inferred from the supplied iterables, preserving strong typing across the zipped result.
+     * @example
+     * ```typescript
+     * const zipped = from([1, 2, 3]).zipMany(['A', 'B', 'C'], [true, false]).toArray();
+     * console.log(zipped); // [[1, 'A', true], [2, 'B', false]]
+     * ```
+     */
     zipMany<TIterable extends readonly Iterable<unknown>[]>(
         ...iterables: [...TIterable]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    /**
+     * Zips this sequence with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
+     * @template TIterable Extends `readonly Iterable<unknown>[]`; the element type of each iterable contributes to the zipper input tuple.
+     * @template TResult Result type produced by {@link ZipManyZipper zipper}.
+     * @param iterablesAndZipper The trailing argument may be a zipper invoked with each tuple to produce a projected result; preceding arguments are the iterables to zip with.
+     * @returns {IEnumerable<TResult>} A deferred sequence of projected results truncated to the length of the shortest input.
+     * @throws {unknown} Re-throws any error raised while iterating the source, the supplied iterables, or executing the zipper.
+     * @remarks The zipper receives a readonly tuple `[source, ...others]` for each aligned set. Iteration stops as soon as any participating iterable is exhausted.
+     * @example
+     * ```typescript
+     * const labels = from([1, 2, 3]).zipMany(
+     *     ['A', 'B', 'C'],
+     *     [true, true, false],
+     *     ([num, letter, flag]) => `${num}${letter}-${flag ? "yes" : "no"}`
+     * ).toArray();
+     * console.log(labels); // ["1A-yes", "2B-yes", "3C-no"]
+     * ```
+     */
     zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
         ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
     ): IEnumerable<TResult>;

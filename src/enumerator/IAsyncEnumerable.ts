@@ -175,9 +175,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Produces the cartesian product between this async sequence and {@link iterable}.
      * @template TSecond Type of elements emitted by {@link iterable}.
-     * @param iterable The secondary async sequence paired with each element from the source.
-     * @returns {IAsyncEnumerable<[TElement, TSecond]>} A deferred async sequence yielding every ordered pair `[source, other]`.
-     * @remarks The secondary sequence is fully materialised so it can be iterated for every element of the source.
+     * @param iterable The secondary async sequence paired with every element from the source.
+     * @returns {IAsyncEnumerable<[TElement, TSecond]>} A deferred async sequence that yields each ordered pair `[source, other]`.
+     * @throws {unknown} Re-throws any error raised while asynchronously iterating the source or {@link iterable}.
+     * @remarks The secondary sequence is fully buffered before iteration starts so that it can be replayed for every source element. The resulting sequence stops when the source sequence completes.
+     * @example
+     * ```typescript
+     * const pairs = await fromAsync([1, 2]).cartesian(fromAsync(['A', 'B'])).toArray();
+     * console.log(pairs); // [[1, 'A'], [1, 'B'], [2, 'A'], [2, 'B']]
+     * ```
      */
     cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
 
@@ -2069,9 +2075,43 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      */
     zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
 
+    /**
+     * Zips this async sequence with the iterables supplied in {@link iterables}, producing aligned tuples.
+     * @template TIterable Extends `readonly AsyncIterable<unknown>[]`; the element type of each iterable contributes to the resulting tuple.
+     * @param iterables Additional async iterables to zip with the source.
+     * @returns {IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>} A deferred async sequence of tuples truncated to the length of the shortest input.
+     * @throws {unknown} Re-throws any error raised while iterating the source or any of the supplied async iterables.
+     * @remarks Iteration stops as soon as any participating async iterable completes. Tuple element types are inferred from the supplied iterables, preserving strong typing across the zipped result.
+     * @example
+     * ```typescript
+     * const zipped = await fromAsync([1, 2, 3]).zipMany(
+     *     fromAsync(['A', 'B', 'C']),
+     *     fromAsync([true, false])
+     * ).toArray();
+     * console.log(zipped); // [[1, 'A', true], [2, 'B', false]]
+     * ```
+     */
     zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
         ...iterables: [...TIterable]
     ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+    /**
+     * Zips this async sequence with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
+     * @template TIterable Extends `readonly AsyncIterable<unknown>[]`; the element type of each iterable contributes to the zipper input tuple.
+     * @template TResult Result type produced by {@link ZipManyZipper zipper}.
+     * @param iterablesAndZipper The trailing argument may be a zipper invoked with each tuple to produce a projected result; preceding arguments are the async iterables to zip with.
+     * @returns {IAsyncEnumerable<TResult>} A deferred async sequence of projected results truncated to the length of the shortest input.
+     * @throws {unknown} Re-throws any error raised while iterating the source, the supplied async iterables, or executing the zipper.
+     * @remarks The zipper receives a readonly tuple `[source, ...others]` for each aligned set. Iteration stops as soon as any participating async iterable completes.
+     * @example
+     * ```typescript
+     * const labels = await fromAsync([1, 2, 3]).zipMany(
+     *     fromAsync(['A', 'B', 'C']),
+     *     fromAsync([true, true, false]),
+     *     ([num, letter, flag]) => `${num}${letter}-${flag ? "yes" : "no"}`
+     * ).toArray();
+     * console.log(labels); // ["1A-yes", "2B-yes", "3C-no"]
+     * ```
+     */
     zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
         ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
     ): IAsyncEnumerable<TResult>;
