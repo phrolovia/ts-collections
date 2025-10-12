@@ -52,7 +52,8 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -137,6 +138,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total / count;
+    }
+
+    public cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]> {
+        return new AsyncEnumerator<[TElement, TSecond]>(() => this.cartesianGenerator(iterable));
     }
 
     public cast<TResult>(): IAsyncEnumerable<TResult> {
@@ -873,9 +878,44 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TResult>(() => this.zipGenerator(iterable, resultSelector));
     }
 
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<TResult>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]> | IAsyncEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>;
+            return new AsyncEnumerator<TResult>(() => this.zipManyWithZipperGenerator(iterables, zipper));
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return new AsyncEnumerator<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>(() => this.zipManyWithoutZipperGenerator(iterables));
+    }
+
     private async* appendGenerator(element: TElement): AsyncIterableIterator<TElement> {
         yield* this;
         yield element;
+    }
+
+    private async* cartesianGenerator<TSecond>(iterable: AsyncIterable<TSecond>): AsyncIterableIterator<[TElement, TSecond]> {
+        const cache: TSecond[] = [];
+        for await (const item of iterable) {
+            cache.push(item);
+        }
+        if (cache.length === 0) {
+            return;
+        }
+        for await (const element of this) {
+            for (let cx = 0; cx < cache.length; cx++) {
+                yield [element, cache[cx]];
+            }
+        }
     }
 
     private async* castGenerator<TResult>(): AsyncIterableIterator<TResult> {
@@ -1500,6 +1540,28 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             yield zipper?.(next1.value, next2.value) ?? [next1.value, next2.value] as TResult;
             next1 = await iterator1.next();
             next2 = await iterator2.next();
+        }
+    }
+
+    private async* zipManyWithZipperGenerator<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        iterables: readonly [...TIterable],
+        zipper: ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>
+    ): AsyncIterableIterator<TResult> {
+        for await (const values of this.zipManyWithoutZipperGenerator(iterables)) {
+            yield zipper(values as readonly [TElement, ...UnpackAsyncIterableTuple<TIterable>]);
+        }
+    }
+
+    private async* zipManyWithoutZipperGenerator<TIterable extends readonly AsyncIterable<unknown>[]>(
+        iterables: readonly [...TIterable]
+    ): AsyncIterableIterator<[TElement, ...UnpackAsyncIterableTuple<TIterable>]> {
+        const iterators = [this, ...iterables].map(iterable => iterable[Symbol.asyncIterator]());
+        while (true) {
+            const results = await Promise.all(iterators.map(iterator => iterator.next()));
+            if (results.some(result => result.done)) {
+                break;
+            }
+            yield results.map(result => result.value) as [TElement, ...UnpackAsyncIterableTuple<TIterable>];
         }
     }
 }

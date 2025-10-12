@@ -34,7 +34,8 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
@@ -170,6 +171,15 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     average(selector?: Selector<TElement, number>): Promise<number>;
+
+    /**
+     * Produces the cartesian product between this async sequence and {@link iterable}.
+     * @template TSecond Type of elements emitted by {@link iterable}.
+     * @param iterable The secondary async sequence paired with each element from the source.
+     * @returns {IAsyncEnumerable<[TElement, TSecond]>} A deferred async sequence yielding every ordered pair `[source, other]`.
+     * @remarks The secondary sequence is fully materialised so it can be iterated for every element of the source.
+     */
+    cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]>;
 
     /**
      * Reinterprets each element in the async sequence as the specified result type.
@@ -2058,4 +2068,11 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @remarks Enumeration is lazy; the `zipper` function executes on demand for each pair and iteration stops when either sequence completes.
      */
     zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
+
+    zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+    zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<TResult>;
 }

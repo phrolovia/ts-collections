@@ -7,6 +7,7 @@ import {
     Dictionary,
     Enumerable,
     EnumerableSet,
+    IEnumerable,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -225,6 +226,23 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numericalStringProducer(10));
             const result = await enumerable.average(n => parseInt(n, 10));
             expect(result).to.eq(4.5);
+        });
+    });
+
+    describe("#cartesian()", () => {
+        test("should produce the cartesian product", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2]));
+            const result = await source.cartesian(arrayProducer(["a", "b", "c"])).toArray();
+            expect(result).to.deep.equal([
+                [1, "a"], [1, "b"], [1, "c"],
+                [2, "a"], [2, "b"], [2, "c"]
+            ]);
+        });
+
+        test("should return empty sequence when secondary iterable is empty", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2]));
+            const result = await source.cartesian(arrayProducer([])).toArray();
+            expect(result).to.deep.equal([]);
         });
     });
 
@@ -2295,6 +2313,8 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+
+
     describe("#zip()", () => {
         test("should zip two enumerable sequence in a tuple", async () => {
             const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
@@ -2320,6 +2340,41 @@ describe("AsyncEnumerable", () => {
             });
             const expected = [{1: "a"}, {2: "b"}, {3: "c"}, {4: "d"}, {5: "e"}];
             expect(await zipped.toArray()).to.deep.equal(expected);
+        });
+    });
+
+    describe("#zipMany()", () => {
+        test("should zip multiple sequences", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            const zipped = source.zipMany(arrayProducer(["a", "b", "c", "d"]), arrayProducer([true, false]));
+            const result = await zipped.toArray();
+            expect(result).to.deep.equal([
+                [1, "a", true],
+                [2, "b", false]
+            ]);
+            expectTypeOf(result).toEqualTypeOf<Array<[number, string, boolean]>>();
+        });
+
+        test("should project tuples with zipper", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            const zipped = source.zipMany(
+                arrayProducer(["a", "b", "c"]),
+                arrayProducer([true, true, false]),
+                ([num, letter, flag]) => `${num}${letter}-${flag ? "yes" : "no"}`
+            );
+            const result = await zipped.toArray();
+            expect(result).to.deep.equal([
+                "1a-yes",
+                "2b-yes",
+                "3c-no"
+            ]);
+        });
+
+        test("should handle no additional iterables", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2]));
+            const result = await source.zipMany().toArray();
+            expect(result).to.deep.equal([[1], [2]]);
+            expectTypeOf(result).toEqualTypeOf<Array<[number]>>();
         });
     });
 

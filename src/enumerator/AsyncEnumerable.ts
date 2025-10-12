@@ -38,7 +38,8 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import { IGroup } from "./IGroup";
 import { AsyncPipeOperator } from "../shared/PipeOperator";
 
@@ -99,6 +100,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public average(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.average(selector);
+    }
+
+    public cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]> {
+        return this.#enumerator.cartesian(iterable);
     }
 
     public cast<TResult>(): IAsyncEnumerable<TResult> {
@@ -511,5 +516,25 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
         return this.#enumerator.zip(iterable, zipper);
+    }
+
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<TResult>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]> | IAsyncEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>;
+            return this.#enumerator.zipMany(...iterables, zipper);
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return this.#enumerator.zipMany(...iterables);
     }
 }
