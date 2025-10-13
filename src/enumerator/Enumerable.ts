@@ -41,6 +41,7 @@ import { Selector } from "../shared/Selector";
 import {Zipper, ZipManyZipper} from "../shared/Zipper";
 import {PipeOperator} from "../shared/PipeOperator";
 import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -269,6 +270,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
         return this.#enumerator.maxBy(keySelector, comparator);
+    }
+
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number {
+        return this.#enumerator.median(selector, tie);
     }
 
     public min(selector?: Selector<TElement, number>): number {

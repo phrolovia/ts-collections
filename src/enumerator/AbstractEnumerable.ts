@@ -56,6 +56,7 @@ import {
     maxBy,
     min,
     minBy,
+    median,
     mode,
     modeOrDefault,
     multimode,
@@ -150,6 +151,7 @@ import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
@@ -330,6 +332,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
         return maxBy(this, keySelector, comparator);
+    }
+
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number {
+        return median(this, selector, tie);
     }
 
     public min(selector?: Selector<TElement, number>): number {

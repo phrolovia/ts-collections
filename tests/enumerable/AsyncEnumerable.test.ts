@@ -1352,6 +1352,51 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#median()", () => {
+        test("should return the median for an odd-length sequence", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 5, 2, 4, 3]));
+            const median = await enumerable.median();
+            expect(median).to.eq(3);
+        });
+
+        test("should return the low median for an even-length sequence", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const median = await enumerable.median(undefined, "low");
+            expect(median).to.eq(2);
+        });
+
+        test("should return the high median for an even-length sequence", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const median = await enumerable.median(undefined, "high");
+            expect(median).to.eq(3);
+        });
+
+        test("should interpolate the median for an even-length sequence by default", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const median = await enumerable.median();
+            expect(median).to.eq(2.5);
+        });
+
+        test("should return NaN when the sequence is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[]));
+            const median = await enumerable.median();
+            expect(median).to.be.NaN;
+        });
+
+        test("should project elements before computing the median", async () => {
+            const people = [
+                Person.Hanna,
+                Person.Bella,
+                Person.Mirei,
+                Person.Alice,
+                Person.Noemi
+            ];
+            const enumerable = new AsyncEnumerable(personProducer(people));
+            const median = await enumerable.median(p => p.age);
+            expect(median).to.eq(22);
+        });
+    });
+
     describe("#min()", () => {
         test("should return the minimum value of the enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));

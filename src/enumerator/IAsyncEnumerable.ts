@@ -27,6 +27,7 @@ import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
@@ -939,6 +940,31 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
+
+    /**
+     * Calculates the median of the numeric values produced by the async sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+     * @param tie Determines how the median is resolved when the sequence contains an even number of elements. Defaults to `"interpolate"`, which averages the two central values. Specify `"low"` or `"high"` to select the lower or higher neighbour respectively.
+     * @returns {Promise<number>} A promise that resolves to the calculated median, or `NaN` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks The sequence is fully consumed and buffered so a selection algorithm can locate the middle element(s) without fully sorting. Supply {@link selector} when the elements are not already numeric.
+     * @example
+     * ```typescript
+     * const medianValue = await fromAsync([1, 5, 2, 4, 3]).median();
+     * console.log(medianValue); // 3
+     *
+     * const people = fromAsync([
+     *   { name: 'Alice', age: 23 },
+     *   { name: 'Bella', age: 21 },
+     *   { name: 'Mirei', age: 22 },
+     *   { name: 'Hanna', age: 20 },
+     *   { name: 'Noemi', age: 29 }
+     * ]);
+     * const medianAge = await people.median(p => p.age);
+     * console.log(medianAge); // 22
+     * ```
+     */
+    median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number>;
 
     /**
      * Asynchronously returns the element that appears most frequently in the sequence.

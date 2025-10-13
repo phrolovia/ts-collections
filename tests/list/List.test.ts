@@ -2313,6 +2313,40 @@ describe("List", () => {
             );
         });
     });
+
+    describe("#median()", () => {
+        test("should return the median of the list which has odd number of elements", () => {
+            const list = new List([3, 1, 5, 4, 2]);
+            const median = list.median();
+            expect(median).to.eq(3);
+        });
+        test("should return the low median of the list which has even number of elements", () => {
+            const list = new List([4, 2, 1, 3]);
+            const median = list.median(x => x, "low");
+            expect(median).to.eq(2);
+        });
+        test("should return the high median of the list which has even number of elements", () => {
+            const list = new List([4, 2, 1, 3]);
+            const median = list.median(x => x, "high");
+            expect(median).to.eq(3);
+        });
+        test("should return the interpolated median of the list which has even number of elements", () => {
+            const list = new List([4, 3, 1, 2]);
+            const median = list.median(x => x, "interpolate");
+            expect(median).to.eq(2.5);
+        });
+        test("should return NaN if the list is empty", () => {
+            const list = new List<number>();
+            const median = list.median();
+            expect(median).to.be.NaN;
+        });
+        test("should use provided selector", () => {
+            const list = new List([Person.Bella, Person.Kaori, Person.Vanessa]);
+            const median = list.median(p => p.age);
+            expect(median).to.eq(20);
+        });
+    });
+
     describe("#min()", () => {
         const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
         test("should return 1", () => {

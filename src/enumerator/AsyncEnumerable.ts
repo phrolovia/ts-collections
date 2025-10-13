@@ -31,6 +31,7 @@ import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
@@ -244,6 +245,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
         return this.#enumerator.maxBy(keySelector, comparator);
+    }
+
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number> {
+        return this.#enumerator.median(selector, tie);
     }
 
     public min(selector?: Selector<TElement, number>): Promise<number> {

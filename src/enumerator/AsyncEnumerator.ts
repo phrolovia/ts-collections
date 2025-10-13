@@ -52,12 +52,14 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
 import { AsyncPipeOperator } from "../shared/PipeOperator";
+import { findMedian } from "./helpers/medianHelpers";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -421,6 +423,15 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return maxElement;
+    }
+
+    public async median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number> {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData: number[] = [];
+        for await (const item of this) {
+            numericData.push(numberSelector(item));
+        }
+        return findMedian(numericData, tie);
     }
 
     public async min(selector?: Selector<TElement, number>): Promise<number> {

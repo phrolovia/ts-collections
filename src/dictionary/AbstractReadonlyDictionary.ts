@@ -59,6 +59,7 @@ import {
     List,
     max,
     maxBy,
+    median,
     min,
     minBy,
     mode,
@@ -152,6 +153,7 @@ import {KeyValuePair} from "./KeyValuePair";
 import {SortedDictionary} from "./SortedDictionary";
 import {PipeOperator} from "../shared/PipeOperator";
 import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -351,6 +353,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public maxBy<TMaxKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMaxKey>, comparator?: OrderComparator<TMaxKey>): KeyValuePair<TKey, TValue> {
         return maxBy(this, keySelector, comparator);
+    }
+
+    public median(selector?: Selector<KeyValuePair<TKey, TValue>, number>, tie?: MedianTieStrategy): number {
+        return median(this, selector, tie);
     }
 
     public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {

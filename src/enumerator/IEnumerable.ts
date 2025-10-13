@@ -39,6 +39,7 @@ import { Selector } from "../shared/Selector";
 import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -893,6 +894,31 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
+
+    /**
+     * Calculates the median of the numeric values produced by the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+     * @param tie Determines how the median is resolved when the sequence contains an even number of elements. Defaults to `"interpolate"`, which averages the two central values. Specify `"low"` or `"high"` to select the lower or higher neighbour respectively.
+     * @returns {number} The calculated median, or `NaN` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks The sequence is enumerated once and buffered so a selection algorithm can locate the middle element(s) without fully sorting. Supply {@link selector} when the elements are not already numeric.
+     * @example
+     * ```typescript
+     * const medianValue = from([1, 5, 2, 4, 3]).median();
+     * console.log(medianValue); // 3
+     *
+     * const people = from([
+     *   { name: 'Alice', age: 23 },
+     *   { name: 'Bella', age: 21 },
+     *   { name: 'Mirei', age: 22 },
+     *   { name: 'Hanna', age: 20 },
+     *   { name: 'Noemi', age: 29 }
+     * ]);
+     * const medianAge = people.median(p => p.age);
+     * console.log(medianAge); // 22
+     * ```
+     */
+    median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number;
 
     /**
      * Returns the smallest numeric value produced for the elements in the sequence.

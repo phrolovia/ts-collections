@@ -104,6 +104,7 @@ export {
     lastOrDefault,
     max,
     maxBy,
+    median,
     min,
     minBy,
     mode,
@@ -182,6 +183,7 @@ export type { IndexedPredicate, IndexedTypePredicate } from "./shared/IndexedPre
 export type { IndexedSelector } from "./shared/IndexedSelector";
 export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";
+export type { MedianTieStrategy } from "./shared/MedianTieStrategy";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";
 export type { AsyncPipeOperator, PipeOperator } from "./shared/PipeOperator";

@@ -104,6 +104,7 @@ export {
     lastOrDefault,
     max,
     maxBy,
+    median,
     min,
     minBy,
     mode,

@@ -53,9 +53,10 @@ import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
-import {PipeOperator} from "../shared/PipeOperator";
-import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
-import * as console from "node:console";
+import { PipeOperator } from "../shared/PipeOperator";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { findMedian } from "./helpers/medianHelpers";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -402,6 +403,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return max;
+    }
+
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData = this.select(numberSelector).toArray();
+        return findMedian(numericData, tie);
     }
 
     public min(selector?: Selector<TElement, number>): number {
