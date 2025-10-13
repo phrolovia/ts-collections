@@ -1310,6 +1310,27 @@ export const minBy = <TElement, TKey>(
     return from(source).minBy(keySelector, comparator);
 };
 
+export const mode = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector?: Selector<TElement, TKey>,
+): TElement => {
+    return from(source).mode(keySelector);
+};
+
+export const modeOrDefault = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector?: Selector<TElement, TKey>
+): TElement | null => {
+    return from(source).modeOrDefault(keySelector);
+};
+
+export const multimode = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector?: Selector<TElement, TKey>
+): IEnumerable<TElement> => {
+    return from(source).multimode(keySelector);
+};
+
 /**
  * Determines whether the sequence contains no elements that satisfy the optional predicate.
  * @template TElement Type of elements within the `source` iterable.

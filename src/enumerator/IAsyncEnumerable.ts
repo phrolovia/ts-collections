@@ -941,6 +941,49 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
 
     /**
+     * Returns the element that appears most frequently in the async sequence.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {Promise<TElement>} A promise that resolves to the first element whose frequency is maximal.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @remarks When multiple elements share the highest frequency, the element that appears earliest is returned. The source sequence is enumerated exactly once.
+     * @example
+     * ```typescript
+     * const winner = await fromAsync([1, 2, 2, 3]).mode();
+     * console.log(winner); // 2
+     * ```
+     */
+    mode<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement>;
+
+    /**
+     * Returns the element that appears most frequently in the async sequence, or `null` when the sequence is empty.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {Promise<TElement | null>} A promise that resolves to the first most frequent element, or `null` when the sequence contains no elements.
+     * @remarks Unlike {@link mode}, this overload never throws; it communicates the absence of values by resolving to `null`.
+     * @example
+     * ```typescript
+     * const winner = await fromAsync<number>([]).modeOrDefault();
+     * console.log(winner); // null
+     * ```
+     */
+    modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement | null>;
+
+    /**
+     * Produces the elements whose occurrences are tied for the highest frequency in the async sequence.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing one representative element for each frequency mode.
+     * @remarks When multiple elements share the same key, only the first occurrence is returned. Enumeration of the source sequence happens once when the result is iterated.
+     * @example
+     * ```typescript
+     * const modes = await fromAsync([1, 2, 2, 3, 3]).multimode().toArray();
+     * console.log(modes); // [2, 3]
+     * ```
+     */
+    multimode<TKey>(keySelector?: Selector<TElement, TKey>): IAsyncEnumerable<TElement>;
+
+    /**
      * Determines whether the async sequence contains no elements that satisfy the optional predicate.
      * @param predicate Optional predicate evaluated against each element. When omitted, the method resolves to `true` if the sequence is empty.
      * @returns {Promise<boolean>} A promise that resolves to `true` when no element satisfies the predicate (or when the sequence is empty and no predicate is provided); otherwise, `false`.

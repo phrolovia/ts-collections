@@ -61,6 +61,9 @@ import {
     maxBy,
     min,
     minBy,
+    mode,
+    modeOrDefault,
+    multimode,
     none,
     ofType,
     order,
@@ -354,6 +357,18 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public minBy<TMinKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMinKey>, comparator?: OrderComparator<TMinKey>): KeyValuePair<TKey, TValue> {
         return minBy(this, keySelector, comparator);
+    }
+
+    public mode<TModeKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TModeKey>): KeyValuePair<TKey, TValue> {
+        return mode(this, keySelector);
+    }
+
+    public modeOrDefault<TModeKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TModeKey>): KeyValuePair<TKey, TValue> | null {
+        return modeOrDefault(this, keySelector);
+    }
+
+    public multimode<TModeKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TModeKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return multimode(this, keySelector);
     }
 
     public none(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {

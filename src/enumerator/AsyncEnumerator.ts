@@ -451,6 +451,26 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return minElement;
     }
 
+    public async mode<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement> {
+        const iterator = this.multimode(keySelector)[Symbol.asyncIterator]();
+        const first = await iterator.next();
+        if (first.done) {
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
+        }
+        return first.value;
+    }
+
+    public async modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement | null> {
+        const iterator = this.multimode(keySelector)[Symbol.asyncIterator]();
+        const first = await iterator.next();
+        return first.done ? null : first.value;
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IAsyncEnumerable<TElement> {
+        const selector = keySelector ?? ((item: TElement): TKey => item as unknown as TKey);
+        return new AsyncEnumerator<TElement>(() => this.multimodeGenerator(selector));
+    }
+
     public async none(predicate?: Predicate<TElement>): Promise<boolean> {
         return !await this.any(predicate);
     }
@@ -1214,6 +1234,34 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 resultSelector,
                 effectiveLeftJoin
             );
+        }
+    }
+
+    private async* multimodeGenerator<TKey>(keySelector: Selector<TElement, TKey>): AsyncIterableIterator<TElement> {
+        const counts = new Map<TKey, number>();
+        const representatives = new Map<TKey, TElement>();
+        let max = 0;
+
+        for await (const item of this) {
+            const key = keySelector(item);
+            if (!representatives.has(key)) {
+                representatives.set(key, item);
+            }
+            const next = (counts.get(key) ?? 0) + 1;
+            counts.set(key, next);
+            if (next > max) {
+                max = next;
+            }
+        }
+
+        if (max === 0) {
+            return;
+        }
+
+        for (const [key, count] of counts) {
+            if (count === max) {
+                yield representatives.get(key) as TElement;
+            }
         }
     }
 

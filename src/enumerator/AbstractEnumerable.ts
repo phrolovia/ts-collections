@@ -56,6 +56,9 @@ import {
     maxBy,
     min,
     minBy,
+    mode,
+    modeOrDefault,
+    multimode,
     none,
     ofType,
     order,
@@ -333,6 +336,18 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
         return minBy(this, keySelector, comparator);
+    }
+
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement {
+        return mode(this, keySelector);
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null {
+        return modeOrDefault(this, keySelector);
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement> {
+        return multimode(this, keySelector);
     }
 
     public none(predicate?: Predicate<TElement>): boolean {

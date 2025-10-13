@@ -1396,6 +1396,90 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#mode()", () => {
+        test("should return most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3], 0));
+            const result = await enumerable.mode();
+            expect(result).to.eq(2);
+        });
+        test("should return first most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 1], 0));
+            const result = await enumerable.mode();
+            expect(result).to.eq(1);
+        });
+        test("should throw if enumerable is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            await expect(enumerable.mode()).rejects.toThrowError(new NoElementsException());
+        });
+        test("should use provided selector", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Suzuha3,
+                Person.Noemi2
+            ], 0));
+            const result = await enumerable.mode(p => p.name);
+            expect(result).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#modeOrDefault()", () => {
+        test("should return most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3], 0));
+            const mode = await enumerable.modeOrDefault();
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 1], 0));
+            const mode = await enumerable.modeOrDefault();
+            expect(mode).to.eq(1);
+        });
+        test("should return null if enumerable is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const mode = await enumerable.modeOrDefault();
+            expect(mode).to.be.null;
+        });
+        test("should use provided selector", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Suzuha3,
+                Person.Noemi2
+            ], 0));
+            const mode = await enumerable.modeOrDefault(p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#multimode()", () => {
+        test("should return a list of most frequent elements", async () => {
+            const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 2, 3], 0));
+            const enumerable2 = new AsyncEnumerable(arrayProducer([1, 2, 2, 3, 3], 0));
+            const mode1 = await enumerable1.multimode().toArray();
+            const mode2 = await enumerable2.multimode().toArray();
+            expect(mode1).to.deep.equal([2]);
+            expect(mode2).to.deep.equal([2, 3]);
+        });
+        test("should return empty list if source is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const mode = await enumerable.multimode().toArray();
+            expect(mode).to.be.empty;
+        });
+        test("should use provided selector", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Noemi2,
+                Person.Suzuha2,
+                Person.Bella
+            ], 0));
+            const mode = await enumerable.multimode(p => p.name).toArray();
+            expect(mode).to.deep.equal([Person.Noemi, Person.Suzuha]);
+        });
+    });
+
     describe("#none()", () => {
         test("should return true if no elements satisfy the predicate", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));

@@ -55,6 +55,7 @@ import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
 import {PipeOperator} from "../shared/PipeOperator";
 import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
+import * as console from "node:console";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -438,6 +439,25 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return min;
+    }
+
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement {
+        const modes = this.multimode(keySelector);
+        if (modes.none()) {
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
+        }
+        console.log(modes.toArray());
+        return modes.first();
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null {
+        const modes = this.multimode(keySelector);
+        return modes.firstOrDefault();
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement> {
+        const selector = keySelector ?? ((item: TElement): TKey => item as unknown as TKey);
+        return new Enumerator(() => this.multimodeGenerator(selector));
     }
 
     public none(predicate?: Predicate<TElement>): boolean {
@@ -1217,6 +1237,32 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 resultSelector,
                 effectiveLeftJoin
             );
+        }
+    }
+
+    private* multimodeGenerator<TKey>(keySelector: Selector<TElement, TKey>): IterableIterator<TElement> {
+        const counts = new Map<TKey, number>();
+        const representatives = new Map<TKey, TElement>();
+        let max = 0;
+
+        for (const item of this) {
+            const key = keySelector(item);
+            if (!representatives.has(key)) {
+                representatives.set(key, item);
+            }
+            const next = (counts.get(key) ?? 0) + 1;
+            counts.set(key, next);
+            if (next > max) {
+                max = next;
+            }
+        }
+        if (max === 0) {
+            return;
+        }
+        for (const [key, count] of counts) {
+            if (count === max) {
+                yield representatives.get(key) as TElement;
+            }
         }
     }
 

@@ -938,6 +938,12 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
 
+    mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement;
+
+    modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null;
+
+    multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement>;
+
     /**
      * Determines whether the sequence contains no elements that satisfy the optional predicate.
      * @param predicate Optional predicate evaluated against each element. When omitted, the method returns `true` if the sequence is empty.

@@ -254,6 +254,18 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.minBy(keySelector, comparator);
     }
 
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement> {
+        return this.#enumerator.mode(keySelector);
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement | null> {
+        return this.#enumerator.modeOrDefault(keySelector);
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.multimode(keySelector);
+    }
+
     public none(predicate?: Predicate<TElement>): Promise<boolean> {
         return this.#enumerator.none(predicate);
     }

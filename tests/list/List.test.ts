@@ -2374,6 +2374,83 @@ describe("List", () => {
             );
         });
     });
+
+    describe("#mode()", () => {
+        test("should return most frequent element", () => {
+            const list = new List([1, 2, 2, 3]);
+            const mode = list.mode();
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", () => {
+            const list = new List([1, 2, 2, 1]);
+            const mode = list.mode();
+            expect(mode).to.eq(1);
+        });
+        test("should throw if list is empty", () => {
+            const list = new List<number>([]);
+            expect(() => list.mode()).toThrow(new NoElementsException());
+        });
+        test("should use provided selector", () => {
+            const list = new List([Person.Noemi, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi2]);
+            const mode = list.mode(p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#modeOrDefault()", () => {
+        test("should return most frequent element", () => {
+            const list = new List([1, 2, 2, 3]);
+            const mode = list.modeOrDefault();
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", () => {
+            const list = new List([1, 2, 2, 1]);
+            const mode = list.modeOrDefault();
+            expect(mode).to.eq(1);
+        });
+        test("should return null if list is empty", () => {
+            const list = new List<number>([]);
+            const mode = list.modeOrDefault();
+            expect(mode).to.be.null;
+        });
+        test("should not throw if list is empty", () => {
+            const list = new List<number>([]);
+            expect(() => list.modeOrDefault()).not.toThrow(new NoElementsException());
+        });
+        test("should use provided selector", () => {
+            const list = new List([Person.Noemi, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi2]);
+            const mode = list.modeOrDefault(p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#nultimode()", () => {
+        test("should return a list of most frequent elements", () => {
+            const list1 = new List([1, 2, 2, 3]);
+            const list2 = new List([1, 2, 2, 3, 3]);
+            const mode1 = list1.multimode().toArray();
+            const mode2 = list2.multimode().toArray();
+            expect(mode1).to.deep.equal([2]);
+            expect(mode2).to.deep.equal([2, 3]);
+        });
+        test("should return empty list if source list is empty", () => {
+            const list = new List<number>([]);
+            const mode = list.multimode().toArray();
+            expect(mode).to.be.empty;
+        });
+        test("should use provided selector", () => {
+            const list = new List([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Noemi2,
+                Person.Suzuha2,
+                Person.Bella
+            ]);
+            const mode = list.multimode(p => p.name).toArray();
+            expect(mode).to.deep.equal([Person.Noemi, Person.Suzuha]);
+        });
+    });
+
     describe("#none()", () => {
         test("should return true if list is empty", () => {
             const list = new List<number>();
