@@ -3500,6 +3500,45 @@ describe("List", () => {
         });
     });
 
+    describe("#standardDeviation()", () => {
+        test("should return the standard deviation of the list", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const stdDevForSample = list.standardDeviation();
+            const stdDevForPopulation = list.standardDeviation(x => x, false);
+            const acceptableResultForSample = (stdDevForSample - Math.sqrt(2.5)) < 1e-12;
+            const acceptableResultForPopulation = (stdDevForPopulation - Math.sqrt(2)) < 1e-12;
+            expect(acceptableResultForSample).to.be.true;
+            expect(acceptableResultForPopulation).to.be.true;
+        });
+        test("should return standard deviation as 0 for all identical values", () => {
+            const list = new List([3, 3, 3, 3]);
+            const sampleStdDev = list.standardDeviation();
+            const populationStdDev = list.standardDeviation(x => x, false);
+            expect(sampleStdDev).to.equal(0);
+            expect(populationStdDev).to.equal(0);
+        });
+        test("should return NaN for empty input", () => {
+            const list = new List<number>([]);
+            const sampleStdDev = list.standardDeviation();
+            const populationStdDev = list.standardDeviation(x => x, false);
+            expect(sampleStdDev).to.be.NaN;
+            expect(populationStdDev).to.be.NaN;
+        });
+        test("should work with given selector", () => {
+            const people = new List([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ]);
+            const sampleStdDev = people.standardDeviation(p => p.age);
+            const populationStdDev = people.standardDeviation(p => p.age, false);
+            const acceptableSampleStdDev = sampleStdDev - Math.sqrt(25) < 1e-12;
+            const acceptablePopulationStdDev = populationStdDev - Math.sqrt(16.6666666667) < 1e-12;
+            expect(acceptableSampleStdDev).to.be.true;
+            expect(acceptablePopulationStdDev).to.be.true;
+        });
+    });
+
     describe("#step()", () => {
         test("should return an IEnumerable with elements [1,3,5,7,9]", () => {
             const list = new List([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -4605,6 +4644,58 @@ describe("List", () => {
                 Person.Noemi,
                 Person.Suzuha,
             ]);
+        });
+    });
+
+    describe("#variance()", () => {
+        test("should return the variance of the given list", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.equal(2.5);
+            expect(populationVariance).to.equal(2);
+        });
+        test("should return variance as 0 for all identical values", () => {
+            const list = new List([3, 3, 3, 3]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.equal(0);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should return the variance of the given list #2", () => {
+            const list = new List([2, 4]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.equal(2);
+            expect(populationVariance).to.equal(1);
+        });
+        test("should return NaN for empty input", () => {
+            const list = new List<number>([]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.be.NaN;
+        });
+        test("should return NaN for sample variance of single element list", () => {
+            const list = new List([10]);
+            const sampleVariance = list.variance();
+            expect(sampleVariance).to.be.NaN;
+        });
+        test("should return 0 for population variance of single element list", () => {
+            const list = new List([10]);
+            const populationVariance = list.variance(x => x, false);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should work with given selector", () => {
+            const people = new List([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ]);
+            const sampleVariance = people.variance(p => p.age);
+            const populationVariance = people.variance(p => p.age, false);
+            expect(sampleVariance).to.equal(25);
+            expect(populationVariance).to.eq(16.666666666666668);
         });
     });
 

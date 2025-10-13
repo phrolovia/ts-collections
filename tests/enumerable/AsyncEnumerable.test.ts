@@ -1981,6 +1981,49 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#standardDeviation()", () => {
+        test("should return the standard deviation of the async sequence", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const sampleStdDev = await sampleEnumerable.standardDeviation();
+            const populationStdDev = await populationEnumerable.standardDeviation(undefined, false);
+            expect(Math.abs(sampleStdDev - Math.sqrt(2.5)) < 1e-12).to.be.true;
+            expect(Math.abs(populationStdDev - Math.sqrt(2)) < 1e-12).to.be.true;
+        });
+        test("should return 0 when all values are identical", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const sampleStdDev = await sampleEnumerable.standardDeviation();
+            const populationStdDev = await populationEnumerable.standardDeviation(undefined, false);
+            expect(sampleStdDev).to.equal(0);
+            expect(populationStdDev).to.equal(0);
+        });
+        test("should return NaN for empty input", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const sampleStdDev = await sampleEnumerable.standardDeviation();
+            const populationStdDev = await populationEnumerable.standardDeviation(undefined, false);
+            expect(sampleStdDev).to.be.NaN;
+            expect(populationStdDev).to.be.NaN;
+        });
+        test("should use selector when provided", async () => {
+            const peopleSample = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const peoplePopulation = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const sampleStdDev = await peopleSample.standardDeviation(p => p.age);
+            const populationStdDev = await peoplePopulation.standardDeviation(p => p.age, false);
+            expect(Math.abs(sampleStdDev - Math.sqrt(25)) < 1e-12).to.be.true;
+            expect(Math.abs(populationStdDev - Math.sqrt(16.666666666666668)) < 1e-12).to.be.true;
+        });
+    });
+
     describe("#step()", () => {
         test("should return an enumerable with elements [0, 2, 4, 6, 8]", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -2346,6 +2389,57 @@ describe("AsyncEnumerable", () => {
             const union = enumerable1.unionBy(enumerable2, p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
             const expected = [Person.Alice, Person.Noemi, Person.Suzuha, Person.Lucrezia];
             expect(await union.toArray()).to.deep.equal(expected);
+        });
+    });
+
+    describe("#variance()", () => {
+        test("should return the variance of the async sequence", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.equal(2.5);
+            expect(populationVariance).to.equal(2);
+        });
+        test("should return 0 when all values are identical", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.equal(0);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should return NaN for empty input", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.be.NaN;
+        });
+        test("should handle single element sequences", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([10], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([10], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.equal(0);
+        });
+        test("should use selector when provided", async () => {
+            const peopleSample = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const peoplePopulation = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const sampleVariance = await peopleSample.variance(p => p.age);
+            const populationVariance = await peoplePopulation.variance(p => p.age, false);
+            expect(sampleVariance).to.equal(25);
+            expect(populationVariance).to.equal(16.666666666666668);
         });
     });
 

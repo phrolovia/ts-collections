@@ -941,12 +941,13 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement>;
 
     /**
-     * Returns the element that appears most frequently in the async sequence.
+     * Asynchronously returns the element that appears most frequently in the sequence.
      * @template TKey Type of key produced by {@link keySelector}.
      * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
-     * @returns {Promise<TElement>} A promise that resolves to the first element whose frequency is maximal.
+     * @returns {Promise<TElement>} A promise that resolves to the first element whose occurrence count matches the maximum frequency.
      * @throws {NoElementsException} Thrown when the sequence is empty.
-     * @remarks When multiple elements share the highest frequency, the element that appears earliest is returned. The source sequence is enumerated exactly once.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks The entire sequence is consumed to build frequency counts before the mode is resolved. When multiple keys share the same frequency, the earliest corresponding element is returned.
      * @example
      * ```typescript
      * const winner = await fromAsync([1, 2, 2, 3]).mode();
@@ -956,11 +957,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     mode<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement>;
 
     /**
-     * Returns the element that appears most frequently in the async sequence, or `null` when the sequence is empty.
+     * Asynchronously returns the element that appears most frequently in the sequence, or `null` when the sequence is empty.
      * @template TKey Type of key produced by {@link keySelector}.
      * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
      * @returns {Promise<TElement | null>} A promise that resolves to the first most frequent element, or `null` when the sequence contains no elements.
-     * @remarks Unlike {@link mode}, this overload never throws; it communicates the absence of values by resolving to `null`.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks Unlike {@link mode}, this overload communicates the absence of elements by resolving to `null`. When multiple keys share the maximum frequency, the element encountered first is returned.
      * @example
      * ```typescript
      * const winner = await fromAsync<number>([]).modeOrDefault();
@@ -970,11 +972,12 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement | null>;
 
     /**
-     * Produces the elements whose occurrences are tied for the highest frequency in the async sequence.
+     * Produces the elements whose occurrence count is tied for the highest frequency in the async sequence.
      * @template TKey Type of key produced by {@link keySelector}.
      * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing one representative element for each frequency mode.
-     * @remarks When multiple elements share the same key, only the first occurrence is returned. Enumeration of the source sequence happens once when the result is iterated.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks The result is deferred; enumerating it buffers the entire source to compute frequency counts before yielding results. When multiple elements share a key, only the first occurrence is emitted.
      * @example
      * ```typescript
      * const modes = await fromAsync([1, 2, 2, 3, 3]).multimode().toArray();
@@ -1450,6 +1453,21 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @remarks The source is fully enumerated asynchronously and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+
+    /**
+     * Calculates the standard deviation of the numeric values produced by the async sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @param sample When `true`, computes the sample standard deviation; when `false`, computes the population standard deviation. Defaults to `true`.
+     * @returns {Promise<number>} A promise that resolves to the calculated standard deviation, or `NaN` when there are insufficient values to compute it.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks This method delegates to {@link variance}; when the variance is `NaN`, that value is returned unchanged. The sequence is enumerated exactly once using a numerically stable single-pass algorithm.
+     * @example
+     * ```typescript
+     * const populationStdDev = await fromAsync([1, 2, 3, 4, 5]).standardDeviation(x => x, false);
+     * console.log(populationStdDev); // Math.sqrt(2)
+     * ```
+     */
+    standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): Promise<number>;
 
     /**
      * Returns every n-th element of the sequence, starting with the first.
@@ -2056,6 +2074,21 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement>;
+
+    /**
+     * Calculates the variance of the numeric values produced by the async sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @param sample When `true`, computes the sample variance dividing by _n - 1_; when `false`, computes the population variance dividing by _n_. Defaults to `true`.
+     * @returns {Promise<number>} A promise that resolves to the calculated variance, or `NaN` when the sequence is empty—or for sample variance when it contains a single element.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks A numerically stable single-pass algorithm (Welford's method) is used, so the sequence is enumerated exactly once regardless of size.
+     * @example
+     * ```typescript
+     * const sampleVariance = await fromAsync([1, 2, 3, 4, 5]).variance();
+     * console.log(sampleVariance); // 2.5
+     * ```
+     */
+    variance(selector?: Selector<TElement, number>, sample?: boolean): Promise<number>;
 
     /**
      * Filters the asynchronous sequence using a type guard predicate and narrows the resulting element type.

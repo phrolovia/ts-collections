@@ -93,6 +93,7 @@ import {
     SortedSet,
     span,
     Stack,
+    standardDeviation,
     step,
     sum,
     take,
@@ -126,6 +127,7 @@ import {
     toStack,
     union,
     unionBy,
+    variance,
     where,
     windows,
     zip,
@@ -480,6 +482,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return span(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     }
 
+    public standardDeviation(selector?: Selector<KeyValuePair<TKey, TValue>, number>, sample?: boolean): number {
+        return standardDeviation(this, selector, sample);
+    }
+
     public step(stepNumber: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return step(this, stepNumber);
     }
@@ -650,6 +656,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public unionBy<TUnionKey>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keySelector: Selector<KeyValuePair<TKey, TValue>, TUnionKey>, comparator?: EqualityComparator<TUnionKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return unionBy(this, iterable, keySelector, comparator);
+    }
+
+    public variance(selector?: Selector<KeyValuePair<TKey, TValue>, number>, sample?: boolean): number {
+        return variance(this, selector, sample);
     }
 
     public where<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;

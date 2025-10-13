@@ -938,10 +938,50 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
 
+    /**
+     * Returns the element that appears most frequently in the sequence.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {TElement} The first element whose occurrence count matches the maximum frequency.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks The source sequence is fully enumerated to build frequency counts before the result is determined. When multiple keys share the same frequency, the earliest corresponding element is returned.
+     * @example
+     * ```typescript
+     * const winner = from([1, 2, 2, 3]).mode();
+     * console.log(winner); // 2
+     * ```
+     */
     mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement;
 
+    /**
+     * Returns the element that appears most frequently in the sequence, or `null` when the sequence is empty.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {TElement | null} The first most frequent element, or `null` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks Unlike {@link mode}, this overload communicates the absence of elements by returning `null`. When multiple keys share the maximum frequency, the element that appears first is returned.
+     * @example
+     * ```typescript
+     * const winner = from<number>([]).modeOrDefault();
+     * console.log(winner); // null
+     * ```
+     */
     modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null;
 
+    /**
+     * Produces the elements whose occurrence count is tied for the highest frequency in the sequence.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing one representative element for each frequency mode.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks Enumeration of the result buffers the entire source to compute frequency counts before yielding results. When multiple elements share a key, only the first occurrence is emitted.
+     * @example
+     * ```typescript
+     * const modes = from([1, 2, 2, 3, 3]).multimode().toArray();
+     * console.log(modes); // [2, 3]
+     * ```
+     */
     multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement>;
 
     /**
@@ -1415,6 +1455,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @remarks The source is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+
+    /**
+     * Calculates the standard deviation of the numeric values produced by the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @param sample When `true`, computes the sample standard deviation; when `false`, computes the population standard deviation. Defaults to `true`.
+     * @returns {number} The calculated standard deviation, or `NaN` when there are insufficient values to compute it.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks This method delegates to {@link variance}; when the variance is `NaN`, that value is returned unchanged. The sequence is enumerated exactly once using a numerically stable single-pass algorithm.
+     * @example
+     * ```typescript
+     * const populationStdDev = from([1, 2, 3, 4, 5]).standardDeviation(x => x, false);
+     * console.log(populationStdDev); // Math.sqrt(2)
+     * ```
+     */
+    standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number;
 
     /**
      * Returns every n-th element of the sequence, starting with the first.
@@ -2028,6 +2083,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
+
+    /**
+     * Calculates the variance of the numeric values produced by the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @param sample When `true`, computes the sample variance dividing by _n - 1_; when `false`, computes the population variance dividing by _n_. Defaults to `true`.
+     * @returns {number} The calculated variance, or `NaN` when the sequence is empty—or for sample variance when it contains a single element.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks A numerically stable single-pass algorithm (Welford's method) is used, so the source is enumerated exactly once regardless of size.
+     * @example
+     * ```typescript
+     * const populationVariance = from([1, 2, 3, 4, 5]).variance(x => x, false);
+     * console.log(populationVariance); // 2
+     * ```
+     */
+    variance(selector?: Selector<TElement, number>, sample?: boolean): number;
 
     /**
      * Filters the sequence using a type guard predicate and narrows the resulting element type.

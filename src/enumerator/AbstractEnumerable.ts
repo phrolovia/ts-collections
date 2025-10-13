@@ -87,6 +87,7 @@ import {
     skipWhile,
     span,
     Stack,
+    standardDeviation,
     step,
     sum,
     take,
@@ -120,6 +121,7 @@ import {
     toStack,
     union,
     unionBy,
+    variance,
     where,
     windows,
     zip,
@@ -459,6 +461,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return span(this, predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return standardDeviation(this, selector, sample);
+    }
+
     public step(stepNumber: number): IEnumerable<TElement> {
         return step(this, stepNumber);
     }
@@ -616,6 +622,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         return unionBy(this, iterable, keySelector, comparator);
+    }
+
+    public variance(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return variance(this, selector, sample);
     }
 
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;

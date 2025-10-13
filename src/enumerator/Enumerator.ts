@@ -665,6 +665,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return [new Enumerable(span), new Enumerable(rest)] as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number {
+        const variance = this.variance(selector, sample);
+        return Number.isNaN(variance) ? variance : Math.sqrt(variance);
+    }
+
     public step(step: number): IEnumerable<TElement> {
         if (step < 1) {
             throw new InvalidArgumentException("Step must be greater than 0.", "step");
@@ -878,6 +883,26 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         return new Enumerator(() => this.unionByGenerator(iterable, keySelector, comparator));
+    }
+
+    public variance(selector?: Selector<TElement, number>, sample: boolean = true): number {
+        const numSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        let count = 0;
+        let mean = 0;
+        let sumOfSquaredDiffs = 0;
+
+        for (const item of this) {
+            const value = numSelector(item);
+            count++;
+            const delta = value - mean;
+            mean += delta / count;
+            const deltaAfterMeanUpdate = value - mean;
+            sumOfSquaredDiffs += delta * deltaAfterMeanUpdate;
+        }
+        if (count === 0 || (sample && count < 2)) {
+            return Number.NaN;
+        }
+        return sample ? sumOfSquaredDiffs / (count - 1) : sumOfSquaredDiffs / count;
     }
 
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;

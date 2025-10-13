@@ -374,6 +374,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.span(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     }
 
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.standardDeviation(selector, sample);
+    }
+
     public step(step: number): IAsyncEnumerable<TElement> {
         return this.#enumerator.step(step);
     }
@@ -516,6 +520,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
         return this.#enumerator.unionBy(enumerable, keySelector, comparator);
+    }
+
+    public variance(selector?: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.variance(selector, sample);
     }
 
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;

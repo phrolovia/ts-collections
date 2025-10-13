@@ -399,6 +399,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.span(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return this.#enumerator.standardDeviation(selector, sample);
+    }
+
     public step(step: number): IEnumerable<TElement> {
         return this.#enumerator.step(step);
     }
@@ -547,6 +551,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
         return this.#enumerator.unionBy(iterable, keySelector, comparator);
+    }
+
+    public variance(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return this.#enumerator.variance(selector, sample);
     }
 
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;

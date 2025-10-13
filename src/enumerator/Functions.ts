@@ -1310,6 +1310,22 @@ export const minBy = <TElement, TKey>(
     return from(source).minBy(keySelector, comparator);
 };
 
+/**
+ * Returns the element that appears most frequently in {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The source iterable to inspect.
+ * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+ * @returns {TElement} The first element whose occurrence count matches the maximum frequency.
+ * @throws {NoElementsException} Thrown when {@link source} is empty.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link keySelector}.
+ * @remarks The source iterable is fully enumerated to build frequency counts before the result is determined. When multiple keys share the same frequency, the earliest corresponding element is returned.
+ * @example
+ * ```typescript
+ * const winner = mode([1, 2, 2, 3]);
+ * console.log(winner); // 2
+ * ```
+ */
 export const mode = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector?: Selector<TElement, TKey>,
@@ -1317,6 +1333,21 @@ export const mode = <TElement, TKey>(
     return from(source).mode(keySelector);
 };
 
+/**
+ * Returns the element that appears most frequently in {@link source}, or `null` when the iterable is empty.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The source iterable to inspect.
+ * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+ * @returns {TElement | null} The first most frequent element, or `null` when {@link source} contains no elements.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link keySelector}.
+ * @remarks Unlike {@link mode}, this function communicates the absence of elements by returning `null`. When multiple keys share the maximum frequency, the element encountered first is returned.
+ * @example
+ * ```typescript
+ * const winner = modeOrDefault<number>([]);
+ * console.log(winner); // null
+ * ```
+ */
 export const modeOrDefault = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector?: Selector<TElement, TKey>
@@ -1324,6 +1355,21 @@ export const modeOrDefault = <TElement, TKey>(
     return from(source).modeOrDefault(keySelector);
 };
 
+/**
+ * Produces the elements whose occurrence count is tied for the highest frequency in {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The source iterable to inspect.
+ * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing one representative element for each frequency mode.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link keySelector}.
+ * @remarks Enumeration of the result buffers the entire source to compute frequency counts before yielding results. When multiple elements share a key, only the first occurrence is emitted.
+ * @example
+ * ```typescript
+ * const modes = multimode([1, 2, 2, 3, 3]).toArray();
+ * console.log(modes); // [2, 3]
+ * ```
+ */
 export const multimode = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector?: Selector<TElement, TKey>
@@ -2039,6 +2085,29 @@ export function span<TElement, TFiltered extends TElement>(
 ): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
     return from(source).span(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
 }
+
+/**
+ * Calculates the standard deviation of the numeric values produced by {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @param sample When `true`, computes the sample standard deviation; when `false`, computes the population standard deviation. Defaults to `true`.
+ * @returns {number} The calculated standard deviation, or `NaN` when there are insufficient values to compute it.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link selector}.
+ * @remarks This function delegates to {@link variance}; when the variance is `NaN`, that value is returned unchanged. The iterable is enumerated exactly once using a numerically stable single-pass algorithm.
+ * @example
+ * ```typescript
+ * const populationStdDev = standardDeviation([1, 2, 3, 4, 5], x => x, false);
+ * console.log(populationStdDev); // Math.sqrt(2)
+ * ```
+ */
+export const standardDeviation = <TElement>(
+    source: Iterable<TElement>,
+    selector?: Selector<TElement, number>,
+    sample?: boolean
+): number => {
+    return from(source).standardDeviation(selector, sample);
+};
 
 /**
  * Returns every n-th element of the sequence, starting with the first.
@@ -2918,6 +2987,29 @@ export const unionBy = <TElement, TKey>(
     comparator?: EqualityComparator<TKey>
 ): IEnumerable<TElement> => {
     return from(source).unionBy(other, keySelector, comparator);
+};
+
+/**
+ * Calculates the variance of the numeric values produced by {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @param sample When `true`, computes the sample variance dividing by _n - 1_; when `false`, computes the population variance dividing by _n_. Defaults to `true`.
+ * @returns {number} The calculated variance, or `NaN` when {@link source} is empty—or for sample variance when it contains a single element.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link selector}.
+ * @remarks A numerically stable single-pass algorithm (Welford's method) is used, so the iterable is enumerated exactly once regardless of size.
+ * @example
+ * ```typescript
+ * const populationVariance = variance([1, 2, 3, 4, 5], x => x, false);
+ * console.log(populationVariance); // 2
+ * ```
+ */
+export const variance = <TElement>(
+    source: Iterable<TElement>,
+    selector?: Selector<TElement, number>,
+    sample?: boolean
+): number => {
+    return from(source).variance(selector, sample);
 };
 
 /**

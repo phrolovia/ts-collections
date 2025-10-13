@@ -673,6 +673,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return [new Enumerable(span), new Enumerable(rest)] as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
+    public async standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        const variance = await this.variance(selector, sample);
+        return Number.isNaN(variance) ? variance : Math.sqrt(variance);
+    }
+
     public step(step: number): IAsyncEnumerable<TElement> {
         if (step < 1) {
             throw new InvalidArgumentException("Step must be greater than 0.", "step");
@@ -883,6 +888,28 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public unionBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.unionByGenerator(enumerable, keySelector, comparator));
+    }
+
+    public async variance(selector?: Selector<TElement, number>, sample: boolean = true): Promise<number> {
+        const numSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        let count = 0;
+        let mean = 0;
+        let sumOfSquaredDiffs = 0;
+
+        for await (const item of this) {
+            const value = numSelector(item);
+            ++count;
+            const delta = value - mean;
+            mean += delta / count;
+            const deltaAfterMeanUpdate = value - mean;
+            sumOfSquaredDiffs += delta * deltaAfterMeanUpdate;
+        }
+
+        if (count === 0 || (sample && count < 2)) {
+            return Number.NaN;
+        }
+
+        return sample ? sumOfSquaredDiffs / (count - 1) : sumOfSquaredDiffs / count;
     }
 
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
