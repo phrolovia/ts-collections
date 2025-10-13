@@ -118,6 +118,7 @@ export {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,

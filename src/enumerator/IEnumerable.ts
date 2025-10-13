@@ -40,6 +40,7 @@ import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -1160,6 +1161,30 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @remarks The source is fully enumerated immediately and buffered so that both partitions can be iterated repeatedly without re-evaluating the predicate.
      */
     partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+
+    /**
+     * Calculates a percentile of the numeric values produced by the sequence.
+     * @param percent Percentile expressed as a fraction between 0 and 1 where `0` corresponds to the minimum and `1` to the maximum.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+     * @param strategy Strategy that determines how fractional ranks are resolved. Defaults to `"linear"`, which interpolates between neighbouring values. Alternative strategies include `"nearest"`, `"low"`, `"high"`, and `"midpoint"`.
+     * @returns {number} The percentile value, or `NaN` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks The sequence is enumerated once and buffered so the selection algorithm can determine the requested rank without fully sorting the data. When {@link percent} falls outside `[0, 1]`, the result is clamped to the range implied by {@link strategy}.
+     * @example
+     * ```typescript
+     * const upperQuartile = from([1, 2, 3, 4, 5]).percentile(0.75);
+     * console.log(upperQuartile); // 4
+     *
+     * const responseTimes = from([
+     *   { endpoint: '/users', duration: 120 },
+     *   { endpoint: '/users', duration: 80 },
+     *   { endpoint: '/users', duration: 200 }
+     * ]);
+     * const p95 = responseTimes.percentile(0.95, r => r.duration, "nearest");
+     * console.log(p95); // 200
+     * ```
+     */
+    percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number;
 
     /**
      * Generates permutations from the distinct elements of the sequence.

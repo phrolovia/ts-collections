@@ -1397,6 +1397,55 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#percentile()", () => {
+        test("should return percentile of the sequence for 0.25", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await enumerable.percentile(0.25);
+            expect(result).to.eq(2);
+        });
+
+        test("should return percentile of the sequence for 0.5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await enumerable.percentile(0.5);
+            expect(result).to.eq(3);
+        });
+
+        test("should honour the 'nearest' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await enumerable.percentile(0.75, undefined, "nearest");
+            expect(result).to.eq(4);
+        });
+
+        test("should honour the 'low' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const result = await enumerable.percentile(0.5, undefined, "low");
+            expect(result).to.eq(2);
+        });
+
+        test("should honour the 'high' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const result = await enumerable.percentile(0.5, undefined, "high");
+            expect(result).to.eq(3);
+        });
+
+        test("should honour the 'midpoint' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 10]));
+            const result = await enumerable.percentile(0.5, undefined, "midpoint");
+            expect(result).to.eq(2.5);
+        });
+
+        test("should project elements before computing the percentile", async () => {
+            const responses = [
+                { duration: 10 },
+                { duration: 20 },
+                { duration: 30 }
+            ];
+            const enumerable = new AsyncEnumerable(arrayProducer(responses));
+            const result = await enumerable.percentile(0.9, r => r.duration);
+            expect(result).to.eq(28);
+        });
+    });
+
     describe("#min()", () => {
         test("should return the minimum value of the enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));

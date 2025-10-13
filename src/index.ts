@@ -118,6 +118,7 @@ export {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,
@@ -186,6 +187,7 @@ export type { JoinSelector } from "./shared/JoinSelector";
 export type { MedianTieStrategy } from "./shared/MedianTieStrategy";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";
+export type { PercentileStrategy } from "./shared/PercentileStrategy";
 export type { AsyncPipeOperator, PipeOperator } from "./shared/PipeOperator";
 export type { Predicate, TypePredicate } from "./shared/Predicate";
 export type { Selector } from "./shared/Selector";

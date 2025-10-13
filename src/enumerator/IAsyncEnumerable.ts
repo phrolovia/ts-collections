@@ -28,6 +28,7 @@ import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
@@ -965,6 +966,30 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number>;
+
+    /**
+     * Calculates a percentile of the numeric values produced by the async sequence.
+     * @param percent Percentile expressed as a fraction between 0 and 1 where `0` corresponds to the minimum and `1` to the maximum.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+     * @param strategy Strategy that determines how fractional ranks are resolved. Defaults to `"linear"`, which interpolates between neighbouring values. Alternative strategies include `"nearest"`, `"low"`, `"high"`, and `"midpoint"`.
+     * @returns {Promise<number>} A promise that resolves to the percentile value, or `NaN` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks The sequence is fully consumed and buffered so the selection algorithm can determine the requested rank without fully sorting the data. When {@link percent} is outside `[0, 1]`, it is clamped to the bounds implied by {@link strategy}.
+     * @example
+     * ```typescript
+     * const upperQuartile = await fromAsync([1, 2, 3, 4, 5]).percentile(0.75);
+     * console.log(upperQuartile); // 4
+     *
+     * const responseTimes = fromAsync([
+     *   { endpoint: '/users', duration: 120 },
+     *   { endpoint: '/users', duration: 80 },
+     *   { endpoint: '/users', duration: 200 }
+     * ]);
+     * const p95 = await responseTimes.percentile(0.95, r => r.duration, "nearest");
+     * console.log(p95); // 200
+     * ```
+     */
+    percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number>;
 
     /**
      * Asynchronously returns the element that appears most frequently in the sequence.

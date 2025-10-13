@@ -42,6 +42,7 @@ import {Zipper, ZipManyZipper} from "../shared/Zipper";
 import {PipeOperator} from "../shared/PipeOperator";
 import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
 import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -328,6 +329,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] {
         return this.#enumerator.partition(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
+        return this.#enumerator.percentile(percent, selector, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {

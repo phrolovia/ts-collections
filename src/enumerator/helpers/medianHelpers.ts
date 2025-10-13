@@ -24,7 +24,7 @@ export function findMedian(data: number[], tie: MedianTieStrategy = "interpolate
     }
 }
 
-function nthElement(sequence: number[], index: number): number {
+export function nthElement(sequence: number[], index: number): number {
     let low = 0;
     let high = sequence.length - 1;
     while (low <= high) {

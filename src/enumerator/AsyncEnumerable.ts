@@ -32,6 +32,7 @@ import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
@@ -249,6 +250,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number> {
         return this.#enumerator.median(selector, tie);
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
+        return this.#enumerator.percentile(percent, selector, strategy);
     }
 
     public min(selector?: Selector<TElement, number>): Promise<number> {

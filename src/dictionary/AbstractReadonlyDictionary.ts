@@ -73,6 +73,7 @@ import {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,
@@ -154,6 +155,7 @@ import {SortedDictionary} from "./SortedDictionary";
 import {PipeOperator} from "../shared/PipeOperator";
 import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
 import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -411,6 +413,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public partition(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     public partition<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] {
         return partition(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
+    }
+
+    public percentile(percent: number, selector?: Selector<KeyValuePair<TKey, TValue>, number>, strategy?: PercentileStrategy): number {
+        return percentile(this, percent, selector, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {

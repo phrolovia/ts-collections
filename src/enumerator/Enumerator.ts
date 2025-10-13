@@ -57,6 +57,8 @@ import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { findMedian } from "./helpers/medianHelpers";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
+import {findPercentile} from "./helpers/percentileHelpers";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -516,6 +518,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         return [new Enumerable(trueItems), new Enumerable(falseItems)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData = this.select(numberSelector).toArray();
+        return findPercentile(numericData, percent, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
