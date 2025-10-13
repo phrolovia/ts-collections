@@ -118,6 +118,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.combinations(size);
     }
 
+    public compact(): IAsyncEnumerable<NonNullable<TElement>> {
+        return this.#enumerator.compact();
+    }
+
     public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.concat(other);
     }

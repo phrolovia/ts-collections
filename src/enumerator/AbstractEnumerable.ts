@@ -14,6 +14,7 @@ import {
     CircularLinkedList,
     CircularQueue,
     combinations,
+    compact,
     concat,
     contains,
     count,
@@ -190,6 +191,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public combinations(size?: number): IEnumerable<IEnumerable<TElement>> {
         return combinations(this, size);
+    }
+
+    public compact(): IEnumerable<NonNullable<TElement>> {
+        return compact(this);
     }
 
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {

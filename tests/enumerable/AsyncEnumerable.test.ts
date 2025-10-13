@@ -313,6 +313,15 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#compact()", () => {
+        test("should filter out null and undefined elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, "a", null, false, undefined], 0));
+            const result = await enumerable.compact().toArray();
+            expect(result).to.deep.equal([1, "a", false]);
+            expectTypeOf(result).toEqualTypeOf<Array<number | string | boolean>>();
+        });
+    });
+
     describe("#concat()", () => {
         test("should concatenate two enumerables", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));

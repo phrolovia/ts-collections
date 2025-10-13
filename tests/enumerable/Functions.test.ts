@@ -12,6 +12,7 @@ import {
     CircularLinkedList,
     CircularQueue,
     combinations,
+    compact,
     concat,
     contains,
     count,
@@ -357,6 +358,16 @@ describe("Enumerable Standalone Functions", () => {
             const combinationsEnum = combinations(sequence);
             const combinationsArray = combinationsEnum.select(p => p.toArray()).orderBy(c => c.length).toArray();
             expect(combinationsArray.length).to.eq(32);
+        });
+    });
+
+    describe("#compact()", () => {
+        test("should filter out null and undefined elements", () => {
+            const list = [1, "a", null, false, undefined];
+            const result = compact(list).toArray();
+            const expected = [1, "a", false];
+            expect(result).to.deep.equal(expected);
+            expectTypeOf(result).toEqualTypeOf<Array<number | string | boolean>>();
         });
     });
 

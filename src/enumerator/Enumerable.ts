@@ -143,6 +143,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.combinations(size);
     }
 
+    public compact(): IEnumerable<NonNullable<TElement>> {
+        return this.#enumerator.compact();
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return this.#enumerator.concat(iterable);
     }

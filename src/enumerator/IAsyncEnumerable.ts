@@ -234,6 +234,19 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     combinations(size?: number): IAsyncEnumerable<IEnumerable<TElement>>;
 
     /**
+     * Filters out `null` and `undefined` values from the async sequence.
+     * @template TElement Type of elements produced by the source sequence.
+     * @returns {IAsyncEnumerable<NonNullable<TElement>>} An async sequence containing only elements that are neither `null` nor `undefined`.
+     * @remarks The method preserves other falsy values (such as `0` or an empty string) and defers execution until the result is iterated.
+     * @example
+     * ```typescript
+     * const values = await fromAsync([1, null, 0, undefined]).compact().toArray();
+     * console.log(values); // [1, 0]
+     * ```
+     */
+    compact(): IAsyncEnumerable<NonNullable<TElement>>;
+
+    /**
      * Appends the specified async iterable to the end of the sequence.
      * @param other Additional elements that are yielded after the current sequence.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the elements of the current sequence followed by those from `other`.

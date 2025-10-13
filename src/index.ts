@@ -72,6 +72,7 @@ export {
     cast,
     chunk,
     combinations,
+    compact,
     concat,
     contains,
     count,

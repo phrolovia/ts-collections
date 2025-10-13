@@ -162,6 +162,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<IEnumerable<TElement>>(() => this.combinationsGenerator(size));
     }
 
+    public compact(): IAsyncEnumerable<NonNullable<TElement>> {
+        return new AsyncEnumerator<NonNullable<TElement>>(() => this.compactGenerator());
+    }
+
     public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.concatGenerator(other));
     }
@@ -964,6 +968,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     seen.add(key);
                     yield combination;
                 }
+            }
+        }
+    }
+
+    private async* compactGenerator(): AsyncIterableIterator<NonNullable<TElement>> {
+        for await (const item of this) {
+            if (item != null) {
+                yield item;
             }
         }
     }

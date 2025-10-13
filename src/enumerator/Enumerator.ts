@@ -162,6 +162,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.combinationsGenerator(size));
     }
 
+    public compact(): IEnumerable<NonNullable<TElement>> {
+        return new Enumerator(() => this.compactGenerator());
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.concatGenerator(iterable));
     }
@@ -962,6 +966,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     seen.add(key);
                     yield combination;
                 }
+            }
+        }
+    }
+
+    private* compactGenerator(): IterableIterator<NonNullable<TElement>> {
+        for (const item of this) {
+            if (item != null) {
+                yield item;
             }
         }
     }

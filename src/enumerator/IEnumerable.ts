@@ -231,6 +231,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     combinations(size?: number): IEnumerable<IEnumerable<TElement>>;
 
     /**
+     * Filters out `null` and `undefined` values from the sequence.
+     * @template TElement Type of elements in the source sequence.
+     * @returns {IEnumerable<NonNullable<TElement>>} A sequence containing only the elements that are neither `null` nor `undefined`.
+     * @remarks The method preserves other falsy values (such as `0` or an empty string) and defers execution until the returned sequence is iterated.
+     * @example
+     * ```typescript
+     * const values = from([1, null, 0, undefined]).compact().toArray();
+     * console.log(values); // [1, 0]
+     * ```
+     */
+    compact(): IEnumerable<NonNullable<TElement>>;
+
+    /**
      * Appends the specified iterable to the end of the sequence.
      * @param iterable Additional elements that are yielded after the current sequence.
      * @returns {IEnumerable<TElement>} A sequence containing the elements of the current sequence followed by those from `iterable`.

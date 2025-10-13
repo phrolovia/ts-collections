@@ -484,6 +484,16 @@ describe("List", () => {
         });
     });
 
+    describe("#compact()", () => {
+        test("should filter out null and undefined elements", () => {
+            const list = new List([1, "a", null, false, undefined]);
+            const result = list.compact().toArray();
+            const expected = [1, "a", false];
+            expect(result).to.deep.equal(expected);
+            expectTypeOf(result).toEqualTypeOf<Array<number | string | boolean>>();
+        });
+    });
+
     describe("#concat()", () => {
         test("should return a list with [1,2,3,4,5,5,6,7,8,9]", () => {
             const list1 = new List([1, 2, 3, 4, 5]);

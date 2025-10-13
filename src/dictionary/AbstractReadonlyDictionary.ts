@@ -11,6 +11,7 @@ import {
     CircularLinkedList,
     CircularQueue,
     combinations,
+    compact,
     concat,
     contains,
     count,
@@ -208,6 +209,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public combinations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
         return combinations(this, size);
+    }
+
+    public compact(): IEnumerable<NonNullable<KeyValuePair<TKey, TValue>>> {
+        return compact(this);
     }
 
     public concat(iterable: Iterable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
