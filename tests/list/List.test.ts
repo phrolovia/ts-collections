@@ -1162,7 +1162,7 @@ describe("List", () => {
         });
         test("should throw error if count is less than 0", () => {
             const list = new List([1, 2, 3]);
-            expect(() => list.exactly(-1)).to.toThrowError(
+            expect(() => list.exactly(-1)).toThrowError(
                 new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
             );
         });
@@ -2734,7 +2734,7 @@ describe("List", () => {
         });
     });
 
-    describe("#nultimode()", () => {
+    describe("#multimode()", () => {
         test("should return a list of most frequent elements", () => {
             const list1 = new List([1, 2, 2, 3]);
             const list2 = new List([1, 2, 2, 3, 3]);
@@ -5154,7 +5154,6 @@ describe("List", () => {
             const list2 = new List(["a", "b", "c"]);
             const list3 = new List([false, true, false]);
             const zipped = list1.zipMany(list2, list3).toArray();
-            console.log(zipped);
             expect(zipped).to.deep.equal(
                 [[1, "a", false],
                 [2, "b", true],

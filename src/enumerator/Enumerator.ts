@@ -144,13 +144,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         if (count < 0) {
             throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
         }
-        if (!predicate) {
-            return this.count() >= count;
-        }
 
         let actualCount = 0;
         for (const item of this) {
-            if (predicate(item)) {
+            if (predicate == null || predicate(item)) {
                 actualCount++;
             }
             if (actualCount >= count) {
@@ -164,20 +161,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         if (count < 0) {
             throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
         }
-        if (!predicate) {
-            return this.count() <= count;
-        }
 
         let actualCount = 0;
         for (const item of this) {
-            if (predicate(item)) {
+            if (predicate == null || predicate(item)) {
                 actualCount++;
             }
             if (actualCount > count) {
                 return false;
             }
         }
-        return actualCount <= count;
+        return true;
     }
 
     public average(selector?: Selector<TElement, number>): number {
@@ -363,13 +357,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         if (count < 0) {
             throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
         }
-        if (!predicate) {
-            return this.count() === count;
-        }
 
         let actualCount = 0;
         for (const item of this) {
-            if (predicate(item)) {
+            if (predicate == null || predicate(item)) {
                 actualCount++;
             }
             if (actualCount > count) {

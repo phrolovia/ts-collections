@@ -848,7 +848,7 @@ describe("Enumerable Standalone Functions", () => {
         });
         test("should throw error if count is less than 0", () => {
             const list = [1, 2, 3];
-            expect(() => exactly(list, -1)).to.toThrowError(
+            expect(() => exactly(list, -1)).toThrowError(
                 new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
             );
         });
@@ -1387,7 +1387,7 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
-    describe("#nultimode()", () => {
+    describe("#multimode()", () => {
         test("should return a list of most frequent elements", () => {
             const list1 = [1, 2, 2, 3];
             const list2 = [1, 2, 2, 3, 3];
