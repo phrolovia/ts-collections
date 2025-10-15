@@ -38,8 +38,11 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import {Zipper, ZipManyZipper} from "../shared/Zipper";
 import {PipeOperator} from "../shared/PipeOperator";
+import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -122,8 +125,20 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.append(element);
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
+        return this.#enumerator.atLeast(count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): boolean {
+        return this.#enumerator.atMost(count, predicate);
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         return this.#enumerator.average(selector);
+    }
+
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
+        return this.#enumerator.cartesian(iterable);
     }
 
     public cast<TResult>(): IEnumerable<TResult> {
@@ -138,6 +153,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.combinations(size);
     }
 
+    public compact(): IEnumerable<NonNullable<TElement>> {
+        return this.#enumerator.compact();
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return this.#enumerator.concat(iterable);
     }
@@ -146,12 +165,28 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.contains(element, comparator);
     }
 
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number {
+        return this.#enumerator.correlation(iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number {
+        return this.#enumerator.correlationBy(leftSelector, rightSelector);
+    }
+
     public count(predicate?: Predicate<TElement>): number {
         return this.#enumerator.count(predicate);
     }
 
     public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
         return this.#enumerator.countBy(keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number {
+        return this.#enumerator.covariance(iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): number {
+        return this.#enumerator.covarianceBy(leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IEnumerable<TElement> {
@@ -184,6 +219,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public elementAtOrDefault(index: number): TElement | null {
         return this.#enumerator.elementAtOrDefault(index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): boolean {
+        return this.#enumerator.exactly(count, predicate);
     }
 
     public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -262,12 +301,28 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.maxBy(keySelector, comparator);
     }
 
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number {
+        return this.#enumerator.median(selector, tie);
+    }
+
     public min(selector?: Selector<TElement, number>): number {
         return this.#enumerator.min(selector);
     }
 
     public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
         return this.#enumerator.minBy(keySelector, comparator);
+    }
+
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement {
+        return this.#enumerator.mode(keySelector);
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null {
+        return this.#enumerator.modeOrDefault(keySelector);
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement> {
+        return this.#enumerator.multimode(keySelector);
     }
 
     public none(predicate?: Predicate<TElement>): boolean {
@@ -302,6 +357,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] {
         return this.#enumerator.partition(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
+        return this.#enumerator.percentile(percent, selector, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -376,6 +435,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
         return this.#enumerator.span(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return this.#enumerator.standardDeviation(selector, sample);
     }
 
     public step(step: number): IEnumerable<TElement> {
@@ -528,6 +591,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.unionBy(iterable, keySelector, comparator);
     }
 
+    public variance(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return this.#enumerator.variance(selector, sample);
+    }
+
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
@@ -540,6 +607,26 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return this.#enumerator.zip(iterable, zipper);
+    }
+
+    public zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+            return this.#enumerator.zipMany(...iterables, zipper);
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return this.#enumerator.zipMany(...iterables);
     }
 }
 

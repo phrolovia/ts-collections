@@ -7,16 +7,24 @@ import {
     all,
     any,
     append,
+    atLeast,
+    atMost,
     average,
+    cartesian,
     cast,
     chunk,
     CircularLinkedList,
     CircularQueue,
     combinations,
+    compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     distinct,
@@ -25,6 +33,7 @@ import {
     distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
+    exactly,
     except,
     exceptBy,
     first,
@@ -54,6 +63,10 @@ import {
     maxBy,
     min,
     minBy,
+    median,
+    mode,
+    modeOrDefault,
+    multimode,
     none,
     ofType,
     order,
@@ -62,6 +75,7 @@ import {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,
@@ -82,6 +96,7 @@ import {
     skipWhile,
     span,
     Stack,
+    standardDeviation,
     step,
     sum,
     take,
@@ -115,9 +130,11 @@ import {
     toStack,
     union,
     unionBy,
+    variance,
     where,
     windows,
-    zip
+    zip,
+    zipMany
 } from "../imports";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
@@ -137,10 +154,13 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
-import {PipeOperator} from "../shared/PipeOperator";
+import { PipeOperator } from "../shared/PipeOperator";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
@@ -169,8 +189,20 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return append(this, element);
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
+        return atLeast(this, count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): boolean {
+        return atMost(this, count, predicate);
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         return average(this, selector);
+    }
+
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
+        return cartesian(this, iterable);
     }
 
     public cast<TResult>(): IEnumerable<TResult> {
@@ -185,6 +217,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return combinations(this, size);
     }
 
+    public compact(): IEnumerable<NonNullable<TElement>> {
+        return compact(this);
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return concat(this, iterable);
     }
@@ -194,12 +230,28 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return contains(this, element, comparator);
     }
 
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number {
+        return correlation(this, iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number {
+        return correlationBy(this, leftSelector, rightSelector);
+    }
+
     public count(predicate?: Predicate<TElement>): number {
         return count(this, predicate);
     }
 
     public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
         return countBy(this, keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number {
+        return covariance(this, iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): number {
+        return covarianceBy(this, leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IEnumerable<TElement> {
@@ -232,6 +284,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public elementAtOrDefault(index: number): TElement | null {
         return elementAtOrDefault(this, index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): boolean {
+        return exactly(this, count, predicate);
     }
 
     public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -315,12 +371,28 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return maxBy(this, keySelector, comparator);
     }
 
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number {
+        return median(this, selector, tie);
+    }
+
     public min(selector?: Selector<TElement, number>): number {
         return min(this, selector);
     }
 
     public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
         return minBy(this, keySelector, comparator);
+    }
+
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement {
+        return mode(this, keySelector);
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null {
+        return modeOrDefault(this, keySelector);
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement> {
+        return multimode(this, keySelector);
     }
 
     public none(predicate?: Predicate<TElement>): boolean {
@@ -355,6 +427,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] {
         return partition(this, predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
+        return percentile(this, percent, selector, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -430,6 +506,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
         return span(this, predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return standardDeviation(this, selector, sample);
     }
 
     public step(stepNumber: number): IEnumerable<TElement> {
@@ -591,6 +671,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return unionBy(this, iterable, keySelector, comparator);
     }
 
+    public variance(selector?: Selector<TElement, number>, sample?: boolean): number {
+        return variance(this, selector, sample);
+    }
+
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
@@ -605,6 +689,26 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> {
         return zip(this, iterable, zipper);
+    }
+
+    public zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+            return zipMany(this, ...iterables, zipper);
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return zipMany(this, ...iterables);
     }
 
     protected getIterableSize(iterable: Iterable<TElement>): number {
@@ -625,8 +729,3 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     abstract [Symbol.iterator](): Iterator<TElement>;
 }
-
-
-
-
-

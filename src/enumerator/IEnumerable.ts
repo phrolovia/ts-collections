@@ -36,8 +36,11 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
-import {PipeOperator} from "../shared/PipeOperator";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { PipeOperator } from "../shared/PipeOperator";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -148,6 +151,40 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     append(element: TElement): IEnumerable<TElement>;
 
     /**
+     * Determines whether the sequence contains at least {@link count} elements that satisfy the optional predicate.
+     * @param count Minimum number of matching elements required. Must be greater than or equal to 0.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+     * @returns {boolean} `true` when at least {@link count} matching elements are present; otherwise, `false`.
+     * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the predicate.
+     * @remarks Enumeration stops as soon as the required number of matches is found, avoiding unnecessary work on long sequences.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasAtLeastTwoEvens = numbers.atLeast(2, n => n % 2 === 0);
+     * console.log(hasAtLeastTwoEvens); // true
+     * ```
+     */
+    atLeast(count: number, predicate?: Predicate<TElement>): boolean;
+
+    /**
+     * Determines whether the sequence contains no more than {@link count} elements that satisfy the optional predicate.
+     * @param count Maximum number of matching elements allowed. Must be greater than or equal to 0.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+     * @returns {boolean} `true` when the number of matching elements does not exceed {@link count}; otherwise, `false`.
+     * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the predicate.
+     * @remarks Enumeration stops as soon as the count is exceeded, making it efficient for large or infinite sequences.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasAtMostOneEven = numbers.atMost(1, n => n % 2 === 0);
+     * console.log(hasAtMostOneEven); // false
+     * ```
+     */
+    atMost(count: number, predicate?: Predicate<TElement>): boolean;
+
+    /**
      * Computes the arithmetic mean of the numeric values produced for each element in the sequence.
      * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
      * @returns {number} The arithmetic mean of the selected values.
@@ -169,6 +206,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     average(selector?: Selector<TElement, number>): number;
+
+    /**
+     * Produces the cartesian product between this sequence and {@link iterable}.
+     * @template TSecond Type of elements emitted by {@link iterable}.
+     * @param iterable The secondary sequence paired with every element from the source.
+     * @returns {IEnumerable<[TElement, TSecond]>} A deferred sequence that yields each ordered pair `[source, other]`.
+     * @throws {unknown} Re-throws any error raised while iterating the source or {@link iterable}.
+     * @remarks The secondary sequence is fully buffered before iteration starts so that it can be replayed for every source element. The resulting sequence stops when the source sequence completes.
+     * @example
+     * ```typescript
+     * const pairs = from([1, 2]).cartesian(['A', 'B']).toArray();
+     * console.log(pairs); // [[1, 'A'], [1, 'B'], [2, 'A'], [2, 'B']]
+     * ```
+     */
+    cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]>;
 
     /**
      * Reinterprets each element in the sequence as the specified result type.
@@ -215,6 +267,19 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     combinations(size?: number): IEnumerable<IEnumerable<TElement>>;
 
     /**
+     * Filters out `null` and `undefined` values from the sequence.
+     * @template TElement Type of elements in the source sequence.
+     * @returns {IEnumerable<NonNullable<TElement>>} A sequence containing only the elements that are neither `null` nor `undefined`.
+     * @remarks The method preserves other falsy values (such as `0` or an empty string) and defers execution until the returned sequence is iterated.
+     * @example
+     * ```typescript
+     * const values = from([1, null, 0, undefined]).compact().toArray();
+     * console.log(values); // [1, 0]
+     * ```
+     */
+    compact(): IEnumerable<NonNullable<TElement>>;
+
+    /**
      * Appends the specified iterable to the end of the sequence.
      * @param iterable Additional elements that are yielded after the current sequence.
      * @returns {IEnumerable<TElement>} A sequence containing the elements of the current sequence followed by those from `iterable`.
@@ -245,6 +310,50 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean;
+
+    /**
+     * Computes the Pearson correlation coefficient between this sequence and {@link iterable}.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @param iterable Sequence whose elements align by index with the source sequence.
+     * @param selector Optional projection that extracts the numeric value for each element of the source sequence. Defaults to treating the element itself as numeric.
+     * @param otherSelector Optional projection that extracts the numeric value for each element of {@link iterable}. Defaults to treating the element itself as numeric.
+     * @returns {number} The correlation coefficient in the interval [-1, 1].
+     * @throws {DimensionMismatchException} Thrown when the sequences do not contain the same number of elements.
+     * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+     * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequences or executing the selector projections.
+     * @remarks Both sequences are consumed simultaneously via an online algorithm that avoids buffering the full dataset. Ensure the iterables are aligned because mismatch detection occurs only after iteration begins.
+     * @example
+     * ```typescript
+     * const temperatures = from([15, 18, 21, 24]);
+     * const sales = [30, 36, 42, 48];
+     * const correlation = temperatures.correlation(sales);
+     * console.log(correlation); // 1
+     * ```
+     */
+    correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number;
+
+    /**
+     * Computes the Pearson correlation coefficient between two numeric projections of the sequence.
+     * @param leftSelector Projection that produces the first numeric series for each element.
+     * @param rightSelector Projection that produces the second numeric series for each element.
+     * @returns {number} The correlation coefficient in the interval [-1, 1].
+     * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+     * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the selector projections.
+     * @remarks The sequence is consumed exactly once using an online algorithm, which keeps memory usage constant even for large inputs.
+     * @example
+     * ```typescript
+     * const metrics = from([
+     *   { impressions: 1_000, clicks: 50 },
+     *   { impressions: 1_500, clicks: 75 },
+     *   { impressions: 2_000, clicks: 100 }
+     * ]);
+     * const correlation = metrics.correlationBy(m => m.impressions, m => m.clicks);
+     * console.log(correlation); // 1
+     * ```
+     */
+    correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number;
 
     /**
      * Counts the number of elements in the sequence, optionally restricted by a predicate.
@@ -287,6 +396,50 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>>;
+
+    /**
+     * Calculates the covariance between this sequence and {@link iterable}.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @param iterable Sequence whose elements align by index with the source sequence.
+     * @param selector Optional projection that extracts the numeric value for each element of the source sequence. Defaults to treating the element itself as numeric.
+     * @param otherSelector Optional projection that extracts the numeric value for each element of {@link iterable}. Defaults to treating the element itself as numeric.
+     * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+     * @returns {number} The calculated covariance.
+     * @throws {DimensionMismatchException} Thrown when the sequences do not contain the same number of elements.
+     * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+     * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing the selector projections.
+     * @remarks Both sequences are consumed simultaneously so streaming statistics can be computed without materialising all elements. Ensure the iterables are aligned because mismatch detection occurs only after iteration begins.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const doubles = [2, 4, 6, 8, 10];
+     * const covariance = numbers.covariance(doubles);
+     * console.log(covariance); // 5
+     * ```
+     */
+    covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number;
+
+    /**
+     * Calculates the covariance between two numeric projections of the sequence.
+     * @param leftSelector Projection that produces the first numeric series for each element.
+     * @param rightSelector Projection that produces the second numeric series for each element.
+     * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+     * @returns {number} The calculated covariance.
+     * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing the selector projections.
+     * @remarks The sequence is consumed exactly once using an online algorithm that avoids buffering, making it suitable for large datasets.
+     * @example
+     * ```typescript
+     * const metrics = from([
+     *   { x: 1, y: 2 },
+     *   { x: 2, y: 4 },
+     *   { x: 3, y: 6 }
+     * ]);
+     * const covariance = metrics.covarianceBy(p => p.x, p => p.y);
+     * console.log(covariance); // 2
+     * ```
+     */
+    covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): number;
 
     /**
      * Repeats the sequence the specified number of times, or indefinitely when no count is provided.
@@ -433,6 +586,23 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     elementAtOrDefault(index: number): TElement | null;
+
+    /**
+     * Determines whether the sequence contains exactly {@link count} elements that satisfy the optional predicate.
+     * @param count Exact number of matching elements required. Must be greater than or equal to 0.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+     * @returns {boolean} `true` when exactly {@link count} matching elements are present; otherwise, `false`.
+     * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the predicate.
+     * @remarks Enumeration stops once the running total exceeds {@link count}, preventing unnecessary work on long sequences.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasExactlyThreeOdds = numbers.exactly(3, n => n % 2 !== 0);
+     * console.log(hasExactlyThreeOdds); // true
+     * ```
+     */
+    exactly(count: number, predicate?: Predicate<TElement>): boolean;
 
     /**
      * Returns the elements of this sequence that are not present in the specified iterable.
@@ -866,6 +1036,31 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
 
     /**
+     * Calculates the median of the numeric values produced by the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+     * @param tie Determines how the median is resolved when the sequence contains an even number of elements. Defaults to `"interpolate"`, which averages the two central values. Specify `"low"` or `"high"` to select the lower or higher neighbour respectively.
+     * @returns {number} The calculated median, or `NaN` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks The sequence is enumerated once and buffered so a selection algorithm can locate the middle element(s) without fully sorting. Supply {@link selector} when the elements are not already numeric.
+     * @example
+     * ```typescript
+     * const medianValue = from([1, 5, 2, 4, 3]).median();
+     * console.log(medianValue); // 3
+     *
+     * const people = from([
+     *   { name: 'Alice', age: 23 },
+     *   { name: 'Bella', age: 21 },
+     *   { name: 'Mirei', age: 22 },
+     *   { name: 'Hanna', age: 20 },
+     *   { name: 'Noemi', age: 29 }
+     * ]);
+     * const medianAge = people.median(p => p.age);
+     * console.log(medianAge); // 22
+     * ```
+     */
+    median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number;
+
+    /**
      * Returns the smallest numeric value produced for the elements in the sequence.
      * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
      * @returns {number} The minimum of the projected values.
@@ -908,6 +1103,52 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement;
+
+    /**
+     * Returns the element that appears most frequently in the sequence.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {TElement} The first element whose occurrence count matches the maximum frequency.
+     * @throws {NoElementsException} Thrown when the sequence is empty.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks The source sequence is fully enumerated to build frequency counts before the result is determined. When multiple keys share the same frequency, the earliest corresponding element is returned.
+     * @example
+     * ```typescript
+     * const winner = from([1, 2, 2, 3]).mode();
+     * console.log(winner); // 2
+     * ```
+     */
+    mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement;
+
+    /**
+     * Returns the element that appears most frequently in the sequence, or `null` when the sequence is empty.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {TElement | null} The first most frequent element, or `null` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks Unlike {@link mode}, this overload communicates the absence of elements by returning `null`. When multiple keys share the maximum frequency, the element that appears first is returned.
+     * @example
+     * ```typescript
+     * const winner = from<number>([]).modeOrDefault();
+     * console.log(winner); // null
+     * ```
+     */
+    modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null;
+
+    /**
+     * Produces the elements whose occurrence count is tied for the highest frequency in the sequence.
+     * @template TKey Type of key produced by {@link keySelector}.
+     * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing one representative element for each frequency mode.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link keySelector}.
+     * @remarks Enumeration of the result buffers the entire source to compute frequency counts before yielding results. When multiple elements share a key, only the first occurrence is emitted.
+     * @example
+     * ```typescript
+     * const modes = from([1, 2, 2, 3, 3]).multimode().toArray();
+     * console.log(modes); // [2, 3]
+     * ```
+     */
+    multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement>;
 
     /**
      * Determines whether the sequence contains no elements that satisfy the optional predicate.
@@ -1059,6 +1300,30 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @remarks The source is fully enumerated immediately and buffered so that both partitions can be iterated repeatedly without re-evaluating the predicate.
      */
     partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+
+    /**
+     * Calculates a percentile of the numeric values produced by the sequence.
+     * @param percent Percentile expressed as a fraction between 0 and 1 where `0` corresponds to the minimum and `1` to the maximum.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+     * @param strategy Strategy that determines how fractional ranks are resolved. Defaults to `"linear"`, which interpolates between neighbouring values. Alternative strategies include `"nearest"`, `"low"`, `"high"`, and `"midpoint"`.
+     * @returns {number} The percentile value, or `NaN` when the sequence contains no elements.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks The sequence is enumerated once and buffered so the selection algorithm can determine the requested rank without fully sorting the data. When {@link percent} falls outside `[0, 1]`, the result is clamped to the range implied by {@link strategy}.
+     * @example
+     * ```typescript
+     * const upperQuartile = from([1, 2, 3, 4, 5]).percentile(0.75);
+     * console.log(upperQuartile); // 4
+     *
+     * const responseTimes = from([
+     *   { endpoint: '/users', duration: 120 },
+     *   { endpoint: '/users', duration: 80 },
+     *   { endpoint: '/users', duration: 200 }
+     * ]);
+     * const p95 = responseTimes.percentile(0.95, r => r.duration, "nearest");
+     * console.log(p95); // 200
+     * ```
+     */
+    percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number;
 
     /**
      * Generates permutations from the distinct elements of the sequence.
@@ -1380,6 +1645,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @remarks The source is fully enumerated immediately and buffered so both partitions can be iterated repeatedly without re-evaluating {@link predicate}.
      */
     span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
+
+    /**
+     * Calculates the standard deviation of the numeric values produced by the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @param sample When `true`, computes the sample standard deviation; when `false`, computes the population standard deviation. Defaults to `true`.
+     * @returns {number} The calculated standard deviation, or `NaN` when there are insufficient values to compute it.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks This method delegates to {@link variance}; when the variance is `NaN`, that value is returned unchanged. The sequence is enumerated exactly once using a numerically stable single-pass algorithm.
+     * @example
+     * ```typescript
+     * const populationStdDev = from([1, 2, 3, 4, 5]).standardDeviation(x => x, false);
+     * console.log(populationStdDev); // Math.sqrt(2)
+     * ```
+     */
+    standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number;
 
     /**
      * Returns every n-th element of the sequence, starting with the first.
@@ -1995,6 +2275,21 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     unionBy<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement>;
 
     /**
+     * Calculates the variance of the numeric values produced by the sequence.
+     * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+     * @param sample When `true`, computes the sample variance dividing by _n - 1_; when `false`, computes the population variance dividing by _n_. Defaults to `true`.
+     * @returns {number} The calculated variance, or `NaN` when the sequence is empty—or for sample variance when it contains a single element.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing {@link selector}.
+     * @remarks A numerically stable single-pass algorithm (Welford's method) is used, so the source is enumerated exactly once regardless of size.
+     * @example
+     * ```typescript
+     * const populationVariance = from([1, 2, 3, 4, 5]).variance(x => x, false);
+     * console.log(populationVariance); // 2
+     * ```
+     */
+    variance(selector?: Selector<TElement, number>, sample?: boolean): number;
+
+    /**
      * Filters the sequence using a type guard predicate and narrows the resulting element type.
      * @template TFiltered extends TElement
      * @param predicate Type guard invoked with each element and its zero-based index. Return `true` to keep the element in the results.
@@ -2066,4 +2361,42 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @remarks Enumeration is lazy; the `zipper` function executes on demand for each pair and iteration stops when either sequence completes.
      */
     zip<TSecond, TResult>(iterable: Iterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IEnumerable<TResult>;
+
+    /**
+     * Zips this sequence with the iterables supplied in {@link iterables}, producing aligned tuples.
+     * @template TIterable Extends `readonly Iterable<unknown>[]`; the element type of each iterable contributes to the resulting tuple.
+     * @param iterables Additional sequences to zip with the source.
+     * @returns {IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>} A deferred sequence of tuples truncated to the length of the shortest input.
+     * @throws {unknown} Re-throws any error raised while iterating the source or any of the supplied iterables.
+     * @remarks Iteration stops as soon as any participating iterable is exhausted. Tuple element types are inferred from the supplied iterables, preserving strong typing across the zipped result.
+     * @example
+     * ```typescript
+     * const zipped = from([1, 2, 3]).zipMany(['A', 'B', 'C'], [true, false]).toArray();
+     * console.log(zipped); // [[1, 'A', true], [2, 'B', false]]
+     * ```
+     */
+    zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    /**
+     * Zips this sequence with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
+     * @template TIterable Extends `readonly Iterable<unknown>[]`; the element type of each iterable contributes to the zipper input tuple.
+     * @template TResult Result type produced by {@link ZipManyZipper zipper}.
+     * @param iterablesAndZipper The trailing argument may be a zipper invoked with each tuple to produce a projected result; preceding arguments are the iterables to zip with.
+     * @returns {IEnumerable<TResult>} A deferred sequence of projected results truncated to the length of the shortest input.
+     * @throws {unknown} Re-throws any error raised while iterating the source, the supplied iterables, or executing the zipper.
+     * @remarks The zipper receives a readonly tuple `[source, ...others]` for each aligned set. Iteration stops as soon as any participating iterable is exhausted.
+     * @example
+     * ```typescript
+     * const labels = from([1, 2, 3]).zipMany(
+     *     ['A', 'B', 'C'],
+     *     [true, true, false],
+     *     ([num, letter, flag]) => `${num}${letter}-${flag ? "yes" : "no"}`
+     * ).toArray();
+     * console.log(labels); // ["1A-yes", "2B-yes", "3C-no"]
+     * ```
+     */
+    zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
 }

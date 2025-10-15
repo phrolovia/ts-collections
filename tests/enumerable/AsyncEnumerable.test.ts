@@ -7,6 +7,7 @@ import {
     Dictionary,
     Enumerable,
     EnumerableSet,
+    IEnumerable,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -30,6 +31,8 @@ import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElement
 import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOneMatchingElementException";
 import { NoElementsException } from "../../src/shared/NoElementsException";
 import { NoMatchingElementException } from "../../src/shared/NoMatchingElementException";
+import { DimensionMismatchException } from "../../src/shared/DimensionMismatchException";
+import { InsufficientElementException } from "../../src/shared/InsufficientElementException";
 import { Helper } from "../helpers/Helper";
 import { ApiResponse, ApiResponseSuccess, isError, isLoading, isSuccess } from "../models/ApiResponse";
 import { Pair } from "../models/Pair";
@@ -206,6 +209,60 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#atLeast()", () => {
+        test("should return true when at least 3 elements are greater than 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atLeast(3, n => n > 5);
+            expect(result).to.eq(true);
+        });
+
+        test("should return false when fewer than 5 elements are greater than 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atLeast(5, n => n > 5);
+            expect(result).to.eq(false);
+        });
+
+        test("should evaluate all elements when predicate is omitted", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            expect(await enumerable.atLeast(1)).to.eq(true);
+            const empty = new AsyncEnumerable(arrayProducer([] as number[]));
+            expect(await empty.atLeast(0)).to.eq(true);
+        });
+
+        test("should reject when count is negative", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            await expect(enumerable.atLeast(-1))
+                .rejects.toThrowError(new InvalidArgumentException("Count must be greater than or equal to 0.", "count"));
+        });
+    });
+
+    describe("#atMost()", () => {
+        test("should return true when at most 3 elements are greater than 6", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atMost(3, n => n > 6);
+            expect(result).to.eq(true);
+        });
+
+        test("should return false when more than 2 elements are greater than 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atMost(2, n => n > 5);
+            expect(result).to.eq(false);
+        });
+
+        test("should honour the non-predicate overload", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            expect(await enumerable.atMost(3)).to.eq(true);
+            const result = await new AsyncEnumerable(arrayProducer([1, 2, 3])).atMost(2);
+            expect(result).to.eq(false);
+        });
+
+        test("should reject when count is negative", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            await expect(enumerable.atMost(-1))
+                .rejects.toThrowError(new InvalidArgumentException("Count must be greater than or equal to 0.", "count"));
+        });
+    });
+
     describe("#average()", () => {
         test("should return the average of the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -225,6 +282,23 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numericalStringProducer(10));
             const result = await enumerable.average(n => parseInt(n, 10));
             expect(result).to.eq(4.5);
+        });
+    });
+
+    describe("#cartesian()", () => {
+        test("should produce the cartesian product", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2]));
+            const result = await source.cartesian(arrayProducer(["a", "b", "c"])).toArray();
+            expect(result).to.deep.equal([
+                [1, "a"], [1, "b"], [1, "c"],
+                [2, "a"], [2, "b"], [2, "c"]
+            ]);
+        });
+
+        test("should return empty sequence when secondary iterable is empty", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2]));
+            const result = await source.cartesian(arrayProducer([])).toArray();
+            expect(result).to.deep.equal([]);
         });
     });
 
@@ -295,6 +369,15 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#compact()", () => {
+        test("should filter out null and undefined elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, "a", null, false, undefined], 0));
+            const result = await enumerable.compact().toArray();
+            expect(result).to.deep.equal([1, "a", false]);
+            expectTypeOf(result).toEqualTypeOf<Array<number | string | boolean>>();
+        });
+    });
+
     describe("#concat()", () => {
         test("should concatenate two enumerables", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -350,6 +433,175 @@ describe("AsyncEnumerable", () => {
             const result1 = enumerable.countBy(p => p.name, (n1, n2) => n1.toLowerCase().localeCompare(n2.toLowerCase()) === 0);
             const suzuhaCountBig = (await result1.first(p => p.key === "Suzuha")).value;
             expect(suzuhaCountBig).to.eq(3);
+        });
+    });
+
+    describe("#correlation()", () => {
+        test("should return correlation of two sequences", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await left.correlation(arrayProducer([2, 4, 6, 8, 10]));
+            expect(result).to.eq(1);
+        });
+
+        test("should throw when sequences have different lengths", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            await expect(left.correlation(arrayProducer([2, 4, 6, 8])))
+                .rejects.toThrowError(new DimensionMismatchException());
+        });
+
+        test("should throw when fewer than two pairs exist", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1]));
+            await expect(left.correlation(arrayProducer([2])))
+                .rejects.toThrowError(new InsufficientElementException("Correlation requires at least two pairs of elements."));
+        });
+
+        test("should throw when variance of either sequence is zero", async () => {
+            const left = new AsyncEnumerable(arrayProducer([3, 3, 3, 3, 3]));
+            await expect(left.correlation(arrayProducer([2, 4, 6, 8, 10])))
+                .rejects.toThrowError(new Error("Correlation is undefined when the standard deviation of either variable is zero."));
+        });
+
+        test("should use selectors", async () => {
+            const left = new AsyncEnumerable(arrayProducer([
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 }
+            ]));
+            const result = await left.correlation(
+                arrayProducer([
+                    { value: 2 },
+                    { value: 4 },
+                    { value: 6 },
+                    { value: 8 },
+                    { value: 10 }
+                ]),
+                item => item.value,
+                item => item.value
+            );
+            expect(result).to.eq(1);
+        });
+    });
+
+    describe("#correlationBy()", () => {
+        test("should return correlation based on selectors", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 2 },
+                { key: 2, value: 4 },
+                { key: 3, value: 6 },
+                { key: 4, value: 8 },
+                { key: 5, value: 10 }
+            ]));
+            const result = await enumerable.correlationBy(p => p.key, p => p.value);
+            expect(result).to.eq(1);
+        });
+
+        test("should throw when sequence has fewer than two elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([{ key: 1, value: 2 }]))
+            await expect(enumerable.correlationBy(p => p.key, p => p.value))
+                .rejects.toThrowError(new InsufficientElementException("Correlation requires at least two pairs of elements."));
+        });
+
+        test("should throw when selector variance is zero", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 10 },
+                { key: 1, value: 12 },
+                { key: 1, value: 14 }
+            ]));
+            await expect(enumerable.correlationBy(p => p.key, p => p.value))
+                .rejects.toThrowError(new Error("Correlation is undefined when the standard deviation of either variable is zero."));
+        });
+    });
+
+    describe("#covariance()", () => {
+        test("should return covariance of two sequences", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const sample = await left.covariance(arrayProducer([2, 4, 6, 8, 10]));
+            const population = await new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]))
+                .covariance(arrayProducer([2, 4, 6, 8, 10]), undefined, undefined, false);
+            expect(sample).to.eq(5);
+            expect(population).to.eq(4);
+        });
+
+        test("should throw when sequences have different lengths", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            await expect(left.covariance(arrayProducer([2, 4, 6, 8])))
+                .rejects.toThrowError(new DimensionMismatchException());
+        });
+
+        test("should throw when fewer than two pairs exist", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1]));
+            await expect(left.covariance(arrayProducer([2])))
+                .rejects.toThrowError(new InsufficientElementException("Covariance requires at least two pairs of elements."));
+        });
+
+        test("should return 0 when one sequence has no variance", async () => {
+            const left = new AsyncEnumerable(arrayProducer([3, 3, 3, 3, 3]));
+            const result = await left.covariance(arrayProducer([2, 4, 6, 8, 10]));
+            expect(result).to.eq(0);
+        });
+
+        test("should use selectors", async () => {
+            const left = new AsyncEnumerable(arrayProducer([
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 }
+            ]));
+            const result = await left.covariance(
+                arrayProducer([
+                    { value: 2 },
+                    { value: 4 },
+                    { value: 6 },
+                    { value: 8 },
+                    { value: 10 }
+                ]),
+                item => item.value,
+                item => item.value
+            );
+            expect(result).to.eq(5);
+        });
+    });
+
+    describe("#covarianceBy()", () => {
+        test("should return covariance based on selectors", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 2 },
+                { key: 2, value: 4 },
+                { key: 3, value: 6 },
+                { key: 4, value: 8 },
+                { key: 5, value: 10 }
+            ]));
+            const sample = await enumerable.covarianceBy(p => p.key, p => p.value);
+            const population = await new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 2 },
+                { key: 2, value: 4 },
+                { key: 3, value: 6 },
+                { key: 4, value: 8 },
+                { key: 5, value: 10 }
+            ])).covarianceBy(p => p.key, p => p.value, false);
+            expect(sample).to.eq(5);
+            expect(population).to.eq(4);
+        });
+
+        test("should throw when sequence is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as Array<{ key: number; value: number }>));
+            await expect(enumerable.covarianceBy(p => p.key, p => p.value))
+                .rejects.toThrowError(new InsufficientElementException("Covariance requires at least two pairs of elements."));
+        });
+
+        test("should return negative covariance", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 10 },
+                { key: 2, value: 8 },
+                { key: 3, value: 6 },
+                { key: 4, value: 4 },
+                { key: 5, value: 2 }
+            ]));
+            const result = await enumerable.covarianceBy(p => p.key, p => p.value);
+            expect(result).to.eq(-5);
         });
     });
 
@@ -491,6 +743,32 @@ describe("AsyncEnumerable", () => {
             const enumerable = AsyncEnumerable.empty();
             const result = await enumerable.toArray();
             expect(result).to.deep.equal([]);
+        });
+    });
+
+    describe("#exactly()", () => {
+        test("should return true when there are exactly 3 elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            expect(await enumerable.exactly(3)).to.eq(true);
+        });
+
+        test("should return false when the element count differs", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            expect(await enumerable.exactly(3)).to.eq(false);
+        });
+
+        test("should respect predicates", async () => {
+            const values = [1, 2, 3, 4, 5];
+            const evenPair = new AsyncEnumerable(arrayProducer(values));
+            const manyEvens = new AsyncEnumerable(arrayProducer(values));
+            expect(await evenPair.exactly(2, n => n % 2 === 0)).to.eq(true);
+            expect(await manyEvens.exactly(3, n => n % 2 === 0)).to.eq(false);
+        });
+
+        test("should reject when count is negative", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            await expect(enumerable.exactly(-1))
+                .rejects.toThrowError(new InvalidArgumentException("Count must be greater than or equal to 0.", "count"));
         });
     });
 
@@ -1325,6 +1603,51 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#median()", () => {
+        test("should return the median for an odd-length sequence", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 5, 2, 4, 3]));
+            const median = await enumerable.median();
+            expect(median).to.eq(3);
+        });
+
+        test("should return the low median for an even-length sequence", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const median = await enumerable.median(undefined, "low");
+            expect(median).to.eq(2);
+        });
+
+        test("should return the high median for an even-length sequence", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const median = await enumerable.median(undefined, "high");
+            expect(median).to.eq(3);
+        });
+
+        test("should interpolate the median for an even-length sequence by default", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const median = await enumerable.median();
+            expect(median).to.eq(2.5);
+        });
+
+        test("should return NaN when the sequence is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[]));
+            const median = await enumerable.median();
+            expect(median).to.be.NaN;
+        });
+
+        test("should project elements before computing the median", async () => {
+            const people = [
+                Person.Hanna,
+                Person.Bella,
+                Person.Mirei,
+                Person.Alice,
+                Person.Noemi
+            ];
+            const enumerable = new AsyncEnumerable(personProducer(people));
+            const median = await enumerable.median(p => p.age);
+            expect(median).to.eq(22);
+        });
+    });
+
     describe("#min()", () => {
         test("should return the minimum value of the enumerable", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -1366,6 +1689,90 @@ describe("AsyncEnumerable", () => {
         test("should throw error if no element is present", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(0));
             await expect(enumerable.minBy(n => n)).rejects.toThrowError(new NoElementsException());
+        });
+    });
+
+    describe("#mode()", () => {
+        test("should return most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3], 0));
+            const result = await enumerable.mode();
+            expect(result).to.eq(2);
+        });
+        test("should return first most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 1], 0));
+            const result = await enumerable.mode();
+            expect(result).to.eq(1);
+        });
+        test("should throw if enumerable is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            await expect(enumerable.mode()).rejects.toThrowError(new NoElementsException());
+        });
+        test("should use provided selector", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Suzuha3,
+                Person.Noemi2
+            ], 0));
+            const result = await enumerable.mode(p => p.name);
+            expect(result).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#modeOrDefault()", () => {
+        test("should return most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 3], 0));
+            const mode = await enumerable.modeOrDefault();
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 2, 1], 0));
+            const mode = await enumerable.modeOrDefault();
+            expect(mode).to.eq(1);
+        });
+        test("should return null if enumerable is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const mode = await enumerable.modeOrDefault();
+            expect(mode).to.be.null;
+        });
+        test("should use provided selector", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Suzuha2,
+                Person.Suzuha3,
+                Person.Noemi2
+            ], 0));
+            const mode = await enumerable.modeOrDefault(p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#multimode()", () => {
+        test("should return a list of most frequent elements", async () => {
+            const enumerable1 = new AsyncEnumerable(arrayProducer([1, 2, 2, 3], 0));
+            const enumerable2 = new AsyncEnumerable(arrayProducer([1, 2, 2, 3, 3], 0));
+            const mode1 = await enumerable1.multimode().toArray();
+            const mode2 = await enumerable2.multimode().toArray();
+            expect(mode1).to.deep.equal([2]);
+            expect(mode2).to.deep.equal([2, 3]);
+        });
+        test("should return empty list if source is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const mode = await enumerable.multimode().toArray();
+            expect(mode).to.be.empty;
+        });
+        test("should use provided selector", async () => {
+            const enumerable = new AsyncEnumerable(personProducer([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Noemi2,
+                Person.Suzuha2,
+                Person.Bella
+            ], 0));
+            const mode = await enumerable.multimode(p => p.name).toArray();
+            expect(mode).to.deep.equal([Person.Noemi, Person.Suzuha]);
         });
     });
 
@@ -1481,6 +1888,55 @@ describe("AsyncEnumerable", () => {
             const [errors, rest] = await enumerable.partition(isError);
             expect(errors.all(isError)).to.be.true;
             expect(rest.all(r => !isError(r))).to.be.true;
+        });
+    });
+
+    describe("#percentile()", () => {
+        test("should return percentile of the sequence for 0.25", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await enumerable.percentile(0.25);
+            expect(result).to.eq(2);
+        });
+
+        test("should return percentile of the sequence for 0.5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await enumerable.percentile(0.5);
+            expect(result).to.eq(3);
+        });
+
+        test("should honour the 'nearest' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await enumerable.percentile(0.75, undefined, "nearest");
+            expect(result).to.eq(4);
+        });
+
+        test("should honour the 'low' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const result = await enumerable.percentile(0.5, undefined, "low");
+            expect(result).to.eq(2);
+        });
+
+        test("should honour the 'high' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            const result = await enumerable.percentile(0.5, undefined, "high");
+            expect(result).to.eq(3);
+        });
+
+        test("should honour the 'midpoint' strategy", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 10]));
+            const result = await enumerable.percentile(0.5, undefined, "midpoint");
+            expect(result).to.eq(2.5);
+        });
+
+        test("should project elements before computing the percentile", async () => {
+            const responses = [
+                { duration: 10 },
+                { duration: 20 },
+                { duration: 30 }
+            ];
+            const enumerable = new AsyncEnumerable(arrayProducer(responses));
+            const result = await enumerable.percentile(0.9, r => r.duration);
+            expect(result).to.eq(28);
         });
     });
 
@@ -1870,6 +2326,49 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#standardDeviation()", () => {
+        test("should return the standard deviation of the async sequence", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const sampleStdDev = await sampleEnumerable.standardDeviation();
+            const populationStdDev = await populationEnumerable.standardDeviation(undefined, false);
+            expect(Math.abs(sampleStdDev - Math.sqrt(2.5)) < 1e-12).to.be.true;
+            expect(Math.abs(populationStdDev - Math.sqrt(2)) < 1e-12).to.be.true;
+        });
+        test("should return 0 when all values are identical", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const sampleStdDev = await sampleEnumerable.standardDeviation();
+            const populationStdDev = await populationEnumerable.standardDeviation(undefined, false);
+            expect(sampleStdDev).to.equal(0);
+            expect(populationStdDev).to.equal(0);
+        });
+        test("should return NaN for empty input", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const sampleStdDev = await sampleEnumerable.standardDeviation();
+            const populationStdDev = await populationEnumerable.standardDeviation(undefined, false);
+            expect(sampleStdDev).to.be.NaN;
+            expect(populationStdDev).to.be.NaN;
+        });
+        test("should use selector when provided", async () => {
+            const peopleSample = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const peoplePopulation = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const sampleStdDev = await peopleSample.standardDeviation(p => p.age);
+            const populationStdDev = await peoplePopulation.standardDeviation(p => p.age, false);
+            expect(Math.abs(sampleStdDev - Math.sqrt(25)) < 1e-12).to.be.true;
+            expect(Math.abs(populationStdDev - Math.sqrt(16.666666666666668)) < 1e-12).to.be.true;
+        });
+    });
+
     describe("#step()", () => {
         test("should return an enumerable with elements [0, 2, 4, 6, 8]", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -2238,6 +2737,57 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#variance()", () => {
+        test("should return the variance of the async sequence", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.equal(2.5);
+            expect(populationVariance).to.equal(2);
+        });
+        test("should return 0 when all values are identical", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([3, 3, 3, 3], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.equal(0);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should return NaN for empty input", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([] as number[], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.be.NaN;
+        });
+        test("should handle single element sequences", async () => {
+            const sampleEnumerable = new AsyncEnumerable(arrayProducer([10], 0));
+            const populationEnumerable = new AsyncEnumerable(arrayProducer([10], 0));
+            const sampleVariance = await sampleEnumerable.variance();
+            const populationVariance = await populationEnumerable.variance(undefined, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.equal(0);
+        });
+        test("should use selector when provided", async () => {
+            const peopleSample = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const peoplePopulation = new AsyncEnumerable(arrayProducer([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ], 0));
+            const sampleVariance = await peopleSample.variance(p => p.age);
+            const populationVariance = await peoplePopulation.variance(p => p.age, false);
+            expect(sampleVariance).to.equal(25);
+            expect(populationVariance).to.equal(16.666666666666668);
+        });
+    });
+
     describe("#where()", () => {
         test("should select values that can be divided to 3", {timeout: 120000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(30));
@@ -2320,6 +2870,41 @@ describe("AsyncEnumerable", () => {
             });
             const expected = [{1: "a"}, {2: "b"}, {3: "c"}, {4: "d"}, {5: "e"}];
             expect(await zipped.toArray()).to.deep.equal(expected);
+        });
+    });
+
+    describe("#zipMany()", () => {
+        test("should zip multiple sequences", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            const zipped = source.zipMany(arrayProducer(["a", "b", "c", "d"]), arrayProducer([true, false]));
+            const result = await zipped.toArray();
+            expect(result).to.deep.equal([
+                [1, "a", true],
+                [2, "b", false]
+            ]);
+            expectTypeOf(result).toEqualTypeOf<Array<[number, string, boolean]>>();
+        });
+
+        test("should project tuples with zipper", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            const zipped = source.zipMany(
+                arrayProducer(["a", "b", "c"]),
+                arrayProducer([true, true, false]),
+                ([num, letter, flag]) => `${num}${letter}-${flag ? "yes" : "no"}`
+            );
+            const result = await zipped.toArray();
+            expect(result).to.deep.equal([
+                "1a-yes",
+                "2b-yes",
+                "3c-no"
+            ]);
+        });
+
+        test("should handle no additional iterables", async () => {
+            const source = new AsyncEnumerable(arrayProducer([1, 2]));
+            const result = await source.zipMany().toArray();
+            expect(result).to.deep.equal([[1], [2]]);
+            expectTypeOf(result).toEqualTypeOf<Array<[number]>>();
         });
     });
 

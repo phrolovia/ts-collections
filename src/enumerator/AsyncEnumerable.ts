@@ -31,6 +31,8 @@ import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
 import { ObjectType } from "../shared/ObjectType";
@@ -38,7 +40,8 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import { IGroup } from "./IGroup";
 import { AsyncPipeOperator } from "../shared/PipeOperator";
 
@@ -97,8 +100,20 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.append(element);
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        return this.#enumerator.atLeast(count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        return this.#enumerator.atMost(count, predicate);
+    }
+
     public average(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.average(selector);
+    }
+
+    public cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]> {
+        return this.#enumerator.cartesian(iterable);
     }
 
     public cast<TResult>(): IAsyncEnumerable<TResult> {
@@ -113,6 +128,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.combinations(size);
     }
 
+    public compact(): IAsyncEnumerable<NonNullable<TElement>> {
+        return this.#enumerator.compact();
+    }
+
     public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.concat(other);
     }
@@ -121,12 +140,28 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.contains(element, comparator);
     }
 
+    public correlation<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): Promise<number> {
+        return this.#enumerator.correlation(iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): Promise<number> {
+        return this.#enumerator.correlationBy(leftSelector, rightSelector);
+    }
+
     public count(predicate?: Predicate<TElement>): Promise<number> {
         return this.#enumerator.count(predicate);
     }
 
     public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>> {
         return this.#enumerator.countBy(keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.covariance(iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.covarianceBy(leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IAsyncEnumerable<TElement> {
@@ -159,6 +194,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public elementAtOrDefault(index: number): Promise<TElement | null> {
         return this.#enumerator.elementAtOrDefault(index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        return this.#enumerator.exactly(count, predicate);
     }
 
     public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
@@ -237,12 +276,28 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.maxBy(keySelector, comparator);
     }
 
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number> {
+        return this.#enumerator.median(selector, tie);
+    }
+
     public min(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.min(selector);
     }
 
     public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
         return this.#enumerator.minBy(keySelector, comparator);
+    }
+
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement> {
+        return this.#enumerator.mode(keySelector);
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement | null> {
+        return this.#enumerator.modeOrDefault(keySelector);
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IAsyncEnumerable<TElement> {
+        return this.#enumerator.multimode(keySelector);
     }
 
     public none(predicate?: Predicate<TElement>): Promise<boolean> {
@@ -277,6 +332,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     public partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> | Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> {
         return this.#enumerator.partition(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
+        return this.#enumerator.percentile(percent, selector, strategy);
     }
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
@@ -351,6 +410,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     public span(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> {
         return this.#enumerator.span(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<TElement>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+    }
+
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.standardDeviation(selector, sample);
     }
 
     public step(step: number): IAsyncEnumerable<TElement> {
@@ -497,6 +560,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.unionBy(enumerable, keySelector, comparator);
     }
 
+    public variance(selector?: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.variance(selector, sample);
+    }
+
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
     public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
@@ -511,5 +578,25 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult>;
     public zip<TSecond, TResult = [TElement, TSecond]>(iterable: AsyncIterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IAsyncEnumerable<TResult> {
         return this.#enumerator.zip(iterable, zipper);
+    }
+
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<TResult>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]> | IAsyncEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>;
+            return this.#enumerator.zipMany(...iterables, zipper);
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return this.#enumerator.zipMany(...iterables);
     }
 }

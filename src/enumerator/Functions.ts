@@ -30,14 +30,17 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { ImmutableStack } from "../stack/ImmutableStack";
 import { Stack } from "../stack/Stack";
 import { Enumerable } from "./Enumerable";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
-import {PipeOperator} from "../shared/PipeOperator";
+import { PipeOperator } from "../shared/PipeOperator";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 /**
  * Combines the elements of the sequence by applying an accumulator to each element and optionally projecting the final result.
@@ -187,6 +190,56 @@ export const append = <TElement>(
 };
 
 /**
+ * Determines whether {@link source} contains at least {@link count} elements that satisfy the optional predicate.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The iterable whose elements are evaluated.
+ * @param count Minimum number of matching elements required. Must be greater than or equal to 0.
+ * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+ * @returns {boolean} `true` when at least {@link count} matching elements are present; otherwise, `false`.
+ * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+ * @throws {unknown} Re-throws any error encountered while iterating {@link source} or executing the predicate.
+ * @remarks Enumeration stops as soon as the required number of matches is found, avoiding unnecessary work on long iterables.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const hasAtLeastTwoEvens = atLeast(numbers, 2, n => n % 2 === 0);
+ * console.log(hasAtLeastTwoEvens); // true
+ * ```
+ */
+export const atLeast = <TElement>(
+    source: Iterable<TElement>,
+    count: number,
+    predicate?: Predicate<TElement>
+): boolean => {
+    return from(source).atLeast(count, predicate);
+};
+
+/**
+ * Determines whether {@link source} contains no more than {@link count} elements that satisfy the optional predicate.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The iterable whose elements are evaluated.
+ * @param count Maximum number of matching elements allowed. Must be greater than or equal to 0.
+ * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+ * @returns {boolean} `true` when the number of matching elements does not exceed {@link count}; otherwise, `false`.
+ * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+ * @throws {unknown} Re-throws any error encountered while iterating {@link source} or executing the predicate.
+ * @remarks Enumeration stops as soon as the count is exceeded, making it efficient for large or infinite iterables.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const hasAtMostOneEven = atMost(numbers, 1, n => n % 2 === 0);
+ * console.log(hasAtMostOneEven); // false
+ * ```
+ */
+export const atMost = <TElement>(
+    source: Iterable<TElement>,
+    count: number,
+    predicate?: Predicate<TElement>
+): boolean => {
+    return from(source).atMost(count, predicate);
+};
+
+/**
  * Computes the arithmetic mean of the numeric values produced for each element in the sequence.
  * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
@@ -215,6 +268,28 @@ export const average = <TElement>(
 ): number => {
     return from(source).average(selector);
 };
+
+/**
+ * Produces the cartesian product between {@link source} and {@link other}.
+ * @template TElement Type of elements in the {@link source} iterable.
+ * @template TSecond Type of elements in the {@link other} iterable.
+ * @param source The primary iterable that drives the resulting sequence.
+ * @param other The secondary iterable paired with every element from {@link source}.
+ * @returns {IEnumerable<[TElement, TSecond]>} A deferred sequence that yields each ordered pair `[source, other]`.
+ * @throws {unknown} Re-throws any error raised while iterating {@link source} or {@link other}.
+ * @remarks The secondary iterable is fully buffered before iteration starts so that it can be replayed for every element from {@link source}. The resulting sequence stops when {@link source} completes.
+ * @example
+ * ```typescript
+ * const pairs = cartesian([1, 2], ['A', 'B']).toArray();
+ * console.log(pairs); // [[1, 'A'], [1, 'B'], [2, 'A'], [2, 'B']]
+ * ```
+ */
+export const cartesian = <TElement, TSecond>(
+    source: Iterable<TElement>,
+    other: Iterable<TSecond>
+): IEnumerable<[TElement, TSecond]> => {
+    return from(source).cartesian(other);
+}
 
 /**
  * Reinterprets each element in the sequence as the specified result type.
@@ -281,6 +356,24 @@ export const combinations = <TElement>(
 };
 
 /**
+ * Filters out `null` and `undefined` values from the sequence.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable.
+ * @returns {IEnumerable<NonNullable<TElement>>} A sequence containing only the elements that are neither `null` nor `undefined`.
+ * @remarks The method preserves other falsy values (such as `0` or an empty string) and defers execution until the returned sequence is iterated.
+ * @example
+ * ```typescript
+ * const values = compact([1, null, 0, undefined]).toArray();
+ * console.log(values); // [1, 0]
+ * ```
+ */
+export const compact = <TElement>(
+    source: Iterable<TElement>,
+): IEnumerable<NonNullable<TElement>> => {
+    return from(source).compact();
+};
+
+/**
  * Appends the specified iterable to the end of the sequence.
  * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
@@ -325,6 +418,67 @@ export const contains = <TElement>(
     comparator?: EqualityComparator<TElement>
 ): boolean => {
     return from(source).contains(element, comparator);
+};
+
+/**
+ * Computes the Pearson correlation coefficient between {@link source} and {@link other}.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TSecond Type of elements within the {@link other} iterable.
+ * @param source The source iterable whose elements align with {@link other} by index.
+ * @param other The iterable that provides the second series of aligned values.
+ * @param selector Optional projection that extracts the numeric value for each element of {@link source}. Defaults to treating the element itself as numeric.
+ * @param otherSelector Optional projection that extracts the numeric value for each element of {@link other}. Defaults to treating the element itself as numeric.
+ * @returns {number} The correlation coefficient in the interval [-1, 1].
+ * @throws {DimensionMismatchException} Thrown when the iterables do not contain the same number of elements.
+ * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+ * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+ * @throws {unknown} Re-throws any error encountered while iterating either iterable or executing the selector projections.
+ * @remarks Both iterables are enumerated simultaneously via an online algorithm that avoids buffering the full dataset. Ensure the iterables are aligned because mismatch detection occurs only after enumeration begins.
+ * @example
+ * ```typescript
+ * const temperatures = [15, 18, 21, 24];
+ * const sales = [30, 36, 42, 48];
+ * const result = correlation(temperatures, sales);
+ * console.log(result); // 1
+ * ```
+ */
+export const correlation = <TElement, TSecond>(
+    source: Iterable<TElement>,
+    other: Iterable<TSecond>,
+    selector?: Selector<TElement, number>,
+    otherSelector?: Selector<TSecond, number>
+): number => {
+    return from(source).correlation(other, selector, otherSelector);
+};
+
+/**
+ * Computes the Pearson correlation coefficient between two numeric projections of {@link source}.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable that supplies the data for both projections.
+ * @param leftSelector Projection that produces the first numeric series for each element.
+ * @param rightSelector Projection that produces the second numeric series for each element.
+ * @returns {number} The correlation coefficient in the interval [-1, 1].
+ * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+ * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+ * @throws {unknown} Re-throws any error encountered while iterating {@link source} or executing the selector projections.
+ * @remarks The iterable is enumerated exactly once using an online algorithm, which keeps memory usage constant even for large inputs.
+ * @example
+ * ```typescript
+ * const metrics = [
+ *   { impressions: 1_000, clicks: 50 },
+ *   { impressions: 1_500, clicks: 75 },
+ *   { impressions: 2_000, clicks: 100 }
+ * ];
+ * const result = correlationBy(metrics, m => m.impressions, m => m.clicks);
+ * console.log(result); // 1
+ * ```
+ */
+export const correlationBy = <TElement>(
+    source: Iterable<TElement>,
+    leftSelector: Selector<TElement, number>,
+    rightSelector: Selector<TElement, number>
+): number => {
+    return from(source).correlationBy(leftSelector, rightSelector);
 };
 
 /**
@@ -382,6 +536,69 @@ export const countBy = <TElement, TKey>(
     comparator?: EqualityComparator<TKey>
 ): IEnumerable<KeyValuePair<TKey, number>> => {
     return from(source).countBy(keySelector, comparator);
+};
+
+/**
+ * Calculates the covariance between {@link source} and {@link other}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TSecond Type of elements within {@link other}.
+ * @param source The primary iterable whose elements align by index with {@link other}.
+ * @param other Secondary iterable supplying the paired values.
+ * @param selector Optional projection that extracts the numeric value for each element in {@link source}. Defaults to treating the element itself as numeric.
+ * @param otherSelector Optional projection that extracts the numeric value for each element in {@link other}. Defaults to treating the element itself as numeric.
+ * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+ * @returns {number} The calculated covariance.
+ * @throws {DimensionMismatchException} Thrown when {@link source} and {@link other} do not contain the same number of elements.
+ * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+ * @throws {unknown} Re-throws any error thrown while iterating either iterable or executing the selector projections.
+ * @remarks Both iterables are consumed simultaneously so streaming statistics can be computed without materialising all elements. Ensure the iterables are aligned because mismatch detection occurs only after iteration begins.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const doubles = [2, 4, 6, 8, 10];
+ * const covarianceValue = covariance(numbers, doubles);
+ * console.log(covarianceValue); // 5
+ * ```
+ */
+export const covariance = <TElement, TSecond>(
+    source: Iterable<TElement>,
+    other: Iterable<TSecond>,
+    selector?: Selector<TElement, number>,
+    otherSelector?: Selector<TSecond, number>,
+    sample?: boolean
+): number => {
+    return from(source).covariance(other, selector, otherSelector, sample);
+};
+
+/**
+ * Calculates the covariance between two numeric projections of {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param leftSelector Projection that produces the first numeric series for each element.
+ * @param rightSelector Projection that produces the second numeric series for each element.
+ * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+ * @returns {number} The calculated covariance.
+ * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing the selector projections.
+ * @remarks {@link source} is consumed exactly once using an online algorithm that avoids buffering, making it suitable for large datasets.
+ * @example
+ * ```typescript
+ * const points = [
+ *   { x: 1, y: 2 },
+ *   { x: 2, y: 4 },
+ *   { x: 3, y: 6 }
+ * ];
+ * const covarianceValue = covarianceBy(points, p => p.x, p => p.y);
+ * console.log(covarianceValue); // 2
+ * ```
+ */
+export const covarianceBy = <TElement>(
+    source: Iterable<TElement>,
+    leftSelector: Selector<TElement, number>,
+    rightSelector: Selector<TElement, number>,
+    sample?: boolean
+): number => {
+    return from(source).covarianceBy(leftSelector, rightSelector, sample);
 };
 
 /**
@@ -598,6 +815,31 @@ export const elementAtOrDefault = <TElement>(
  */
 export const empty = <TElement>(): IEnumerable<TElement> => {
     return Enumerable.empty();
+};
+
+/**
+ * Determines whether {@link source} contains exactly {@link count} elements that satisfy the optional predicate.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The iterable whose elements are evaluated.
+ * @param count Exact number of matching elements required. Must be greater than or equal to 0.
+ * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+ * @returns {boolean} `true` when exactly {@link count} matching elements are present; otherwise, `false`.
+ * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+ * @throws {unknown} Re-throws any error encountered while iterating {@link source} or executing the predicate.
+ * @remarks Enumeration stops once the running total exceeds {@link count}, preventing unnecessary work on long iterables.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const hasExactlyThreeOdds = exactly(numbers, 3, n => n % 2 !== 0);
+ * console.log(hasExactlyThreeOdds); // true
+ * ```
+ */
+export const exactly = <TElement>(
+    source: Iterable<TElement>,
+    count: number,
+    predicate?: Predicate<TElement>
+): boolean => {
+    return from(source).exactly(count, predicate);
 };
 
 /**
@@ -1211,6 +1453,39 @@ export const maxBy = <TElement, TKey>(
 };
 
 /**
+ * Calculates the median of the numeric values produced by {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+ * @param tie Determines how the median is resolved when {@link source} contains an even number of elements. Defaults to `"interpolate"`, which averages the two central values. Specify `"low"` or `"high"` to choose the lower or higher neighbour respectively.
+ * @returns {number} The calculated median, or `NaN` when {@link source} contains no elements.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link selector}.
+ * @remarks {@link source} is enumerated once and buffered so a selection algorithm can locate the middle element(s) without fully sorting. Supply {@link selector} when elements are not already numeric.
+ * @example
+ * ```typescript
+ * const medianValue = median([1, 5, 2, 4, 3]);
+ * console.log(medianValue); // 3
+ *
+ * const people = [
+ *   { name: 'Alice', age: 23 },
+ *   { name: 'Bella', age: 21 },
+ *   { name: 'Mirei', age: 22 },
+ *   { name: 'Hanna', age: 20 },
+ *   { name: 'Noemi', age: 29 }
+ * ];
+ * const medianAge = median(people, p => p.age);
+ * console.log(medianAge); // 22
+ * ```
+ */
+export const median = <TElement>(
+    source: Iterable<TElement>,
+    selector?: Selector<TElement, number>,
+    tie?: MedianTieStrategy
+): number => {
+    return from(source).median(selector, tie);
+};
+
+/**
  * Returns the smallest numeric value produced for the elements in the sequence.
  * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
@@ -1267,6 +1542,73 @@ export const minBy = <TElement, TKey>(
     comparator?: OrderComparator<TKey>
 ): TElement => {
     return from(source).minBy(keySelector, comparator);
+};
+
+/**
+ * Returns the element that appears most frequently in {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The source iterable to inspect.
+ * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+ * @returns {TElement} The first element whose occurrence count matches the maximum frequency.
+ * @throws {NoElementsException} Thrown when {@link source} is empty.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link keySelector}.
+ * @remarks The source iterable is fully enumerated to build frequency counts before the result is determined. When multiple keys share the same frequency, the earliest corresponding element is returned.
+ * @example
+ * ```typescript
+ * const winner = mode([1, 2, 2, 3]);
+ * console.log(winner); // 2
+ * ```
+ */
+export const mode = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector?: Selector<TElement, TKey>,
+): TElement => {
+    return from(source).mode(keySelector);
+};
+
+/**
+ * Returns the element that appears most frequently in {@link source}, or `null` when the iterable is empty.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The source iterable to inspect.
+ * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+ * @returns {TElement | null} The first most frequent element, or `null` when {@link source} contains no elements.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link keySelector}.
+ * @remarks Unlike {@link mode}, this function communicates the absence of elements by returning `null`. When multiple keys share the maximum frequency, the element encountered first is returned.
+ * @example
+ * ```typescript
+ * const winner = modeOrDefault<number>([]);
+ * console.log(winner); // null
+ * ```
+ */
+export const modeOrDefault = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector?: Selector<TElement, TKey>
+): TElement | null => {
+    return from(source).modeOrDefault(keySelector);
+};
+
+/**
+ * Produces the elements whose occurrence count is tied for the highest frequency in {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TKey Type of key produced by {@link keySelector}.
+ * @param source The source iterable to inspect.
+ * @param keySelector Optional selector that projects each element to the key used for frequency counting. Defaults to the element itself.
+ * @returns {IEnumerable<TElement>} A deferred sequence containing one representative element for each frequency mode.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link keySelector}.
+ * @remarks Enumeration of the result buffers the entire source to compute frequency counts before yielding results. When multiple elements share a key, only the first occurrence is emitted.
+ * @example
+ * ```typescript
+ * const modes = multimode([1, 2, 2, 3, 3]).toArray();
+ * console.log(modes); // [2, 3]
+ * ```
+ */
+export const multimode = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector?: Selector<TElement, TKey>
+): IEnumerable<TElement> => {
+    return from(source).multimode(keySelector);
 };
 
 /**
@@ -1481,6 +1823,39 @@ export function partition<TElement, TFiltered extends TElement>(
     predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
     return from(source).partition(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+}
+
+/**
+ * Calculates a percentile of the numeric values produced by {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param percent Percentile expressed as a fraction between 0 and 1 where `0` corresponds to the minimum and `1` to the maximum.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to treating the element itself as numeric.
+ * @param strategy Strategy that determines how fractional ranks are resolved. Defaults to `"linear"`, which interpolates between neighbouring values. Alternative strategies include `"nearest"`, `"low"`, `"high"`, and `"midpoint"`.
+ * @returns {number} The percentile value, or `NaN` when {@link source} contains no elements.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link selector}.
+ * @remarks {@link source} is enumerated once and buffered so the selection algorithm can determine the requested rank without fully sorting the data. When {@link percent} is outside `[0, 1]`, the result is clamped to the range implied by {@link strategy}.
+ * @example
+ * ```typescript
+ * const upperQuartile = percentile([1, 2, 3, 4, 5], 0.75);
+ * console.log(upperQuartile); // 4
+ *
+ * const responseTimes = [
+ *   { endpoint: '/users', duration: 120 },
+ *   { endpoint: '/users', duration: 80 },
+ *   { endpoint: '/users', duration: 200 }
+ * ];
+ * const p95 = percentile(responseTimes, 0.95, r => r.duration, "nearest");
+ * console.log(p95); // 200
+ * ```
+ */
+export const percentile = <TElement>(
+    source: Iterable<TElement>,
+    percent: number,
+    selector?: Selector<TElement, number>,
+    strategy?: PercentileStrategy
+): number => {
+    return from(source).percentile(percent, selector, strategy);
 }
 
 /**
@@ -1977,6 +2352,29 @@ export function span<TElement, TFiltered extends TElement>(
 ): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
     return from(source).span(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
 }
+
+/**
+ * Calculates the standard deviation of the numeric values produced by {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @param sample When `true`, computes the sample standard deviation; when `false`, computes the population standard deviation. Defaults to `true`.
+ * @returns {number} The calculated standard deviation, or `NaN` when there are insufficient values to compute it.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link selector}.
+ * @remarks This function delegates to {@link variance}; when the variance is `NaN`, that value is returned unchanged. The iterable is enumerated exactly once using a numerically stable single-pass algorithm.
+ * @example
+ * ```typescript
+ * const populationStdDev = standardDeviation([1, 2, 3, 4, 5], x => x, false);
+ * console.log(populationStdDev); // Math.sqrt(2)
+ * ```
+ */
+export const standardDeviation = <TElement>(
+    source: Iterable<TElement>,
+    selector?: Selector<TElement, number>,
+    sample?: boolean
+): number => {
+    return from(source).standardDeviation(selector, sample);
+};
 
 /**
  * Returns every n-th element of the sequence, starting with the first.
@@ -2859,6 +3257,29 @@ export const unionBy = <TElement, TKey>(
 };
 
 /**
+ * Calculates the variance of the numeric values produced by {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
+ * @param sample When `true`, computes the sample variance dividing by _n - 1_; when `false`, computes the population variance dividing by _n_. Defaults to `true`.
+ * @returns {number} The calculated variance, or `NaN` when {@link source} is empty—or for sample variance when it contains a single element.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing {@link selector}.
+ * @remarks A numerically stable single-pass algorithm (Welford's method) is used, so the iterable is enumerated exactly once regardless of size.
+ * @example
+ * ```typescript
+ * const populationVariance = variance([1, 2, 3, 4, 5], x => x, false);
+ * console.log(populationVariance); // 2
+ * ```
+ */
+export const variance = <TElement>(
+    source: Iterable<TElement>,
+    selector?: Selector<TElement, number>,
+    sample?: boolean
+): number => {
+    return from(source).variance(selector, sample);
+};
+
+/**
  * Filters {@link source} using a type guard predicate and narrows the resulting element type.
  * @template TElement Type of elements within {@link source}.
  * @template TFiltered extends TElement Narrowed element type produced by {@link predicate}.
@@ -2954,3 +3375,62 @@ export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
         return from(source).zip(other);
     }
 };
+
+/**
+ * Zips {@link source} with the iterables supplied in {@link iterables}, producing aligned tuples.
+ * @template TElement Type of elements in the {@link source} iterable.
+ * @template TIterable Extends `readonly Iterable<unknown>[]`; each iterable's element type contributes to the resulting tuple.
+ * @param source The primary iterable zipped with the additional iterables.
+ * @param iterables Additional iterables to zip with {@link source}.
+ * @returns {IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>} A deferred sequence of tuples truncated to the length of the shortest input.
+ * @throws {unknown} Re-throws any error raised while iterating {@link source} or any of {@link iterables}.
+ * @remarks Iteration stops as soon as any participating iterable is exhausted. Tuple element types are inferred from the supplied iterables, preserving strong typing across the zipped result.
+ * @example
+ * ```typescript
+ * const zipped = zipMany([1, 2, 3], ['A', 'B', 'C'], [true, false]).toArray();
+ * console.log(zipped); // [[1, 'A', true], [2, 'B', false]]
+ * ```
+ */
+export function zipMany<TElement, TIterable extends readonly Iterable<unknown>[]>(
+    source: Iterable<TElement>,
+    ...iterables: [...TIterable]
+): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+/**
+ * Zips {@link source} with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
+ * @template TElement Type of elements in the {@link source} iterable.
+ * @template TIterable Extends `readonly Iterable<unknown>[]`; each iterable's element type contributes to the zipper input tuple.
+ * @template TResult Result type produced by {@link ZipManyZipper zipper}.
+ * @param source The primary iterable zipped with the additional iterables.
+ * @param iterablesAndZipper The trailing argument may be a zipper invoked with each tuple to produce a projected result; preceding arguments are the iterables to zip with.
+ * @returns {IEnumerable<TResult>} A deferred sequence of projected results truncated to the length of the shortest input.
+ * @throws {unknown} Re-throws any error raised while iterating {@link source}, the supplied iterables, or executing the zipper.
+ * @remarks The zipper receives a readonly tuple `[source, ...others]` for each aligned set. Iteration stops as soon as any participating iterable is exhausted.
+ * @example
+ * ```typescript
+ * const labels = zipMany(
+ *     [1, 2, 3],
+ *     ['A', 'B', 'C'],
+ *     [true, true, false],
+ *     ([num, letter, flag]) => `${num}${letter}-${flag ? "yes" : "no"}`
+ * ).toArray();
+ * console.log(labels); // ["1A-yes", "2B-yes", "3C-no"]
+ * ```
+ */
+export function zipMany<TElement, TIterable extends readonly Iterable<unknown>[], TResult>(
+    source: Iterable<TElement>,
+    ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+): IEnumerable<TResult>;
+export function zipMany<TElement, TIterable extends readonly Iterable<unknown>[], TResult>(
+    source: Iterable<TElement>,
+    ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
+    const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+    const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+    if (hasZipper) {
+        const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+        const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+        return from(source).zipMany(...iterables, zipper);
+    }
+    const iterables = iterablesAndZipper as [...TIterable];
+    return from(source).zipMany(...iterables);
+}

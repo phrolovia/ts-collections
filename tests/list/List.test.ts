@@ -25,6 +25,8 @@ import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
+import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
+import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>
@@ -332,10 +334,70 @@ describe("List", () => {
         });
     });
 
+    describe("#atLeast()", () => {
+        test("should return true if there are at least 3 elements greater than 5", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atLeast = list.atLeast(3, n => n > 5);
+            expect(atLeast).to.eq(true);
+        });
+        test("should return false if there are not at least 5 elements greater than 5", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atLeast = list.atLeast(5, n => n > 5);
+            expect(atLeast).to.eq(false);
+        });
+        test("should return true if there are at least 1 element in the list", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atLeast = list.atLeast(1);
+            expect(atLeast).to.eq(true);
+        });
+        test("should return false if there are not at least 1 element in the list", () => {
+            const list = new List<number>([]);
+            const atLeast = list.atLeast(1);
+            const atLeast2 = list.atLeast(0);
+            expect(atLeast).to.eq(false);
+            expect(atLeast2).to.eq(true);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            expect(() => list.atLeast(-1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
+    describe("#atMost()", () => {
+        test("should return true if there are at most 3 elements greater than 6", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(3, n => n > 6);
+            expect(atMost).to.eq(true);
+        });
+        test("should return false if there are not at most 2 elements greater than 5", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(2, n => n > 5);
+            expect(atMost).to.eq(false);
+        });
+        test("should return true if there are at most 10 element in the list", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(10);
+            expect(atMost).to.eq(true);
+        });
+        test("should return false if there are not at most 0 element in the list", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(0);
+            expect(atMost).to.eq(false);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            expect(() => list.atMost(-1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
     describe("#average()", () => {
         test("should return 99948748093", () => {
             const list = new List(["10007", "37", "299846234235"]);
-            const avg = list.average((s) => parseInt(s, 10));
+            const avg = list.average(s => parseInt(s, 10));
             expect(avg).to.eq(99948748093);
         });
         test("should use non-transformed values if predicate is not provided.", () => {
@@ -344,7 +406,7 @@ describe("List", () => {
         });
         test("should throw error if list is empty", () => {
             const list = new List<string>([]);
-            expect(() => list.average((s) => parseInt(s, 10))).toThrow(
+            expect(() => list.average(s => parseInt(s, 10))).toThrow(
                 new NoElementsException()
             );
         });
@@ -363,6 +425,28 @@ describe("List", () => {
         });
         test("should return a list of strings", () => {
             expect(strings.toArray()).to.deep.equal(["4", "5", "6", "10"]);
+        });
+    });
+
+    describe("#cartesian()", () => {
+        test("should return cartesian product of two lists", () => {
+            const list1 = new List([1, 2]);
+            const list2 = new List(["x", "y", "z"]);
+            const result = list1.cartesian(list2).toArray();
+            const expected = [[1,"x"], [1,"y"], [1,"z"], [2,"x"], [2,"y"], [2,"z"]];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return empty list if first list is empty", () => {
+            const list1 = new List();
+            const list2 = new List(["x", "y", "z"]);
+            const result = list1.cartesian(list2).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should return empty list if second list is empty", () => {
+            const list1 = new List([1,2]);
+            const list2 = new List();
+            const result = list1.cartesian(list2).toArray();
+            expect(result).to.deep.equal([]);
         });
     });
 
@@ -462,6 +546,16 @@ describe("List", () => {
         });
     });
 
+    describe("#compact()", () => {
+        test("should filter out null and undefined elements", () => {
+            const list = new List([1, "a", null, false, undefined]);
+            const result = list.compact().toArray();
+            const expected = [1, "a", false];
+            expect(result).to.deep.equal(expected);
+            expectTypeOf(result).toEqualTypeOf<Array<number | string | boolean>>();
+        });
+    });
+
     describe("#concat()", () => {
         test("should return a list with [1,2,3,4,5,5,6,7,8,9]", () => {
             const list1 = new List([1, 2, 3, 4, 5]);
@@ -526,6 +620,59 @@ describe("List", () => {
         });
         test("should return true if list contains all the elements from the other list", () => {
             expect(list1.containsAll(list2)).to.eq(true);
+        });
+    });
+
+    describe("#correlation()", () => {
+        test("should return correlation of two lists", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8, 10]);
+            const correlation = list1.correlation(list2);
+            expect(correlation).to.eq(1);
+        });
+        test("should return 1 for identical lists", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([1, 2, 3, 4, 5]);
+            const correlation = list1.correlation(list2);
+            expect(correlation).to.eq(1);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8]);
+            expect(() => list1.correlation(list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = new List<number>();
+            const list2 = new List<number>();
+            expect(() => list1.correlation(list2)).toThrowError(
+                new InsufficientElementException("Correlation requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = new List([1]);
+            const list2 = new List([2]);
+            expect(() => list1.correlation(list2)).toThrowError(
+                new InsufficientElementException("Correlation requires at least two pairs of elements.")
+            );
+        });
+    });
+
+    describe("#correlationBy()", () => {
+        test("should return correlation of two lists based on selectors", () => {
+            const list1 = new List([
+                { value: 1, amount: 11 },
+                { value: 2, amount: 22 },
+                { value: 3, amount: 33 },
+                { value: 4, amount: 44 },
+                { value: 5, amount: 55 },
+            ]);
+            const correlation = list1.correlationBy(
+                x => x.value,
+                x => x.amount
+            );
+            expect(correlation).to.eq(1);
         });
     });
 
@@ -613,6 +760,133 @@ describe("List", () => {
                 (p) => p.key === "Eliza"
             ).value;
             expect(elizaCountAll).to.eq(2);
+        });
+    });
+
+    describe("#covariance", () => {
+        test("should return covariance of two lists", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8, 10]);
+            const sampleCovariance = list1.covariance(list2);
+            const populationCovariance = list1.covariance(list2, x => x, y => y, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8]);
+            expect(() => list1.covariance(list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = new List<number>();
+            const list2 = new List<number>();
+            expect(() => list1.covariance(list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = new List([1]);
+            const list2 = new List([2]);
+            expect(() => list1.covariance(list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one list has no variance", () => {
+            const list1 = new List([3, 3, 3, 3, 3]);
+            const list2 = new List([2, 4, 6, 8, 10]);
+            const covariance = list1.covariance(list2);
+            expect(covariance).to.eq(0);
+        });
+        test("should return 0 if both lists have no variance", () => {
+            const list1 = new List([3, 3, 3, 3, 3]);
+            const list2 = new List([7, 7, 7, 7, 7]);
+            const covariance = list1.covariance(list2);
+            expect(covariance).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([10, 8, 6, 4, 2]);
+            const covariance = list1.covariance(list2);
+            expect(covariance).to.eq(-5);
+        });
+        test("should use selectors", () => {
+            const list1 = new List([
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 },
+            ]);
+            const list2 = new List([
+                { value: 2 },
+                { value: 4 },
+                { value: 6 },
+                { value: 8 },
+                { value: 10 },
+            ]);
+            const covariance = list1.covariance(list2, x => x.value, y => y.value);
+            expect(covariance).to.eq(5);
+        });
+    });
+
+    describe("#covarianceBy()", () => {
+        test("should return covariance by two keys of one list", () => {
+            const list = new List([
+                new Pair(1, 2),
+                new Pair(2, 4),
+                new Pair(3, 6),
+                new Pair(4, 8),
+                new Pair(5, 10),
+            ]);
+            const sampleCovariance = list.covarianceBy(p => p.key, p => p.value);
+            const populationCovariance = list.covarianceBy(p => p.key, p => p.value, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if list has less than two elements", () => {
+            const list1 = new List<Pair<number, number>>([]);
+            expect(() => list1.covarianceBy(p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+            const list2 = new List([new Pair(1, 2)]);
+            expect(() => list2.covarianceBy(p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one key has no variance", () => {
+            const list = new List([
+                new Pair(3, 2),
+                new Pair(3, 4),
+                new Pair(3, 6),
+                new Pair(3, 8),
+                new Pair(3, 10),
+            ]);
+            const covariance = list.covarianceBy(p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return 0 if both keys have no variance", () => {
+            const list = new List([
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+            ]);
+            const covariance = list.covarianceBy(p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list = new List([
+                new Pair(1, 10),
+                new Pair(2, 8),
+                new Pair(3, 6),
+                new Pair(4, 4),
+                new Pair(5, 2),
+            ]);
+            const covariance = list.covarianceBy(p => p.key, p => p.value);
+            expect(covariance).to.eq(-5);
         });
     });
 
@@ -860,6 +1134,40 @@ describe("List", () => {
             }
         });
     });
+
+    describe("#exactly()", () => {
+        test("should return true if list has exactly 3 elements", () => {
+            const list = new List([1, 2, 3]);
+            expect(list.exactly(3)).to.be.true;
+        });
+        test("should return false if list does not have exactly 3 elements", () => {
+            const list = new List([1, 2, 3, 4]);
+            expect(list.exactly(3)).to.be.false;
+        });
+        test("should return true if list has exactly 0 elements", () => {
+            const list = new List();
+            expect(list.exactly(0)).to.be.true;
+        });
+        test("should return false if list does not have exactly 0 elements", () => {
+            const list = new List([1]);
+            expect(list.exactly(0)).to.be.false;
+        });
+        test("should return false if predicate does not match exactly 3 elements", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.exactly(3, n => n % 2 === 0)).to.be.false;
+        });
+        test("should return true if predicate matches exactly 2 elements", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.exactly(2, n => n % 2 === 0)).to.be.true;
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = new List([1, 2, 3]);
+            expect(() => list.exactly(-1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
     describe("#except()", () => {
         test("should return an array of [1,2,3]", () => {
             const list1 = new List([1, 2, 3, 3, 4, 5]);
@@ -2281,6 +2589,40 @@ describe("List", () => {
             );
         });
     });
+
+    describe("#median()", () => {
+        test("should return the median of the list which has odd number of elements", () => {
+            const list = new List([3, 1, 5, 4, 2]);
+            const median = list.median();
+            expect(median).to.eq(3);
+        });
+        test("should return the low median of the list which has even number of elements", () => {
+            const list = new List([4, 2, 1, 3]);
+            const median = list.median(x => x, "low");
+            expect(median).to.eq(2);
+        });
+        test("should return the high median of the list which has even number of elements", () => {
+            const list = new List([4, 2, 1, 3]);
+            const median = list.median(x => x, "high");
+            expect(median).to.eq(3);
+        });
+        test("should return the interpolated median of the list which has even number of elements", () => {
+            const list = new List([4, 3, 1, 2]);
+            const median = list.median(x => x, "interpolate");
+            expect(median).to.eq(2.5);
+        });
+        test("should return NaN if the list is empty", () => {
+            const list = new List<number>();
+            const median = list.median();
+            expect(median).to.be.NaN;
+        });
+        test("should use provided selector", () => {
+            const list = new List([Person.Bella, Person.Kaori, Person.Vanessa]);
+            const median = list.median(p => p.age);
+            expect(median).to.eq(20);
+        });
+    });
+
     describe("#min()", () => {
         const list = new List([43, 56, 123, 65, 1, 6, 900, 2312, 555, 1011]);
         test("should return 1", () => {
@@ -2342,6 +2684,83 @@ describe("List", () => {
             );
         });
     });
+
+    describe("#mode()", () => {
+        test("should return most frequent element", () => {
+            const list = new List([1, 2, 2, 3]);
+            const mode = list.mode();
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", () => {
+            const list = new List([1, 2, 2, 1]);
+            const mode = list.mode();
+            expect(mode).to.eq(1);
+        });
+        test("should throw if list is empty", () => {
+            const list = new List<number>([]);
+            expect(() => list.mode()).toThrow(new NoElementsException());
+        });
+        test("should use provided selector", () => {
+            const list = new List([Person.Noemi, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi2]);
+            const mode = list.mode(p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#modeOrDefault()", () => {
+        test("should return most frequent element", () => {
+            const list = new List([1, 2, 2, 3]);
+            const mode = list.modeOrDefault();
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", () => {
+            const list = new List([1, 2, 2, 1]);
+            const mode = list.modeOrDefault();
+            expect(mode).to.eq(1);
+        });
+        test("should return null if list is empty", () => {
+            const list = new List<number>([]);
+            const mode = list.modeOrDefault();
+            expect(mode).to.be.null;
+        });
+        test("should not throw if list is empty", () => {
+            const list = new List<number>([]);
+            expect(() => list.modeOrDefault()).not.toThrow(new NoElementsException());
+        });
+        test("should use provided selector", () => {
+            const list = new List([Person.Noemi, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi2]);
+            const mode = list.modeOrDefault(p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#multimode()", () => {
+        test("should return a list of most frequent elements", () => {
+            const list1 = new List([1, 2, 2, 3]);
+            const list2 = new List([1, 2, 2, 3, 3]);
+            const mode1 = list1.multimode().toArray();
+            const mode2 = list2.multimode().toArray();
+            expect(mode1).to.deep.equal([2]);
+            expect(mode2).to.deep.equal([2, 3]);
+        });
+        test("should return empty list if source list is empty", () => {
+            const list = new List<number>([]);
+            const mode = list.multimode().toArray();
+            expect(mode).to.be.empty;
+        });
+        test("should use provided selector", () => {
+            const list = new List([
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Noemi2,
+                Person.Suzuha2,
+                Person.Bella
+            ]);
+            const mode = list.multimode(p => p.name).toArray();
+            expect(mode).to.deep.equal([Person.Noemi, Person.Suzuha]);
+        });
+    });
+
     describe("#none()", () => {
         test("should return true if list is empty", () => {
             const list = new List<number>();
@@ -2605,6 +3024,48 @@ describe("List", () => {
             expect(rest.count()).to.eq(3);
             expectTypeOf(successes).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
             expectTypeOf(rest).toEqualTypeOf<IEnumerable<Exclude<ApiResponse<Person>, ApiResponseSuccess<Person>>>>();
+        });
+    });
+
+    describe("#percentile()", () => {
+        test("should return percentile of the list for 0.25", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = list.percentile(0.25);
+            expect(result).to.equal(2.0);
+        });
+        test("should return percentile of the list for 0.5", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = list.percentile(0.5);
+            expect(result).to.equal(3);
+        });
+        test("should return percentile of the list for 0.75 with 'nearest' strategy", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const result = list.percentile(0.75, x => x, "nearest");
+            expect(result).to.equal(4);
+        });
+        test("should return percentile of the list for 0.5 with 'low' strategy", () => {
+            const list = new List([1, 2, 3, 4]);
+            const result = list.percentile(0.5, x => x, "low");
+            expect(result).to.equal(2);
+        });
+        test("should return percentile of the list for 0.5 with 'high' strategy", () => {
+            const list = new List([1, 2, 3, 4]);
+            const result = list.percentile(0.5, x => x, "high");
+            expect(result).to.equal(3);
+        });
+        test("should return percentile of the list for 0.5 with 'midpoint' strategy", () => {
+            const list = new List([1, 2, 3, 10]);
+            const result = list.percentile(0.5, x => x, "midpoint");
+            expect(result).to.equal(2.5);
+        });
+        test("should use provided selector", () => {
+            const list = new List([
+                { value: 10 },
+                { value: 20 },
+                { value: 30 }
+            ]);
+            const result = list.percentile(0.9, x => x.value);
+            expect(result).to.equal(28);
         });
     });
 
@@ -3388,6 +3849,45 @@ describe("List", () => {
             expect(remainder.count()).to.eq(5);
             expectTypeOf(initialSuccesses).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
             expectTypeOf(remainder).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
+        });
+    });
+
+    describe("#standardDeviation()", () => {
+        test("should return the standard deviation of the list", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const stdDevForSample = list.standardDeviation();
+            const stdDevForPopulation = list.standardDeviation(x => x, false);
+            const acceptableResultForSample = (stdDevForSample - Math.sqrt(2.5)) < 1e-12;
+            const acceptableResultForPopulation = (stdDevForPopulation - Math.sqrt(2)) < 1e-12;
+            expect(acceptableResultForSample).to.be.true;
+            expect(acceptableResultForPopulation).to.be.true;
+        });
+        test("should return standard deviation as 0 for all identical values", () => {
+            const list = new List([3, 3, 3, 3]);
+            const sampleStdDev = list.standardDeviation();
+            const populationStdDev = list.standardDeviation(x => x, false);
+            expect(sampleStdDev).to.equal(0);
+            expect(populationStdDev).to.equal(0);
+        });
+        test("should return NaN for empty input", () => {
+            const list = new List<number>([]);
+            const sampleStdDev = list.standardDeviation();
+            const populationStdDev = list.standardDeviation(x => x, false);
+            expect(sampleStdDev).to.be.NaN;
+            expect(populationStdDev).to.be.NaN;
+        });
+        test("should work with given selector", () => {
+            const people = new List([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ]);
+            const sampleStdDev = people.standardDeviation(p => p.age);
+            const populationStdDev = people.standardDeviation(p => p.age, false);
+            const acceptableSampleStdDev = sampleStdDev - Math.sqrt(25) < 1e-12;
+            const acceptablePopulationStdDev = populationStdDev - Math.sqrt(16.6666666667) < 1e-12;
+            expect(acceptableSampleStdDev).to.be.true;
+            expect(acceptablePopulationStdDev).to.be.true;
         });
     });
 
@@ -4499,6 +4999,58 @@ describe("List", () => {
         });
     });
 
+    describe("#variance()", () => {
+        test("should return the variance of the given list", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.equal(2.5);
+            expect(populationVariance).to.equal(2);
+        });
+        test("should return variance as 0 for all identical values", () => {
+            const list = new List([3, 3, 3, 3]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.equal(0);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should return the variance of the given list #2", () => {
+            const list = new List([2, 4]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.equal(2);
+            expect(populationVariance).to.equal(1);
+        });
+        test("should return NaN for empty input", () => {
+            const list = new List<number>([]);
+            const sampleVariance = list.variance();
+            const populationVariance = list.variance(x => x, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.be.NaN;
+        });
+        test("should return NaN for sample variance of single element list", () => {
+            const list = new List([10]);
+            const sampleVariance = list.variance();
+            expect(sampleVariance).to.be.NaN;
+        });
+        test("should return 0 for population variance of single element list", () => {
+            const list = new List([10]);
+            const populationVariance = list.variance(x => x, false);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should work with given selector", () => {
+            const people = new List([
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ]);
+            const sampleVariance = people.variance(p => p.age);
+            const populationVariance = people.variance(p => p.age, false);
+            expect(sampleVariance).to.equal(25);
+            expect(populationVariance).to.eq(16.666666666666668);
+        });
+    });
+
     describe("#where()", () => {
         test("should return an IEnumerable with elements [2,5]", () => {
             const list = new List([2, 5, 6, 99]);
@@ -4593,6 +5145,20 @@ describe("List", () => {
             expect(zippedList.size()).to.eq(2);
             expect(zippedList.get(0)).to.eq("one 1");
             expect(zippedList.get(1)).to.eq("two 2");
+        });
+    });
+
+    describe("#zipMany()", () => {
+        test("should zip multiple lists", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List(["a", "b", "c"]);
+            const list3 = new List([false, true, false]);
+            const zipped = list1.zipMany(list2, list3).toArray();
+            expect(zipped).to.deep.equal(
+                [[1, "a", false],
+                [2, "b", true],
+                [3, "c", false]]
+            );
         });
     });
 
