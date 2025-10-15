@@ -68,13 +68,19 @@ export {
     any,
     append,
     average,
+    cartesian,
     cast,
     chunk,
     combinations,
+    compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     distinct,
@@ -102,8 +108,12 @@ export {
     lastOrDefault,
     max,
     maxBy,
+    median,
     min,
     minBy,
+    mode,
+    modeOrDefault,
+    multimode,
     none,
     ofType,
     order,
@@ -112,6 +122,7 @@ export {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,
@@ -166,7 +177,8 @@ export {
     unionBy,
     where,
     windows,
-    zip
+    zip,
+    zipMany
 } from "./imports";
 export { KeyValuePair } from "./dictionary/KeyValuePair";
 export type { Accumulator } from "./shared/Accumulator";
@@ -176,8 +188,10 @@ export type { IndexedPredicate, IndexedTypePredicate } from "./shared/IndexedPre
 export type { IndexedSelector } from "./shared/IndexedSelector";
 export type { IndexedTupleSelector } from "./shared/IndexedTupleSelector";
 export type { JoinSelector } from "./shared/JoinSelector";
+export type { MedianTieStrategy } from "./shared/MedianTieStrategy";
 export type { OrderComparator } from "./shared/OrderComparator";
 export type { PairwiseSelector } from "./shared/PairwiseSelector";
+export type { PercentileStrategy } from "./shared/PercentileStrategy";
 export type { AsyncPipeOperator, PipeOperator } from "./shared/PipeOperator";
 export type { Predicate, TypePredicate } from "./shared/Predicate";
 export type { Selector } from "./shared/Selector";

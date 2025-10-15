@@ -52,13 +52,27 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { DimensionMismatchException } from "../shared/DimensionMismatchException";
+import { InsufficientElementException } from "../shared/InsufficientElementException";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
+import {
+    accumulatePairStatsFromAsyncIterables,
+    accumulatePairStatsFromSingleAsyncIterable,
+    accumulateSingleStatsAsync, findCorrelation,
+    resolveNumberSelector
+} from "./helpers/statisticsHelpers";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
 import { AsyncPipeOperator } from "../shared/PipeOperator";
+import { findMedian } from "./helpers/medianHelpers";
+import { findPercentile } from "./helpers/percentileHelpers";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
+    private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
     private static readonly NO_ELEMENTS_EXCEPTION = new NoElementsException();
@@ -126,6 +140,43 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.appendGenerator(element));
     }
 
+    public async atLeast(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        if (count === 0) {
+            return true;
+        }
+        const matcher: Predicate<TElement> = predicate ?? (() => true);
+        let matches = 0;
+        for await (const item of this) {
+            if (matcher(item)) {
+                ++matches;
+                if (matches >= count) {
+                    return true;
+                }
+            }
+        }
+        return matches >= count;
+    }
+
+    public async atMost(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        const matcher: Predicate<TElement> = predicate ?? (() => true);
+        let matches = 0;
+        for await (const item of this) {
+            if (matcher(item)) {
+                ++matches;
+                if (matches > count) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public async average(selector?: Selector<TElement, number>): Promise<number> {
         let total = 0;
         let count = 0;
@@ -137,6 +188,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total / count;
+    }
+
+    public cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]> {
+        return new AsyncEnumerator<[TElement, TSecond]>(() => this.cartesianGenerator(iterable));
     }
 
     public cast<TResult>(): IAsyncEnumerable<TResult> {
@@ -157,6 +212,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<IEnumerable<TElement>>(() => this.combinationsGenerator(size));
     }
 
+    public compact(): IAsyncEnumerable<NonNullable<TElement>> {
+        return new AsyncEnumerator<NonNullable<TElement>>(() => this.compactGenerator());
+    }
+
     public concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.concatGenerator(other));
     }
@@ -169,6 +228,24 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         return false;
+    }
+
+    public async correlation<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): Promise<number> {
+        const leftSelector = resolveNumberSelector(selector);
+        const rightSelector = resolveNumberSelector(otherSelector);
+        const stats = await accumulatePairStatsFromAsyncIterables(
+            this,
+            iterable,
+            leftSelector,
+            rightSelector,
+            AsyncEnumerator.DIMENSION_MISMATCH_EXCEPTION
+        );
+        return findCorrelation(stats);
+    }
+
+    public async correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): Promise<number> {
+        const stats = await accumulatePairStatsFromSingleAsyncIterable(this, leftSelector, rightSelector);
+        return findCorrelation(stats);
     }
 
     public async count(predicate?: Predicate<TElement>): Promise<number> {
@@ -192,6 +269,38 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         const groups = this.groupBy(keySelector, comparator);
         return groups.select(g => new KeyValuePair(g.key, g.source.count()));
+    }
+
+    public async covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample: boolean = true): Promise<number> {
+        const leftSelector = resolveNumberSelector(selector);
+        const rightSelector = resolveNumberSelector(otherSelector);
+        const stats = await accumulatePairStatsFromAsyncIterables(
+            this,
+            iterable,
+            leftSelector,
+            rightSelector,
+            AsyncEnumerator.DIMENSION_MISMATCH_EXCEPTION
+        );
+
+        if (stats.count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? stats.sumSqXY / (stats.count - 1)
+            : stats.sumSqXY / stats.count;
+    }
+
+    public async covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample: boolean = true): Promise<number> {
+        const stats = await accumulatePairStatsFromSingleAsyncIterable(this, leftSelector, rightSelector);
+
+        if (stats.count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? stats.sumSqXY / (stats.count - 1)
+            : stats.sumSqXY / stats.count;
     }
 
     public cycle(count?: number): IAsyncEnumerable<TElement> {
@@ -258,6 +367,23 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             ++count;
         }
         return null;
+    }
+
+    public async exactly(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        const matcher: Predicate<TElement> = predicate ?? (() => true);
+        let matches = 0;
+        for await (const item of this) {
+            if (matcher(item)) {
+                ++matches;
+                if (matches > count) {
+                    return false;
+                }
+            }
+        }
+        return matches === count;
     }
 
     public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
@@ -414,6 +540,15 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return maxElement;
     }
 
+    public async median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): Promise<number> {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData: number[] = [];
+        for await (const item of this) {
+            numericData.push(numberSelector(item));
+        }
+        return findMedian(numericData, tie);
+    }
+
     public async min(selector?: Selector<TElement, number>): Promise<number> {
         let min: number | null = null;
         for await (const element of this) {
@@ -440,6 +575,26 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
         }
         return minElement;
+    }
+
+    public async mode<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement> {
+        const iterator = this.multimode(keySelector)[Symbol.asyncIterator]();
+        const first = await iterator.next();
+        if (first.done) {
+            throw AsyncEnumerator.NO_ELEMENTS_EXCEPTION;
+        }
+        return first.value;
+    }
+
+    public async modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): Promise<TElement | null> {
+        const iterator = this.multimode(keySelector)[Symbol.asyncIterator]();
+        const first = await iterator.next();
+        return first.done ? null : first.value;
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IAsyncEnumerable<TElement> {
+        const selector = keySelector ?? ((item: TElement): TKey => item as unknown as TKey);
+        return new AsyncEnumerator<TElement>(() => this.multimodeGenerator(selector));
     }
 
     public async none(predicate?: Predicate<TElement>): Promise<boolean> {
@@ -484,6 +639,15 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         return [Enumerable.from(trueElements), Enumerable.from(falseElements)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public async percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData: number[] = [];
+        for await (const item of this) {
+            numericData.push(numberSelector(item));
+        }
+        return findPercentile(numericData, percent, strategy);
     }
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
@@ -642,6 +806,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         return [new Enumerable(span), new Enumerable(rest)] as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public async standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        const variance = await this.variance(selector, sample);
+        return Number.isNaN(variance) ? variance : Math.sqrt(variance);
     }
 
     public step(step: number): IAsyncEnumerable<TElement> {
@@ -856,6 +1025,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.unionByGenerator(enumerable, keySelector, comparator));
     }
 
+    public async variance(selector?: Selector<TElement, number>, sample: boolean = true): Promise<number> {
+        const numberSelector = resolveNumberSelector(selector);
+        const stats = await accumulateSingleStatsAsync(this, numberSelector);
+
+        if (stats.count === 0 || (sample && stats.count < 2)) {
+            return Number.NaN;
+        }
+
+        return sample ? stats.sumSq / (stats.count - 1) : stats.sumSq / stats.count;
+    }
+
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
     public where(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
     public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
@@ -873,9 +1053,44 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TResult>(() => this.zipGenerator(iterable, resultSelector));
     }
 
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<TResult>;
+    public zipMany<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>]
+    ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]> | IAsyncEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>;
+            return new AsyncEnumerator<TResult>(() => this.zipManyWithZipperGenerator(iterables, zipper));
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return new AsyncEnumerator<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>(() => this.zipManyWithoutZipperGenerator(iterables));
+    }
+
     private async* appendGenerator(element: TElement): AsyncIterableIterator<TElement> {
         yield* this;
         yield element;
+    }
+
+    private async* cartesianGenerator<TSecond>(iterable: AsyncIterable<TSecond>): AsyncIterableIterator<[TElement, TSecond]> {
+        const cache: TSecond[] = [];
+        for await (const item of iterable) {
+            cache.push(item);
+        }
+        if (cache.length === 0) {
+            return;
+        }
+        for await (const element of this) {
+            for (let cx = 0; cx < cache.length; cx++) {
+                yield [element, cache[cx]];
+            }
+        }
     }
 
     private async* castGenerator<TResult>(): AsyncIterableIterator<TResult> {
@@ -924,6 +1139,14 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     seen.add(key);
                     yield combination;
                 }
+            }
+        }
+    }
+
+    private async* compactGenerator(): AsyncIterableIterator<NonNullable<TElement>> {
+        for await (const item of this) {
+            if (item != null) {
+                yield item;
             }
         }
     }
@@ -1162,6 +1385,34 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 resultSelector,
                 effectiveLeftJoin
             );
+        }
+    }
+
+    private async* multimodeGenerator<TKey>(keySelector: Selector<TElement, TKey>): AsyncIterableIterator<TElement> {
+        const counts = new Map<TKey, number>();
+        const representatives = new Map<TKey, TElement>();
+        let max = 0;
+
+        for await (const item of this) {
+            const key = keySelector(item);
+            if (!representatives.has(key)) {
+                representatives.set(key, item);
+            }
+            const next = (counts.get(key) ?? 0) + 1;
+            counts.set(key, next);
+            if (next > max) {
+                max = next;
+            }
+        }
+
+        if (max === 0) {
+            return;
+        }
+
+        for (const [key, count] of counts) {
+            if (count === max) {
+                yield representatives.get(key) as TElement;
+            }
         }
     }
 
@@ -1500,6 +1751,28 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             yield zipper?.(next1.value, next2.value) ?? [next1.value, next2.value] as TResult;
             next1 = await iterator1.next();
             next2 = await iterator2.next();
+        }
+    }
+
+    private async* zipManyWithZipperGenerator<TIterable extends readonly AsyncIterable<unknown>[], TResult>(
+        iterables: readonly [...TIterable],
+        zipper: ZipManyZipper<[TElement, ...UnpackAsyncIterableTuple<TIterable>], TResult>
+    ): AsyncIterableIterator<TResult> {
+        for await (const values of this.zipManyWithoutZipperGenerator(iterables)) {
+            yield zipper(values as readonly [TElement, ...UnpackAsyncIterableTuple<TIterable>]);
+        }
+    }
+
+    private async* zipManyWithoutZipperGenerator<TIterable extends readonly AsyncIterable<unknown>[]>(
+        iterables: readonly [...TIterable]
+    ): AsyncIterableIterator<[TElement, ...UnpackAsyncIterableTuple<TIterable>]> {
+        const iterators = [this, ...iterables].map(iterable => iterable[Symbol.asyncIterator]());
+        while (true) {
+            const results = await Promise.all(iterators.map(iterator => iterator.next()));
+            if (results.some(result => result.done)) {
+                break;
+            }
+            yield results.map(result => result.value) as [TElement, ...UnpackAsyncIterableTuple<TIterable>];
         }
     }
 }

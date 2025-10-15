@@ -49,13 +49,27 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper } from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
-import {PipeOperator} from "../shared/PipeOperator";
+import { PipeOperator } from "../shared/PipeOperator";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { findMedian } from "./helpers/medianHelpers";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { findPercentile } from "./helpers/percentileHelpers";
+import { DimensionMismatchException } from "../shared/DimensionMismatchException";
+import { InsufficientElementException } from "../shared/InsufficientElementException";
+import {
+    accumulatePairStatsFromIterables,
+    accumulatePairStatsFromSingleIterable,
+    accumulateSingleStats, findCorrelation,
+    resolveNumberSelector
+} from "./helpers/statisticsHelpers";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
     private static readonly NO_ELEMENTS_EXCEPTION = new NoElementsException();
@@ -126,6 +140,40 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.appendGenerator(element));
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+
+        let actualCount = 0;
+        for (const item of this) {
+            if (predicate == null || predicate(item)) {
+                actualCount++;
+            }
+            if (actualCount >= count) {
+                return true;
+            }
+        }
+        return actualCount >= count;
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): boolean {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+
+        let actualCount = 0;
+        for (const item of this) {
+            if (predicate == null || predicate(item)) {
+                actualCount++;
+            }
+            if (actualCount > count) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         let total: number = 0;
         let count: number = 0;
@@ -137,6 +185,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return total / count;
+    }
+
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
+        return new Enumerator(() => this.cartesianGenerator(iterable));
     }
 
     public cast<TResult>(): IEnumerable<TResult> {
@@ -157,6 +209,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.combinationsGenerator(size));
     }
 
+    public compact(): IEnumerable<NonNullable<TElement>> {
+        return new Enumerator(() => this.compactGenerator());
+    }
+
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.concatGenerator(iterable));
     }
@@ -169,6 +225,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         return false;
+    }
+
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number {
+        const leftSelector = resolveNumberSelector(selector);
+        const rightSelector = resolveNumberSelector(otherSelector);
+        const stats = accumulatePairStatsFromIterables(
+            this,
+            iterable,
+            leftSelector,
+            rightSelector,
+            Enumerator.DIMENSION_MISMATCH_EXCEPTION
+        );
+        return findCorrelation(stats);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number {
+        const stats = accumulatePairStatsFromSingleIterable(this, leftSelector, rightSelector);
+        return findCorrelation(stats);
     }
 
     public count(predicate?: Predicate<TElement>): number {
@@ -192,6 +266,38 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         const groups = this.groupBy(keySelector, comparator);
         return groups.select(g => new KeyValuePair(g.key, g.source.count()));
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample: boolean = true): number {
+        const leftSelector = resolveNumberSelector(selector);
+        const rightSelector = resolveNumberSelector(otherSelector);
+        const stats = accumulatePairStatsFromIterables(
+            this,
+            iterable,
+            leftSelector,
+            rightSelector,
+            Enumerator.DIMENSION_MISMATCH_EXCEPTION
+        );
+
+        if (stats.count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? stats.sumSqXY / (stats.count - 1)
+            : stats.sumSqXY / stats.count;
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample: boolean = true): number {
+        const stats = accumulatePairStatsFromSingleIterable(this, leftSelector, rightSelector);
+
+        if (stats.count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? stats.sumSqXY / (stats.count - 1)
+            : stats.sumSqXY / stats.count;
     }
 
     public cycle(count?: number): IEnumerable<TElement> {
@@ -245,6 +351,23 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             ++ix;
         }
         return null;
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): boolean {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+
+        let actualCount = 0;
+        for (const item of this) {
+            if (predicate == null || predicate(item)) {
+                actualCount++;
+            }
+            if (actualCount > count) {
+                return false;
+            }
+        }
+        return actualCount === count;
     }
 
     public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -394,6 +517,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return max;
     }
 
+    public median(selector?: Selector<TElement, number>, tie?: MedianTieStrategy): number {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData = this.select(numberSelector).toArray();
+        return findMedian(numericData, tie);
+    }
+
     public min(selector?: Selector<TElement, number>): number {
         let min: number | null = null;
         if (!selector) {
@@ -429,6 +558,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
         return min;
+    }
+
+    public mode<TKey>(keySelector?: Selector<TElement, TKey>): TElement {
+        const modes = this.multimode(keySelector);
+        if (modes.none()) {
+            throw Enumerator.NO_ELEMENTS_EXCEPTION;
+        }
+        return modes.first();
+    }
+
+    public modeOrDefault<TKey>(keySelector?: Selector<TElement, TKey>): TElement | null {
+        const modes = this.multimode(keySelector);
+        return modes.firstOrDefault();
+    }
+
+    public multimode<TKey>(keySelector?: Selector<TElement, TKey>): IEnumerable<TElement> {
+        const selector = keySelector ?? ((item: TElement): TKey => item as unknown as TKey);
+        return new Enumerator(() => this.multimodeGenerator(selector));
     }
 
     public none(predicate?: Predicate<TElement>): boolean {
@@ -480,6 +627,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         return [new Enumerable(trueItems), new Enumerable(falseItems)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
+        const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const numericData = this.select(numberSelector).toArray();
+        return findPercentile(numericData, percent, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -634,6 +787,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         return [new Enumerable(span), new Enumerable(rest)] as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    }
+
+    public standardDeviation(selector?: Selector<TElement, number>, sample?: boolean): number {
+        const variance = this.variance(selector, sample);
+        return Number.isNaN(variance) ? variance : Math.sqrt(variance);
     }
 
     public step(step: number): IEnumerable<TElement> {
@@ -851,6 +1009,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.unionByGenerator(iterable, keySelector, comparator));
     }
 
+    public variance(selector?: Selector<TElement, number>, sample: boolean = true): number {
+        const numberSelector = resolveNumberSelector(selector);
+        const stats = accumulateSingleStats(this, numberSelector);
+
+        if (stats.count === 0 || (sample && stats.count < 2)) {
+            return Number.NaN;
+        }
+
+        return sample ? stats.sumSq / (stats.count - 1) : stats.sumSq / stats.count;
+    }
+
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     public where(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public where<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
@@ -868,9 +1037,41 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.zipGenerator(iterable, zipper));
     }
 
+    public zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
+            return new Enumerator<TResult>(() => this.zipManyWithZipperGenerator(iterables, zipper));
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return new Enumerator<[TElement, ...UnpackIterableTuple<TIterable>]>(() => this.zipManyWithoutZipperGenerator(iterables));
+    }
+
     private* appendGenerator(element: TElement): IterableIterator<TElement> {
         yield* this;
         yield element;
+    }
+
+    private* cartesianGenerator<TSecond>(iterable: Iterable<TSecond>): IterableIterator<[TElement, TSecond]> {
+        const cache = Array.isArray(iterable) ? iterable as TSecond[] : [...iterable];
+        if (cache.length === 0) {
+            return;
+        }
+        for (const element of this) {
+            for (let cx = 0; cx < cache.length; cx++) {
+                yield [element, cache[cx]];
+            }
+        }
     }
 
     private* castGenerator<TResult>(): IterableIterator<TResult> {
@@ -925,6 +1126,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     seen.add(key);
                     yield combination;
                 }
+            }
+        }
+    }
+
+    private* compactGenerator(): IterableIterator<NonNullable<TElement>> {
+        for (const item of this) {
+            if (item != null) {
+                yield item;
             }
         }
     }
@@ -1168,6 +1377,32 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 resultSelector,
                 effectiveLeftJoin
             );
+        }
+    }
+
+    private* multimodeGenerator<TKey>(keySelector: Selector<TElement, TKey>): IterableIterator<TElement> {
+        const counts = new Map<TKey, number>();
+        const representatives = new Map<TKey, TElement>();
+        let max = 0;
+
+        for (const item of this) {
+            const key = keySelector(item);
+            if (!representatives.has(key)) {
+                representatives.set(key, item);
+            }
+            const next = (counts.get(key) ?? 0) + 1;
+            counts.set(key, next);
+            if (next > max) {
+                max = next;
+            }
+        }
+        if (max === 0) {
+            return;
+        }
+        for (const [key, count] of counts) {
+            if (count === max) {
+                yield representatives.get(key) as TElement;
+            }
         }
     }
 
@@ -1521,9 +1756,26 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
     }
+
+    private* zipManyWithZipperGenerator<TIterable extends readonly Iterable<unknown>[], TResult>(
+        iterables: readonly [...TIterable],
+        zipper: ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>
+    ): IterableIterator<TResult> {
+        for (const values of this.zipManyWithoutZipperGenerator(iterables)) {
+            yield zipper(values as readonly [TElement, ...UnpackIterableTuple<TIterable>]);
+        }
+    }
+
+    private* zipManyWithoutZipperGenerator<TIterable extends readonly Iterable<unknown>[]>(
+        iterables: readonly [...TIterable]
+    ): IterableIterator<[TElement, ...UnpackIterableTuple<TIterable>]> {
+        const iterators = [this, ...iterables].map(i => i[Symbol.iterator]());
+        while (true) {
+            const results = iterators.map(i => i.next());
+            if (results.some(result => result.done)) {
+                break;
+            }
+            yield results.map(result => result.value) as [TElement, ...UnpackIterableTuple<TIterable>];
+        }
+    }
 }
-
-
-
-
-

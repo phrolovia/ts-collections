@@ -5,16 +5,24 @@ import {
     all,
     any,
     append,
+    atLeast,
+    atMost,
     average,
+    cartesian,
     cast,
     chunk,
     CircularLinkedList,
     CircularQueue,
     combinations,
+    compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     Dictionary,
@@ -26,6 +34,7 @@ import {
     elementAtOrDefault,
     empty,
     EnumerableSet,
+    exactly,
     except,
     exceptBy,
     first,
@@ -58,6 +67,10 @@ import {
     maxBy,
     min,
     minBy,
+    median,
+    mode,
+    modeOrDefault,
+    multimode,
     none,
     ofType,
     order,
@@ -66,6 +79,7 @@ import {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,
@@ -90,6 +104,7 @@ import {
     SortedSet,
     span,
     Stack,
+    standardDeviation,
     step,
     sum,
     take,
@@ -123,9 +138,11 @@ import {
     toStack,
     union,
     unionBy,
+    variance,
     where,
     windows,
-    zip
+    zip,
+    zipMany
 } from "../../src/imports";
 import { MoreThanOneElementException } from "../../src/shared/MoreThanOneElementException";
 import { MoreThanOneMatchingElementException } from "../../src/shared/MoreThanOneMatchingElementException";
@@ -139,6 +156,9 @@ import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { AbstractShape, Circle, Polygon, Rectangle, Square, Triangle } from "../models/Shape";
 import { Student } from "../models/Student";
+import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
+import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
+import {InvalidArgumentException} from "../../src/shared/InvalidArgumentException";
 
 describe("Enumerable Standalone Functions", () => {
     const responses = new List<ApiResponse<Person>>([
@@ -242,6 +262,66 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#atLeast()", () => {
+        test("should return true if there are at least 3 elements greater than 5", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atLeast(list, 3, n => n > 5);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at least 5 elements greater than 5", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atLeast(list, 5, n => n > 5);
+            expect(result).to.eq(false);
+        });
+        test("should return true if there are at least 1 element in the list", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atLeast(list, 1);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at least 1 element in the list", () => {
+            const list = [] as number[];
+            const result = atLeast(list, 1);
+            const result2 = atLeast(list, 0);
+            expect(result).to.eq(false);
+            expect(result2).to.eq(true);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            expect(() => atLeast(list, -1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
+    describe("#atMost()", () => {
+        test("should return true if there are at most 3 elements greater than 6", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 3, n => n > 6);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at most 2 elements greater than 5", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 2, n => n > 5);
+            expect(result).to.eq(false);
+        });
+        test("should return true if there are at most 10 element in the list", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 10);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at most 0 element in the list", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 0);
+            expect(result).to.eq(false);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            expect(() => atMost(list, -1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
     describe("#average()", () => {
         test("should return the average of the list", () => {
             const list = new List([1, 2, 3, 4, 5]);
@@ -265,6 +345,28 @@ describe("Enumerable Standalone Functions", () => {
             const strings = cast<string>(where(mixedSequence, n => typeof n === "string"));
             expect(numbers.toArray()).to.deep.equal([1, 3, 5]);
             expect(strings.toArray()).to.deep.equal(["2", "4"]);
+        });
+    });
+
+    describe("#cartesian()", () => {
+        test("should return cartesian product of two lists", () => {
+            const list1 = [1, 2];
+            const list2 = ["x", "y", "z"];
+            const result = cartesian(list1, list2).toArray();
+            const expected = [[1,"x"], [1,"y"], [1,"z"], [2,"x"], [2,"y"], [2,"z"]];
+            expect(result).to.deep.equal(expected);
+        });
+        test("should return empty list if first list is empty", () => {
+            const list1 = [] as never[];
+            const list2 = ["x", "y", "z"];
+            const result = cartesian(list1, list2).toArray();
+            expect(result).to.deep.equal([]);
+        });
+        test("should return empty list if second list is empty", () => {
+            const list1 = [1,2];
+            const list2 = [] as never[];
+            const result = cartesian(list1, list2).toArray();
+            expect(result).to.deep.equal([]);
         });
     });
 
@@ -336,6 +438,16 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#compact()", () => {
+        test("should filter out null and undefined elements", () => {
+            const list = [1, "a", null, false, undefined];
+            const result = compact(list).toArray();
+            const expected = [1, "a", false];
+            expect(result).to.deep.equal(expected);
+            expectTypeOf(result).toEqualTypeOf<Array<number | string | boolean>>();
+        });
+    });
+
     describe("#concat()", () => {
         test("should concatenate two lists", () => {
             const list1 = new List([1, 2, 3]);
@@ -363,6 +475,62 @@ describe("Enumerable Standalone Functions", () => {
         test("should return true if the list contains the element with a comparer", () => {
             const sequence = [Person.Noemi, Person.Vanessa];
             expect(contains(sequence, Person.Noemi2, (a, b) => a.name === b.name)).to.be.true;
+        });
+    });
+
+    describe("#correlation()", () => {
+        test("should return correlation of two lists", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [2, 4, 6, 8, 10];
+            const result = correlation(list1, list2);
+            expect(result).to.eq(1);
+        });
+        test("should return correlation of two lists #2", () => {
+            const list1 = [3,28,10,15];
+            const list2 = [2,0,2,5];
+            const result = correlation(list1, list2);
+            expect(result).to.be.closeTo(-0.3831, 0.0001);
+        });
+        test("should return 1 for identical lists", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [1, 2, 3, 4, 5];
+            const result = correlation(list1, list2);
+            expect(result).to.eq(1);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [2, 4, 6, 8];
+            expect(() => correlation(list1, list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = [] as number[];
+            const list2 = [] as number[];
+            expect(() => correlation(list1, list2)).toThrowError(
+                new InsufficientElementException("Correlation requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = [1];
+            const list2 = [2];
+            expect(() => correlation(list1, list2)).toThrowError(
+                new InsufficientElementException("Correlation requires at least two pairs of elements.")
+            );
+        });
+    });
+
+    describe("#correlationBy()", () => {
+        test("should return correlation of two lists based on selectors", () => {
+            const list1 = [
+                { value: 1, amount: 11 },
+                { value: 2, amount: 22 },
+                { value: 3, amount: 33 },
+                { value: 4, amount: 44 },
+                { value: 5, amount: 55 },
+            ];
+            const correlation = correlationBy(list1, x => x.value, x => x.amount);
+            expect(correlation).to.eq(1);
         });
     });
 
@@ -396,6 +564,133 @@ describe("Enumerable Standalone Functions", () => {
             expect(suuzhaCount).to.eq(2);
             const kaoriCount = countPairs.first(p => p.key === "Kaori").value;
             expect(kaoriCount).to.eq(2);
+        });
+    });
+
+    describe("#covariance", () => {
+        test("should return covariance of two lists", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [2, 4, 6, 8, 10];
+            const sampleCovariance = covariance(list1, list2);
+            const populationCovariance = covariance(list1, list2, x => x, y => y, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [2, 4, 6, 8];
+            expect(() => covariance(list1, list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = [] as number[]
+            const list2 = [] as number[];
+            expect(() => covariance(list1, list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = [1];
+            const list2 = [2];
+            expect(() => covariance(list1, list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one list has no variance", () => {
+            const list1 = [3, 3, 3, 3, 3];
+            const list2 = [2, 4, 6, 8, 10];
+            const result = covariance(list1, list2);
+            expect(result).to.eq(0);
+        });
+        test("should return 0 if both lists have no variance", () => {
+            const list1 = [3, 3, 3, 3, 3];
+            const list2 = [7, 7, 7, 7, 7];
+            const result = covariance(list1, list2);
+            expect(result).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list1 =[1, 2, 3, 4, 5];
+            const list2 =[10, 8, 6, 4, 2];
+            const result = covariance(list1, list2);
+            expect(result).to.eq(-5);
+        });
+        test("should use selectors", () => {
+            const list1 = [
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 },
+            ];
+            const list2 = [
+                { value: 2 },
+                { value: 4 },
+                { value: 6 },
+                { value: 8 },
+                { value: 10 },
+            ];
+            const result = covariance(list1, list2, x => x.value, y => y.value);
+            expect(result).to.eq(5);
+        });
+    });
+
+    describe("#covarianceBy()", () => {
+        test("should return covariance by two keys of one list", () => {
+            const list = [
+                new Pair(1, 2),
+                new Pair(2, 4),
+                new Pair(3, 6),
+                new Pair(4, 8),
+                new Pair(5, 10),
+            ];
+            const sampleCovariance = covarianceBy(list, p => p.key, p => p.value);
+            const populationCovariance = covarianceBy(list, p => p.key, p => p.value, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if list has less than two elements", () => {
+            const list1 = [] as Pair<number, number>[];
+            expect(() => covarianceBy(list1, p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+            const list2 = [new Pair(1, 2)];
+            expect(() => covarianceBy(list2, p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one key has no variance", () => {
+            const list = [
+                new Pair(3, 2),
+                new Pair(3, 4),
+                new Pair(3, 6),
+                new Pair(3, 8),
+                new Pair(3, 10),
+            ];
+            const covariance = covarianceBy(list, p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return 0 if both keys have no variance", () => {
+            const list = [
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+            ];
+            const covariance = covarianceBy(list, p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list = [
+                new Pair(1, 10),
+                new Pair(2, 8),
+                new Pair(3, 6),
+                new Pair(4, 4),
+                new Pair(5, 2),
+            ];
+            const covariance = covarianceBy(list, p => p.key, p => p.value);
+            expect(covariance).to.eq(-5);
         });
     });
 
@@ -523,6 +818,39 @@ describe("Enumerable Standalone Functions", () => {
         test("should create an empty enumerable", () => {
             const enumerable = empty<number>();
             expect(enumerable.count()).to.eq(0);
+        });
+    });
+
+    describe("#exactly()", () => {
+        test("should return true if list has exactly 3 elements", () => {
+            const list = [1, 2, 3];
+            expect(exactly(list, 3)).to.be.true;
+        });
+        test("should return false if list does not have exactly 3 elements", () => {
+            const list = [1, 2, 3, 4];
+            expect(exactly(list, 3)).to.be.false;
+        });
+        test("should return true if list has exactly 0 elements", () => {
+            const list = [] as never[];
+            expect(exactly(list, 0)).to.be.true;
+        });
+        test("should return false if list does not have exactly 0 elements", () => {
+            const list = [1];
+            expect(exactly(list, 0)).to.be.false;
+        });
+        test("should return false if predicate does not match exactly 3 elements", () => {
+            const list = [1, 2, 3, 4, 5];
+            expect(exactly(list, 3, n => n % 2 === 0)).to.be.false;
+        });
+        test("should return true if predicate matches exactly 2 elements", () => {
+            const list = [1, 2, 3, 4, 5];
+            expect(exactly(list, 2, n => n % 2 === 0)).to.be.true;
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = [1, 2, 3];
+            expect(() => exactly(list, -1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
         });
     });
 
@@ -951,6 +1279,39 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#median()", () => {
+        test("should return the median of the list which has odd number of elements", () => {
+            const list = [3, 1, 5, 4, 2];
+            const result = median(list);
+            expect(result).to.eq(3);
+        });
+        test("should return the low median of the list which has even number of elements", () => {
+            const list = [4, 2, 1, 3];
+            const result = median(list, x => x, "low");
+            expect(result).to.eq(2);
+        });
+        test("should return the high median of the list which has even number of elements", () => {
+            const list = [4, 2, 1, 3];
+            const result = median(list, x => x, "high");
+            expect(result).to.eq(3);
+        });
+        test("should return the interpolated median of the list which has even number of elements", () => {
+            const list = [4, 3, 1, 2];
+            const result = median(list, x => x, "interpolate");
+            expect(result).to.eq(2.5);
+        });
+        test("should return NaN if the list is empty", () => {
+            const list = [] as number[];
+            const result = median(list);
+            expect(result).to.be.NaN;
+        });
+        test("should use provided selector", () => {
+            const list = [Person.Bella, Person.Kaori, Person.Vanessa];
+            const result = median(list, p => p.age);
+            expect(result).to.eq(20);
+        });
+    });
+
     describe("#min()", () => {
         test("should return the minimum value", () => {
             expect(min([1, 2, 3, 4, 5])).to.eq(1);
@@ -974,6 +1335,82 @@ describe("Enumerable Standalone Functions", () => {
         test("should throw an error if the list is empty", () => {
             const list = new List<Person>([]);
             expect(() => minBy(list, p => p.age)).to.throw();
+        });
+    });
+
+    describe("#mode()", () => {
+        test("should return most frequent element", () => {
+            const list = [1, 2, 2, 3];
+            const result = mode(list);
+            expect(result).to.eq(2);
+        });
+        test("should return first most frequent element", () => {
+            const list = [1, 2, 2, 1];
+            const result = mode(list);
+            expect(result).to.eq(1);
+        });
+        test("should throw if list is empty", () => {
+            const list = [] as number[];
+            expect(() => mode(list)).toThrow(new NoElementsException());
+        });
+        test("should use provided selector", () => {
+            const list = [Person.Noemi, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi2];
+            const result = mode(list, p => p.name);
+            expect(result).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#modeOrDefault()", () => {
+        test("should return most frequent element", () => {
+            const list = [1, 2, 2, 3];
+            const mode = modeOrDefault(list);
+            expect(mode).to.eq(2);
+        });
+        test("should return first most frequent element", () => {
+            const list = [1, 2, 2, 1];
+            const mode = modeOrDefault(list);
+            expect(mode).to.eq(1);
+        });
+        test("should return null if list is empty", () => {
+            const list = [] as number[];
+            const mode = modeOrDefault(list);
+            expect(mode).to.be.null;
+        });
+        test("should not throw if list is empty", () => {
+            const list = [] as number[];
+            expect(() => modeOrDefault(list)).not.toThrow(new NoElementsException());
+        });
+        test("should use provided selector", () => {
+            const list = [Person.Noemi, Person.Suzuha, Person.Suzuha2, Person.Suzuha3, Person.Noemi2];
+            const mode = modeOrDefault(list, p => p.name);
+            expect(mode).to.eq(Person.Suzuha);
+        });
+    });
+
+    describe("#multimode()", () => {
+        test("should return a list of most frequent elements", () => {
+            const list1 = [1, 2, 2, 3];
+            const list2 = [1, 2, 2, 3, 3];
+            const mode1 = multimode(list1).toArray();
+            const mode2 = multimode(list2).toArray();
+            expect(mode1).to.deep.equal([2]);
+            expect(mode2).to.deep.equal([2, 3]);
+        });
+        test("should return empty list if source list is empty", () => {
+            const list = [] as number[];
+            const mode = multimode(list).toArray();
+            expect(mode).to.be.empty;
+        });
+        test("should use provided selector", () => {
+            const list = [
+                Person.Noemi,
+                Person.Suzuha,
+                Person.Noemi2,
+                Person.Suzuha2,
+                Person.Bella
+            ];
+            const mode = multimode(list, p => p.name).toArray();
+            expect(mode).to.deep.equal([Person.Noemi, Person.Suzuha]);
         });
     });
 
@@ -1211,6 +1648,48 @@ describe("Enumerable Standalone Functions", () => {
             expect(rest.count()).to.eq(3);
             expectTypeOf(successes).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
             expectTypeOf(rest).toEqualTypeOf<IEnumerable<Exclude<ApiResponse<Person>, ApiResponseSuccess<Person>>>>();
+        });
+    });
+
+    describe("#percentile()", () => {
+        test("should return percentile of the list for 0.25", () => {
+            const list = [1, 2, 3, 4, 5];
+            const result = percentile(list, 0.25);
+            expect(result).to.equal(2.0);
+        });
+        test("should return percentile of the list for 0.5", () => {
+            const list = [1, 2, 3, 4, 5];
+            const result = percentile(list, 0.5);
+            expect(result).to.equal(3);
+        });
+        test("should return percentile of the list for 0.75 with 'nearest' strategy", () => {
+            const list = [1, 2, 3, 4, 5];
+            const result = percentile(list, 0.75, x => x, "nearest");
+            expect(result).to.equal(4);
+        });
+        test("should return percentile of the list for 0.5 with 'low' strategy", () => {
+            const list = [1, 2, 3, 4];
+            const result = percentile(list, 0.5, x => x, "low");
+            expect(result).to.equal(2);
+        });
+        test("should return percentile of the list for 0.5 with 'high' strategy", () => {
+            const list = [1, 2, 3, 4];
+            const result = percentile(list, 0.5, x => x, "high");
+            expect(result).to.equal(3);
+        });
+        test("should return percentile of the list for 0.5 with 'midpoint' strategy", () => {
+            const list = [1, 2, 3, 10];
+            const result = percentile(list, 0.5, x => x, "midpoint");
+            expect(result).to.equal(2.5);
+        });
+        test("should use provided selector", () => {
+            const list = [
+                { value: 10 },
+                { value: 20 },
+                { value: 30 }
+            ];
+            const result = percentile(list, 0.9, x => x.value);
+            expect(result).to.equal(28);
         });
     });
 
@@ -1539,6 +2018,45 @@ describe("Enumerable Standalone Functions", () => {
             expect(remainder.count()).to.eq(5);
             expectTypeOf(initialSuccesses).toEqualTypeOf<IEnumerable<ApiResponseSuccess<Person>>>();
             expectTypeOf(remainder).toEqualTypeOf<IEnumerable<ApiResponse<Person>>>();
+        });
+    });
+
+    describe("#standardDeviation()", () => {
+        test("should return the standard deviation of the list", () => {
+            const list = [1, 2, 3, 4, 5];
+            const sampleStdDev = standardDeviation(list);
+            const populationStdDev = standardDeviation(list, x => x, false);
+            const acceptableResultForSample = (sampleStdDev - Math.sqrt(2.5)) < 1e-12;
+            const acceptableResultForPopulation = (populationStdDev - Math.sqrt(2)) < 1e-12;
+            expect(acceptableResultForSample).to.be.true;
+            expect(acceptableResultForPopulation).to.be.true;
+        });
+        test("should return standard deviation as 0 for all identical values", () => {
+            const list = [3, 3, 3, 3];
+            const sampleStdDev = standardDeviation(list);
+            const populationStdDev = standardDeviation(list, x => x, false);
+            expect(sampleStdDev).to.equal(0);
+            expect(populationStdDev).to.equal(0);
+        });
+        test("should return NaN for empty input", () => {
+            const list = [] as number[];
+            const sampleStdDev = standardDeviation(list);
+            const populationStdDev = standardDeviation(list, x => x, false);
+            expect(sampleStdDev).to.be.NaN;
+            expect(populationStdDev).to.be.NaN;
+        });
+        test("should work with given selector", () => {
+            const people = [
+                {name: "A", age: 20},
+                {name: "B", age: 25},
+                {name: "C", age: 30}
+            ];
+            const sampleStdDev = standardDeviation(people, x => x.age);
+            const populationStdDev = standardDeviation(people, x => x.age, false);
+            const acceptableSampleStdDev = sampleStdDev - Math.sqrt(25) < 1e-12;
+            const acceptablePopulationStdDev = populationStdDev - Math.sqrt(16.6666666667) < 1e-12;
+            expect(acceptableSampleStdDev).to.be.true;
+            expect(acceptablePopulationStdDev).to.be.true;
         });
     });
 
@@ -2005,6 +2523,58 @@ describe("Enumerable Standalone Functions", () => {
         });
     });
 
+    describe("#variance()", () => {
+        test("should return the variance of the given list", () => {
+            const list = [1, 2, 3, 4, 5];
+            const sampleVariance = variance(list);
+            const populationVariance = variance(list, x => x, false);
+            expect(sampleVariance).to.equal(2.5);
+            expect(populationVariance).to.equal(2);
+        });
+        test("should return variance as 0 for all identical values", () => {
+            const list = [3, 3, 3, 3];
+            const sampleVariance = variance(list);
+            const populationVariance = variance(list, x => x, false);
+            expect(sampleVariance).to.equal(0);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should return the variance of the given list #2", () => {
+            const list = [2, 4];
+            const sampleVariance = variance(list);
+            const populationVariance = variance(list, x => x, false);
+            expect(sampleVariance).to.equal(2);
+            expect(populationVariance).to.equal(1);
+        });
+        test("should return NaN for empty input", () => {
+            const list = [] as number[];
+            const sampleVariance = variance(list);
+            const populationVariance = variance(list, x => x, false);
+            expect(sampleVariance).to.be.NaN;
+            expect(populationVariance).to.be.NaN;
+        });
+        test("should return NaN for sample variance of single element list", () => {
+            const list = [10];
+            const sampleVariance = variance(list);
+            expect(sampleVariance).to.be.NaN;
+        });
+        test("should return 0 for population variance of single element list", () => {
+            const list = [10];
+            const populationVariance = variance(list, x => x, false);
+            expect(populationVariance).to.equal(0);
+        });
+        test("should work with given selector", () => {
+            const people = [
+                { name: "A", age: 20 },
+                { name: "B", age: 25 },
+                { name: "C", age: 30 }
+            ];
+            const sampleVariance = variance(people, p => p.age);
+            const populationVariance = variance(people, x => x.age, false);
+            expect(sampleVariance).to.equal(25);
+            expect(populationVariance).to.eq(16.666666666666668);
+        });
+    });
+
     describe("#where()", () => {
         test("should return an IEnumerable with elements [2,5]", () => {
             const list = new List([2, 5, 6, 99]);
@@ -2067,6 +2637,22 @@ describe("Enumerable Standalone Functions", () => {
         test("should return array of strings if predicate is specified", () => {
             const zipped = zip(numbers, strings, (n, s) => `${n} ${s}`);
             expect(zipped.toArray()).to.deep.equal(["1 one", "2 two", "3 three"]);
+        });
+    });
+
+    describe("#zipMany()", () => {
+        test("should zip multiple arrays", () => {
+            const list1 = [1, 2, 3];
+            const list2 = ["a", "b", "c"];
+            const list3 = [false, true, false];
+            const zipped = zipMany(list1, list2, list3).toArray();
+            expect(zipped).to.deep.equal(
+                [
+                    [1, "a", false],
+                    [2, "b", true],
+                    [3, "c", false]
+                ]
+            );
         });
     });
 });

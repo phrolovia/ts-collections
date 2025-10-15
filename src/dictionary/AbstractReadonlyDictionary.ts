@@ -4,16 +4,24 @@ import {
     all,
     any,
     append,
+    atLeast,
+    atMost,
     average,
+    cartesian,
     cast,
     chunk,
     CircularLinkedList,
     CircularQueue,
     combinations,
+    compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     distinct,
@@ -23,6 +31,7 @@ import {
     elementAt,
     elementAtOrDefault,
     EnumerableSet,
+    exactly,
     except,
     exceptBy,
     first,
@@ -57,8 +66,12 @@ import {
     List,
     max,
     maxBy,
+    median,
     min,
     minBy,
+    mode,
+    modeOrDefault,
+    multimode,
     none,
     ofType,
     order,
@@ -67,6 +80,7 @@ import {
     orderDescending,
     pairwise,
     partition,
+    percentile,
     permutations,
     pipe,
     prepend,
@@ -88,6 +102,7 @@ import {
     SortedSet,
     span,
     Stack,
+    standardDeviation,
     step,
     sum,
     take,
@@ -121,9 +136,11 @@ import {
     toStack,
     union,
     unionBy,
+    variance,
     where,
     windows,
-    zip
+    zip,
+    zipMany
 } from "../imports";
 import {Accumulator} from "../shared/Accumulator";
 import {EqualityComparator} from "../shared/EqualityComparator";
@@ -137,12 +154,15 @@ import {OrderComparator} from "../shared/OrderComparator";
 import {PairwiseSelector} from "../shared/PairwiseSelector";
 import {Predicate, TypePredicate} from "../shared/Predicate";
 import {Selector} from "../shared/Selector";
-import {Zipper} from "../shared/Zipper";
+import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import {Dictionary} from "./Dictionary";
 import {IReadonlyDictionary} from "./IReadonlyDictionary";
 import {KeyValuePair} from "./KeyValuePair";
 import {SortedDictionary} from "./SortedDictionary";
 import {PipeOperator} from "../shared/PipeOperator";
+import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
+import {MedianTieStrategy} from "../shared/MedianTieStrategy";
+import {PercentileStrategy} from "../shared/PercentileStrategy";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -187,8 +207,20 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return this.toObject(keySelector, valueSelector);
     }
 
+    public atLeast(count: number, predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return atLeast(this, count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return atMost(this, count, predicate);
+    }
+
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return average(this, selector);
+    }
+
+    public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> {
+        return cartesian(this, iterable);
     }
 
     public cast<TResult>(): IEnumerable<TResult> {
@@ -203,12 +235,24 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return combinations(this, size);
     }
 
+    public compact(): IEnumerable<NonNullable<KeyValuePair<TKey, TValue>>> {
+        return compact(this);
+    }
+
     public concat(iterable: Iterable<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
         return concat(this, iterable);
     }
 
     public contains(element: KeyValuePair<TKey, TValue>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
         return contains(this, element, comparator);
+    }
+
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<KeyValuePair<TKey, TValue>, number>, otherSelector?: Selector<TSecond, number>): number {
+        return correlation(this, iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<KeyValuePair<TKey, TValue>, number>, rightSelector: Selector<KeyValuePair<TKey, TValue>, number>): number {
+        return correlationBy(this, leftSelector, rightSelector);
     }
 
     public count(predicate?: Predicate<KeyValuePair<TKey, TValue>>): number {
@@ -220,6 +264,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public countBy<TCountKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TCountKey>, comparator?: EqualityComparator<TCountKey>): IEnumerable<KeyValuePair<TCountKey, number>> {
         return countBy(this, keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<KeyValuePair<TKey, TValue>, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number {
+        return covariance(this, iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<KeyValuePair<TKey, TValue>, number>, rightSelector: Selector<KeyValuePair<TKey, TValue>, number>, sample?: boolean): number {
+        return covarianceBy(this, leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -252,6 +304,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public elementAtOrDefault(index: number): KeyValuePair<TKey, TValue> | null {
         return elementAtOrDefault(this, index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return exactly(this, count, predicate);
     }
 
     public except(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -336,12 +392,28 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return maxBy(this, keySelector, comparator);
     }
 
+    public median(selector?: Selector<KeyValuePair<TKey, TValue>, number>, tie?: MedianTieStrategy): number {
+        return median(this, selector, tie);
+    }
+
     public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return min(this, selector);
     }
 
     public minBy<TMinKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMinKey>, comparator?: OrderComparator<TMinKey>): KeyValuePair<TKey, TValue> {
         return minBy(this, keySelector, comparator);
+    }
+
+    public mode<TModeKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TModeKey>): KeyValuePair<TKey, TValue> {
+        return mode(this, keySelector);
+    }
+
+    public modeOrDefault<TModeKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TModeKey>): KeyValuePair<TKey, TValue> | null {
+        return modeOrDefault(this, keySelector);
+    }
+
+    public multimode<TModeKey>(keySelector?: Selector<KeyValuePair<TKey, TValue>, TModeKey>): IEnumerable<KeyValuePair<TKey, TValue>> {
+        return multimode(this, keySelector);
     }
 
     public none(predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
@@ -376,6 +448,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public partition(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     public partition<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] {
         return partition(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
+    }
+
+    public percentile(percent: number, selector?: Selector<KeyValuePair<TKey, TValue>, number>, strategy?: PercentileStrategy): number {
+        return percentile(this, percent, selector, strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
@@ -451,6 +527,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public span(predicate: Predicate<KeyValuePair<TKey, TValue>>): [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     public span<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>] {
         return span(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<KeyValuePair<TKey, TValue>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
+    }
+
+    public standardDeviation(selector?: Selector<KeyValuePair<TKey, TValue>, number>, sample?: boolean): number {
+        return standardDeviation(this, selector, sample);
     }
 
     public step(stepNumber: number): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -625,6 +705,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return unionBy(this, iterable, keySelector, comparator);
     }
 
+    public variance(selector?: Selector<KeyValuePair<TKey, TValue>, number>, sample?: boolean): number {
+        return variance(this, selector, sample);
+    }
+
     public where<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;
     public where(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
     public where<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
@@ -637,6 +721,26 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public zip<TSecond, TResult = [KeyValuePair<TKey, TValue>, TSecond]>(iterable: Iterable<TSecond>, zipper?: Zipper<KeyValuePair<TKey, TValue>, TSecond, TResult>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> | IEnumerable<TResult> {
         return zip(this, iterable, zipper);
+    }
+
+    public zipMany<TIterable extends readonly Iterable<unknown>[]>(
+        ...iterables: [...TIterable]
+    ): IEnumerable<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>]>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable, ZipManyZipper<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<TResult>;
+    public zipMany<TIterable extends readonly Iterable<unknown>[], TResult>(
+        ...iterablesAndZipper: [...TIterable] | [...TIterable, ZipManyZipper<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>]
+    ): IEnumerable<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>]> | IEnumerable<TResult> {
+        const lastArg = iterablesAndZipper[iterablesAndZipper.length - 1];
+        const hasZipper = iterablesAndZipper.length > 0 && typeof lastArg === "function";
+        if (hasZipper) {
+            const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
+            const zipper = lastArg as ZipManyZipper<[KeyValuePair<TKey, TValue>, ...UnpackIterableTuple<TIterable>], TResult>;
+            return zipMany(this, ...iterables, zipper);
+        }
+        const iterables = iterablesAndZipper as [...TIterable];
+        return zipMany(this, ...iterables);
     }
 
     public get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>> {
