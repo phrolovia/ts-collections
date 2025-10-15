@@ -54,6 +54,8 @@ import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { DimensionMismatchException } from "../shared/DimensionMismatchException";
+import { InsufficientElementException } from "../shared/InsufficientElementException";
 import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
@@ -68,6 +70,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
     private static readonly NO_ELEMENTS_EXCEPTION = new NoElementsException();
     private static readonly NO_MATCHING_ELEMENT_EXCEPTION = new NoMatchingElementException();
+    private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
 
     public constructor(private readonly iterable: () => AsyncIterable<TElement>) {
     }
@@ -443,6 +446,83 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             numericData.push(numberSelector(item));
         }
         return findPercentile(numericData, percent, strategy);
+    }
+
+    public async covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample: boolean = true): Promise<number> {
+        const thisSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const rightSelector = otherSelector ?? ((item: TSecond): number => item as unknown as number);
+
+        const iterator = this[Symbol.asyncIterator]();
+        const otherIterator = iterable[Symbol.asyncIterator]();
+
+        let count = 0;
+        let meanX = 0;
+        let meanY = 0;
+        let crossDeviations = 0;
+
+        while (true) {
+            const [next, otherNext] = await Promise.all([iterator.next(), otherIterator.next()]);
+
+            if (next.done && otherNext.done) {
+                break;
+            }
+
+            if (next.done !== otherNext.done) {
+                throw AsyncEnumerator.DIMENSION_MISMATCH_EXCEPTION;
+            }
+
+            const x = thisSelector(next.value);
+            const y = rightSelector(otherNext.value);
+
+            ++count;
+
+            const deltaX = x - meanX;
+            const deltaY = y - meanY;
+
+            meanX += deltaX / count;
+            meanY += deltaY / count;
+            crossDeviations += deltaX * (y - meanY);
+        }
+
+        if (count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? crossDeviations / (count - 1)
+            : crossDeviations / count;
+    }
+
+    public async covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample: boolean = true): Promise<number> {
+        const selectorX = leftSelector ?? ((item: TElement): number => item as unknown as number);
+        const selectorY = rightSelector ?? ((item: TElement): number => item as unknown as number);
+
+        let count = 0;
+        let meanX = 0;
+        let meanY = 0;
+        let crossDeviations = 0;
+
+        for await (const item of this) {
+            const x = selectorX(item);
+            const y = selectorY(item);
+
+            ++count;
+
+            const deltaX = x - meanX;
+            const deltaY = y - meanY;
+
+            meanX += deltaX / count;
+            meanY += deltaY / count;
+            crossDeviations += deltaX * (y - meanY);
+        }
+
+        if (count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? crossDeviations / (count - 1)
+            : crossDeviations / count;
     }
 
     public async min(selector?: Selector<TElement, number>): Promise<number> {

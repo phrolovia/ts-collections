@@ -320,6 +320,50 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>>;
 
     /**
+     * Calculates the covariance between this sequence and {@link iterable}.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @param iterable Sequence whose elements align by index with the source sequence.
+     * @param selector Optional projection that extracts the numeric value for each element of the source sequence. Defaults to treating the element itself as numeric.
+     * @param otherSelector Optional projection that extracts the numeric value for each element of {@link iterable}. Defaults to treating the element itself as numeric.
+     * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+     * @returns {number} The calculated covariance.
+     * @throws {DimensionMismatchException} Thrown when the sequences do not contain the same number of elements.
+     * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+     * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing the selector projections.
+     * @remarks Both sequences are consumed simultaneously so streaming statistics can be computed without materialising all elements. Ensure the iterables are aligned because mismatch detection occurs only after iteration begins.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const doubles = [2, 4, 6, 8, 10];
+     * const covariance = numbers.covariance(doubles);
+     * console.log(covariance); // 5
+     * ```
+     */
+    covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number;
+
+    /**
+     * Calculates the covariance between two numeric projections of the sequence.
+     * @param leftSelector Projection that produces the first numeric series for each element.
+     * @param rightSelector Projection that produces the second numeric series for each element.
+     * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+     * @returns {number} The calculated covariance.
+     * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing the selector projections.
+     * @remarks The sequence is consumed exactly once using an online algorithm that avoids buffering, making it suitable for large datasets.
+     * @example
+     * ```typescript
+     * const metrics = from([
+     *   { x: 1, y: 2 },
+     *   { x: 2, y: 4 },
+     *   { x: 3, y: 6 }
+     * ]);
+     * const covariance = metrics.covarianceBy(p => p.x, p => p.y);
+     * console.log(covariance); // 2
+     * ```
+     */
+    covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): number;
+
+    /**
      * Repeats the sequence the specified number of times, or indefinitely when no count is provided.
      * @param count Optional number of times to repeat the sequence. When omitted, the sequence repeats without end.
      * @returns {IEnumerable<TElement>} A sequence that yields the original elements cyclically.

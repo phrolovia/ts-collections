@@ -16,6 +16,8 @@ import {
     contains,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     distinct,
@@ -241,6 +243,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public countBy<TCountKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TCountKey>, comparator?: EqualityComparator<TCountKey>): IEnumerable<KeyValuePair<TCountKey, number>> {
         return countBy(this, keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<KeyValuePair<TKey, TValue>, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number {
+        return covariance(this, iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<KeyValuePair<TKey, TValue>, number>, rightSelector: Selector<KeyValuePair<TKey, TValue>, number>, sample?: boolean): number {
+        return covarianceBy(this, leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IEnumerable<KeyValuePair<TKey, TValue>> {

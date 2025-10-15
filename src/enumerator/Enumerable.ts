@@ -165,6 +165,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.countBy(keySelector, comparator);
     }
 
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number {
+        return this.#enumerator.covariance(iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): number {
+        return this.#enumerator.covarianceBy(leftSelector, rightSelector, sample);
+    }
+
     public cycle(count?: number): IEnumerable<TElement> {
         return this.#enumerator.cycle(count);
     }

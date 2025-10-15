@@ -59,8 +59,11 @@ import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { findMedian } from "./helpers/medianHelpers";
 import {PercentileStrategy} from "../shared/PercentileStrategy";
 import {findPercentile} from "./helpers/percentileHelpers";
+import {DimensionMismatchException} from "../shared/DimensionMismatchException";
+import {InsufficientElementException} from "../shared/InsufficientElementException";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
     private static readonly NO_ELEMENTS_EXCEPTION = new NoElementsException();
@@ -205,6 +208,79 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         const groups = this.groupBy(keySelector, comparator);
         return groups.select(g => new KeyValuePair(g.key, g.source.count()));
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample: boolean = true): number {
+        let count = 0;
+        let meanX = 0;
+        let meanY = 0;
+        let crossDeviations = 0;
+        const iterator = this[Symbol.iterator]();
+        const otherIterator = iterable[Symbol.iterator]();
+
+        const thisSelector = selector ?? ((item: TElement): number => item as unknown as number);
+        const rightSelector = otherSelector ?? ((item: TSecond): number => item as unknown as number);
+
+        while (true) {
+            const next = iterator.next();
+            const otherNext = otherIterator.next();
+
+            if (next.done && otherNext.done) {
+                break;
+            }
+
+            if (next.done !== otherNext.done) {
+                throw Enumerator.DIMENSION_MISMATCH_EXCEPTION;
+            }
+
+            const x = thisSelector(next.value);
+            const y = rightSelector(otherNext.value);
+
+            count += 1;
+
+            const deltaX = x - meanX;
+            const deltaY = y - meanY;
+
+            meanX += deltaX / count;
+            meanY += deltaY / count;
+            crossDeviations += deltaX * (y - meanY);
+        }
+
+        if (count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+
+        return sample
+            ? crossDeviations / (count - 1)
+            : crossDeviations / count;
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample: boolean = true): number {
+        let count = 0;
+        let meanX = 0;
+        let meanY = 0;
+        let crossDeviations = 0;
+        const selectorX = leftSelector ?? ((item: TElement): number => item as unknown as number);
+        const selectorY = rightSelector ?? ((item: TElement): number => item as unknown as number);
+        for (const item of this) {
+            const x = selectorX(item);
+            const y = selectorY(item);
+
+            count += 1;
+
+            const deltaX = x - meanX;
+            const deltaY = y - meanY;
+
+            meanX += deltaX / count;
+            meanY += deltaY / count;
+            crossDeviations += deltaX * (y - meanY);
+        }
+        if (count < 2) {
+            throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+        }
+        return sample
+            ? crossDeviations / (count - 1)
+            : crossDeviations / count;
     }
 
     public cycle(count?: number): IEnumerable<TElement> {
@@ -1679,7 +1755,3 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 }
-
-
-
-

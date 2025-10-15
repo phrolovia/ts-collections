@@ -25,6 +25,8 @@ import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
+import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
+import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>
@@ -645,6 +647,133 @@ describe("List", () => {
                 (p) => p.key === "Eliza"
             ).value;
             expect(elizaCountAll).to.eq(2);
+        });
+    });
+
+    describe("#covariance", () => {
+        test("should return covariance of two lists", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8, 10]);
+            const sampleCovariance = list1.covariance(list2);
+            const populationCovariance = list1.covariance(list2, x => x, y => y, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8]);
+            expect(() => list1.covariance(list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = new List<number>();
+            const list2 = new List<number>();
+            expect(() => list1.covariance(list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = new List([1]);
+            const list2 = new List([2]);
+            expect(() => list1.covariance(list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one list has no variance", () => {
+            const list1 = new List([3, 3, 3, 3, 3]);
+            const list2 = new List([2, 4, 6, 8, 10]);
+            const covariance = list1.covariance(list2);
+            expect(covariance).to.eq(0);
+        });
+        test("should return 0 if both lists have no variance", () => {
+            const list1 = new List([3, 3, 3, 3, 3]);
+            const list2 = new List([7, 7, 7, 7, 7]);
+            const covariance = list1.covariance(list2);
+            expect(covariance).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([10, 8, 6, 4, 2]);
+            const covariance = list1.covariance(list2);
+            expect(covariance).to.eq(-5);
+        });
+        test("should use selectors", () => {
+            const list1 = new List([
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 },
+            ]);
+            const list2 = new List([
+                { value: 2 },
+                { value: 4 },
+                { value: 6 },
+                { value: 8 },
+                { value: 10 },
+            ]);
+            const covariance = list1.covariance(list2, x => x.value, y => y.value);
+            expect(covariance).to.eq(5);
+        });
+    });
+
+    describe("#covarianceBy()", () => {
+        test("should return covariance by two keys of one list", () => {
+            const list = new List([
+                new Pair(1, 2),
+                new Pair(2, 4),
+                new Pair(3, 6),
+                new Pair(4, 8),
+                new Pair(5, 10),
+            ]);
+            const sampleCovariance = list.covarianceBy(p => p.key, p => p.value);
+            const populationCovariance = list.covarianceBy(p => p.key, p => p.value, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if list has less than two elements", () => {
+            const list1 = new List<Pair<number, number>>([]);
+            expect(() => list1.covarianceBy(p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+            const list2 = new List([new Pair(1, 2)]);
+            expect(() => list2.covarianceBy(p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one key has no variance", () => {
+            const list = new List([
+                new Pair(3, 2),
+                new Pair(3, 4),
+                new Pair(3, 6),
+                new Pair(3, 8),
+                new Pair(3, 10),
+            ]);
+            const covariance = list.covarianceBy(p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return 0 if both keys have no variance", () => {
+            const list = new List([
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+            ]);
+            const covariance = list.covarianceBy(p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list = new List([
+                new Pair(1, 10),
+                new Pair(2, 8),
+                new Pair(3, 6),
+                new Pair(4, 4),
+                new Pair(5, 2),
+            ]);
+            const covariance = list.covarianceBy(p => p.key, p => p.value);
+            expect(covariance).to.eq(-5);
         });
     });
 

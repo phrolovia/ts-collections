@@ -17,6 +17,8 @@ import {
     contains,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     Dictionary,
@@ -149,6 +151,8 @@ import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { AbstractShape, Circle, Polygon, Rectangle, Square, Triangle } from "../models/Shape";
 import { Student } from "../models/Student";
+import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
+import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
 
 describe("Enumerable Standalone Functions", () => {
     const responses = new List<ApiResponse<Person>>([
@@ -438,6 +442,133 @@ describe("Enumerable Standalone Functions", () => {
             expect(suuzhaCount).to.eq(2);
             const kaoriCount = countPairs.first(p => p.key === "Kaori").value;
             expect(kaoriCount).to.eq(2);
+        });
+    });
+
+    describe("#covariance", () => {
+        test("should return covariance of two lists", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [2, 4, 6, 8, 10];
+            const sampleCovariance = covariance(list1, list2);
+            const populationCovariance = covariance(list1, list2, x => x, y => y, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = [1, 2, 3, 4, 5];
+            const list2 = [2, 4, 6, 8];
+            expect(() => covariance(list1, list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = [] as number[]
+            const list2 = [] as number[];
+            expect(() => covariance(list1, list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = [1];
+            const list2 = [2];
+            expect(() => covariance(list1, list2)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one list has no variance", () => {
+            const list1 = [3, 3, 3, 3, 3];
+            const list2 = [2, 4, 6, 8, 10];
+            const result = covariance(list1, list2);
+            expect(result).to.eq(0);
+        });
+        test("should return 0 if both lists have no variance", () => {
+            const list1 = [3, 3, 3, 3, 3];
+            const list2 = [7, 7, 7, 7, 7];
+            const result = covariance(list1, list2);
+            expect(result).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list1 =[1, 2, 3, 4, 5];
+            const list2 =[10, 8, 6, 4, 2];
+            const result = covariance(list1, list2);
+            expect(result).to.eq(-5);
+        });
+        test("should use selectors", () => {
+            const list1 = [
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 },
+            ];
+            const list2 = [
+                { value: 2 },
+                { value: 4 },
+                { value: 6 },
+                { value: 8 },
+                { value: 10 },
+            ];
+            const result = covariance(list1, list2, x => x.value, y => y.value);
+            expect(result).to.eq(5);
+        });
+    });
+
+    describe("#covarianceBy()", () => {
+        test("should return covariance by two keys of one list", () => {
+            const list = [
+                new Pair(1, 2),
+                new Pair(2, 4),
+                new Pair(3, 6),
+                new Pair(4, 8),
+                new Pair(5, 10),
+            ];
+            const sampleCovariance = covarianceBy(list, p => p.key, p => p.value);
+            const populationCovariance = covarianceBy(list, p => p.key, p => p.value, false);
+            expect(sampleCovariance).to.eq(5);
+            expect(populationCovariance).to.eq(4);
+        });
+        test("should throw error if list has less than two elements", () => {
+            const list1 = [] as Pair<number, number>[];
+            expect(() => covarianceBy(list1, p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+            const list2 = [new Pair(1, 2)];
+            expect(() => covarianceBy(list2, p => p.key, p => p.value)).toThrowError(
+                new InsufficientElementException("Covariance requires at least two pairs of elements.")
+            );
+        });
+        test("should return 0 if one key has no variance", () => {
+            const list = [
+                new Pair(3, 2),
+                new Pair(3, 4),
+                new Pair(3, 6),
+                new Pair(3, 8),
+                new Pair(3, 10),
+            ];
+            const covariance = covarianceBy(list, p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return 0 if both keys have no variance", () => {
+            const list = [
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+                new Pair(3, 7),
+            ];
+            const covariance = covarianceBy(list, p => p.key, p => p.value);
+            expect(covariance).to.eq(0);
+        });
+        test("should return negative covariance", () => {
+            const list = [
+                new Pair(1, 10),
+                new Pair(2, 8),
+                new Pair(3, 6),
+                new Pair(4, 4),
+                new Pair(5, 2),
+            ];
+            const covariance = covarianceBy(list, p => p.key, p => p.value);
+            expect(covariance).to.eq(-5);
         });
     });
 

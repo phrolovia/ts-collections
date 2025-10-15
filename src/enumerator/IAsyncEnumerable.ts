@@ -323,6 +323,50 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>>;
 
     /**
+     * Calculates the covariance between this async sequence and {@link iterable}.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @param iterable Async sequence whose elements align by index with the source sequence.
+     * @param selector Optional projection that extracts the numeric value for each element in the source sequence. Defaults to treating the element itself as numeric.
+     * @param otherSelector Optional projection that extracts the numeric value for each element in {@link iterable}. Defaults to treating the element itself as numeric.
+     * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+     * @returns {Promise<number>} A promise that resolves to the calculated covariance.
+     * @throws {DimensionMismatchException} Thrown when the sequences do not contain the same number of elements.
+     * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+     * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing the selector projections.
+     * @remarks Both sequences are consumed simultaneously so that streaming statistics can be computed without materialising all elements. Align the sequences carefully, as mismatch detection occurs only after enumeration begins.
+     * @example
+     * ```typescript
+     * const numbers = fromAsync([1, 2, 3, 4, 5]);
+     * const doubles = fromAsync([2, 4, 6, 8, 10]);
+     * const covariance = await numbers.covariance(doubles);
+     * console.log(covariance); // 5
+     * ```
+     */
+    covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): Promise<number>;
+
+    /**
+     * Calculates the covariance between two numeric projections of the async sequence.
+     * @param leftSelector Projection that produces the first numeric series for each element.
+     * @param rightSelector Projection that produces the second numeric series for each element.
+     * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+     * @returns {Promise<number>} A promise that resolves to the calculated covariance.
+     * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+     * @throws {unknown} Re-throws any error thrown while iterating the sequence or executing the selector projections.
+     * @remarks The sequence is consumed exactly once using an online algorithm that avoids buffering, making it suitable for large datasets.
+     * @example
+     * ```typescript
+     * const pairs = fromAsync([
+     *   { x: 1, y: 2 },
+     *   { x: 2, y: 4 },
+     *   { x: 3, y: 6 }
+     * ]);
+     * const covariance = await pairs.covarianceBy(p => p.x, p => p.y);
+     * console.log(covariance); // 2
+     * ```
+     */
+    covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): Promise<number>;
+
+    /**
      * Repeats the async sequence the specified number of times, or indefinitely when no count is provided.
      * @param count Optional number of times to repeat the sequence. When omitted, the sequence repeats without end.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields the original elements cyclically.

@@ -19,6 +19,8 @@ import {
     contains,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     distinct,
@@ -221,6 +223,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, number>> {
         return countBy(this, keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): number {
+        return covariance(this, iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): number {
+        return covarianceBy(this, leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IEnumerable<TElement> {

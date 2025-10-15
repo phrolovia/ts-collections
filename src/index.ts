@@ -77,6 +77,8 @@ export {
     contains,
     count,
     countBy,
+    covariance,
+    covarianceBy,
     cycle,
     defaultIfEmpty,
     distinct,

@@ -256,6 +256,14 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.percentile(percent, selector, strategy);
     }
 
+    public covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.covariance(iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.covarianceBy(leftSelector, rightSelector, sample);
+    }
+
     public min(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.min(selector);
     }

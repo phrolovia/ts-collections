@@ -428,6 +428,69 @@ export const countBy = <TElement, TKey>(
 };
 
 /**
+ * Calculates the covariance between {@link source} and {@link other}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @template TSecond Type of elements within {@link other}.
+ * @param source The primary iterable whose elements align by index with {@link other}.
+ * @param other Secondary iterable supplying the paired values.
+ * @param selector Optional projection that extracts the numeric value for each element in {@link source}. Defaults to treating the element itself as numeric.
+ * @param otherSelector Optional projection that extracts the numeric value for each element in {@link other}. Defaults to treating the element itself as numeric.
+ * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+ * @returns {number} The calculated covariance.
+ * @throws {DimensionMismatchException} Thrown when {@link source} and {@link other} do not contain the same number of elements.
+ * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+ * @throws {unknown} Re-throws any error thrown while iterating either iterable or executing the selector projections.
+ * @remarks Both iterables are consumed simultaneously so streaming statistics can be computed without materialising all elements. Ensure the iterables are aligned because mismatch detection occurs only after iteration begins.
+ * @example
+ * ```typescript
+ * const numbers = [1, 2, 3, 4, 5];
+ * const doubles = [2, 4, 6, 8, 10];
+ * const covarianceValue = covariance(numbers, doubles);
+ * console.log(covarianceValue); // 5
+ * ```
+ */
+export const covariance = <TElement, TSecond>(
+    source: Iterable<TElement>,
+    other: Iterable<TSecond>,
+    selector?: Selector<TElement, number>,
+    otherSelector?: Selector<TSecond, number>,
+    sample?: boolean
+): number => {
+    return from(source).covariance(other, selector, otherSelector, sample);
+};
+
+/**
+ * Calculates the covariance between two numeric projections of {@link source}.
+ * @template TElement Type of elements within the {@link source} iterable.
+ * @param source The source iterable to inspect.
+ * @param leftSelector Projection that produces the first numeric series for each element.
+ * @param rightSelector Projection that produces the second numeric series for each element.
+ * @param sample When `true`, computes the sample covariance dividing by _n - 1_; when `false`, computes the population covariance dividing by _n_. Defaults to `true`.
+ * @returns {number} The calculated covariance.
+ * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+ * @throws {unknown} Re-throws any error thrown while iterating {@link source} or executing the selector projections.
+ * @remarks {@link source} is consumed exactly once using an online algorithm that avoids buffering, making it suitable for large datasets.
+ * @example
+ * ```typescript
+ * const points = [
+ *   { x: 1, y: 2 },
+ *   { x: 2, y: 4 },
+ *   { x: 3, y: 6 }
+ * ];
+ * const covarianceValue = covarianceBy(points, p => p.x, p => p.y);
+ * console.log(covarianceValue); // 2
+ * ```
+ */
+export const covarianceBy = <TElement>(
+    source: Iterable<TElement>,
+    leftSelector: Selector<TElement, number>,
+    rightSelector: Selector<TElement, number>,
+    sample?: boolean
+): number => {
+    return from(source).covarianceBy(leftSelector, rightSelector, sample);
+};
+
+/**
  * Repeats the sequence the specified number of times, or indefinitely when no count is provided.
  * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.
