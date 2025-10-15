@@ -371,6 +371,67 @@ export const contains = <TElement>(
 };
 
 /**
+ * Computes the Pearson correlation coefficient between {@link source} and {@link other}.
+ * @template TElement Type of elements within the `source` iterable.
+ * @template TSecond Type of elements within the {@link other} iterable.
+ * @param source The source iterable whose elements align with {@link other} by index.
+ * @param other The iterable that provides the second series of aligned values.
+ * @param selector Optional projection that extracts the numeric value for each element of {@link source}. Defaults to treating the element itself as numeric.
+ * @param otherSelector Optional projection that extracts the numeric value for each element of {@link other}. Defaults to treating the element itself as numeric.
+ * @returns {number} The correlation coefficient in the interval [-1, 1].
+ * @throws {DimensionMismatchException} Thrown when the iterables do not contain the same number of elements.
+ * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+ * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+ * @throws {unknown} Re-throws any error encountered while iterating either iterable or executing the selector projections.
+ * @remarks Both iterables are enumerated simultaneously via an online algorithm that avoids buffering the full dataset. Ensure the iterables are aligned because mismatch detection occurs only after enumeration begins.
+ * @example
+ * ```typescript
+ * const temperatures = [15, 18, 21, 24];
+ * const sales = [30, 36, 42, 48];
+ * const result = correlation(temperatures, sales);
+ * console.log(result); // 1
+ * ```
+ */
+export const correlation = <TElement, TSecond>(
+    source: Iterable<TElement>,
+    other: Iterable<TSecond>,
+    selector?: Selector<TElement, number>,
+    otherSelector?: Selector<TSecond, number>
+): number => {
+    return from(source).correlation(other, selector, otherSelector);
+};
+
+/**
+ * Computes the Pearson correlation coefficient between two numeric projections of {@link source}.
+ * @template TElement Type of elements within the `source` iterable.
+ * @param source The source iterable that supplies the data for both projections.
+ * @param leftSelector Projection that produces the first numeric series for each element.
+ * @param rightSelector Projection that produces the second numeric series for each element.
+ * @returns {number} The correlation coefficient in the interval [-1, 1].
+ * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+ * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+ * @throws {unknown} Re-throws any error encountered while iterating {@link source} or executing the selector projections.
+ * @remarks The iterable is enumerated exactly once using an online algorithm, which keeps memory usage constant even for large inputs.
+ * @example
+ * ```typescript
+ * const metrics = [
+ *   { impressions: 1_000, clicks: 50 },
+ *   { impressions: 1_500, clicks: 75 },
+ *   { impressions: 2_000, clicks: 100 }
+ * ];
+ * const result = correlationBy(metrics, m => m.impressions, m => m.clicks);
+ * console.log(result); // 1
+ * ```
+ */
+export const correlationBy = <TElement>(
+    source: Iterable<TElement>,
+    leftSelector: Selector<TElement, number>,
+    rightSelector: Selector<TElement, number>
+): number => {
+    return from(source).correlationBy(leftSelector, rightSelector);
+};
+
+/**
  * Counts the number of elements in the sequence, optionally restricted by a predicate.
  * @template TElement Type of elements within the `source` iterable.
  * @param source The source iterable.

@@ -17,6 +17,8 @@ import {
     compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
     covariance,
@@ -215,6 +217,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
         comparator ??= this.comparer;
         return contains(this, element, comparator);
+    }
+
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number {
+        return correlation(this, iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number {
+        return correlationBy(this, leftSelector, rightSelector);
     }
 
     public count(predicate?: Predicate<TElement>): number {

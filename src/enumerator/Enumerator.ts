@@ -57,10 +57,16 @@ import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { findMedian } from "./helpers/medianHelpers";
-import {PercentileStrategy} from "../shared/PercentileStrategy";
-import {findPercentile} from "./helpers/percentileHelpers";
-import {DimensionMismatchException} from "../shared/DimensionMismatchException";
-import {InsufficientElementException} from "../shared/InsufficientElementException";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { findPercentile } from "./helpers/percentileHelpers";
+import { DimensionMismatchException } from "../shared/DimensionMismatchException";
+import { InsufficientElementException } from "../shared/InsufficientElementException";
+import {
+    accumulatePairStatsFromIterables,
+    accumulatePairStatsFromSingleIterable,
+    accumulateSingleStats, findCorrelation,
+    resolveNumberSelector
+} from "./helpers/statisticsHelpers";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
@@ -187,6 +193,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return false;
     }
 
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number {
+        const leftSelector = resolveNumberSelector(selector);
+        const rightSelector = resolveNumberSelector(otherSelector);
+        const stats = accumulatePairStatsFromIterables(
+            this,
+            iterable,
+            leftSelector,
+            rightSelector,
+            Enumerator.DIMENSION_MISMATCH_EXCEPTION
+        );
+        return findCorrelation(stats);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number {
+        const stats = accumulatePairStatsFromSingleIterable(this, leftSelector, rightSelector);
+        return findCorrelation(stats);
+    }
+
     public count(predicate?: Predicate<TElement>): number {
         let count: number = 0;
         if (!predicate) {
@@ -211,76 +235,35 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public covariance<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample: boolean = true): number {
-        let count = 0;
-        let meanX = 0;
-        let meanY = 0;
-        let crossDeviations = 0;
-        const iterator = this[Symbol.iterator]();
-        const otherIterator = iterable[Symbol.iterator]();
+        const leftSelector = resolveNumberSelector(selector);
+        const rightSelector = resolveNumberSelector(otherSelector);
+        const stats = accumulatePairStatsFromIterables(
+            this,
+            iterable,
+            leftSelector,
+            rightSelector,
+            Enumerator.DIMENSION_MISMATCH_EXCEPTION
+        );
 
-        const thisSelector = selector ?? ((item: TElement): number => item as unknown as number);
-        const rightSelector = otherSelector ?? ((item: TSecond): number => item as unknown as number);
-
-        while (true) {
-            const next = iterator.next();
-            const otherNext = otherIterator.next();
-
-            if (next.done && otherNext.done) {
-                break;
-            }
-
-            if (next.done !== otherNext.done) {
-                throw Enumerator.DIMENSION_MISMATCH_EXCEPTION;
-            }
-
-            const x = thisSelector(next.value);
-            const y = rightSelector(otherNext.value);
-
-            count += 1;
-
-            const deltaX = x - meanX;
-            const deltaY = y - meanY;
-
-            meanX += deltaX / count;
-            meanY += deltaY / count;
-            crossDeviations += deltaX * (y - meanY);
-        }
-
-        if (count < 2) {
+        if (stats.count < 2) {
             throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
         }
 
         return sample
-            ? crossDeviations / (count - 1)
-            : crossDeviations / count;
+            ? stats.sumSqXY / (stats.count - 1)
+            : stats.sumSqXY / stats.count;
     }
 
     public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample: boolean = true): number {
-        let count = 0;
-        let meanX = 0;
-        let meanY = 0;
-        let crossDeviations = 0;
-        const selectorX = leftSelector ?? ((item: TElement): number => item as unknown as number);
-        const selectorY = rightSelector ?? ((item: TElement): number => item as unknown as number);
-        for (const item of this) {
-            const x = selectorX(item);
-            const y = selectorY(item);
+        const stats = accumulatePairStatsFromSingleIterable(this, leftSelector, rightSelector);
 
-            count += 1;
-
-            const deltaX = x - meanX;
-            const deltaY = y - meanY;
-
-            meanX += deltaX / count;
-            meanY += deltaY / count;
-            crossDeviations += deltaX * (y - meanY);
-        }
-        if (count < 2) {
+        if (stats.count < 2) {
             throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
         }
+
         return sample
-            ? crossDeviations / (count - 1)
-            : crossDeviations / count;
+            ? stats.sumSqXY / (stats.count - 1)
+            : stats.sumSqXY / stats.count;
     }
 
     public cycle(count?: number): IEnumerable<TElement> {
@@ -531,7 +514,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         if (modes.none()) {
             throw Enumerator.NO_ELEMENTS_EXCEPTION;
         }
-        console.log(modes.toArray());
         return modes.first();
     }
 
@@ -977,23 +959,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public variance(selector?: Selector<TElement, number>, sample: boolean = true): number {
-        const numSelector = selector ?? ((item: TElement): number => item as unknown as number);
-        let count = 0;
-        let mean = 0;
-        let sumOfSquaredDiffs = 0;
+        const numberSelector = resolveNumberSelector(selector);
+        const stats = accumulateSingleStats(this, numberSelector);
 
-        for (const item of this) {
-            const value = numSelector(item);
-            count++;
-            const delta = value - mean;
-            mean += delta / count;
-            const deltaAfterMeanUpdate = value - mean;
-            sumOfSquaredDiffs += delta * deltaAfterMeanUpdate;
-        }
-        if (count === 0 || (sample && count < 2)) {
+        if (stats.count === 0 || (sample && stats.count < 2)) {
             return Number.NaN;
         }
-        return sample ? sumOfSquaredDiffs / (count - 1) : sumOfSquaredDiffs / count;
+
+        return sample ? stats.sumSq / (stats.count - 1) : stats.sumSq / stats.count;
     }
 
     public where<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;

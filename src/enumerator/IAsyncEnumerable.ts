@@ -277,8 +277,52 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * const hasTen = await numbers.contains(10);
      * console.log(hasTen); // false
      * ```
-     */
+    */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean>;
+
+    /**
+     * Computes the Pearson correlation coefficient between this async sequence and {@link iterable}.
+     * @template TSecond Type of elements produced by {@link iterable}.
+     * @param iterable Async sequence whose elements align by index with the source sequence.
+     * @param selector Optional projection that extracts the numeric value for each element of the source sequence. Defaults to treating the element itself as numeric.
+     * @param otherSelector Optional projection that extracts the numeric value for each element of {@link iterable}. Defaults to treating the element itself as numeric.
+     * @returns {Promise<number>} A promise that resolves to the correlation coefficient in the interval [-1, 1].
+     * @throws {DimensionMismatchException} Thrown when the sequences do not contain the same number of elements.
+     * @throws {InsufficientElementException} Thrown when fewer than two aligned pairs are available.
+     * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+     * @throws {unknown} Re-throws any error encountered while asynchronously iterating the source, {@link iterable}, or executing the selector projections.
+     * @remarks Both sequences are consumed simultaneously via an online algorithm that avoids buffering the full dataset. Ensure the async iterables are aligned because mismatch detection occurs only after iteration begins.
+     * @example
+     * ```typescript
+     * const temperatures = fromAsync([15, 18, 21, 24]);
+     * const sales = fromAsync([30, 36, 42, 48]);
+     * const correlation = await temperatures.correlation(sales);
+     * console.log(correlation); // 1
+     * ```
+     */
+    correlation<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): Promise<number>;
+
+    /**
+     * Computes the Pearson correlation coefficient between two numeric projections of the async sequence.
+     * @param leftSelector Projection that produces the first numeric series for each element.
+     * @param rightSelector Projection that produces the second numeric series for each element.
+     * @returns {Promise<number>} A promise that resolves to the correlation coefficient in the interval [-1, 1].
+     * @throws {InsufficientElementException} Thrown when fewer than two elements are available.
+     * @throws {Error} Thrown when the standard deviation of either numeric projection is zero.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the selector projections.
+     * @remarks The sequence is consumed exactly once using an online algorithm, which keeps memory usage constant even for large inputs.
+     * @example
+     * ```typescript
+     * const metrics = fromAsync([
+     *   { impressions: 1_000, clicks: 50 },
+     *   { impressions: 1_500, clicks: 75 },
+     *   { impressions: 2_000, clicks: 100 }
+     * ]);
+     * const correlation = await metrics.correlationBy(m => m.impressions, m => m.clicks);
+     * console.log(correlation); // 1
+     * ```
+     */
+    correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): Promise<number>;
 
     /**
      * Counts the number of elements in the async sequence, optionally restricted by a predicate.

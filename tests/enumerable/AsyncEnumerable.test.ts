@@ -382,6 +382,84 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#correlation()", () => {
+        test("should return correlation of two sequences", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            const result = await left.correlation(arrayProducer([2, 4, 6, 8, 10]));
+            expect(result).to.eq(1);
+        });
+
+        test("should throw when sequences have different lengths", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));
+            await expect(left.correlation(arrayProducer([2, 4, 6, 8])))
+                .rejects.toThrowError(new DimensionMismatchException());
+        });
+
+        test("should throw when fewer than two pairs exist", async () => {
+            const left = new AsyncEnumerable(arrayProducer([1]));
+            await expect(left.correlation(arrayProducer([2])))
+                .rejects.toThrowError(new InsufficientElementException("Correlation requires at least two pairs of elements."));
+        });
+
+        test("should throw when variance of either sequence is zero", async () => {
+            const left = new AsyncEnumerable(arrayProducer([3, 3, 3, 3, 3]));
+            await expect(left.correlation(arrayProducer([2, 4, 6, 8, 10])))
+                .rejects.toThrowError(new Error("Correlation is undefined when the standard deviation of either variable is zero."));
+        });
+
+        test("should use selectors", async () => {
+            const left = new AsyncEnumerable(arrayProducer([
+                { value: 1 },
+                { value: 2 },
+                { value: 3 },
+                { value: 4 },
+                { value: 5 }
+            ]));
+            const result = await left.correlation(
+                arrayProducer([
+                    { value: 2 },
+                    { value: 4 },
+                    { value: 6 },
+                    { value: 8 },
+                    { value: 10 }
+                ]),
+                item => item.value,
+                item => item.value
+            );
+            expect(result).to.eq(1);
+        });
+    });
+
+    describe("#correlationBy()", () => {
+        test("should return correlation based on selectors", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 2 },
+                { key: 2, value: 4 },
+                { key: 3, value: 6 },
+                { key: 4, value: 8 },
+                { key: 5, value: 10 }
+            ]));
+            const result = await enumerable.correlationBy(p => p.key, p => p.value);
+            expect(result).to.eq(1);
+        });
+
+        test("should throw when sequence has fewer than two elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([{ key: 1, value: 2 }]))
+            await expect(enumerable.correlationBy(p => p.key, p => p.value))
+                .rejects.toThrowError(new InsufficientElementException("Correlation requires at least two pairs of elements."));
+        });
+
+        test("should throw when selector variance is zero", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([
+                { key: 1, value: 10 },
+                { key: 1, value: 12 },
+                { key: 1, value: 14 }
+            ]));
+            await expect(enumerable.correlationBy(p => p.key, p => p.value))
+                .rejects.toThrowError(new Error("Correlation is undefined when the standard deviation of either variable is zero."));
+        });
+    });
+
     describe("#covariance()", () => {
         test("should return covariance of two sequences", async () => {
             const left = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5]));

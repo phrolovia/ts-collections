@@ -132,12 +132,28 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.contains(element, comparator);
     }
 
+    public correlation<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): Promise<number> {
+        return this.#enumerator.correlation(iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): Promise<number> {
+        return this.#enumerator.correlationBy(leftSelector, rightSelector);
+    }
+
     public count(predicate?: Predicate<TElement>): Promise<number> {
         return this.#enumerator.count(predicate);
     }
 
     public countBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, number>> {
         return this.#enumerator.countBy(keySelector, comparator);
+    }
+
+    public covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.covariance(iterable, selector, otherSelector, sample);
+    }
+
+    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): Promise<number> {
+        return this.#enumerator.covarianceBy(leftSelector, rightSelector, sample);
     }
 
     public cycle(count?: number): IAsyncEnumerable<TElement> {
@@ -252,18 +268,6 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.median(selector, tie);
     }
 
-    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
-        return this.#enumerator.percentile(percent, selector, strategy);
-    }
-
-    public covariance<TSecond>(iterable: AsyncIterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>, sample?: boolean): Promise<number> {
-        return this.#enumerator.covariance(iterable, selector, otherSelector, sample);
-    }
-
-    public covarianceBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>, sample?: boolean): Promise<number> {
-        return this.#enumerator.covarianceBy(leftSelector, rightSelector, sample);
-    }
-
     public min(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.min(selector);
     }
@@ -316,6 +320,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     public partition(predicate: Predicate<TElement>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<[IEnumerable<TElement>, IEnumerable<TElement>]> | Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> {
         return this.#enumerator.partition(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
+    }
+
+    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
+        return this.#enumerator.percentile(percent, selector, strategy);
     }
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {

@@ -75,6 +75,8 @@ export {
     compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
     covariance,

@@ -14,6 +14,8 @@ import {
     compact,
     concat,
     contains,
+    correlation,
+    correlationBy,
     count,
     countBy,
     covariance,
@@ -232,6 +234,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public contains(element: KeyValuePair<TKey, TValue>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): boolean {
         return contains(this, element, comparator);
+    }
+
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<KeyValuePair<TKey, TValue>, number>, otherSelector?: Selector<TSecond, number>): number {
+        return correlation(this, iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<KeyValuePair<TKey, TValue>, number>, rightSelector: Selector<KeyValuePair<TKey, TValue>, number>): number {
+        return correlationBy(this, leftSelector, rightSelector);
     }
 
     public count(predicate?: Predicate<KeyValuePair<TKey, TValue>>): number {

@@ -157,6 +157,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.contains(element, comparator);
     }
 
+    public correlation<TSecond>(iterable: Iterable<TSecond>, selector?: Selector<TElement, number>, otherSelector?: Selector<TSecond, number>): number {
+        return this.#enumerator.correlation(iterable, selector, otherSelector);
+    }
+
+    public correlationBy(leftSelector: Selector<TElement, number>, rightSelector: Selector<TElement, number>): number {
+        return this.#enumerator.correlationBy(leftSelector, rightSelector);
+    }
+
     public count(predicate?: Predicate<TElement>): number {
         return this.#enumerator.count(predicate);
     }

@@ -563,6 +563,59 @@ describe("List", () => {
         });
     });
 
+    describe("#correlation()", () => {
+        test("should return correlation of two lists", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8, 10]);
+            const correlation = list1.correlation(list2);
+            expect(correlation).to.eq(1);
+        });
+        test("should return 1 for identical lists", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([1, 2, 3, 4, 5]);
+            const correlation = list1.correlation(list2);
+            expect(correlation).to.eq(1);
+        });
+        test("should throw error if lists have different sizes", () => {
+            const list1 = new List([1, 2, 3, 4, 5]);
+            const list2 = new List([2, 4, 6, 8]);
+            expect(() => list1.correlation(list2)).toThrowError(
+                new DimensionMismatchException()
+            );
+        });
+        test("should throw error if lists are empty", () => {
+            const list1 = new List<number>();
+            const list2 = new List<number>();
+            expect(() => list1.correlation(list2)).toThrowError(
+                new InsufficientElementException("Correlation requires at least two pairs of elements.")
+            );
+        });
+        test("should throw error if lists have only one element", () => {
+            const list1 = new List([1]);
+            const list2 = new List([2]);
+            expect(() => list1.correlation(list2)).toThrowError(
+                new InsufficientElementException("Correlation requires at least two pairs of elements.")
+            );
+        });
+    });
+
+    describe("#correlationBy()", () => {
+        test("should return correlation of two lists based on selectors", () => {
+            const list1 = new List([
+                { value: 1, amount: 11 },
+                { value: 2, amount: 22 },
+                { value: 3, amount: 33 },
+                { value: 4, amount: 44 },
+                { value: 5, amount: 55 },
+            ]);
+            const correlation = list1.correlationBy(
+                x => x.value,
+                x => x.amount
+            );
+            expect(correlation).to.eq(1);
+        });
+    });
+
     describe("#count()", () => {
         test("should return 2", () => {
             const list = new List<Person>();
