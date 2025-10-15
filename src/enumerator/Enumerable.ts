@@ -125,6 +125,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.append(element);
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
+        return this.#enumerator.atLeast(count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): boolean {
+        return this.#enumerator.atMost(count, predicate);
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         return this.#enumerator.average(selector);
     }
@@ -211,6 +219,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public elementAtOrDefault(index: number): TElement | null {
         return this.#enumerator.elementAtOrDefault(index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): boolean {
+        return this.#enumerator.exactly(count, predicate);
     }
 
     public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {

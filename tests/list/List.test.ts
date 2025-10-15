@@ -334,10 +334,70 @@ describe("List", () => {
         });
     });
 
+    describe("#atLeast()", () => {
+        test("should return true if there are at least 3 elements greater than 5", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atLeast = list.atLeast(3, n => n > 5);
+            expect(atLeast).to.eq(true);
+        });
+        test("should return false if there are not at least 5 elements greater than 5", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atLeast = list.atLeast(5, n => n > 5);
+            expect(atLeast).to.eq(false);
+        });
+        test("should return true if there are at least 1 element in the list", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atLeast = list.atLeast(1);
+            expect(atLeast).to.eq(true);
+        });
+        test("should return false if there are not at least 1 element in the list", () => {
+            const list = new List<number>([]);
+            const atLeast = list.atLeast(1);
+            const atLeast2 = list.atLeast(0);
+            expect(atLeast).to.eq(false);
+            expect(atLeast2).to.eq(true);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            expect(() => list.atLeast(-1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
+    describe("#atMost()", () => {
+        test("should return true if there are at most 3 elements greater than 6", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(3, n => n > 6);
+            expect(atMost).to.eq(true);
+        });
+        test("should return false if there are not at most 2 elements greater than 5", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(2, n => n > 5);
+            expect(atMost).to.eq(false);
+        });
+        test("should return true if there are at most 10 element in the list", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(10);
+            expect(atMost).to.eq(true);
+        });
+        test("should return false if there are not at most 0 element in the list", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            const atMost = list.atMost(0);
+            expect(atMost).to.eq(false);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = new List([1, 2, 3, 6, 7, 8, 9]);
+            expect(() => list.atMost(-1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
     describe("#average()", () => {
         test("should return 99948748093", () => {
             const list = new List(["10007", "37", "299846234235"]);
-            const avg = list.average((s) => parseInt(s, 10));
+            const avg = list.average(s => parseInt(s, 10));
             expect(avg).to.eq(99948748093);
         });
         test("should use non-transformed values if predicate is not provided.", () => {
@@ -346,7 +406,7 @@ describe("List", () => {
         });
         test("should throw error if list is empty", () => {
             const list = new List<string>([]);
-            expect(() => list.average((s) => parseInt(s, 10))).toThrow(
+            expect(() => list.average(s => parseInt(s, 10))).toThrow(
                 new NoElementsException()
             );
         });
@@ -1074,6 +1134,40 @@ describe("List", () => {
             }
         });
     });
+
+    describe("#exactly()", () => {
+        test("should return true if list has exactly 3 elements", () => {
+            const list = new List([1, 2, 3]);
+            expect(list.exactly(3)).to.be.true;
+        });
+        test("should return false if list does not have exactly 3 elements", () => {
+            const list = new List([1, 2, 3, 4]);
+            expect(list.exactly(3)).to.be.false;
+        });
+        test("should return true if list has exactly 0 elements", () => {
+            const list = new List();
+            expect(list.exactly(0)).to.be.true;
+        });
+        test("should return false if list does not have exactly 0 elements", () => {
+            const list = new List([1]);
+            expect(list.exactly(0)).to.be.false;
+        });
+        test("should return false if predicate does not match exactly 3 elements", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.exactly(3, n => n % 2 === 0)).to.be.false;
+        });
+        test("should return true if predicate matches exactly 2 elements", () => {
+            const list = new List([1, 2, 3, 4, 5]);
+            expect(list.exactly(2, n => n % 2 === 0)).to.be.true;
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = new List([1, 2, 3]);
+            expect(() => list.exactly(-1)).to.toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
     describe("#except()", () => {
         test("should return an array of [1,2,3]", () => {
             const list1 = new List([1, 2, 3, 3, 4, 5]);

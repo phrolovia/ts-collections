@@ -140,6 +140,43 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.appendGenerator(element));
     }
 
+    public async atLeast(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        if (count === 0) {
+            return true;
+        }
+        const matcher: Predicate<TElement> = predicate ?? (() => true);
+        let matches = 0;
+        for await (const item of this) {
+            if (matcher(item)) {
+                ++matches;
+                if (matches >= count) {
+                    return true;
+                }
+            }
+        }
+        return matches >= count;
+    }
+
+    public async atMost(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        const matcher: Predicate<TElement> = predicate ?? (() => true);
+        let matches = 0;
+        for await (const item of this) {
+            if (matcher(item)) {
+                ++matches;
+                if (matches > count) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public async average(selector?: Selector<TElement, number>): Promise<number> {
         let total = 0;
         let count = 0;
@@ -330,6 +367,23 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             ++count;
         }
         return null;
+    }
+
+    public async exactly(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        const matcher: Predicate<TElement> = predicate ?? (() => true);
+        let matches = 0;
+        for await (const item of this) {
+            if (matcher(item)) {
+                ++matches;
+                if (matches > count) {
+                    return false;
+                }
+            }
+        }
+        return matches === count;
     }
 
     public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {

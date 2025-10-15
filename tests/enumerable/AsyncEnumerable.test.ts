@@ -209,6 +209,60 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#atLeast()", () => {
+        test("should return true when at least 3 elements are greater than 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atLeast(3, n => n > 5);
+            expect(result).to.eq(true);
+        });
+
+        test("should return false when fewer than 5 elements are greater than 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atLeast(5, n => n > 5);
+            expect(result).to.eq(false);
+        });
+
+        test("should evaluate all elements when predicate is omitted", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            expect(await enumerable.atLeast(1)).to.eq(true);
+            const empty = new AsyncEnumerable(arrayProducer([] as number[]));
+            expect(await empty.atLeast(0)).to.eq(true);
+        });
+
+        test("should reject when count is negative", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            await expect(enumerable.atLeast(-1))
+                .rejects.toThrowError(new InvalidArgumentException("Count must be greater than or equal to 0.", "count"));
+        });
+    });
+
+    describe("#atMost()", () => {
+        test("should return true when at most 3 elements are greater than 6", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atMost(3, n => n > 6);
+            expect(result).to.eq(true);
+        });
+
+        test("should return false when more than 2 elements are greater than 5", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 6, 7, 8, 9]));
+            const result = await enumerable.atMost(2, n => n > 5);
+            expect(result).to.eq(false);
+        });
+
+        test("should honour the non-predicate overload", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            expect(await enumerable.atMost(3)).to.eq(true);
+            const result = await new AsyncEnumerable(arrayProducer([1, 2, 3])).atMost(2);
+            expect(result).to.eq(false);
+        });
+
+        test("should reject when count is negative", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            await expect(enumerable.atMost(-1))
+                .rejects.toThrowError(new InvalidArgumentException("Count must be greater than or equal to 0.", "count"));
+        });
+    });
+
     describe("#average()", () => {
         test("should return the average of the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -689,6 +743,32 @@ describe("AsyncEnumerable", () => {
             const enumerable = AsyncEnumerable.empty();
             const result = await enumerable.toArray();
             expect(result).to.deep.equal([]);
+        });
+    });
+
+    describe("#exactly()", () => {
+        test("should return true when there are exactly 3 elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            expect(await enumerable.exactly(3)).to.eq(true);
+        });
+
+        test("should return false when the element count differs", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4]));
+            expect(await enumerable.exactly(3)).to.eq(false);
+        });
+
+        test("should respect predicates", async () => {
+            const values = [1, 2, 3, 4, 5];
+            const evenPair = new AsyncEnumerable(arrayProducer(values));
+            const manyEvens = new AsyncEnumerable(arrayProducer(values));
+            expect(await evenPair.exactly(2, n => n % 2 === 0)).to.eq(true);
+            expect(await manyEvens.exactly(3, n => n % 2 === 0)).to.eq(false);
+        });
+
+        test("should reject when count is negative", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            await expect(enumerable.exactly(-1))
+                .rejects.toThrowError(new InvalidArgumentException("Count must be greater than or equal to 0.", "count"));
         });
     });
 

@@ -7,6 +7,8 @@ import {
     all,
     any,
     append,
+    atLeast,
+    atMost,
     average,
     cartesian,
     cast,
@@ -31,6 +33,7 @@ import {
     distinctUntilChangedBy,
     elementAt,
     elementAtOrDefault,
+    exactly,
     except,
     exceptBy,
     first,
@@ -186,6 +189,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return append(this, element);
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
+        return atLeast(this, count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): boolean {
+        return atMost(this, count, predicate);
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         return average(this, selector);
     }
@@ -273,6 +284,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public elementAtOrDefault(index: number): TElement | null {
         return elementAtOrDefault(this, index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): boolean {
+        return exactly(this, count, predicate);
     }
 
     public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {
@@ -714,7 +729,3 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     abstract [Symbol.iterator](): Iterator<TElement>;
 }
-
-
-
-

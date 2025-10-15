@@ -140,6 +140,46 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.appendGenerator(element));
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        if (!predicate) {
+            return this.count() >= count;
+        }
+
+        let actualCount = 0;
+        for (const item of this) {
+            if (predicate(item)) {
+                actualCount++;
+            }
+            if (actualCount >= count) {
+                return true;
+            }
+        }
+        return actualCount >= count;
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): boolean {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        if (!predicate) {
+            return this.count() <= count;
+        }
+
+        let actualCount = 0;
+        for (const item of this) {
+            if (predicate(item)) {
+                actualCount++;
+            }
+            if (actualCount > count) {
+                return false;
+            }
+        }
+        return actualCount <= count;
+    }
+
     public average(selector?: Selector<TElement, number>): number {
         let total: number = 0;
         let count: number = 0;
@@ -317,6 +357,26 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             ++ix;
         }
         return null;
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): boolean {
+        if (count < 0) {
+            throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+        }
+        if (!predicate) {
+            return this.count() === count;
+        }
+
+        let actualCount = 0;
+        for (const item of this) {
+            if (predicate(item)) {
+                actualCount++;
+            }
+            if (actualCount > count) {
+                return false;
+            }
+        }
+        return actualCount === count;
     }
 
     public except(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IEnumerable<TElement> {

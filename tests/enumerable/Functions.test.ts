@@ -5,6 +5,8 @@ import {
     all,
     any,
     append,
+    atLeast,
+    atMost,
     average,
     cartesian,
     cast,
@@ -32,6 +34,7 @@ import {
     elementAtOrDefault,
     empty,
     EnumerableSet,
+    exactly,
     except,
     exceptBy,
     first,
@@ -155,6 +158,7 @@ import { AbstractShape, Circle, Polygon, Rectangle, Square, Triangle } from "../
 import { Student } from "../models/Student";
 import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
 import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
+import {InvalidArgumentException} from "../../src/shared/InvalidArgumentException";
 
 describe("Enumerable Standalone Functions", () => {
     const responses = new List<ApiResponse<Person>>([
@@ -255,6 +259,66 @@ describe("Enumerable Standalone Functions", () => {
         test("should append an element to the end", () => {
             const list2 = toList(append([1, 2, 3, 4, 5], 6));
             expect(list2.get(5)).to.eq(6);
+        });
+    });
+
+    describe("#atLeast()", () => {
+        test("should return true if there are at least 3 elements greater than 5", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atLeast(list, 3, n => n > 5);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at least 5 elements greater than 5", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atLeast(list, 5, n => n > 5);
+            expect(result).to.eq(false);
+        });
+        test("should return true if there are at least 1 element in the list", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atLeast(list, 1);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at least 1 element in the list", () => {
+            const list = [] as number[];
+            const result = atLeast(list, 1);
+            const result2 = atLeast(list, 0);
+            expect(result).to.eq(false);
+            expect(result2).to.eq(true);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            expect(() => atLeast(list, -1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
+        });
+    });
+
+    describe("#atMost()", () => {
+        test("should return true if there are at most 3 elements greater than 6", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 3, n => n > 6);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at most 2 elements greater than 5", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 2, n => n > 5);
+            expect(result).to.eq(false);
+        });
+        test("should return true if there are at most 10 element in the list", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 10);
+            expect(result).to.eq(true);
+        });
+        test("should return false if there are not at most 0 element in the list", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            const result = atMost(list, 0);
+            expect(result).to.eq(false);
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = [1, 2, 3, 6, 7, 8, 9];
+            expect(() => atMost(list, -1)).toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
         });
     });
 
@@ -754,6 +818,39 @@ describe("Enumerable Standalone Functions", () => {
         test("should create an empty enumerable", () => {
             const enumerable = empty<number>();
             expect(enumerable.count()).to.eq(0);
+        });
+    });
+
+    describe("#exactly()", () => {
+        test("should return true if list has exactly 3 elements", () => {
+            const list = [1, 2, 3];
+            expect(exactly(list, 3)).to.be.true;
+        });
+        test("should return false if list does not have exactly 3 elements", () => {
+            const list = [1, 2, 3, 4];
+            expect(exactly(list, 3)).to.be.false;
+        });
+        test("should return true if list has exactly 0 elements", () => {
+            const list = [] as never[];
+            expect(exactly(list, 0)).to.be.true;
+        });
+        test("should return false if list does not have exactly 0 elements", () => {
+            const list = [1];
+            expect(exactly(list, 0)).to.be.false;
+        });
+        test("should return false if predicate does not match exactly 3 elements", () => {
+            const list = [1, 2, 3, 4, 5];
+            expect(exactly(list, 3, n => n % 2 === 0)).to.be.false;
+        });
+        test("should return true if predicate matches exactly 2 elements", () => {
+            const list = [1, 2, 3, 4, 5];
+            expect(exactly(list, 2, n => n % 2 === 0)).to.be.true;
+        });
+        test("should throw error if count is less than 0", () => {
+            const list = [1, 2, 3];
+            expect(() => exactly(list, -1)).to.toThrowError(
+                new InvalidArgumentException("Count must be greater than or equal to 0.", "count")
+            );
         });
     });
 

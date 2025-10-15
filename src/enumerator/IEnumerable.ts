@@ -151,6 +151,40 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     append(element: TElement): IEnumerable<TElement>;
 
     /**
+     * Determines whether the sequence contains at least {@link count} elements that satisfy the optional predicate.
+     * @param count Minimum number of matching elements required. Must be greater than or equal to 0.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+     * @returns {boolean} `true` when at least {@link count} matching elements are present; otherwise, `false`.
+     * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the predicate.
+     * @remarks Enumeration stops as soon as the required number of matches is found, avoiding unnecessary work on long sequences.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasAtLeastTwoEvens = numbers.atLeast(2, n => n % 2 === 0);
+     * console.log(hasAtLeastTwoEvens); // true
+     * ```
+     */
+    atLeast(count: number, predicate?: Predicate<TElement>): boolean;
+
+    /**
+     * Determines whether the sequence contains no more than {@link count} elements that satisfy the optional predicate.
+     * @param count Maximum number of matching elements allowed. Must be greater than or equal to 0.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+     * @returns {boolean} `true` when the number of matching elements does not exceed {@link count}; otherwise, `false`.
+     * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the predicate.
+     * @remarks Enumeration stops as soon as the count is exceeded, making it efficient for large or infinite sequences.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasAtMostOneEven = numbers.atMost(1, n => n % 2 === 0);
+     * console.log(hasAtMostOneEven); // false
+     * ```
+     */
+    atMost(count: number, predicate?: Predicate<TElement>): boolean;
+
+    /**
      * Computes the arithmetic mean of the numeric values produced for each element in the sequence.
      * @param selector Optional projection that extracts the numeric value for each element. Defaults to the element itself.
      * @returns {number} The arithmetic mean of the selected values.
@@ -552,6 +586,23 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     elementAtOrDefault(index: number): TElement | null;
+
+    /**
+     * Determines whether the sequence contains exactly {@link count} elements that satisfy the optional predicate.
+     * @param count Exact number of matching elements required. Must be greater than or equal to 0.
+     * @param predicate Optional predicate that determines which elements are counted. When omitted, every element is considered a match.
+     * @returns {boolean} `true` when exactly {@link count} matching elements are present; otherwise, `false`.
+     * @throws {InvalidArgumentException} Thrown when {@link count} is negative.
+     * @throws {unknown} Re-throws any error encountered while iterating the sequence or executing the predicate.
+     * @remarks Enumeration stops once the running total exceeds {@link count}, preventing unnecessary work on long sequences.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const hasExactlyThreeOdds = numbers.exactly(3, n => n % 2 !== 0);
+     * console.log(hasExactlyThreeOdds); // true
+     * ```
+     */
+    exactly(count: number, predicate?: Predicate<TElement>): boolean;
 
     /**
      * Returns the elements of this sequence that are not present in the specified iterable.

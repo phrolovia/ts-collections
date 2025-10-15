@@ -100,6 +100,14 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.append(element);
     }
 
+    public atLeast(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        return this.#enumerator.atLeast(count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        return this.#enumerator.atMost(count, predicate);
+    }
+
     public average(selector?: Selector<TElement, number>): Promise<number> {
         return this.#enumerator.average(selector);
     }
@@ -186,6 +194,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public elementAtOrDefault(index: number): Promise<TElement | null> {
         return this.#enumerator.elementAtOrDefault(index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<TElement>): Promise<boolean> {
+        return this.#enumerator.exactly(count, predicate);
     }
 
     public except(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {

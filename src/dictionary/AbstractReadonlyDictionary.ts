@@ -4,6 +4,8 @@ import {
     all,
     any,
     append,
+    atLeast,
+    atMost,
     average,
     cartesian,
     cast,
@@ -29,6 +31,7 @@ import {
     elementAt,
     elementAtOrDefault,
     EnumerableSet,
+    exactly,
     except,
     exceptBy,
     first,
@@ -204,6 +207,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return this.toObject(keySelector, valueSelector);
     }
 
+    public atLeast(count: number, predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return atLeast(this, count, predicate);
+    }
+
+    public atMost(count: number, predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return atMost(this, count, predicate);
+    }
+
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
         return average(this, selector);
     }
@@ -293,6 +304,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public elementAtOrDefault(index: number): KeyValuePair<TKey, TValue> | null {
         return elementAtOrDefault(this, index);
+    }
+
+    public exactly(count: number, predicate?: Predicate<KeyValuePair<TKey, TValue>>): boolean {
+        return exactly(this, count, predicate);
     }
 
     public except(iterable: Iterable<KeyValuePair<TKey, TValue>>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue>> | OrderComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {
