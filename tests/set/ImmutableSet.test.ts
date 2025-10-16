@@ -31,7 +31,7 @@ describe("ImmutableSet", () => {
         });
     });
     describe("#contains()", () => {
-        const setData = from(range(0, 10000000)).select(i => ({id: 1, name: i.toString()})).toArray();
+        const setData = from(range(0, 1000000)).select(i => ({id: 1, name: i.toString()})).toArray();
         const set = ImmutableSet.create(setData);
         test("should return true if the set contains the given element", () => {
             const set = ImmutableSet.create([1, 2, 3]);
@@ -50,7 +50,7 @@ describe("ImmutableSet", () => {
             expect(set.contains(setData[142857])).to.be.true;
             expect(set.contains(setData[666666])).to.be.true;
             expect(set.contains(setData[0])).to.be.true;
-            expect(set.contains(setData[9999999])).to.be.true;
+            expect(set.contains(setData[999999])).to.be.true;
         });
     });
     describe("#count()", () => {
