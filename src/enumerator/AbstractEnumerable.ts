@@ -27,6 +27,8 @@ import {
     covarianceBy,
     cycle,
     defaultIfEmpty,
+    disjoint,
+    disjointBy,
     distinct,
     distinctBy,
     distinctUntilChanged,
@@ -260,6 +262,14 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
         return defaultIfEmpty(this as IEnumerable<TElement | null>, value);
+    }
+
+    public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
+        return disjoint(this, iterable, comparator);
+    }
+
+    public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): boolean {
+        return disjointBy(this, iterable, keySelector, otherKeySelector, keyComparator);
     }
 
     public distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

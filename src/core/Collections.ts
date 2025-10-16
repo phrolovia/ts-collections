@@ -27,25 +27,6 @@ export abstract class Collections {
     }
 
     /**
-     * Returns true if the two specified iterables have no elements in common.
-     * @param {Iterable} iterable1 First collection of items
-     * @param {Iterable} iterable2 Second collection of items
-     * @param {Function} comparator The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.
-     * @return {boolean} true if the two specified iterables have no elements in common.
-     */
-    public static disjoint<TFirst, TSecond = TFirst>(iterable1: Iterable<TFirst>, iterable2: Iterable<TSecond>, comparator?: EqualityComparator<TFirst, TSecond>): boolean {
-        comparator ??= Comparators.equalityComparator;
-        for (const element1 of iterable1) {
-            for (const element2 of iterable2) {
-                if (comparator(element1, element2)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
      * Replaces all the elements of the list with the given element.
      * @template TElement The type of the elements
      * @param {IList} list The list whose elements will be replaced

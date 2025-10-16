@@ -85,6 +85,8 @@ export {
     covarianceBy,
     cycle,
     defaultIfEmpty,
+    disjoint,
+    disjointBy,
     distinct,
     distinctBy,
     distinctUntilChanged,

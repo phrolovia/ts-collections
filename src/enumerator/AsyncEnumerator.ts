@@ -311,6 +311,83 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement | null>(() => this.defaultIfEmptyGenerator(defaultValue));
     }
 
+    public async disjoint<TSecond>(iterable: AsyncIterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): Promise<boolean> {
+        if (!comparator || comparator === Comparators.equalityComparator) {
+            const seen = new Set<TElement | TSecond>();
+            for await (const element of this) {
+                seen.add(element);
+            }
+            for await (const element of iterable) {
+                if (seen.has(element)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        const leftValues = await this.toArray();
+        const rightValues: TSecond[] = [];
+        for await (const element of iterable) {
+            rightValues.push(element);
+        }
+
+        const [small, large] = leftValues.length < rightValues.length
+            ? [leftValues as Array<TElement | TSecond>, rightValues as Array<TElement | TSecond>]
+            : [rightValues as Array<TElement | TSecond>, leftValues as Array<TElement | TSecond>];
+
+        for (const left of small) {
+            for (const right of large) {
+                if (comparator(left, right)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public async disjointBy<TSecond, TKey, TSecondKey>(iterable: AsyncIterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): Promise<boolean> {
+        const leftKeys: TKey[] = [];
+        for await (const element of this) {
+            leftKeys.push(keySelector(element));
+        }
+
+        const rightKeys: TSecondKey[] = [];
+        for await (const element of iterable) {
+            rightKeys.push(otherKeySelector(element));
+        }
+
+        let smallArray: Array<TKey | TSecondKey>;
+        let largeArray: Array<TKey | TSecondKey>;
+        if (leftKeys.length <= rightKeys.length) {
+            smallArray = leftKeys as Array<TKey | TSecondKey>;
+            largeArray = rightKeys as Array<TKey | TSecondKey>;
+        } else {
+            smallArray = rightKeys as Array<TKey | TSecondKey>;
+            largeArray = leftKeys as Array<TKey | TSecondKey>;
+        }
+
+        if (!keyComparator || keyComparator === Comparators.equalityComparator) {
+            const largeSet = new Set(largeArray);
+            for (const key of smallArray) {
+                if (largeSet.has(key)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        for (const key of smallArray) {
+            for (const otherKey of largeArray) {
+                if (keyComparator(key, otherKey)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
         const keyComparer = keyComparator ?? Comparators.equalityComparator;
         const asyncEnumerable = new AsyncEnumerator(async function* () {

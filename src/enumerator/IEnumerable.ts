@@ -475,6 +475,48 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null>;
 
     /**
+     * Determines whether the sequence and {@link iterable} share no equivalent elements.
+     * @template TSecond Type of elements yielded by {@link iterable}.
+     * @param iterable Sequence compared against the source.
+     * @param comparator Optional equality comparator used to match elements across both sequences. Defaults to the library's standard equality comparison.
+     * @returns {boolean} `true` when the sequences are disjoint; otherwise, `false`.
+     * @throws {unknown} Re-throws any error encountered while iterating the source, {@link iterable}, or executing the comparator.
+     * @remarks When the default comparator is used, the method buffers the source elements in a {@link Set} so it can short-circuit as soon as a shared element is detected.
+     * With a custom comparator, the method compares every pair of elements, which may iterate each sequence multiple times; prefer the default comparator when possible for better performance.
+     * @example
+     * ```typescript
+     * const first = from([1, 2, 3]);
+     * const second = [4, 5, 6];
+     * const areDisjoint = first.disjoint(second);
+     * console.log(areDisjoint); // true
+     * ```
+     */
+    disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean;
+
+    /**
+     * Determines whether the key projections of the sequence and {@link iterable} are mutually exclusive.
+     * @template TSecond Type of elements yielded by {@link iterable}.
+     * @template TKey Key type produced by {@link keySelector}.
+     * @template TSecondKey Key type produced by {@link otherKeySelector}.
+     * @param iterable Sequence compared against the source.
+     * @param keySelector Projection that produces the key evaluated for each source element.
+     * @param otherKeySelector Projection that produces the key evaluated for each element of {@link iterable}.
+     * @param keyComparator Optional equality comparator applied to projected keys. Defaults to the library's standard equality comparison.
+     * @returns {boolean} `true` when no projected keys intersect; otherwise, `false`.
+     * @throws {unknown} Re-throws any error encountered while iterating either sequence or executing the selector projections/comparator.
+     * @remarks When the default comparator is used, the method buffers the larger key collection in a {@link Set} and short-circuits as soon as an intersecting key is found.
+     * Providing a custom comparator forces a full pairwise comparison, which may iterate both sequences repeatedly; prefer the default comparator when suitable.
+     * @example
+     * ```typescript
+     * const left = from([{ name: 'Alice' }, { name: 'Bella' }]);
+     * const right = [{ name: 'Mel' }];
+     * const areDisjoint = left.disjointBy(right, p => p.name, p => p.name);
+     * console.log(areDisjoint); // true
+     * ```
+     */
+    disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): boolean;
+
+    /**
      * Eliminates duplicate elements from the sequence using an optional comparator.
      * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
      * @returns {IEnumerable<TElement>} A sequence that yields each distinct element once.

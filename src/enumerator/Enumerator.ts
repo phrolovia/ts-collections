@@ -246,6 +246,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public count(predicate?: Predicate<TElement>): number {
+        if (Array.isArray(this)) {
+            return this.length;
+        }
+        if (this instanceof Set || this instanceof Map) {
+            return this.size;
+        }
         let count: number = 0;
         if (!predicate) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -306,6 +312,43 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
         return new Enumerator(() => this.defaultIfEmptyGenerator(value));
+    }
+
+    public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
+        comparator ??= Comparators.equalityComparator as EqualityComparator<TElement | TSecond>;
+        if (!comparator || comparator === Comparators.equalityComparator) {
+            const set = new Set<TElement|TSecond>(this);
+            for (const element of iterable) {
+                if (set.has(element)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        const [small, large] = (this.count() < Enumerable.from(iterable).count()) ? [this, iterable] : [iterable, this];
+        for (const element1 of small) {
+            for (const element2 of large) {
+                if (comparator(element1, element2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey|TSecondKey>): boolean {
+        const leftKeys = new Set<TKey>(Enumerable.from(this).select(keySelector));
+        const rightKeys = new Set<TSecondKey>(Enumerable.from(iterable).select(otherKeySelector));
+        const [smallKeys, largeKeys] = (leftKeys.size < rightKeys.size) ? [leftKeys, rightKeys] : [rightKeys, leftKeys];
+        const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey|TSecondKey, TSecondKey|TKey>;
+        for (const key of smallKeys) {
+            for (const otherKey of largeKeys) {
+                if (keyComparer(key, otherKey)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {

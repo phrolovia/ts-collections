@@ -951,6 +951,78 @@ describe("List", () => {
         });
     });
 
+    describe("#disjoint()", () => {
+        test("should return true if two lists have no elements in common", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List([4, 5, 6]);
+            expect(list1.disjoint(list2)).to.be.true;
+        });
+        test("should return false if two lists have elements in common", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List([3, 4, 5, 6]);
+            expect(list1.disjoint(list2)).to.be.false;
+        });
+        test("should return true if one list is empty", () => {
+            const list1 = new List<number>([]);
+            const list2 = new List([3, 4, 5, 6]);
+            expect(list1.disjoint(list2)).to.be.true;
+            expect(list2.disjoint(list1)).to.be.true;
+        });
+        test("should return true if both lists are empty", () => {
+            const list1 = new List<number>([]);
+            const list2 = new List<number>([]);
+            expect(list1.disjoint(list2)).to.be.true;
+        });
+        test("should use provided comparator", () => {
+            const list1 = new List([Person.Alice, Person.Mel, Person.Senna]);
+            const list2 = new List([Person.Hanna, Person.Hanna2, Person.Noemi]);
+            const list3 = new List([Person.Senna, Person.Lucrezia, Person.Vanessa]);
+            const comparator: EqualityComparator<Person> = (p1, p2) =>
+                p1.name === p2.name;
+            expect(list1.disjoint(list2, comparator)).to.be.true;
+            expect(list1.disjoint(list3, comparator)).to.be.false;
+        });
+        test("should work with different types", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List(["1", "2", "3"]);
+            const comparator: EqualityComparator<number | string> = (a, b) =>
+                a.toString() === b.toString();
+            expect(list1.disjoint(list2)).to.be.true;
+            expect(list1.disjoint(list2, comparator)).to.be.false;
+        });
+    });
+
+    describe("#disjointBy()", () => {
+        test("should return true if two lists have no elements in common based on key", () => {
+            const list1 = new List([Person.Alice, Person.Mel, Person.Senna]);
+            const list2 = new List([Person.Hanna, Person.Hanna2, Person.Noemi]);
+            expect(list1.disjointBy(list2, p => p.name, p => p.name)).to.be.true;
+        });
+        test("should return false if two lists have elements in common based on key", () => {
+            const list1 = new List([Person.Alice, Person.Mel, Person.Suzuha]);
+            const list2 = new List([Person.Suzuha2, Person.Lucrezia, Person.Vanessa]);
+            expect(list1.disjointBy(list2, p => p, p => p)).to.be.true;
+            expect(list1.disjointBy(list2, p => p.name, p => p.name)).to.be.false;
+        });
+        test("should return true if one list is empty", () => {
+            const list1 = new List<Person>([]);
+            const list2 = new List([Person.Suzuha, Person.Lucrezia, Person.Vanessa]);
+            expect(list1.disjointBy(list2, p => p.name, p => p.name)).to.be.true;
+            expect(list2.disjointBy(list1, p => p.name, p => p.name)).to.be.true;
+        });
+        test("should return true if both lists are empty", () => {
+            const list1 = new List<Person>([]);
+            const list2 = new List<Person>([]);
+            expect(list1.disjointBy(list2, p => p.name, p => p.name)).to.be.true;
+        });
+        test("should work with different types", () => {
+            const list1 = new List([1, 2, 3]);
+            const list2 = new List(["1", "2", "3"]);
+            expect(list1.disjointBy(list2, n => n, s => s)).to.be.true;
+            expect(list1.disjointBy(list2, n => n.toString(), s => s)).to.be.false;
+        });
+    });
+
     describe("#distinct()", () => {
         test("should remove duplicate elements", () => {
             const list = new List([

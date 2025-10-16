@@ -52,31 +52,6 @@ describe("Collections", () => {
         });
     });
 
-    describe("#disjoint()", () => {
-        test("should return true if two collections are disjoint", () => {
-            const list1 = new List([1, 2, 3]);
-            const list2 = new List([4, 5, 6]);
-            expect(Collections.disjoint(list1, list2)).to.be.true;
-            expect(Collections.disjoint(list2, list1)).to.be.true;
-            expect(Collections.disjoint(list1, list1)).to.be.false;
-            expect(Collections.disjoint(list2, list2)).to.be.false;
-        });
-        test("should return true if two collections are disjoint #2", () => {
-            const list1 = new List([Person.Alice, Person.Lucrezia, Person.Vanessa]);
-            const list2 = new List([Person.Bella, Person.Priscilla, Person.Suzuha]);
-            expect(Collections.disjoint(list1, list2, (x, y) => x === y)).to.be.true;
-            expect(Collections.disjoint(list2, list1, (x, y) => x === y)).to.be.true;
-            expect(Collections.disjoint(list1, list1, (x, y) => x === y)).to.be.false;
-            expect(Collections.disjoint(list2, list2, (x, y) => x === y)).to.be.false;
-        });
-        test("should return true if two collections are disjoint #3", () => {
-            const list1 = new List([Person.Noemi, Person.Bella]);
-            const list2 = new List([Person.Noemi2, Person.Reika]);
-            expect(Collections.disjoint(list1, list2, (x, y) => x.name.localeCompare(y.name) === 0)).to.be.false;
-            expect(Collections.disjoint(list1, list2, (x, y) => x.age === y.age)).to.be.true;
-        });
-    });
-
     describe("#fill()", () => {
         test("should replace all elements in the list with the given element", () => {
             const list = new List(["a", "b", "c", "d", "e"]);
