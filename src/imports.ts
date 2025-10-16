@@ -60,7 +60,6 @@ export { PriorityQueue } from "./queue/PriorityQueue";
 export { ImmutableQueue } from "./queue/ImmutableQueue";
 export { ImmutablePriorityQueue } from "./queue/ImmutablePriorityQueue";
 export { ImmutableStack } from "./stack/ImmutableStack";
-export { Collections } from "./core/Collections";
 export {
     aggregate,
     aggregateBy,
@@ -188,6 +187,7 @@ export {
     zipMany
 } from "./enumerator/Functions";
 
+export { binarySearch } from "./utils/binarySearch";
 export { reverseInPlace } from "./utils/reverseInPlace";
 export { shuffleInPlace } from "./utils/shuffleInPlace";
 export { swap } from "./utils/swap";

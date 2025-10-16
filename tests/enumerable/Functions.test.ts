@@ -568,6 +568,11 @@ describe("Enumerable Standalone Functions", () => {
             const kaoriCount = countPairs.first(p => p.key === "Kaori").value;
             expect(kaoriCount).to.eq(2);
         });
+        test("should return number of words", () => {
+            const str = `apple banana apple strawberry banana lemon`;
+            const record = countBy(str.split(" "), s => s).toObject(p => p.key, p => p.value);
+            expect(record).to.deep.equal({ apple: 2, banana: 2, strawberry: 1, lemon: 1 });
+        });
     });
 
     describe("#covariance", () => {
@@ -1102,7 +1107,10 @@ describe("Enumerable Standalone Functions", () => {
         const students = [desiree, apolline, giselle, priscilla, lucrezia];
         test("should join and group by school id", () => {
             const joinedData = groupJoin(schools, students, sc => sc.id, st => st.schoolId,
-                (school, students) => new SchoolStudents(school.id, students?.toList() ?? toList(empty()))
+                (school, students) => {
+                    const studentsList = students ? toList(students) : toList(empty<Student>());
+                    return new SchoolStudents(school.id, studentsList)
+                }
             );
             const orderedJoinedData = orderByDescending(joinedData, sd => sd.students.size());
             const finalData = toArray(orderedJoinedData);

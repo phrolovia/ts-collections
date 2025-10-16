@@ -1,5 +1,5 @@
-import {IList} from "../list/IList";
-import {IndexOutOfBoundsException} from "../shared/IndexOutOfBoundsException";
+import { IList } from "../list/IList";
+import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 
 /**
  * Swaps the elements of the list at the given indices.
