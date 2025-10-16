@@ -6,7 +6,7 @@ import { IReadonlyList, toImmutableList } from "../imports";
  * Performs a binary search on the given sequence and returns the index of the element. The sequence must be sorted prior to calling this method.
  * If the searched element exists multiple times in the sequence, the returned index is arbitrary.
  * @template TElement The type of the elements
- * @param {IList|Array} sequence The list or array in which the element will be binary-searched for. It must be sorted.
+ * @param {Iterable<TElement>} sequence The iterable in which the element will be binary-searched for. It must be sorted.
  * @param {TElement} element The element that will be searched for.
  * @param {OrderComparator} comparator The comparator method that will be used to compare the elements. It should always be provided if the sequence is of a complex type.
  * @return {number} The index of the element that is equal to the searched element. If the element is not found, returns -1.

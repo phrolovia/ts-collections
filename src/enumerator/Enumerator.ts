@@ -246,12 +246,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public count(predicate?: Predicate<TElement>): number {
-        if (Array.isArray(this)) {
-            return this.length;
-        }
-        if (this instanceof Set || this instanceof Map) {
-            return this.size;
-        }
         let count: number = 0;
         if (!predicate) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -337,12 +331,29 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey|TSecondKey>): boolean {
-        const leftKeys = new Set<TKey>(Enumerable.from(this).select(keySelector));
-        const rightKeys = new Set<TSecondKey>(Enumerable.from(iterable).select(otherKeySelector));
-        const [smallKeys, largeKeys] = (leftKeys.size < rightKeys.size) ? [leftKeys, rightKeys] : [rightKeys, leftKeys];
         const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey|TSecondKey, TSecondKey|TKey>;
-        for (const key of smallKeys) {
-            for (const otherKey of largeKeys) {
+        if (keyComparer === Comparators.equalityComparator) {
+            const leftKeys = new Set<TKey|TSecondKey>();
+            for (const element of this) {
+                leftKeys.add(keySelector(element));
+            }
+            if (leftKeys.size === 0) {
+                return true;
+            }
+            const rightKeys = Enumerable.from(iterable).select(otherKeySelector);
+            for (const key of rightKeys) {
+                if (leftKeys.has(key)) {
+                    return false;
+                }
+            }
+        }
+
+        const leftArray = Enumerable.from(this).select(keySelector).toArray();
+        const rightArray = Enumerable.from(iterable).select(otherKeySelector).toArray();
+        const [small, large] = leftArray.length < rightArray.length ? [leftArray, rightArray] : [rightArray, leftArray];
+
+        for (const key of small) {
+            for (const otherKey of large) {
                 if (keyComparer(key, otherKey)) {
                     return false;
                 }

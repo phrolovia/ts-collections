@@ -502,6 +502,14 @@ export const count = <TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): number => {
+    if (!predicate) {
+        if (Array.isArray(source)) {
+            return source.length;
+        }
+        if (source instanceof Set || source instanceof Map) {
+            return source.size;
+        }
+    }
     return from(source).count(predicate);
 };
 
