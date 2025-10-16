@@ -24,6 +24,8 @@ import {
     covarianceBy,
     cycle,
     defaultIfEmpty,
+    disjoint,
+    disjointBy,
     distinct,
     distinctBy,
     distinctUntilChanged,
@@ -280,6 +282,14 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public defaultIfEmpty(value?: KeyValuePair<TKey, TValue> | null): IEnumerable<KeyValuePair<TKey, TValue> | null> {
         return defaultIfEmpty(this, value);
+    }
+
+    public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<KeyValuePair<TKey, TValue> | TSecond>): boolean {
+        return disjoint(this, iterable, comparator);
+    }
+
+    public disjointBy<TSecond, TDisjointKey, TSecondDisjointKey>(iterable: Iterable<TSecond>, keySelector: Selector<KeyValuePair<TKey, TValue>, TDisjointKey>, otherKeySelector: Selector<TSecond, TSecondDisjointKey>, keyComparator?: EqualityComparator<TDisjointKey | TSecondDisjointKey>): boolean {
+        return disjointBy(this, iterable, keySelector, otherKeySelector, keyComparator);
     }
 
     public distinct(keyComparator?: EqualityComparator<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {

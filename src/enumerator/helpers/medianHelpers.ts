@@ -1,4 +1,4 @@
-import {Collections} from "../../imports";
+import {swap} from "../../imports";
 import {MedianTieStrategy} from "../../shared/MedianTieStrategy";
 
 export function findMedian(data: number[], tie: MedianTieStrategy = "interpolate"): number {
@@ -31,14 +31,14 @@ export function nthElement(sequence: number[], index: number): number {
         const mid = (low + high) >>> 1;
         const p = medianOfThreeIndex(sequence, low, mid, high);
         const pivot = sequence[p];
-        Collections.swap(sequence, p, high);
+        swap(sequence, p, high);
         let store = low;
         for (let i = low; i < high; i++) {
             if (sequence[i] < pivot) {
-                Collections.swap(sequence, i, store++);
+                swap(sequence, i, store++);
             }
         }
-        Collections.swap(sequence, store, high);
+        swap(sequence, store, high);
         if (store === index) {
             return sequence[store];
         }

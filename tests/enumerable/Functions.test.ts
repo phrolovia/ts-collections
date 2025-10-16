@@ -26,6 +26,8 @@ import {
     cycle,
     defaultIfEmpty,
     Dictionary,
+    disjoint,
+    disjointBy,
     distinct,
     distinctBy,
     distinctUntilChanged,
@@ -159,6 +161,7 @@ import { Student } from "../models/Student";
 import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
 import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
 import {InvalidArgumentException} from "../../src/shared/InvalidArgumentException";
+import {EqualityComparator} from "../../src";
 
 describe("Enumerable Standalone Functions", () => {
     const responses = new List<ApiResponse<Person>>([
@@ -565,6 +568,11 @@ describe("Enumerable Standalone Functions", () => {
             const kaoriCount = countPairs.first(p => p.key === "Kaori").value;
             expect(kaoriCount).to.eq(2);
         });
+        test("should return number of words", () => {
+            const str = `apple banana apple strawberry banana lemon`;
+            const record = countBy(str.split(" "), s => s).toObject(p => p.key, p => p.value);
+            expect(record).to.deep.equal({ apple: 2, banana: 2, strawberry: 1, lemon: 1 });
+        });
     });
 
     describe("#covariance", () => {
@@ -716,6 +724,78 @@ describe("Enumerable Standalone Functions", () => {
             const list = new List([]);
             const list2 = toList(defaultIfEmpty(list, 6));
             expect(list2.toArray()).to.deep.equal([6]);
+        });
+    });
+
+    describe("#disjoint()", () => {
+        test("should return true if two lists have no elements in common", () => {
+            const list1 = [1, 2, 3];
+            const list2 = [4, 5, 6];
+            expect(disjoint(list1, list2)).to.be.true;
+        });
+        test("should return false if two lists have elements in common", () => {
+            const list1 = [1, 2, 3];
+            const list2 = [3, 4, 5, 6];
+            expect(disjoint(list1, list2)).to.be.false;
+        });
+        test("should return true if one list is empty", () => {
+            const list1 = [] as number[];
+            const list2 = [3, 4, 5, 6];
+            expect(disjoint(list1, list2)).to.be.true;
+            expect(disjoint(list1, list1)).to.be.true;
+        });
+        test("should return true if both lists are empty", () => {
+            const list1 = [] as number[];
+            const list2 = [] as number[];
+            expect(disjoint(list1, list2)).to.be.true;
+        });
+        test("should use provided comparator", () => {
+            const list1 = [Person.Alice, Person.Mel, Person.Senna];
+            const list2 = [Person.Hanna, Person.Hanna2, Person.Noemi];
+            const list3 = [Person.Senna, Person.Lucrezia, Person.Vanessa];
+            const comparator: EqualityComparator<Person> = (p1, p2) =>
+                p1.name === p2.name;
+            expect(disjoint(list1, list2, comparator)).to.be.true;
+            expect(disjoint(list1, list3, comparator)).to.be.false;
+        });
+        test("should work with different types", () => {
+            const list1 = [1, 2, 3];
+            const list2 = ["1", "2", "3"];
+            const comparator: EqualityComparator<number | string> = (a, b) =>
+                a.toString() === b.toString();
+            expect(disjoint(list1, list2)).to.be.true;
+            expect(disjoint(list1, list2, comparator)).to.be.false;
+        });
+    });
+
+    describe("#disjointBy()", () => {
+        test("should return true if two lists have no elements in common based on key", () => {
+            const list1 = [Person.Alice, Person.Mel, Person.Senna];
+            const list2 = [Person.Hanna, Person.Hanna2, Person.Noemi];
+            expect(disjointBy(list1, list2, p => p.name, p => p.name)).to.be.true;
+        });
+        test("should return false if two lists have elements in common based on key", () => {
+            const list1 = [Person.Alice, Person.Mel, Person.Suzuha];
+            const list2 = [Person.Suzuha2, Person.Lucrezia, Person.Vanessa];
+            expect(disjointBy(list1, list2, p => p, p => p)).to.be.true;
+            expect(disjointBy(list1, list2, p => p.name, p => p.name)).to.be.false;
+        });
+        test("should return true if one list is empty", () => {
+            const list1 = [] as Person[];
+            const list2 = [Person.Suzuha, Person.Lucrezia, Person.Vanessa];
+            expect(disjointBy(list1, list2, p => p.name, p => p.name)).to.be.true;
+            expect(disjointBy(list1, list1, p => p.name, p => p.name)).to.be.true;
+        });
+        test("should return true if both lists are empty", () => {
+            const list1 = [] as Person[];
+            const list2 = [] as Person[];
+            expect(disjointBy(list1, list2, p => p.name, p => p.name)).to.be.true;
+        });
+        test("should work with different types", () => {
+            const list1 = [1, 2, 3];
+            const list2 = ["1", "2", "3"];
+            expect(disjointBy(list1, list2, n => n, s => s)).to.be.true;
+            expect(disjointBy(list1, list2, n => n.toString(), s => s)).to.be.false;
         });
     });
 
@@ -1027,7 +1107,10 @@ describe("Enumerable Standalone Functions", () => {
         const students = [desiree, apolline, giselle, priscilla, lucrezia];
         test("should join and group by school id", () => {
             const joinedData = groupJoin(schools, students, sc => sc.id, st => st.schoolId,
-                (school, students) => new SchoolStudents(school.id, students?.toList() ?? toList(empty()))
+                (school, students) => {
+                    const studentsList = students ? toList(students) : toList(empty<Student>());
+                    return new SchoolStudents(school.id, studentsList)
+                }
             );
             const orderedJoinedData = orderByDescending(joinedData, sd => sd.students.size());
             const finalData = toArray(orderedJoinedData);

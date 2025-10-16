@@ -172,6 +172,14 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.defaultIfEmpty(defaultValue);
     }
 
+    public disjoint<TSecond>(iterable: AsyncIterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): Promise<boolean> {
+        return this.#enumerator.disjoint(iterable, comparator);
+    }
+
+    public disjointBy<TSecond, TKey, TSecondKey>(iterable: AsyncIterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): Promise<boolean> {
+        return this.#enumerator.disjointBy(iterable, keySelector, otherKeySelector, keyComparator);
+    }
+
     public distinct(keyComparator?: EqualityComparator<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.distinct(keyComparator);
     }

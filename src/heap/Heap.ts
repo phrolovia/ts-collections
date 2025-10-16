@@ -1,4 +1,4 @@
-import { AbstractRandomAccessCollection, Collections, List } from "../imports";
+import { AbstractRandomAccessCollection, List, swap } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
@@ -104,7 +104,7 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
         const root = this.#heap.get(0);
         const lastElementIndex = this.size() - 1;
         if (lastElementIndex > 0) {
-            Collections.swap(this.#heap, 0, lastElementIndex);
+            swap(this.#heap, 0, lastElementIndex);
         }
         this.#heap.removeAt(lastElementIndex);
         this.heapifyDown();
@@ -123,7 +123,7 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
             return false;
         }
         const lastElementIndex = this.size() - 1;
-        Collections.swap(this.#heap, index, lastElementIndex);
+        swap(this.#heap, index, lastElementIndex);
         this.#heap.removeAt(lastElementIndex);
         this.heapifyDown(index);
         return true;
@@ -237,7 +237,7 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
             if (this.#comparator(this.#heap.get(index), this.#heap.get(smallerChildIndex)) <= 0) {
                 break;
             }
-            Collections.swap(this.#heap, index, smallerChildIndex);
+            swap(this.#heap, index, smallerChildIndex);
             index = smallerChildIndex;
         }
     }
@@ -248,7 +248,7 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
         }
 
         while (index > 0 && this.#comparator(this.getParentValue(index) as TElement, this.#heap.get(index)) > 0) {
-            Collections.swap(this.#heap, index, this.getParentIndex(index));
+            swap(this.#heap, index, this.getParentIndex(index));
             index = this.getParentIndex(index);
         }
     }
