@@ -185,3 +185,7 @@ export {
     zip,
     zipMany
 } from "./enumerator/Functions";
+
+export { reverseInPlace } from "./utils/reverseInPlace";
+export { shuffleInPlace } from "./utils/shuffleInPlace";
+export { swap } from "./utils/swap";

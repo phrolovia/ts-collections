@@ -1496,7 +1496,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns a deferred asynchronous sequence whose elements appear in random order.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the same elements as the source but shuffled.
-     * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
+     * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences.
      * @example
      * ```typescript
      * const numbers = fromAsync([1, 2, 3, 4, 5]);

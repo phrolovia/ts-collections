@@ -1,33 +1,12 @@
-import { IEnumerable } from "../enumerator/IEnumerable";
 import { IList } from "../list/IList";
-import { List } from "../list/List";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
-import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
-import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
-import { Selector } from "../shared/Selector";
-import { ICollection } from "./ICollection";
 
 export abstract class Collections {
 
     /* istanbul ignore next */
     private constructor() {
-    }
-
-    /**
-     * Add all the given elements to the collection
-     * @template TElement The type of the elements
-     * @param {ICollection} collection The collection to which the elements will be added.
-     * @param {TElement} elements The elements that will be added to the given collection.
-     * @return {boolean} true if collection is modified, false otherwise.
-     */
-    public static addAll<TElement, TSource extends TElement>(collection: ICollection<TSource>, ...elements: TElement[]): boolean {
-        const oldSize = collection.size();
-        for (const element of elements) {
-            collection.add(element as TSource);
-        }
-        return collection.size() !== oldSize;
     }
 
     /**
@@ -67,33 +46,6 @@ export abstract class Collections {
     }
 
     /**
-     * Returns an array of distinct element from a given iterable source.
-     * @param {Iterable} iterable Collection of items
-     * @param {Function} selector A method that will be used to return a key which will be used to determine the distinctness. If not provided,
-     *                 then the item itself will be used as the key.
-     * @param {Function} comparator A method that will be used to compare the equality of the selector keys.
-     * @return An array of distinct items.
-     */
-    public static distinct<TElement, TKey>(iterable: Iterable<TElement>, selector?: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): IEnumerable<TElement> {
-        selector ??= (item: TElement) => item as unknown as TKey;
-        comparator ??= (key1: TKey, key2: TKey) => Object.is(key1, key2);
-        const distinctList = new List<TElement>();
-        for (const item of iterable) {
-            let exists = false;
-            for (const distinctItem of distinctList) {
-                if (comparator(selector(item), selector(distinctItem))) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                distinctList.add(item);
-            }
-        }
-        return distinctList;
-    }
-
-    /**
      * Replaces all the elements of the list with the given element.
      * @template TElement The type of the elements
      * @param {IList} list The list whose elements will be replaced
@@ -122,68 +74,6 @@ export abstract class Collections {
     }
 
     /**
-     * Finds the maximum item in an iterable source.
-     * @param {Iterable} iterable The data source
-     * @param {Function} selector A selector method which will return a key that will be used for comparison.
-     * @return The item which has the maximum value according to the selector method, or null if iterable is empty.
-     * @throws {NoElementsException} If the iterable is empty.
-     */
-    public static max<TElement>(iterable: Iterable<TElement>, selector?: Selector<TElement, number>): TElement {
-        const iterator = iterable[Symbol.iterator]();
-        let iteratorItem = iterator.next();
-        let maxItem: TElement;
-        if (iteratorItem.done) {
-            throw new NoElementsException();
-        }
-        maxItem = iteratorItem.value;
-        while (!iteratorItem.done) {
-            if (selector) {
-                const value = selector(iteratorItem.value);
-                const maxValue = selector(maxItem);
-                if (value > maxValue) {
-                    maxItem = iteratorItem.value;
-                }
-            } else if (iteratorItem.value > maxItem) {
-                maxItem = iteratorItem.value;
-            }
-            iteratorItem = iterator.next();
-        }
-        return maxItem;
-    }
-
-    /**
-     * Finds the minimum item in an iterable source.
-     * @param {Iterable} iterable The data source
-     * @param {Function} selector A selector method which will return a key that will be used for comparison.
-     * @return The item which has the minimum value according to the selector method, or null if iterable is empty.
-     * @throws {NoElementsException} If the iterable is empty.
-     */
-    public static min<TElement>(iterable: Iterable<TElement>, selector?: Selector<TElement, number>): TElement {
-        const iterator = iterable[Symbol.iterator]();
-        let iteratorItem = iterator.next();
-        let minItem: TElement;
-        if (iteratorItem.done) {
-            throw new NoElementsException();
-        }
-        minItem = iteratorItem.value;
-        while (!iteratorItem.done) {
-            if (selector) {
-                const value = selector(iteratorItem.value);
-                const minValue = selector(minItem);
-                if (value < minValue) {
-                    minItem = iteratorItem.value;
-                }
-            } else {
-                if (iteratorItem.value < minItem) {
-                    minItem = iteratorItem.value;
-                }
-            }
-            iteratorItem = iterator.next();
-        }
-        return minItem;
-    }
-
-    /**
      * Replaces the old element with the new element in a given sequence.
      * @template TElement The type of the elements
      * @param {IList|Array} sequence The sequence whose old elements will be replaced.
@@ -197,72 +87,6 @@ export abstract class Collections {
             return Collections.replaceAllArray(sequence, oldElement, newElement, comparator);
         }
         return Collections.replaceAllList(sequence, oldElement, newElement, comparator);
-    }
-
-    /**
-     * Reverse the order of the elements in a given sequence. Reversing is done in place.
-     * @param {IList|Array} sequence The sequence whose elements will be reversed.
-     */
-    public static reverse<TElement>(sequence: IList<TElement> | Array<TElement>): void {
-        const size = sequence instanceof Array ? sequence.length : sequence.size();
-        for (let ix = 0, mid = size >> 1, jx = size - 1; ix < mid; ++ix, --jx) {
-            Collections.swap(sequence, ix, jx);
-        }
-    }
-
-    /**
-     * Rotation of the elements in a given sequence.
-     *
-     * Example:
-     *  - If the sequence is [1, 2, 3, 4, 5] and the distance is 2, the result is [4, 5, 1, 2, 3].
-     *  - If the sequence is [1, 2, 3, 4, 5] and the distance is -2, the result is [3, 4, 5, 1, 2].
-     *
-     * @param {IList|Array} sequence The sequence whose elements will be rotated.
-     * @param {number} distance The distance of the rotation. This value can be positive or negative.
-     */
-    public static rotate<TElement>(sequence: IList<TElement> | Array<TElement>, distance: number): void {
-        if (sequence instanceof Array) {
-            Collections.rotateArray(sequence, distance);
-        } else {
-            Collections.rotateList(sequence, distance);
-        }
-    }
-
-    /**
-     * Shuffles the elements of a sequence. The elements are shuffled using the Fisher-Yates shuffle algorithm.
-     *
-     * <b>Note:</b> The result of the shuffling is not guaranteed to be different from the original sequence, especially if the size of the sequence is very small.
-     * @param {IList|Array} sequence The sequence whose elements will be shuffled.
-     */
-    public static shuffle<TElement>(sequence: IList<TElement> | Array<TElement>): void {
-        const size = sequence instanceof Array ? sequence.length : sequence.size();
-        const random = (min: number, max: number): number => Math.floor(Math.random() * (max - min)) + min;
-        for (let ix = size; ix > 1; --ix) {
-            Collections.swap(sequence, ix - 1, random(0, ix));
-        }
-    }
-
-    /**
-     * Swaps the elements of the list at the given indices.
-     * @param {IList|Array} sequence The list or array whose two elements will be swapped
-     * @param {number} firstIndex The first index of the swap operation
-     * @param {number} secondIndex The second index of the swap operation
-     * @throws {IndexOutOfBoundsException} If the given indices are out of bounds.
-     */
-    public static swap<TElement>(sequence: IList<TElement> | Array<TElement>, firstIndex: number, secondIndex: number): void {
-        const size = sequence instanceof Array ? sequence.length : sequence.size();
-        if (firstIndex < 0 || firstIndex >= size) {
-            throw new IndexOutOfBoundsException(firstIndex);
-        } else if (secondIndex < 0 || secondIndex >= size) {
-            throw new IndexOutOfBoundsException(secondIndex);
-        }
-        if (sequence instanceof Array) {
-            [sequence[firstIndex], sequence[secondIndex]] = [sequence[secondIndex], sequence[firstIndex]];
-            return;
-        }
-        const temp = sequence.get(firstIndex);
-        sequence.set(firstIndex, sequence.get(secondIndex));
-        sequence.set(secondIndex, temp);
     }
 
     private static binarySearchArray<TElement>(array: Array<TElement>, element: TElement, comparator?: OrderComparator<TElement>): number {
@@ -349,59 +173,5 @@ export abstract class Collections {
             }
         }
         return replaced;
-    }
-
-    private static rotateArray<TElement>(sequence: Array<TElement>, distance: number): void {
-        const size = sequence.length;
-        if (size === 0) {
-            return;
-        }
-        distance %= size;
-        if (distance < 0) {
-            distance += size;
-        }
-        if (distance === 0) {
-            return;
-        }
-        for (let cycleStart = 0, moveCount = 0; moveCount !== size; cycleStart++) {
-            let displaced: TElement = sequence[cycleStart];
-            let index: number = cycleStart;
-            do {
-                index += distance;
-                if (index >= size) {
-                    index -= size;
-                }
-                const oldValue: TElement = sequence[index];
-                sequence[index] = displaced;
-                displaced = oldValue;
-                moveCount++;
-            } while (index !== cycleStart);
-        }
-    }
-
-    private static rotateList<TElement>(sequence: IList<TElement>, distance: number): void {
-        const size = sequence.size();
-        if (size === 0) {
-            return;
-        }
-        distance %= size;
-        if (distance < 0) {
-            distance += size;
-        }
-        if (distance === 0) {
-            return;
-        }
-        for (let cycleStart = 0, moveCount = 0; moveCount !== size; cycleStart++) {
-            let displaced: TElement = sequence.get(cycleStart);
-            let index: number = cycleStart;
-            do {
-                index += distance;
-                if (index >= size) {
-                    index -= size;
-                }
-                displaced = sequence.set(index, displaced);
-                moveCount++;
-            } while (index !== cycleStart);
-        }
     }
 }

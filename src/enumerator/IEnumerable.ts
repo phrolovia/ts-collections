@@ -1498,7 +1498,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     /**
      * Returns a deferred sequence whose elements appear in random order.
      * @returns {IEnumerable<TElement>} A sequence containing the same elements as the source but shuffled.
-     * @remarks The implementation materialises all elements into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
+     * @remarks The implementation materialises all elements into an array before shuffling, making this unsuitable for infinite sequences.
      * @example
      * ```typescript
      * const numbers = from([1, 2, 3, 4, 5]);

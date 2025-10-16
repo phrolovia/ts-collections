@@ -2132,7 +2132,7 @@ export const sequenceEqual = <TElement>(
  * @template TElement Type of elements within the {@link source} iterable.
  * @param source The source iterable.
  * @returns {IEnumerable<TElement>} A sequence containing the same elements as {@link source} but shuffled.
- * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
+ * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences.
  * @example
  * ```typescript
  * const numbers = [1, 2, 3, 4, 5];

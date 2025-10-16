@@ -2,7 +2,6 @@ import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     CircularLinkedList,
     CircularQueue,
-    Collections,
     Dictionary,
     Enumerable,
     EnumerableSet,
@@ -27,7 +26,8 @@ import {
     Queue,
     SortedDictionary,
     SortedSet,
-    Stack
+    Stack,
+    shuffleInPlace
 } from "../imports";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
@@ -1540,7 +1540,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* shuffleGenerator(): IterableIterator<TElement> {
         const array = Array.from(this);
-        Collections.shuffle(array);
+        shuffleInPlace(array);
         yield* array;
     }
 

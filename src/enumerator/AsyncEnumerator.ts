@@ -3,7 +3,6 @@ import {
     AsyncEnumerable,
     CircularLinkedList,
     CircularQueue,
-    Collections,
     Dictionary,
     Enumerable,
     EnumerableSet,
@@ -27,6 +26,7 @@ import {
     OrderedAsyncEnumerator,
     PriorityQueue,
     Queue,
+    shuffleInPlace,
     SortedDictionary,
     SortedSet,
     Stack
@@ -1550,7 +1550,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     private async* shuffleGenerator(): AsyncIterableIterator<TElement> {
         const array = await this.toArray();
-        Collections.shuffle(array);
+        shuffleInPlace(array);
         yield* array;
     }
 
