@@ -310,8 +310,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
         comparator ??= Comparators.equalityComparator as EqualityComparator<TElement | TSecond>;
-        if (!comparator || comparator === Comparators.equalityComparator) {
+        if (comparator === Comparators.equalityComparator) {
             const set = new Set<TElement|TSecond>(this);
+            if (set.size === 0) {
+                return true;
+            }
             for (const element of iterable) {
                 if (set.has(element)) {
                     return false;
@@ -319,10 +322,15 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
             return true;
         }
-        const [small, large] = (this.count() < Enumerable.from(iterable).count()) ? [this, iterable] : [iterable, this];
-        for (const element1 of small) {
-            for (const element2 of large) {
-                if (comparator(element1, element2)) {
+
+        const leftArray = Array.from(this);
+        if (leftArray.length === 0) {
+            return true;
+        }
+
+        for (const rightElement of iterable) {
+            for (const leftElement of leftArray) {
+                if (comparator(leftElement, rightElement)) {
                     return false;
                 }
             }
