@@ -2,7 +2,6 @@ import { KeyValuePair } from "../dictionary/KeyValuePair";
 import {
     CircularLinkedList,
     CircularQueue,
-    Collections,
     Dictionary,
     Enumerable,
     EnumerableSet,
@@ -27,7 +26,8 @@ import {
     Queue,
     SortedDictionary,
     SortedSet,
-    Stack
+    Stack,
+    shuffleInPlace
 } from "../imports";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
@@ -306,6 +306,61 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public defaultIfEmpty(value?: TElement | null): IEnumerable<TElement | null> {
         return new Enumerator(() => this.defaultIfEmptyGenerator(value));
+    }
+
+    public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
+        comparator ??= Comparators.equalityComparator as EqualityComparator<TElement | TSecond>;
+        if (!comparator || comparator === Comparators.equalityComparator) {
+            const set = new Set<TElement|TSecond>(this);
+            for (const element of iterable) {
+                if (set.has(element)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        const [small, large] = (this.count() < Enumerable.from(iterable).count()) ? [this, iterable] : [iterable, this];
+        for (const element1 of small) {
+            for (const element2 of large) {
+                if (comparator(element1, element2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey|TSecondKey>): boolean {
+        const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey|TSecondKey, TSecondKey|TKey>;
+        if (keyComparer === Comparators.equalityComparator) {
+            const leftKeys = new Set<TKey|TSecondKey>();
+            for (const element of this) {
+                leftKeys.add(keySelector(element));
+            }
+            if (leftKeys.size === 0) {
+                return true;
+            }
+            const rightKeys = Enumerable.from(iterable).select(otherKeySelector);
+            for (const key of rightKeys) {
+                if (leftKeys.has(key)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        const leftArray = Enumerable.from(this).select(keySelector).toArray();
+        const rightArray = Enumerable.from(iterable).select(otherKeySelector).toArray();
+        const [small, large] = leftArray.length < rightArray.length ? [leftArray, rightArray] : [rightArray, leftArray];
+
+        for (const key of small) {
+            for (const otherKey of large) {
+                if (keyComparer(key, otherKey)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
@@ -1540,7 +1595,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* shuffleGenerator(): IterableIterator<TElement> {
         const array = Array.from(this);
-        Collections.shuffle(array);
+        shuffleInPlace(array);
         yield* array;
     }
 

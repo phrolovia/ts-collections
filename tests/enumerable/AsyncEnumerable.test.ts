@@ -640,6 +640,47 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#disjoint()", () => {
+        test("should return true when sequences have no elements in common", {timeout: 5000}, async () => {
+            const first = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            const result = await first.disjoint(arrayProducer([4, 5, 6]));
+            expect(result).to.be.true;
+        });
+        test("should return false when sequences share an element", {timeout: 5000}, async () => {
+            const first = new AsyncEnumerable(arrayProducer([1, 2, 3]));
+            const result = await first.disjoint(arrayProducer([3, 4, 5]));
+            expect(result).to.be.false;
+        });
+        test("should use the provided comparator", {timeout: 5000}, async () => {
+            const comparator = (left: number | string, right: number | string) => left.toString() === right.toString();
+            const allDistinct = await new AsyncEnumerable(arrayProducer([1, 2, 3]))
+                .disjoint(arrayProducer(["4", "5"]), comparator);
+            const hasOverlap = await new AsyncEnumerable(arrayProducer([1, 2, 3]))
+                .disjoint(arrayProducer(["2", "5"]), comparator);
+            expect(allDistinct).to.be.true;
+            expect(hasOverlap).to.be.false;
+        });
+    });
+
+    describe("#disjointBy()", () => {
+        test("should return true when projected keys are disjoint", {timeout: 5000}, async () => {
+            const left = new AsyncEnumerable(personProducer([Person.Alice, Person.Bella]));
+            const result = await left.disjointBy(personProducer([Person.Mel, Person.Noemi]), p => p.name, p => p.name);
+            expect(result).to.be.true;
+        });
+        test("should return false when projected keys overlap", {timeout: 5000}, async () => {
+            const left = new AsyncEnumerable(personProducer([Person.Alice, Person.Noemi]));
+            const result = await left.disjointBy(personProducer([Person.Noemi2, Person.Mel]), p => p.name, p => p.name);
+            expect(result).to.be.false;
+        });
+        test("should honour the provided key comparator", {timeout: 5000}, async () => {
+            const melLower = new Person("mel", "Bluesky", 9);
+            const result = await new AsyncEnumerable(personProducer([Person.Mel]))
+                .disjointBy(personProducer([melLower]), p => p.name, p => p.name, (a, b) => a.toLowerCase() === b.toLowerCase());
+            expect(result).to.be.false;
+        });
+    });
+
     describe("#distinct()", () => {
         test("should return the distinct elements in the enumerable", {timeout: 5000}, async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));

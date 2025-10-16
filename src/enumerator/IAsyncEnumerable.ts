@@ -478,6 +478,48 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     defaultIfEmpty(defaultValue?: TElement | null): IAsyncEnumerable<TElement | null>;
 
     /**
+     * Determines whether the async sequence and {@link iterable} share no equivalent elements.
+     * @template TSecond Type of elements yielded by {@link iterable}.
+     * @param iterable Async sequence compared against the source.
+     * @param comparator Optional equality comparator used to match elements across both sequences. Defaults to the library's standard equality comparison.
+     * @returns {Promise<boolean>} A promise that resolves to `true` when the sequences are disjoint; otherwise, `false`.
+     * @throws {unknown} Re-throws any error encountered while asynchronously iterating the source, {@link iterable}, or executing the comparator.
+     * @remarks When the default comparator is used, the method buffers the source elements in a {@link Set} so it can short-circuit as soon as a shared element is detected.
+     * When a custom comparator is supplied, both sequences are materialised to avoid repeated enumeration.
+     * @example
+     * ```typescript
+     * const first = fromAsync([1, 2, 3]);
+     * const second = fromAsync([4, 5, 6]);
+     * const areDisjoint = await first.disjoint(second);
+     * console.log(areDisjoint); // true
+     * ```
+     */
+    disjoint<TSecond>(iterable: AsyncIterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): Promise<boolean>;
+
+    /**
+     * Determines whether the key projections of the async sequence and {@link iterable} are mutually exclusive.
+     * @template TSecond Type of elements yielded by {@link iterable}.
+     * @template TKey Key type produced by {@link keySelector}.
+     * @template TSecondKey Key type produced by {@link otherKeySelector}.
+     * @param iterable Async sequence compared against the source.
+     * @param keySelector Projection that produces the key evaluated for each source element.
+     * @param otherKeySelector Projection that produces the key evaluated for each element of {@link iterable}.
+     * @param keyComparator Optional equality comparator applied to projected keys. Defaults to the library's standard equality comparison.
+     * @returns {Promise<boolean>} A promise that resolves to `true` when no projected keys intersect; otherwise, `false`.
+     * @throws {unknown} Re-throws any error encountered while iterating either sequence or executing the selector projections/comparator.
+     * @remarks When the default comparator is used, the method buffers the larger key collection in a {@link Set} and short-circuits as soon as an intersecting key is found.
+     * Supplying a custom comparator materialises both key collections and compares each pair, so prefer the default when suitable.
+     * @example
+     * ```typescript
+     * const left = fromAsync([{ name: 'Alice' }, { name: 'Bella' }]);
+     * const right = fromAsync([{ name: 'Mel' }]);
+     * const areDisjoint = await left.disjointBy(right, p => p.name, p => p.name);
+     * console.log(areDisjoint); // true
+     * ```
+     */
+    disjointBy<TSecond, TKey, TSecondKey>(iterable: AsyncIterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): Promise<boolean>;
+
+    /**
      * Eliminates duplicate elements from the async sequence using an optional comparator.
      * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
      * @returns {IAsyncEnumerable<TElement>} An async sequence that yields each distinct element once.
@@ -1496,7 +1538,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     /**
      * Returns a deferred asynchronous sequence whose elements appear in random order.
      * @returns {IAsyncEnumerable<TElement>} An async sequence containing the same elements as the source but shuffled.
-     * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences. Randomness is provided by {@link Collections.shuffle}.
+     * @remarks The implementation materialises the entire sequence into an array before shuffling, making this unsuitable for infinite sequences.
      * @example
      * ```typescript
      * const numbers = fromAsync([1, 2, 3, 4, 5]);

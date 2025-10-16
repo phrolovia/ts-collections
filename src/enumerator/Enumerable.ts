@@ -197,6 +197,14 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.defaultIfEmpty(value);
     }
 
+    public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
+        return this.#enumerator.disjoint(iterable, comparator);
+    }
+
+    public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): boolean {
+        return this.#enumerator.disjointBy(iterable, keySelector, otherKeySelector, keyComparator);
+    }
+
     public distinct( keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return this.#enumerator.distinct(keyComparator);
     }
