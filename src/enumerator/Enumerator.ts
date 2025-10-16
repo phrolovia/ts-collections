@@ -346,6 +346,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     return false;
                 }
             }
+            return true;
         }
 
         const leftArray = Enumerable.from(this).select(keySelector).toArray();
