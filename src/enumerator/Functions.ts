@@ -34,89 +34,14 @@ import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { ImmutableStack } from "../stack/ImmutableStack";
 import { Stack } from "../stack/Stack";
 import { Enumerable } from "./Enumerable";
+import { from } from "./functions/from";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
-import {MedianTieStrategy} from "../shared/MedianTieStrategy";
-import {PercentileStrategy} from "../shared/PercentileStrategy";
-
-/**
- * Combines the elements of the sequence by applying an accumulator to each element and optionally projecting the final result.
- * @template TElement Type of elements within the `source` iterable.
- * @template TAccumulate Type of the intermediate accumulator. Defaults to `TElement` when no seed is provided.
- * @template TResult Type returned when a `resultSelector` is supplied.
- * @param source The source iterable.
- * @param accumulator Function that merges the running accumulator with the next element.
- * @param seed Optional initial accumulator value. When omitted, the first element is used as the starting accumulator.
- * @param resultSelector Optional projection applied to the final accumulator before it is returned.
- * @returns {TAccumulate|TResult} The final accumulator (or its projection).
- * @throws {NoElementsException} Thrown when `source` has no elements and no `seed` is provided.
- * @remarks The source sequence is enumerated exactly once. Supply a `seed` to avoid exceptions on empty sequences and to control the accumulator type.
- * @example
- * ```typescript
- * const numbers = [1, 2, 3, 4, 5];
- * const sum = aggregate(numbers, (acc, x) => acc + x);
- * console.log(sum); // 15
- *
- * const product = aggregate(numbers, (acc, x) => acc * x, 1);
- * console.log(product); // 120
- * ```
- */
-export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulate>(
-    source: Iterable<TElement>,
-    accumulator: (accumulator: TAccumulate, element: TElement) => TAccumulate,
-    seed?: TAccumulate,
-    resultSelector?: (accumulator: TAccumulate) => TResult
-): TAccumulate | TResult => {
-    return from(source).aggregate(accumulator, seed, resultSelector);
-};
-
-/**
- * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.
- * @template TElement Type of elements within the `source` iterable.
- * @template TKey Type returned by `keySelector` and used to organise groups.
- * @template TAccumulate Type of the accumulated value created for each group.
- * @param source The source iterable.
- * @param keySelector Selector that derives the grouping key for each element.
- * @param seedSelector Either an initial accumulator value applied to every group or a factory invoked with the group key to produce that value.
- * @param accumulator Function that merges the current accumulator with the next element in the group.
- * @param keyComparator Optional equality comparator used to match group keys.
- * @returns {IEnumerable<KeyValuePair<TKey, TAccumulate>>} A sequence containing one key-value pair per group and its aggregated result.
- * @remarks When `seedSelector` is a factory function, it is evaluated once per group to obtain the initial accumulator.
- * @example
- * ```typescript
- * const products = [
- *   { name: 'Apple', category: 'Fruit', price: 1.2 },
- *   { name: 'Banana', category: 'Fruit', price: 0.5 },
- *   { name: 'Carrot', category: 'Vegetable', price: 0.8 },
- *   { name: 'Broccoli', category: 'Vegetable', price: 1.5 },
- * ];
- *
- * const totalPriceByCategory = aggregateBy(
- *   from(products),
- *   p => p.category,
- *   0,
- *   (acc, p) => acc + p.price
- * ).toArray();
- *
- * console.log(totalPriceByCategory);
- * // [
- * //   { key: 'Fruit', value: 1.7 },
- * //   { key: 'Vegetable', value: 2.3 }
- * // ]
- * ```
- */
-export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
-    source: IEnumerable<TElement>,
-    keySelector: Selector<TElement, TKey>,
-    seedSelector: Selector<TKey, TAccumulate> | TAccumulate,
-    accumulator: Accumulator<TElement, TAccumulate>,
-    keyComparator?: EqualityComparator<TKey>
-): IEnumerable<KeyValuePair<TKey, TAccumulate>> => {
-    return from(source).aggregateBy(keySelector, seedSelector, accumulator, keyComparator);
-};
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
 
 /**
  * Determines whether every element in the sequence satisfies the supplied predicate.
@@ -1087,23 +1012,6 @@ export const forEach = <TElement>(
     action: IndexedAction<TElement>
 ): void => {
     return from(source).forEach(action);
-};
-
-/**
- * Wraps an iterable with the library's `IEnumerable` implementation.
- * @template TElement Type of elements within the `source` iterable.
- * @param source The iterable to expose as an enumerable sequence.
- * @returns {IEnumerable<TElement>} An enumerable view over the given iterable.
- * @remarks The returned sequence defers enumeration of {@link source} until iterated.
- * @example
- * ```typescript
- * const numbers = [1, 2, 3];
- * const enumerable = from(numbers);
- * console.log(enumerable.toArray()); // [1, 2, 3]
- * ```
- */
-export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
-    return Enumerable.from(source);
 };
 
 /**

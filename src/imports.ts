@@ -61,8 +61,6 @@ export { ImmutableQueue } from "./queue/ImmutableQueue";
 export { ImmutablePriorityQueue } from "./queue/ImmutablePriorityQueue";
 export { ImmutableStack } from "./stack/ImmutableStack";
 export {
-    aggregate,
-    aggregateBy,
     all,
     any,
     append,
@@ -99,7 +97,6 @@ export {
     first,
     firstOrDefault,
     forEach,
-    from,
     groupBy,
     groupJoin,
     index,
@@ -186,6 +183,8 @@ export {
     zip,
     zipMany
 } from "./enumerator/Functions";
+
+export { from } from "./enumerator/functions/from";
 
 export { binarySearch } from "./utils/binarySearch";
 export { reverseInPlace } from "./utils/reverseInPlace";

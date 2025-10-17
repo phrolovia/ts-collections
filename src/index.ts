@@ -18,8 +18,8 @@ export type {
     IReadonlyList,
     ISet,
     ITree,
-    TraverseType,
-} from "./imports"
+    TraverseType
+} from "./imports";
 
 export {
     AbstractCollection,
@@ -61,8 +61,6 @@ export {
     SortedDictionary,
     SortedSet,
     Stack,
-    aggregate,
-    aggregateBy,
     all,
     any,
     append,
@@ -100,7 +98,6 @@ export {
     first,
     firstOrDefault,
     forEach,
-    from,
     groupBy,
     groupJoin,
     index,
@@ -190,6 +187,11 @@ export {
     zip,
     zipMany
 } from "./imports";
+
+export { aggregate } from "./enumerator/functions/aggregate";
+export { aggregateBy } from "./enumerator/functions/aggregateBy";
+export { from } from "./enumerator/functions/from";
+
 export { KeyValuePair } from "./dictionary/KeyValuePair";
 export type { Accumulator } from "./shared/Accumulator";
 export type { EqualityComparator } from "./shared/EqualityComparator";

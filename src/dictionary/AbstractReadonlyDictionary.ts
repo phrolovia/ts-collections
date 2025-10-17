@@ -1,6 +1,4 @@
 import {
-    aggregate,
-    aggregateBy,
     all,
     any,
     append,
@@ -165,6 +163,8 @@ import {PipeOperator} from "../shared/PipeOperator";
 import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
 import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 import {PercentileStrategy} from "../shared/PercentileStrategy";
+import { aggregate } from "../enumerator/functions/aggregate";
+import { aggregateBy } from "../enumerator/functions/aggregateBy";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;

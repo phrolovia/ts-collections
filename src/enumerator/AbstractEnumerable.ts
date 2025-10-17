@@ -2,8 +2,6 @@ import { Dictionary } from "../dictionary/Dictionary";
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { SortedDictionary } from "../dictionary/SortedDictionary";
 import {
-    aggregate,
-    aggregateBy,
     all,
     any,
     append,
@@ -163,6 +161,8 @@ import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 import {PercentileStrategy} from "../shared/PercentileStrategy";
+import { aggregate } from "./functions/aggregate";
+import { aggregateBy } from "./functions/aggregateBy";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;
