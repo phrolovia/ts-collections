@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
 import {
     CircularLinkedList, CircularQueue,
-    Enumerable, from, type IEnumerable, ImmutableCircularQueue,
+    Enumerable, type IEnumerable, ImmutableCircularQueue,
     ImmutableList, ImmutableQueue,
     PriorityQueue, ReadonlyCollection, Stack
 } from "../../src/imports";
@@ -27,6 +27,7 @@ import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
 import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
 import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
+import { from } from "../../src/enumerator/functions/from";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>

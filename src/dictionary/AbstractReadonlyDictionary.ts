@@ -1,44 +1,7 @@
 import {
-    all,
-    any,
-    append,
-    atLeast,
-    atMost,
-    average,
-    cartesian,
-    cast,
-    chunk,
     CircularLinkedList,
     CircularQueue,
-    combinations,
-    compact,
-    concat,
-    contains,
-    correlation,
-    correlationBy,
-    count,
-    countBy,
-    covariance,
-    covarianceBy,
-    cycle,
-    defaultIfEmpty,
-    disjoint,
-    disjointBy,
-    distinct,
-    distinctBy,
-    distinctUntilChanged,
-    distinctUntilChangedBy,
-    elementAt,
-    elementAtOrDefault,
     EnumerableSet,
-    exactly,
-    except,
-    exceptBy,
-    first,
-    firstOrDefault,
-    forEach,
-    groupBy,
-    groupJoin,
     ICollection,
     IEnumerable,
     IGroup,
@@ -52,95 +15,14 @@ import {
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
-    index,
-    interleave,
-    intersect,
-    intersectBy,
-    intersperse,
     IOrderedEnumerable,
     ISet,
-    join,
-    last,
-    lastOrDefault,
     LinkedList,
     List,
-    max,
-    maxBy,
-    median,
-    min,
-    minBy,
-    mode,
-    modeOrDefault,
-    multimode,
-    none,
-    ofType,
-    order,
-    orderBy,
-    orderByDescending,
-    orderDescending,
-    pairwise,
-    partition,
-    percentile,
-    permutations,
-    pipe,
-    prepend,
     PriorityQueue,
-    product,
     Queue,
-    reverse,
-    rotate,
-    scan,
-    select,
-    selectMany,
-    sequenceEqual,
-    shuffle,
-    single,
-    singleOrDefault,
-    skip,
-    skipLast,
-    skipWhile,
     SortedSet,
-    span,
     Stack,
-    standardDeviation,
-    step,
-    sum,
-    take,
-    takeLast,
-    takeWhile,
-    tap,
-    toArray,
-    toCircularLinkedList,
-    toCircularQueue,
-    toDictionary,
-    toEnumerableSet,
-    toImmutableCircularQueue,
-    toImmutableDictionary,
-    toImmutableList,
-    toImmutablePriorityQueue,
-    toImmutableQueue,
-    toImmutableSet,
-    toImmutableSortedDictionary,
-    toImmutableSortedSet,
-    toImmutableStack,
-    toLinkedList,
-    toList,
-    toLookup,
-    toMap,
-    toObject,
-    toPriorityQueue,
-    toQueue,
-    toSet,
-    toSortedDictionary,
-    toSortedSet,
-    toStack,
-    union,
-    unionBy,
-    variance,
-    where,
-    windows,
-    zip,
-    zipMany
 } from "../imports";
 import {Accumulator} from "../shared/Accumulator";
 import {EqualityComparator} from "../shared/EqualityComparator";
@@ -165,6 +47,124 @@ import {MedianTieStrategy} from "../shared/MedianTieStrategy";
 import {PercentileStrategy} from "../shared/PercentileStrategy";
 import { aggregate } from "../enumerator/functions/aggregate";
 import { aggregateBy } from "../enumerator/functions/aggregateBy";
+import { all } from "../enumerator/functions/all";
+import { any } from "../enumerator/functions/any";
+import { append } from "../enumerator/functions/append";
+import { atLeast } from "../enumerator/functions/atLeast";
+import { atMost } from "../enumerator/functions/atMost";
+import { average } from "../enumerator/functions/average";
+import { cartesian } from "../enumerator/functions/cartesian";
+import { cast } from "../enumerator/functions/cast";
+import { chunk } from "../enumerator/functions/chunk";
+import { combinations } from "../enumerator/functions/combinations";
+import { compact } from "../enumerator/functions/compact";
+import { concat } from "../enumerator/functions/concat";
+import { contains } from "../enumerator/functions/contains";
+import { correlation } from "../enumerator/functions/correlation";
+import { correlationBy } from "../enumerator/functions/correlationBy";
+import { count } from "../enumerator/functions/count";
+import { countBy } from "../enumerator/functions/countBy";
+import { covariance } from "../enumerator/functions/covariance";
+import { covarianceBy } from "../enumerator/functions/covarianceBy";
+import { cycle } from "../enumerator/functions/cycle";
+import { defaultIfEmpty } from "../enumerator/functions/defaultIfEmpty";
+import { disjoint } from "../enumerator/functions/disjoint";
+import { disjointBy } from "../enumerator/functions/disjointBy";
+import { distinct } from "../enumerator/functions/distinct";
+import { distinctBy } from "../enumerator/functions/distinctBy";
+import { distinctUntilChanged } from "../enumerator/functions/distinctUntilChanged";
+import { distinctUntilChangedBy } from "../enumerator/functions/distinctUntilChangedBy";
+import { elementAt } from "../enumerator/functions/elementAt";
+import { elementAtOrDefault } from "../enumerator/functions/elementAtOrDefault";
+import { exactly } from "../enumerator/functions/exactly";
+import { except } from "../enumerator/functions/except";
+import { exceptBy } from "../enumerator/functions/exceptBy";
+import { first } from "../enumerator/functions/first";
+import { firstOrDefault } from "../enumerator/functions/firstOrDefault";
+import { forEach } from "../enumerator/functions/forEach";
+import { groupBy } from "../enumerator/functions/groupBy";
+import { groupJoin } from "../enumerator/functions/groupJoin";
+import { index } from "../enumerator/functions/index";
+import { interleave } from "../enumerator/functions/interleave";
+import { intersect } from "../enumerator/functions/intersect";
+import { intersectBy } from "../enumerator/functions/intersectBy";
+import { intersperse } from "../enumerator/functions/intersperse";
+import { join } from "../enumerator/functions/join";
+import { last } from "../enumerator/functions/last";
+import { lastOrDefault } from "../enumerator/functions/lastOrDefault";
+import { max } from "../enumerator/functions/max";
+import { maxBy } from "../enumerator/functions/maxBy";
+import { median } from "../enumerator/functions/median";
+import { min } from "../enumerator/functions/min";
+import { minBy } from "../enumerator/functions/minBy";
+import { mode } from "../enumerator/functions/mode";
+import { modeOrDefault } from "../enumerator/functions/modeOrDefault";
+import { multimode } from "../enumerator/functions/multimode";
+import { none } from "../enumerator/functions/none";
+import { ofType } from "../enumerator/functions/ofType";
+import { order } from "../enumerator/functions/order";
+import { orderBy } from "../enumerator/functions/orderBy";
+import { orderByDescending } from "../enumerator/functions/orderByDescending";
+import { orderDescending } from "../enumerator/functions/orderDescending";
+import { pairwise } from "../enumerator/functions/pairwise";
+import { partition } from "../enumerator/functions/partition";
+import { percentile } from "../enumerator/functions/percentile";
+import { permutations } from "../enumerator/functions/permutations";
+import { pipe } from "../enumerator/functions/pipe";
+import { prepend } from "../enumerator/functions/prepend";
+import { product } from "../enumerator/functions/product";
+import { reverse } from "../enumerator/functions/reverse";
+import { rotate } from "../enumerator/functions/rotate";
+import { scan } from "../enumerator/functions/scan";
+import { select } from "../enumerator/functions/select";
+import { selectMany } from "../enumerator/functions/selectMany";
+import { sequenceEqual } from "../enumerator/functions/sequenceEqual";
+import { shuffle } from "../enumerator/functions/shuffle";
+import { single } from "../enumerator/functions/single";
+import { singleOrDefault } from "../enumerator/functions/singleOrDefault";
+import { skip } from "../enumerator/functions/skip";
+import { skipLast } from "../enumerator/functions/skipLast";
+import { skipWhile } from "../enumerator/functions/skipWhile";
+import { span } from "../enumerator/functions/span";
+import { standardDeviation } from "../enumerator/functions/standardDeviation";
+import { step } from "../enumerator/functions/step";
+import { sum } from "../enumerator/functions/sum";
+import { take } from "../enumerator/functions/take";
+import { takeLast } from "../enumerator/functions/takeLast";
+import { takeWhile } from "../enumerator/functions/takeWhile";
+import { tap } from "../enumerator/functions/tap";
+import { toArray } from "../enumerator/functions/toArray";
+import { toCircularLinkedList } from "../enumerator/functions/toCircularLinkedList";
+import { toCircularQueue } from "../enumerator/functions/toCircularQueue";
+import { toDictionary } from "../enumerator/functions/toDictionary";
+import { toEnumerableSet } from "../enumerator/functions/toEnumerableSet";
+import { toImmutableCircularQueue } from "../enumerator/functions/toImmutableCircularQueue";
+import { toImmutableDictionary } from "../enumerator/functions/toImmutableDictionary";
+import { toImmutableList } from "../enumerator/functions/toImmutableList";
+import { toImmutablePriorityQueue } from "../enumerator/functions/toImmutablePriorityQueue";
+import { toImmutableQueue } from "../enumerator/functions/toImmutableQueue";
+import { toImmutableSet } from "../enumerator/functions/toImmutableSet";
+import { toImmutableSortedDictionary } from "../enumerator/functions/toImmutableSortedDictionary";
+import { toImmutableSortedSet } from "../enumerator/functions/toImmutableSortedSet";
+import { toImmutableStack } from "../enumerator/functions/toImmutableStack";
+import { toLinkedList } from "../enumerator/functions/toLinkedList";
+import { toList } from "../enumerator/functions/toList";
+import { toLookup } from "../enumerator/functions/toLookup";
+import { toMap } from "../enumerator/functions/toMap";
+import { toObject } from "../enumerator/functions/toObject";
+import { toPriorityQueue } from "../enumerator/functions/toPriorityQueue";
+import { toQueue } from "../enumerator/functions/toQueue";
+import { toSet } from "../enumerator/functions/toSet";
+import { toSortedDictionary } from "../enumerator/functions/toSortedDictionary";
+import { toSortedSet } from "../enumerator/functions/toSortedSet";
+import { toStack } from "../enumerator/functions/toStack";
+import { union } from "../enumerator/functions/union";
+import { unionBy } from "../enumerator/functions/unionBy";
+import { variance } from "../enumerator/functions/variance";
+import { where } from "../enumerator/functions/where";
+import { windows } from "../enumerator/functions/windows";
+import { zip } from "../enumerator/functions/zip";
+import { zipMany } from "../enumerator/functions/zipMany";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;

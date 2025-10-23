@@ -1,8 +1,9 @@
-import { from, IEnumerable } from "../../imports";
+import { IEnumerable } from "../../imports";
 import { KeyValuePair } from "../../dictionary/KeyValuePair";
 import { Accumulator } from "../../shared/Accumulator";
 import { EqualityComparator } from "../../shared/EqualityComparator";
 import { Selector } from "../../shared/Selector";
+import { from } from "./from";
 
 /**
  * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.

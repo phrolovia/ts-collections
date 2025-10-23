@@ -1,5 +1,7 @@
-import { describe, test } from "vitest";
-import { binarySearch, elementAt, List } from "../../src/imports";
+import { describe, expect, test } from "vitest";
+import { elementAt } from "../../src/enumerator/functions/elementAt";
+import { List } from "../../src/list/List";
+import { binarySearch } from "../../src/utils/binarySearch";
 
 describe("#binarySearch", () => {
     test("should perform binary search on a sorted array", () => {

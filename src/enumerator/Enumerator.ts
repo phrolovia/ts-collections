@@ -27,7 +27,6 @@ import {
     SortedDictionary,
     SortedSet,
     Stack,
-    shuffleInPlace
 } from "../imports";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
@@ -50,6 +49,7 @@ import { PairwiseSelector } from "../shared/PairwiseSelector";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { shuffleInPlace } from "../utils/shuffleInPlace";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";

@@ -1,5 +1,5 @@
-import {swap} from "../../imports";
-import {MedianTieStrategy} from "../../shared/MedianTieStrategy";
+import { MedianTieStrategy } from "../../shared/MedianTieStrategy";
+import { swap } from "../../utils/swap";
 
 export function findMedian(data: number[], tie: MedianTieStrategy = "interpolate"): number {
     if (data.length < 1) {

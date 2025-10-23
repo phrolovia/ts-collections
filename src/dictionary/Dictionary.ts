@@ -1,4 +1,5 @@
-import { EnumerableSet, ICollection, ISet, List, select } from "../imports";
+import { select } from "../enumerator/functions/select";
+import { EnumerableSet, ICollection, ISet, List } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";

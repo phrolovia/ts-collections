@@ -1,6 +1,6 @@
-import { Enumerable } from "./Enumerable";
-import { IEnumerable } from "./IEnumerable";
-import { IGroup } from "./IGroup";
+import { Enumerable } from "../imports";
+import type { IEnumerable } from "./IEnumerable";
+import type { IGroup } from "./IGroup";
 
 export class Group<TKey, TElement> extends Enumerable<TElement> implements IGroup<TKey, TElement> {
     public readonly key: TKey;

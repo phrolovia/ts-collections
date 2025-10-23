@@ -1,4 +1,5 @@
-import { AbstractRandomAccessImmutableCollection, contains, IReadonlyList, List, ReadonlyList } from "../imports";
+import { contains } from "../enumerator/functions/contains";
+import { AbstractRandomAccessImmutableCollection, IReadonlyList, List, ReadonlyList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { OrderComparator } from "../shared/OrderComparator";

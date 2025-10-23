@@ -26,7 +26,6 @@ import {
     OrderedAsyncEnumerator,
     PriorityQueue,
     Queue,
-    shuffleInPlace,
     SortedDictionary,
     SortedSet,
     Stack
@@ -58,6 +57,7 @@ import { DimensionMismatchException } from "../shared/DimensionMismatchException
 import { InsufficientElementException } from "../shared/InsufficientElementException";
 import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
+import { shuffleInPlace } from "../utils/shuffleInPlace";
 import {
     accumulatePairStatsFromAsyncIterables,
     accumulatePairStatsFromSingleAsyncIterable,

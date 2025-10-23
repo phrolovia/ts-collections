@@ -1,4 +1,7 @@
-import { empty, from, ImmutableSet, ImmutableSortedSet } from "../../src/imports";
+import { ImmutableSortedSet } from "../../src/set/ImmutableSortedSet";
+import { ImmutableSet } from "../../src/set/ImmutableSet";
+import { from } from "../../src/enumerator/functions/from";
+import { empty } from "../../src/enumerator/functions/empty";
 
 describe("ImmutableSortedSet", () => {
     describe("#add()", () => {
