@@ -5,9 +5,6 @@ import {
     CircularQueue,
     Dictionary,
     EnumerableSet,
-    IAsyncEnumerable,
-    IEnumerable,
-    ILookup,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -17,7 +14,6 @@ import {
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
-    IOrderedAsyncEnumerable,
     LinkedList,
     List,
     PriorityQueue,
@@ -26,24 +22,28 @@ import {
     SortedSet,
     Stack
 } from "../imports";
+import { ILookup } from "../lookup/ILookup";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
-import { MedianTieStrategy } from "../shared/MedianTieStrategy";
-import { PercentileStrategy } from "../shared/PercentileStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { AsyncPipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { IAsyncEnumerable } from "./IAsyncEnumerable";
+import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
-import { AsyncPipeOperator } from "../shared/PipeOperator";
+import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     readonly #enumerator: AsyncEnumerator<TElement>;
@@ -248,7 +248,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.interleave(iterable);
     }
 
-    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> |  OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.intersect(iterable, comparator);
     }
 
@@ -532,7 +532,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.toMap(keySelector, valueSelector);
     }
 
-    public async toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
+    public async toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
         return this.#enumerator.toObject(keySelector, valueSelector);
     }
 

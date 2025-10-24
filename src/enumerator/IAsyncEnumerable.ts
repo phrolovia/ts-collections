@@ -4,7 +4,6 @@ import {
     CircularQueue,
     Dictionary,
     EnumerableSet,
-    ILookup,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -22,26 +21,27 @@ import {
     SortedSet,
     Stack
 } from "../imports";
+import { ILookup } from "../lookup/ILookup";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
-import { MedianTieStrategy } from "../shared/MedianTieStrategy";
-import { PercentileStrategy } from "../shared/PercentileStrategy";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { AsyncPipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
-import { AsyncPipeOperator } from "../shared/PipeOperator";
 
 export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
 
@@ -99,7 +99,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * // ]
      * ```
      */
-    aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>
+    aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>>;
 
     /**
      * Determines whether every element in the sequence satisfies the supplied predicate.
@@ -294,7 +294,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * const concatenated = await numbers1.concat(numbers2).toArray();
      * console.log(concatenated); // [1, 2, 3, 4, 5, 6]
      * ```
-    */
+     */
     concat(other: AsyncIterable<TElement>): IAsyncEnumerable<TElement>;
 
     /**
@@ -311,7 +311,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * const hasTen = await numbers.contains(10);
      * console.log(hasTen); // false
      * ```
-    */
+     */
     contains(element: TElement, comparator?: EqualityComparator<TElement>): Promise<boolean>;
 
     /**
@@ -1903,6 +1903,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<Dictionary<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into an enumerable set containing the distinct elements.
      * @returns {Promise<EnumerableSet<TElement>>} A promise that resolves to a set populated with the distinct elements from the source.
@@ -1967,6 +1968,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableDictionary<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into an immutable list.
      * @param comparator Optional equality comparator used by the resulting list.
@@ -2045,6 +2047,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<ImmutableSortedDictionary<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into an immutable sorted set of distinct elements.
      * @param comparator Optional order comparator used to sort the elements.
@@ -2124,6 +2127,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into a `Map` keyed by the provided selector.
      * @template TKey Type of key returned by {@link keySelector}.
@@ -2144,6 +2148,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Map<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into a plain object keyed by the provided selector.
      * @template TKey extends string | number | symbol Property key type returned by {@link keySelector}.
@@ -2164,6 +2169,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toObject<TKey extends PropertyKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into a priority queue.
      * @param comparator Optional order comparator used to compare elements in the resulting queue.
@@ -2230,6 +2236,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): Promise<SortedDictionary<TKey, TValue>>;
+
     /**
      * Materialises the asynchronous sequence into a sorted set of distinct elements.
      * @param comparator Optional order comparator used to sort the elements.
@@ -2415,6 +2422,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     zipMany<TIterable extends readonly AsyncIterable<unknown>[]>(
         ...iterables: [...TIterable]
     ): IAsyncEnumerable<[TElement, ...UnpackAsyncIterableTuple<TIterable>]>;
+
     /**
      * Zips this async sequence with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
      * @template TIterable Extends `readonly AsyncIterable<unknown>[]`; the element type of each iterable contributes to the zipper input tuple.

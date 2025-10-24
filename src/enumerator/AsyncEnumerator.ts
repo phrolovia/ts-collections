@@ -7,10 +7,6 @@ import {
     Enumerable,
     EnumerableSet,
     Group,
-    IAsyncEnumerable,
-    IEnumerable,
-    IGroup,
-    ILookup,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -20,7 +16,6 @@ import {
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
-    IOrderedAsyncEnumerable,
     LinkedList,
     List,
     OrderedAsyncEnumerator,
@@ -30,17 +25,21 @@ import {
     SortedSet,
     Stack
 } from "../imports";
+import { ILookup } from "../lookup/ILookup";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
+import { DimensionMismatchException } from "../shared/DimensionMismatchException";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InferredType } from "../shared/InferredType";
+import { InsufficientElementException } from "../shared/InsufficientElementException";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { MoreThanOneElementException } from "../shared/MoreThanOneElementException";
 import { MoreThanOneMatchingElementException } from "../shared/MoreThanOneMatchingElementException";
 import { NoElementsException } from "../shared/NoElementsException";
@@ -49,27 +48,30 @@ import { NoSuchElementException } from "../shared/NoSuchElementException";
 import { ClassType, ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { AsyncPipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { MedianTieStrategy } from "../shared/MedianTieStrategy";
-import { PercentileStrategy } from "../shared/PercentileStrategy";
-import { DimensionMismatchException } from "../shared/DimensionMismatchException";
-import { InsufficientElementException } from "../shared/InsufficientElementException";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
 import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
+import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
+import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
+import { findMedian } from "./helpers/medianHelpers";
+import { findPercentile } from "./helpers/percentileHelpers";
+import { permutationsGenerator } from "./helpers/permutationsGenerator";
 import {
     accumulatePairStatsFromAsyncIterables,
     accumulatePairStatsFromSingleAsyncIterable,
-    accumulateSingleStatsAsync, findCorrelation,
+    accumulateSingleStatsAsync,
+    findCorrelation,
     resolveNumberSelector
 } from "./helpers/statisticsHelpers";
-import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
-import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
-import { permutationsGenerator } from "./helpers/permutationsGenerator";
-import { AsyncPipeOperator } from "../shared/PipeOperator";
-import { findMedian } from "./helpers/medianHelpers";
-import { findPercentile } from "./helpers/percentileHelpers";
+
+import { IAsyncEnumerable } from "./IAsyncEnumerable";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
+import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
@@ -468,7 +470,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.exceptGenerator(iterable, comparator));
     }
 
-    public exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> |  OrderComparator<TKey>): IAsyncEnumerable<TElement> {
+    public exceptBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement> {
         comparator ??= Comparators.equalityComparator;
         return new AsyncEnumerator<TElement>(() => this.exceptByGenerator(enumerable, keySelector, comparator));
     }
@@ -534,12 +536,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement | TSecond>(() => this.interleaveGenerator(iterable));
     }
 
-    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> |  OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
         const compare = comparator ?? Comparators.equalityComparator;
         return new AsyncEnumerator<TElement>(() => this.intersectGenerator(iterable, compare));
     }
 
-    public intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> |  OrderComparator<TKey>): IAsyncEnumerable<TElement> {
+    public intersectBy<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey> | OrderComparator<TKey>): IAsyncEnumerable<TElement> {
         const compare = comparator ?? Comparators.equalityComparator;
         return new AsyncEnumerator<TElement>(() => this.intersectByGenerator(enumerable, keySelector, compare));
     }
@@ -1319,7 +1321,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> |  OrderComparator<TElement>): AsyncIterableIterator<TElement> {
+    private async* exceptGenerator(iterable: AsyncIterable<TElement>, comparator: EqualityComparator<TElement> | OrderComparator<TElement>): AsyncIterableIterator<TElement> {
         return yield* this.exceptByGenerator(iterable, e => e, comparator);
     }
 

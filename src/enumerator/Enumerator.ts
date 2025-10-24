@@ -6,19 +6,15 @@ import {
     Enumerable,
     EnumerableSet,
     Group,
-    IEnumerable,
-    IGroup,
-    ILookup,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
-    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
-    IOrderedEnumerable,
     LinkedList,
     List,
     OrderedEnumerator,
@@ -26,19 +22,24 @@ import {
     Queue,
     SortedDictionary,
     SortedSet,
-    Stack,
+    Stack
 } from "../imports";
+
+import { ILookup } from "../lookup/ILookup";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
+import { DimensionMismatchException } from "../shared/DimensionMismatchException";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
 import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InferredType } from "../shared/InferredType";
+import { InsufficientElementException } from "../shared/InsufficientElementException";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { MoreThanOneElementException } from "../shared/MoreThanOneElementException";
 import { MoreThanOneMatchingElementException } from "../shared/MoreThanOneMatchingElementException";
 import { NoElementsException } from "../shared/NoElementsException";
@@ -46,27 +47,28 @@ import { NoMatchingElementException } from "../shared/NoMatchingElementException
 import { ClassType, ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { PipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
 import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
 import { buildGroupsSync, processOuterElement } from "./helpers/joinHelpers";
-import { permutationsGenerator } from "./helpers/permutationsGenerator";
-import { PipeOperator } from "../shared/PipeOperator";
-import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
-import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { findMedian } from "./helpers/medianHelpers";
-import { PercentileStrategy } from "../shared/PercentileStrategy";
 import { findPercentile } from "./helpers/percentileHelpers";
-import { DimensionMismatchException } from "../shared/DimensionMismatchException";
-import { InsufficientElementException } from "../shared/InsufficientElementException";
+import { permutationsGenerator } from "./helpers/permutationsGenerator";
 import {
     accumulatePairStatsFromIterables,
     accumulatePairStatsFromSingleIterable,
-    accumulateSingleStats, findCorrelation,
+    accumulateSingleStats,
+    findCorrelation,
     resolveNumberSelector
 } from "./helpers/statisticsHelpers";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
@@ -109,11 +111,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-   public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>> {
+    public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>> {
         keyComparator ??= Comparators.equalityComparator;
         const groups = this.groupBy(keySelector, keyComparator);
-        return groups.select(g => new KeyValuePair(g.key, g.source.aggregate(accumulator, seedSelector instanceof Function ? seedSelector(g.key) : seedSelector )));
-   }
+        return groups.select(g => new KeyValuePair(g.key, g.source.aggregate(accumulator, seedSelector instanceof Function ? seedSelector(g.key) : seedSelector)));
+    }
 
     public all(predicate: Predicate<TElement>): boolean {
         for (const d of this) {
@@ -311,7 +313,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
         comparator ??= Comparators.equalityComparator as EqualityComparator<TElement | TSecond>;
         if (comparator === Comparators.equalityComparator) {
-            const set = new Set<TElement|TSecond>(this);
+            const set = new Set<TElement | TSecond>(this);
             if (set.size === 0) {
                 return true;
             }
@@ -338,10 +340,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return true;
     }
 
-    public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey|TSecondKey>): boolean {
-        const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey|TSecondKey, TSecondKey|TKey>;
+    public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): boolean {
+        const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey | TSecondKey, TSecondKey | TKey>;
         if (keyComparer === Comparators.equalityComparator) {
-            const leftKeys = new Set<TKey|TSecondKey>();
+            const leftKeys = new Set<TKey | TSecondKey>();
             for (const element of this) {
                 leftKeys.add(keySelector(element));
             }
@@ -1258,9 +1260,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
 
-        const { value: first, done } = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
+        const {value: first, done} = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
         if (done) {
-            const { value: first, done } = new Enumerator<TElement>(() => this)[Symbol.iterator]().next();
+            const {value: first, done} = new Enumerator<TElement>(() => this)[Symbol.iterator]().next();
             if (done) {
                 return yield* this;
             }
@@ -1389,7 +1391,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const keySet = new SortedSet<TKey>([], keyComparator as OrderComparator<TKey>);
         const keyList = new List<TKey>([], keyComparator as EqualityComparator<TKey>);
 
-        const { value: first, done } = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
+        const {value: first, done} = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
         if (done) {
             return yield* Enumerable.empty<TElement>();
         }

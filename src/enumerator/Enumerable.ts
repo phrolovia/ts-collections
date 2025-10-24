@@ -5,19 +5,15 @@ import {
     Dictionary,
     EnumerableSet,
     Enumerator,
-    IEnumerable,
-    IGroup,
-    ILookup,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
-    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
-    IOrderedEnumerable,
     LinkedList,
     List,
     PriorityQueue,
@@ -26,6 +22,7 @@ import {
     SortedSet,
     Stack
 } from "../imports";
+import { ILookup } from "../lookup/ILookup";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
@@ -33,16 +30,19 @@ import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredica
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { PipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import {Zipper, ZipManyZipper} from "../shared/Zipper";
-import {PipeOperator} from "../shared/PipeOperator";
-import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
-import {MedianTieStrategy} from "../shared/MedianTieStrategy";
-import {PercentileStrategy} from "../shared/PercentileStrategy";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export class Enumerable<TElement> implements IEnumerable<TElement> {
     readonly #enumerator: Enumerator<TElement>;
@@ -205,7 +205,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.disjointBy(iterable, keySelector, otherKeySelector, keyComparator);
     }
 
-    public distinct( keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
+    public distinct(keyComparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
         return this.#enumerator.distinct(keyComparator);
     }
 
