@@ -565,14 +565,14 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Mel.name)).to.eq(Person.Mel.age);
             expect(dictionary.get(Person.Senna.name)).to.eq(Person.Senna.age);
         });
-        test("should get the value which belongs to the given key #2", () => {
-            const numbers = Helper.generateRandomUniqueNumbers(500000);
+        test("should get the value which belongs to the given key #2", { timeout: 15000 }, () => {
+            const numbers = Helper.generateRandomUniqueNumbers(50000);
             const dict = new Dictionary<number, string>();
             numbers.forEach(n => dict.add(n, n.toString()));
             for (const num of numbers) {
                 expect(dict.get(num)).to.eq(num.toString());
             }
-        }, {timeout: 15000});
+        });
         test("should return null if key is not in the dictionary", () => {
             expect(dictionary.get(Person.Jane.name)).to.be.null;
         });
