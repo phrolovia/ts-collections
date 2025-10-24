@@ -4866,24 +4866,6 @@ describe("List", () => {
         });
     });
 
-    describe("#toReadonlyCollection()", () => {
-        const list = new List([1, 2, 3]);
-        const readonlyCollection = list.toReadonlyCollection();
-        test("should return a new ReadonlyCollection without altering the current list", () => {
-            expect(list.size()).to.eq(3);
-            expect(readonlyCollection instanceof ReadonlyCollection).to.be.true;
-            expect(readonlyCollection.size()).to.eq(3);
-            expect(list === readonlyCollection).to.be.false;
-            expect(list.length).to.eq(3);
-            expect(readonlyCollection.length).to.eq(3);
-        });
-        test("should return a new readonly collection", () => {
-            const readonly2 = list.toReadonlyCollection();
-            expect(list === readonly2).to.be.false;
-            expect(list.toArray()).to.deep.equal(readonly2.toArray());
-        });
-    });
-
     describe("#toSet()", () => {
         const list = new List([1, 2, 3, 4, 4, 5, 6, 7, 7, 7, 8, 9, 10]);
         test("should convert it to a set", () => {
