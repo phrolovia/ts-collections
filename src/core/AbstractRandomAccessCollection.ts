@@ -1,5 +1,6 @@
-import { AbstractCollection, IRandomAccessCollection, List } from "../imports";
+import { AbstractCollection, List } from "../imports";
 import { Predicate } from "../shared/Predicate";
+import { IRandomAccessCollection } from "./IRandomAccessCollection";
 
 export abstract class AbstractRandomAccessCollection<TElement> extends AbstractCollection<TElement> implements IRandomAccessCollection<TElement> {
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
