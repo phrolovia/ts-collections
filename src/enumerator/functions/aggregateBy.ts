@@ -1,8 +1,8 @@
-import { IEnumerable } from "../../imports";
 import { KeyValuePair } from "../../dictionary/KeyValuePair";
 import { Accumulator } from "../../shared/Accumulator";
 import { EqualityComparator } from "../../shared/EqualityComparator";
 import { Selector } from "../../shared/Selector";
+import { IEnumerable } from "../IEnumerable";
 import { from } from "./from";
 
 /**
