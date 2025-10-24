@@ -1,24 +1,5 @@
 export type {
     CollectionChangedAction,
-    IAsyncEnumerable,
-    ICollection,
-    ICollectionChangedEventArgs,
-    IDictionary,
-    IEnumerable,
-    IGroup,
-    IImmutableCollection,
-    IImmutableDictionary,
-    IList,
-    ILookup,
-    IOrderedAsyncEnumerable,
-    IOrderedEnumerable,
-    IRandomAccessCollection,
-    IRandomAccessImmutableCollection,
-    IReadonlyCollection,
-    IReadonlyList,
-    ISet,
-    ITree,
-    TraverseType
 } from "./imports";
 
 export {
@@ -194,6 +175,27 @@ export { shuffleInPlace } from "./utils/shuffleInPlace";
 export { swap } from "./utils/swap";
 
 export { KeyValuePair } from "./dictionary/KeyValuePair";
+
+export type { IEnumerable } from "./enumerator/IEnumerable";
+export type { IAsyncEnumerable } from "./enumerator/IAsyncEnumerable";
+export type { IOrderedEnumerable } from "./enumerator/IOrderedEnumerable";
+export type { IOrderedAsyncEnumerable } from "./enumerator/IOrderedAsyncEnumerable";
+export type { IGroup } from "./enumerator/IGroup";
+export type { ICollectionChangedEventArgs } from "./observable/ICollectionChangedEventArgs";
+export type { ILookup } from "./lookup/ILookup";
+export type { ICollection } from "./core/ICollection";
+export type { IImmutableCollection } from "./core/IImmutableCollection";
+export type { IRandomAccessImmutableCollection } from "./core/IRandomAccessImmutableCollection";
+export type { IRandomAccessCollection } from "./core/IRandomAccessCollection";
+export type { IReadonlyCollection } from "./core/IReadonlyCollection";
+export type { IList } from "./list/IList";
+export type { IReadonlyList } from "./list/IReadonlyList";
+export type { ITree, TraverseType } from "./tree/ITree";
+export type { IDictionary } from "./dictionary/IDictionary";
+export type { IReadonlyDictionary } from "./dictionary/IReadonlyDictionary";
+export type { IImmutableDictionary } from "./dictionary/IImmutableDictionary";
+export type { ISet } from "./set/ISet";
+
 export type { Accumulator } from "./shared/Accumulator";
 export type { EqualityComparator } from "./shared/EqualityComparator";
 export type { IndexedAction } from "./shared/IndexedAction";
