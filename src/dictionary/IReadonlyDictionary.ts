@@ -1,4 +1,6 @@
-import { ICollection, IEnumerable, ISet } from "../imports";
+import { ICollection } from "../core/ICollection";
+import { IEnumerable } from "../enumerator/IEnumerable";
+import { ISet } from "../set/ISet";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { Selector } from "../shared/Selector";
 import { KeyValuePair } from "./KeyValuePair";

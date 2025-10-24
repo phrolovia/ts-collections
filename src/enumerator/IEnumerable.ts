@@ -4,18 +4,15 @@ import {
     CircularQueue,
     Dictionary,
     EnumerableSet,
-    IGroup,
-    ILookup,
+    ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
     ImmutablePriorityQueue,
-    ImmutableCircularQueue,
     ImmutableQueue,
     ImmutableSet,
     ImmutableSortedDictionary,
     ImmutableSortedSet,
     ImmutableStack,
-    IOrderedEnumerable,
     LinkedList,
     List,
     PriorityQueue,
@@ -24,6 +21,7 @@ import {
     SortedSet,
     Stack
 } from "../imports";
+import { ILookup } from "../lookup/ILookup";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexedAction } from "../shared/IndexedAction";
@@ -31,16 +29,18 @@ import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredica
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { PipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
-import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
-import {MedianTieStrategy} from "../shared/MedianTieStrategy";
-import {PercentileStrategy} from "../shared/PercentileStrategy";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { IGroup } from "./IGroup";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -847,7 +847,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * const indexed = letters.index().toArray();
      * console.log(indexed); // [[0, 'a'], [1, 'b'], [2, 'c']]
      * ```
-    */
+     */
     index(): IEnumerable<[number, TElement]>;
 
     /**
@@ -1319,6 +1319,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
+
     /**
      * Splits the sequence into two cached partitions by applying a type guard predicate.
      * @template TFiltered Type produced when {@link predicate} confirms the element.
@@ -2420,6 +2421,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     zipMany<TIterable extends readonly Iterable<unknown>[]>(
         ...iterables: [...TIterable]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+
     /**
      * Zips this sequence with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
      * @template TIterable Extends `readonly Iterable<unknown>[]`; the element type of each iterable contributes to the zipper input tuple.

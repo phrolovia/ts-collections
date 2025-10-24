@@ -1,6 +1,7 @@
 import { Enumerable } from "../enumerator/Enumerable";
 import { IEnumerable } from "../enumerator/IEnumerable";
-import { AbstractEnumerable, Group, IGroup, List, RedBlackTree } from "../imports";
+import { IGroup } from "../enumerator/IGroup";
+import { AbstractEnumerable, Group, List, RedBlackTree } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";

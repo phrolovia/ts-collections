@@ -1,9 +1,10 @@
 import { contains } from "../enumerator/functions/contains";
-import { AbstractRandomAccessImmutableCollection, IReadonlyList, List, ReadonlyList } from "../imports";
+import { AbstractRandomAccessImmutableCollection, List, ReadonlyList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
+import { IReadonlyList } from "./IReadonlyList";
 
 export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: ReadonlyList<TElement>;

@@ -1,5 +1,7 @@
-import { AbstractReadonlyCollection, IList, IReadonlyList } from "../imports";
+import { AbstractReadonlyCollection } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
+import { IList } from "./IList";
+import { IReadonlyList } from "./IReadonlyList";
 
 export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: IList<TElement>;

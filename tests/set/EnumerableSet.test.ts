@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Enumerable } from "../../src";
+import { range } from "../../src/enumerator/functions/range";
 import { LinkedList } from "../../src/list/LinkedList";
 import { EnumerableSet } from "../../src/set/EnumerableSet";
 import { Person } from "../models/Person";
@@ -176,8 +176,8 @@ describe("EnumerableSet", () => {
             expect(set.contains(Person.Senna)).to.be.false;
         });
         test("should measure performance of retainAll", () => {
-            const set1 = Enumerable.range(1, 10000).toEnumerableSet();
-            const set2 = Enumerable.range(5000, 10000).toEnumerableSet();
+            const set1 = range(1, 10000).toEnumerableSet();
+            const set2 = range(5000, 10000).toEnumerableSet();
             const startTime = performance.now();
             set1.retainAll(set2);
             const endTime = performance.now();

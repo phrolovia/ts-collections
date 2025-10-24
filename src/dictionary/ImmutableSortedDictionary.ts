@@ -1,8 +1,10 @@
-import { ICollection, ISet, SortedDictionary } from "../imports";
+import { SortedDictionary } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { OrderComparator } from "../shared/OrderComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";
+import { ICollection } from "../core/ICollection";
+import { ISet } from "../set/ISet";
 
 export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: SortedDictionary<TKey, TValue>;

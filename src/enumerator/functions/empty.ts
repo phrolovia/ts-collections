@@ -1,5 +1,5 @@
 import { Enumerable } from "../../imports";
-import type { IEnumerable } from "../../enumerator/IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Creates an empty sequence.

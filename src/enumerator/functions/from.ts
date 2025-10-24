@@ -1,4 +1,5 @@
-import { Enumerable, IEnumerable } from "../../imports";
+import { Enumerable } from "../../imports";
+import { IEnumerable } from "../IEnumerable";
 
 /**
  * Wraps an iterable with the library's `IEnumerable` implementation.

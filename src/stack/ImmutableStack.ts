@@ -1,4 +1,5 @@
-import { AbstractImmutableCollection, IImmutableCollection, Stack } from "../imports";
+import { IImmutableCollection } from "../core/IImmutableCollection";
+import { AbstractImmutableCollection, Stack } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 
@@ -13,7 +14,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
         return new ImmutableStack(iterable, comparator);
     }
-    
+
     * [Symbol.iterator](): Iterator<TElement> {
         yield* this.#stack;
     }

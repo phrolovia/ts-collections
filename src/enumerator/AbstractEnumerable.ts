@@ -4,7 +4,6 @@ import { SortedDictionary } from "../dictionary/SortedDictionary";
 import {
     CircularLinkedList,
     CircularQueue,
-    IEnumerable,
     ImmutableCircularQueue,
     ImmutableDictionary,
     ImmutableList,
@@ -16,7 +15,7 @@ import {
     ImmutableStack,
     PriorityQueue,
     Queue,
-    Stack,
+    Stack
 } from "../imports";
 import { LinkedList } from "../list/LinkedList";
 import { List } from "../list/List";
@@ -31,18 +30,16 @@ import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredica
 import { IndexedSelector } from "../shared/IndexedSelector";
 import { InferredType } from "../shared/InferredType";
 import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import { ObjectType } from "../shared/ObjectType";
 import { OrderComparator } from "../shared/OrderComparator";
 import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { PipeOperator } from "../shared/PipeOperator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
-import { IGroup } from "./IGroup";
-import { IOrderedEnumerable } from "./IOrderedEnumerable";
-import { PipeOperator } from "../shared/PipeOperator";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
-import { MedianTieStrategy } from "../shared/MedianTieStrategy";
-import { PercentileStrategy } from "../shared/PercentileStrategy"
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
 
 import { aggregate } from "./functions/aggregate";
 import { aggregateBy } from "./functions/aggregateBy";
@@ -164,6 +161,9 @@ import { where } from "./functions/where";
 import { windows } from "./functions/windows";
 import { zip } from "./functions/zip";
 import { zipMany } from "./functions/zipMany";
+import { IEnumerable } from "./IEnumerable";
+import { IGroup } from "./IGroup";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;

@@ -1,7 +1,8 @@
 import { from } from "../enumerator/functions/from";
-import { AbstractRandomAccessCollection, ISet } from "../imports";
+import { AbstractRandomAccessCollection } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
+import { ISet } from "./ISet";
 
 export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollection<TElement> implements ISet<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {

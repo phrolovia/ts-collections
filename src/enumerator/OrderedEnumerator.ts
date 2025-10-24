@@ -1,7 +1,8 @@
-import { Enumerator, IOrderedEnumerable } from "../imports";
+import { Enumerator } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
+import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export class OrderedEnumerator<TElement> extends Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public constructor(public readonly orderedValueGroups: () => Iterable<Iterable<TElement>>) {

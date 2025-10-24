@@ -1,4 +1,4 @@
-import { ICollection, ISet, RedBlackTree, SortedSet } from "../imports";
+import { RedBlackTree, SortedSet } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
@@ -6,6 +6,8 @@ import { KeyNotFoundException } from "../shared/KeyNotFoundException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
+import { ICollection } from "../core/ICollection";
+import { ISet } from "../set/ISet";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     readonly #keyComparer: OrderComparator<TKey>;
