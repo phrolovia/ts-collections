@@ -1,9 +1,9 @@
 import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
-import { IList } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
+import { IList } from "./IList";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 

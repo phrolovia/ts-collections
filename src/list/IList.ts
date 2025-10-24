@@ -1,5 +1,6 @@
-import { IRandomAccessCollection, IReadonlyList } from "../imports";
+import { IRandomAccessCollection } from "../core/IRandomAccessCollection";
 import { OrderComparator } from "../shared/OrderComparator";
+import { IReadonlyList } from "./IReadonlyList";
 
 export interface IList<TElement> extends IReadonlyList<TElement>, IRandomAccessCollection<TElement> {
 
