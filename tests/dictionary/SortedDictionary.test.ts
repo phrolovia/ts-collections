@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
-import { Dictionary, Enumerable, List } from "../../src/imports";
+import { range } from "../../src/enumerator/functions/range";
+import { Dictionary, List } from "../../src/imports";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
 import { KeyNotFoundException } from "../../src/shared/KeyNotFoundException";
@@ -127,19 +128,19 @@ describe("SortedDictionary", () => {
 
     describe("#chunk()", () => {
         test("should split list into chunks of size 10", () => {
-            const dictionary = Enumerable.range(1, 100).toSortedDictionary(n => n, n => n * n);
+            const dictionary = range(1, 100).toSortedDictionary(n => n, n => n * n);
             for (const chunk of dictionary.chunk(10)) {
                 expect(chunk.count() === 10).to.be.true;
             }
         });
         test("should splits enumerable into chunks of size 7 at max", () => {
-            const enumerable = Enumerable.range(1, 79);
+            const enumerable = range(1, 79);
             for (const chunk of enumerable.toSortedDictionary(n => n, n => n * 2).chunk(7)) {
                 expect(chunk.count() <= 7).to.be.true;
             }
         });
         test("should throw error if chunk size is 0", () => {
-            const dictionary = Enumerable.range(1, 100).toSortedDictionary(n => n, n => n * n);
+            const dictionary = range(1, 100).toSortedDictionary(n => n, n => n * n);
             expect(() => dictionary.chunk(0)).toThrowError(new InvalidArgumentException(`Invalid argument: size. Size must be greater than 0.`));
         });
     });
@@ -179,7 +180,7 @@ describe("SortedDictionary", () => {
         const dictionary = new SortedDictionary<string, Person>(
             [
                 new KeyValuePair<string, Person>(Person.Mirei.name, Person.Mirei),
-                new KeyValuePair<string, Person>(Person.Hanyuu.name, Person.Hanyuu),
+                new KeyValuePair<string, Person>(Person.Hanyuu.name, Person.Hanyuu)
             ],
             (p1, p2) => p1.localeCompare(p2),
             (p1, p2) => p1.name === p2.name
@@ -233,7 +234,7 @@ describe("SortedDictionary", () => {
         });
         test("should return false", () => {
             const dict = new SortedDictionary<any, any>();
-            const key1 = {a: 1};
+            const key1 = { a: 1 };
             dict.add(key1, 1);
             expect(dict.containsKey(key1)).to.eq(true);
             expect(dict.contains(1 as any)).to.eq(false);
@@ -770,7 +771,7 @@ describe("SortedDictionary", () => {
             const orderedArray = dictionary.orderBy(p => p.key).toArray();
             const expectedResult = [
                 new KeyValuePair<string, Person>(Person.Reina.name, Person.Reina),
-                new KeyValuePair<string, Person>(Person.Rui.name, Person.Rui),
+                new KeyValuePair<string, Person>(Person.Rui.name, Person.Rui)
             ];
             let index = 0;
             for (const item of orderedArray) {
@@ -1648,7 +1649,7 @@ describe("SortedDictionary", () => {
 
     describe("#windows()", () => {
         const dict = new SortedDictionary<number, string>();
-        Enumerable.range(1, 5).shuffle().forEach(i => dict.add(i, `item${i}`));
+        range(1, 5).shuffle().forEach(i => dict.add(i, `item${i}`));
         test("should return a list of enumerables with 3 elements each", () => {
             const windows = dict.windows(3)
                 .select(w => w.select(p => p.key).toArray())

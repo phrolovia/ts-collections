@@ -1,4 +1,3 @@
-
 export { AbstractEnumerable } from "./enumerator/AbstractEnumerable";
 export { Enumerator } from "./enumerator/Enumerator";
 export { AsyncEnumerator } from "./enumerator/AsyncEnumerator";
@@ -7,12 +6,12 @@ export { OrderedAsyncEnumerator } from "./enumerator/OrderedAsyncEnumerator";
 export { Enumerable } from "./enumerator/Enumerable";
 export { AsyncEnumerable } from "./enumerator/AsyncEnumerable";
 export { Group } from "./enumerator/Group";
-export { CollectionChangedAction } from "./observable/ICollectionChangedEventArgs";
 export { AbstractCollection } from "./core/AbstractCollection";
 export { AbstractRandomAccessCollection } from "./core/AbstractRandomAccessCollection";
 export { AbstractReadonlyCollection } from "./core/AbstractReadonlyCollection";
 export { AbstractImmutableCollection } from "./core/AbstractImmutableCollection";
 export { AbstractRandomAccessImmutableCollection } from "./core/AbstractRandomAccessImmutableCollection";
+export { CollectionChangedAction } from "./observable/ICollectionChangedEventArgs";
 export { ObservableCollection } from "./observable/ObservableCollection";
 export { ReadonlyCollection } from "./core/ReadonlyCollection";
 export { AbstractList } from "./list/AbstractList";
@@ -43,5 +42,3 @@ export { PriorityQueue } from "./queue/PriorityQueue";
 export { ImmutableQueue } from "./queue/ImmutableQueue";
 export { ImmutablePriorityQueue } from "./queue/ImmutablePriorityQueue";
 export { ImmutableStack } from "./stack/ImmutableStack";
-
-

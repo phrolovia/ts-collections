@@ -1,11 +1,11 @@
-import { Enumerable } from "../../src/imports";
+import { range } from "../../src/enumerator/functions/range";
 import { List } from "../../src/list/List";
 import { ReadonlyList } from "../../src/list/ReadonlyList";
 
 describe("ReadonlyList", () => {
     describe("#entries()", () => {
         test("should return an indexed IterableIterator", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            const list = new ReadonlyList(range(1, 100).toList());
             for (const [index, element] of list.entries()) {
                 expect(index + 1).to.eq(element);
                 expect(list.get(index)).to.eq(element);
@@ -15,7 +15,7 @@ describe("ReadonlyList", () => {
 
     describe("#get()", () => {
         test("should return the element at the given index", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            const list = new ReadonlyList(range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 expect(list.get(i)).to.eq(i + 1);
             }
@@ -24,7 +24,7 @@ describe("ReadonlyList", () => {
 
     describe("#getRange()", () => {
         test("should return a new list containing the elements in the given range", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            const list = new ReadonlyList(range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 const range = list.getRange(i, 100 - i);
                 expect(range.size()).to.eq(100 - i);
@@ -34,12 +34,12 @@ describe("ReadonlyList", () => {
             }
         });
         test("should throw an error if the given index is out of bounds", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            const list = new ReadonlyList(range(1, 100).toList());
             expect(() => list.getRange(-1, 1)).to.throw(Error);
             expect(() => list.getRange(100, 1)).to.throw(Error);
         });
         test("should throw an error if the given count is out of bounds", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            const list = new ReadonlyList(range(1, 100).toList());
             expect(() => list.getRange(0, -1)).to.throw(Error);
             expect(() => list.getRange(0, 101)).to.throw(Error);
         });
@@ -47,7 +47,7 @@ describe("ReadonlyList", () => {
 
     describe("#indexOf()", () => {
         test("should return the index of the given element", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toList());
+            const list = new ReadonlyList(range(1, 100).toList());
             for (let i = 0; i < 100; i++) {
                 expect(list.indexOf(i + 1)).to.eq(i);
             }
@@ -56,7 +56,7 @@ describe("ReadonlyList", () => {
 
     describe("#lastIndexOf()", () => {
         test("should return the last index of the given element", () => {
-            const list = new ReadonlyList(Enumerable.range(1, 100).toLinkedList());
+            const list = new ReadonlyList(range(1, 100).toLinkedList());
             for (let i = 0; i < 100; i++) {
                 expect(list.lastIndexOf(i + 1)).to.eq(i);
             }

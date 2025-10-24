@@ -7,7 +7,6 @@ import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
 import { ILookup } from "./ILookup";
 
-
 export class Lookup<TKey, TElement> extends AbstractEnumerable<IGroup<TKey, TElement>> implements ILookup<TKey, TElement> {
     readonly #keyComparator: OrderComparator<TKey>;
     readonly #lookupTree: RedBlackTree<IGroup<TKey, TElement>>;

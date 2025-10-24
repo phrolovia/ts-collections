@@ -1,11 +1,12 @@
-import { Enumerable, ReadonlyDictionary, SortedDictionary } from "../../src/imports";
+import { range } from "../../src/enumerator/functions/range";
+import { ReadonlyDictionary, SortedDictionary } from "../../src/imports";
 
 
 describe("ReadonlyDictionary", () => {
 
     describe("#containsKey()", () => {
         test("should return true if the dictionary contains the given key", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).reverse().toSortedDictionary(x => x, x => x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).reverse().toSortedDictionary(x => x, x => x));
             for (let i = 0; i < 100; i++) {
                 expect(dictionary.containsKey(i + 1)).to.be.true;
                 expect(dictionary.containsKey(0)).to.be.false;
@@ -15,7 +16,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("#containsValue()", () => {
         test("should return true if the dictionary contains the given value", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => x));
             for (let i = 0; i < 100; i++) {
                 expect(dictionary.containsValue(i + 1)).to.be.true;
                 expect(dictionary.containsValue(0)).to.be.false;
@@ -25,7 +26,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("#entries()", () => {
         test("should return an indexed IterableIterator", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => x));
             for (const [key, value] of dictionary.entries()) {
                 expect(key).to.eq(value);
                 expect(dictionary.get(key)).to.eq(value);
@@ -37,7 +38,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("#get()", () => {
         test("should return the value at the given key", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => x));
             for (let i = 0; i < 100; i++) {
                 expect(dictionary.get(i + 1)).to.eq(i + 1);
             }
@@ -46,7 +47,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("#keys()", () => {
         test("should return an IterableIterator of keys", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => 1 / x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => 1 / x));
             let index = 1;
             for (const key of dictionary.keys()) {
                 expect(key).to.eq(index);
@@ -57,12 +58,12 @@ describe("ReadonlyDictionary", () => {
 
     describe("#size()", () => {
         test("should return the number of elements in the collection", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => x));
             expect(dictionary.size()).to.equal(100);
             expect(dictionary.length).to.equal(100);
         });
         test("should reflect changes to the underlying collection", () => {
-            const dictionary = new SortedDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new SortedDictionary(range(1, 100).toDictionary(x => x, x => x));
             const readonlyDictionary = new ReadonlyDictionary(dictionary);
             expect(readonlyDictionary.size()).to.equal(100);
             expect(readonlyDictionary.length).to.equal(100);
@@ -74,7 +75,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("#values()", () => {
         test("should return an IterableIterator of values", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => 1 / x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => 1 / x));
             let index = 1;
             for (const value of dictionary.values()) {
                 expect(value).to.eq(1 / index);
@@ -85,7 +86,7 @@ describe("ReadonlyDictionary", () => {
 
     describe("for-of", () => {
         test("should iterate over the dictionary", () => {
-            const dictionary = new ReadonlyDictionary(Enumerable.range(1, 100).toDictionary(x => x, x => x));
+            const dictionary = new ReadonlyDictionary(range(1, 100).toDictionary(x => x, x => x));
             let index = 1;
             for (const pair of dictionary) {
                 expect(pair.key).to.eq(index);
