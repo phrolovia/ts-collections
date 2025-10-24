@@ -1,4 +1,4 @@
-import { IRandomAccessCollection } from "../imports";
+import { IRandomAccessCollection } from "../core/IRandomAccessCollection";
 import { Predicate } from "../shared/Predicate";
 
 export type TraverseType = "INORDER" | "PREORDER" | "POSTORDER";
