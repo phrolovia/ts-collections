@@ -1,7 +1,9 @@
-import { Dictionary, ICollection, ISet, ReadonlyDictionary } from "../imports";
+import { Dictionary, ReadonlyDictionary } from "../imports";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";
+import { ICollection } from "../core/ICollection";
+import { ISet } from "../set/ISet";
 
 export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: ReadonlyDictionary<TKey, TValue>;

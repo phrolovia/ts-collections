@@ -1,4 +1,5 @@
-import { ICollection, ISet } from "../imports";
+import { ICollection } from "../core/ICollection";
+import { ISet } from "../set/ISet";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
 import { IDictionary } from "./IDictionary";

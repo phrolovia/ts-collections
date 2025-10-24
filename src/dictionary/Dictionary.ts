@@ -1,11 +1,13 @@
 import { select } from "../enumerator/functions/select";
-import { EnumerableSet, ICollection, ISet, List } from "../imports";
+import { EnumerableSet, List } from "../imports";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { KeyNotFoundException } from "../shared/KeyNotFoundException";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
+import { ISet } from "../set/ISet";
+import { ICollection } from "../core/ICollection";
 
 export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     readonly #dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();

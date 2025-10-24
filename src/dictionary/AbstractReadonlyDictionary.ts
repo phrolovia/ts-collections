@@ -1,50 +1,4 @@
-import {
-    CircularLinkedList,
-    CircularQueue,
-    EnumerableSet,
-    ICollection,
-    IEnumerable,
-    IGroup,
-    ILookup,
-    ImmutableCircularQueue,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutablePriorityQueue,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    IOrderedEnumerable,
-    ISet,
-    LinkedList,
-    List,
-    PriorityQueue,
-    Queue,
-    SortedSet,
-    Stack,
-} from "../imports";
-import {Accumulator} from "../shared/Accumulator";
-import {EqualityComparator} from "../shared/EqualityComparator";
-import {IndexedAction} from "../shared/IndexedAction";
-import {IndexedPredicate, IndexedTypePredicate} from "../shared/IndexedPredicate";
-import {IndexedSelector} from "../shared/IndexedSelector";
-import {InferredType} from "../shared/InferredType";
-import {JoinSelector} from "../shared/JoinSelector";
-import {ObjectType} from "../shared/ObjectType";
-import {OrderComparator} from "../shared/OrderComparator";
-import {PairwiseSelector} from "../shared/PairwiseSelector";
-import {Predicate, TypePredicate} from "../shared/Predicate";
-import {Selector} from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
-import {Dictionary} from "./Dictionary";
-import {IReadonlyDictionary} from "./IReadonlyDictionary";
-import {KeyValuePair} from "./KeyValuePair";
-import {SortedDictionary} from "./SortedDictionary";
-import {PipeOperator} from "../shared/PipeOperator";
-import {UnpackIterableTuple} from "../shared/UnpackIterableTuple";
-import {MedianTieStrategy} from "../shared/MedianTieStrategy";
-import {PercentileStrategy} from "../shared/PercentileStrategy";
+import { ICollection } from "../core/ICollection";
 import { aggregate } from "../enumerator/functions/aggregate";
 import { aggregateBy } from "../enumerator/functions/aggregateBy";
 import { all } from "../enumerator/functions/all";
@@ -165,6 +119,52 @@ import { where } from "../enumerator/functions/where";
 import { windows } from "../enumerator/functions/windows";
 import { zip } from "../enumerator/functions/zip";
 import { zipMany } from "../enumerator/functions/zipMany";
+import { IEnumerable } from "../enumerator/IEnumerable";
+import { IGroup } from "../enumerator/IGroup";
+import { IOrderedEnumerable } from "../enumerator/IOrderedEnumerable";
+import {
+    CircularLinkedList,
+    CircularQueue,
+    EnumerableSet,
+    ImmutableCircularQueue,
+    ImmutableDictionary,
+    ImmutableList,
+    ImmutablePriorityQueue,
+    ImmutableQueue,
+    ImmutableSet,
+    ImmutableSortedDictionary,
+    ImmutableSortedSet,
+    ImmutableStack,
+    LinkedList,
+    List,
+    PriorityQueue,
+    Queue,
+    SortedSet,
+    Stack
+} from "../imports";
+import { ILookup } from "../lookup/ILookup";
+import { ISet } from "../set/ISet";
+import { Accumulator } from "../shared/Accumulator";
+import { EqualityComparator } from "../shared/EqualityComparator";
+import { IndexedAction } from "../shared/IndexedAction";
+import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
+import { IndexedSelector } from "../shared/IndexedSelector";
+import { InferredType } from "../shared/InferredType";
+import { JoinSelector } from "../shared/JoinSelector";
+import { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import { ObjectType } from "../shared/ObjectType";
+import { OrderComparator } from "../shared/OrderComparator";
+import { PairwiseSelector } from "../shared/PairwiseSelector";
+import { PercentileStrategy } from "../shared/PercentileStrategy";
+import { PipeOperator } from "../shared/PipeOperator";
+import { Predicate, TypePredicate } from "../shared/Predicate";
+import { Selector } from "../shared/Selector";
+import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { Dictionary } from "./Dictionary";
+import { IReadonlyDictionary } from "./IReadonlyDictionary";
+import { KeyValuePair } from "./KeyValuePair";
+import { SortedDictionary } from "./SortedDictionary";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
