@@ -1,7 +1,8 @@
-import { AbstractImmutableCollection, Heap } from "../imports";
+import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
+import { Heap } from "./Heap";
 
 /**
  * An immutable binary heap that returns a new instance whenever it is modified.
