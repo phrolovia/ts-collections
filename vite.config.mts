@@ -5,10 +5,13 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
     build: {
         lib: {
-            entry: resolve(__dirname, "./src/index.ts"),
+            entry: {
+                index: resolve(__dirname, "./src/index.ts"),
+                functions: resolve(__dirname, "./src/enumerator/functions/functions.ts"),
+            },
             name: "ts-collections",
             formats: ["es"],
-            fileName: ({}): string => `index.mjs`
+            fileName: (_format, entryName): string => `${entryName}.mjs`
         },
         rollupOptions: {
             external: [
@@ -19,6 +22,7 @@ export default defineConfig({
     },
     plugins: [
         dts({
+            entryRoot: "src",
             rollupTypes: true
         })
     ], // emit TS declaration files
