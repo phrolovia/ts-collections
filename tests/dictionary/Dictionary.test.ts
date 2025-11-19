@@ -564,6 +564,8 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Senna.name)).to.eq(Person.Senna.age);
         });
         test("should get the value which belongs to the given key #2", { timeout: 15000 }, () => {
+            // The number of generated random numbers was reduced from 500000 to 50000
+            // for performance reasons (e.g., to avoid timeouts in CI).
             const numbers = Helper.generateRandomUniqueNumbers(50000);
             const dict = new Dictionary<number, string>();
             numbers.forEach(n => dict.add(n, n.toString()));

@@ -106,7 +106,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     }
 
     public values(): IImmutableCollection<TValue> {
-        return select(this.#dictionary.values(), x => x.value).toImmutableSet();
+        return select(this.#dictionary.values(), x => x.value).toImmutableList(this.valueComparator);
     }
 
     public override get length(): number {

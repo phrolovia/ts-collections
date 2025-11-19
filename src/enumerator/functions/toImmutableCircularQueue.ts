@@ -3,12 +3,12 @@ import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**
- * Materialises {@link source} into an immutable circular queue that uses the implementation\'s default capacity.
+ * Materialises {@link source} into an immutable circular queue that uses the implementation's default capacity.
  * @template TElement Type of elements within {@link source}.
  * @param source The source iterable.
  * @param comparator Optional equality comparator used by the resulting queue.
  * @returns {ImmutableCircularQueue<TElement>} An immutable circular queue containing the most recent elements from {@link source}, up to the default capacity.
- * @remarks The entire sequence is enumerated immediately. Earlier items are discarded when the number of elements exceeds the queue\'s capacity (currently 32).
+ * @remarks The entire sequence is enumerated immediately. Earlier items are discarded when the number of elements exceeds the queue's capacity (currently 32).
  * @example
  * ```typescript
  * const numbers = [1, 2, 3];

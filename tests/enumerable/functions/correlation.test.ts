@@ -11,8 +11,8 @@ describe("#correlation()", () => {
         expect(result).to.eq(1);
     });
     test("should return correlation of two lists #2", () => {
-        const list1 = [3,28,10,15];
-        const list2 = [2,0,2,5];
+        const list1 = [3, 28, 10, 15];
+        const list2 = [2, 0, 2, 5];
         const result = correlation(list1, list2);
         expect(result).to.be.closeTo(-0.3831, 0.0001);
     });

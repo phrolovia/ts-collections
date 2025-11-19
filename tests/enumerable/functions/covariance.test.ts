@@ -20,7 +20,7 @@ describe("#covariance", () => {
         );
     });
     test("should throw error if lists are empty", () => {
-        const list1 = [] as number[]
+        const list1 = [] as number[];
         const list2 = [] as number[];
         expect(() => covariance(list1, list2)).toThrowError(
             new InsufficientElementException("Covariance requires at least two pairs of elements.")
@@ -46,8 +46,8 @@ describe("#covariance", () => {
         expect(result).to.eq(0);
     });
     test("should return negative covariance", () => {
-        const list1 =[1, 2, 3, 4, 5];
-        const list2 =[10, 8, 6, 4, 2];
+        const list1 = [1, 2, 3, 4, 5];
+        const list2 = [10, 8, 6, 4, 2];
         const result = covariance(list1, list2);
         expect(result).to.eq(-5);
     });
@@ -57,14 +57,14 @@ describe("#covariance", () => {
             { value: 2 },
             { value: 3 },
             { value: 4 },
-            { value: 5 },
+            { value: 5 }
         ];
         const list2 = [
             { value: 2 },
             { value: 4 },
             { value: 6 },
             { value: 8 },
-            { value: 10 },
+            { value: 10 }
         ];
         const result = covariance(list1, list2, x => x.value, y => y.value);
         expect(result).to.eq(5);

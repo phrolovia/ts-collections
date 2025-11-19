@@ -8,8 +8,8 @@ export abstract class AbstractRandomAccessCollection<TElement> extends AbstractC
         const removedElements = new Set<TElement>();
         for (const element of this) {
             const found = this.comparer
-                ? elementsToRetain.some(e => this.comparer(e as TElement, element))
-                : elementsToRetain.includes(element as TSource);
+                ? elementsToRetain.some(e => this.comparer(e, element))
+                : (elementsToRetain as TElement[]).includes(element);
 
             if (!found) {
                 removedElements.add(element);
