@@ -7,6 +7,7 @@ import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate, TypePredicate } from "../shared/Predicate";
 import { IReadonlyList } from "./IReadonlyList";
+import { registerImmutableListFactory } from "../enumerator/Enumerator";
 
 export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: ReadonlyList<TElement>;
@@ -223,3 +224,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         return this.#list.length;
     }
 }
+
+registerImmutableListFactory(<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> => {
+    return ImmutableList.create(iterable, comparator);
+});

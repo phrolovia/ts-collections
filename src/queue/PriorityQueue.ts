@@ -3,6 +3,7 @@ import { Heap } from "../heap/Heap";
 import { Comparators } from "../shared/Comparators";
 import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
+import { registerPriorityQueueFactory } from "../enumerator/Enumerator";
 
 export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
@@ -113,3 +114,7 @@ export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
         return this.#queue.size();
     }
 }
+
+registerPriorityQueueFactory(<TElement>(iterable: Iterable<TElement>, comparator?: OrderComparator<TElement>): PriorityQueue<TElement> => {
+    return new PriorityQueue(iterable, comparator);
+});

@@ -1,6 +1,7 @@
 import type { IEnumerable } from "./IEnumerable";
 import type { IGroup } from "./IGroup";
 import { AbstractEnumerable } from "./AbstractEnumerable";
+import { registerGroupFactory } from "./Enumerator";
 
 export class Group<TKey, TElement> extends AbstractEnumerable<TElement> implements IGroup<TKey, TElement> {
     public readonly key: TKey;
@@ -16,3 +17,7 @@ export class Group<TKey, TElement> extends AbstractEnumerable<TElement> implemen
         yield* this.source;
     }
 }
+
+registerGroupFactory(<TKey, TElement>(key: TKey, source: IEnumerable<TElement>): Group<TKey, TElement> => {
+    return new Group(key, source);
+});

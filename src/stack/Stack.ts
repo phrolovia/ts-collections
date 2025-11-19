@@ -3,6 +3,7 @@ import { AbstractCollection } from "../core/AbstractCollection";
 import { LinkedList } from "../list/LinkedList";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
+import { registerStackFactory } from "../enumerator/Enumerator";
 
 export class Stack<TElement> extends AbstractCollection<TElement> {
     readonly #stack: LinkedList<TElement>;
@@ -85,3 +86,7 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
         return this.#stack.length;
     }
 }
+
+registerStackFactory(<TElement>(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): Stack<TElement> => {
+    return new Stack(iterable, comparator);
+});

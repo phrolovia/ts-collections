@@ -9,6 +9,7 @@ import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import { ISet } from "../set/ISet";
 import { ICollection } from "../core/ICollection";
+import { registerDictionaryFactory } from "../enumerator/Enumerator";
 
 export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     readonly #dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();
@@ -113,3 +114,7 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         return this.#dictionary.size;
     }
 }
+
+registerDictionaryFactory(<TKey, TValue>(iterable?: Iterable<KeyValuePair<TKey, TValue>>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> => {
+    return new Dictionary(iterable ?? ([] as Array<KeyValuePair<TKey, TValue>>), valueComparator);
+});

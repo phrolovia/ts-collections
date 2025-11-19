@@ -4,6 +4,7 @@ import { SortedSet } from "./SortedSet";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
+import { registerImmutableSortedSetFactory } from "../enumerator/Enumerator";
 
 export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
@@ -183,3 +184,7 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
         return this.#set.length;
     }
 }
+
+registerImmutableSortedSetFactory(<TElement>(iterable: Iterable<TElement>, comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> => {
+    return ImmutableSortedSet.create(iterable, comparator);
+});

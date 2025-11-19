@@ -3,6 +3,7 @@ import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection
 import { Stack } from "./Stack";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
+import { registerImmutableStackFactory } from "../enumerator/Enumerator";
 
 export class ImmutableStack<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #stack: Stack<TElement>;
@@ -105,3 +106,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
         return this.#stack.length;
     }
 }
+
+registerImmutableStackFactory(<TElement>(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> => {
+    return ImmutableStack.create(iterable, comparator);
+});

@@ -5,6 +5,7 @@ import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import { ICollection } from "../core/ICollection";
 import { ISet } from "../set/ISet";
+import { registerImmutableDictionaryFactory } from "../enumerator/Enumerator";
 
 export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: ReadonlyDictionary<TKey, TValue>;
@@ -93,3 +94,7 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         return this.#dictionary.length;
     }
 }
+
+registerImmutableDictionaryFactory(<TKey, TValue>(dictionary: Dictionary<TKey, TValue>): ImmutableDictionary<TKey, TValue> => {
+    return ImmutableDictionary.create<TKey, TValue>(dictionary, dictionary.valueComparator);
+});

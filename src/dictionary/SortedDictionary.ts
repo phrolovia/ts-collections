@@ -9,6 +9,7 @@ import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import { ICollection } from "../core/ICollection";
 import { ISet } from "../set/ISet";
+import { registerSortedDictionaryFactory } from "../enumerator/Enumerator";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     readonly #keyComparer: OrderComparator<TKey>;
@@ -113,3 +114,7 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         return this.#keyValueTree.length;
     }
 }
+
+registerSortedDictionaryFactory(<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> => {
+    return new SortedDictionary(iterable, keyComparator, valueComparator);
+});

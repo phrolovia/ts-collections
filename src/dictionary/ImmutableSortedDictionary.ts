@@ -5,6 +5,7 @@ import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import { ICollection } from "../core/ICollection";
 import { ISet } from "../set/ISet";
+import { registerImmutableSortedDictionaryFactory } from "../enumerator/Enumerator";
 
 export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: SortedDictionary<TKey, TValue>;
@@ -94,3 +95,7 @@ export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDi
         return this.#dictionary.length;
     }
 }
+
+registerImmutableSortedDictionaryFactory(<TKey, TValue>(dictionary: SortedDictionary<TKey, TValue>): ImmutableSortedDictionary<TKey, TValue> => {
+    return ImmutableSortedDictionary.create(dictionary);
+});

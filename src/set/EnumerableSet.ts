@@ -1,6 +1,7 @@
 import { AbstractSet } from "./AbstractSet";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { Predicate } from "../shared/Predicate";
+import { registerEnumerableSetFactory } from "../enumerator/Enumerator";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {
     readonly #set: Set<TElement>;
@@ -76,3 +77,7 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
         return this.#set.size;
     }
 }
+
+registerEnumerableSetFactory(<TElement>(iterable: Iterable<TElement>): EnumerableSet<TElement> => {
+    return new EnumerableSet(iterable);
+});

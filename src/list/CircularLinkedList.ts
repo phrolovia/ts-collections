@@ -5,6 +5,7 @@ import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";
 import { AbstractList } from "./AbstractList";
+import { registerCircularLinkedListFactory } from "../enumerator/Enumerator";
 
 // Internal Node class specifically for CircularLinkedList
 // Maintains references to the previous and next nodes in the circle.
@@ -463,3 +464,7 @@ export class CircularLinkedList<TElement> extends AbstractList<TElement> {
         return this.#listSize;
     }
 }
+
+registerCircularLinkedListFactory(<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): CircularLinkedList<TElement> => {
+    return new CircularLinkedList(iterable ?? ([] as TElement[]), comparator);
+});
