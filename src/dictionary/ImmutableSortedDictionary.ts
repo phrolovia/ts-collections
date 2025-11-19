@@ -97,5 +97,5 @@ export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDi
 }
 
 registerImmutableSortedDictionaryFactory(<TKey, TValue>(dictionary: SortedDictionary<TKey, TValue>): ImmutableSortedDictionary<TKey, TValue> => {
-    return ImmutableSortedDictionary.create(dictionary);
+    return ImmutableSortedDictionary.create(dictionary, dictionary.keyComparator, dictionary.valueComparator);
 });

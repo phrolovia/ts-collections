@@ -23,7 +23,6 @@ import { SortedDictionary } from "../dictionary/SortedDictionary";
 import { SortedSet } from "../set/SortedSet";
 import { Stack } from "../stack/Stack";
 import type { ILookup } from "../lookup/ILookup";
-import { registerLookupFactory } from "./Enumerator";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { DimensionMismatchException } from "../shared/DimensionMismatchException";
@@ -69,20 +68,6 @@ import { IAsyncEnumerable } from "./IAsyncEnumerable";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
-
-type OrderedAsyncEnumerableFactory = <TElement, TKey>(
-    source: AsyncIterable<TElement>,
-    keySelector: Selector<TElement, TKey>,
-    ascending: boolean,
-    viaThenBy?: boolean,
-    comparator?: OrderComparator<TKey>
-) => IOrderedAsyncEnumerable<TElement>;
-
-let orderedAsyncEnumerableFactory: OrderedAsyncEnumerableFactory | undefined;
-
-export const registerOrderedAsyncEnumerableFactory = (factory: OrderedAsyncEnumerableFactory): void => {
-    orderedAsyncEnumerableFactory = factory;
-};
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
@@ -1886,3 +1871,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 }
+
+type OrderedAsyncEnumerableFactory = <TElement, TKey>(
+    source: AsyncIterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    ascending: boolean,
+    viaThenBy?: boolean,
+    comparator?: OrderComparator<TKey>
+) => IOrderedAsyncEnumerable<TElement>;
+
+let orderedAsyncEnumerableFactory: OrderedAsyncEnumerableFactory | undefined;
+
+export const registerOrderedAsyncEnumerableFactory = (factory: OrderedAsyncEnumerableFactory): void => {
+    orderedAsyncEnumerableFactory = factory;
+};
