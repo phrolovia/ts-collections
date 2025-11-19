@@ -1,6 +1,5 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { Enumerable } from "./Enumerable";
-import { OrderedEnumerator } from "./OrderedEnumerator";
 import type { Group } from "./Group";
 import type { CircularLinkedList } from "../list/CircularLinkedList";
 import type { CircularQueue } from "../queue/CircularQueue";
@@ -23,8 +22,7 @@ import type { SortedDictionary } from "../dictionary/SortedDictionary";
 import type { SortedSet } from "../set/SortedSet";
 import type { Stack } from "../stack/Stack";
 
-import { ILookup } from "../lookup/ILookup";
-import { Lookup } from "../lookup/Lookup";
+import type { ILookup } from "../lookup/ILookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { DimensionMismatchException } from "../shared/DimensionMismatchException";
@@ -172,6 +170,21 @@ type GroupFactory = <TKey, TElement>(
     source: IEnumerable<TElement>
 ) => Group<TKey, TElement>;
 
+type OrderedEnumerableFactory = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    ascending: boolean,
+    viaThenBy?: boolean,
+    comparator?: OrderComparator<TKey>
+) => IOrderedEnumerable<TElement>;
+
+type LookupFactory = <TSource, TKey, TValue>(
+    source: Iterable<TSource>,
+    keySelector: Selector<TSource, TKey>,
+    valueSelector: Selector<TSource, TValue>,
+    keyComparator?: OrderComparator<TKey>
+) => ILookup<TKey, TValue>;
+
 let circularLinkedListFactory: CircularLinkedListFactory | undefined;
 let circularQueueFactory: CircularQueueFactory | undefined;
 let dictionaryFactory: DictionaryFactory | undefined;
@@ -193,6 +206,8 @@ let sortedDictionaryFactory: SortedDictionaryFactory | undefined;
 let sortedSetFactory: SortedSetFactory | undefined;
 let stackFactory: StackFactory | undefined;
 let groupFactory: GroupFactory | undefined;
+let orderedEnumerableFactory: OrderedEnumerableFactory | undefined;
+let lookupFactory: LookupFactory | undefined;
 
 export const registerCircularLinkedListFactory = (factory: CircularLinkedListFactory): void => {
     circularLinkedListFactory = factory;
@@ -276,6 +291,14 @@ export const registerStackFactory = (factory: StackFactory): void => {
 
 export const registerGroupFactory = (factory: GroupFactory): void => {
     groupFactory = factory;
+};
+
+export const registerOrderedEnumerableFactory = (factory: OrderedEnumerableFactory): void => {
+    orderedEnumerableFactory = factory;
+};
+
+export const registerLookupFactory = (factory: LookupFactory): void => {
+    lookupFactory = factory;
 };
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
@@ -868,19 +891,31 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
-        return OrderedEnumerator.createOrderedEnumerable(this, k => k, true, false, comparator);
+        if (!orderedEnumerableFactory) {
+            throw new Error("OrderedEnumerable factory is not registered.");
+        }
+        return orderedEnumerableFactory(this, k => k, true, false, comparator);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
+        if (!orderedEnumerableFactory) {
+            throw new Error("OrderedEnumerable factory is not registered.");
+        }
+        return orderedEnumerableFactory(this, keySelector, true, false, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
+        if (!orderedEnumerableFactory) {
+            throw new Error("OrderedEnumerable factory is not registered.");
+        }
+        return orderedEnumerableFactory(this, keySelector, false, false, comparator);
     }
 
     public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
-        return OrderedEnumerator.createOrderedEnumerable(this, k => k, false, false, comparator);
+        if (!orderedEnumerableFactory) {
+            throw new Error("OrderedEnumerable factory is not registered.");
+        }
+        return orderedEnumerableFactory(this, k => k, false, false, comparator);
     }
 
     public pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
@@ -1112,11 +1147,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
+        if (!orderedEnumerableFactory) {
+            throw new Error("OrderedEnumerable factory is not registered.");
+        }
+        return orderedEnumerableFactory(this, keySelector, true, true, comparator);
     }
 
     public thenByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, true, comparator);
+        if (!orderedEnumerableFactory) {
+            throw new Error("OrderedEnumerable factory is not registered.");
+        }
+        return orderedEnumerableFactory(this, keySelector, false, true, comparator);
     }
 
     public toArray(): TElement[] {
@@ -1247,7 +1288,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
-        return Lookup.create(this, keySelector, valueSelector, keyComparator);
+        if (!lookupFactory) {
+            throw new Error("Lookup factory is not registered.");
+        }
+        return lookupFactory(this, keySelector, valueSelector, keyComparator);
     }
 
     public toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue> {

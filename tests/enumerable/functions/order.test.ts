@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { order } from "../../../src/enumerator/functions/order";
+import "../../../src/enumerator/OrderedEnumerator";
 
 describe("#order()", () => {
     test("should order numbers", () => {

@@ -1,6 +1,7 @@
 import { describe } from "vitest";
 import { shuffleInPlace } from "../../src/utils/shuffleInPlace";
 import { range } from "../../src/enumerator/functions/range";
+import "../../src/list/List";
 
 describe("#shuffleInPlace", () => {
     test("should shuffle elements in an array", () => {

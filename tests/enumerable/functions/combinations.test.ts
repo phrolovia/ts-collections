@@ -1,5 +1,7 @@
 import { describe, expect, it, test } from "vitest";
 import { combinations } from "../../../src/enumerator/functions/combinations";
+import "../../../src/enumerator/OrderedEnumerator";
+import "../../../src/list/List";
 
 describe("#combinations()", () => {
     test("should return all combinations of the string", () => {

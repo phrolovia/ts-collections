@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { exceptBy } from "../../../src/enumerator/functions/exceptBy";
 import { Person } from "../../models/Person";
+import "../../../src/set/SortedSet";
 
 describe("#exceptBy()", () => {
     test("should return [1,2,3]", () => {

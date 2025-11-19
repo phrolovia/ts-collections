@@ -3,6 +3,7 @@ import { range } from "../../src/enumerator/functions/range";
 import { LinkedList } from "../../src/list/LinkedList";
 import { EnumerableSet } from "../../src/set/EnumerableSet";
 import { Person } from "../models/Person";
+import "../../src/set/SortedSet";
 
 describe("EnumerableSet", () => {
     describe("#add()", () => {

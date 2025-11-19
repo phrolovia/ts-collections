@@ -4,6 +4,7 @@ import { count } from "../../../src/enumerator/functions/count";
 import { elementAt } from "../../../src/enumerator/functions/elementAt";
 import { forEach } from "../../../src/enumerator/functions/forEach";
 import { range } from "../../../src/enumerator/functions/range";
+import "../../../src/list/List";
 
 describe("#chunk()", () => {
     test("should split the list into groups of 10", () => {

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { toLookup } from "../../../src/enumerator/functions/toLookup";
 import { Person } from "../../models/Person";
+import "../../../src/lookup/Lookup";
 
 describe("#toLookup()", () => {
     test("should return a lookup", () => {

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { orderByDescending } from "../../../src/enumerator/functions/orderByDescending";
+import "../../../src/enumerator/OrderedEnumerator";
 import { select } from "../../../src/enumerator/functions/select";
 import { Person } from "../../models/Person";
 

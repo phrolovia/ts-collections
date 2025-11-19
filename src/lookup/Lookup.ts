@@ -3,6 +3,7 @@ import { IEnumerable } from "../enumerator/IEnumerable";
 import { IGroup } from "../enumerator/IGroup";
 import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
 import { Group } from "../enumerator/Group";
+import { registerLookupFactory } from "../enumerator/Enumerator";
 import { List } from "../list/List";
 import { RedBlackTree } from "../tree/RedBlackTree";
 import { Comparators } from "../shared/Comparators";
@@ -69,3 +70,12 @@ export class Lookup<TKey, TElement> extends AbstractEnumerable<IGroup<TKey, TEle
         return this.#lookupTree.length;
     }
 }
+
+registerLookupFactory(<TSource, TKey, TValue>(
+    source: Iterable<TSource>,
+    keySelector: Selector<TSource, TKey>,
+    valueSelector: Selector<TSource, TValue>,
+    keyComparator: OrderComparator<TKey> = Comparators.orderComparator
+): ILookup<TKey, TValue> => {
+    return Lookup.create(source, keySelector, valueSelector, keyComparator);
+});

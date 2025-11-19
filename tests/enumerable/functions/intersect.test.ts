@@ -5,6 +5,7 @@ import { range } from "../../../src/enumerator/functions/range";
 import { select } from "../../../src/enumerator/functions/select";
 import { Helper } from "../../helpers/Helper";
 import { Person } from "../../models/Person";
+import "../../../src/set/SortedSet";
 
 describe("#intersect()", () => {
     test("should return [4,5]", () => {

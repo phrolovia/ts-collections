@@ -31,6 +31,7 @@ import { DimensionMismatchException } from "../../src/shared/DimensionMismatchEx
 import { InsufficientElementException } from "../../src/shared/InsufficientElementException";
 import { from } from "../../src/enumerator/functions/from";
 import { IEnumerable } from "../../src/enumerator/IEnumerable";
+import "../../src/lookup/Lookup";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>

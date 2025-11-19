@@ -10,6 +10,8 @@ import { where } from "../../../src/enumerator/functions/where";
 import { School } from "../../models/School";
 import { SchoolStudents } from "../../models/SchoolStudents";
 import { Student } from "../../models/Student";
+import "../../../src/enumerator/OrderedEnumerator";
+import "../../../src/list/List";
 
 describe("#groupJoin()", () => {
     const school1 = new School(1, "Elementary School");

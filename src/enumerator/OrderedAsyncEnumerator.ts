@@ -1,4 +1,4 @@
-import { AsyncEnumerator } from "./AsyncEnumerator";
+import { AsyncEnumerator, registerOrderedAsyncEnumerableFactory } from "./AsyncEnumerator";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
@@ -13,7 +13,7 @@ export class OrderedAsyncEnumerator<TElement> extends AsyncEnumerator<TElement> 
         });
     }
 
-    public static createOrderedEnumerable<TElement, TKey>(source: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>) {
+    public static createOrderedEnumerable<TElement, TKey>(source: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
         const keyValueGenerator = async function* <TKey>(source: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, comparator?: OrderComparator<TKey>): AsyncIterable<AsyncIterable<TElement>> {
             comparator ??= Comparators.orderComparator;
             const sortMap = await OrderedAsyncEnumerator.createKeyValueMap(source, keySelector);
@@ -56,3 +56,5 @@ export class OrderedAsyncEnumerator<TElement> extends AsyncEnumerator<TElement> 
         return new Map<TKey, AsyncIterable<TElement>>(Array.from(sortMap.entries()).map(([key, value]) => [key, asyncEnumerable(value)]));
     }
 }
+
+registerOrderedAsyncEnumerableFactory(OrderedAsyncEnumerator.createOrderedEnumerable);

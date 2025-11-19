@@ -8,6 +8,8 @@ import { selectMany } from "../../../src/enumerator/functions/selectMany";
 import { toArray } from "../../../src/enumerator/functions/toArray";
 import { where } from "../../../src/enumerator/functions/where";
 import { Person } from "../../models/Person";
+import "../../../src/enumerator/Group";
+import "../../../src/list/List";
 
 describe("#groupBy()", () => {
     const sequence = new Set([Person.Alice, Person.Mel, Person.Senna, Person.Lenka, Person.Jane, Person.Kaori, Person.Reina]);

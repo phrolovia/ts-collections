@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { intersectBy } from "../../../src/enumerator/functions/intersectBy";
 import { Person } from "../../models/Person";
+import "../../../src/set/SortedSet";
 
 describe("#intersectBy()", () => {
     test("should return [4,5]", () => {

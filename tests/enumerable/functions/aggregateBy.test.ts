@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import { aggregateBy } from "../../../src/enumerator/functions/aggregateBy";
 import { List } from "../../../src/list/List";
 import { Person } from "../../models/Person";
+import "../../../src/enumerator/Group";
 
 describe("#aggregateBy()", () => {
     test("should return (name, sum of ages)", () => {

@@ -38,6 +38,7 @@ import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
+import "../../src/lookup/Lookup";
 
 describe.skip("AsyncEnumerable", () => {
     const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));

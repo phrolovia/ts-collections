@@ -1,4 +1,4 @@
-import { Enumerator } from "./Enumerator";
+import { Enumerator, registerOrderedEnumerableFactory } from "./Enumerator";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";
@@ -13,7 +13,7 @@ export class OrderedEnumerator<TElement> extends Enumerator<TElement> implements
         });
     }
 
-    public static createOrderedEnumerable<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>) {
+    public static createOrderedEnumerable<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
         const keyValueGenerator = function* <TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, comparator?: OrderComparator<TKey>): Iterable<Iterable<TElement>> {
             comparator ??= Comparators.orderComparator;
             const sortMap = OrderedEnumerator.createKeyValueMap(source, keySelector);
@@ -53,3 +53,5 @@ export class OrderedEnumerator<TElement> extends Enumerator<TElement> implements
         return sortMap;
     }
 }
+
+registerOrderedEnumerableFactory(OrderedEnumerator.createOrderedEnumerable);
