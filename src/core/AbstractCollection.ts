@@ -1,7 +1,6 @@
-import { IReadonlyCollection, ReadonlyCollection } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
-import { ICollection } from "./ICollection";
+import type { ICollection } from "./ICollection";
 
 export abstract class AbstractCollection<TElement> extends AbstractReadonlyCollection<TElement> implements ICollection<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {
@@ -14,10 +13,6 @@ export abstract class AbstractCollection<TElement> extends AbstractReadonlyColle
             this.add(element);
         }
         return this.size() !== oldSize;
-    }
-
-    public toReadonlyCollection(): IReadonlyCollection<TElement> {
-        return new ReadonlyCollection(this);
     }
 
     abstract add(element: TElement): boolean;

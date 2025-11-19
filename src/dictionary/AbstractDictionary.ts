@@ -1,7 +1,7 @@
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
-import { IDictionary } from "./IDictionary";
-import { KeyValuePair } from "./KeyValuePair";
+import type { IDictionary } from "./IDictionary";
+import type { KeyValuePair } from "./KeyValuePair";
 
 export abstract class AbstractDictionary<TKey, TValue> extends AbstractReadonlyDictionary<TKey, TValue> implements IDictionary<TKey, TValue> {
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {

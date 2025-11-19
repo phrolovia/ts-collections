@@ -1,6 +1,7 @@
+import { toImmutableList } from "../enumerator/functions/toImmutableList";
+import type { IReadonlyList } from "../list/IReadonlyList";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { IReadonlyList, toImmutableList } from "../imports";
+import type { OrderComparator } from "../shared/OrderComparator";
 
 /**
  * Performs a binary search on the given sequence and returns the index of the element. The sequence must be sorted prior to calling this method.

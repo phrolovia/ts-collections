@@ -1,5 +1,5 @@
-import { AbstractImmutableCollection } from "../imports";
-import { IRandomAccessImmutableCollection } from "./IRandomAccessImmutableCollection";
+import { AbstractImmutableCollection } from "./AbstractImmutableCollection";
+import type { IRandomAccessImmutableCollection } from "./IRandomAccessImmutableCollection";
 
 export abstract class AbstractRandomAccessImmutableCollection<TElement> extends AbstractImmutableCollection<TElement> implements IRandomAccessImmutableCollection<TElement> {
     abstract remove(element: TElement): IRandomAccessImmutableCollection<TElement>;

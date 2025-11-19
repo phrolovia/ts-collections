@@ -1,5 +1,5 @@
-import { EqualityComparator } from "./EqualityComparator";
-import { OrderComparator } from "./OrderComparator";
+import type { EqualityComparator } from "./EqualityComparator";
+import type { OrderComparator } from "./OrderComparator";
 
 export abstract class Comparators {
     /* istanbul ignore next */

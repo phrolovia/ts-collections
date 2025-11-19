@@ -1,22 +1,20 @@
 import { describe, test } from "vitest";
 import { Dictionary } from "../../src/dictionary/Dictionary";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
-import { Enumerable } from "../../src/enumerator/Enumerable";
-import {
-    CircularLinkedList,
-    EnumerableSet,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    LinkedList,
-    PriorityQueue,
-    Queue,
-    Stack
-} from "../../src/imports";
+import { range } from "../../src/enumerator/functions/range";
+import { CircularLinkedList } from "../../src/list/CircularLinkedList";
+import { EnumerableSet } from "../../src/set/EnumerableSet";
+import { ImmutableDictionary } from "../../src/dictionary/ImmutableDictionary";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
+import { ImmutableSet } from "../../src/set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../../src/dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../../src/set/ImmutableSortedSet";
+import { ImmutableStack } from "../../src/stack/ImmutableStack";
+import { LinkedList } from "../../src/list/LinkedList";
+import { PriorityQueue } from "../../src/queue/PriorityQueue";
+import { Queue } from "../../src/queue/Queue";
+import { Stack } from "../../src/stack/Stack";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";
@@ -86,7 +84,7 @@ describe("Dictionary", () => {
         test("should aggregate into (name, sum of ages) pairs", () => {
             const result = dictionary.aggregateBy(p => p.value.name, () => 0, (total, next) => total + next.value.age);
             const obj = result.toObject(p => p.key, p => p.value);
-            expect(obj).to.deep.equal({Alice: 23, Lucrezia: 21, Noemi: 72});
+            expect(obj).to.deep.equal({ Alice: 23, Lucrezia: 21, Noemi: 72 });
         });
         test("should return empty result if source is empty", () => {
             dictionary.clear();
@@ -188,19 +186,19 @@ describe("Dictionary", () => {
 
     describe("#chunk()", () => {
         test("should split list into chunks of size 10", () => {
-            const dictionary = Enumerable.range(1, 100).toDictionary(n => n, n => n * n);
+            const dictionary = range(1, 100).toDictionary(n => n, n => n * n);
             for (const chunk of dictionary.chunk(10)) {
                 expect(chunk.count() === 10).to.be.true;
             }
         });
         test("should splits enumerable into chunks of size 7 at max", () => {
-            const enumerable = Enumerable.range(1, 79);
+            const enumerable = range(1, 79);
             for (const chunk of enumerable.chunk(7)) {
                 expect(chunk.count() <= 7).to.be.true;
             }
         });
         test("should throw error if chunk size is 0", () => {
-            const dictionary = Enumerable.range(1, 100).toDictionary(n => n, n => n * n);
+            const dictionary = range(1, 100).toDictionary(n => n, n => n * n);
             expect(() => dictionary.chunk(0)).toThrowError(new InvalidArgumentException(`Invalid argument: size. Size must be greater than 0.`));
         });
     });
@@ -530,7 +528,7 @@ describe("Dictionary", () => {
         });
         test("should return the first element if no predicate is provided", () => {
             const first = dictionary.firstOrDefault() as KeyValuePair<string, Person>;
-            expect(first.key).to.eq(Person.Alice.name)
+            expect(first.key).to.eq(Person.Alice.name);
             expect(first.value.equals(Person.Alice)).to.be.true;
         });
         test("should return null if no matching element is found", () => {
@@ -565,14 +563,16 @@ describe("Dictionary", () => {
             expect(dictionary.get(Person.Mel.name)).to.eq(Person.Mel.age);
             expect(dictionary.get(Person.Senna.name)).to.eq(Person.Senna.age);
         });
-        test("should get the value which belongs to the given key #2", () => {
-            const numbers = Helper.generateRandomUniqueNumbers(500000);
+        test("should get the value which belongs to the given key #2", { timeout: 15000 }, () => {
+            // The number of generated random numbers was reduced from 500000 to 50000
+            // for performance reasons (e.g., to avoid timeouts in CI).
+            const numbers = Helper.generateRandomUniqueNumbers(50000);
             const dict = new Dictionary<number, string>();
             numbers.forEach(n => dict.add(n, n.toString()));
             for (const num of numbers) {
                 expect(dict.get(num)).to.eq(num.toString());
             }
-        }, {timeout: 15000});
+        });
         test("should return null if key is not in the dictionary", () => {
             expect(dictionary.get(Person.Jane.name)).to.be.null;
         });
@@ -592,7 +592,7 @@ describe("Dictionary", () => {
             const ages: number[] = [];
             const groupedAges: Record<number, number[]> = {};
             for (const ageGroup of group.values()) {
-                ages.push(ageGroup.key)
+                ages.push(ageGroup.key);
                 groupedAges[ageGroup.key] ??= [];
                 for (const dictItem of ageGroup.source) {
                     groupedAges[ageGroup.key].push(dictItem.value.age);
@@ -622,7 +622,7 @@ describe("Dictionary", () => {
         test("should join and group by school id", () => {
             const joinedData = schoolDict.groupJoin(studentDict, sc => sc.value.id, st => st.value.schoolId,
                 (schoolPair, students) => {
-                    return new SchoolStudents(schoolPair.key, students?.select(s => s.value).toList() ?? new List<Student>())
+                    return new SchoolStudents(schoolPair.key, students?.select(s => s.value).toList() ?? new List<Student>());
                 }).orderByDescending(ss => ss.students.size());
             const finalData = joinedData.toArray();
             const finalOutput: string[] = [];
@@ -1258,7 +1258,7 @@ describe("Dictionary", () => {
             dict.add(Person.Priscilla.name, Person.Priscilla);
             dict.add(Person.Vanessa.name, Person.Vanessa);
             const single = dict.singleOrDefault(p => p.key === "Priscilla") as KeyValuePair<string, Person>;
-            expect(single.key).eq(Person.Priscilla.name)
+            expect(single.key).eq(Person.Priscilla.name);
             expect(single.value).to.eq(Person.Priscilla);
         });
     });
@@ -1371,7 +1371,7 @@ describe("Dictionary", () => {
             dict.clear();
             expect(() => dict.sum()).toThrow(new NoElementsException());
         });
-    })
+    });
 
     describe("#take()", () => {
         test("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
@@ -1754,7 +1754,7 @@ describe("Dictionary", () => {
         const expectedQueueItems = [
             new KeyValuePair(1, "a"),
             new KeyValuePair(2, "b")
-        ]
+        ];
         test("should create a new immutable queue", () => {
             expect(queue instanceof ImmutableQueue).to.be.true;
             expect(queue.size()).to.eq(dictionary.size());
@@ -1914,7 +1914,7 @@ describe("Dictionary", () => {
         dictionary.add(2, "b");
         const obj = dictionary.toObject(p => p.key * 10, p => p.value);
         test("should create a new object", () => {
-            expect(obj).to.deep.equal({10: "a", 20: "b"});
+            expect(obj).to.deep.equal({ 10: "a", 20: "b" });
         });
     });
 

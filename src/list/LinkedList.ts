@@ -1,10 +1,11 @@
-import { AbstractList } from "../imports";
+import { AbstractList } from "./AbstractList";
 import { Comparators } from "../shared/Comparators";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { NoElementsException } from "../shared/NoElementsException";
-import { OrderComparator } from "../shared/OrderComparator";
+import type { OrderComparator } from "../shared/OrderComparator";
+import { registerLinkedListFactory } from "../enumerator/Enumerator";
 
 class Node<TElement> {
     public item: TElement;
@@ -322,3 +323,7 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         this.#listSize = size;
     }
 }
+
+registerLinkedListFactory(<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): LinkedList<TElement> => {
+    return new LinkedList(iterable ?? ([] as TElement[]), comparator);
+});

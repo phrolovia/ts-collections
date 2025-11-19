@@ -1,6 +1,9 @@
-import { AbstractEnumerable, IList, List, ReadonlyList } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { CollectionChangedAction, ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";
+import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
+import type { IList } from "../list/IList";
+import { List } from "../list/List";
+import { ReadonlyList } from "../list/ReadonlyList";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import { CollectionChangedAction, type ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";
 
 export class ObservableCollection<TElement> extends AbstractEnumerable<TElement> {
     readonly #list: IList<TElement>;

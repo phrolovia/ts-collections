@@ -1,5 +1,6 @@
-import {describe} from "vitest";
-import {List, reverseInPlace} from "../../src/imports";
+import { describe, expect } from "vitest";
+import { reverseInPlace } from "../../src/utils/reverseInPlace";
+import { List } from "../../src/list/List";
 
 describe("#reverseInPlace", () => {
     test("should reverse elements in an array", () => {

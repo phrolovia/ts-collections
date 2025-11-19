@@ -1,8 +1,11 @@
-import { ICollection, ISet, SortedDictionary } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { OrderComparator } from "../shared/OrderComparator";
+import { SortedDictionary } from "./SortedDictionary";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { OrderComparator } from "../shared/OrderComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
-import { KeyValuePair } from "./KeyValuePair";
+import type { KeyValuePair } from "./KeyValuePair";
+import type { ISet } from "../set/ISet";
+import { registerImmutableSortedDictionaryFactory } from "../enumerator/Enumerator";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: SortedDictionary<TKey, TValue>;
@@ -80,7 +83,7 @@ export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDi
         return this.#dictionary.size();
     }
 
-    public values(): ICollection<TValue> {
+    public values(): IImmutableCollection<TValue> {
         return this.#dictionary.values();
     }
 
@@ -92,3 +95,7 @@ export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDi
         return this.#dictionary.length;
     }
 }
+
+registerImmutableSortedDictionaryFactory(<TKey, TValue>(dictionary: SortedDictionary<TKey, TValue>): ImmutableSortedDictionary<TKey, TValue> => {
+    return ImmutableSortedDictionary.create(dictionary, dictionary.keyComparator, dictionary.valueComparator);
+});

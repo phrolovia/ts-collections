@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { CircularLinkedList } from "../../src/imports"; // Adjust path as needed
+import { CircularLinkedList } from "../../src/list/CircularLinkedList";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException"; // Adjust path as needed
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException"; // Adjust path as needed
 import { NoElementsException } from "../../src/shared/NoElementsException"; // Adjust path as needed

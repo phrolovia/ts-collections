@@ -1,8 +1,12 @@
-import { AbstractSet, ISet, ITree, RedBlackTree } from "../imports";
+import { AbstractSet } from "./AbstractSet";
+import { RedBlackTree } from "../tree/RedBlackTree";
 import { Comparators } from "../shared/Comparators";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
+import type { ISet } from "./ISet";
+import type { ITree } from "../tree/ITree";
+import { registerSortedSetFactory } from "../enumerator/Enumerator";
 
 export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
     readonly #orderComparator: OrderComparator<TElement>;
@@ -77,3 +81,7 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         return this.#tree.length;
     }
 }
+
+registerSortedSetFactory(<TElement>(iterable: Iterable<TElement>, comparator?: OrderComparator<TElement>): SortedSet<TElement> => {
+    return new SortedSet(iterable, comparator);
+});

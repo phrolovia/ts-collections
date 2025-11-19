@@ -8,7 +8,7 @@ export default defineConfig({
             entry: resolve(__dirname, "./src/index.ts"),
             name: "ts-collections",
             formats: ["es"],
-            fileName: ({}): string => `index.mjs`
+            fileName: (_format, entryName): string => `${entryName}.mjs`
         },
         rollupOptions: {
             external: [
@@ -19,6 +19,7 @@ export default defineConfig({
     },
     plugins: [
         dts({
+            entryRoot: "src",
             rollupTypes: true
         })
     ], // emit TS declaration files

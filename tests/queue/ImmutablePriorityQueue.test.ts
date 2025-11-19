@@ -1,5 +1,5 @@
 import { describe, expect } from "vitest";
-import { ImmutablePriorityQueue } from "../../src/imports";
+import { ImmutablePriorityQueue } from "../../src/queue/ImmutablePriorityQueue";
 import { Comparators } from "../../src/shared/Comparators";
 import { NoElementsException } from "../../src/shared/NoElementsException";
 

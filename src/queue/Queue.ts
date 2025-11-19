@@ -1,6 +1,8 @@
-import { AbstractCollection, LinkedList } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractCollection } from "../core/AbstractCollection";
+import { LinkedList } from "../list/LinkedList";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
+import { registerQueueFactory } from "../enumerator/Enumerator";
 
 export class Queue<TElement> extends AbstractCollection<TElement> {
     readonly #queue: LinkedList<TElement>;
@@ -107,3 +109,7 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         return this.#queue.length;
     }
 }
+
+registerQueueFactory(<TElement>(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): Queue<TElement> => {
+    return new Queue(iterable, comparator);
+});

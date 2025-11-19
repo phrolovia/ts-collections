@@ -1,7 +1,9 @@
-import { AbstractRandomAccessCollection, List, swap } from "../imports";
+import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
+import { List } from "../list/List";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
+import { swap } from "../utils/swap";
 
 export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
     readonly #comparator: OrderComparator<TElement> = Comparators.orderComparator;

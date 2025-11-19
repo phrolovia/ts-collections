@@ -1,5 +1,6 @@
 import { describe } from "vitest";
 import { Stack } from "../../src/stack/Stack";
+import "../../src/list/List";
 
 describe("Stack", () => {
     describe("#add()", () => {

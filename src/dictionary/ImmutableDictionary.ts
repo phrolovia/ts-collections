@@ -1,7 +1,11 @@
-import { Dictionary, ICollection, ISet, ReadonlyDictionary } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import { Dictionary } from "./Dictionary";
+import { ReadonlyDictionary } from "./ReadonlyDictionary";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
-import { KeyValuePair } from "./KeyValuePair";
+import type { KeyValuePair } from "./KeyValuePair";
+import type { ISet } from "../set/ISet";
+import { registerImmutableDictionaryFactory } from "../enumerator/Enumerator";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictionary<TKey, TValue> {
     readonly #dictionary: ReadonlyDictionary<TKey, TValue>;
@@ -78,7 +82,7 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         return this.#dictionary.size();
     }
 
-    public values(): ICollection<TValue> {
+    public values(): IImmutableCollection<TValue> {
         return this.#dictionary.values();
     }
 
@@ -90,3 +94,7 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         return this.#dictionary.length;
     }
 }
+
+registerImmutableDictionaryFactory(<TKey, TValue>(dictionary: Dictionary<TKey, TValue>): ImmutableDictionary<TKey, TValue> => {
+    return ImmutableDictionary.create<TKey, TValue>(dictionary, dictionary.valueComparator);
+});

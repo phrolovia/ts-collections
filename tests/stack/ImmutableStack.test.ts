@@ -1,5 +1,6 @@
 import { describe } from "vitest";
-import { ImmutableStack, Stack } from "../../src/imports";
+import { ImmutableStack } from "../../src/stack/ImmutableStack";
+import { Stack } from "../../src/stack/Stack";
 
 describe("ImmutableStack", () => {
     describe("#add()", () => {

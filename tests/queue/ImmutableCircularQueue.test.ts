@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ImmutableCircularQueue } from "../../src/imports";
+import { ImmutableCircularQueue } from "../../src/queue/ImmutableCircularQueue";
 import { NoElementsException } from "../../src/shared/NoElementsException";
 
 describe("ImmutableCircularQueue", () => {

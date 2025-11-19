@@ -1,10 +1,12 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
-import {
-    CircularLinkedList, CircularQueue,
-    Enumerable, from, type IEnumerable, ImmutableCircularQueue,
-    ImmutableList, ImmutableQueue,
-    PriorityQueue, ReadonlyCollection, Stack
-} from "../../src/imports";
+import { CircularLinkedList } from "../../src/list/CircularLinkedList";
+import { CircularQueue } from "../../src/queue/CircularQueue";
+import { Enumerable } from "../../src/enumerator/Enumerable";
+import { ImmutableCircularQueue } from "../../src/queue/ImmutableCircularQueue";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
+import { PriorityQueue } from "../../src/queue/PriorityQueue";
+import { Stack } from "../../src/stack/Stack";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -25,8 +27,11 @@ import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
-import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
-import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
+import { DimensionMismatchException } from "../../src/shared/DimensionMismatchException";
+import { InsufficientElementException } from "../../src/shared/InsufficientElementException";
+import { from } from "../../src/enumerator/functions/from";
+import { IEnumerable } from "../../src/enumerator/IEnumerable";
+import "../../src/lookup/Lookup";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>
@@ -4862,24 +4867,6 @@ describe("List", () => {
         const queue = list.toQueue();
         test("should return a new Queue without altering the current list", () => {
             expect(list.toArray()).to.deep.equal(queue.toArray());
-        });
-    });
-
-    describe("#toReadonlyCollection()", () => {
-        const list = new List([1, 2, 3]);
-        const readonlyCollection = list.toReadonlyCollection();
-        test("should return a new ReadonlyCollection without altering the current list", () => {
-            expect(list.size()).to.eq(3);
-            expect(readonlyCollection instanceof ReadonlyCollection).to.be.true;
-            expect(readonlyCollection.size()).to.eq(3);
-            expect(list === readonlyCollection).to.be.false;
-            expect(list.length).to.eq(3);
-            expect(readonlyCollection.length).to.eq(3);
-        });
-        test("should return a new readonly collection", () => {
-            const readonly2 = list.toReadonlyCollection();
-            expect(list === readonly2).to.be.false;
-            expect(list.toArray()).to.deep.equal(readonly2.toArray());
         });
     });
 
