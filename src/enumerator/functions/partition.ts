@@ -1,6 +1,6 @@
-import { Predicate, TypePredicate } from "../../shared/Predicate";
+import type { Predicate, TypePredicate } from "../../shared/Predicate";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Splits the sequence into cached partitions using a type guard predicate.

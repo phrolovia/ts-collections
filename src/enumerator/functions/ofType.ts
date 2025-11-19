@@ -1,7 +1,7 @@
-import { InferredType } from "../../shared/InferredType";
-import { ObjectType } from "../../shared/ObjectType";
+import type { InferredType } from "../../shared/InferredType";
+import type { ObjectType } from "../../shared/ObjectType";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Filters the sequence, keeping only elements assignable to the specified type.

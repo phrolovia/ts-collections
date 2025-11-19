@@ -1,5 +1,5 @@
-import { List } from "../../list/List";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { List } from "../../list/List";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

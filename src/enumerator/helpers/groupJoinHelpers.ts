@@ -1,4 +1,4 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 
 export const findOrCreateGroupEntry = <TInner, TKey>(lookupStore: Array<GroupJoinLookup<TKey, TInner>>, key: TKey, keyCompare: EqualityComparator<TKey>): TInner[] => {
     for (const entry of lookupStore) {

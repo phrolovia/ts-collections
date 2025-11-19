@@ -1,5 +1,5 @@
-import { ImmutablePriorityQueue } from "../../queue/ImmutablePriorityQueue";
-import { OrderComparator } from "../../shared/OrderComparator";
+import type { ImmutablePriorityQueue } from "../../queue/ImmutablePriorityQueue";
+import type { OrderComparator } from "../../shared/OrderComparator";
 import { from } from "./from";
 
 /**

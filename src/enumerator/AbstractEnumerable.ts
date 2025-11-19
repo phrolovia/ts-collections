@@ -159,9 +159,9 @@ import { where } from "./functions/where";
 import { windows } from "./functions/windows";
 import { zip } from "./functions/zip";
 import { zipMany } from "./functions/zipMany";
-import { IEnumerable } from "./IEnumerable";
-import { IGroup } from "./IGroup";
-import { IOrderedEnumerable } from "./IOrderedEnumerable";
+import type { IEnumerable } from "./IEnumerable";
+import type { IGroup } from "./IGroup";
+import type { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export abstract class AbstractEnumerable<TElement> implements IEnumerable<TElement> {
     protected readonly comparer: EqualityComparator<TElement>;

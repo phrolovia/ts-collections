@@ -1,6 +1,6 @@
-import { ILookup } from "../../lookup/ILookup";
-import { OrderComparator } from "../../shared/OrderComparator";
-import { Selector } from "../../shared/Selector";
+import type { ILookup } from "../../lookup/ILookup";
+import type { OrderComparator } from "../../shared/OrderComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
 
 /**

@@ -1,6 +1,6 @@
 import { AbstractCollection } from "./AbstractCollection";
-import { Predicate } from "../shared/Predicate";
-import { IRandomAccessCollection } from "./IRandomAccessCollection";
+import type { Predicate } from "../shared/Predicate";
+import type { IRandomAccessCollection } from "./IRandomAccessCollection";
 
 export abstract class AbstractRandomAccessCollection<TElement> extends AbstractCollection<TElement> implements IRandomAccessCollection<TElement> {
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {

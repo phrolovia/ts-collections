@@ -1,5 +1,5 @@
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Omits a specified number of elements from the end of the sequence.

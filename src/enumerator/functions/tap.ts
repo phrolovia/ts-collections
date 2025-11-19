@@ -1,6 +1,6 @@
-import { IndexedAction } from "../../shared/IndexedAction";
+import type { IndexedAction } from "../../shared/IndexedAction";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Invokes the specified action for each element while yielding the original elements unchanged.

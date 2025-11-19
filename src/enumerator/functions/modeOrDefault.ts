@@ -1,4 +1,4 @@
-import { Selector } from "../../shared/Selector";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
 
 /**

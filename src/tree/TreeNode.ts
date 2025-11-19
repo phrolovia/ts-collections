@@ -1,4 +1,4 @@
-import { INode } from "./INode";
+import type { INode } from "./INode";
 
 export class TreeNode<TElement> implements INode<TElement> {
     private data: TElement;

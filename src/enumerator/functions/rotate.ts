@@ -1,5 +1,5 @@
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Returns a deferred sequence that rotates the elements by the specified offset while preserving length.

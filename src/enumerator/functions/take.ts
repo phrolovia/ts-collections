@@ -1,5 +1,5 @@
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Returns up to the specified number of leading elements from {@link source}.

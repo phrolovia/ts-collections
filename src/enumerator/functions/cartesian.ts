@@ -1,5 +1,5 @@
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Produces the cartesian product between {@link source} and {@link other}.

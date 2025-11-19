@@ -1,8 +1,8 @@
 import { Enumerator, registerOrderedEnumerableFactory } from "./Enumerator";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Selector } from "../shared/Selector";
-import { IOrderedEnumerable } from "./IOrderedEnumerable";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Selector } from "../shared/Selector";
+import type { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export class OrderedEnumerator<TElement> extends Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public constructor(public readonly orderedValueGroups: () => Iterable<Iterable<TElement>>) {

@@ -1,6 +1,6 @@
-import { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
+import type { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Filters {@link source} using a type guard predicate and narrows the resulting element type.

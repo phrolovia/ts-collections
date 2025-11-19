@@ -1,8 +1,8 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { JoinSelector } from "../../shared/JoinSelector";
-import { Selector } from "../../shared/Selector";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { JoinSelector } from "../../shared/JoinSelector";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Correlates each element of the sequence with a collection of matching elements from another sequence.

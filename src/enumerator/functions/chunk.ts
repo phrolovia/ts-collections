@@ -1,5 +1,5 @@
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Splits the sequence into contiguous subsequences containing at most the specified number of elements.

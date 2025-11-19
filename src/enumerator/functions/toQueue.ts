@@ -1,5 +1,5 @@
-import { Queue } from "../../queue/Queue";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Queue } from "../../queue/Queue";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

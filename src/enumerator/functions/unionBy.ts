@@ -1,7 +1,7 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Selector } from "../../shared/Selector";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Creates a set-style union between {@link source} and {@link other} by comparing keys projected from each element.

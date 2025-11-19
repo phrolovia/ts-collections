@@ -1,7 +1,7 @@
-import { IImmutableCollection } from "../core/IImmutableCollection";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { Stack } from "./Stack";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { registerImmutableStackFactory } from "../enumerator/Enumerator";
 

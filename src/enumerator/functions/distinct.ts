@@ -1,6 +1,6 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Eliminates duplicate elements from the sequence using an optional comparator.

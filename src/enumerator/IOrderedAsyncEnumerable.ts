@@ -1,6 +1,6 @@
-import { OrderComparator } from "../shared/OrderComparator";
-import { Selector } from "../shared/Selector";
-import { IAsyncEnumerable } from "./IAsyncEnumerable";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Selector } from "../shared/Selector";
+import type { IAsyncEnumerable } from "./IAsyncEnumerable";
 
 export interface IOrderedAsyncEnumerable<TElement> extends IAsyncEnumerable<TElement> {
     /**

@@ -1,10 +1,10 @@
 import { AbstractList } from "./AbstractList";
 import { Comparators } from "../shared/Comparators";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Selector } from "../shared/Selector";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Selector } from "../shared/Selector";
 import { registerListFactory } from "../enumerator/Enumerator";
 
 export class List<TElement> extends AbstractList<TElement> {

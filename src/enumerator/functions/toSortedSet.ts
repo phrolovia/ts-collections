@@ -1,5 +1,5 @@
-import { SortedSet } from "../../set/SortedSet";
-import { OrderComparator } from "../../shared/OrderComparator";
+import type { SortedSet } from "../../set/SortedSet";
+import type { OrderComparator } from "../../shared/OrderComparator";
 import { from } from "./from";
 
 /**

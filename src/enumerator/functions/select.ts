@@ -1,6 +1,6 @@
-import { IndexedSelector } from "../../shared/IndexedSelector";
+import type { IndexedSelector } from "../../shared/IndexedSelector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Transforms each element and its zero-based index into a new value.

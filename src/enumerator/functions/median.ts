@@ -1,6 +1,6 @@
-import { Selector } from "../../shared/Selector";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { MedianTieStrategy } from "../../shared/MedianTieStrategy";
+import type { MedianTieStrategy } from "../../shared/MedianTieStrategy";
 
 /**
  * Calculates the median of the numeric values produced by {@link source}.

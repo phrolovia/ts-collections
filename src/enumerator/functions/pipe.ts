@@ -1,5 +1,5 @@
 import { from } from "./from";
-import { PipeOperator } from "../../shared/PipeOperator";
+import type { PipeOperator } from "../../shared/PipeOperator";
 
 /**
  * Applies a user-defined pipeline to {@link source} and returns the operator's result.

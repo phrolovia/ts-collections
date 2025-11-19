@@ -1,7 +1,7 @@
-import { OrderComparator } from "../../shared/OrderComparator";
-import { Selector } from "../../shared/Selector";
+import type { OrderComparator } from "../../shared/OrderComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IOrderedEnumerable } from "../IOrderedEnumerable";
+import type { IOrderedEnumerable } from "../IOrderedEnumerable";
 
 /**
  * Sorts the elements of a sequence in ascending order by using a specified comparer.

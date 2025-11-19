@@ -1,15 +1,15 @@
 import { Enumerable } from "../enumerator/Enumerable";
-import { IEnumerable } from "../enumerator/IEnumerable";
-import { IGroup } from "../enumerator/IGroup";
+import type { IEnumerable } from "../enumerator/IEnumerable";
+import type { IGroup } from "../enumerator/IGroup";
 import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
 import { Group } from "../enumerator/Group";
 import { registerLookupFactory } from "../enumerator/Enumerator";
 import { List } from "../list/List";
 import { RedBlackTree } from "../tree/RedBlackTree";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Selector } from "../shared/Selector";
-import { ILookup } from "./ILookup";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Selector } from "../shared/Selector";
+import type { ILookup } from "./ILookup";
 
 export class Lookup<TKey, TElement> extends AbstractEnumerable<IGroup<TKey, TElement>> implements ILookup<TKey, TElement> {
     readonly #keyComparator: OrderComparator<TKey>;

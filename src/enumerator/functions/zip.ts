@@ -1,6 +1,6 @@
-import { Zipper } from "../../shared/Zipper";
+import type { Zipper } from "../../shared/Zipper";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Combines {@link source} with {@link other} and optionally projects each aligned pair using {@link zipper}.

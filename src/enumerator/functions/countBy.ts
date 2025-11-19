@@ -1,8 +1,8 @@
-import { KeyValuePair } from "../../dictionary/KeyValuePair";
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Selector } from "../../shared/Selector";
+import type { KeyValuePair } from "../../dictionary/KeyValuePair";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Counts the occurrences of elements grouped by a derived key.

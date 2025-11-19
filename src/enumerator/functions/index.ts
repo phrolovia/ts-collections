@@ -1,4 +1,4 @@
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 import { from } from "./from";
 
 /**

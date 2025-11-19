@@ -1,8 +1,8 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { OrderComparator } from "../../shared/OrderComparator";
-import { Selector } from "../../shared/Selector";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { OrderComparator } from "../../shared/OrderComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Returns the elements whose keys are common to {@link source} and {@link other}.

@@ -1,6 +1,6 @@
-import { Accumulator } from "../../shared/Accumulator";
+import type { Accumulator } from "../../shared/Accumulator";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Accumulates the sequence and emits each intermediate result.

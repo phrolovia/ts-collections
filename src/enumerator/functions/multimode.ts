@@ -1,6 +1,6 @@
-import { Selector } from "../../shared/Selector";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Produces the elements whose occurrence count is tied for the highest frequency in {@link source}.

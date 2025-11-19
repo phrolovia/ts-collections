@@ -1,7 +1,7 @@
 import { reverse } from "../enumerator/functions/reverse";
 import { AbstractCollection } from "../core/AbstractCollection";
 import { LinkedList } from "../list/LinkedList";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { registerStackFactory } from "../enumerator/Enumerator";
 

@@ -1,6 +1,6 @@
-import { Selector } from "../../shared/Selector";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { PercentileStrategy } from "../../shared/PercentileStrategy";
+import type { PercentileStrategy } from "../../shared/PercentileStrategy";
 
 /**
  * Calculates a percentile of the numeric values produced by {@link source}.

@@ -1,4 +1,4 @@
-import { MedianTieStrategy } from "../../shared/MedianTieStrategy";
+import type { MedianTieStrategy } from "../../shared/MedianTieStrategy";
 import { swap } from "../../utils/swap";
 
 export function findMedian(data: number[], tie: MedianTieStrategy = "interpolate"): number {

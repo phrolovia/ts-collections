@@ -1,8 +1,8 @@
-import { KeyValuePair } from "../../dictionary/KeyValuePair";
-import { Accumulator } from "../../shared/Accumulator";
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Selector } from "../../shared/Selector";
-import { IEnumerable } from "../IEnumerable";
+import type { KeyValuePair } from "../../dictionary/KeyValuePair";
+import type { Accumulator } from "../../shared/Accumulator";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Selector } from "../../shared/Selector";
+import type { IEnumerable } from "../IEnumerable";
 import { from } from "./from";
 
 /**

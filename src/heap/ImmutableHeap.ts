@@ -1,7 +1,7 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
 import { Heap } from "./Heap";
 
 /**

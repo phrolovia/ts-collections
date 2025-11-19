@@ -1,5 +1,5 @@
-import { PriorityQueue } from "../../queue/PriorityQueue";
-import { OrderComparator } from "../../shared/OrderComparator";
+import type { PriorityQueue } from "../../queue/PriorityQueue";
+import type { OrderComparator } from "../../shared/OrderComparator";
 import { from } from "./from";
 
 /**

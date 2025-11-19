@@ -1,7 +1,7 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { OrderComparator } from "../../shared/OrderComparator";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { OrderComparator } from "../../shared/OrderComparator";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Returns the elements of {@link source} that are not present in {@link other}.

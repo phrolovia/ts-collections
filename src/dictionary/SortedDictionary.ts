@@ -1,15 +1,15 @@
 import { RedBlackTree } from "../tree/RedBlackTree";
 import { SortedSet } from "../set/SortedSet";
 import { Comparators } from "../shared/Comparators";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { KeyNotFoundException } from "../shared/KeyNotFoundException";
-import { OrderComparator } from "../shared/OrderComparator";
+import type { OrderComparator } from "../shared/OrderComparator";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
-import { ICollection } from "../core/ICollection";
-import { ISet } from "../set/ISet";
+import type { ISet } from "../set/ISet";
 import { registerSortedDictionaryFactory } from "../enumerator/Enumerator";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     readonly #keyComparer: OrderComparator<TKey>;
@@ -102,8 +102,8 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         return this.#keyValueTree.size();
     }
 
-    public values(): ICollection<TValue> {
-        return this.#keyValueTree.select(p => p.value).toList(this.valueComparer);
+    public values(): IImmutableCollection<TValue> {
+        return this.#keyValueTree.select(p => p.value).toImmutableList(this.valueComparer);
     }
 
     public get keyComparator(): OrderComparator<TKey> {

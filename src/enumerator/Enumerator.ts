@@ -66,7 +66,6 @@ import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
-
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -1938,6 +1937,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 }
 
 
+/** Factories For Concrete Classes **/
+
 type CircularLinkedListFactory = <TElement>(
     source: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
@@ -1957,6 +1958,11 @@ type DictionaryFactory = <TKey, TValue>(
 type EnumerableSetFactory = <TElement>(
     source: Iterable<TElement>
 ) => EnumerableSet<TElement>;
+
+type GroupFactory = <TKey, TElement>(
+    key: TKey,
+    source: IEnumerable<TElement>
+) => Group<TKey, TElement>;
 
 type ImmutableCircularQueueFactory = <TElement>(
     source: Iterable<TElement>,
@@ -2011,6 +2017,21 @@ type ListFactory = <TElement>(
     comparator?: EqualityComparator<TElement>
 ) => List<TElement>;
 
+type LookupFactory = <TSource, TKey, TValue>(
+    source: Iterable<TSource>,
+    keySelector: Selector<TSource, TKey>,
+    valueSelector: Selector<TSource, TValue>,
+    keyComparator?: OrderComparator<TKey>
+) => ILookup<TKey, TValue>;
+
+type OrderedEnumerableFactory = <TElement, TKey>(
+    source: Iterable<TElement>,
+    keySelector: Selector<TElement, TKey>,
+    ascending: boolean,
+    viaThenBy?: boolean,
+    comparator?: OrderComparator<TKey>
+) => IOrderedEnumerable<TElement>;
+
 type PriorityQueueFactory = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
@@ -2037,30 +2058,11 @@ type StackFactory = <TElement>(
     comparator?: EqualityComparator<TElement>
 ) => Stack<TElement>;
 
-type GroupFactory = <TKey, TElement>(
-    key: TKey,
-    source: IEnumerable<TElement>
-) => Group<TKey, TElement>;
-
-type OrderedEnumerableFactory = <TElement, TKey>(
-    source: Iterable<TElement>,
-    keySelector: Selector<TElement, TKey>,
-    ascending: boolean,
-    viaThenBy?: boolean,
-    comparator?: OrderComparator<TKey>
-) => IOrderedEnumerable<TElement>;
-
-type LookupFactory = <TSource, TKey, TValue>(
-    source: Iterable<TSource>,
-    keySelector: Selector<TSource, TKey>,
-    valueSelector: Selector<TSource, TValue>,
-    keyComparator?: OrderComparator<TKey>
-) => ILookup<TKey, TValue>;
-
 let circularLinkedListFactory: CircularLinkedListFactory | undefined;
 let circularQueueFactory: CircularQueueFactory | undefined;
 let dictionaryFactory: DictionaryFactory | undefined;
 let enumerableSetFactory: EnumerableSetFactory | undefined;
+let groupFactory: GroupFactory | undefined;
 let immutableCircularQueueFactory: ImmutableCircularQueueFactory | undefined;
 let immutableDictionaryFactory: ImmutableDictionaryFactory | undefined;
 let immutableListFactory: ImmutableListFactory | undefined;
@@ -2072,14 +2074,13 @@ let immutableSortedSetFactory: ImmutableSortedSetFactory | undefined;
 let immutableStackFactory: ImmutableStackFactory | undefined;
 let linkedListFactory: LinkedListFactory | undefined;
 let listFactory: ListFactory | undefined;
+let lookupFactory: LookupFactory | undefined;
+let orderedEnumerableFactory: OrderedEnumerableFactory | undefined;
 let priorityQueueFactory: PriorityQueueFactory | undefined;
 let queueFactory: QueueFactory | undefined;
 let sortedDictionaryFactory: SortedDictionaryFactory | undefined;
 let sortedSetFactory: SortedSetFactory | undefined;
 let stackFactory: StackFactory | undefined;
-let groupFactory: GroupFactory | undefined;
-let orderedEnumerableFactory: OrderedEnumerableFactory | undefined;
-let lookupFactory: LookupFactory | undefined;
 
 export const registerCircularLinkedListFactory = (factory: CircularLinkedListFactory): void => {
     circularLinkedListFactory = factory;
@@ -2095,6 +2096,10 @@ export const registerDictionaryFactory = (factory: DictionaryFactory): void => {
 
 export const registerEnumerableSetFactory = (factory: EnumerableSetFactory): void => {
     enumerableSetFactory = factory;
+};
+
+export const registerGroupFactory = (factory: GroupFactory): void => {
+    groupFactory = factory;
 };
 
 export const registerImmutableCircularQueueFactory = (factory: ImmutableCircularQueueFactory): void => {
@@ -2141,6 +2146,14 @@ export const registerListFactory = (factory: ListFactory): void => {
     listFactory = factory;
 };
 
+export const registerLookupFactory = (factory: LookupFactory): void => {
+    lookupFactory = factory;
+};
+
+export const registerOrderedEnumerableFactory = (factory: OrderedEnumerableFactory): void => {
+    orderedEnumerableFactory = factory;
+};
+
 export const registerPriorityQueueFactory = (factory: PriorityQueueFactory): void => {
     priorityQueueFactory = factory;
 };
@@ -2159,16 +2172,4 @@ export const registerSortedSetFactory = (factory: SortedSetFactory): void => {
 
 export const registerStackFactory = (factory: StackFactory): void => {
     stackFactory = factory;
-};
-
-export const registerGroupFactory = (factory: GroupFactory): void => {
-    groupFactory = factory;
-};
-
-export const registerOrderedEnumerableFactory = (factory: OrderedEnumerableFactory): void => {
-    orderedEnumerableFactory = factory;
-};
-
-export const registerLookupFactory = (factory: LookupFactory): void => {
-    lookupFactory = factory;
 };

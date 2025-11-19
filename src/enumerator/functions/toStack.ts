@@ -1,5 +1,5 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Stack } from "../../stack/Stack";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Stack } from "../../stack/Stack";
 import { from } from "./from";
 
 /**

@@ -1,6 +1,6 @@
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Selector } from "../shared/Selector";
-import { IEnumerable } from "./IEnumerable";
+import type { IEnumerable } from "./IEnumerable";
 
 export interface IOrderedEnumerable<TElement> extends IEnumerable<TElement> {
 

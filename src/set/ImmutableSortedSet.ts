@@ -2,8 +2,8 @@ import { contains } from "../enumerator/functions/contains";
 import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
 import { SortedSet } from "./SortedSet";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
 import { registerImmutableSortedSetFactory } from "../enumerator/Enumerator";
 
 export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {

@@ -1,6 +1,6 @@
 import { AbstractSet } from "./AbstractSet";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { Predicate } from "../shared/Predicate";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { Predicate } from "../shared/Predicate";
 import { registerEnumerableSetFactory } from "../enumerator/Enumerator";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {

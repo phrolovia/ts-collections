@@ -1,4 +1,4 @@
-import { IRandomAccessCollection } from "../core/IRandomAccessCollection";
+import type { IRandomAccessCollection } from "../core/IRandomAccessCollection";
 
 export interface ISet<TElement> extends IRandomAccessCollection<TElement> {
     /**

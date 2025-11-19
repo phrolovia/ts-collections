@@ -1,6 +1,6 @@
-import { OrderComparator } from "../../shared/OrderComparator";
+import type { OrderComparator } from "../../shared/OrderComparator";
 import { from } from "./from";
-import { IOrderedEnumerable } from "../IOrderedEnumerable";
+import type { IOrderedEnumerable } from "../IOrderedEnumerable";
 
 /**
  * Sorts the elements of the sequence in descending order using the provided comparator.

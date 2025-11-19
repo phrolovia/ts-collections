@@ -2,7 +2,7 @@ import { AbstractCollection } from "../core/AbstractCollection";
 import { Heap } from "../heap/Heap";
 import { Comparators } from "../shared/Comparators";
 import { NoElementsException } from "../shared/NoElementsException";
-import { OrderComparator } from "../shared/OrderComparator";
+import type { OrderComparator } from "../shared/OrderComparator";
 import { registerPriorityQueueFactory } from "../enumerator/Enumerator";
 
 export class PriorityQueue<TElement> extends AbstractCollection<TElement> {

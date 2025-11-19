@@ -1,4 +1,4 @@
-import { IndexedAction } from "../../shared/IndexedAction";
+import type { IndexedAction } from "../../shared/IndexedAction";
 import { from } from "./from";
 
 /**

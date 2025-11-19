@@ -1,4 +1,4 @@
-import { EnumerableSet } from "../../set/EnumerableSet";
+import type { EnumerableSet } from "../../set/EnumerableSet";
 import { from } from "./from";
 
 /**

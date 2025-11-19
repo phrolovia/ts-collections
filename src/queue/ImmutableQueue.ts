@@ -1,6 +1,6 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { Queue } from "./Queue";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { registerImmutableQueueFactory } from "../enumerator/Enumerator";
 

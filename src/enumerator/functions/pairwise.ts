@@ -1,6 +1,6 @@
-import { PairwiseSelector } from "../../shared/PairwiseSelector";
+import type { PairwiseSelector } from "../../shared/PairwiseSelector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Creates a deferred sequence of adjacent element pairs drawn from the source iterable.

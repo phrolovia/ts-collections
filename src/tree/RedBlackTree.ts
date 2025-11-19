@@ -8,8 +8,8 @@
  */
 
 import { AbstractTree } from "./AbstractTree";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
 import { TreeNode } from "./TreeNode";
 
 class RedBlackNode<TElement> extends TreeNode<TElement> {

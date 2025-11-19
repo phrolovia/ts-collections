@@ -1,7 +1,7 @@
 import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { ICollection } from "./ICollection";
-import { IReadonlyCollection } from "./IReadonlyCollection";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { ICollection } from "./ICollection";
+import type { IReadonlyCollection } from "./IReadonlyCollection";
 
 export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TElement> {
     readonly #collection: IReadonlyCollection<TElement>;

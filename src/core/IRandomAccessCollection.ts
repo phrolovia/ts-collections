@@ -1,5 +1,5 @@
-import { Predicate } from "../shared/Predicate";
-import { ICollection } from "./ICollection";
+import type { Predicate } from "../shared/Predicate";
+import type { ICollection } from "./ICollection";
 
 /**
  * Represents a collection of objects whose elements can be accessed without restriction.

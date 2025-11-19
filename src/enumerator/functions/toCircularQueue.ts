@@ -1,5 +1,5 @@
-import { CircularQueue } from "../../queue/CircularQueue";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { CircularQueue } from "../../queue/CircularQueue";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

@@ -1,8 +1,8 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { JoinSelector } from "../../shared/JoinSelector";
-import { Selector } from "../../shared/Selector";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { JoinSelector } from "../../shared/JoinSelector";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Produces a projection from the sequence and a second sequence by matching elements that share an identical join key.

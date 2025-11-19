@@ -1,4 +1,4 @@
-import { ImmutableSet } from "../../set/ImmutableSet";
+import type { ImmutableSet } from "../../set/ImmutableSet";
 import { from } from "./from";
 
 /**

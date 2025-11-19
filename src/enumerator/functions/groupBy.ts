@@ -1,8 +1,8 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Selector } from "../../shared/Selector";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
-import { IGroup } from "../IGroup";
+import type { IEnumerable } from "../IEnumerable";
+import type { IGroup } from "../IGroup";
 
 /**
  * Partitions the sequence into groups based on keys projected from each element.

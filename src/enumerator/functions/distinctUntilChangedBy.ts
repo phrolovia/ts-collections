@@ -1,7 +1,7 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Selector } from "../../shared/Selector";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Removes consecutive duplicate elements by comparing keys projected from each element.

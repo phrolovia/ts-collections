@@ -1,5 +1,5 @@
-import { LinkedList } from "../../list/LinkedList";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { LinkedList } from "../../list/LinkedList";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

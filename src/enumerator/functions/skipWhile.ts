@@ -1,6 +1,6 @@
-import { IndexedPredicate } from "../../shared/IndexedPredicate";
+import type { IndexedPredicate } from "../../shared/IndexedPredicate";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Skips elements while a predicate returns `true` and then yields the remaining elements.

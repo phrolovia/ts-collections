@@ -1,4 +1,4 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

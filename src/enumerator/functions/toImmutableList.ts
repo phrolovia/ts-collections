@@ -1,5 +1,5 @@
-import { ImmutableList } from "../../list/ImmutableList";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { ImmutableList } from "../../list/ImmutableList";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

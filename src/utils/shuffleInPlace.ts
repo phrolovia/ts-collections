@@ -1,4 +1,4 @@
-import { IList } from "../list/IList";
+import type { IList } from "../list/IList";
 import { swap } from "./swap";
 
 export const shuffleInPlace = <TElement>(sequence: Array<TElement> | IList<TElement>): void => {

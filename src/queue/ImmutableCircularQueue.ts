@@ -1,5 +1,5 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { registerImmutableCircularQueueFactory } from "../enumerator/Enumerator";
 

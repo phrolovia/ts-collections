@@ -1,6 +1,6 @@
-import { ImmutableDictionary } from "../../dictionary/ImmutableDictionary";
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { Selector } from "../../shared/Selector";
+import type { ImmutableDictionary } from "../../dictionary/ImmutableDictionary";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
 
 /**

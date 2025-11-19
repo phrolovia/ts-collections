@@ -1,5 +1,5 @@
-import { CircularLinkedList } from "../../list/CircularLinkedList";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { CircularLinkedList } from "../../list/CircularLinkedList";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

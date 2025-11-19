@@ -1,7 +1,7 @@
-import { ImmutableSortedDictionary } from "../../dictionary/ImmutableSortedDictionary";
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { OrderComparator } from "../../shared/OrderComparator";
-import { Selector } from "../../shared/Selector";
+import type { ImmutableSortedDictionary } from "../../dictionary/ImmutableSortedDictionary";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { OrderComparator } from "../../shared/OrderComparator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
 
 /**

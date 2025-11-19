@@ -1,6 +1,6 @@
-import { IndexedSelector } from "../../shared/IndexedSelector";
+import type { IndexedSelector } from "../../shared/IndexedSelector";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Projects each element and index into an iterable and flattens the results into a single sequence.

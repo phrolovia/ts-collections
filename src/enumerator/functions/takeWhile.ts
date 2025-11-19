@@ -1,6 +1,6 @@
-import { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
+import type { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Returns consecutive leading elements while a type guard predicate continues to succeed, narrowing the element type.

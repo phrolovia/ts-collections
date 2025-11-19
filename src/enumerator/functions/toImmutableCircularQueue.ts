@@ -1,5 +1,5 @@
-import { ImmutableCircularQueue } from "../../queue/ImmutableCircularQueue";
-import { EqualityComparator } from "../../shared/EqualityComparator";
+import type { ImmutableCircularQueue } from "../../queue/ImmutableCircularQueue";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
 /**

@@ -1,8 +1,8 @@
 import { contains } from "../enumerator/functions/contains";
 import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
 import { EnumerableSet } from "./EnumerableSet";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { Predicate } from "../shared/Predicate";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { Predicate } from "../shared/Predicate";
 import { registerImmutableSetFactory } from "../enumerator/Enumerator";
 
 export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {

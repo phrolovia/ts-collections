@@ -1,8 +1,8 @@
 import { AsyncEnumerator, registerOrderedAsyncEnumerableFactory } from "./AsyncEnumerator";
 import { Comparators } from "../shared/Comparators";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Selector } from "../shared/Selector";
-import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Selector } from "../shared/Selector";
+import type { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
 
 export class OrderedAsyncEnumerator<TElement> extends AsyncEnumerator<TElement> implements IOrderedAsyncEnumerable<TElement> {
     public constructor(public readonly orderedValueGroups: () => AsyncIterable<AsyncIterable<TElement>>) {

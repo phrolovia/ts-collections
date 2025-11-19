@@ -1,6 +1,6 @@
 import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { IImmutableCollection } from "./IImmutableCollection";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { IImmutableCollection } from "./IImmutableCollection";
 
 export abstract class AbstractImmutableCollection<TElement> extends AbstractReadonlyCollection<TElement> implements IImmutableCollection<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {

@@ -1,5 +1,5 @@
 import { Queue } from "./Queue";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { registerCircularQueueFactory } from "../enumerator/Enumerator";
 
 /**

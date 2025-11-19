@@ -1,15 +1,14 @@
 import { select } from "../enumerator/functions/select";
 import { EnumerableSet } from "../set/EnumerableSet";
-import { List } from "../list/List";
 import { Comparators } from "../shared/Comparators";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { KeyNotFoundException } from "../shared/KeyNotFoundException";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
-import { ISet } from "../set/ISet";
-import { ICollection } from "../core/ICollection";
+import type { ISet } from "../set/ISet";
 import { registerDictionaryFactory } from "../enumerator/Enumerator";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
     readonly #dictionary: Map<TKey, KeyValuePair<TKey, TValue>> = new Map<TKey, KeyValuePair<TKey, TValue>>();
@@ -106,8 +105,8 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         return this.#dictionary.size;
     }
 
-    public values(): ICollection<TValue> {
-        return new List<TValue>(select(this.#dictionary.values(), x => x.value));
+    public values(): IImmutableCollection<TValue> {
+        return select(this.#dictionary.values(), x => x.value).toImmutableSet();
     }
 
     public override get length(): number {

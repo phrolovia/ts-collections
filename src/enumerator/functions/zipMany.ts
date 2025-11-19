@@ -1,7 +1,7 @@
-import { ZipManyZipper } from "../../shared/Zipper";
+import type { ZipManyZipper } from "../../shared/Zipper";
 import { from } from "./from";
-import { IEnumerable } from "../IEnumerable";
-import { UnpackIterableTuple } from "../../shared/UnpackIterableTuple";
+import type { IEnumerable } from "../IEnumerable";
+import type { UnpackIterableTuple } from "../../shared/UnpackIterableTuple";
 
 /**
  * Zips {@link source} with the iterables supplied in {@link iterables}, producing aligned tuples.

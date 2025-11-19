@@ -1,4 +1,4 @@
-import { IList } from "../list/IList";
+import type { IList } from "../list/IList";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 
 /**

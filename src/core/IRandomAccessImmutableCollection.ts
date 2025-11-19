@@ -1,5 +1,5 @@
-import { Predicate } from "../shared/Predicate";
-import { IImmutableCollection } from "./IImmutableCollection";
+import type { Predicate } from "../shared/Predicate";
+import type { IImmutableCollection } from "./IImmutableCollection";
 
 export interface IRandomAccessImmutableCollection<TElement> extends IImmutableCollection<TElement> {
     /**

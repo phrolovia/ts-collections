@@ -1,5 +1,5 @@
 import { Enumerable } from "../Enumerable";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
 
 /**
  * Generates a numeric range beginning at the specified start value.

@@ -1,9 +1,9 @@
 import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
-import { Selector } from "../shared/Selector";
-import { IReadonlyCollection } from "./IReadonlyCollection";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
+import type { Selector } from "../shared/Selector";
+import type { IReadonlyCollection } from "./IReadonlyCollection";
 
 export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {

@@ -2,11 +2,11 @@ import { contains } from "../enumerator/functions/contains";
 import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
 import { List } from "./List";
 import { ReadonlyList } from "./ReadonlyList";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate, TypePredicate } from "../shared/Predicate";
-import { IReadonlyList } from "./IReadonlyList";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate, TypePredicate } from "../shared/Predicate";
+import type { IReadonlyList } from "./IReadonlyList";
 import { registerImmutableListFactory } from "../enumerator/Enumerator";
 
 export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollection<TElement> implements IReadonlyList<TElement> {

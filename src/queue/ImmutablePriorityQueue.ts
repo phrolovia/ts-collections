@@ -2,8 +2,8 @@ import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection
 import { Heap } from "../heap/Heap";
 import { Comparators } from "../shared/Comparators";
 import { NoElementsException } from "../shared/NoElementsException";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
 import { registerImmutablePriorityQueueFactory } from "../enumerator/Enumerator";
 
 export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollection<TElement> {

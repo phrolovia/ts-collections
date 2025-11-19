@@ -1,5 +1,5 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { ImmutableStack } from "../../stack/ImmutableStack";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { ImmutableStack } from "../../stack/ImmutableStack";
 import { from } from "./from";
 
 /**

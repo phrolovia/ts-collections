@@ -1,4 +1,4 @@
-import { Predicate, TypePredicate } from "../../shared/Predicate";
+import type { Predicate, TypePredicate } from "../../shared/Predicate";
 import { from } from "./from";
 
 /**
