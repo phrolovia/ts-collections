@@ -39,6 +39,7 @@ export { ImmutableSet } from "./set/ImmutableSet";
 export { ImmutableSortedSet } from "./set/ImmutableSortedSet";
 export { Heap } from "./heap/Heap";
 export { ImmutableHeap } from "./heap/ImmutableHeap";
+export { Lookup } from "./lookup/Lookup";
 export { PriorityQueue } from "./queue/PriorityQueue";
 export { ImmutableQueue } from "./queue/ImmutableQueue";
 export { ImmutablePriorityQueue } from "./queue/ImmutablePriorityQueue";

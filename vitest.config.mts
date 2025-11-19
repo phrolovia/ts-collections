@@ -7,6 +7,7 @@ export default defineConfig({
             provider: 'v8', // or 'v8'
         },
         exclude: [
+            "tests/setup.ts",
             "tests/helpers/**",
             "tests/models/**",
             "docs/**",
