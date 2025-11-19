@@ -2,29 +2,27 @@ import { describe, expect, expectTypeOf, test } from "vitest";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { AsyncEnumerable } from "../../src/enumerator/AsyncEnumerable";
 import { IEnumerable } from "../../src/enumerator/IEnumerable";
-import {
-    CircularLinkedList,
-    CircularQueue,
-    Dictionary,
-    Enumerable,
-    EnumerableSet,
-    ImmutableCircularQueue,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutablePriorityQueue,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    LinkedList,
-    List,
-    PriorityQueue,
-    Queue,
-    SortedDictionary,
-    SortedSet,
-    Stack
-} from "../../src/imports";
+import { CircularLinkedList } from "../../src/list/CircularLinkedList";
+import { CircularQueue } from "../../src/queue/CircularQueue";
+import { Dictionary } from "../../src/dictionary/Dictionary";
+import { Enumerable } from "../../src/enumerator/Enumerable";
+import { EnumerableSet } from "../../src/set/EnumerableSet";
+import { ImmutableCircularQueue } from "../../src/queue/ImmutableCircularQueue";
+import { ImmutableDictionary } from "../../src/dictionary/ImmutableDictionary";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { ImmutablePriorityQueue } from "../../src/queue/ImmutablePriorityQueue";
+import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
+import { ImmutableSet } from "../../src/set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../../src/dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../../src/set/ImmutableSortedSet";
+import { ImmutableStack } from "../../src/stack/ImmutableStack";
+import { LinkedList } from "../../src/list/LinkedList";
+import { List } from "../../src/list/List";
+import { PriorityQueue } from "../../src/queue/PriorityQueue";
+import { Queue } from "../../src/queue/Queue";
+import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
+import { SortedSet } from "../../src/set/SortedSet";
+import { Stack } from "../../src/stack/Stack";
 import { DimensionMismatchException } from "../../src/shared/DimensionMismatchException";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
 import { InsufficientElementException } from "../../src/shared/InsufficientElementException";

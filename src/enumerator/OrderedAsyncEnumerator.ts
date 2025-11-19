@@ -1,4 +1,4 @@
-import { AsyncEnumerator } from "../imports";
+import { AsyncEnumerator } from "./AsyncEnumerator";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";

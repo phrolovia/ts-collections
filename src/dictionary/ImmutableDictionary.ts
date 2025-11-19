@@ -1,4 +1,5 @@
-import { Dictionary, ReadonlyDictionary } from "../imports";
+import { Dictionary } from "./Dictionary";
+import { ReadonlyDictionary } from "./ReadonlyDictionary";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";

@@ -1,5 +1,5 @@
 import { from } from "../enumerator/functions/from";
-import { AbstractRandomAccessCollection } from "../imports";
+import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ISet } from "./ISet";

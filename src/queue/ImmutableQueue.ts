@@ -1,4 +1,5 @@
-import { AbstractImmutableCollection, Queue } from "../imports";
+import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
+import { Queue } from "./Queue";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 

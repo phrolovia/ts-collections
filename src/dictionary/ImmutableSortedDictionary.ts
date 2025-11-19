@@ -1,4 +1,4 @@
-import { SortedDictionary } from "../imports";
+import { SortedDictionary } from "./SortedDictionary";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { OrderComparator } from "../shared/OrderComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";

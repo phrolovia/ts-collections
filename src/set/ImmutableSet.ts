@@ -1,5 +1,6 @@
 import { contains } from "../enumerator/functions/contains";
-import { AbstractRandomAccessImmutableCollection, EnumerableSet } from "../imports";
+import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
+import { EnumerableSet } from "./EnumerableSet";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { Predicate } from "../shared/Predicate";
 

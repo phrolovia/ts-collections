@@ -1,5 +1,6 @@
 import { IImmutableCollection } from "../core/IImmutableCollection";
-import { AbstractImmutableCollection, Stack } from "../imports";
+import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
+import { Stack } from "./Stack";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 

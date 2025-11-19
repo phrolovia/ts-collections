@@ -1,26 +1,24 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
-import {
-    CircularLinkedList,
-    CircularQueue,
-    Dictionary,
-    EnumerableSet,
-    ImmutableCircularQueue,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutablePriorityQueue,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    LinkedList,
-    List,
-    PriorityQueue,
-    Queue,
-    SortedDictionary,
-    SortedSet,
-    Stack
-} from "../imports";
+import { CircularLinkedList } from "../list/CircularLinkedList";
+import { CircularQueue } from "../queue/CircularQueue";
+import { Dictionary } from "../dictionary/Dictionary";
+import { EnumerableSet } from "../set/EnumerableSet";
+import { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import { ImmutableList } from "../list/ImmutableList";
+import { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import { ImmutableQueue } from "../queue/ImmutableQueue";
+import { ImmutableSet } from "../set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../set/ImmutableSortedSet";
+import { ImmutableStack } from "../stack/ImmutableStack";
+import { LinkedList } from "../list/LinkedList";
+import { List } from "../list/List";
+import { PriorityQueue } from "../queue/PriorityQueue";
+import { Queue } from "../queue/Queue";
+import { SortedDictionary } from "../dictionary/SortedDictionary";
+import { SortedSet } from "../set/SortedSet";
+import { Stack } from "../stack/Stack";
 import { ILookup } from "../lookup/ILookup";
 import { Accumulator } from "../shared/Accumulator";
 import { EqualityComparator } from "../shared/EqualityComparator";

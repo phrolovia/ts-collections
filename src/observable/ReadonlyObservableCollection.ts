@@ -1,5 +1,6 @@
 import { IReadonlyCollection } from "../core/IReadonlyCollection";
-import { AbstractEnumerable, ObservableCollection } from "../imports";
+import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
+import { ObservableCollection } from "./ObservableCollection";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";
 

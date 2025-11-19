@@ -1,4 +1,4 @@
-import { AbstractReadonlyCollection } from "../imports";
+import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { ICollection } from "./ICollection";
 import { IReadonlyCollection } from "./IReadonlyCollection";

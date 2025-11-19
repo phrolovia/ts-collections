@@ -2,21 +2,19 @@ import { describe, test } from "vitest";
 import { Dictionary } from "../../src/dictionary/Dictionary";
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
 import { range } from "../../src/enumerator/functions/range";
-import {
-    CircularLinkedList,
-    EnumerableSet,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    LinkedList,
-    PriorityQueue,
-    Queue,
-    Stack
-} from "../../src/imports";
+import { CircularLinkedList } from "../../src/list/CircularLinkedList";
+import { EnumerableSet } from "../../src/set/EnumerableSet";
+import { ImmutableDictionary } from "../../src/dictionary/ImmutableDictionary";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
+import { ImmutableSet } from "../../src/set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../../src/dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../../src/set/ImmutableSortedSet";
+import { ImmutableStack } from "../../src/stack/ImmutableStack";
+import { LinkedList } from "../../src/list/LinkedList";
+import { PriorityQueue } from "../../src/queue/PriorityQueue";
+import { Queue } from "../../src/queue/Queue";
+import { Stack } from "../../src/stack/Stack";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { InvalidArgumentException } from "../../src/shared/InvalidArgumentException";

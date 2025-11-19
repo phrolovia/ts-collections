@@ -1,4 +1,4 @@
-import { Queue } from "../imports";
+import { Queue } from "./Queue";
 import { EqualityComparator } from "../shared/EqualityComparator";
 
 /**

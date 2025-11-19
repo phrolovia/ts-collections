@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { ICollection } from "../../src/core/ICollection";
 import { from } from "../../src/enumerator/functions/from";
 import { repeat } from "../../src/enumerator/functions/repeat";
-import { LinkedList } from "../../src/imports";
+import { LinkedList } from "../../src/list/LinkedList";
 import { RedBlackTree } from "../../src/tree/RedBlackTree";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";

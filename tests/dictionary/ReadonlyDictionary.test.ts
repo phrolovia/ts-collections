@@ -1,5 +1,6 @@
 import { range } from "../../src/enumerator/functions/range";
-import { ReadonlyDictionary, SortedDictionary } from "../../src/imports";
+import { ReadonlyDictionary } from "../../src/dictionary/ReadonlyDictionary";
+import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
 
 
 describe("ReadonlyDictionary", () => {

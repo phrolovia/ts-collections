@@ -1,4 +1,5 @@
-import { AbstractSet, RedBlackTree } from "../imports";
+import { AbstractSet } from "./AbstractSet";
+import { RedBlackTree } from "../tree/RedBlackTree";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { OrderComparator } from "../shared/OrderComparator";

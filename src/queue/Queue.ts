@@ -1,4 +1,5 @@
-import { AbstractCollection, LinkedList } from "../imports";
+import { AbstractCollection } from "../core/AbstractCollection";
+import { LinkedList } from "../list/LinkedList";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 

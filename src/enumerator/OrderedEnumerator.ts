@@ -1,4 +1,4 @@
-import { Enumerator } from "../imports";
+import { Enumerator } from "./Enumerator";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Selector } from "../shared/Selector";

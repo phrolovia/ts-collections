@@ -1,4 +1,4 @@
-import { AbstractImmutableCollection } from "../imports";
+import { AbstractImmutableCollection } from "./AbstractImmutableCollection";
 import { IRandomAccessImmutableCollection } from "./IRandomAccessImmutableCollection";
 
 export abstract class AbstractRandomAccessImmutableCollection<TElement> extends AbstractImmutableCollection<TElement> implements IRandomAccessImmutableCollection<TElement> {

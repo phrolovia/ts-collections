@@ -1,4 +1,4 @@
-import { AbstractSet } from "../imports";
+import { AbstractSet } from "./AbstractSet";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { Predicate } from "../shared/Predicate";
 

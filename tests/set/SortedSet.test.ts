@@ -1,4 +1,4 @@
-import { LinkedList } from "../../src/imports";
+import { LinkedList } from "../../src/list/LinkedList";
 import { SortedSet } from "../../src/set/SortedSet";
 import { Person } from "../models/Person";
 import { SimpleObject } from "../models/SimpleObject";

@@ -1,10 +1,12 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
-import {
-    CircularLinkedList, CircularQueue,
-    Enumerable, type IEnumerable, ImmutableCircularQueue,
-    ImmutableList, ImmutableQueue,
-    PriorityQueue, ReadonlyCollection, Stack
-} from "../../src/imports";
+import { CircularLinkedList } from "../../src/list/CircularLinkedList";
+import { CircularQueue } from "../../src/queue/CircularQueue";
+import { Enumerable } from "../../src/enumerator/Enumerable";
+import { ImmutableCircularQueue } from "../../src/queue/ImmutableCircularQueue";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
+import { PriorityQueue } from "../../src/queue/PriorityQueue";
+import { Stack } from "../../src/stack/Stack";
 import { List } from "../../src/list/List";
 import { EqualityComparator } from "../../src/shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
@@ -28,6 +30,7 @@ import { Student } from "../models/Student";
 import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
 import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
 import { from } from "../../src/enumerator/functions/from";
+import { IEnumerable } from "../../src/enumerator/IEnumerable";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>

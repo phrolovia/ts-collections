@@ -1,4 +1,5 @@
-import { AbstractCollection, Heap } from "../imports";
+import { AbstractCollection } from "../core/AbstractCollection";
+import { Heap } from "../heap/Heap";
 import { Comparators } from "../shared/Comparators";
 import { NoElementsException } from "../shared/NoElementsException";
 import { OrderComparator } from "../shared/OrderComparator";

@@ -1,4 +1,4 @@
-import { AbstractList } from "../imports";
+import { AbstractList } from "./AbstractList";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";

@@ -1,4 +1,4 @@
-import { Queue } from "../../src/imports";
+import { Queue } from "../../src/queue/Queue";
 import { NoElementsException } from "../../src/shared/NoElementsException";
 
 describe("Queue", () => {

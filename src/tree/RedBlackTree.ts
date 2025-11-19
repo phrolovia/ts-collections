@@ -7,7 +7,7 @@
  * to improve readability, maintainability and performance.
  */
 
-import { AbstractTree } from "../imports";
+import { AbstractTree } from "./AbstractTree";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";
 import { TreeNode } from "./TreeNode";

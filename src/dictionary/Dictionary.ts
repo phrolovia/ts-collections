@@ -1,5 +1,6 @@
 import { select } from "../enumerator/functions/select";
-import { EnumerableSet, List } from "../imports";
+import { EnumerableSet } from "../set/EnumerableSet";
+import { List } from "../list/List";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";

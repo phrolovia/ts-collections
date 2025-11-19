@@ -1,4 +1,5 @@
-import { RedBlackTree, SortedSet } from "../imports";
+import { RedBlackTree } from "../tree/RedBlackTree";
+import { SortedSet } from "../set/SortedSet";
 import { Comparators } from "../shared/Comparators";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";

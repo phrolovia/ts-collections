@@ -1,4 +1,5 @@
-import { AbstractRandomAccessCollection, List } from "../imports";
+import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
+import { List } from "../list/List";
 import { Comparators } from "../shared/Comparators";
 import { OrderComparator } from "../shared/OrderComparator";
 import { Predicate } from "../shared/Predicate";

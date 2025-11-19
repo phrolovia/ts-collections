@@ -1,30 +1,28 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
-import {
-    AsyncEnumerable,
-    CircularLinkedList,
-    CircularQueue,
-    Dictionary,
-    Enumerable,
-    EnumerableSet,
-    Group,
-    ImmutableCircularQueue,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutablePriorityQueue,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    LinkedList,
-    List,
-    OrderedAsyncEnumerator,
-    PriorityQueue,
-    Queue,
-    SortedDictionary,
-    SortedSet,
-    Stack
-} from "../imports";
+import { AsyncEnumerable } from "./AsyncEnumerable";
+import { CircularLinkedList } from "../list/CircularLinkedList";
+import { CircularQueue } from "../queue/CircularQueue";
+import { Dictionary } from "../dictionary/Dictionary";
+import { Enumerable } from "./Enumerable";
+import { EnumerableSet } from "../set/EnumerableSet";
+import { Group } from "./Group";
+import { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import { ImmutableList } from "../list/ImmutableList";
+import { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import { ImmutableQueue } from "../queue/ImmutableQueue";
+import { ImmutableSet } from "../set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../set/ImmutableSortedSet";
+import { ImmutableStack } from "../stack/ImmutableStack";
+import { LinkedList } from "../list/LinkedList";
+import { List } from "../list/List";
+import { OrderedAsyncEnumerator } from "./OrderedAsyncEnumerator";
+import { PriorityQueue } from "../queue/PriorityQueue";
+import { Queue } from "../queue/Queue";
+import { SortedDictionary } from "../dictionary/SortedDictionary";
+import { SortedSet } from "../set/SortedSet";
+import { Stack } from "../stack/Stack";
 import { ILookup } from "../lookup/ILookup";
 import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";

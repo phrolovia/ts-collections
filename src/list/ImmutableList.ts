@@ -1,5 +1,7 @@
 import { contains } from "../enumerator/functions/contains";
-import { AbstractRandomAccessImmutableCollection, List, ReadonlyList } from "../imports";
+import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
+import { List } from "./List";
+import { ReadonlyList } from "./ReadonlyList";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { OrderComparator } from "../shared/OrderComparator";

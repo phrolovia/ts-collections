@@ -1,6 +1,6 @@
 import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
 import type { IList } from "../list/IList";
-import { List } from "../imports";
+import { List } from "../list/List";
 import { ReadonlyList } from "../list/ReadonlyList";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { CollectionChangedAction, ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";

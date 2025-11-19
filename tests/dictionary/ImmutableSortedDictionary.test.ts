@@ -1,5 +1,5 @@
 import { KeyValuePair } from "../../src/dictionary/KeyValuePair";
-import { ImmutableSortedDictionary } from "../../src/imports";
+import { ImmutableSortedDictionary } from "../../src/dictionary/ImmutableSortedDictionary";
 
 describe("ImmutableSortedDictionary", () => {
     describe("#add()", () => {

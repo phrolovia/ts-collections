@@ -1,4 +1,4 @@
-import { AbstractImmutableCollection } from "../imports";
+import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 

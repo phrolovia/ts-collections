@@ -1,5 +1,5 @@
 import { describe } from "vitest";
-import { List } from "../../src/imports";
+import { List } from "../../src/list/List";
 import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
 import { swap } from "../../src/utils/swap";
 

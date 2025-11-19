@@ -1,4 +1,4 @@
-import { AbstractCollection } from "../imports";
+import { AbstractCollection } from "./AbstractCollection";
 import { Predicate } from "../shared/Predicate";
 import { IRandomAccessCollection } from "./IRandomAccessCollection";
 

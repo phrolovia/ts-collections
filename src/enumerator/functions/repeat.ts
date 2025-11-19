@@ -1,4 +1,4 @@
-import { Enumerable } from "../../imports";
+import { Enumerable } from "../Enumerable";
 import type { IEnumerable } from "../../enumerator/IEnumerable";
 
 /**
