@@ -1,4 +1,4 @@
-import { Enumerable } from "../../src/imports";
+import { Enumerable } from "../../src/enumerator/Enumerable";
 import { CollectionChangedAction } from "../../src/observable/ICollectionChangedEventArgs";
 import { ObservableCollection } from "../../src/observable/ObservableCollection";
 import { Person } from "../models/Person";

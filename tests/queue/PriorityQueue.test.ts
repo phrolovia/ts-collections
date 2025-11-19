@@ -1,5 +1,5 @@
 import { describe, test } from "vitest";
-import { PriorityQueue } from "../../src/imports";
+import { PriorityQueue } from "../../src/queue/PriorityQueue";
 import { Comparators } from "../../src/shared/Comparators";
 import { NoElementsException } from "../../src/shared/NoElementsException";
 

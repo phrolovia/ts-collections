@@ -1,12 +1,17 @@
-import { AbstractCollection, IRandomAccessCollection, List } from "../imports";
-import { Predicate } from "../shared/Predicate";
+import { AbstractCollection } from "./AbstractCollection";
+import type { Predicate } from "../shared/Predicate";
+import type { IRandomAccessCollection } from "./IRandomAccessCollection";
 
 export abstract class AbstractRandomAccessCollection<TElement> extends AbstractCollection<TElement> implements IRandomAccessCollection<TElement> {
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        const elementsToRetainList = new List<TSource>(collection);
+        const elementsToRetain = Array.from(collection);
         const removedElements = new Set<TElement>();
         for (const element of this) {
-            if (!elementsToRetainList.contains(element as TSource, this.comparer)) {
+            const found = this.comparer
+                ? elementsToRetain.some(e => this.comparer(e, element))
+                : (elementsToRetain as TElement[]).includes(element);
+
+            if (!found) {
                 removedElements.add(element);
             }
         }

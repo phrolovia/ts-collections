@@ -1,5 +1,5 @@
+import type { IList } from "../list/IList";
 import { swap } from "./swap";
-import { IList } from "../list/IList";
 
 export const shuffleInPlace = <TElement>(sequence: Array<TElement> | IList<TElement>): void => {
     const size = sequence instanceof Array ? sequence.length : sequence.size();

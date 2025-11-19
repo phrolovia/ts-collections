@@ -1,5 +1,5 @@
-import {PercentileStrategy} from "../../shared/PercentileStrategy";
-import {nthElement} from "./medianHelpers";
+import type { PercentileStrategy } from "../../shared/PercentileStrategy";
+import { nthElement } from "./medianHelpers";
 
 export function findPercentile(data: number[], percent: number, strategy: PercentileStrategy = "linear"): number {
     if (data.length === 0) {

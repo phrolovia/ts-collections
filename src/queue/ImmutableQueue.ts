@@ -1,6 +1,8 @@
-import { AbstractImmutableCollection, Queue } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
+import { Queue } from "./Queue";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
+import { registerImmutableQueueFactory } from "../enumerator/Enumerator";
 
 export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #queue: Queue<TElement>;
@@ -120,3 +122,7 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
         return this.#queue.length;
     }
 }
+
+registerImmutableQueueFactory(<TElement>(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> => {
+    return ImmutableQueue.create(iterable, comparator);
+});

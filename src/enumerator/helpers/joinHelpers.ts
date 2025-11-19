@@ -1,7 +1,7 @@
-import { EqualityComparator } from "../../shared/EqualityComparator";
-import { JoinSelector } from "../../shared/JoinSelector";
-import { Selector } from "../../shared/Selector";
-import { IEnumerable } from "../IEnumerable";
+import type { EqualityComparator } from "../../shared/EqualityComparator";
+import type { JoinSelector } from "../../shared/JoinSelector";
+import type { Selector } from "../../shared/Selector";
+import type { IEnumerable } from "../IEnumerable";
 
 export const processGroupElement = <TInner, TKey>(innerElement: TInner, groups: JoinGroup<TKey, TInner>[], innerKeySelector: Selector<TInner, TKey>, keyCompare: EqualityComparator<TKey>): void => {
     const innerKey = innerKeySelector(innerElement);

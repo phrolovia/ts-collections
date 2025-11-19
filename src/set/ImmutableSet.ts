@@ -1,6 +1,9 @@
-import { AbstractRandomAccessImmutableCollection, contains, EnumerableSet } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { Predicate } from "../shared/Predicate";
+import { contains } from "../enumerator/functions/contains";
+import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
+import { EnumerableSet } from "./EnumerableSet";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { Predicate } from "../shared/Predicate";
+import { registerImmutableSetFactory } from "../enumerator/Enumerator";
 
 export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
     readonly #set: EnumerableSet<TElement>;
@@ -140,3 +143,7 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
         return this.#set.length;
     }
 }
+
+registerImmutableSetFactory(<TElement>(iterable: Iterable<TElement>): ImmutableSet<TElement> => {
+    return ImmutableSet.create(iterable);
+});

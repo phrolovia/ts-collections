@@ -1,4 +1,5 @@
-import { IList, swap } from "../imports";
+import type { IList } from "../list/IList";
+import { swap } from "./swap";
 
 export const reverseInPlace = <TElement>(sequence: IList<TElement> | Array<TElement>): void => {
     const size = sequence instanceof Array ? sequence.length : sequence.size();

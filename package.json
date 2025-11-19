@@ -6,6 +6,13 @@
     "module": "dist/index.mjs",
     "type": "module",
     "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.ts"
+        },
+        "./package.json": "./package.json"
+    },
     "private": false,
     "scripts": {
         "build": "vite build",

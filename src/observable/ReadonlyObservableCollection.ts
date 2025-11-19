@@ -1,5 +1,8 @@
-import { AbstractEnumerable, ICollectionChangedEventArgs, IReadonlyCollection, ObservableCollection } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { IReadonlyCollection } from "../core/IReadonlyCollection";
+import { AbstractEnumerable } from "../enumerator/AbstractEnumerable";
+import { ObservableCollection } from "./ObservableCollection";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { ICollectionChangedEventArgs } from "./ICollectionChangedEventArgs";
 
 export class ReadonlyObservableCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {
     readonly #collection: ObservableCollection<TElement>;
@@ -46,6 +49,6 @@ export class ReadonlyObservableCollection<TElement> extends AbstractEnumerable<T
     private setCollectionChangedEvent(): void {
         this.#collection.collectionChanged = (_sender, args) => {
             this.collectionChanged?.(this, args);
-        }
+        };
     }
 }

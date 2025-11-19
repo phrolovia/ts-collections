@@ -1,6 +1,8 @@
 import { describe, expect, test } from "vitest";
 import { ICollection } from "../../src/core/ICollection";
-import { Enumerable, LinkedList } from "../../src/imports";
+import { from } from "../../src/enumerator/functions/from";
+import { repeat } from "../../src/enumerator/functions/repeat";
+import { LinkedList } from "../../src/list/LinkedList";
 import { RedBlackTree } from "../../src/tree/RedBlackTree";
 import { Pair } from "../models/Pair";
 import { Person } from "../models/Person";
@@ -11,11 +13,17 @@ describe("RedBlackTree", () => {
     const personSurnameComparator = (p1: Person, p2: Person) => p1.surname.localeCompare(p2.surname);
     const personComparator = (p1: Person, p2: Person) => {
         let result = personNameComparator(p1, p2);
-        if (result !== 0) return result;
+        if (result !== 0) {
+            return result;
+        }
         result = personSurnameComparator(p1, p2);
-        if (result !== 0) return result;
+        if (result !== 0) {
+            return result;
+        }
         result = personAgeComparator(p1, p2);
-        if (result !== 0) return result;
+        if (result !== 0) {
+            return result;
+        }
         return 0;
     };
     const shuffle = <TElement>(data: Array<TElement> | ICollection<TElement>) => {
@@ -73,14 +81,14 @@ describe("RedBlackTree", () => {
 
         test("should not have duplicates", () => {
             const randomArray = randomArrayGenerator(5000);
-            const distinct = Enumerable.from(randomArray).distinct().toArray();
+            const distinct = from(randomArray).distinct().toArray();
             const tree = new RedBlackTree<number>(randomArray);
             expect(distinct.length).to.eq(tree.size());
             expect(distinct.length).to.eq(tree.length);
-        }, {timeout: 5000});
+        }, { timeout: 5000 });
 
         test("should not have duplicates #2", () => {
-            const repeatedEnumerable = Enumerable.repeat(100, 100);
+            const repeatedEnumerable = repeat(100, 100);
             const tree = new RedBlackTree<number>(repeatedEnumerable);
             expect(tree.size()).to.eq(1);
             expect(tree.length).to.eq(1);
@@ -445,7 +453,7 @@ describe("RedBlackTree", () => {
         test("should return false if element is not in the tree", () => {
             const tree = new RedBlackTree([1, 2, 3, 4]);
             expect(tree.remove(5)).to.be.false;
-        })
+        });
     });
 
     describe("#removeAll()", () => {
@@ -660,7 +668,7 @@ describe("RedBlackTree", () => {
         });
         test("should return in-order array #2", () => {
             const array = randomUniqueArrayGenerator(1000);
-            const sortedArray = Enumerable.from(array).orderBy(n => n).toArray();
+            const sortedArray = from(array).orderBy(n => n).toArray();
             const tree = new RedBlackTree(array);
             const treeArray = tree.toArray();
             expect(sortedArray).to.deep.equal(treeArray);
@@ -675,7 +683,7 @@ describe("RedBlackTree", () => {
     describe("#traverseToArray()", () => {
         test("should traverse and return an array based on the given direction", () => {
             const sourceData = [4, 1, 3, 5, 2];
-            const sortedSourceData = Enumerable.from(sourceData).orderBy(n => n).toArray();
+            const sortedSourceData = from(sourceData).orderBy(n => n).toArray();
             const expectedPreOrderArray = [3, 1, 2, 4, 5];
             const expectedPostOrderArray = [2, 1, 5, 4, 3];
             const tree = new RedBlackTree(sourceData);

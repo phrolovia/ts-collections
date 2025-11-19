@@ -3,16 +3,13 @@ import { SortedDictionary } from "../../src/dictionary/SortedDictionary";
 import { Enumerable } from "../../src/enumerator/Enumerable";
 import { Group } from "../../src/enumerator/Group";
 import { IGroup } from "../../src/enumerator/IGroup";
-import {
-    EnumerableSet,
-    IEnumerable,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    SortedSet
-} from "../../src/imports";
+import { EnumerableSet } from "../../src/set/EnumerableSet";
+import { ImmutableDictionary } from "../../src/dictionary/ImmutableDictionary";
+import { ImmutableList } from "../../src/list/ImmutableList";
+import { ImmutableSet } from "../../src/set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../../src/dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../../src/set/ImmutableSortedSet";
+import { SortedSet } from "../../src/set/SortedSet";
 
 import { LinkedList } from "../../src/list/LinkedList";
 
@@ -21,6 +18,7 @@ import { Lookup } from "../../src/lookup/Lookup";
 import { Queue } from "../../src/queue/Queue";
 import { RedBlackTree } from "../../src/tree/RedBlackTree";
 import { Person } from "../models/Person";
+import type {IEnumerable} from "../../src/enumerator/IEnumerable";
 
 describe("Lookup", () => {
     const personAgeComparator = (p1: Person, p2: Person) => p1.age === p2.age;

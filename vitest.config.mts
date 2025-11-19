@@ -7,6 +7,7 @@ export default defineConfig({
             provider: 'v8', // or 'v8'
         },
         exclude: [
+            "tests/setup.ts",
             "tests/helpers/**",
             "tests/models/**",
             "docs/**",
@@ -16,6 +17,7 @@ export default defineConfig({
         ],
         globals: true,
         include: ["tests/**/*.ts"],
-        reporters: ["html"]
+        reporters: ["html"],
+        setupFiles: ["tests/setup.ts"],
     },
 })

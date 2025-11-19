@@ -1,4 +1,4 @@
-import { IReadonlyCollection } from "./IReadonlyCollection";
+import type { IReadonlyCollection } from "./IReadonlyCollection";
 
 export interface IImmutableCollection<TElement> extends IReadonlyCollection<TElement> {
     /**

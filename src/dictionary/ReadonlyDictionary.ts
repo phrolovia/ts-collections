@@ -1,8 +1,9 @@
-import { ICollection, ISet } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { ISet } from "../set/ISet";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
-import { IDictionary } from "./IDictionary";
-import { KeyValuePair } from "./KeyValuePair";
+import type { IDictionary } from "./IDictionary";
+import type { KeyValuePair } from "./KeyValuePair";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary<TKey, TValue> {
     readonly #dictionary: IDictionary<TKey, TValue>;
@@ -40,7 +41,7 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
         return this.#dictionary.size();
     }
 
-    public values(): ICollection<TValue> {
+    public values(): IImmutableCollection<TValue> {
         return this.#dictionary.values();
     }
 

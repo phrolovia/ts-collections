@@ -1,13 +1,13 @@
 import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
 import { Comparators } from "../shared/Comparators";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { IndexedAction } from "../shared/IndexedAction";
-import { OrderComparator } from "../shared/OrderComparator";
-import { Predicate } from "../shared/Predicate";
-import { Selector } from "../shared/Selector";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { IndexedAction } from "../shared/IndexedAction";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { Predicate } from "../shared/Predicate";
+import type { Selector } from "../shared/Selector";
 import { Stack } from "../stack/Stack";
-import { INode } from "./INode";
-import { ITree, TraverseType } from "./ITree";
+import type { INode } from "./INode";
+import type { ITree, TraverseType } from "./ITree";
 
 export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollection<TElement> implements ITree<TElement> {
     protected readonly orderComparator: OrderComparator<TElement>;

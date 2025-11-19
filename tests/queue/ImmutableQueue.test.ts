@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ImmutableQueue } from "../../src/imports";
+import { ImmutableQueue } from "../../src/queue/ImmutableQueue";
 import { NoElementsException } from "../../src/shared/NoElementsException";
 
 describe("ImmutableQueue", () => {

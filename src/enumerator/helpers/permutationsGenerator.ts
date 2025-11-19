@@ -1,6 +1,7 @@
 import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
-import { Enumerable } from "../Enumerable";
-import { IEnumerable } from "../IEnumerable";
+import type { IEnumerable } from "../IEnumerable";
+import { from } from "../functions/from";
+import { empty } from "../functions/empty";
 
 export const permutationsGenerator = function* <TElement>(distinctElements: TElement[], size?: number): Generator<IEnumerable<TElement>> {
     const n = distinctElements.length;
@@ -10,7 +11,7 @@ export const permutationsGenerator = function* <TElement>(distinctElements: TEle
         throw new InvalidArgumentException("Invalid permutation size.", "size");
     }
     if (targetSize === 0 || n === 0) {
-        return yield Enumerable.empty<TElement>();
+        return yield empty<TElement>();
     }
 
     const used = new Array<boolean>(n).fill(false);
@@ -18,7 +19,7 @@ export const permutationsGenerator = function* <TElement>(distinctElements: TEle
 
     function* generate(index: number): IterableIterator<IEnumerable<TElement>> {
         if (index === targetSize) {
-            return yield Enumerable.from(currentPermutation);
+            return yield from(currentPermutation);
         }
 
         for (let i = 0; i < n; i++) {

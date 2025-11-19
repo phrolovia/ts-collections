@@ -1,7 +1,7 @@
-import { EqualityComparator } from "../shared/EqualityComparator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { AbstractReadonlyDictionary } from "./AbstractReadonlyDictionary";
-import { IImmutableDictionary } from "./IImmutableDictionary";
-import { KeyValuePair } from "./KeyValuePair";
+import type { IImmutableDictionary } from "./IImmutableDictionary";
+import type { KeyValuePair } from "./KeyValuePair";
 
 export abstract class AbstractImmutableDictionary<TKey, TValue> extends AbstractReadonlyDictionary<TKey, TValue> implements IImmutableDictionary<TKey, TValue> {
     protected constructor(valueComparator: EqualityComparator<TValue>, keyValueComparator: EqualityComparator<KeyValuePair<TKey, TValue>>) {

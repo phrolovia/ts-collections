@@ -1,7 +1,9 @@
-import { ICollection, IEnumerable, ISet } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { Selector } from "../shared/Selector";
-import { KeyValuePair } from "./KeyValuePair";
+import type { IEnumerable } from "../enumerator/IEnumerable";
+import type { ISet } from "../set/ISet";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { Selector } from "../shared/Selector";
+import type { KeyValuePair } from "./KeyValuePair";
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValuePair<TKey, TValue>> {
     /**
@@ -76,9 +78,9 @@ export interface IReadonlyDictionary<TKey, TValue> extends IEnumerable<KeyValueP
 
     /**
      * Returns a list of values of the dictionary.
-     * @returns {ICollection} A collection of values of this dictionary.
+     * @returns {IImmutableCollection} An immutable collection of values of this dictionary.
      */
-    values(): ICollection<TValue>;
+    values(): IImmutableCollection<TValue>;
 
     get keyValueComparator(): EqualityComparator<KeyValuePair<TKey, TValue>>;
 

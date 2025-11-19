@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ImmutableHeap } from "../../src/imports";
+import { ImmutableHeap } from "../../src/heap/ImmutableHeap";
 import { Comparators } from "../../src/shared/Comparators";
 
 describe("ImmutableHeap", () => {

@@ -1,46 +1,44 @@
-import { KeyValuePair } from "../dictionary/KeyValuePair";
-import {
-    CircularLinkedList,
-    CircularQueue,
-    Dictionary,
-    EnumerableSet,
-    IGroup,
-    ILookup,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutablePriorityQueue,
-    ImmutableCircularQueue,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    IOrderedEnumerable,
-    LinkedList,
-    List,
-    PriorityQueue,
-    Queue,
-    SortedDictionary,
-    SortedSet,
-    Stack
-} from "../imports";
-import { Accumulator } from "../shared/Accumulator";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
-import { IndexedSelector } from "../shared/IndexedSelector";
-import { InferredType } from "../shared/InferredType";
-import { JoinSelector } from "../shared/JoinSelector";
-import { ObjectType } from "../shared/ObjectType";
-import { OrderComparator } from "../shared/OrderComparator";
-import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate, TypePredicate } from "../shared/Predicate";
-import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
-import { PipeOperator } from "../shared/PipeOperator";
-import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
-import {MedianTieStrategy} from "../shared/MedianTieStrategy";
-import {PercentileStrategy} from "../shared/PercentileStrategy";
+import type { KeyValuePair } from "../dictionary/KeyValuePair";
+import type { CircularLinkedList } from "../list/CircularLinkedList";
+import type { CircularQueue } from "../queue/CircularQueue";
+import type { Dictionary } from "../dictionary/Dictionary";
+import type { EnumerableSet } from "../set/EnumerableSet";
+import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import type { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import type { ImmutableList } from "../list/ImmutableList";
+import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import type { ImmutableQueue } from "../queue/ImmutableQueue";
+import type { ImmutableSet } from "../set/ImmutableSet";
+import type { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
+import type { ImmutableStack } from "../stack/ImmutableStack";
+import type { LinkedList } from "../list/LinkedList";
+import type { List } from "../list/List";
+import type { PriorityQueue } from "../queue/PriorityQueue";
+import type { Queue } from "../queue/Queue";
+import type { SortedDictionary } from "../dictionary/SortedDictionary";
+import type { SortedSet } from "../set/SortedSet";
+import type { Stack } from "../stack/Stack";
+import type { ILookup } from "../lookup/ILookup";
+import type { Accumulator } from "../shared/Accumulator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { IndexedAction } from "../shared/IndexedAction";
+import type { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
+import type { IndexedSelector } from "../shared/IndexedSelector";
+import type { InferredType } from "../shared/InferredType";
+import type { JoinSelector } from "../shared/JoinSelector";
+import type { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import type { ObjectType } from "../shared/ObjectType";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { PairwiseSelector } from "../shared/PairwiseSelector";
+import type { PercentileStrategy } from "../shared/PercentileStrategy";
+import type { PipeOperator } from "../shared/PipeOperator";
+import type { Predicate, TypePredicate } from "../shared/Predicate";
+import type { Selector } from "../shared/Selector";
+import type { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
+import type { ZipManyZipper, Zipper } from "../shared/Zipper";
+import type { IGroup } from "./IGroup";
+import type { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export interface IEnumerable<TElement> extends Iterable<TElement> {
 
@@ -847,7 +845,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * const indexed = letters.index().toArray();
      * console.log(indexed); // [[0, 'a'], [1, 'b'], [2, 'c']]
      * ```
-    */
+     */
     index(): IEnumerable<[number, TElement]>;
 
     /**
@@ -1319,6 +1317,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]>;
+
     /**
      * Splits the sequence into two cached partitions by applying a type guard predicate.
      * @template TFiltered Type produced when {@link predicate} confirms the element.
@@ -2420,6 +2419,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     zipMany<TIterable extends readonly Iterable<unknown>[]>(
         ...iterables: [...TIterable]
     ): IEnumerable<[TElement, ...UnpackIterableTuple<TIterable>]>;
+
     /**
      * Zips this sequence with the iterables supplied in {@link iterablesAndZipper} and projects each tuple with {@link ZipManyZipper zipper}.
      * @template TIterable Extends `readonly Iterable<unknown>[]`; the element type of each iterable contributes to the zipper input tuple.

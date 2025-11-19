@@ -1,49 +1,47 @@
-import { KeyValuePair } from "../dictionary/KeyValuePair";
-import {
-    AsyncEnumerator,
-    CircularLinkedList,
-    CircularQueue,
-    Dictionary,
-    EnumerableSet,
-    IAsyncEnumerable,
-    IEnumerable,
-    ILookup,
-    ImmutableCircularQueue,
-    ImmutableDictionary,
-    ImmutableList,
-    ImmutablePriorityQueue,
-    ImmutableQueue,
-    ImmutableSet,
-    ImmutableSortedDictionary,
-    ImmutableSortedSet,
-    ImmutableStack,
-    IOrderedAsyncEnumerable,
-    LinkedList,
-    List,
-    PriorityQueue,
-    Queue,
-    SortedDictionary,
-    SortedSet,
-    Stack
-} from "../imports";
-import { Accumulator } from "../shared/Accumulator";
-import { EqualityComparator } from "../shared/EqualityComparator";
-import { IndexedAction } from "../shared/IndexedAction";
-import { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
-import { IndexedSelector } from "../shared/IndexedSelector";
-import { MedianTieStrategy } from "../shared/MedianTieStrategy";
-import { PercentileStrategy } from "../shared/PercentileStrategy";
-import { InferredType } from "../shared/InferredType";
-import { JoinSelector } from "../shared/JoinSelector";
-import { ObjectType } from "../shared/ObjectType";
-import { OrderComparator } from "../shared/OrderComparator";
-import { PairwiseSelector } from "../shared/PairwiseSelector";
-import { Predicate, TypePredicate } from "../shared/Predicate";
-import { Selector } from "../shared/Selector";
-import { Zipper, ZipManyZipper } from "../shared/Zipper";
-import { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
-import { IGroup } from "./IGroup";
-import { AsyncPipeOperator } from "../shared/PipeOperator";
+import type { KeyValuePair } from "../dictionary/KeyValuePair";
+import { AsyncEnumerator } from "./AsyncEnumerator";
+import type { CircularLinkedList } from "../list/CircularLinkedList";
+import type { CircularQueue } from "../queue/CircularQueue";
+import type { Dictionary } from "../dictionary/Dictionary";
+import type { EnumerableSet } from "../set/EnumerableSet";
+import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import type { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import type { ImmutableList } from "../list/ImmutableList";
+import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import type { ImmutableQueue } from "../queue/ImmutableQueue";
+import type { ImmutableSet } from "../set/ImmutableSet";
+import type { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
+import type { ImmutableStack } from "../stack/ImmutableStack";
+import type { LinkedList } from "../list/LinkedList";
+import type { List } from "../list/List";
+import type { PriorityQueue } from "../queue/PriorityQueue";
+import type { Queue } from "../queue/Queue";
+import type { SortedDictionary } from "../dictionary/SortedDictionary";
+import type { SortedSet } from "../set/SortedSet";
+import type { Stack } from "../stack/Stack";
+import type { ILookup } from "../lookup/ILookup";
+import type { Accumulator } from "../shared/Accumulator";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import type { IndexedAction } from "../shared/IndexedAction";
+import type { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
+import type { IndexedSelector } from "../shared/IndexedSelector";
+import type { InferredType } from "../shared/InferredType";
+import type { JoinSelector } from "../shared/JoinSelector";
+import type { MedianTieStrategy } from "../shared/MedianTieStrategy";
+import type { ObjectType } from "../shared/ObjectType";
+import type { OrderComparator } from "../shared/OrderComparator";
+import type { PairwiseSelector } from "../shared/PairwiseSelector";
+import type { PercentileStrategy } from "../shared/PercentileStrategy";
+import type { AsyncPipeOperator } from "../shared/PipeOperator";
+import type { Predicate, TypePredicate } from "../shared/Predicate";
+import type { Selector } from "../shared/Selector";
+import type { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
+import type { ZipManyZipper, Zipper } from "../shared/Zipper";
+import type { IAsyncEnumerable } from "./IAsyncEnumerable";
+import type { IEnumerable } from "./IEnumerable";
+import type { IGroup } from "./IGroup";
+import type { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
 
 export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     readonly #enumerator: AsyncEnumerator<TElement>;
@@ -248,7 +246,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.interleave(iterable);
     }
 
-    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> |  OrderComparator<TElement>): IAsyncEnumerable<TElement> {
+    public intersect(iterable: AsyncIterable<TElement>, comparator?: EqualityComparator<TElement> | OrderComparator<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.intersect(iterable, comparator);
     }
 
@@ -532,7 +530,7 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.toMap(keySelector, valueSelector);
     }
 
-    public async toObject<TKey extends string|number|symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
+    public async toObject<TKey extends string | number | symbol, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Promise<Record<TKey, TValue>> {
         return this.#enumerator.toObject(keySelector, valueSelector);
     }
 

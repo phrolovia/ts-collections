@@ -1,6 +1,7 @@
-import {describe} from "vitest";
-import {List, swap} from "../../src/imports";
-import {IndexOutOfBoundsException} from "../../src/shared/IndexOutOfBoundsException";
+import { describe } from "vitest";
+import { List } from "../../src/list/List";
+import { IndexOutOfBoundsException } from "../../src/shared/IndexOutOfBoundsException";
+import { swap } from "../../src/utils/swap";
 
 describe("#swap", () => {
     test("should swap elements in an array", () => {

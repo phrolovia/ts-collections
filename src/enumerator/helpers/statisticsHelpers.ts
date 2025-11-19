@@ -1,4 +1,4 @@
-import { Selector } from "../../shared/Selector";
+import type { Selector } from "../../shared/Selector";
 import { InsufficientElementException } from "../../shared/InsufficientElementException";
 
 const defaultNumberSelector = (value: unknown): number => value as number;

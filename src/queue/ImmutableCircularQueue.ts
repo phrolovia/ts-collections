@@ -1,6 +1,7 @@
-import { AbstractImmutableCollection } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
+import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
+import { registerImmutableCircularQueueFactory } from "../enumerator/Enumerator";
 
 /**
  * An immutable circular queue maintains a bounded history of elements. When the capacity is exceeded,
@@ -184,3 +185,10 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         return this.#elements.length;
     }
 }
+
+registerImmutableCircularQueueFactory(<TElement>(source: Iterable<TElement>, capacityOrComparator?: number | EqualityComparator<TElement>, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement> => {
+    if (typeof capacityOrComparator === "number") {
+        return ImmutableCircularQueue.create(capacityOrComparator, source, comparator);
+    }
+    return ImmutableCircularQueue.create(source, capacityOrComparator);
+});

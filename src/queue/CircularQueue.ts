@@ -1,5 +1,6 @@
-import { Queue } from "../imports";
-import { EqualityComparator } from "../shared/EqualityComparator";
+import { Queue } from "./Queue";
+import type { EqualityComparator } from "../shared/EqualityComparator";
+import { registerCircularQueueFactory } from "../enumerator/Enumerator";
 
 /**
  * A circular queue is a queue that uses a fixed-size queue as its underlying data structure.
@@ -58,3 +59,14 @@ export class CircularQueue<TElement> extends Queue<TElement> {
         return this.comparer;
     }
 }
+
+registerCircularQueueFactory(<TElement>(source: Iterable<TElement>, capacityOrComparator?: number | EqualityComparator<TElement>, comparator?: EqualityComparator<TElement>): CircularQueue<TElement> => {
+    if (typeof capacityOrComparator === "number") {
+        const queue = new CircularQueue<TElement>(capacityOrComparator, comparator);
+        queue.addAll(source);
+        return queue;
+    }
+    const queue = new CircularQueue<TElement>(undefined, capacityOrComparator);
+    queue.addAll(source);
+    return queue;
+});

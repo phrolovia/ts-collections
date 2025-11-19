@@ -1,4 +1,6 @@
-import { empty, from, range } from "../../src/imports";
+import { from } from "../../src/enumerator/functions/from";
+import { range } from "../../src/enumerator/functions/range";
+import { empty } from "../../src/enumerator/functions/empty";
 import { ImmutableSet } from "../../src/set/ImmutableSet";
 
 describe("ImmutableSet", () => {
