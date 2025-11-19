@@ -169,7 +169,7 @@ type StackFactory = <TElement>(
 
 type GroupFactory = <TKey, TElement>(
     key: TKey,
-    source: Iterable<TElement>
+    source: IEnumerable<TElement>
 ) => Group<TKey, TElement>;
 
 let circularLinkedListFactory: CircularLinkedListFactory | undefined;
@@ -1288,7 +1288,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
-        const dictionary = new SortedDictionary<TKey, TValue>([], keyComparator, valueComparator);
+        if (!sortedDictionaryFactory) {
+            throw new Error("SortedDictionary factory is not registered.");
+        }
+        const dictionary = sortedDictionaryFactory<TKey, TValue>([], keyComparator, valueComparator);
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
@@ -1563,18 +1566,22 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
 
             for (const item of this) {
-                const key = keySelector(item);
-                const group = groupMap.get(key);
-                if (group) {
-                    (group.source as List<TElement>).add(item);
-                } else {
-                    const newList = listFactory([item]);
-                    if (!groupFactory) {
-                        throw new Error("Group factory is not registered.");
-                    }
-                    const newGroup = groupFactory(key, newList);
-                    groupMap.set(key, newGroup);
+            const key = keySelector(item);
+            const group = groupMap.get(key);
+            if (group) {
+                (group.source as List<TElement>).add(item);
+            } else {
+                const factory = listFactory;
+                if (!factory) {
+                    throw new Error("List factory is not registered.");
                 }
+                if (!groupFactory) {
+                    throw new Error("Group factory is not registered.");
+                }
+                const newList = factory<TElement>([item]);
+                const newGroup = groupFactory(key, newList);
+                groupMap.set(key, newGroup);
+            }
             }
             yield* groupMap.values();
         } else {
@@ -1592,20 +1599,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
             for (const item of this) {
                 const key = keySelector(item);
-                const existingKey = findExistingKey(key);
+            const existingKey = findExistingKey(key);
 
-                if (existingKey !== undefined) {
-                    const group = groupMap.get(existingKey)!;
-                    (group.source as List<TElement>).add(item);
-                } else {
-                    const newList = listFactory([item]);
-                    if (!groupFactory) {
-                        throw new Error("Group factory is not registered.");
-                    }
-                    const newGroup = groupFactory(key, newList);
-                    groupMap.set(key, newGroup);
-                    keyLookupMap.set(key, key);
+            if (existingKey !== undefined) {
+                const group = groupMap.get(existingKey)!;
+                (group.source as List<TElement>).add(item);
+            } else {
+                const factory = listFactory;
+                if (!factory) {
+                    throw new Error("List factory is not registered.");
                 }
+                if (!groupFactory) {
+                    throw new Error("Group factory is not registered.");
+                }
+                const newList = factory<TElement>([item]);
+                const newGroup = groupFactory(key, newList);
+                groupMap.set(key, newGroup);
+                keyLookupMap.set(key, key);
+            }
             }
             yield* groupMap.values();
         }
