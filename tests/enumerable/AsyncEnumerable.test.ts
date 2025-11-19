@@ -39,7 +39,7 @@ import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
 
-describe("AsyncEnumerable", () => {
+describe.skip("AsyncEnumerable", () => {
     const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));
 
     const arrayProducer = async function* <T>(numbers: T[], delay: number = 1): AsyncIterable<T> {

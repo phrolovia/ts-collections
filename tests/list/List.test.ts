@@ -27,8 +27,8 @@ import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
-import {DimensionMismatchException} from "../../src/shared/DimensionMismatchException";
-import {InsufficientElementException} from "../../src/shared/InsufficientElementException";
+import { DimensionMismatchException } from "../../src/shared/DimensionMismatchException";
+import { InsufficientElementException } from "../../src/shared/InsufficientElementException";
 import { from } from "../../src/enumerator/functions/from";
 import { IEnumerable } from "../../src/enumerator/IEnumerable";
 
