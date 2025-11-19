@@ -40,7 +40,7 @@ import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
 import "../../src/lookup/Lookup";
 
-describe.skip("AsyncEnumerable", () => {
+describe("AsyncEnumerable", () => {
     const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));
 
     const arrayProducer = async function* <T>(numbers: T[], delay: number = 1): AsyncIterable<T> {

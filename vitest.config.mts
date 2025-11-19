@@ -16,6 +16,7 @@ export default defineConfig({
         ],
         globals: true,
         include: ["tests/**/*.ts"],
-        reporters: ["html"]
+        reporters: ["html"],
+        setupFiles: ["tests/setup.ts"],
     },
 })
