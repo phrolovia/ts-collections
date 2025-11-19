@@ -5,10 +5,7 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
     build: {
         lib: {
-            entry: {
-                index: resolve(__dirname, "./src/index.ts"),
-                functions: resolve(__dirname, "./src/enumerator/functions/functions.ts"),
-            },
+            entry: resolve(__dirname, "./src/index.ts"),
             name: "ts-collections",
             formats: ["es"],
             fileName: (_format, entryName): string => `${entryName}.mjs`

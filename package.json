@@ -11,10 +11,6 @@
             "import": "./dist/index.mjs",
             "types": "./dist/index.d.ts"
         },
-        "./functions": {
-            "import": "./dist/functions.mjs",
-            "types": "./dist/functions.d.ts"
-        },
         "./package.json": "./package.json"
     },
     "private": false,
