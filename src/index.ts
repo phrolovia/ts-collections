@@ -26,6 +26,8 @@ export { CircularLinkedList } from "./list/CircularLinkedList";
 export { ImmutableList } from "./list/ImmutableList";
 export { AbstractTree } from "./tree/AbstractTree";
 export { RedBlackTree } from "./tree/RedBlackTree";
+export { Trie } from "./tree/Trie";
+export { ImmutableTrie } from "./tree/ImmutableTrie";
 export { KeyValuePair } from "./dictionary/KeyValuePair";
 export { Dictionary } from "./dictionary/Dictionary";
 export { SortedDictionary } from "./dictionary/SortedDictionary";
