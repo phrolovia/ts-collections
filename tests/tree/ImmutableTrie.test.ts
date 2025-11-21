@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, test, expect } from "vitest";
 import { ImmutableTrie } from "../../src/tree/ImmutableTrie";
 
 describe("ImmutableTrie", () => {
     describe("Basic behavior with default tokenizer/comparator", () => {
-        it("should insert and retrieve simple string keys", () => {
+        test("should insert and retrieve simple string keys", () => {
             let trie = ImmutableTrie.create<string, number>();
 
             trie = trie.insert("cat", 1);
@@ -21,7 +21,7 @@ describe("ImmutableTrie", () => {
             expect(trie.get("cow")).to.be.null;
         });
 
-        it("should overwrite existing key values immutably", () => {
+        test("should overwrite existing key values immutably", () => {
             let trie = ImmutableTrie.create<string, number>();
 
             const trie1 = trie.insert("cat", 1);
@@ -35,7 +35,7 @@ describe("ImmutableTrie", () => {
             expect(trie2.get("cat")).toBe(42);
         });
 
-        it("should handle keys that are prefixes of other keys", () => {
+        test("should handle keys that are prefixes of other keys", () => {
             let trie = ImmutableTrie.create<string, string>();
 
             trie = trie.insert("MARIA", "maria");
@@ -55,7 +55,7 @@ describe("ImmutableTrie", () => {
             expect(trie.has("MARIANA")).to.be.true;
         });
 
-        it("should return same instance when delete does nothing", () => {
+        test("should return same instance when delete does nothing", () => {
             let trie = ImmutableTrie.create<string, number>();
             trie = trie.insert("cat", 1);
             trie = trie.insert("car", 2);
@@ -66,7 +66,7 @@ describe("ImmutableTrie", () => {
             expect(trie.has("car")).to.be.true;
         });
 
-        it("should not delete when key is only a prefix and not terminal", () => {
+        test("should not delete when key is only a prefix and not terminal", () => {
             let trie = ImmutableTrie.create<string, number>();
             trie = trie.insert("cat", 1);
 
@@ -78,7 +78,7 @@ describe("ImmutableTrie", () => {
     });
 
     describe("Iteration", () => {
-        it("should support valuesWithPrefix for default string keys", () => {
+        test("should support valuesWithPrefix for default string keys", () => {
             let trie = ImmutableTrie.create<string, string>();
 
             trie = trie.insert("cat", "cat");
@@ -97,7 +97,7 @@ describe("ImmutableTrie", () => {
             expect(valuesWithX).toEqual([]);
         });
 
-        it("should yield [TKey, TValue] with original keys", () => {
+        test("should yield [TKey, TValue] with original keys", () => {
             let trie = ImmutableTrie.create<string, number>();
 
             trie = trie.insert("cat", 1);
@@ -120,7 +120,7 @@ describe("ImmutableTrie", () => {
     });
 
     describe("Custom Tokenizer", () => {
-        it("should be able to use dot-separated segments as tokens", () => {
+        test("should be able to use dot-separated segments as tokens", () => {
             let trie = ImmutableTrie.create<string, string, string>(
                 key => key.split(".")
             );
@@ -138,7 +138,7 @@ describe("ImmutableTrie", () => {
             expect(homeValues).toEqual(["subtitle", "title"]);
         });
 
-        it("should support empty key if tokenizer returns empty iterable", () => {
+        test("should support empty key if tokenizer returns empty iterable", () => {
             let trie = ImmutableTrie.create<string, string, string>(
                 key => (key === "" ? [] : key.split(""))
             );
@@ -160,7 +160,7 @@ describe("ImmutableTrie", () => {
     });
 
     describe("Custom Token Comparator", () => {
-        it("should support case-insensitive matching via custom comparator", () => {
+        test("should support case-insensitive matching via custom comparator", () => {
             let trie = ImmutableTrie.create<string, string, string>(
                 key => key.split(""),
                 (a, b) => a.toLowerCase() === b.toLowerCase()
@@ -181,7 +181,7 @@ describe("ImmutableTrie", () => {
     });
 
     describe("Array keys with default tokenizer using key's iterator", () => {
-        it("should use the key's own iterator when tokenizer is not provided", () => {
+        test("should use the key's own iterator when tokenizer is not provided", () => {
             type Key = string[];
             let trie = ImmutableTrie.create<Key, number>();
 
@@ -200,7 +200,7 @@ describe("ImmutableTrie", () => {
     });
 
     describe("Deletion behavior and Immutability", () => {
-        it("should delete a leaf node cleanly and keep previous version intact", () => {
+        test("should delete a leaf node cleanly and keep previous version intact", () => {
             let trie = ImmutableTrie.create<string, number>();
 
             trie = trie.insert("cat", 1);
@@ -219,7 +219,7 @@ describe("ImmutableTrie", () => {
             expect(beforeDelete.has("cat")).to.be.true;
         });
 
-        it("should delete nested keys step by step without affecting other versions", () => {
+        test("should delete nested keys step by step without affecting other versions", () => {
             let trie = ImmutableTrie.create<string, number>();
 
             const t1 = trie.insert("ab", 1);
