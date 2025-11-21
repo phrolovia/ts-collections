@@ -35,7 +35,7 @@ describe("ImmutableTrie", () => {
             expect(trie2.get("cat")).toBe(42);
         });
 
-        it("should handle keys that are prefixes of other keys (MARIA / MARIANA)", () => {
+        it("should handle keys that are prefixes of other keys", () => {
             let trie = ImmutableTrie.create<string, string>();
 
             trie = trie.insert("MARIA", "maria");

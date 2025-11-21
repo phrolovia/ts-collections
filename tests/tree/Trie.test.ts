@@ -86,7 +86,7 @@ describe("Trie", () => {
         });
     });
     describe("Custom tokenizer", () => {
-        it("should use dot-separated segments as tokens", () => {
+        test("should use dot-separated segments as tokens", () => {
             const trie = new Trie<string, string>((key: string) => key.split("."));
 
             trie.insert("page.home.title", "title");
@@ -102,7 +102,7 @@ describe("Trie", () => {
             expect(homeValues).toEqual(["subtitle", "title"]);
         });
 
-        it("should support empty keys", () => {
+        test("should support empty keys", () => {
             const trie = new Trie<string, string>((key: string) => key === "" ? [] : key.split(""));
             trie.insert("", "empty");
             trie.insert("a", "a-value");
@@ -117,7 +117,7 @@ describe("Trie", () => {
         });
     });
     describe("Custom token comparator", () => {
-        it("should support case-insensitive matching", () => {
+        test("should support case-insensitive matching", () => {
             const trie = new Trie<string, string>(
                 key => key.split(""),
                 (a, b) => a.toLowerCase() === b.toLowerCase()
@@ -139,7 +139,7 @@ describe("Trie", () => {
         });
     });
     describe("Array keys with default tokenizer", () => {
-        it("should use the key's own iterator as tokenizer", () => {
+        test("should use the key's own iterator as tokenizer", () => {
             const trie = new Trie<string[], number>();
 
             trie.insert(["home", "user", "docs"], 1);
@@ -153,7 +153,7 @@ describe("Trie", () => {
 
             const homeUserValues = trie.prefix(["home", "user"]).order().toArray();
             expect(homeUserValues).toEqual([1, 2]);
-        })
+        });
     });
     describe("Deletion in more detail", () => {
         test("should delete a leaf node cleanly", () => {
@@ -186,7 +186,7 @@ describe("Trie", () => {
             // And finally delete "ab"
             expect(trie.delete("ab")).toBe(true);
             expect(trie.has("ab")).toBe(false);
-        })
+        });
     });
     describe("Enumeration", () => {
         test("should work with IEnumerable interface", () => {

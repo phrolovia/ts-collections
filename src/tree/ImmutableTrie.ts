@@ -94,7 +94,14 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
      * @returns True if the key exists, false otherwise.
      */
     public has(key: TKey): boolean {
-        return this.get(key) !== null;
+        let node: ImmutableTrieNode<TKey, TValue, TToken> | null = this.#root;
+        for (const token of this.#tokenizer(key)) {
+            node = this.#findChild(node, token);
+            if (!node) {
+                return false;
+            }
+        }
+        return node.isTerminal;
     }
 
     /**

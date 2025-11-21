@@ -63,6 +63,7 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
 
         node.isTerminal = false;
         node.value = null;
+        node.key = null;
 
         for (let i = path.length - 1; i > 0; i--) {
             const { node: current, token } = path[i];
@@ -97,7 +98,15 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
      * @returns True if the key exists, false otherwise.
      */
     public has(key: TKey): boolean {
-        return this.get(key) !== null;
+        let node = this.#root;
+        for (const token of this.#tokenizer(key)) {
+            const child = this.#findChild(node, token);
+            if (!child) {
+                return false;
+            }
+            node = child;
+        }
+        return node.isTerminal;
     }
 
     /**
