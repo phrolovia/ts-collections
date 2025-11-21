@@ -3459,14 +3459,6 @@ describe("List", () => {
             expect(list.get(1)).to.eq(16);
             expect(list.get(1)).to.eq(16);
         });
-        test("should measure performance of retainAll", () => {
-            const list1 = Enumerable.range(1, 10000).toList();
-            const list2 = Enumerable.range(5000, 10000).toList();
-            const startTime = performance.now();
-            list1.retainAll(list2);
-            const endTime = performance.now();
-            console.log(`Time taken to retainAll: ${endTime - startTime} ms`);
-        });
     });
 
     describe("#reverse()", () => {
