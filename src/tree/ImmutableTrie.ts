@@ -12,11 +12,13 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
     readonly #root: ImmutableTrieNode<TKey, TValue, TToken>;
     readonly #tokenComparator: EqualityComparator<TToken> = Comparators.equalityComparator;
     readonly #tokenizer: Selector<TKey, Iterable<TToken>>;
+    readonly #size: number;
 
     private constructor(
         tokenizer: Selector<TKey, Iterable<TToken>> | null = null,
         tokenComparator?: EqualityComparator<TToken>,
-        root?: ImmutableTrieNode<TKey, TValue, TToken>
+        root?: ImmutableTrieNode<TKey, TValue, TToken>,
+        size: number = 0
     ) {
         super();
         if (tokenizer) {
@@ -36,6 +38,7 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
             this.#tokenComparator = tokenComparator;
         }
         this.#root = root ?? new ImmutableTrieNode<TKey, TValue, TToken>();
+        this.#size = size;
     }
 
     public static create<TKey, TValue, TToken = TKey>(
@@ -47,6 +50,17 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
 
     *[Symbol.iterator](): IterableIterator<[TKey, TValue]> {
         yield* this.#traverseNode(this.#root);
+    }
+
+    /**
+     * Removes all entries from the trie.
+     * @returns A new, empty ImmutableTrie with the same tokenizer and comparator.
+     */
+    public clear(): ImmutableTrie<TKey, TValue, TToken> {
+        if (this.#size === 0) {
+            return this;
+        }
+        return new ImmutableTrie(this.#tokenizer, this.#tokenComparator);
     }
 
     /**
@@ -67,7 +81,7 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
 
         // If everything got pruned (root became empty), newRoot can be null
         const finalRoot = newRoot ?? new ImmutableTrieNode<TKey, TValue, TToken>();
-        return new ImmutableTrie(this.#tokenizer, this.#tokenComparator, finalRoot);
+        return new ImmutableTrie(this.#tokenizer, this.#tokenComparator, finalRoot, this.#size - 1);
     }
 
     /**
@@ -112,14 +126,15 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
      * @returns A new ImmutableTrie instance with the key-value pair inserted.
      */
     public insert(key: TKey, value: TValue): ImmutableTrie<TKey, TValue, TToken> {
+        const existed = this.has(key);
         const tokens = Array.from(this.#tokenizer(key));
         const newRoot = this.#insertPath(this.#root, tokens, 0, key, value);
-        if (newRoot === this.#root) {
-            // No structural change (only possible if you add an optimization),
-            // so we can safely return this instance.
+        if (newRoot === this.#root && existed) {
+            // No structural change and key already existed, so we can safely return this instance.
             return this;
         }
-        return new ImmutableTrie(this.#tokenizer, this.#tokenComparator, newRoot);
+        const newSize = existed ? this.#size : this.#size + 1;
+        return new ImmutableTrie(this.#tokenizer, this.#tokenComparator, newRoot, newSize);
     }
 
     /**
@@ -129,6 +144,14 @@ export class ImmutableTrie<TKey, TValue, TToken = TKey> extends AbstractEnumerab
      */
     public prefix(prefix: TKey): IEnumerable<TValue> {
         return from(this.#prefix(prefix));
+    }
+
+    /**
+     * Gets the number of stored key-value pairs.
+     * @returns The number of stored key-value pairs.
+     */
+    public size(): number {
+        return this.#size;
     }
 
     #createPath(

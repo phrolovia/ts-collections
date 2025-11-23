@@ -12,6 +12,7 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
     readonly #root = new TrieNode<TKey, TValue, TToken>();
     readonly #tokenComparator: EqualityComparator<TToken> = Comparators.equalityComparator;
     readonly #tokenizer: Selector<TKey, Iterable<TToken>>;
+    #size: number = 0;
 
     public constructor(
         tokenizer: Selector<TKey, Iterable<TToken>> | null = null,
@@ -33,8 +34,19 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
         }
     }
 
-    *[Symbol.iterator](): IterableIterator<[TKey,TValue]> {
+    *[Symbol.iterator](): IterableIterator<[TKey, TValue]> {
         yield* this.#traverseNode(this.#root);
+    }
+
+    /**
+     * Removes all entries from the trie.
+     */
+    public clear(): void {
+        this.#root.children = [];
+        this.#root.isTerminal = false;
+        this.#root.key = null;
+        this.#root.value = null;
+        this.#size = 0;
     }
 
     /**
@@ -64,6 +76,7 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
         node.isTerminal = false;
         node.value = null;
         node.key = null;
+        this.#size--;
 
         for (let i = path.length - 1; i > 0; i--) {
             const { node: current, token } = path[i];
@@ -80,6 +93,11 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
         return true;
     }
 
+    /**
+     * Gets the value associated with a key.
+     * @param key The key to get the value for.
+     * @returns The value associated with the key, or null if the key is not found.
+     */
     public get(key: TKey): TValue | null {
         let node = this.#root;
         for (const token of this.#tokenizer(key)) {
@@ -110,7 +128,7 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
     }
 
     /**
-     * Inserts a key-value pair into the trie.
+    * Inserts a key-value pair into the trie.
      * @param key The key to insert.
      * @param value The value associated with the key.
      */
@@ -119,9 +137,13 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
         for (const token of this.#tokenizer(key)) {
             node = this.#getOrAddChild(node, token);
         }
+        const wasTerminal = node.isTerminal;
         node.isTerminal = true;
         node.key = key;
         node.value = value;
+        if (!wasTerminal) {
+            this.#size++;
+        }
     }
 
     /**
@@ -131,6 +153,14 @@ export class Trie<TKey, TValue, TToken = TKey> extends AbstractEnumerable<[TKey,
      */
     public prefix(prefix: TKey): IEnumerable<TValue> {
         return from(this.#prefix(prefix));
+    }
+
+    /**
+     * Gets the number of stored key-value pairs.
+     * @returns The number of stored key-value pairs.
+     */
+    public size(): number {
+        return this.#size;
     }
 
     *#deepValues(node: TrieNode<TKey, TValue, TToken>): IterableIterator<TValue> {

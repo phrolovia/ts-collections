@@ -244,4 +244,48 @@ describe("ImmutableTrie", () => {
             expect(t6.has("ab")).to.be.false;
         });
     });
+
+    describe("#clear()", () => {
+        test("should return an empty trie and keep previous version intact", () => {
+            const original = ImmutableTrie.create<string, number>()
+                .insert("cat", 1)
+                .insert("car", 2);
+
+            expect(original.size()).toBe(2);
+
+            const cleared = original.clear();
+
+            expect(cleared.size()).toBe(0);
+            expect(cleared.has("cat")).to.be.false;
+            expect(cleared.has("car")).to.be.false;
+
+            expect(original.size()).toBe(2);
+            expect(original.has("cat")).to.be.true;
+            expect(original.has("car")).to.be.true;
+        });
+
+        test("should return same instance when trie is already empty", () => {
+            const empty = ImmutableTrie.create<string, number>();
+            const cleared = empty.clear();
+            expect(cleared).toBe(empty);
+        });
+    });
+
+    describe("#size()", () => {
+        test("should return the number of stored key-value pairs", () => {
+            const empty = ImmutableTrie.create<string, number>();
+            expect(empty.size()).toBe(0);
+
+            const withValues = empty
+                .insert("cat", 1)
+                .insert("car", 2)
+                .insert("dog", 3);
+
+            expect(withValues.size()).toBe(3);
+
+            const overwritten = withValues.insert("cat", 42);
+            expect(overwritten.size()).toBe(3);
+            expect(withValues.size()).toBe(3);
+        });
+    });
 });
