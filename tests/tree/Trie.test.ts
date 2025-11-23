@@ -199,5 +199,43 @@ describe("Trie", () => {
             const wordStartingWithC = trie.where(e => e[0].charAt(0) === 'c').select(e => e[1]).toArray().sort();
             expect(wordStartingWithC).toEqual([1, 2, 3]);
         });
-    })
+    });
+    describe("#clear()", () => {
+        test("should remove all entries from the trie", () => {
+            const trie = new Trie<string, number>();
+
+            trie.insert("cat", 1);
+            trie.insert("car", 2);
+
+            expect(trie.size()).toBe(2);
+
+            trie.clear();
+
+            expect(trie.size()).toBe(0);
+            expect(trie.has("cat")).to.be.false;
+            expect(trie.has("car")).to.be.false;
+
+            trie.clear();
+            expect(trie.size()).toBe(0);
+        });
+    });
+    describe("#size()", () => {
+        test("should return the number of stored key-value pairs", () => {
+            const trie = new Trie<string, number>();
+
+            expect(trie.size()).toBe(0);
+
+            trie.insert("cat", 1);
+            trie.insert("car", 2);
+            trie.insert("dog", 3);
+
+            expect(trie.size()).toBe(3);
+
+            trie.insert("cat", 42);
+            expect(trie.size()).toBe(3);
+
+            trie.delete("car");
+            expect(trie.size()).toBe(2);
+        });
+    });
 });
