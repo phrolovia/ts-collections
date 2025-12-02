@@ -1,5 +1,4 @@
 import { describe, expect, expectTypeOf, test } from "vitest";
-import { skipUntil } from "../../src";
 import { Enumerable } from "../../src/enumerator/Enumerable";
 import { from } from "../../src/enumerator/functions/from";
 import { IEnumerable } from "../../src/enumerator/IEnumerable";
