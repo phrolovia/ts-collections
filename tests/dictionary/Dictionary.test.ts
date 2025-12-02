@@ -1335,7 +1335,7 @@ describe("Dictionary", () => {
                 ["Noemi", "Waterfox"],
                 ["Priscilla", "Necci"],
                 ["Vanessa", "Bloodboil"]
-            ]
+            ];
             expect(people).to.deep.equal(expectedResult);
         });
     });
@@ -1451,7 +1451,7 @@ describe("Dictionary", () => {
             const expectedResult = [
                 ["Alice", "Rivermist"],
                 ["Noemi", "Waterfox"]
-            ]
+            ];
             expect(people).to.deep.equal(expectedResult);
         });
     });

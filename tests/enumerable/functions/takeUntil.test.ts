@@ -1,13 +1,11 @@
-import { describe } from "vitest";
+import { describe, test, expect } from "vitest";
 import { takeUntil } from "../../../src/enumerator/functions/takeUntil";
 
 describe("#takeUntil()", () => {
     test("should return a sequence with [1,2,3]", () => {
         const list = [1, 2, 3, 4, 5];
         const result = takeUntil(list, n => n === 4).toArray();
-        expect(result).to.deep.equal(
-            [1, 2, 3]
-        )
+        expect(result).to.deep.equal([1, 2, 3]);
     });
     test("should return an empty sequence when predicate is always true", () => {
         const list = [1, 2, 3, 4, 5];
