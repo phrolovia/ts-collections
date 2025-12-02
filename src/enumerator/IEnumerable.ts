@@ -1649,6 +1649,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     skipLast(count: number): IEnumerable<TElement>;
 
+    skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+
     /**
      * Skips elements while a predicate returns `true` and then yields the remaining elements.
      * @param predicate Predicate receiving the element and its index. The first element for which it returns `false` is included in the result.

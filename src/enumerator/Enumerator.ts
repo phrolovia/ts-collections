@@ -842,6 +842,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.skipLastGenerator(count));
     }
 
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return new Enumerator(() => this.skipUntilGenerator(predicate));
+    }
+
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.skipWhileGenerator(predicate));
     }
@@ -1735,6 +1741,21 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             if (bufferSize < count) {
                 bufferSize++;
             }
+        }
+    }
+
+    private *skipUntilGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+        let index = 0;
+        let skipping = true;
+
+        for (const item of this) {
+            if (skipping && predicate(item, index)) {
+                skipping = false;
+            }
+            if (!skipping) {
+                yield item;
+            }
+            index++;
         }
     }
 

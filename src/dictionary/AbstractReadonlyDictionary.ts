@@ -78,6 +78,7 @@ import { single } from "../enumerator/functions/single";
 import { singleOrDefault } from "../enumerator/functions/singleOrDefault";
 import { skip } from "../enumerator/functions/skip";
 import { skipLast } from "../enumerator/functions/skipLast";
+import { skipUntil } from "../enumerator/functions/skipUntil";
 import { skipWhile } from "../enumerator/functions/skipWhile";
 import { span } from "../enumerator/functions/span";
 import { standardDeviation } from "../enumerator/functions/standardDeviation";
@@ -526,6 +527,12 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public skipLast(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return skipLast(this, count);
+    }
+
+    public skipUntil<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
+    public skipUntil<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
+        return skipUntil(this, predicate as IndexedPredicate<KeyValuePair<TKey, TValue>>);
     }
 
     public skipWhile(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>> {

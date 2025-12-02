@@ -118,6 +118,7 @@ import { single } from "./functions/single";
 import { singleOrDefault } from "./functions/singleOrDefault";
 import { skip } from "./functions/skip";
 import { skipLast } from "./functions/skipLast";
+import { skipUntil } from "./functions/skipUntil";
 import { skipWhile } from "./functions/skipWhile";
 import { span } from "./functions/span";
 import { standardDeviation } from "./functions/standardDeviation";
@@ -506,6 +507,12 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public skipLast(count: number): IEnumerable<TElement> {
         return skipLast(this, count);
+    }
+
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return skipUntil(this, predicate);
     }
 
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {

@@ -433,6 +433,12 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.skipLast(count);
     }
 
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return this.#enumerator.skipUntil(predicate);
+    }
+
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return this.#enumerator.skipWhile(predicate);
     }
