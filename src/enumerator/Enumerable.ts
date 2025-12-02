@@ -433,6 +433,12 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.skipLast(count);
     }
 
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return this.#enumerator.skipUntil(predicate);
+    }
+
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return this.#enumerator.skipWhile(predicate);
     }
@@ -463,10 +469,16 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.takeLast(count);
     }
 
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return this.#enumerator.takeUntil(predicate);
+    }
+
     public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
-        return this.#enumerator.takeWhile(predicate as IndexedPredicate<TElement>);
+        return this.#enumerator.takeWhile(predicate);
     }
 
     public tap(action: IndexedAction<TElement>): IEnumerable<TElement> {

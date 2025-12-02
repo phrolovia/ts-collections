@@ -1323,6 +1323,23 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#skipUntil()", () => {
+        test("should return a dictionary with people 'Priscilla' and 'Vanessa'", () => {
+            const dict = new Dictionary<string, Person>();
+            dict.add(Person.Alice.name, Person.Alice);
+            dict.add(Person.Noemi.name, Person.Noemi);
+            dict.add(Person.Priscilla.name, Person.Priscilla);
+            dict.add(Person.Vanessa.name, Person.Vanessa);
+            const people = dict.skipUntil(p => p.key === Person.Noemi.name).select(p => [p.key, p.value.surname]).toArray();
+            const expectedResult = [
+                ["Noemi", "Waterfox"],
+                ["Priscilla", "Necci"],
+                ["Vanessa", "Bloodboil"]
+            ];
+            expect(people).to.deep.equal(expectedResult);
+        });
+    });
+
     describe("#skipWhile()", () => {
         const dict = new Dictionary<number, Person>();
         dict.add(5000, Person.Alice);
@@ -1420,6 +1437,22 @@ describe("Dictionary", () => {
             dict.add(Person.Vanessa.name, Person.Vanessa);
             const people = dict.takeLast(100).toDictionary(p => p.key, p => p.value);
             expect(people.size()).to.eq(4);
+        });
+    });
+
+    describe("#takeUntil()", () => {
+        test("should return a dictionary with people 'Alice' and 'Noemi'", () => {
+            const dict = new Dictionary<string, Person>();
+            dict.add(Person.Alice.name, Person.Alice);
+            dict.add(Person.Noemi.name, Person.Noemi);
+            dict.add(Person.Priscilla.name, Person.Priscilla);
+            dict.add(Person.Vanessa.name, Person.Vanessa);
+            const people = dict.takeUntil(p => p.key === "Priscilla").select(p => [p.key, p.value.surname]).toArray();
+            const expectedResult = [
+                ["Alice", "Rivermist"],
+                ["Noemi", "Waterfox"]
+            ];
+            expect(people).to.deep.equal(expectedResult);
         });
     });
 

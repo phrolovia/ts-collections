@@ -1650,6 +1650,35 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
     skipLast(count: number): IEnumerable<TElement>;
 
     /**
+     * Skips elements until a type guard predicate returns `true`, then yields that element and the remainder, narrowing the element type.
+     * @template TFiltered extends TElement Result type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard invoked for each element and its zero-based index; once it returns `true`, that element and all following elements are yielded.
+     * @returns {IEnumerable<TFiltered>} A deferred sequence starting with the first element that satisfies {@link predicate}.
+     * @remarks The predicate runs until the first match is found; subsequent elements are yielded without further checks.
+     * @example
+     * ```typescript
+     * const mixed: (number | string)[] = ['a', 'b', 1, 2];
+     * const numbers = from(mixed).skipUntil((x): x is number => typeof x === 'number').toArray();
+     * console.log(numbers); // [1, 2]
+     * ```
+     */
+    skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+
+    /**
+     * Skips elements until a predicate returns `true`, then yields that element and the remainder.
+     * @param predicate Predicate receiving the element and its zero-based index; once it returns `true`, enumeration stops skipping.
+     * @returns {IEnumerable<TElement>} A deferred sequence starting with the first element that satisfies {@link predicate}.
+     * @remarks The predicate runs until the first match is found; subsequent elements are yielded without further checks.
+     * @example
+     * ```typescript
+     * const numbers = from([0, 0, 1, 2, 3]);
+     * const result = numbers.skipUntil((_, i) => i >= 2).toArray();
+     * console.log(result); // [1, 2, 3]
+     * ```
+     */
+    skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+
+    /**
      * Skips elements while a predicate returns `true` and then yields the remaining elements.
      * @param predicate Predicate receiving the element and its index. The first element for which it returns `false` is included in the result.
      * @returns {IEnumerable<TElement>} A deferred sequence starting with the first element that fails {@link predicate}.
@@ -1772,6 +1801,34 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * ```
      */
     takeLast(count: number): IEnumerable<TElement>;
+
+    /**
+     * Returns consecutive leading elements until a type guard predicate returns `true`, then stops.
+     * @template TFiltered extends TElement Result type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard invoked for each element and its zero-based index; iteration halts immediately when it returns `true`.
+     * @returns {IEnumerable<TFiltered>} A deferred sequence containing the contiguous prefix produced before {@link predicate} succeeds.
+     * @remarks Elements after the first element satisfying {@link predicate} are not inspected.
+     * @example
+     * ```typescript
+     * const mixed: (number | string)[] = [1, 2, 'stop', 3];
+     * const beforeStop = from(mixed).takeUntil((x): x is string => typeof x === 'string').toArray();
+     * console.log(beforeStop); // [1, 2]
+     * ```
+     */
+    takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    /**
+     * Returns consecutive leading elements until a predicate returns `true`, then stops.
+     * @param predicate Predicate invoked for each element and its zero-based index; iteration halts immediately when it returns `true`.
+     * @returns {IEnumerable<TElement>} A deferred sequence containing the contiguous prefix produced before {@link predicate} succeeds.
+     * @remarks Elements after the first element satisfying {@link predicate} are not inspected.
+     * @example
+     * ```typescript
+     * const numbers = from([1, 2, 3, 4, 5]);
+     * const taken = numbers.takeUntil(x => x > 3).toArray();
+     * console.log(taken); // [1, 2, 3]
+     * ```
+     */
+    takeUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
 
     /**
      * Returns consecutive leading elements while a type guard predicate returns `true`, narrowing the element type.

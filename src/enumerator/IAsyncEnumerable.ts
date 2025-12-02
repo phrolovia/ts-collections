@@ -1647,6 +1647,34 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
     skipLast(count: number): IAsyncEnumerable<TElement>;
 
     /**
+     * Skips elements until a type guard predicate returns `true`, then yields that element and the remainder, narrowing the element type.
+     * @template TFiltered extends TElement Result type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard invoked for each element and its zero-based index; once it returns `true`, that element and all following elements are yielded.
+     * @returns {IAsyncEnumerable<TFiltered>} An async sequence starting with the first element that satisfies {@link predicate}.
+     * @remarks The predicate's index parameter increments for each inspected element until the condition is met.
+     * @example
+     * ```typescript
+     * const mixed: (number | string)[] = ['a', 'b', 1, 2];
+     * const numbers = await fromAsync(mixed).skipUntil((x): x is number => typeof x === 'number').toArray();
+     * console.log(numbers); // [1, 2]
+     * ```
+     */
+    skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+
+    /**
+     * Skips elements until a predicate returns `true`, then yields that element and the remainder.
+     * @param predicate Predicate receiving the element and its zero-based index; once it returns `true`, enumeration stops skipping.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence starting with the first element that satisfies {@link predicate}.
+     * @remarks The predicate runs until the first match is found; subsequent elements are yielded without further checks.
+     * @example
+     * ```typescript
+     * const numbers = await fromAsync([0, 0, 1, 2, 3]).skipUntil(x => x >= 2).toArray();
+     * console.log(numbers); // [2, 3]
+     * ```
+     */
+    skipUntil(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+
+    /**
      * Skips elements while a predicate returns `true` and then yields the remaining elements.
      * @param predicate Predicate receiving the element and its zero-based index. The first element for which it returns `false` is included in the result.
      * @returns {IAsyncEnumerable<TElement>} An async sequence starting with the first element that fails {@link predicate}.
@@ -1769,6 +1797,34 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * ```
      */
     takeLast(count: number): IAsyncEnumerable<TElement>;
+
+    /**
+     * Returns consecutive leading elements until a type guard predicate returns `true`, then stops.
+     * @template TFiltered extends TElement Result type produced when {@link predicate} returns `true`.
+     * @param predicate Type guard invoked for each element and its zero-based index; iteration halts immediately when it returns `true`.
+     * @returns {IAsyncEnumerable<TFiltered>} An async sequence containing the contiguous prefix produced before {@link predicate} succeeds.
+     * @remarks Elements after the first element satisfying {@link predicate} are not inspected.
+     * @example
+     * ```typescript
+     * const mixed: (number | string)[] = [1, 2, 'stop', 3];
+     * const beforeStop = await fromAsync(mixed).takeUntil((x): x is string => typeof x === 'string').toArray();
+     * console.log(beforeStop); // [1, 2]
+     * ```
+     */
+    takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+
+    /**
+     * Returns consecutive leading elements until a predicate returns `true`, then stops.
+     * @param predicate Predicate invoked for each element and its zero-based index; iteration halts immediately when it returns `true`.
+     * @returns {IAsyncEnumerable<TElement>} An async sequence containing the contiguous prefix produced before {@link predicate} succeeds.
+     * @remarks Elements after the first element satisfying {@link predicate} are not inspected.
+     * @example
+     * ```typescript
+     * const numbers = await fromAsync([1, 2, 3, 4, 5]).takeUntil(x => x > 3).toArray();
+     * console.log(numbers); // [1, 2, 3]
+     * ```
+     */
+    takeUntil(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
 
     /**
      * Returns consecutive leading elements while a type guard predicate returns `true`, narrowing the element type.

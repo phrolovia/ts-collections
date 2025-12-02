@@ -872,6 +872,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.skipLastGenerator(count));
     }
 
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
+        return new AsyncEnumerator<TElement>(() => this.skipUntilGenerator(predicate as IndexedPredicate<TElement>));
+    }
+
     public skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.skipWhileGenerator(predicate));
     }
@@ -926,6 +932,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public takeLast(count: number): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.takeLastGenerator(count));
+    }
+
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
+        return new AsyncEnumerator<TElement>(() => this.takeUntilGenerator(predicate as IndexedPredicate<TElement>));
     }
 
     public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
@@ -1686,6 +1698,21 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
+    private async* skipUntilGenerator(predicate: IndexedPredicate<TElement>): AsyncIterableIterator<TElement> {
+        let index = 0;
+        let skipping = true;
+
+        for await (const item of this) {
+            if (skipping && predicate(item, index)) {
+                skipping = false;
+            }
+            if (!skipping) {
+                yield item;
+            }
+            index++;
+        }
+    }
+
     private async* skipWhileGenerator(predicate: IndexedPredicate<TElement>): AsyncIterableIterator<TElement> {
         let index = 0;
         let skipEnded = false;
@@ -1747,6 +1774,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         for (let i = 0; i < size; i++) {
             const readIndex = (startIndex + i) % count;
             yield buffer[readIndex]!;
+        }
+    }
+
+    private async* takeUntilGenerator(predicate: IndexedPredicate<TElement>): AsyncIterableIterator<TElement> {
+        let index = 0;
+        for await (const item of this) {
+            if (predicate(item, index)) {
+                break;
+            }
+            yield item;
+            index++;
         }
     }
 
