@@ -2318,6 +2318,66 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#skipUntil()", () => {
+        test("should skip elements until predicate matches and include matching and following elements", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.skipUntil(n => n === 3).toArray();
+            expect(result).to.deep.equal([3, 4, 5]);
+        });
+
+        test("should return the full sequence when predicate matches on the first element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.skipUntil(() => true).toArray();
+            expect(result).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+
+        test("should return an empty sequence when predicate never matches", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.skipUntil(() => false).toArray();
+            expect(result).to.deep.equal([]);
+        });
+
+        test("should return only the last element when predicate matches only on the last element", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.skipUntil(n => n === 5).toArray();
+            expect(result).to.deep.equal([5]);
+        });
+
+        test("should pass correct value and index to predicate", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([10, 20, 30], 0));
+            const calls: Array<[number, number]> = [];
+
+            await enumerable.skipUntil((value, index) => {
+                calls.push([value, index]);
+                return value === 20;
+            }).toArray();
+
+            expect(calls).to.deep.equal([
+                [10, 0],
+                [20, 1]
+            ]);
+        });
+
+        test("should stop evaluating predicate after the first match", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            let callCount = 0;
+
+            const result = await enumerable.skipUntil(n => {
+                callCount++;
+                return n === 3;
+            }).toArray();
+
+            expect(result).to.deep.equal([3, 4, 5]);
+            expect(callCount).to.equal(3);
+        });
+
+        test("should return an empty sequence when source is empty", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer<number>([], 0));
+            const result = await enumerable.skipUntil(n => n === 1).toArray();
+            expect(result).to.deep.equal([]);
+        });
+    });
+
     describe("#skipWhile()", () => {
         test("should skip elements while predicate is true", async () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
@@ -2496,6 +2556,60 @@ describe("AsyncEnumerable", () => {
             expect(result[0]).to.eq(size - 100);
             expect(result[99]).to.eq(size - 1);
         }, { timeout: 10000 });
+    });
+
+    describe("#takeUntil()", () => {
+        test("should return a sequence with [1,2,3]", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.takeUntil(n => n === 4).toArray();
+            expect(result).to.deep.equal([1, 2, 3]);
+        });
+
+        test("should return an empty sequence when predicate is always true", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.takeUntil(() => true).toArray();
+            expect(result).to.deep.equal([]);
+        });
+
+        test("should return full sequence when predicate never matches", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.takeUntil(() => false).toArray();
+            expect(result).to.deep.equal([1, 2, 3, 4, 5]);
+        });
+
+        test("should exclude only the last element when predicate matches only there", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.takeUntil(n => n === 5).toArray();
+            expect(result).to.deep.equal([1, 2, 3, 4]);
+        });
+
+        test("should pass correct index to predicate", async () => {
+            const enumerable = new AsyncEnumerable(arrayProducer([10, 20, 30], 0));
+            const called: Array<[number, number]> = [];
+
+            await enumerable.takeUntil((value, index) => {
+                called.push([value, index]);
+                return value === 30;
+            }).toArray();
+
+            expect(called).to.deep.equal([
+                [10, 0],
+                [20, 1],
+                [30, 2]
+            ]);
+        });
+
+        test("should stop evaluating after predicate matches", async () => {
+            let calls = 0;
+            const enumerable = new AsyncEnumerable(arrayProducer([1, 2, 3, 4, 5], 0));
+            const result = await enumerable.takeUntil(n => {
+                calls++;
+                return n === 3;
+            }).toArray();
+
+            expect(result).to.deep.equal([1, 2]);
+            expect(calls).to.equal(3);
+        });
     });
 
     describe("#takeWhile()", () => {

@@ -408,6 +408,12 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.skipLast(count);
     }
 
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
+        return this.#enumerator.skipUntil(predicate);
+    }
+
     public skipWhile(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement> {
         return this.#enumerator.skipWhile(predicate);
     }
@@ -436,6 +442,12 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public takeLast(count: number): IAsyncEnumerable<TElement> {
         return this.#enumerator.takeLast(count);
+    }
+
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<TElement>): IAsyncEnumerable<TElement>;
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TElement> | IAsyncEnumerable<TFiltered> {
+        return this.#enumerator.takeUntil(predicate);
     }
 
     public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IAsyncEnumerable<TFiltered>;

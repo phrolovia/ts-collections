@@ -842,6 +842,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.skipLastGenerator(count));
     }
 
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public skipUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public skipUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return new Enumerator(() => this.skipUntilGenerator(predicate));
+    }
+
     public skipWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement> {
         return new Enumerator(() => this.skipWhileGenerator(predicate));
     }
@@ -899,6 +905,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public takeLast(count: number): IEnumerable<TElement> {
         return new Enumerator(() => this.takeLastGenerator(count));
+    }
+
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return new Enumerator(() => this.takeUntilGenerator(predicate));
     }
 
     public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
@@ -1732,6 +1744,21 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
+    private *skipUntilGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+        let index = 0;
+        let skipping = true;
+
+        for (const item of this) {
+            if (skipping && predicate(item, index)) {
+                skipping = false;
+            }
+            if (!skipping) {
+                yield item;
+            }
+            index++;
+        }
+    }
+
     private* skipWhileGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
         let index = 0;
         let skipEnded = false;
@@ -1792,6 +1819,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         for (let i = 0; i < bufferSize; i++) {
             const readIndex = (startIndex + i) % count;
             yield buffer[readIndex];
+        }
+    }
+
+    private* takeUntilGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+        let index = 0;
+        for (const item of this) {
+            if (predicate(item, index)) {
+                break;
+            }
+            yield item;
+            index++;
         }
     }
 
