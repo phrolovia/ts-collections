@@ -4069,6 +4069,14 @@ describe("List", () => {
             expect(result.get(99)).to.eq(99999);
         });
     });
+    describe("#takeUntil()", () => {
+        const list = new List([5000, 2500, 9000, 8000, 6500, 4000, 1500, 5500]);
+        test("should return an IEnumerable with elements [5000, 2500]", () => {
+            const list2 = list.takeUntil((n, nx) => n >= 9000).toList();
+            expect(list2.toArray()).to.deep.equal([5000, 2500]);
+            expect(list2.count()).to.eq(2);
+        });
+    });
     describe("#takeWhile()", () => {
         const list = new List([
             "apple",

@@ -1,24 +1,22 @@
 import type { Dictionary } from "../dictionary/Dictionary";
+import type { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import type { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
 import type { KeyValuePair } from "../dictionary/KeyValuePair";
 import type { SortedDictionary } from "../dictionary/SortedDictionary";
 import type { CircularLinkedList } from "../list/CircularLinkedList";
-import type { CircularQueue } from "../queue/CircularQueue";
-import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
-import type { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
 import type { ImmutableList } from "../list/ImmutableList";
-import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
-import type { ImmutableQueue } from "../queue/ImmutableQueue";
-import type { ImmutableSet } from "../set/ImmutableSet";
-import type { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
-import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
-import type { ImmutableStack } from "../stack/ImmutableStack";
-import type { PriorityQueue } from "../queue/PriorityQueue";
-import type { Queue } from "../queue/Queue";
-import type { Stack } from "../stack/Stack";
 import type { LinkedList } from "../list/LinkedList";
 import type { List } from "../list/List";
 import type { ILookup } from "../lookup/ILookup";
+import type { CircularQueue } from "../queue/CircularQueue";
+import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import type { ImmutableQueue } from "../queue/ImmutableQueue";
+import type { PriorityQueue } from "../queue/PriorityQueue";
+import type { Queue } from "../queue/Queue";
 import type { EnumerableSet } from "../set/EnumerableSet";
+import type { ImmutableSet } from "../set/ImmutableSet";
+import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
 import type { SortedSet } from "../set/SortedSet";
 import type { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
@@ -38,6 +36,8 @@ import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { Selector } from "../shared/Selector";
 import type { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import type { ZipManyZipper, Zipper } from "../shared/Zipper";
+import type { ImmutableStack } from "../stack/ImmutableStack";
+import type { Stack } from "../stack/Stack";
 
 import { aggregate } from "./functions/aggregate";
 import { aggregateBy } from "./functions/aggregateBy";
@@ -125,6 +125,7 @@ import { step } from "./functions/step";
 import { sum } from "./functions/sum";
 import { take } from "./functions/take";
 import { takeLast } from "./functions/takeLast";
+import { takeUntil } from "./functions/takeUntil";
 import { takeWhile } from "./functions/takeWhile";
 import { tap } from "./functions/tap";
 import { toArray } from "./functions/toArray";
@@ -535,6 +536,12 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public takeLast(count: number): IEnumerable<TElement> {
         return takeLast(this, count);
+    }
+
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return takeUntil(this, predicate as IndexedPredicate<TElement>);
     }
 
     public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;

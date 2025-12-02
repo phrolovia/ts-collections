@@ -1423,6 +1423,22 @@ describe("Dictionary", () => {
         });
     });
 
+    describe("#takeUntil()", () => {
+        test("should return a dictionary with people 'Alice' and 'Noemi'", () => {
+            const dict = new Dictionary<string, Person>();
+            dict.add(Person.Alice.name, Person.Alice);
+            dict.add(Person.Noemi.name, Person.Noemi);
+            dict.add(Person.Priscilla.name, Person.Priscilla);
+            dict.add(Person.Vanessa.name, Person.Vanessa);
+            const people = dict.takeUntil(p => p.key === "Priscilla").select(p => [p.key, p.value.surname]).toArray();
+            const expectedResult = [
+                ["Alice", "Rivermist"],
+                ["Noemi", "Waterfox"]
+            ]
+            expect(people).to.deep.equal(expectedResult);
+        });
+    });
+
     describe("#takeWhile()", () => {
         const dict = new Dictionary<string, number>();
         dict.add("apple", 1);

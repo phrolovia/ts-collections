@@ -1773,6 +1773,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      */
     takeLast(count: number): IEnumerable<TElement>;
 
+    takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    takeUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>
+
     /**
      * Returns consecutive leading elements while a type guard predicate returns `true`, narrowing the element type.
      * @template TFiltered extends TElement Result type produced when {@link predicate} returns `true`.

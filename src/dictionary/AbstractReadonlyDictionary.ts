@@ -1,3 +1,4 @@
+import type { IImmutableCollection } from "../core/IImmutableCollection";
 import { aggregate } from "../enumerator/functions/aggregate";
 import { aggregateBy } from "../enumerator/functions/aggregateBy";
 import { all } from "../enumerator/functions/all";
@@ -84,6 +85,7 @@ import { step } from "../enumerator/functions/step";
 import { sum } from "../enumerator/functions/sum";
 import { take } from "../enumerator/functions/take";
 import { takeLast } from "../enumerator/functions/takeLast";
+import { takeUntil } from "../enumerator/functions/takeUntil";
 import { takeWhile } from "../enumerator/functions/takeWhile";
 import { tap } from "../enumerator/functions/tap";
 import { toArray } from "../enumerator/functions/toArray";
@@ -122,25 +124,21 @@ import type { IEnumerable } from "../enumerator/IEnumerable";
 import type { IGroup } from "../enumerator/IGroup";
 import type { IOrderedEnumerable } from "../enumerator/IOrderedEnumerable";
 import type { CircularLinkedList } from "../list/CircularLinkedList";
-import type { CircularQueue } from "../queue/CircularQueue";
-import type { EnumerableSet } from "../set/EnumerableSet";
-import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
-import type { ImmutableDictionary } from "./ImmutableDictionary";
 import type { ImmutableList } from "../list/ImmutableList";
-import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
-import type { ImmutableQueue } from "../queue/ImmutableQueue";
-import type { ImmutableSet } from "../set/ImmutableSet";
-import type { ImmutableSortedDictionary } from "./ImmutableSortedDictionary";
-import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
-import type { ImmutableStack } from "../stack/ImmutableStack";
 import type { LinkedList } from "../list/LinkedList";
 import type { List } from "../list/List";
+import type { ILookup } from "../lookup/ILookup";
+import type { CircularQueue } from "../queue/CircularQueue";
+import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import type { ImmutableQueue } from "../queue/ImmutableQueue";
 import type { PriorityQueue } from "../queue/PriorityQueue";
 import type { Queue } from "../queue/Queue";
-import type { SortedSet } from "../set/SortedSet";
-import type { Stack } from "../stack/Stack";
-import type { ILookup } from "../lookup/ILookup";
+import type { EnumerableSet } from "../set/EnumerableSet";
+import type { ImmutableSet } from "../set/ImmutableSet";
+import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
 import type { ISet } from "../set/ISet";
+import type { SortedSet } from "../set/SortedSet";
 import type { Accumulator } from "../shared/Accumulator";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { IndexedAction } from "../shared/IndexedAction";
@@ -158,11 +156,14 @@ import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { Selector } from "../shared/Selector";
 import type { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import type { ZipManyZipper, Zipper } from "../shared/Zipper";
+import type { ImmutableStack } from "../stack/ImmutableStack";
+import type { Stack } from "../stack/Stack";
 import type { Dictionary } from "./Dictionary";
+import type { ImmutableDictionary } from "./ImmutableDictionary";
+import type { ImmutableSortedDictionary } from "./ImmutableSortedDictionary";
 import type { IReadonlyDictionary } from "./IReadonlyDictionary";
-import type { KeyValuePair } from "./KeyValuePair";
+import { KeyValuePair } from "./KeyValuePair";
 import type { SortedDictionary } from "./SortedDictionary";
-import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReadonlyDictionary<TKey, TValue> {
     protected readonly keyValueComparer: EqualityComparator<KeyValuePair<TKey, TValue>>;
@@ -555,6 +556,12 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public takeLast(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {
         return takeLast(this, count);
+    }
+
+    public takeUntil<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
+    public takeUntil<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedPredicate<KeyValuePair<TKey, TValue>> | IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<KeyValuePair<TKey, TValue>> | IEnumerable<TFiltered> {
+        return takeUntil(this, predicate as IndexedPredicate<KeyValuePair<TKey, TValue>>);
     }
 
     public takeWhile<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: IndexedTypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): IEnumerable<TFiltered>;

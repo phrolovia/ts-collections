@@ -901,6 +901,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.takeLastGenerator(count));
     }
 
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
+    public takeUntil(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
+    public takeUntil<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
+        return new Enumerator(() => this.takeUntilGenerator(predicate));
+    }
+
     public takeWhile<TFiltered extends TElement>(predicate: IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TFiltered>;
     public takeWhile(predicate: IndexedPredicate<TElement>): IEnumerable<TElement>;
     public takeWhile<TFiltered extends TElement>(predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>): IEnumerable<TElement> | IEnumerable<TFiltered> {
@@ -1792,6 +1798,17 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         for (let i = 0; i < bufferSize; i++) {
             const readIndex = (startIndex + i) % count;
             yield buffer[readIndex];
+        }
+    }
+
+    private* takeUntilGenerator(predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+        let index = 0;
+        for (const item of this) {
+            if (predicate(item, index)) {
+                break;
+            }
+            yield item;
+            index++;
         }
     }
 
