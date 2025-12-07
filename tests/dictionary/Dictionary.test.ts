@@ -716,18 +716,6 @@ describe("Dictionary", () => {
             expect(joinedData.length).to.eq(4);
             expect(joinedData).to.deep.equal(expectedOutput);
         });
-        test("should set null for school if left join is true and student's school is unknown", () => {
-            const joinedData = studentDict.join(schoolDict, st => st.value.schoolId, sc => sc.value.id,
-                (student, school) => [student, school],
-                (stid, scid) => stid === scid, true);
-            for (const jd of joinedData) {
-                if ((jd[0]?.value as Student).surname === "Volpe") {
-                    expect(jd[1]).to.eq(null);
-                } else {
-                    expect(jd[1]).to.not.eq(null);
-                }
-            }
-        });
     });
 
     describe("#keys()", () => {

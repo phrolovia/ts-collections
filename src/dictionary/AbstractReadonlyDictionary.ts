@@ -46,6 +46,7 @@ import { intersperse } from "../enumerator/functions/intersperse";
 import { join } from "../enumerator/functions/join";
 import { last } from "../enumerator/functions/last";
 import { lastOrDefault } from "../enumerator/functions/lastOrDefault";
+import { leftJoin } from "../enumerator/functions/leftJoin";
 import { max } from "../enumerator/functions/max";
 import { maxBy } from "../enumerator/functions/maxBy";
 import { median } from "../enumerator/functions/median";
@@ -68,6 +69,7 @@ import { pipe } from "../enumerator/functions/pipe";
 import { prepend } from "../enumerator/functions/prepend";
 import { product } from "../enumerator/functions/product";
 import { reverse } from "../enumerator/functions/reverse";
+import { rightJoin } from "../enumerator/functions/rightJoin";
 import { rotate } from "../enumerator/functions/rotate";
 import { scan } from "../enumerator/functions/scan";
 import { select } from "../enumerator/functions/select";
@@ -378,8 +380,8 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return this.size() === 0;
     }
 
-    public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>, leftJoin?: boolean): IEnumerable<TResult> {
-        return join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+    public join<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
+        return join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public last<TFiltered extends KeyValuePair<TKey, TValue>>(predicate: TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): TFiltered;
@@ -392,6 +394,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public lastOrDefault(predicate?: Predicate<KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue> | null;
     public lastOrDefault<TFiltered extends KeyValuePair<TKey, TValue>>(predicate?: Predicate<KeyValuePair<TKey, TValue>> | TypePredicate<KeyValuePair<TKey, TValue>, TFiltered>): KeyValuePair<TKey, TValue> | TFiltered | null {
         return lastOrDefault(this, predicate as Predicate<KeyValuePair<TKey, TValue>> | undefined);
+    }
+
+    public leftJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue>, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
+        return leftJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public max(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
@@ -482,6 +488,10 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
         return reverse(this);
+    }
+
+    public rightJoin<TInner, TGroupKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<KeyValuePair<TKey, TValue>, TGroupKey>, innerKeySelector: Selector<TInner, TGroupKey>, resultSelector: JoinSelector<KeyValuePair<TKey, TValue> | null, TInner, TResult>, keyComparator?: EqualityComparator<TGroupKey>): IEnumerable<TResult> {
+        return rightJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public rotate(shift: number): IEnumerable<KeyValuePair<TKey, TValue>> {

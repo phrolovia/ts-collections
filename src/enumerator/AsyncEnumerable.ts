@@ -258,8 +258,8 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.intersperse(separator);
     }
 
-    public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
-        return this.#enumerator.join(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+    public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
+        return this.#enumerator.join(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
@@ -272,6 +272,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
     public lastOrDefault(predicate?: Predicate<TElement>): Promise<TElement | null>;
     public lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): Promise<TElement | TFiltered | null> {
         return this.#enumerator.lastOrDefault(predicate as Predicate<TElement> | undefined) as Promise<TElement | TFiltered | null>;
+    }
+
+    public leftJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
+        return this.#enumerator.leftJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public max(selector?: Selector<TElement, number>): Promise<number> {
@@ -362,6 +366,10 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public reverse(): IAsyncEnumerable<TElement> {
         return this.#enumerator.reverse();
+    }
+
+    public rightJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
+        return this.#enumerator.rightJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public rotate(shift: number): IAsyncEnumerable<TElement> {
