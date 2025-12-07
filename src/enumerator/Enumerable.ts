@@ -283,8 +283,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return this.#enumerator.intersperse(separator);
     }
 
-    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
-        return this.#enumerator.join(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return this.#enumerator.join(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
@@ -297,6 +297,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
     public lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         return this.#enumerator.lastOrDefault(predicate as Predicate<TElement> | undefined);
+    }
+
+    public leftJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return this.#enumerator.leftJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public max(selector?: Selector<TElement, number>): number {
@@ -387,6 +391,10 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
 
     public reverse(): IEnumerable<TElement> {
         return this.#enumerator.reverse();
+    }
+
+    public rightJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return this.#enumerator.rightJoin(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public rotate(shift: number): IEnumerable<TElement> {

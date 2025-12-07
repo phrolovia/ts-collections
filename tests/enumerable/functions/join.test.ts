@@ -1,5 +1,4 @@
 import { describe, expect, test } from "vitest";
-import { forEach } from "../../../src/enumerator/functions/forEach";
 import { join } from "../../../src/enumerator/functions/join";
 import { List } from "../../../src/list/List";
 import { Pair } from "../../models/Pair";
@@ -29,22 +28,6 @@ describe("#join()", () => {
             "Priscilla Necci :: Elementary School"
         ];
         expect(joinedData.toArray()).to.deep.equal(expectedOutputDataList);
-    });
-    test("should set null for school if left join is true", () => {
-        const joinedData = join(students, schools, st => st.schoolId, sc => sc.id,
-            (student, school) => [student, school],
-            (stId, scId) => stId === scId,
-            true
-        );
-        forEach(joinedData, ([st, sc]) => {
-            const student = st as Student;
-            const school = sc as School;
-            if (student.surname === "Volpe") {
-                expect(school).to.be.null;
-            } else {
-                expect(school).to.not.be.null;
-            }
-        });
     });
     test("should join key-value pairs", () => {
         const first = [new Pair(1, Person.Alice.name), new Pair(2, Person.Kaori.name), new Pair(3, Person.Mirei.name)];

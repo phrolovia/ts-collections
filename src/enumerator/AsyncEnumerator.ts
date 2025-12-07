@@ -546,9 +546,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement | TSeparator>(() => this.intersperseGenerator(separator));
     }
 
-    public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IAsyncEnumerable<TResult> {
+    public join<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
-        return new AsyncEnumerator<TResult>(() => this.joinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare, leftJoin ?? false));
+        return new AsyncEnumerator<TResult>(() => this.joinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare, false));
     }
 
     public async last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): Promise<TFiltered>;
@@ -585,6 +585,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             }
         }
         return last as TElement | TFiltered | null;
+    }
+
+    public leftJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
+        const keyCompare = keyComparator ?? Comparators.equalityComparator;
+        return new AsyncEnumerator<TResult>(() => this.joinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare, true));
     }
 
     public async max(selector?: Selector<TElement, number>): Promise<number> {
@@ -770,6 +775,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public reverse(): IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.reverseGenerator());
+    }
+
+    public rightJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
+        const keyCompare = keyComparator ?? Comparators.equalityComparator;
+        return new AsyncEnumerator<TResult>(() => this.rightJoinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare));
     }
 
     public rotate(shift: number): IAsyncEnumerable<TElement> {
@@ -1558,6 +1568,26 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     private async* reverseGenerator(): AsyncIterableIterator<TElement> {
         yield* (await this.toArray()).reverse();
+    }
+
+    private async* rightJoinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TResult> {
+        const groups = await buildGroupsAsync(this, outerKeySelector, keyComparator);
+
+        for await (const innerElement of inner) {
+            const innerKey = innerKeySelector(innerElement);
+            let foundMatch = false;
+            for (const group of groups) {
+                if (keyComparator(innerKey, group.key)) {
+                    for (const outerElement of group.elements) {
+                        yield resultSelector(outerElement, innerElement);
+                        foundMatch = true;
+                    }
+                }
+            }
+            if (!foundMatch) {
+                yield resultSelector(null, innerElement);
+            }
+        }
     }
 
     private async* rotateGenerator(shift: number): AsyncIterableIterator<TElement> {
