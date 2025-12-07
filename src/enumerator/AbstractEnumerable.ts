@@ -84,6 +84,7 @@ import { intersect } from "./functions/intersect";
 import { intersectBy } from "./functions/intersectBy";
 import { intersperse } from "./functions/intersperse";
 import { join } from "./functions/join";
+import { leftJoin } from "./functions/leftJoin";
 import { last } from "./functions/last";
 import { lastOrDefault } from "./functions/lastOrDefault";
 import { max } from "./functions/max";
@@ -108,6 +109,7 @@ import { pipe } from "./functions/pipe";
 import { prepend } from "./functions/prepend";
 import { product } from "./functions/product";
 import { reverse } from "./functions/reverse";
+import { rightJoin } from "./functions/rightJoin";
 import { rotate } from "./functions/rotate";
 import { scan } from "./functions/scan";
 import { select } from "./functions/select";
@@ -358,8 +360,8 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return intersperse(this, separator);
     }
 
-    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
-        return join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin);
+    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return join(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
@@ -372,6 +374,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
     public lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
         return lastOrDefault(this, predicate as Predicate<TElement> | undefined);
+    }
+
+    public leftJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return leftJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public max(selector?: Selector<TElement, number>): number {
@@ -462,6 +468,10 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
 
     public reverse(): IEnumerable<TElement> {
         return reverse(this);
+    }
+
+    public rightJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        return rightJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
     public rotate(shift: number): IEnumerable<TElement> {

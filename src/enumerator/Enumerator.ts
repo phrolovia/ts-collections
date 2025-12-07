@@ -502,9 +502,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.intersperseGenerator(separator));
     }
 
-    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IEnumerable<TResult> {
+    public join<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
         keyComparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, leftJoin));
+        return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, false));
     }
 
     public last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
@@ -539,6 +539,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
         }
         return result;
+    }
+
+    public leftJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        keyComparator ??= Comparators.equalityComparator;
+        return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, true));
     }
 
     public max(selector?: Selector<TElement, number>): number {
@@ -741,6 +746,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public reverse(): IEnumerable<TElement> {
         return new Enumerator(() => this.reverseGenerator());
+    }
+
+    public rightJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
+        keyComparator ??= Comparators.equalityComparator;
+        return new Enumerator(() => this.rightJoinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
     }
 
     public rotate(shift: number): IEnumerable<TElement> {
@@ -1530,7 +1540,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    private* joinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator?: EqualityComparator<TKey>, leftJoin?: boolean): IterableIterator<TResult> {
+    private* joinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, TInner, TResult>, keyComparator: EqualityComparator<TKey>, leftJoin: boolean): IterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         const effectiveLeftJoin = leftJoin ?? false;
         const groups = buildGroupsSync(innerEnumerable, innerKeySelector, keyCompare);
@@ -1610,6 +1620,27 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     private* reverseGenerator(): IterableIterator<TElement> {
         yield* Array.from(this).reverse();
+    }
+
+    private* rightJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator: EqualityComparator<TKey>): IterableIterator<TResult> {
+        const keyCompare = keyComparator ?? Comparators.equalityComparator;
+        const groups = buildGroupsSync(this, outerKeySelector, keyCompare);
+
+        for (const innerElement of innerEnumerable) {
+            const innerKey = innerKeySelector(innerElement);
+            let foundMatch = false;
+            for (const group of groups) {
+                if (keyCompare(innerKey, group.key)) {
+                    for (const outerElement of group.elements) {
+                        yield resultSelector(outerElement, innerElement);
+                        foundMatch = true;
+                    }
+                }
+            }
+            if (!foundMatch) {
+                yield resultSelector(null, innerElement);
+            }
+        }
     }
 
     private* rotateGenerator(shift: number): IterableIterator<TElement> {

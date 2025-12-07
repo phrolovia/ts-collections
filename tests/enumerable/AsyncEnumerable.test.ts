@@ -43,6 +43,20 @@ import "../../src/lookup/Lookup";
 describe("AsyncEnumerable", () => {
     const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));
 
+    const schools: School[] = [
+        new School(1, "Elementary School"),
+        new School(2, "High School"),
+        new School(3, "University"),
+        new School(5, "Academy")
+    ];
+    const students: Student[] = [
+        new Student(100, "Desireé", "Moretti", 3),
+        new Student(200, "Apolline", "Bruyere", 2),
+        new Student(300, "Giselle", "García", 2),
+        new Student(400, "Priscilla", "Necci", 1),
+        new Student(500, "Lucrezia", "Volpe", 4)
+    ];
+
     const arrayProducer = async function* <T>(numbers: T[], delay: number = 1): AsyncIterable<T> {
         for (let ix = 0; ix < numbers.length; ++ix) {
             await suspend(delay);
@@ -93,10 +107,24 @@ describe("AsyncEnumerable", () => {
         }
     };
 
+    const schoolProducer = async function* (): AsyncIterableIterator<School> {
+        for (const school of schools) {
+            await suspend(100);
+            yield school;
+        }
+    };
+
     const stringProducer = async function* (stringList: string[], delay: number = 1): AsyncIterable<string> {
         for (let ix = 0; ix < stringList.length; ++ix) {
             await suspend(delay);
             yield stringList[ix];
+        }
+    };
+
+    const studentProducer = async function* (): AsyncIterableIterator<Student> {
+        for (const student of students) {
+            await suspend(100);
+            yield student;
         }
     };
 
@@ -1404,32 +1432,9 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+
+
     describe("#join()", () => {
-        const schools: School[] = [
-            new School(1, "Elementary School"),
-            new School(2, "High School"),
-            new School(3, "University"),
-            new School(5, "Academy")
-        ];
-        const students: Student[] = [
-            new Student(100, "Desireé", "Moretti", 3),
-            new Student(200, "Apolline", "Bruyere", 2),
-            new Student(300, "Giselle", "García", 2),
-            new Student(400, "Priscilla", "Necci", 1),
-            new Student(500, "Lucrezia", "Volpe", 4)
-        ];
-        const schoolProducer = async function* (): AsyncIterableIterator<School> {
-            for (const school of schools) {
-                await suspend(100);
-                yield school;
-            }
-        };
-        const studentProducer = async function* (): AsyncIterableIterator<Student> {
-            for (const student of students) {
-                await suspend(100);
-                yield student;
-            }
-        };
         test("should join students and schools", async () => {
             const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
             const studentsEnumerable = new AsyncEnumerable(studentProducer());
@@ -1445,20 +1450,6 @@ describe("AsyncEnumerable", () => {
             ];
             expect(joinedData.length).to.eq(4);
             expect(joinedData).to.deep.equal(expectedOutput);
-        });
-        test("should set null for school if left join is true", async () => {
-            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
-            const studentsEnumerable = new AsyncEnumerable(studentProducer());
-            const joinedData = await studentsEnumerable.join(schoolsEnumerable, st => st.schoolId, sc => sc.id, (student, school) => {
-                return [student, school];
-            }, (stId, scId) => stId === scId, true).toArray();
-            for (const [student, school] of joinedData) {
-                if (student?.id === 500) {
-                    expect(school).to.be.null;
-                } else {
-                    expect(school).to.not.be.null;
-                }
-            }
         });
         test("should join key-value pairs", async () => {
             const pairs1 = [
@@ -1528,6 +1519,23 @@ describe("AsyncEnumerable", () => {
             // Lucrezia (schoolId 4) should match with schools with even IDs (2)
             const lucreziaMatches = joinedData.filter(s => s.startsWith("Lucrezia")).length;
             expect(lucreziaMatches).to.be.greaterThan(0);
+        });
+    });
+
+    describe("#leftJoin()", () => {
+        test("should set null for school on leftJoin when no match", async () => {
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+            const joinedData = await studentsEnumerable.leftJoin(schoolsEnumerable, st => st.schoolId, sc => sc.id, (student, school) => {
+                return [student, school];
+            }, (stId, scId) => stId === scId).toArray();
+            for (const [student, school] of joinedData) {
+                if (student?.id === 500) {
+                    expect(school).to.be.null;
+                } else {
+                    expect(school).to.not.be.null;
+                }
+            }
         });
     });
 
@@ -2057,6 +2065,28 @@ describe("AsyncEnumerable", () => {
             const enumerable = new AsyncEnumerable(numberProducer(10));
             const result = await enumerable.reverse().toArray();
             expect(result).to.deep.equal([9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+        });
+    });
+
+    describe("#rightJoin()", () => {
+        test("should include unmatched inner elements on rightJoin", async () => {
+            const schoolsEnumerable = new AsyncEnumerable(schoolProducer());
+            const studentsEnumerable = new AsyncEnumerable(studentProducer());
+
+            const joinedData = await schoolsEnumerable.rightJoin(
+                studentsEnumerable,
+                s => s.id,
+                st => st.schoolId,
+                (school, student) => `${school?.name ?? null} :: ${student!.name}`
+            ).toArray();
+
+            expect(joinedData).to.deep.equal([
+                "University :: Desireé",
+                "High School :: Apolline",
+                "High School :: Giselle",
+                "Elementary School :: Priscilla",
+                "null :: Lucrezia"
+            ]);
         });
     });
 
