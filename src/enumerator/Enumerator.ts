@@ -1623,14 +1623,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* rightJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator: EqualityComparator<TKey>): IterableIterator<TResult> {
-        const keyCompare = keyComparator ?? Comparators.equalityComparator;
-        const groups = buildGroupsSync(this, outerKeySelector, keyCompare);
+        const groups = buildGroupsSync(this, outerKeySelector, keyComparator);
 
         for (const innerElement of innerEnumerable) {
             const innerKey = innerKeySelector(innerElement);
             let foundMatch = false;
             for (const group of groups) {
-                if (keyCompare(innerKey, group.key)) {
+                if (keyComparator(innerKey, group.key)) {
                     for (const outerElement of group.elements) {
                         yield resultSelector(outerElement, innerElement);
                         foundMatch = true;

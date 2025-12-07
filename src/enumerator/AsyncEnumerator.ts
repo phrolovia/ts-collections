@@ -1571,14 +1571,13 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* rightJoinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TResult> {
-        const keyCompare = keyComparator ?? Comparators.equalityComparator;
-        const groups = await buildGroupsAsync(this, outerKeySelector, keyCompare);
+        const groups = await buildGroupsAsync(this, outerKeySelector, keyComparator);
 
         for await (const innerElement of inner) {
             const innerKey = innerKeySelector(innerElement);
             let foundMatch = false;
             for (const group of groups) {
-                if (keyCompare(innerKey, group.key)) {
+                if (keyComparator(innerKey, group.key)) {
                     for (const outerElement of group.elements) {
                         yield resultSelector(outerElement, innerElement);
                         foundMatch = true;

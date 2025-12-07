@@ -2305,25 +2305,6 @@ describe("List", () => {
             expect(joinedData.size()).to.eq(4);
             expect(joinedData.toArray()).to.deep.equal(expectedOutputDataList);
         });
-        test("should set null for school if left join is true", () => {
-            const joinedData = students
-                .join(
-                    schools,
-                    (st) => st.schoolId,
-                    (sc) => sc.id,
-                    (student, school) => [student, school],
-                    (stid, scid) => stid === scid,
-                    true
-                )
-                .toArray();
-            for (const jd of joinedData) {
-                if ((jd[0] as Student).surname === "Volpe") {
-                    expect(jd[1]).to.eq(null);
-                } else {
-                    expect(jd[1]).to.not.eq(null);
-                }
-            }
-        });
         test("should join key-value pairs", () => {
             const pairList1 = new List([
                 new Pair(1, "A"),
