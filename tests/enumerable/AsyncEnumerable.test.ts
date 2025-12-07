@@ -2577,15 +2577,19 @@ describe("AsyncEnumerable", () => {
             const result = await enumerable.takeLast(0).toArray();
             expect(result).to.deep.equal([]);
         });
-        test("should run performance test", async () => {
-            const size = 500;
-            const enumerable = new AsyncEnumerable(numberProducer(size, 0));
+        test(
+            "should run performance test",
+            { timeout: 10000 },
+            async () => {
+                const size = 500;
+                const enumerable = new AsyncEnumerable(numberProducer(size, 0));
 
-            const result = await enumerable.takeLast(100).toArray();
-            expect(result.length).to.eq(100);
-            expect(result[0]).to.eq(size - 100);
-            expect(result[99]).to.eq(size - 1);
-        }, { timeout: 10000 });
+                const result = await enumerable.takeLast(100).toArray();
+                expect(result.length).to.eq(100);
+                expect(result[0]).to.eq(size - 100);
+                expect(result[99]).to.eq(size - 1);
+            }
+        );
     });
 
     describe("#takeUntil()", () => {
@@ -3119,14 +3123,18 @@ describe("AsyncEnumerable", () => {
             expect(result).to.deep.equal([]);
         });
 
-        test("should handle large collections", async () => {
-            const size = 500;
-            const enumerable = new AsyncEnumerable(numberProducer(size));
-            const result = await enumerable.toArray();
-            expect(result.length).to.equal(size);
-            expect(result[0]).to.equal(0);
-            expect(result[size - 1]).to.equal(size - 1);
-        }, { timeout: 10000 });
+        test(
+            "should handle large collections",
+            { timeout: 10000 },
+            async () => {
+                const size = 500;
+                const enumerable = new AsyncEnumerable(numberProducer(size));
+                const result = await enumerable.toArray();
+                expect(result.length).to.equal(size);
+                expect(result[0]).to.equal(0);
+                expect(result[size - 1]).to.equal(size - 1);
+            }
+        );
 
         test("should preserve order of elements", async () => {
             const enumerable = new AsyncEnumerable(arrayProducer([5, 3, 1, 4, 2]));

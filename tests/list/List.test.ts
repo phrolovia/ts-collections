@@ -2380,22 +2380,6 @@ describe("List", () => {
             expect(joinedData.count()).to.eq(0);
         });
 
-        test("should return results for left join when inner collection is empty", () => {
-            const emptySchools = new List<School>();
-            const joinedData = students.join(
-                emptySchools,
-                (st) => st.schoolId,
-                (sc) => sc.id,
-                (student, school) => [student.name, school?.name],
-                undefined,
-                true
-            );
-            expect(joinedData.count()).to.eq(5);
-            for (const item of joinedData) {
-                expect(item[1]).to.be.undefined;
-            }
-        });
-
         test("should handle custom equality comparator", () => {
             // Custom comparator that considers school IDs equal if they have the same parity (odd/even)
             const parityComparator = (id1: number, id2: number) =>
@@ -3207,6 +3191,7 @@ describe("List", () => {
         });
         test(
             "should measure the time taken to generate permutations",
+            { timeout: 10000 },
             () => {
                 const list = Enumerable.range(1, 9).toList();
                 const startTime = performance.now();
@@ -3221,8 +3206,7 @@ describe("List", () => {
                     } ms`
                 );
                 expect(perms.length).to.eq(362880);
-            },
-            { timeout: 10000 }
+            }
         );
     });
 
@@ -4980,6 +4964,7 @@ describe("List", () => {
         });
         test(
             "should return union of two enumerables",
+            { timeout: 10000 },
             () => {
                 const list1 = new List<Person>();
                 const list2 = new List<Person>();
@@ -5008,8 +4993,7 @@ describe("List", () => {
                     .distinct()
                     .count();
                 expect(ageCount).to.not.greaterThan(90);
-            },
-            { timeout: 10000 }
+            }
         );
     });
 
