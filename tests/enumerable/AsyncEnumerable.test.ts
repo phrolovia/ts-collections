@@ -41,7 +41,7 @@ import { Student } from "../models/Student";
 import "../../src/lookup/Lookup";
 
 describe("AsyncEnumerable", () => {
-    const suspend = (ms: number) => new Promise(resolve => global.setTimeout(resolve, ms));
+    const suspend = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const schools: School[] = [
         new School(1, "Elementary School"),
@@ -1322,6 +1322,33 @@ describe("AsyncEnumerable", () => {
         });
     });
 
+    describe("#infiniteSequence()", () => {
+        test("should return an infinite sequence", async () => {
+            const sequence = AsyncEnumerable.infiniteSequence(1, 1);
+            for (let ix = 0; ix < 10; ix++) {
+                const item = await sequence.elementAt(ix);
+                expect(item).to.eq(ix + 1);
+                if (item === 10) break;
+            }
+        });
+        test("should return an infinite sequence #2", async () => {
+            const sequence = AsyncEnumerable.infiniteSequence(1, 2);
+            for (let ix = 0; ix < 10; ix++) {
+                const item = await sequence.elementAt(ix);
+                expect(item).to.eq(ix * 2 + 1);
+                if (item === 20) break;
+            }
+        });
+        test("should support a negative increment", async () => {
+            const sequence = AsyncEnumerable.infiniteSequence(10, -1);
+            for (let ix = 0; ix < 10; ix++) {
+                const item = await sequence.elementAt(ix);
+                expect(item).to.eq(10 - ix);
+                if (item === 1) break;
+            }
+        });
+    });
+
     describe("#interleave()", () => {
         test("should interleave values from both sequences", { timeout: 5000 }, async () => {
             const numbers = new AsyncEnumerable(numberProducer(3));
@@ -2057,6 +2084,51 @@ describe("AsyncEnumerable", () => {
         test("should create an enumerable that repeats the value", async () => {
             const enumerable = AsyncEnumerable.repeat("a", 10);
             expect(await enumerable.toArray()).to.deep.equal(["a", "a", "a", "a", "a", "a", "a", "a", "a", "a"]);
+        });
+    });
+
+    describe("#sequence()", () => {
+        test("should create a sequence with given constraints", async () => {
+            const enumerable = AsyncEnumerable.sequence(1, 10, 1);
+            expect(await enumerable.toArray()).to.deep.equal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+        });
+        test("should work with negative step", async () => {
+            const enumerable = AsyncEnumerable.sequence(5, 1, -1);
+            expect(await enumerable.toArray()).to.deep.equal([5, 4, 3, 2, 1]);
+        });
+        test("should include end when divisible by step", async () => {
+            const enumerable1 = AsyncEnumerable.sequence(1, 10, 2);
+            const enumerable2 = AsyncEnumerable.sequence(1, 11, 2);
+            expect(await enumerable1.toArray()).to.deep.equal([1, 3, 5, 7, 9]);
+            expect(await enumerable2.toArray()).to.deep.equal([1, 3, 5, 7, 9, 11]);
+        });
+        test("should include end with negative step", async () => {
+            const enumerable1 = AsyncEnumerable.sequence(11, 2, -2);
+            const enumerable2 = AsyncEnumerable.sequence(11, 1, -2);
+            expect(await enumerable1.toArray()).to.deep.equal([11, 9, 7, 5, 3]);
+            expect(await enumerable2.toArray()).to.deep.equal([11, 9, 7, 5, 3, 1]);
+        });
+        test("should throw error if start is NaN", () => {
+            expect(() => AsyncEnumerable.sequence(Number.NaN, 11, 2)).to.throw(InvalidArgumentException);
+        });
+        test("should throw error if end is NaN", () => {
+            expect(() => AsyncEnumerable.sequence(1, Number.NaN, 2)).to.throw(InvalidArgumentException);
+        });
+        test("should throw error if step is NaN", () => {
+            expect(() => AsyncEnumerable.sequence(1, 11, Number.NaN)).to.throw(InvalidArgumentException);
+        });
+        test("should throw error if step is greater than 0 and end is smaller than start", () => {
+            expect(() => AsyncEnumerable.sequence(10, 2, 1)).to.throw(InvalidArgumentException);
+        });
+        test("should throw error if step is less than 0 and end is greater than start", () => {
+            expect(() => AsyncEnumerable.sequence(1, 10, -1)).to.throw(InvalidArgumentException);
+        });
+        test("should throw error if step is 0 and end is not equal to start", () => {
+            expect(() => AsyncEnumerable.sequence(1, 10, 0)).to.throw(InvalidArgumentException);
+        });
+        test("should return start if start is equal to end and step is 0", async () => {
+            const enumerable = AsyncEnumerable.sequence(1, 1, 0);
+            expect(await enumerable.toArray()).to.deep.equal([1]);
         });
     });
 
