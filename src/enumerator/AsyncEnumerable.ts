@@ -87,11 +87,6 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
 
     public static sequence(start: number, end: number, step: number): IAsyncEnumerable<number> {
         ensureSequenceArgumentValidity(start, end, step);
-        if (step === 0 && end === start) {
-            return new AsyncEnumerator(async function* () {
-                yield start;
-            });
-        }
         return new AsyncEnumerator(async function* () {
             if (start < end) {
                 for (let ix = start; ix <= end; ix += step) {
