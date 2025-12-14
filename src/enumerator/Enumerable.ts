@@ -24,7 +24,6 @@ import type { IndexedAction } from "../shared/IndexedAction";
 import type { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import type { IndexedSelector } from "../shared/IndexedSelector";
 import type { InferredType } from "../shared/InferredType";
-import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import type { JoinSelector } from "../shared/JoinSelector";
 import type { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import type { ObjectType } from "../shared/ObjectType";
@@ -39,6 +38,7 @@ import type { ZipManyZipper, Zipper } from "../shared/Zipper";
 import type { ImmutableStack } from "../stack/ImmutableStack";
 import type { Stack } from "../stack/Stack";
 import { Enumerator } from "./Enumerator";
+import { ensureSequenceArgumentValidity } from "./helpers/sequenceHelpers";
 import type { IEnumerable } from "./IEnumerable";
 import type { IGroup } from "./IGroup";
 import type { IOrderedEnumerable } from "./IOrderedEnumerable";
@@ -111,27 +111,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     }
 
     public static sequence(start: number, end: number, step: number): IEnumerable<number> {
-        if (isNaN(start)) {
-            throw new InvalidArgumentException("start cannot be NaN");
-        }
-        if (isNaN(end)) {
-            throw new InvalidArgumentException("end cannot be NaN");
-        }
-        if (isNaN(step)) {
-            throw new InvalidArgumentException("step cannot be NaN");
-        }
-        if (step > 0 && end < start) {
-            throw new InvalidArgumentException("step cannot be greater than zero when end is less than start");
-        }
-        if (step < 0 && end > start) {
-            throw new InvalidArgumentException("step cannot be less than zero when end is greater than start");
-        }
-        if (step === 0 && end !== start) {
-            throw new InvalidArgumentException("step cannot be zero when end is not equal to start");
-        }
-        if (step === 0 && end === start) {
-            return Enumerable.from([start]);
-        }
+        ensureSequenceArgumentValidity(start, end, step);
         return new Enumerator(function* () {
             if (start < end) {
                 for (let ix = start; ix <= end; ix += step) {

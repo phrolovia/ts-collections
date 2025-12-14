@@ -10,7 +10,7 @@ describe("#infiniteSequence()", () => {
             if (item === 10) break;
         }
     });
-    it("should return an infinite sequence with a custom increment", () => {
+    it("should return an infinite sequence #2", () => {
         const sequence = infiniteSequence(1, 2);
         for (let ix = 0; ix < 10; ix++) {
             const item = sequence.elementAt(ix);
