@@ -1,32 +1,30 @@
-import type { KeyValuePair } from "../dictionary/KeyValuePair";
-import type { CircularLinkedList } from "../list/CircularLinkedList";
-import type { CircularQueue } from "../queue/CircularQueue";
 import type { Dictionary } from "../dictionary/Dictionary";
-import type { EnumerableSet } from "../set/EnumerableSet";
-import { Enumerator } from "./Enumerator";
-import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
 import type { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
-import type { ImmutableList } from "../list/ImmutableList";
-import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
-import type { ImmutableQueue } from "../queue/ImmutableQueue";
-import type { ImmutableSet } from "../set/ImmutableSet";
 import type { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
-import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
-import type { ImmutableStack } from "../stack/ImmutableStack";
+import type { KeyValuePair } from "../dictionary/KeyValuePair";
+import type { SortedDictionary } from "../dictionary/SortedDictionary";
+import type { CircularLinkedList } from "../list/CircularLinkedList";
+import type { ImmutableList } from "../list/ImmutableList";
 import type { LinkedList } from "../list/LinkedList";
 import type { List } from "../list/List";
+import type { ILookup } from "../lookup/ILookup";
+import type { CircularQueue } from "../queue/CircularQueue";
+import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import type { ImmutableQueue } from "../queue/ImmutableQueue";
 import type { PriorityQueue } from "../queue/PriorityQueue";
 import type { Queue } from "../queue/Queue";
-import type { SortedDictionary } from "../dictionary/SortedDictionary";
+import type { EnumerableSet } from "../set/EnumerableSet";
+import type { ImmutableSet } from "../set/ImmutableSet";
+import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
 import type { SortedSet } from "../set/SortedSet";
-import type { Stack } from "../stack/Stack";
-import type { ILookup } from "../lookup/ILookup";
 import type { Accumulator } from "../shared/Accumulator";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { IndexedAction } from "../shared/IndexedAction";
 import type { IndexedPredicate, IndexedTypePredicate } from "../shared/IndexedPredicate";
 import type { IndexedSelector } from "../shared/IndexedSelector";
 import type { InferredType } from "../shared/InferredType";
+import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import type { JoinSelector } from "../shared/JoinSelector";
 import type { MedianTieStrategy } from "../shared/MedianTieStrategy";
 import type { ObjectType } from "../shared/ObjectType";
@@ -38,6 +36,9 @@ import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { Selector } from "../shared/Selector";
 import type { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import type { ZipManyZipper, Zipper } from "../shared/Zipper";
+import type { ImmutableStack } from "../stack/ImmutableStack";
+import type { Stack } from "../stack/Stack";
+import { Enumerator } from "./Enumerator";
 import type { IEnumerable } from "./IEnumerable";
 import type { IGroup } from "./IGroup";
 import type { IOrderedEnumerable } from "./IOrderedEnumerable";
@@ -69,6 +70,16 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return new Enumerable(source);
     }
 
+    public static infiniteSequence(start: number, step: number): IEnumerable<number> {
+        return new Enumerator(function* () {
+            let ix = start;
+            while (true) {
+                yield ix;
+                ix += step;
+            }
+        });
+    }
+
     /**
      * Creates a range of numbers starting from the specified start value and containing the specified count of elements.
      * @param {number} start The start value of the range.
@@ -95,6 +106,43 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         return new Enumerator(function* () {
             for (let ix = 0; ix < count; ++ix) {
                 yield element;
+            }
+        });
+    }
+
+    public static sequence(start: number, end: number, step: number): IEnumerable<number> {
+        if (isNaN(start)) {
+            throw new InvalidArgumentException("start cannot be NaN");
+        }
+        if (isNaN(end)) {
+            throw new InvalidArgumentException("end cannot be NaN");
+        }
+        if (isNaN(step)) {
+            throw new InvalidArgumentException("step cannot be NaN");
+        }
+        if (step > 0 && end < start) {
+            throw new InvalidArgumentException("step cannot be greater than zero when end is less than start");
+        }
+        if (step < 0 && end > start) {
+            throw new InvalidArgumentException("step cannot be less than zero when end is greater than start");
+        }
+        if (step === 0 && end !== start) {
+            throw new InvalidArgumentException("step cannot be zero when end is not equal to start");
+        }
+        if (step === 0 && end === start) {
+            return Enumerable.from([start]);
+        }
+        return new Enumerator(function* () {
+            if (start < end) {
+                for (let ix = start; ix <= end; ix += step) {
+                    yield ix;
+                }
+            } else if (start > end) {
+                for (let ix = start; ix >= end; ix += step) {
+                    yield ix;
+                }
+            } else {
+                yield start;
             }
         });
     }
