@@ -110,6 +110,17 @@ describe("ImmutableQueue", () => {
             expect(queue.size()).to.equal(0);
         });
     });
+    describe("#reset()", () => {
+        test("should return a new queue with the elements from the given iterable", () => {
+            const queue = ImmutableQueue.create<number>([1, 2, 3]);
+            const newQueue = queue.reset([4, 5, 6]);
+            expect(queue.size()).to.equal(3);
+            expect(newQueue.size()).to.equal(3);
+            expect(queue.front()).to.equal(1);
+            expect(newQueue.front()).to.equal(4);
+            expect(newQueue.toArray()).to.deep.equal([4, 5, 6]);
+        });
+    });
     describe("#size()", () => {
         test("should return the size of the queue", () => {
             const queue = ImmutableQueue.create<number>([1, 2, 3]);
