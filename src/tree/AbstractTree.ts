@@ -91,6 +91,7 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         return this.removeByRecursive(this.root, key, selector, comparator);
     }
 
+
     public size(): number {
         return this.treeSize;
     }

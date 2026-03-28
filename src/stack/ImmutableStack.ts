@@ -1,4 +1,3 @@
-import type { IImmutableCollection } from "../core/IImmutableCollection";
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { Stack } from "./Stack";
 import type { EqualityComparator } from "../shared/EqualityComparator";
@@ -47,7 +46,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * Removes all elements from this stack.
      * @returns {ImmutableStack} An empty stack.
      */
-    public override clear(): IImmutableCollection<TElement> {
+    public override clear(): ImmutableStack<TElement> {
         return new ImmutableStack([], this.comparer);
     }
 

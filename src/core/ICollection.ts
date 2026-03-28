@@ -20,4 +20,10 @@ export interface ICollection<TElement> extends IReadonlyCollection<TElement> {
      * Remove all elements from this collection.
      */
     clear(): void;
+
+    /**
+     * Replaces the elements in this collection with the elements from the provided collection.
+     * @param collection The collection whose elements will replace the current elements in this collection.
+     */
+    reset<TSource extends TElement>(collection: Iterable<TSource>): void;
 }

@@ -6,7 +6,7 @@ import type { Selector } from "../shared/Selector";
 
 export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
     /**
-     * Returns the number of element in this collection.
+     * Returns the number of elements in this collection.
      * @returns {number} The number of elements in this collection.
      */
     get length(): number;
@@ -33,7 +33,7 @@ export interface IReadonlyCollection<TElement> extends IEnumerable<TElement> {
 
     /**
      * Checks whether this collection is empty or not.
-     * @returns {boolean} true if collection is empty
+     * @returns {boolean} true if the collection is empty
      */
     isEmpty(): boolean;
 

@@ -20,4 +20,11 @@ export interface IImmutableCollection<TElement> extends IReadonlyCollection<TEle
      * @returns {IImmutableCollection} An empty collection.
      */
     clear(): IImmutableCollection<TElement>;
+
+    /**
+     * Replaces the elements in this collection with the elements from the provided collection.
+     * @param collection The collection whose elements will replace the current elements in this collection.
+     * @returns {IImmutableCollection} A new collection with the elements from the provided collection.
+     */
+    reset<TSource extends TElement>(collection: Iterable<TSource>): IImmutableCollection<TElement>;
 }
