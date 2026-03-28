@@ -92,6 +92,22 @@ describe("ImmutableStack", () => {
         });
     });
 
+    describe("#reset()", () => {
+        test("should return a new stack with the elements from the given iterable", () => {
+            const stack = ImmutableStack.create<number>([1, 2, 3]);
+            const newStack = stack.reset([4, 5, 6]);
+            expect(stack.size()).to.equal(3);
+            expect(newStack.size()).to.equal(3);
+            expect(stack.contains(4)).to.be.false;
+            expect(newStack.contains(1)).to.be.false;
+            expect(newStack.toArray()).to.deep.equal([6, 5, 4]);
+        });
+        test("should return the same instance when called with itself", () => {
+            const stack = ImmutableStack.create<number>([1, 2, 3]);
+            expect(stack.reset(stack)).to.equal(stack);
+        });
+    });
+
     describe("#size()", () => {
         test("should return the size of the stack", () => {
             const stack = ImmutableStack.create<number>([1, 2, 3]);

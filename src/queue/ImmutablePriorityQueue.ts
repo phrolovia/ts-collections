@@ -195,6 +195,19 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
         return changed ? new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator) : this;
     }
 
+    /**
+     * Replaces all elements in this priority queue with the elements from the provided collection.
+     * @template TSource The type of elements in the collection.
+     * @param collection The collection whose elements will replace the current elements.
+     * @returns {ImmutablePriorityQueue<TElement>} A new priority queue containing only the elements from the provided collection.
+     */
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutablePriorityQueue<TElement> {
+        if (collection === this) {
+            return this;
+        }
+        return new ImmutablePriorityQueue<TElement>([...collection], this.#comparator);
+    }
+
     public override size(): number {
         return this.#heap.size();
     }

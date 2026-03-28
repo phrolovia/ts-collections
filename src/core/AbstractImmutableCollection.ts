@@ -1,5 +1,5 @@
-import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
 import type { EqualityComparator } from "../shared/EqualityComparator";
+import { AbstractReadonlyCollection } from "./AbstractReadonlyCollection";
 import type { IImmutableCollection } from "./IImmutableCollection";
 
 export abstract class AbstractImmutableCollection<TElement> extends AbstractReadonlyCollection<TElement> implements IImmutableCollection<TElement> {
@@ -12,4 +12,6 @@ export abstract class AbstractImmutableCollection<TElement> extends AbstractRead
     abstract addAll<TSource extends TElement>(collection: Iterable<TSource>): IImmutableCollection<TElement>;
 
     abstract clear(): IImmutableCollection<TElement>;
+
+    abstract reset<TSource extends TElement>(collection: Iterable<TSource>): IImmutableCollection<TElement>;
 }

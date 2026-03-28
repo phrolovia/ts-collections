@@ -166,6 +166,23 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         return new ImmutableCircularQueue<TElement>(this.#capacity, this.#elements.slice(1), this.comparer);
     }
 
+    /**
+     * Replaces all elements in this queue with the elements from the provided collection.
+     * Only the most recent elements up to the configured capacity are retained.
+     * @template TSource The type of elements in the collection.
+     * @param collection The collection whose elements will replace the current elements.
+     * @returns {ImmutableCircularQueue} A new queue containing only the elements from the provided collection, capped by the capacity.
+     */
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableCircularQueue<TElement> {
+        if (this.#capacity === 0) {
+            return this;
+        }
+        if (collection === this) {
+            return this;
+        }
+        return new ImmutableCircularQueue<TElement>(this.#capacity, [...collection], this.comparer);
+    }
+
     public override size(): number {
         return this.#elements.length;
     }

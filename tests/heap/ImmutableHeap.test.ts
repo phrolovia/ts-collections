@@ -125,6 +125,20 @@ describe("ImmutableHeap", () => {
             const unchanged = initialHeap.removeIf(() => false);
             expect(unchanged).toBe(initialHeap);
         });
+
+        it("reset should return a new heap with the elements from the given iterable", () => {
+            const newHeap = initialHeap.reset([10, 20, 30]);
+            expect(newHeap).not.toBe(initialHeap);
+            expect(initialHeap.size()).toBe(4);
+            expect(newHeap.size()).toBe(3);
+            expect(newHeap.peek()).toBe(10);
+            expect(newHeap.contains(1)).toBe(false);
+            expect(newHeap.comparator).toBe(initialHeap.comparator);
+        });
+
+        it("reset should return the same instance when called with itself", () => {
+            expect(initialHeap.reset(initialHeap)).toBe(initialHeap);
+        });
     });
 
     describe("behavior", () => {

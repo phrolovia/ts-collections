@@ -3377,6 +3377,15 @@ describe("List", () => {
         });
     });
 
+    describe("#reset()", () => {
+        test("should replace the elements in the list with the elements from the given iterable", () => {
+            const list = new List([1, 2, 3]);
+            list.reset([4, 5, 6]);
+            expect(list.size()).to.eq(3);
+            expect(list.toArray()).to.deep.eq([4, 5, 6]);
+        });
+    });
+
     describe("#retainAll()", () => {
         test("should remove elements that are not in the specified list", () => {
             const list1 = new List([3, 4, 1, 2, 5]);

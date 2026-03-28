@@ -111,6 +111,21 @@ describe('ImmutablePriorityQueue', () => {
             expect(queueWithRemoved.size()).toBe(3);
         });
 
+        it('reset should return a new instance with the elements from the given iterable', () => {
+            const newQueue = initialQueue.reset([8, 2, 6]);
+            expect(newQueue).not.toBe(initialQueue);
+            expect(initialQueue.size()).toBe(3);
+            expect(initialQueue.peek()).toBe(1);
+            expect(newQueue.size()).toBe(3);
+            expect(newQueue.peek()).toBe(2);
+            expect(newQueue.contains(1)).toBe(false);
+            expect(newQueue.contains(2)).toBe(true);
+        });
+
+        it('reset should return the same instance when called with itself', () => {
+            expect(initialQueue.reset(initialQueue)).toBe(initialQueue);
+        });
+
         // Similar immutability checks for removeAll, removeIf...
     });
 

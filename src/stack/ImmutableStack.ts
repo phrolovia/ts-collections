@@ -1,4 +1,3 @@
-import type { IImmutableCollection } from "../core/IImmutableCollection";
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import { Stack } from "./Stack";
 import type { EqualityComparator } from "../shared/EqualityComparator";
@@ -47,7 +46,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * Removes all elements from this stack.
      * @returns {ImmutableStack} An empty stack.
      */
-    public override clear(): IImmutableCollection<TElement> {
+    public override clear(): ImmutableStack<TElement> {
         return new ImmutableStack([], this.comparer);
     }
 
@@ -78,6 +77,19 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      */
     public push(element: TElement): ImmutableStack<TElement> {
         return new ImmutableStack(this.#stack.reverse().append(element), this.comparer);
+    }
+
+    /**
+     * Replaces all elements in this stack with the elements from the provided collection.
+     * @template TSource The type of elements in the collection.
+     * @param collection The collection whose elements will replace the current elements.
+     * @returns {ImmutableStack} A new stack containing only the elements from the provided collection.
+     */
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableStack<TElement> {
+        if (collection === this) {
+            return this;
+        }
+        return new ImmutableStack(collection as Iterable<TElement>, this.comparer);
     }
 
     public override size(): number {

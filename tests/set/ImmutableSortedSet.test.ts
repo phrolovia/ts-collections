@@ -226,6 +226,21 @@ describe("ImmutableSortedSet", () => {
             expect(newSet.contains(2)).to.be.false;
         });
     });
+    describe("#reset()", () => {
+        test("should return a new set with the elements from the given iterable", () => {
+            const set = ImmutableSortedSet.create([1, 2, 3]);
+            const newSet = set.reset([4, 5, 6]);
+            expect(set.size()).to.eq(3);
+            expect(newSet.size()).to.eq(3);
+            expect(set.contains(4)).to.be.false;
+            expect(newSet.contains(1)).to.be.false;
+            expect(newSet.toArray()).to.deep.eq([4, 5, 6]);
+        });
+        test("should return the same instance when called with itself", () => {
+            const set = ImmutableSortedSet.create([1, 2, 3]);
+            expect(set.reset(set)).to.eq(set);
+        });
+    });
     describe("#retainAll()", () => {
         test("should return a new set with the elements that match the given collection", () => {
             const set = ImmutableSortedSet.create([1, 2, 3]);

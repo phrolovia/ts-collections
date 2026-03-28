@@ -15,6 +15,11 @@ export abstract class AbstractCollection<TElement> extends AbstractReadonlyColle
         return this.size() !== oldSize;
     }
 
+    public reset<TSource extends TElement>(collection: Iterable<TSource>): void {
+        this.clear();
+        this.addAll(collection);
+    }
+
     abstract add(element: TElement): boolean;
 
     abstract clear(): void;

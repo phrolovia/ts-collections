@@ -303,6 +303,21 @@ describe("ImmutableList", () => {
             expect(list.toArray()).to.deep.eq([1, 2, 3]);
         });
     });
+    describe("#reset()", () => {
+        test("should return a new list with the elements from the given iterable", () => {
+            const list = ImmutableList.create([1, 2, 3]);
+            const newList = list.reset([4, 5, 6]);
+            expect(list.size()).to.eq(3);
+            expect(newList.size()).to.eq(3);
+            expect(list.contains(4)).to.be.false;
+            expect(newList.contains(1)).to.be.false;
+            expect(newList.toArray()).to.deep.eq([4, 5, 6]);
+        });
+        test("should return the same instance when called with itself", () => {
+            const list = ImmutableList.create([1, 2, 3]);
+            expect(list.reset(list)).to.eq(list);
+        });
+    });
     describe("#set()", () => {
         test("should return a new list with the element set", () => {
             const list = ImmutableList.create([1, 2, 3]);
