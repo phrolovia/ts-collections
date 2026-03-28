@@ -135,6 +135,10 @@ describe("ImmutableHeap", () => {
             expect(newHeap.contains(1)).toBe(false);
             expect(newHeap.comparator).toBe(initialHeap.comparator);
         });
+
+        it("reset should return the same instance when called with itself", () => {
+            expect(initialHeap.reset(initialHeap)).toBe(initialHeap);
+        });
     });
 
     describe("behavior", () => {

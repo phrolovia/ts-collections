@@ -211,6 +211,10 @@ describe("ImmutableSet", () => {
             expect(newSet.contains(2)).to.be.false;
             expect(newSet.toArray()).to.deep.eq([4, 5, 6]);
         });
+        test("should return the same instance when called with itself", () => {
+            const set = ImmutableSet.create([1, 2, 3]);
+            expect(set.reset(set)).to.eq(set);
+        });
     });
     describe("#size()", () => {
         test("should return the number of elements in the set", () => {

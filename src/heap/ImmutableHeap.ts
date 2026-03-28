@@ -158,7 +158,10 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap containing only the elements from the provided collection.
      */
     public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableHeap<TElement> {
-        return new ImmutableHeap([...collection] as TElement[], this.#comparator);
+        if (collection === this) {
+            return this;
+        }
+        return new ImmutableHeap(collection as Iterable<TElement>, this.#comparator);
     }
 
     public override size(): number {

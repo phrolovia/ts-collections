@@ -185,8 +185,11 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @param collection The collection whose elements will replace the current elements.
      * @returns {ImmutableList} A new list containing only the elements from the provided collection.
      */
-    public reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        return new ImmutableList([...collection] as TElement[], this.comparer);
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
+        if (collection === this) {
+            return this;
+        }
+        return new ImmutableList(collection as Iterable<TElement>, this.comparer);
     }
 
     /**

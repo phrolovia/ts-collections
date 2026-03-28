@@ -86,6 +86,9 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} A new stack containing only the elements from the provided collection.
      */
     public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableStack<TElement> {
+        if (collection === this) {
+            return this;
+        }
         return new ImmutableStack(collection as Iterable<TElement>, this.comparer);
     }
 

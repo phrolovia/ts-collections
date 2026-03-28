@@ -177,6 +177,9 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (this.#capacity === 0) {
             return this;
         }
+        if (collection === this) {
+            return this;
+        }
         return new ImmutableCircularQueue<TElement>(this.#capacity, [...collection], this.comparer);
     }
 

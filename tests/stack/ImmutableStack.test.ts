@@ -102,6 +102,10 @@ describe("ImmutableStack", () => {
             expect(newStack.contains(1)).to.be.false;
             expect(newStack.toArray()).to.deep.equal([6, 5, 4]);
         });
+        test("should return the same instance when called with itself", () => {
+            const stack = ImmutableStack.create<number>([1, 2, 3]);
+            expect(stack.reset(stack)).to.equal(stack);
+        });
     });
 
     describe("#size()", () => {

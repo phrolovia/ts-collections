@@ -22,7 +22,8 @@ export interface IImmutableCollection<TElement> extends IReadonlyCollection<TEle
     clear(): IImmutableCollection<TElement>;
 
     /**
-     * Replaces the elements in this collection with the elements from the provided collection.
+     * Returns a new collection with the elements from the provided collection.
+     * If the provided collection is empty, the same collection will be returned.
      * @param collection The collection whose elements will replace the current elements in this collection.
      * @returns {IImmutableCollection} A new collection with the elements from the provided collection.
      */

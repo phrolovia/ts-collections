@@ -116,8 +116,11 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
      * @param collection The collection whose elements will replace the current elements.
      * @returns {ImmutableQueue} A new queue containing only the elements from the provided collection.
      */
-    public reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableQueue<TElement> {
-        return new ImmutableQueue([...collection] as TElement[], this.comparer);
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableQueue<TElement> {
+        if (collection === this) {
+            return this;
+        }
+        return new ImmutableQueue(collection as Iterable<TElement>, this.comparer);
     }
 
     public override size(): number {

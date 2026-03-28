@@ -126,7 +126,10 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @param collection The collection whose elements will replace the current elements.
      * @returns {ImmutableSet} A new set containing only the elements from the provided collection.
      */
-    public reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
+        if (collection === this) {
+            return this;
+        }
         return new ImmutableSet<TElement>([...collection]);
     }
 

@@ -149,6 +149,10 @@ describe("ImmutableCircularQueue", () => {
             expect(newQueue.toArray()).to.deep.equal([4, 5, 6]);
             expect(newQueue.capacity).to.equal(3);
         });
+        test("should return the same instance when called with itself", () => {
+            const queue = ImmutableCircularQueue.create<number>(3, [1, 2, 3]);
+            expect(queue.reset(queue)).to.equal(queue);
+        });
     });
 
     describe("#size()", () => {

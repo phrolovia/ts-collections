@@ -202,6 +202,9 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue containing only the elements from the provided collection.
      */
     public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutablePriorityQueue<TElement> {
+        if (collection === this) {
+            return this;
+        }
         return new ImmutablePriorityQueue<TElement>([...collection], this.#comparator);
     }
 

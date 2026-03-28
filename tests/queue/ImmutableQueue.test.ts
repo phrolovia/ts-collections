@@ -120,6 +120,10 @@ describe("ImmutableQueue", () => {
             expect(newQueue.front()).to.equal(4);
             expect(newQueue.toArray()).to.deep.equal([4, 5, 6]);
         });
+        test("should return the same instance when called with itself", () => {
+            const queue = ImmutableQueue.create<number>([1, 2, 3]);
+            expect(queue.reset(queue)).to.equal(queue);
+        });
     });
     describe("#size()", () => {
         test("should return the size of the queue", () => {

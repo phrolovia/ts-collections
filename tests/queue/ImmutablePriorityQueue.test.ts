@@ -122,6 +122,10 @@ describe('ImmutablePriorityQueue', () => {
             expect(newQueue.contains(2)).toBe(true);
         });
 
+        it('reset should return the same instance when called with itself', () => {
+            expect(initialQueue.reset(initialQueue)).toBe(initialQueue);
+        });
+
         // Similar immutability checks for removeAll, removeIf...
     });
 

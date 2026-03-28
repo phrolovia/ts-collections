@@ -143,7 +143,10 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @param collection The collection whose elements will replace the current elements.
      * @returns {ImmutableSortedSet} A new set containing only the elements from the provided collection.
      */
-    public reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSortedSet<TElement> {
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSortedSet<TElement> {
+        if (collection === this) {
+            return this;
+        }
         return new ImmutableSortedSet<TElement>([...collection], this.#comparator);
     }
 
