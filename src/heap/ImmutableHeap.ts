@@ -151,6 +151,16 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
         return removed ? new ImmutableHeap(newHeap, this.#comparator) : this;
     }
 
+    /**
+     * Replaces all elements in this heap with the elements from the provided collection.
+     * @template TSource The type of elements in the collection.
+     * @param collection The collection whose elements will replace the current elements.
+     * @returns {ImmutableHeap<TElement>} A new heap containing only the elements from the provided collection.
+     */
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableHeap<TElement> {
+        return new ImmutableHeap([...collection] as TElement[], this.#comparator);
+    }
+
     public override size(): number {
         return this.#heap.size();
     }

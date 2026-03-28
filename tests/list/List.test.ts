@@ -3378,7 +3378,7 @@ describe("List", () => {
     });
 
     describe("#reset()", () => {
-        test("should return a new list with the elements from the given iterable", () => {
+        test("should replace the elements in the list with the elements from the given iterable", () => {
             const list = new List([1, 2, 3]);
             list.reset([4, 5, 6]);
             expect(list.size()).to.eq(3);

@@ -79,6 +79,16 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
         return new ImmutableStack(this.#stack.reverse().append(element), this.comparer);
     }
 
+    /**
+     * Replaces all elements in this stack with the elements from the provided collection.
+     * @template TSource The type of elements in the collection.
+     * @param collection The collection whose elements will replace the current elements.
+     * @returns {ImmutableStack} A new stack containing only the elements from the provided collection.
+     */
+    public override reset<TSource extends TElement>(collection: Iterable<TSource>): ImmutableStack<TElement> {
+        return new ImmutableStack(collection as Iterable<TElement>, this.comparer);
+    }
+
     public override size(): number {
         return this.#stack.size();
     }

@@ -7,13 +7,11 @@ export abstract class AbstractImmutableCollection<TElement> extends AbstractRead
         super(comparator);
     }
 
-    public reset<TSource extends TElement>(collection: Iterable<TSource>): IImmutableCollection<TElement> {
-        return this.clear().addAll(collection);
-    }
-
     abstract add(element: TElement): IImmutableCollection<TElement>;
 
     abstract addAll<TSource extends TElement>(collection: Iterable<TSource>): IImmutableCollection<TElement>;
 
     abstract clear(): IImmutableCollection<TElement>;
+
+    abstract reset<TSource extends TElement>(collection: Iterable<TSource>): IImmutableCollection<TElement>;
 }
