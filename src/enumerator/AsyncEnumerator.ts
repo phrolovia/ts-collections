@@ -514,9 +514,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<IGroup<TKey, TElement>> {
-        const keyCompare = keyComparator ?? Comparators.equalityComparator;
-        return new AsyncEnumerator<IGroup<TKey, TElement>>(() => this.groupByGenerator(keySelector, keyCompare));
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IAsyncEnumerable<IGroup<TKey, TElement>> {
+        return new AsyncEnumerator<IGroup<TKey, TElement>>(() => this.groupByGenerator(keySelector, keyComparator, hashSelector));
     }
 
     public groupJoin<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<TResult> {
@@ -1363,43 +1362,70 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return yield* this.exceptByGenerator(iterable, e => e, comparator);
     }
 
-    private async* groupByGenerator<TKey>(
-        keySelector: Selector<TElement, TKey>,
-        keyComparator: EqualityComparator<TKey>
-    ): AsyncIterableIterator<IGroup<TKey, TElement>> {
-
-        const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
-
-        const findExistingKeyInMap = (targetKey: TKey): TKey | undefined => {
-            for (const existingKey of groupMap.keys()) {
-                if (keyComparator(existingKey, targetKey)) {
-                    return existingKey;
+    private async* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): AsyncIterableIterator<IGroup<TKey, TElement>> {
+        if (!keyComparator) {
+            const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+            for await (const element of this) {
+                const key = keySelector(element);
+                const group = groupMap.get(key);
+                if (group) {
+                    (group.source as List<TElement>).add(element);
+                } else {
+                    const newList = new List<TElement>([element]);
+                    const newGroup = new Group<TKey, TElement>(key, newList);
+                    groupMap.set(key, newGroup);
                 }
             }
-            return undefined;
-        };
-
-        for await (const element of this) {
-            const key = keySelector(element);
-            let group: IGroup<TKey, TElement> | undefined;
-            const existingMapKey = findExistingKeyInMap(key);
-
-            if (existingMapKey !== undefined) {
-                group = groupMap.get(existingMapKey);
-                if (!group) {
-                    throw new NoSuchElementException(`Group with key ${existingMapKey} not found.`);
+            yield* groupMap.values();
+        } else if (hashSelector) {
+            type BucketEntry = { canonicalKey: TKey; group: IGroup<TKey, TElement> };
+            const bucketMap = new Map<PropertyKey, BucketEntry[]>();
+            const orderedGroups: IGroup<TKey, TElement>[] = [];
+            for await (const element of this) {
+                const key = keySelector(element);
+                const hash = hashSelector(key);
+                let bucket = bucketMap.get(hash);
+                let found: BucketEntry | undefined;
+                if (bucket) {
+                    found = bucket.find(entry => keyComparator(entry.canonicalKey, key));
+                } else {
+                    bucket = [];
+                    bucketMap.set(hash, bucket);
+                }
+                if (found) {
+                    (found.group.source as List<TElement>).add(element);
+                } else {
+                    const newList = new List<TElement>([element]);
+                    const newGroup = new Group<TKey, TElement>(key, newList);
+                    bucket.push({ canonicalKey: key, group: newGroup });
+                    orderedGroups.push(newGroup);
                 }
             }
-
-            if (group) {
-                (group.source as List<TElement>).add(element);
-            } else {
-                const newList = new List<TElement>([element]);
-                const newGroup = new Group<TKey, TElement>(key, newList);
-                groupMap.set(key, newGroup);
+            yield* orderedGroups;
+        } else {
+            const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+            const findExistingKey = (targetKey: TKey): TKey | undefined => {
+                for (const existingKey of groupMap.keys()) {
+                    if (keyComparator(existingKey, targetKey)) {
+                        return existingKey;
+                    }
+                }
+                return undefined;
+            };
+            for await (const element of this) {
+                const key = keySelector(element);
+                const existingKey = findExistingKey(key);
+                if (existingKey !== undefined) {
+                    const group = groupMap.get(existingKey)!;
+                    (group.source as List<TElement>).add(element);
+                } else {
+                    const newList = new List<TElement>([element]);
+                    const newGroup = new Group<TKey, TElement>(key, newList);
+                    groupMap.set(key, newGroup);
+                }
             }
+            yield* groupMap.values();
         }
-        yield* groupMap.values();
     }
 
     private async* groupJoinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TResult> {

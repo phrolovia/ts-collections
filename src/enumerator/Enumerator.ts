@@ -470,9 +470,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>> {
-        keyComparator ??= Comparators.equalityComparator;
-        return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator));
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IEnumerable<IGroup<TKey, TElement>> {
+        return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator, hashSelector));
     }
 
     public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {
@@ -1392,62 +1391,74 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return yield* this.exceptByGenerator(iterable, x => x, comparator);
     }
 
-    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IterableIterator<IGroup<TKey, TElement>> {
+    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IterableIterator<IGroup<TKey, TElement>> {
+        const factory = listFactory;
+        if (!factory) {
+            throw new Error("List factory is not registered.");
+        }
+        if (!groupFactory) {
+            throw new Error("Group factory is not registered.");
+        }
         if (!keyComparator) {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
-
             for (const item of this) {
-            const key = keySelector(item);
-            const group = groupMap.get(key);
-            if (group) {
-                (group.source as List<TElement>).add(item);
-            } else {
-                const factory = listFactory;
-                if (!factory) {
-                    throw new Error("List factory is not registered.");
+                const key = keySelector(item);
+                const group = groupMap.get(key);
+                if (group) {
+                    (group.source as List<TElement>).add(item);
+                } else {
+                    const newList = factory<TElement>([item]);
+                    const newGroup = groupFactory(key, newList);
+                    groupMap.set(key, newGroup);
                 }
-                if (!groupFactory) {
-                    throw new Error("Group factory is not registered.");
-                }
-                const newList = factory<TElement>([item]);
-                const newGroup = groupFactory(key, newList);
-                groupMap.set(key, newGroup);
-            }
             }
             yield* groupMap.values();
+        } else if (hashSelector) {
+            type BucketEntry = { canonicalKey: TKey; group: IGroup<TKey, TElement> };
+            const bucketMap = new Map<PropertyKey, BucketEntry[]>();
+            const orderedGroups: IGroup<TKey, TElement>[] = [];
+            for (const item of this) {
+                const key = keySelector(item);
+                const hash = hashSelector(key);
+                let bucket = bucketMap.get(hash);
+                let found: BucketEntry | undefined;
+                if (bucket) {
+                    found = bucket.find(entry => keyComparator(entry.canonicalKey, key));
+                } else {
+                    bucket = [];
+                    bucketMap.set(hash, bucket);
+                }
+                if (found) {
+                    (found.group.source as List<TElement>).add(item);
+                } else {
+                    const newList = factory<TElement>([item]);
+                    const newGroup = groupFactory(key, newList);
+                    bucket.push({ canonicalKey: key, group: newGroup });
+                    orderedGroups.push(newGroup);
+                }
+            }
+            yield* orderedGroups;
         } else {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
-            const keyLookupMap = new Map<TKey, TKey>();
-
             const findExistingKey = (targetKey: TKey): TKey | undefined => {
-                for (const existingKey of keyLookupMap.values()) {
+                for (const existingKey of groupMap.keys()) {
                     if (keyComparator(existingKey, targetKey)) {
                         return existingKey;
                     }
                 }
                 return undefined;
             };
-
             for (const item of this) {
                 const key = keySelector(item);
-            const existingKey = findExistingKey(key);
-
-            if (existingKey !== undefined) {
-                const group = groupMap.get(existingKey)!;
-                (group.source as List<TElement>).add(item);
-            } else {
-                const factory = listFactory;
-                if (!factory) {
-                    throw new Error("List factory is not registered.");
+                const existingKey = findExistingKey(key);
+                if (existingKey !== undefined) {
+                    const group = groupMap.get(existingKey)!;
+                    (group.source as List<TElement>).add(item);
+                } else {
+                    const newList = factory<TElement>([item]);
+                    const newGroup = groupFactory(key, newList);
+                    groupMap.set(key, newGroup);
                 }
-                if (!groupFactory) {
-                    throw new Error("Group factory is not registered.");
-                }
-                const newList = factory<TElement>([item]);
-                const newGroup = groupFactory(key, newList);
-                groupMap.set(key, newGroup);
-                keyLookupMap.set(key, key);
-            }
             }
             yield* groupMap.values();
         }

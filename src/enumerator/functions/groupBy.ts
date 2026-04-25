@@ -11,6 +11,7 @@ import type { IGroup } from "../IGroup";
  * @param source The source iterable.
  * @param keySelector Selector used to derive the grouping key for each element.
  * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+ * @param hashSelector Optional hash selector. When provided together with `keyComparator`, the sequence will use a bucketed approach for faster grouping based on the hash values.
  * @returns {IEnumerable<IGroup<TKey, TElement>>} A sequence of groups, each exposing the key and the elements that share it.
  * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
  * @example
@@ -32,7 +33,8 @@ import type { IGroup } from "../IGroup";
 export const groupBy = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
-    keyComparator?: EqualityComparator<TKey>
+    keyComparator?: EqualityComparator<TKey>,
+    hashSelector?: Selector<TKey, PropertyKey>
 ): IEnumerable<IGroup<TKey, TElement>> => {
-    return from(source).groupBy(keySelector, keyComparator);
+    return from(source).groupBy(keySelector, keyComparator, hashSelector);
 };

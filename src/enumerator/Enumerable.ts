@@ -283,8 +283,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         this.#enumerator.forEach(action);
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IEnumerable<IGroup<TKey, TElement>> {
-        return this.#enumerator.groupBy(keySelector, keyComparator);
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IEnumerable<IGroup<TKey, TElement>> {
+        return this.#enumerator.groupBy(keySelector, keyComparator, hashSelector);
     }
 
     public groupJoin<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IEnumerable<TResult> {

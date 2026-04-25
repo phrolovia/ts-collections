@@ -778,6 +778,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * @template TKey Type of key produced by {@link keySelector}.
      * @param keySelector Selector used to derive the grouping key for each element.
      * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
+     * @param hashSelector Optional hash selector. When provided, the sequence will use a bucketed approach for faster grouping based on the hash values.
      * @returns {IAsyncEnumerable<IGroup<TKey, TElement>>} An async sequence of groups, each exposing the key and the elements that share it.
      * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
      * @example
@@ -796,7 +797,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * // Vegetable [ { name: 'Carrot', category: 'Vegetable' } ]
      * ```
      */
-    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<IGroup<TKey, TElement>>;
+    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IAsyncEnumerable<IGroup<TKey, TElement>>;
 
     /**
      * Correlates each element of the async sequence with a collection of matching elements from another async sequence.
