@@ -70,4 +70,15 @@ describe("#groupBy()", () => {
         expect(elementAt(groups, 3).key).to.eq("Reina");
         expect(count(elementAt(groups, 2).source)).to.eq(2);
     });
+    test("should preserve first-appearance group order when a new key is added to an existing hash bucket", () => {
+        // hashA → key "a" and "c", hashB → key "b"
+        // sequence: a(hashA), b(hashB), c(hashA-new) — group order must be [a, b, c], not [a, c, b]
+        const hashMap: Record<string, string> = { a: "hashA", b: "hashB", c: "hashA" };
+        const sequence = ["a", "b", "c"];
+        const groups = groupBy(sequence, x => x, (x, y) => x === y, x => hashMap[x]);
+        expect(count(groups)).to.eq(3);
+        expect(elementAt(groups, 0).key).to.eq("a");
+        expect(elementAt(groups, 1).key).to.eq("b");
+        expect(elementAt(groups, 2).key).to.eq("c");
+    });
 });

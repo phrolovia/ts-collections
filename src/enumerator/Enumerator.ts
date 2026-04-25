@@ -1392,6 +1392,13 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IterableIterator<IGroup<TKey, TElement>> {
+        const factory = listFactory;
+        if (!factory) {
+            throw new Error("List factory is not registered.");
+        }
+        if (!groupFactory) {
+            throw new Error("Group factory is not registered.");
+        }
         if (!keyComparator) {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
             for (const item of this) {
@@ -1400,13 +1407,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 if (group) {
                     (group.source as List<TElement>).add(item);
                 } else {
-                    const factory = listFactory;
-                    if (!factory) {
-                        throw new Error("List factory is not registered.");
-                    }
-                    if (!groupFactory) {
-                        throw new Error("Group factory is not registered.");
-                    }
                     const newList = factory<TElement>([item]);
                     const newGroup = groupFactory(key, newList);
                     groupMap.set(key, newGroup);
@@ -1414,15 +1414,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             }
             yield* groupMap.values();
         } else if (hashSelector) {
-            const factory = listFactory;
-            if (!factory) {
-                throw new Error("List factory is not registered.");
-            }
-            if (!groupFactory) {
-                throw new Error("Group factory is not registered.");
-            }
             type BucketEntry = { canonicalKey: TKey; group: IGroup<TKey, TElement> };
             const bucketMap = new Map<PropertyKey, BucketEntry[]>();
+            const orderedGroups: IGroup<TKey, TElement>[] = [];
             for (const item of this) {
                 const key = keySelector(item);
                 const hash = hashSelector(key);
@@ -1440,13 +1434,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     const newList = factory<TElement>([item]);
                     const newGroup = groupFactory(key, newList);
                     bucket.push({ canonicalKey: key, group: newGroup });
+                    orderedGroups.push(newGroup);
                 }
             }
-            for (const bucket of bucketMap.values()) {
-                for (const entry of bucket) {
-                    yield entry.group;
-                }
-            }
+            yield* orderedGroups;
         } else {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
             const findExistingKey = (targetKey: TKey): TKey | undefined => {
@@ -1464,13 +1455,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     const group = groupMap.get(existingKey)!;
                     (group.source as List<TElement>).add(item);
                 } else {
-                    const factory = listFactory;
-                    if (!factory) {
-                        throw new Error("List factory is not registered.");
-                    }
-                    if (!groupFactory) {
-                        throw new Error("Group factory is not registered.");
-                    }
                     const newList = factory<TElement>([item]);
                     const newGroup = groupFactory(key, newList);
                     groupMap.set(key, newGroup);

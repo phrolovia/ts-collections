@@ -1380,6 +1380,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         } else if (hashSelector) {
             type BucketEntry = { canonicalKey: TKey; group: IGroup<TKey, TElement> };
             const bucketMap = new Map<PropertyKey, BucketEntry[]>();
+            const orderedGroups: IGroup<TKey, TElement>[] = [];
             for await (const element of this) {
                 const key = keySelector(element);
                 const hash = hashSelector(key);
@@ -1397,13 +1398,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                     const newList = new List<TElement>([element]);
                     const newGroup = new Group<TKey, TElement>(key, newList);
                     bucket.push({ canonicalKey: key, group: newGroup });
+                    orderedGroups.push(newGroup);
                 }
             }
-            for (const bucket of bucketMap.values()) {
-                for (const entry of bucket) {
-                    yield entry.group;
-                }
-            }
+            yield* orderedGroups;
         } else {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
             const findExistingKey = (targetKey: TKey): TKey | undefined => {
@@ -1418,10 +1416,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 const key = keySelector(element);
                 const existingKey = findExistingKey(key);
                 if (existingKey !== undefined) {
-                    const group = groupMap.get(existingKey);
-                    if (!group) {
-                        throw new NoSuchElementException(`Group with key ${String(existingKey)} not found.`);
-                    }
+                    const group = groupMap.get(existingKey)!;
                     (group.source as List<TElement>).add(element);
                 } else {
                     const newList = new List<TElement>([element]);
