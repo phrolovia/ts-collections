@@ -47,4 +47,27 @@ describe("#groupBy()", () => {
         expect(count(elementAt(groups, 2).source)).to.eq(2);
         expect(count(elementAt(groups, 3).source)).to.eq(1);
     });
+    test("should use hashSelector for bucketed grouping with custom comparator", () => {
+        const sequence = [Person.Alice, Person.Mel, Person.Noemi, Person.Noemi2, Person.Reina];
+        const groups = groupBy(sequence, p => p.name, (a, b) => a === b, n => n);
+        expect(count(groups)).to.eq(4);
+        expect(elementAt(groups, 0).key).to.eq("Alice");
+        expect(elementAt(groups, 1).key).to.eq("Mel");
+        expect(elementAt(groups, 2).key).to.eq("Noemi");
+        expect(elementAt(groups, 3).key).to.eq("Reina");
+        expect(count(elementAt(groups, 0).source)).to.eq(1);
+        expect(count(elementAt(groups, 1).source)).to.eq(1);
+        expect(count(elementAt(groups, 2).source)).to.eq(2);
+        expect(count(elementAt(groups, 3).source)).to.eq(1);
+    });
+    test("should produce correct groups with hashSelector even when hashes collide", () => {
+        const sequence = [Person.Alice, Person.Mel, Person.Noemi, Person.Noemi2, Person.Reina];
+        const groups = groupBy(sequence, p => p.name, (a, b) => a === b, _ => "same-bucket");
+        expect(count(groups)).to.eq(4);
+        expect(elementAt(groups, 0).key).to.eq("Alice");
+        expect(elementAt(groups, 1).key).to.eq("Mel");
+        expect(elementAt(groups, 2).key).to.eq("Noemi");
+        expect(elementAt(groups, 3).key).to.eq("Reina");
+        expect(count(elementAt(groups, 2).source)).to.eq(2);
+    });
 });

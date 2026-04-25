@@ -1642,6 +1642,58 @@ describe("List", () => {
             expect(groupedNames["Mel"]).to.have.all.members(["Mel"]);
             expect(groupedNames["Senna"]).to.have.all.members(["Senna"]);
         });
+        test("should use hashSelector for O(n) bucketed grouping with custom comparator", () => {
+            const LittleAlice = new Person("alice", "Snowmist", 9);
+            const list = new List([
+                Person.Alice,
+                Person.Mel,
+                Person.Senna,
+                LittleAlice
+            ]);
+            const group = list
+                .groupBy(
+                    (p) => p.name,
+                    (n1, n2) => n1.toLowerCase() === n2.toLowerCase(),
+                    (n) => n.toLowerCase()
+                )
+                .toList();
+            const names: string[] = [];
+            const groupedNames: { [name: string]: string[] } = {};
+            for (const nameGroup of group) {
+                names.push(nameGroup.key);
+                groupedNames[nameGroup.key] ??= [];
+                for (const pdata of nameGroup.source) {
+                    groupedNames[nameGroup.key].push(pdata.name);
+                }
+            }
+            expect(names).to.have.all.members(["Alice", "Mel", "Senna"]);
+            expect(groupedNames["Alice"]).to.have.all.members(["Alice", "alice"]);
+            expect(groupedNames["Mel"]).to.have.all.members(["Mel"]);
+            expect(groupedNames["Senna"]).to.have.all.members(["Senna"]);
+        });
+        test("should produce correct groups with hashSelector even when hashes collide", () => {
+            // Force hash collisions: all keys hash to the same bucket.
+            // The equality comparator must then distinguish them correctly.
+            const items = new List([
+                { id: 1, label: "one" },
+                { id: 2, label: "two" },
+                { id: 1, label: "one-dup" },
+                { id: 3, label: "three" },
+                { id: 2, label: "two-dup" }
+            ]);
+            const groups = items
+                .groupBy(
+                    (x) => x.id,
+                    (a, b) => a === b,
+                    (_) => "same-bucket"
+                )
+                .toArray();
+            expect(groups.length).to.eq(3);
+            const groupById = Object.fromEntries(groups.map((g) => [g.key, g.source.select((x) => x.label).toArray()]));
+            expect(groupById[1]).to.have.members(["one", "one-dup"]);
+            expect(groupById[2]).to.have.members(["two", "two-dup"]);
+            expect(groupById[3]).to.have.members(["three"]);
+        });
     });
 
     describe("#groupJoin()", () => {
