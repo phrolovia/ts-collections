@@ -331,7 +331,7 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IEnumerable<IGroup<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IEnumerable<IGroup<TKey, TElement>> {
         return groupBy(this, keySelector, keyComparator, hashSelector);
     }
 

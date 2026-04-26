@@ -797,7 +797,7 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * // Vegetable [ { name: 'Carrot', category: 'Vegetable' } ]
      * ```
      */
-    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IAsyncEnumerable<IGroup<TKey, TElement>>;
+    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IAsyncEnumerable<IGroup<TKey, TElement>>;
 
     /**
      * Correlates each element of the async sequence with a collection of matching elements from another async sequence.

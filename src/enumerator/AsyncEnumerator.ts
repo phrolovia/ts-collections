@@ -514,7 +514,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IAsyncEnumerable<IGroup<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IAsyncEnumerable<IGroup<TKey, TElement>> {
         return new AsyncEnumerator<IGroup<TKey, TElement>>(() => this.groupByGenerator(keySelector, keyComparator, hashSelector));
     }
 
@@ -1362,7 +1362,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return yield* this.exceptByGenerator(iterable, e => e, comparator);
     }
 
-    private async* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): AsyncIterableIterator<IGroup<TKey, TElement>> {
+    private async* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): AsyncIterableIterator<IGroup<TKey, TElement>> {
         if (!keyComparator) {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
             for await (const element of this) {
@@ -1383,7 +1383,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             const orderedGroups: IGroup<TKey, TElement>[] = [];
             for await (const element of this) {
                 const key = keySelector(element);
-                const hash = hashSelector(key);
+                const hash = hashSelector(element);
                 let bucket = bucketMap.get(hash);
                 let found: BucketEntry | undefined;
                 if (bucket) {

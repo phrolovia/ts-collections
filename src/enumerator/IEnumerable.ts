@@ -793,7 +793,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * // Vegetable [ { name: 'Carrot', category: 'Vegetable' } ]
      * ```
      */
-    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IEnumerable<IGroup<TKey, TElement>>;
+    groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IEnumerable<IGroup<TKey, TElement>>;
 
     /**
      * Correlates each element of the sequence with a collection of matching elements from another sequence.
