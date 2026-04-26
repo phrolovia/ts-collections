@@ -1654,7 +1654,7 @@ describe("List", () => {
                 .groupBy(
                     (p) => p.name,
                     (n1, n2) => n1.toLowerCase() === n2.toLowerCase(),
-                    (n) => n.toLowerCase()
+                    (p) => p.name.toLowerCase()
                 )
                 .toList();
             const names: string[] = [];

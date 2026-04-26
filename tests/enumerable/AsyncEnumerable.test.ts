@@ -1069,6 +1069,40 @@ describe("AsyncEnumerable", () => {
                 expect(sameAges).to.deep.equal(expectedAges);
             }
         });
+        test("should use hashSelector for bucketed grouping with custom comparator", async () => {
+            const sequence = [Person.Alice, Person.Mel, Person.Noemi, Person.Noemi2, Person.Reina];
+            const enumerable = new AsyncEnumerable(personProducer(sequence));
+            const groups = await enumerable.groupBy(p => p.name, (a, b) => a === b, p => p.name).toArray();
+            expect(groups.length).to.eq(4);
+            expect(groups[0].key).to.eq("Alice");
+            expect(groups[1].key).to.eq("Mel");
+            expect(groups[2].key).to.eq("Noemi");
+            expect(groups[3].key).to.eq("Reina");
+            expect(groups[0].source.toArray().length).to.eq(1);
+            expect(groups[1].source.toArray().length).to.eq(1);
+            expect(groups[2].source.toArray().length).to.eq(2);
+            expect(groups[3].source.toArray().length).to.eq(1);
+        });
+        test("should produce correct groups with hashSelector even when hashes collide", async () => {
+            const sequence = [Person.Alice, Person.Mel, Person.Noemi, Person.Noemi2, Person.Reina];
+            const enumerable = new AsyncEnumerable(personProducer(sequence));
+            const groups = await enumerable.groupBy(p => p.name, (a, b) => a === b, _ => "same-bucket").toArray();
+            expect(groups.length).to.eq(4);
+            expect(groups[0].key).to.eq("Alice");
+            expect(groups[1].key).to.eq("Mel");
+            expect(groups[2].key).to.eq("Noemi");
+            expect(groups[3].key).to.eq("Reina");
+            expect(groups[2].source.toArray().length).to.eq(2);
+        });
+        test("should preserve first-appearance group order when a new key is added to an existing hash bucket", async () => {
+            const hashMap: Record<string, string> = { a: "hashA", b: "hashB", c: "hashA" };
+            const enumerable = new AsyncEnumerable(stringProducer(["a", "b", "c"]));
+            const groups = await enumerable.groupBy(x => x, (x, y) => x === y, x => hashMap[x]).toArray();
+            expect(groups.length).to.eq(3);
+            expect(groups[0].key).to.eq("a");
+            expect(groups[1].key).to.eq("b");
+            expect(groups[2].key).to.eq("c");
+        });
     });
 
     describe("#groupJoin()", () => {

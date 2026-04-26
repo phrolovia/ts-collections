@@ -470,7 +470,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         }
     }
 
-    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IEnumerable<IGroup<TKey, TElement>> {
+    public groupBy<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IEnumerable<IGroup<TKey, TElement>> {
         return new Enumerator(() => this.groupByGenerator(keySelector, keyComparator, hashSelector));
     }
 
@@ -1391,7 +1391,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return yield* this.exceptByGenerator(iterable, x => x, comparator);
     }
 
-    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TKey, PropertyKey>): IterableIterator<IGroup<TKey, TElement>> {
+    private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IterableIterator<IGroup<TKey, TElement>> {
         const factory = listFactory;
         if (!factory) {
             throw new Error("List factory is not registered.");
@@ -1419,7 +1419,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             const orderedGroups: IGroup<TKey, TElement>[] = [];
             for (const item of this) {
                 const key = keySelector(item);
-                const hash = hashSelector(key);
+                const hash = hashSelector(item);
                 let bucket = bucketMap.get(hash);
                 let found: BucketEntry | undefined;
                 if (bucket) {

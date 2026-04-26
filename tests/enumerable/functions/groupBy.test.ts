@@ -49,7 +49,7 @@ describe("#groupBy()", () => {
     });
     test("should use hashSelector for bucketed grouping with custom comparator", () => {
         const sequence = [Person.Alice, Person.Mel, Person.Noemi, Person.Noemi2, Person.Reina];
-        const groups = groupBy(sequence, p => p.name, (a, b) => a === b, n => n);
+        const groups = groupBy(sequence, p => p.name, (a, b) => a === b, p => p.name);
         expect(count(groups)).to.eq(4);
         expect(elementAt(groups, 0).key).to.eq("Alice");
         expect(elementAt(groups, 1).key).to.eq("Mel");

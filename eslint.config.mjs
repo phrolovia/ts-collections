@@ -32,11 +32,11 @@ export default defineConfig([globalIgnores([
         "@typescript-eslint": typescriptEslint,
     },
 
+    files: ["**/*.ts"],
     languageOptions: {
         parser: tsParser,
         ecmaVersion: "latest",
         sourceType: "module",
-
         parserOptions: {
             project: "./tsconfig.json",
         },

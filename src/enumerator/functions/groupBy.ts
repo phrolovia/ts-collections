@@ -34,7 +34,7 @@ export const groupBy = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector: Selector<TElement, TKey>,
     keyComparator?: EqualityComparator<TKey>,
-    hashSelector?: Selector<TKey, PropertyKey>
+    hashSelector?: Selector<TElement, PropertyKey>
 ): IEnumerable<IGroup<TKey, TElement>> => {
     return from(source).groupBy(keySelector, keyComparator, hashSelector);
 };
