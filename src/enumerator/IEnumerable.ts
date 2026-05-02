@@ -62,7 +62,9 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(product); // 120
      * ```
      */
-    aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult;
+    aggregate(accumulator: Accumulator<TElement, TElement>): TElement;
+    aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): TAccumulate;
+    aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
 
     /**
      * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.
@@ -203,7 +205,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(avgAge); // 30
      * ```
      */
-    average(selector?: Selector<TElement, number>): number;
+    average(this: Iterable<number>): number;
+    average(selector: Selector<TElement, number>): number;
 
     /**
      * Produces the cartesian product between this sequence and {@link iterable}.
@@ -1092,7 +1095,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(maxAge); // 30
      * ```
      */
-    max(selector?: Selector<TElement, number>): number;
+    max(this: Iterable<number>): number;
+    max(selector: Selector<TElement, number>): number;
 
     /**
      * Returns the element whose projected key is greatest according to the provided comparator.
@@ -1161,7 +1165,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(minAge); // 22
      * ```
      */
-    min(selector?: Selector<TElement, number>): number;
+    min(this: Iterable<number>): number;
+    min(selector: Selector<TElement, number>): number;
 
     /**
      * Returns the element whose projected key is smallest according to the provided comparator.
@@ -1404,7 +1409,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(p95); // 200
      * ```
      */
-    percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number;
+    percentile(this: Iterable<number>, percent: number, strategy?: PercentileStrategy): number;
+    percentile(percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): number;
 
     /**
      * Generates permutations from the distinct elements of the sequence.
@@ -1476,7 +1482,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(ageProduct); // 750
      * ```
      */
-    product(selector?: Selector<TElement, number>): number;
+    product(this: Iterable<number>): number;
+    product(selector: Selector<TElement, number>): number;
 
     /**
      * Returns a deferred sequence that yields the source elements in reverse order.
@@ -1563,7 +1570,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(runningTotal); // [1, 3, 6, 10, 15]
      * ```
      */
-    scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate>;
+    scan(accumulator: Accumulator<TElement, TElement>): IEnumerable<TElement>;
+    scan<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate>;
 
     /**
      * Projects each element and its zero-based index into a new form.
@@ -1846,7 +1854,8 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * console.log(totalAge); // 55
      * ```
      */
-    sum(selector?: Selector<TElement, number>): number;
+    sum(this: Iterable<number>): number;
+    sum(selector: Selector<TElement, number>): number;
 
     /**
      * Returns up to the specified number of leading elements.

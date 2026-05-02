@@ -174,8 +174,17 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         this.comparer = comparator ?? Comparators.equalityComparator;
     }
 
+    public aggregate(accumulator: Accumulator<TElement, TElement>): TElement;
+    public aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): TAccumulate;
+    public aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
-        return aggregate(this, accumulator, seed, resultSelector);
+        if (seed !== undefined && resultSelector !== undefined) {
+            return aggregate(this, accumulator, seed, resultSelector);
+        }
+        if (seed !== undefined) {
+            return aggregate(this, accumulator, seed);
+        }
+        return aggregate(this, accumulator as unknown as Accumulator<TElement, TElement>) as unknown as TAccumulate;
     }
 
     public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IEnumerable<KeyValuePair<TKey, TAccumulate>> {
@@ -202,8 +211,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return atMost(this, count, predicate);
     }
 
+    public average(this: Iterable<number>): number;
+    public average(selector: Selector<TElement, number>): number;
     public average(selector?: Selector<TElement, number>): number {
-        return average(this, selector);
+        if (selector != null) {
+            return average(this, selector);
+        }
+        return average(this as Iterable<number>);
     }
 
     public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[TElement, TSecond]> {
@@ -380,8 +394,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return leftJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
+    public max(this: Iterable<number>): number;
+    public max(selector: Selector<TElement, number>): number;
     public max(selector?: Selector<TElement, number>): number {
-        return max(this, selector);
+        if (selector != null) {
+            return max(this, selector);
+        }
+        return max(this as Iterable<number>);
     }
 
     public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
@@ -392,8 +411,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return median(this, selector, tie);
     }
 
+    public min(this: Iterable<number>): number;
+    public min(selector: Selector<TElement, number>): number;
     public min(selector?: Selector<TElement, number>): number {
-        return min(this, selector);
+        if (selector != null) {
+            return min(this, selector);
+        }
+        return min(this as Iterable<number>);
     }
 
     public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): TElement {
@@ -446,8 +470,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return partition(this, predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
-    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
-        return percentile(this, percent, selector, strategy);
+    public percentile(this: Iterable<number>, percent: number, strategy?: PercentileStrategy): number;
+    public percentile(percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): number;
+    public percentile(percent: number, selectorOrStrategy?: Selector<TElement, number> | PercentileStrategy, strategy?: PercentileStrategy): number {
+        if (typeof selectorOrStrategy === "function") {
+            return percentile(this, percent, selectorOrStrategy, strategy);
+        }
+        return percentile(this as Iterable<number>, percent, selectorOrStrategy ?? strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -462,8 +491,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return prepend(this, element);
     }
 
+    public product(this: Iterable<number>): number;
+    public product(selector: Selector<TElement, number>): number;
     public product(selector?: Selector<TElement, number>): number {
-        return product(this, selector);
+        if (selector != null) {
+            return product(this, selector);
+        }
+        return product(this as Iterable<number>);
     }
 
     public reverse(): IEnumerable<TElement> {
@@ -478,8 +512,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return rotate(this, shift);
     }
 
+    public scan(accumulator: Accumulator<TElement, TElement>): IEnumerable<TElement>;
+    public scan<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate>;
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
-        return scan(this, accumulator, seed);
+        if (seed !== undefined) {
+            return scan(this, accumulator, seed);
+        }
+        return scan(this, accumulator as unknown as Accumulator<TElement, TElement>) as unknown as IEnumerable<TAccumulate>;
     }
 
     public select<TResult>(selector: IndexedSelector<TElement, TResult>): IEnumerable<TResult> {
@@ -543,8 +582,13 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
         return step(this, stepNumber);
     }
 
+    public sum(this: Iterable<number>): number;
+    public sum(selector: Selector<TElement, number>): number;
     public sum(selector?: Selector<TElement, number>): number {
-        return sum(this, selector);
+        if (selector != null) {
+            return sum(this, selector);
+        }
+        return sum(this as Iterable<number>);
     }
 
     public take(count: number): IEnumerable<TElement> {

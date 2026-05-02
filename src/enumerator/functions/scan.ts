@@ -19,10 +19,15 @@ import type { IEnumerable } from "../IEnumerable";
  * console.log(runningTotal); // [1, 3, 6, 10, 15]
  * ```
  */
-export const scan = <TElement, TAccumulate = TElement>(
+export function scan<TElement>(source: Iterable<TElement>, accumulator: Accumulator<TElement, TElement>): IEnumerable<TElement>;
+export function scan<TElement, TAccumulate>(source: Iterable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate>;
+export function scan<TElement, TAccumulate = TElement>(
     source: Iterable<TElement>,
     accumulator: Accumulator<TElement, TAccumulate>,
     seed?: TAccumulate
-): IEnumerable<TAccumulate> => {
-    return from(source).scan(accumulator, seed);
-};
+): IEnumerable<TAccumulate> {
+    if (seed != null) {
+        return from(source).scan(accumulator, seed);
+    }
+    return from(source).scan(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as IEnumerable<TAccumulate>;
+}

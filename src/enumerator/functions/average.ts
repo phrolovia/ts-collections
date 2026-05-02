@@ -24,9 +24,11 @@ import { from } from "./from";
  * console.log(avgAge); // 30
  * ```
  */
-export const average = <TElement>(
-    source: Iterable<TElement>,
-    selector?: Selector<TElement, number>
-): number => {
-    return from(source).average(selector);
-};
+export function average(source: Iterable<number>): number;
+export function average<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
+export function average<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
+    if (selector != null) {
+        return from(source).average(selector);
+    }
+    return from(source as Iterable<number>).average();
+}

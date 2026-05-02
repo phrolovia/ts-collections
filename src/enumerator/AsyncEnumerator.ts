@@ -83,6 +83,9 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         yield* this.iterable();
     }
 
+    public aggregate(accumulator: Accumulator<TElement, TElement>): Promise<TElement>;
+    public aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): Promise<TAccumulate>;
+    public aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): Promise<TResult>;
     public async aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>,
                                                                           seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult> {
         let accumulatedValue: TAccumulate;
@@ -175,6 +178,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return true;
     }
 
+    public average(this: AsyncIterable<number>): Promise<number>;
+    public average(selector: Selector<TElement, number>): Promise<number>;
     public async average(selector?: Selector<TElement, number>): Promise<number> {
         let total = 0;
         let count = 0;
@@ -591,6 +596,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TResult>(() => this.joinGenerator(inner, outerKeySelector, innerKeySelector, resultSelector, keyCompare, true));
     }
 
+    public max(this: AsyncIterable<number>): Promise<number>;
+    public max(selector: Selector<TElement, number>): Promise<number>;
     public async max(selector?: Selector<TElement, number>): Promise<number> {
         let max: number | null = null;
         for await (const element of this) {
@@ -628,6 +635,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return findMedian(numericData, tie);
     }
 
+    public min(this: AsyncIterable<number>): Promise<number>;
+    public min(selector: Selector<TElement, number>): Promise<number>;
     public async min(selector?: Selector<TElement, number>): Promise<number> {
         let min: number | null = null;
         for await (const element of this) {
@@ -732,13 +741,17 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return [Enumerable.from(trueElements), Enumerable.from(falseElements)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
-    public async percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
+    public percentile(this: AsyncIterable<number>, percent: number, strategy?: PercentileStrategy): Promise<number>;
+    public percentile(percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number>;
+    public async percentile(percent: number, selectorOrStrategy?: Selector<TElement, number> | PercentileStrategy, strategy?: PercentileStrategy): Promise<number> {
+        const selector = typeof selectorOrStrategy === "function" ? selectorOrStrategy : undefined;
+        const actualStrategy = typeof selectorOrStrategy === "function" ? strategy : selectorOrStrategy ?? strategy;
         const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
         const numericData: number[] = [];
         for await (const item of this) {
             numericData.push(numberSelector(item));
         }
-        return findPercentile(numericData, percent, strategy);
+        return findPercentile(numericData, percent, actualStrategy);
     }
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
@@ -756,6 +769,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.prependGenerator(element));
     }
 
+    public product(this: AsyncIterable<number>): Promise<number>;
+    public product(selector: Selector<TElement, number>): Promise<number>;
     public async product(selector?: Selector<TElement, number>): Promise<number> {
         let product = 1;
         let count = 0;
@@ -785,6 +800,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.rotateGenerator(shift));
     }
 
+    public scan(accumulator: Accumulator<TElement, TElement>): IAsyncEnumerable<TElement>;
+    public scan<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IAsyncEnumerable<TAccumulate>;
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate> {
         return new AsyncEnumerator<TAccumulate>(() => this.scanGenerator(accumulator, seed));
     }
@@ -922,6 +939,8 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         return new AsyncEnumerator<TElement>(() => this.stepGenerator(step));
     }
 
+    public sum(this: AsyncIterable<number>): Promise<number>;
+    public sum(selector: Selector<TElement, number>): Promise<number>;
     public async sum(selector?: Selector<TElement, number>): Promise<number> {
         let count = 0;
         let sum = 0;

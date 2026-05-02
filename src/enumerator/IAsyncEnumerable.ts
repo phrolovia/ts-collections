@@ -63,7 +63,9 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(product); // 120
      * ```
      */
-    aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult>;
+    aggregate(accumulator: Accumulator<TElement, TElement>): Promise<TElement>;
+    aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): Promise<TAccumulate>;
+    aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): Promise<TResult>;
 
     /**
      * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.
@@ -204,7 +206,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(avgAge); // 30
      * ```
      */
-    average(selector?: Selector<TElement, number>): Promise<number>;
+    average(this: AsyncIterable<number>): Promise<number>;
+    average(selector: Selector<TElement, number>): Promise<number>;
 
     /**
      * Produces the cartesian product between this async sequence and {@link iterable}.
@@ -1069,7 +1072,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(maxAge); // 30
      * ```
      */
-    max(selector?: Selector<TElement, number>): Promise<number>;
+    max(this: AsyncIterable<number>): Promise<number>;
+    max(selector: Selector<TElement, number>): Promise<number>;
 
     /**
      * Asynchronously returns the element whose projected key is greatest according to the provided comparator.
@@ -1113,7 +1117,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(minAge); // 22
      * ```
      */
-    min(selector?: Selector<TElement, number>): Promise<number>;
+    min(this: AsyncIterable<number>): Promise<number>;
+    min(selector: Selector<TElement, number>): Promise<number>;
 
     /**
      * Asynchronously returns the element whose projected key is smallest according to the provided comparator.
@@ -1183,7 +1188,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(p95); // 200
      * ```
      */
-    percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number>;
+    percentile(this: AsyncIterable<number>, percent: number, strategy?: PercentileStrategy): Promise<number>;
+    percentile(percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number>;
 
     /**
      * Asynchronously returns the element that appears most frequently in the sequence.
@@ -1448,7 +1454,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(ageProduct); // 750
      * ```
      */
-    product(selector?: Selector<TElement, number>): Promise<number>;
+    product(this: AsyncIterable<number>): Promise<number>;
+    product(selector: Selector<TElement, number>): Promise<number>;
 
     /**
      * Returns a deferred asynchronous sequence that yields the source elements in reverse order.
@@ -1510,7 +1517,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(runningTotal); // [1, 3, 6, 10, 15]
      * ```
      */
-    scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate>;
+    scan(accumulator: Accumulator<TElement, TElement>): IAsyncEnumerable<TElement>;
+    scan<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IAsyncEnumerable<TAccumulate>;
 
     /**
      * Transforms each element and its zero-based index into a new value.
@@ -1792,7 +1800,8 @@ export interface IAsyncEnumerable<TElement> extends AsyncIterable<TElement> {
      * console.log(totalAge); // 55
      * ```
      */
-    sum(selector?: Selector<TElement, number>): Promise<number>;
+    sum(this: AsyncIterable<number>): Promise<number>;
+    sum(selector: Selector<TElement, number>): Promise<number>;
 
     /**
      * Returns up to the specified number of leading elements.

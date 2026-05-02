@@ -80,6 +80,9 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         yield* this.iterable();
     }
 
+    public aggregate(accumulator: Accumulator<TElement, TElement>): TElement;
+    public aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): TAccumulate;
+    public aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
         let accumulatedValue: TAccumulate;
         if (seed == null) {
@@ -172,6 +175,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return true;
     }
 
+    public average(this: Iterable<number>): number;
+    public average(selector: Selector<TElement, number>): number;
     public average(selector?: Selector<TElement, number>): number {
         let total: number = 0;
         let count: number = 0;
@@ -545,6 +550,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.joinGenerator(innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, true));
     }
 
+    public max(this: Iterable<number>): number;
+    public max(selector: Selector<TElement, number>): number;
     public max(selector?: Selector<TElement, number>): number {
         let max: number | null = null;
         if (!selector) {
@@ -588,6 +595,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return findMedian(numericData, tie);
     }
 
+    public min(this: Iterable<number>): number;
+    public min(selector: Selector<TElement, number>): number;
     public min(selector?: Selector<TElement, number>): number {
         let min: number | null = null;
         if (!selector) {
@@ -709,10 +718,14 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return [new Enumerable(trueItems), new Enumerable(falseItems)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
     }
 
-    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): number {
+    public percentile(this: Iterable<number>, percent: number, strategy?: PercentileStrategy): number;
+    public percentile(percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): number;
+    public percentile(percent: number, selectorOrStrategy?: Selector<TElement, number> | PercentileStrategy, strategy?: PercentileStrategy): number {
+        const selector = typeof selectorOrStrategy === "function" ? selectorOrStrategy : undefined;
+        const actualStrategy = typeof selectorOrStrategy === "function" ? strategy : selectorOrStrategy ?? strategy;
         const numberSelector = selector ?? ((item: TElement): number => item as unknown as number);
         const numericData = this.select(numberSelector).toArray();
-        return findPercentile(numericData, percent, strategy);
+        return findPercentile(numericData, percent, actualStrategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<TElement>> {
@@ -730,6 +743,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.prependGenerator(element));
     }
 
+    public product(this: Iterable<number>): number;
+    public product(selector: Selector<TElement, number>): number;
     public product(selector?: Selector<TElement, number>): number {
         let total: number = 1;
         let hasElements = false;
@@ -756,6 +771,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.rotateGenerator(shift));
     }
 
+    public scan(accumulator: Accumulator<TElement, TElement>): IEnumerable<TElement>;
+    public scan<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate>;
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
         return new Enumerator(() => this.scanGenerator(accumulator, seed));
     }
@@ -895,6 +912,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator(() => this.stepGenerator(step));
     }
 
+    public sum(this: Iterable<number>): number;
+    public sum(selector: Selector<TElement, number>): number;
     public sum(selector?: Selector<TElement, number>): number {
         let total: number = 0;
         let hasElements = false;
