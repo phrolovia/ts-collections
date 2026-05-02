@@ -490,13 +490,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return partition(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     }
 
-    public percentile(this: IEnumerable<number>, percent: number, strategy?: PercentileStrategy): number;
+    public percentile(this: Iterable<number>, percent: number, strategy?: PercentileStrategy): number;
     public percentile(percent: number, selector: Selector<KeyValuePair<TKey, TValue>, number>, strategy?: PercentileStrategy): number;
     public percentile(percent: number, selectorOrStrategy?: Selector<KeyValuePair<TKey, TValue>, number> | PercentileStrategy, strategy?: PercentileStrategy): number {
         if (typeof selectorOrStrategy === "function") {
             return percentile(this, percent, selectorOrStrategy, strategy);
         }
-        return percentile(this as unknown as Iterable<number>, percent, selectorOrStrategy ?? strategy);
+        return percentile(this as Iterable<number>, percent, selectorOrStrategy ?? strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
