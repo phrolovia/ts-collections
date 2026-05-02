@@ -178,8 +178,8 @@ export abstract class AbstractEnumerable<TElement> implements IEnumerable<TEleme
     public aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): TAccumulate;
     public aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
-        if (seed !== undefined && resultSelector !== undefined) {
-            return aggregate(this, accumulator, seed, resultSelector);
+        if (resultSelector !== undefined) {
+            return aggregate(this, accumulator, seed as TAccumulate, resultSelector);
         }
         if (seed !== undefined) {
             return aggregate(this, accumulator, seed);

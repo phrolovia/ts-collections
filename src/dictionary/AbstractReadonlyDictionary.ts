@@ -181,8 +181,8 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
     public aggregate<TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed: TAccumulate): TAccumulate;
     public aggregate<TAccumulate, TResult>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
     public aggregate<TAccumulate = KeyValuePair<TKey, TValue>, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
-        if (seed !== undefined && resultSelector !== undefined) {
-            return aggregate(this, accumulator, seed, resultSelector);
+        if (resultSelector !== undefined) {
+            return aggregate(this, accumulator, seed as TAccumulate, resultSelector);
         }
         if (seed !== undefined) {
             return aggregate(this, accumulator, seed);

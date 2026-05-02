@@ -135,8 +135,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     public aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): TAccumulate;
     public aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
-        if (seed !== undefined && resultSelector !== undefined) {
-            return this.#enumerator.aggregate(accumulator, seed, resultSelector);
+        if (resultSelector !== undefined) {
+            return this.#enumerator.aggregate(accumulator, seed as TAccumulate, resultSelector);
         }
         if (seed !== undefined) {
             return this.#enumerator.aggregate(accumulator, seed);

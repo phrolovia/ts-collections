@@ -26,7 +26,7 @@ export function scan<TElement, TAccumulate = TElement>(
     accumulator: Accumulator<TElement, TAccumulate>,
     seed?: TAccumulate
 ): IEnumerable<TAccumulate> {
-    if (seed != null) {
+    if (seed !== undefined) {
         return from(source).scan(accumulator, seed);
     }
     return from(source).scan(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as IEnumerable<TAccumulate>;

@@ -33,12 +33,12 @@ export function aggregate<TElement, TAccumulate = TElement, TResult = TAccumulat
     seed?: TAccumulate,
     resultSelector?: Selector<TAccumulate, TResult>
 ): TAccumulate | TResult {
-    const en = from(source);
-    if (seed !== undefined && resultSelector !== undefined) {
-        return en.aggregate(accumulator, seed, resultSelector);
+    const enumerable = from(source);
+    if (resultSelector !== undefined) {
+        return enumerable.aggregate(accumulator, seed as TAccumulate, resultSelector);
     }
     if (seed !== undefined) {
-        return en.aggregate(accumulator, seed);
+        return enumerable.aggregate(accumulator, seed);
     }
-    return en.aggregate(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as TAccumulate;
+    return enumerable.aggregate(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as TAccumulate;
 }

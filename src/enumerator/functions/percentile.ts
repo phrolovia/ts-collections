@@ -32,5 +32,5 @@ export function percentile<TElement>(source: Iterable<TElement>, percent: number
     if (typeof selectorOrStrategy === "function") {
         return from(source).percentile(percent, selectorOrStrategy, strategy);
     }
-    return from(source as Iterable<number>).percentile(percent);
+    return from(source as Iterable<number>).percentile(percent, selectorOrStrategy ?? strategy);
 }
