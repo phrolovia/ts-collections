@@ -177,8 +177,17 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         this.keyValueComparer = keyValueComparator;
     }
 
+    public aggregate(accumulator: Accumulator<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): KeyValuePair<TKey, TValue>;
+    public aggregate<TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed: TAccumulate): TAccumulate;
+    public aggregate<TAccumulate, TResult>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
     public aggregate<TAccumulate = KeyValuePair<TKey, TValue>, TResult = TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): TAccumulate | TResult {
-        return aggregate(this, accumulator, seed, resultSelector);
+        if (resultSelector !== undefined) {
+            return aggregate(this, accumulator, seed as TAccumulate, resultSelector);
+        }
+        if (seed !== undefined) {
+            return aggregate(this, accumulator, seed);
+        }
+        return aggregate(this, accumulator as unknown as Accumulator<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>) as unknown as TAccumulate;
     }
 
     public aggregateBy<TAggregateKey, TAccumulate = KeyValuePair<TKey, TValue>>(keySelector: Selector<KeyValuePair<TKey, TValue>, TAggregateKey>, seedSelector: Selector<TAggregateKey, TAccumulate> | TAccumulate, accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, keyComparator?: EqualityComparator<TAggregateKey>): IEnumerable<KeyValuePair<TAggregateKey, TAccumulate>> {
@@ -219,8 +228,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return atMost(this, count, predicate);
     }
 
+    public average(this: Iterable<number>): number;
+    public average(selector: Selector<KeyValuePair<TKey, TValue>, number>): number;
     public average(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
-        return average(this, selector);
+        if (selector != null) {
+            return average(this, selector);
+        }
+        return average(this as unknown as Iterable<number>);
     }
 
     public cartesian<TSecond>(iterable: Iterable<TSecond>): IEnumerable<[KeyValuePair<TKey, TValue>, TSecond]> {
@@ -400,8 +414,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return leftJoin(this, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
+    public max(this: Iterable<number>): number;
+    public max(selector: Selector<KeyValuePair<TKey, TValue>, number>): number;
     public max(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
-        return max(this, selector);
+        if (selector != null) {
+            return max(this, selector);
+        }
+        return max(this as unknown as Iterable<number>);
     }
 
     public maxBy<TMaxKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMaxKey>, comparator?: OrderComparator<TMaxKey>): KeyValuePair<TKey, TValue> {
@@ -412,8 +431,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return median(this, selector, tie);
     }
 
+    public min(this: Iterable<number>): number;
+    public min(selector: Selector<KeyValuePair<TKey, TValue>, number>): number;
     public min(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
-        return min(this, selector);
+        if (selector != null) {
+            return min(this, selector);
+        }
+        return min(this as unknown as Iterable<number>);
     }
 
     public minBy<TMinKey>(keySelector: Selector<KeyValuePair<TKey, TValue>, TMinKey>, comparator?: OrderComparator<TMinKey>): KeyValuePair<TKey, TValue> {
@@ -466,8 +490,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return partition(this, predicate as Predicate<KeyValuePair<TKey, TValue>>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<KeyValuePair<TKey, TValue>, TFiltered>>] | [IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>];
     }
 
-    public percentile(percent: number, selector?: Selector<KeyValuePair<TKey, TValue>, number>, strategy?: PercentileStrategy): number {
-        return percentile(this, percent, selector, strategy);
+    public percentile(this: Iterable<number>, percent: number, strategy?: PercentileStrategy): number;
+    public percentile(percent: number, selector: Selector<KeyValuePair<TKey, TValue>, number>, strategy?: PercentileStrategy): number;
+    public percentile(percent: number, selectorOrStrategy?: Selector<KeyValuePair<TKey, TValue>, number> | PercentileStrategy, strategy?: PercentileStrategy): number {
+        if (typeof selectorOrStrategy === "function") {
+            return percentile(this, percent, selectorOrStrategy, strategy);
+        }
+        return percentile(this as Iterable<number>, percent, selectorOrStrategy ?? strategy);
     }
 
     public permutations(size?: number): IEnumerable<IEnumerable<KeyValuePair<TKey, TValue>>> {
@@ -482,8 +511,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return prepend(this, element);
     }
 
+    public product(this: Iterable<number>): number;
+    public product(selector: Selector<KeyValuePair<TKey, TValue>, number>): number;
     public product(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
-        return product(this, selector);
+        if (selector != null) {
+            return product(this, selector);
+        }
+        return product(this as unknown as Iterable<number>);
     }
 
     public reverse(): IEnumerable<KeyValuePair<TKey, TValue>> {
@@ -498,8 +532,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return rotate(this, shift);
     }
 
+    public scan(accumulator: Accumulator<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>): IEnumerable<KeyValuePair<TKey, TValue>>;
+    public scan<TAccumulate>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed: TAccumulate): IEnumerable<TAccumulate>;
     public scan<TAccumulate = KeyValuePair<TKey, TValue>>(accumulator: Accumulator<KeyValuePair<TKey, TValue>, TAccumulate>, seed?: TAccumulate): IEnumerable<TAccumulate> {
-        return scan(this, accumulator, seed);
+        if (seed !== undefined) {
+            return scan(this, accumulator, seed);
+        }
+        return scan(this, accumulator as unknown as Accumulator<KeyValuePair<TKey, TValue>, KeyValuePair<TKey, TValue>>) as unknown as IEnumerable<TAccumulate>;
     }
 
     public select<TResult>(selector: IndexedSelector<KeyValuePair<TKey, TValue>, TResult>): IEnumerable<TResult> {
@@ -563,8 +602,13 @@ export abstract class AbstractReadonlyDictionary<TKey, TValue> implements IReado
         return step(this, stepNumber);
     }
 
+    public sum(this: Iterable<number>): number;
+    public sum(selector: Selector<KeyValuePair<TKey, TValue>, number>): number;
     public sum(selector?: Selector<KeyValuePair<TKey, TValue>, number>): number {
-        return sum(this, selector);
+        if (selector != null) {
+            return sum(this, selector);
+        }
+        return sum(this as unknown as Iterable<number>);
     }
 
     public take(count: number): IEnumerable<KeyValuePair<TKey, TValue>> {

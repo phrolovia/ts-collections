@@ -106,8 +106,17 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         yield* this.iterable instanceof Function ? this.iterable() : this.iterable;
     }
 
+    public aggregate(accumulator: Accumulator<TElement, TElement>): Promise<TElement>;
+    public aggregate<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): Promise<TAccumulate>;
+    public aggregate<TAccumulate, TResult>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): Promise<TResult>;
     public aggregate<TAccumulate = TElement, TResult = TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate, resultSelector?: Selector<TAccumulate, TResult>): Promise<TAccumulate | TResult> {
-        return this.#enumerator.aggregate(accumulator, seed, resultSelector);
+        if (resultSelector !== undefined) {
+            return this.#enumerator.aggregate(accumulator, seed as TAccumulate, resultSelector);
+        }
+        if (seed !== undefined) {
+            return this.#enumerator.aggregate(accumulator, seed);
+        }
+        return this.#enumerator.aggregate(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as Promise<TAccumulate>;
     }
 
     public aggregateBy<TKey, TAccumulate = TElement>(keySelector: Selector<TElement, TKey>, seedSelector: Selector<TKey, TAccumulate> | TAccumulate, accumulator: Accumulator<TElement, TAccumulate>, keyComparator?: EqualityComparator<TKey>): IAsyncEnumerable<KeyValuePair<TKey, TAccumulate>> {
@@ -134,8 +143,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.atMost(count, predicate);
     }
 
+    public average(this: AsyncIterable<number>): Promise<number>;
+    public average(selector: Selector<TElement, number>): Promise<number>;
     public average(selector?: Selector<TElement, number>): Promise<number> {
-        return this.#enumerator.average(selector);
+        if (selector != null) {
+            return this.#enumerator.average(selector);
+        }
+        return (this.#enumerator as unknown as AsyncEnumerator<number>).average();
     }
 
     public cartesian<TSecond>(iterable: AsyncIterable<TSecond>): IAsyncEnumerable<[TElement, TSecond]> {
@@ -306,8 +320,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.leftJoin(inner, outerKeySelector, innerKeySelector, resultSelector, keyComparator);
     }
 
+    public max(this: AsyncIterable<number>): Promise<number>;
+    public max(selector: Selector<TElement, number>): Promise<number>;
     public max(selector?: Selector<TElement, number>): Promise<number> {
-        return this.#enumerator.max(selector);
+        if (selector != null) {
+            return this.#enumerator.max(selector);
+        }
+        return (this.#enumerator as unknown as AsyncEnumerator<number>).max();
     }
 
     public maxBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
@@ -318,8 +337,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.median(selector, tie);
     }
 
+    public min(this: AsyncIterable<number>): Promise<number>;
+    public min(selector: Selector<TElement, number>): Promise<number>;
     public min(selector?: Selector<TElement, number>): Promise<number> {
-        return this.#enumerator.min(selector);
+        if (selector != null) {
+            return this.#enumerator.min(selector);
+        }
+        return (this.#enumerator as unknown as AsyncEnumerator<number>).min();
     }
 
     public minBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): Promise<TElement> {
@@ -372,8 +396,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.partition(predicate as Predicate<TElement>) as Promise<[IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>]> | Promise<[IEnumerable<TElement>, IEnumerable<TElement>]>;
     }
 
-    public percentile(percent: number, selector?: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number> {
-        return this.#enumerator.percentile(percent, selector, strategy);
+    public percentile(this: AsyncIterable<number>, percent: number, strategy?: PercentileStrategy): Promise<number>;
+    public percentile(percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): Promise<number>;
+    public percentile(percent: number, selectorOrStrategy?: Selector<TElement, number> | PercentileStrategy, strategy?: PercentileStrategy): Promise<number> {
+        if (typeof selectorOrStrategy === "function") {
+            return this.#enumerator.percentile(percent, selectorOrStrategy, strategy);
+        }
+        return (this.#enumerator as unknown as AsyncEnumerator<number>).percentile(percent, selectorOrStrategy ?? strategy);
     }
 
     public permutations(size?: number): IAsyncEnumerable<IEnumerable<TElement>> {
@@ -388,8 +417,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.prepend(element);
     }
 
+    public product(this: AsyncIterable<number>): Promise<number>;
+    public product(selector: Selector<TElement, number>): Promise<number>;
     public product(selector?: Selector<TElement, number>): Promise<number> {
-        return this.#enumerator.product(selector);
+        if (selector != null) {
+            return this.#enumerator.product(selector);
+        }
+        return (this.#enumerator as unknown as AsyncEnumerator<number>).product();
     }
 
     public reverse(): IAsyncEnumerable<TElement> {
@@ -404,8 +438,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.rotate(shift);
     }
 
+    public scan(accumulator: Accumulator<TElement, TElement>): IAsyncEnumerable<TElement>;
+    public scan<TAccumulate>(accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): IAsyncEnumerable<TAccumulate>;
     public scan<TAccumulate = TElement>(accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IAsyncEnumerable<TAccumulate> {
-        return this.#enumerator.scan(accumulator, seed);
+        if (seed !== undefined) {
+            return this.#enumerator.scan(accumulator, seed);
+        }
+        return this.#enumerator.scan(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as IAsyncEnumerable<TAccumulate>;
     }
 
     public select<TResult>(selector: IndexedSelector<TElement, TResult>): IAsyncEnumerable<TResult> {
@@ -468,8 +507,13 @@ export class AsyncEnumerable<TElement> implements IAsyncEnumerable<TElement> {
         return this.#enumerator.step(step);
     }
 
+    public sum(this: AsyncIterable<number>): Promise<number>;
+    public sum(selector: Selector<TElement, number>): Promise<number>;
     public sum(selector?: Selector<TElement, number>): Promise<number> {
-        return this.#enumerator.sum(selector);
+        if (selector != null) {
+            return this.#enumerator.sum(selector);
+        }
+        return (this.#enumerator as unknown as AsyncEnumerator<number>).sum();
     }
 
     public take(count: number): IAsyncEnumerable<TElement> {

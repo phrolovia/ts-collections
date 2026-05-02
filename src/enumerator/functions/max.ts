@@ -24,9 +24,11 @@ import { from } from "./from";
  * console.log(maxAge); // 30
  * ```
  */
-export const max = <TElement>(
-    source: Iterable<TElement>,
-    selector?: Selector<TElement, number>
-): number => {
-    return from(source).max(selector);
-};
+export function max(source: Iterable<number>): number;
+export function max<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
+export function max<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
+    if (selector != null) {
+        return from(source).max(selector);
+    }
+    return from(source as Iterable<number>).max();
+}

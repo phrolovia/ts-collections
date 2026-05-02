@@ -1,3 +1,5 @@
+import type { Accumulator } from "../../shared/Accumulator";
+import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
 
 /**
@@ -22,11 +24,21 @@ import { from } from "./from";
  * console.log(product); // 120
  * ```
  */
-export const aggregate = <TElement, TAccumulate = TElement, TResult = TAccumulate>(
+export function aggregate<TElement>(source: Iterable<TElement>, accumulator: Accumulator<TElement, TElement>): TElement;
+export function aggregate<TElement, TAccumulate>(source: Iterable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate): TAccumulate;
+export function aggregate<TElement, TAccumulate, TResult>(source: Iterable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed: TAccumulate, resultSelector: Selector<TAccumulate, TResult>): TResult;
+export function aggregate<TElement, TAccumulate = TElement, TResult = TAccumulate>(
     source: Iterable<TElement>,
-    accumulator: (accumulator: TAccumulate, element: TElement) => TAccumulate,
+    accumulator: Accumulator<TElement, TAccumulate>,
     seed?: TAccumulate,
-    resultSelector?: (accumulator: TAccumulate) => TResult
-): TAccumulate | TResult => {
-    return from(source).aggregate(accumulator, seed, resultSelector);
-};
+    resultSelector?: Selector<TAccumulate, TResult>
+): TAccumulate | TResult {
+    const enumerable = from(source);
+    if (resultSelector !== undefined) {
+        return enumerable.aggregate(accumulator, seed as TAccumulate, resultSelector);
+    }
+    if (seed !== undefined) {
+        return enumerable.aggregate(accumulator, seed);
+    }
+    return enumerable.aggregate(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as TAccumulate;
+}

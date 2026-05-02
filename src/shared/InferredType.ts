@@ -8,8 +8,8 @@ export type SymbolType = symbol | Symbol | SymbolConstructor | "symbol";
 export type BigIntType = bigint | BigInt | BigIntConstructor | "bigint";
 export type NumberType = number | Number | NumberConstructor | "number";
 
-export type StringType = string | String | StringConstructor;
-export type ObjectType = object | Object | ObjectConstructor;
+export type StringType = string | String | StringConstructor | "string";
+export type PlainObjectType = object | Object | ObjectConstructor;
 export type FunctionType = Function | FunctionConstructor;
 
 export type InferredType<T> =
@@ -22,4 +22,4 @@ export type InferredType<T> =
                             T extends StringType ? string :
                                 T extends Class<infer R> ? R :
                                     T extends FunctionType ? Function :
-                                        T extends ObjectType ? object : T;
+                                        T extends PlainObjectType ? object : T;

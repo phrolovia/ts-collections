@@ -23,9 +23,11 @@ import { from } from "./from";
  * console.log(ageProduct); // 750
  * ```
  */
-export const product = <TElement>(
-    source: Iterable<TElement>,
-    selector?: Selector<TElement, number>
-): number => {
-    return from(source).product(selector);
-};
+export function product(source: Iterable<number>): number;
+export function product<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
+export function product<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
+    if (selector != null) {
+        return from(source).product(selector);
+    }
+    return from(source as Iterable<number>).product();
+}

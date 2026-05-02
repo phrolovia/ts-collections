@@ -24,9 +24,11 @@ import { from } from "./from";
  * console.log(minAge); // 22
  * ```
  */
-export const min = <TElement>(
-    source: Iterable<TElement>,
-    selector?: Selector<TElement, number>
-): number => {
-    return from(source).min(selector);
-};
+export function min(source: Iterable<number>): number;
+export function min<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
+export function min<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
+    if (selector != null) {
+        return from(source).min(selector);
+    }
+    return from(source as Iterable<number>).min();
+}

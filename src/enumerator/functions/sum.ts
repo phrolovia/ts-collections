@@ -23,9 +23,11 @@ import { from } from "./from";
  * console.log(totalAge); // 55
  * ```
  */
-export const sum = <TElement>(
-    source: Iterable<TElement>,
-    selector?: Selector<TElement, number>
-): number => {
-    return from(source).sum(selector);
-};
+export function sum(source: Iterable<number>): number;
+export function sum<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
+export function sum<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
+    if (selector != null) {
+        return from(source).sum(selector);
+    }
+    return from(source as Iterable<number>).sum();
+}

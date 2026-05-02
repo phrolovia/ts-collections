@@ -19,10 +19,10 @@ describe("#aggregate()", () => {
         expect(result).to.eq(10);
     });
     test("should throw error if the sequence is empty and no seed is provided", () => {
-        expect(() => aggregate<number>([], (total, next) => total + next)).toThrow(new NoElementsException());
+        expect(() => aggregate([] as number[], (total, next) => total + next)).toThrow(new NoElementsException());
     });
     test("should return the seed if the sequence is empty", () => {
-        const result = aggregate<number, number>([], (total, next) => total + next, 10);
+        const result = aggregate([], (total, next) => total + next, 10);
         expect(result).to.eq(10);
     });
     test("should use the result selector", () => {

@@ -155,7 +155,7 @@ describe("List", () => {
         });
         test("should return 10", () => {
             const list = new List([1, 2, 3, 4]);
-            const result = list.aggregate<number>(
+            const result = list.aggregate(
                 (total, num) => (total += num)
             );
             expect(result).to.eq(10);
@@ -163,7 +163,7 @@ describe("List", () => {
         test("should throw error if list is empty and no seed is provided", () => {
             const list = new List<number>([]);
             expect(() =>
-                list.aggregate<number>((acc, num) => (acc *= num))
+                list.aggregate((acc, num) => (acc *= num))
             ).toThrow(new NoElementsException());
         });
         test("should return the seed if list is empty", () => {
@@ -176,7 +176,7 @@ describe("List", () => {
         });
         test("should use provided resultSelector and return 100", () => {
             const list = new List([1, 2, 3, 4]);
-            const result = list.aggregate<number>(
+            const result = list.aggregate(
                 (total, num) => (total += num),
                 0,
                 (r) => Math.pow(r, 2)
