@@ -30,10 +30,10 @@ export class List<TElement> extends AbstractList<TElement> {
     }
 
     public addAt(element: TElement, index: number): boolean {
-        if (index < 0 || index > this.size()) {
+        if (index < 0 || index > this.#data.length) {
             throw new IndexOutOfBoundsException(index);
         }
-        if (index === this.size()) {
+        if (index === this.#data.length) {
             this.#data.push(element);
         } else {
             this.#data.splice(index, 0, element);

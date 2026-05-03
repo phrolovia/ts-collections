@@ -1365,12 +1365,15 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const isDefaultComparator = keyComparator === Comparators.equalityComparator;
 
         if (isDefaultComparator) {
-            const keySet = new Set<TKey>();
+            const keySet = new Set<TKey | symbol>();
+            const MINUS_ZERO_SENTINEL = Symbol("-0");
+            const normalize = (k: unknown) => Object.is(k, -0) ? MINUS_ZERO_SENTINEL : k as TKey | symbol;
+
             for (const item of iterable) {
-                keySet.add(keySelector(item));
+                keySet.add(normalize(keySelector(item)));
             }
             for (const item of this) {
-                const key = keySelector(item);
+                const key = normalize(keySelector(item));
                 if (!keySet.has(key)) {
                     keySet.add(key);
                     yield item;
@@ -1545,15 +1548,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const isDefaultComparator = keyComparator === Comparators.equalityComparator;
 
         if (isDefaultComparator) {
-            const keySet = new Set<TKey>();
+            const keySet = new Set<TKey | symbol>();
+            const MINUS_ZERO_SENTINEL = Symbol("-0");
+            const normalize = (k: unknown) => Object.is(k, -0) ? MINUS_ZERO_SENTINEL : k as TKey | symbol;
+
             for (const item of iterable) {
-                keySet.add(keySelector(item));
+                keySet.add(normalize(keySelector(item)));
             }
             if (keySet.size === 0) {
                 return;
             }
             for (const item of this) {
-                const key = keySelector(item);
+                const key = normalize(keySelector(item));
                 if (keySet.delete(key)) {
                     yield item;
                 }

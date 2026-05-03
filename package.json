@@ -20,7 +20,9 @@
         "lint": "eslint src tests --ext .ts",
         "lint:fix": "eslint src tests --ext .ts --fix",
         "prebuild": "rimraf dist",
-        "test": "vitest run --reporter=verbose",
+        "test": "npm run test:non-perf && npm run test:perf",
+        "test:non-perf": "vitest run --reporter=verbose --exclude **/*.perf.test.ts",
+        "test:perf": "vitest run --reporter=verbose .perf.test",
         "test:coverage": "vitest run --reporter=verbose --coverage",
         "test:ui": "vitest --ui"
     },
