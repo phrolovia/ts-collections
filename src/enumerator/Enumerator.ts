@@ -1362,6 +1362,23 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
+        const isDefaultComparator = keyComparator === Comparators.equalityComparator;
+
+        if (isDefaultComparator) {
+            const keySet = new Set<TKey>();
+            for (const item of iterable) {
+                keySet.add(keySelector(item));
+            }
+            for (const item of this) {
+                const key = keySelector(item);
+                if (!keySet.has(key)) {
+                    keySet.add(key);
+                    yield item;
+                }
+            }
+            return;
+        }
+
         if (!sortedSetFactory) {
             throw new Error("SortedSet factory is not registered.");
         }
@@ -1525,6 +1542,25 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
+        const isDefaultComparator = keyComparator === Comparators.equalityComparator;
+
+        if (isDefaultComparator) {
+            const keySet = new Set<TKey>();
+            for (const item of iterable) {
+                keySet.add(keySelector(item));
+            }
+            if (keySet.size === 0) {
+                return;
+            }
+            for (const item of this) {
+                const key = keySelector(item);
+                if (keySet.delete(key)) {
+                    yield item;
+                }
+            }
+            return;
+        }
+
         if (!sortedSetFactory) {
             throw new Error("SortedSet factory is not registered.");
         }

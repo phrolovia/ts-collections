@@ -81,4 +81,12 @@ describe("#groupBy()", () => {
         expect(elementAt(groups, 1).key).to.eq("b");
         expect(elementAt(groups, 2).key).to.eq("c");
     });
+    test("should group 1,000,000 items efficiently", () => {
+        const data = Array.from({ length: 1000000 }, (_, i) => i);
+        const start = performance.now();
+        const groups = toArray(groupBy(data, x => x % 100));
+        const end = performance.now();
+        expect(end - start).toBeLessThan(1000);
+        expect(groups.length).toBe(100);
+    });
 });

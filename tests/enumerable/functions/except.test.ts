@@ -45,4 +45,13 @@ describe("#except()", () => {
         const ageCount = count(result, p => p.age <= 50);
         expect(ageCount).to.eq(0);
     });
+    test("should handle 100,000 items efficiently with default comparator", () => {
+        const first = Array.from({ length: 100000 }, (_, i) => i);
+        const second = Array.from({ length: 50000 }, (_, i) => i * 2);
+        const start = performance.now();
+        const result = except(first, second).toArray();
+        const end = performance.now();
+        expect(end - start).toBeLessThan(500);
+        expect(result.length).toBe(50000);
+    });
 });

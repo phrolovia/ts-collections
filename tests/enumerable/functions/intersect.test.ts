@@ -49,4 +49,13 @@ describe("#intersect()", () => {
         const ageCount = count(intersection, p => p.age > 59);
         expect(ageCount).to.eq(0);
     });
+    test("should handle 100,000 items efficiently with default comparator", () => {
+        const first = Array.from({ length: 100000 }, (_, i) => i);
+        const second = Array.from({ length: 100000 }, (_, i) => i + 50000);
+        const start = performance.now();
+        const result = intersect(first, second).toArray();
+        const end = performance.now();
+        expect(end - start).toBeLessThan(500);
+        expect(result.length).toBe(50000);
+    });
 });

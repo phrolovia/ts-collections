@@ -24,11 +24,20 @@ export class List<TElement> extends AbstractList<TElement> {
         yield* this.#data;
     }
 
+    public override add(element: TElement): boolean {
+        this.#data.push(element);
+        return true;
+    }
+
     public addAt(element: TElement, index: number): boolean {
         if (index < 0 || index > this.size()) {
             throw new IndexOutOfBoundsException(index);
         }
-        this.#data.splice(index, 0, element);
+        if (index === this.size()) {
+            this.#data.push(element);
+        } else {
+            this.#data.splice(index, 0, element);
+        }
         return true;
     }
 
