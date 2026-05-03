@@ -67,6 +67,8 @@ import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    readonly #MINUS_ZERO_SENTINEL = Symbol("-0");
+    readonly #normalizeZero = <TKey>(k: unknown): TKey | symbol => Object.is(k, -0) ? this.#MINUS_ZERO_SENTINEL : k as TKey | symbol;
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
@@ -1366,14 +1368,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
         if (isDefaultComparator) {
             const keySet = new Set<TKey | symbol>();
-            const MINUS_ZERO_SENTINEL = Symbol("-0");
-            const normalize = (k: unknown) => Object.is(k, -0) ? MINUS_ZERO_SENTINEL : k as TKey | symbol;
 
             for (const item of iterable) {
-                keySet.add(normalize(keySelector(item)));
+                keySet.add(this.#normalizeZero(keySelector(item)));
             }
             for (const item of this) {
-                const key = normalize(keySelector(item));
+                const key = this.#normalizeZero<TKey>(keySelector(item));
                 if (!keySet.has(key)) {
                     keySet.add(key);
                     yield item;
@@ -1549,17 +1549,15 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
         if (isDefaultComparator) {
             const keySet = new Set<TKey | symbol>();
-            const MINUS_ZERO_SENTINEL = Symbol("-0");
-            const normalize = (k: unknown) => Object.is(k, -0) ? MINUS_ZERO_SENTINEL : k as TKey | symbol;
 
             for (const item of iterable) {
-                keySet.add(normalize(keySelector(item)));
+                keySet.add(this.#normalizeZero(keySelector(item)));
             }
             if (keySet.size === 0) {
                 return;
             }
             for (const item of this) {
-                const key = normalize(keySelector(item));
+                const key = this.#normalizeZero<TKey>(keySelector(item));
                 if (keySet.delete(key)) {
                     yield item;
                 }

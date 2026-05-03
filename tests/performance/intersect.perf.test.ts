@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { IEnumerable } from "../../src";
 import { count } from "../../src/enumerator/functions/count";
 import { intersect } from "../../src/enumerator/functions/intersect";
