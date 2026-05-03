@@ -67,6 +67,8 @@ import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    readonly #MINUS_ZERO_SENTINEL = Symbol("-0");
+    readonly #normalizeZero = <TKey>(k: unknown): TKey | symbol => Object.is(k, -0) ? this.#MINUS_ZERO_SENTINEL : k as TKey | symbol;
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
@@ -1362,6 +1364,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
+        const isDefaultComparator = keyComparator === Comparators.equalityComparator;
+
+        if (isDefaultComparator) {
+            const keySet = new Set<TKey | symbol>();
+
+            for (const item of iterable) {
+                keySet.add(this.#normalizeZero(keySelector(item)));
+            }
+            for (const item of this) {
+                const key = this.#normalizeZero<TKey>(keySelector(item));
+                if (!keySet.has(key)) {
+                    keySet.add(key);
+                    yield item;
+                }
+            }
+            return;
+        }
+
         if (!sortedSetFactory) {
             throw new Error("SortedSet factory is not registered.");
         }
@@ -1525,6 +1545,26 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
+        const isDefaultComparator = keyComparator === Comparators.equalityComparator;
+
+        if (isDefaultComparator) {
+            const keySet = new Set<TKey | symbol>();
+
+            for (const item of iterable) {
+                keySet.add(this.#normalizeZero(keySelector(item)));
+            }
+            if (keySet.size === 0) {
+                return;
+            }
+            for (const item of this) {
+                const key = this.#normalizeZero<TKey>(keySelector(item));
+                if (keySet.delete(key)) {
+                    yield item;
+                }
+            }
+            return;
+        }
+
         if (!sortedSetFactory) {
             throw new Error("SortedSet factory is not registered.");
         }
