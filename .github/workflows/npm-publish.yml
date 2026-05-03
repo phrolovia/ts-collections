@@ -34,7 +34,7 @@ jobs:
         run: npm install --save-dev @semantic-release/changelog @semantic-release/git --legacy-peer-deps
 
       - name: Non-Performance Tests
-        run: npm run test:non-perf
+        run: npm run test
 
       - name: Performance Tests
         continue-on-error: true
