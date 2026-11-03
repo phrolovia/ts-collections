@@ -37,6 +37,7 @@ export { LruCache } from "./dictionary/LruCache";
 export { AbstractSet } from "./set/AbstractSet";
 export { SortedSet } from "./set/SortedSet";
 export { EnumerableSet } from "./set/EnumerableSet";
+export { DisjointSet } from "./set/DisjointSet";
 export { ImmutableSet } from "./set/ImmutableSet";
 export { ImmutableSortedSet } from "./set/ImmutableSortedSet";
 export { Heap } from "./heap/Heap";
