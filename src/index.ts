@@ -32,6 +32,7 @@ export { SortedDictionary } from "./dictionary/SortedDictionary";
 export { ReadonlyDictionary } from "./dictionary/ReadonlyDictionary";
 export { ImmutableDictionary } from "./dictionary/ImmutableDictionary";
 export { ImmutableSortedDictionary } from "./dictionary/ImmutableSortedDictionary";
+export { BiMap } from "./dictionary/BiMap";
 export { LruCache } from "./dictionary/LruCache";
 export { AbstractSet } from "./set/AbstractSet";
 export { SortedSet } from "./set/SortedSet";
