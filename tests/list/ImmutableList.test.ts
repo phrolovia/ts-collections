@@ -387,4 +387,59 @@ describe("ImmutableList", () => {
             expect(newList.length).to.eq(4);
         });
     });
+
+    describe("persistence", () => {
+        test("should match an array model through random edits without changing earlier versions", () => {
+            let list = ImmutableList.create<number>();
+            const model: Array<number> = [];
+            const snapshots: Array<[ImmutableList<number>, Array<number>]> = [];
+            let seed = 7;
+            const random = (bound: number) => (seed = (seed * 1103515245 + 12345) % 2147483648) % bound;
+            for (let step = 0; step < 3000; ++step) {
+                const op = random(10);
+                if (model.length === 0 || op < 5) {
+                    list = list.add(step);
+                    model.push(step);
+                } else if (op < 7) {
+                    const index = random(model.length);
+                    list = list.set(index, -step);
+                    model[index] = -step;
+                } else if (op < 9) {
+                    list = list.removeAt(model.length - 1);
+                    model.pop();
+                } else {
+                    const index = random(model.length);
+                    list = list.removeAt(index);
+                    model.splice(index, 1);
+                }
+                if (step % 300 === 0) {
+                    snapshots.push([list, model.slice()]);
+                }
+            }
+            expect(list.toArray()).to.deep.equal(model);
+            for (let i = 0; i < model.length; ++i) {
+                expect(list.get(i)).to.equal(model[i]);
+            }
+            for (const [snapshot, expected] of snapshots) {
+                expect(snapshot.toArray()).to.deep.equal(expected);
+            }
+        });
+        test("should return the same list when nothing changes", () => {
+            const list = ImmutableList.create([1, 2, 3]);
+            expect(list.addAll([])).to.equal(list);
+            expect(list.remove(4)).to.equal(list);
+            expect(list.removeIf(e => e > 3)).to.equal(list);
+        });
+        test("should answer index queries from either end", () => {
+            const list = ImmutableList.create([1, null, 2, 1, null]);
+            expect(list.indexOf(1)).to.equal(0);
+            expect(list.lastIndexOf(1)).to.equal(3);
+            expect(list.indexOf(null)).to.equal(1);
+            expect(list.lastIndexOf(null)).to.equal(4);
+            expect(list.first()).to.equal(1);
+            expect(list.last()).to.be.null;
+            expect(list.elementAtOrDefault(5)).to.be.null;
+            expect(() => ImmutableList.create<number>().last()).to.throw();
+        });
+    });
 });

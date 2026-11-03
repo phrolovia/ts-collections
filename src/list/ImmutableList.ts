@@ -1,28 +1,34 @@
 import { contains } from "../enumerator/functions/contains";
 import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
 import { List } from "./List";
-import { ReadonlyList } from "./ReadonlyList";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
+import { NoElementsException } from "../shared/NoElementsException";
+import { PersistentVector } from "../shared/internal/PersistentVector";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { IReadonlyList } from "./IReadonlyList";
 import { registerImmutableListFactory } from "../enumerator/Enumerator";
 
+/**
+ * Immutable list backed by a persistent vector. `add`, `set`, `get` and removing the last element
+ * share structure with the original list and run in O(log32 n). Operations that shift elements,
+ * such as `addAt` or `removeAt` in the middle, still rebuild the list in O(n).
+ */
 export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollection<TElement> implements IReadonlyList<TElement> {
-    readonly #list: ReadonlyList<TElement>;
+    readonly #vector: PersistentVector<TElement>;
 
-    private constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
+    private constructor(vector: PersistentVector<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.#list = new ReadonlyList(new List(iterable, comparator));
+        this.#vector = vector;
     }
 
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
-        return new ImmutableList(iterable, comparator);
+        return new ImmutableList(PersistentVector.empty<TElement>().pushAll(iterable ?? []), comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#list;
+        yield* this.#vector;
     }
 
     /**
@@ -31,7 +37,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list with the added element.
      */
     public add(element: TElement): ImmutableList<TElement> {
-        return new ImmutableList([...this.#list, element], this.comparer);
+        return this.#with(this.#vector.push(element));
     }
 
     /**
@@ -40,20 +46,19 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list with the added element.
      */
     public addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        return new ImmutableList([...this.#list, ...collection], this.comparer);
+        return this.#with(this.#vector.pushAll(collection));
     }
 
     public addAt(element: TElement, index: number): ImmutableList<TElement> {
         if (index < 0 || index > this.size()) {
             throw new IndexOutOfBoundsException(index);
         }
-        const list = this.#list.toList();
+        if (index === this.size()) {
+            return this.add(element);
+        }
+        const list = this.#toList();
         list.addAt(element, index);
-        return new ImmutableList([...list], this.comparer);
-    }
-
-    public override any(predicate?: Predicate<TElement>): boolean {
-        return this.#list.any(predicate);
+        return this.#from(list);
     }
 
     /**
@@ -61,50 +66,54 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} An empty list.
      */
     public clear(): ImmutableList<TElement> {
-        return new ImmutableList([], this.comparer);
+        return this.#with(PersistentVector.empty());
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
-        return this.#list.contains(element, comparator);
-    }
-
-    public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return this.#list.containsAll(collection);
-    }
-
-    public override count(predicate?: Predicate<TElement>): number {
-        return this.#list.count(predicate);
+        return this.indexOf(element, comparator) !== -1;
     }
 
     public override elementAt(index: number): TElement {
-        return this.#list.elementAt(index);
+        return this.get(index);
     }
 
     public override elementAtOrDefault(index: number): TElement | null {
-        return this.#list.elementAtOrDefault(index);
+        return index < 0 || index >= this.size() ? null : this.#vector.get(index);
     }
 
     public* entries(): IterableIterator<[number, TElement]> {
-        yield* this.#list.entries();
+        let index = 0;
+        for (const element of this.#vector) {
+            yield [index++, element];
+        }
     }
 
     public override first<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
     public override first(predicate?: Predicate<TElement>): TElement;
     public override first<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
-        return this.#list.first(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
+        if (!predicate) {
+            if (this.isEmpty()) {
+                throw new NoElementsException();
+            }
+            return this.#vector.get(0);
+        }
+        return super.first(predicate as Predicate<TElement>);
     }
 
     public override firstOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
     public override firstOrDefault(predicate?: Predicate<TElement>): TElement | null;
     public override firstOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
-        return this.#list.firstOrDefault(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
+        if (!predicate) {
+            return this.isEmpty() ? null : this.#vector.get(0);
+        }
+        return super.firstOrDefault(predicate as Predicate<TElement>);
     }
 
     public get(index: number): TElement {
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException(index);
         }
-        return this.#list.get(index);
+        return this.#vector.get(index);
     }
 
     /**
@@ -117,27 +126,55 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException(index);
         }
-        return new ImmutableList(this.#list.getRange(index, count), this.comparer);
+        return this.#from(this.#toList().getRange(index, count));
     }
 
     public indexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
-        return this.#list.indexOf(element, comparator);
+        comparator ??= this.comparer;
+        let index = 0;
+        for (const e of this.#vector) {
+            if (element == null ? e == null : comparator(e, element)) {
+                return index;
+            }
+            ++index;
+        }
+        return -1;
+    }
+
+    public override isEmpty(): boolean {
+        return this.#vector.size === 0;
     }
 
     public override last<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered;
     public override last(predicate?: Predicate<TElement>): TElement;
     public override last<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered {
-        return this.#list.last(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
+        if (!predicate) {
+            if (this.isEmpty()) {
+                throw new NoElementsException();
+            }
+            return this.#vector.get(this.size() - 1);
+        }
+        return super.last(predicate as Predicate<TElement>);
     }
 
     public lastIndexOf(element: TElement, comparator?: EqualityComparator<TElement>): number {
-        return this.#list.lastIndexOf(element, comparator);
+        comparator ??= this.comparer;
+        for (let index = this.size() - 1; index >= 0; --index) {
+            const e = this.#vector.get(index);
+            if (element == null ? e == null : comparator(element, e)) {
+                return index;
+            }
+        }
+        return -1;
     }
 
     public override lastOrDefault<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): TFiltered | null;
     public override lastOrDefault(predicate?: Predicate<TElement>): TElement | null;
     public override lastOrDefault<TFiltered extends TElement>(predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>): TElement | TFiltered | null {
-        return this.#list.lastOrDefault(predicate as Predicate<TElement> | TypePredicate<TElement, TFiltered> | undefined);
+        if (!predicate) {
+            return this.isEmpty() ? null : this.#vector.get(this.size() - 1);
+        }
+        return super.lastOrDefault(predicate as Predicate<TElement>);
     }
 
     /**
@@ -146,7 +183,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list without the specified element.
      */
     public remove(element: TElement): ImmutableList<TElement> {
-        return new ImmutableList(this.#list.where(e => !this.comparer(element, e)), this.comparer);
+        return this.removeIf(e => this.comparer(element, e));
     }
 
     /**
@@ -155,7 +192,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list without the elements in the specified collection.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        return new ImmutableList(this.#list.where(e => !contains(collection, e, this.comparer)), this.comparer);
+        return this.removeIf(e => contains(collection, e, this.comparer));
     }
 
     /**
@@ -167,7 +204,12 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException(index);
         }
-        return new ImmutableList(this.#list.where((_, i) => i !== index), this.comparer);
+        if (index === this.size() - 1) {
+            return this.#with(this.#vector.pop());
+        }
+        const list = this.#toList();
+        list.removeAt(index);
+        return this.#from(list);
     }
 
     /**
@@ -176,7 +218,13 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list without the elements that satisfies the specified predicate.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutableList<TElement> {
-        return new ImmutableList(this.#list.where(e => !predicate(e)), this.comparer);
+        const kept = PersistentVector.empty<TElement>().asMutable();
+        for (const element of this.#vector) {
+            if (!predicate(element)) {
+                kept.push(element);
+            }
+        }
+        return kept.size === this.size() ? this : this.#with(kept.asImmutable());
     }
 
     /**
@@ -189,7 +237,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         if (collection === this) {
             return this;
         }
-        return new ImmutableList(collection as Iterable<TElement>, this.comparer);
+        return ImmutableList.create<TElement>(collection, this.comparer);
     }
 
     /**
@@ -198,9 +246,9 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list with only the elements in the specified collection.
      */
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableList<TElement> {
-        const list = this.#list.toList();
+        const list = this.#toList();
         list.retainAll(collection);
-        return new ImmutableList(list, this.comparer);
+        return list.size() === this.size() ? this : this.#from(list);
     }
 
     /**
@@ -213,11 +261,11 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         if (index < 0 || index >= this.size()) {
             throw new IndexOutOfBoundsException(index);
         }
-        return new ImmutableList(this.#list.select((e, i) => i === index ? element : e), this.comparer);
+        return this.#with(this.#vector.set(index, element));
     }
 
     public size(): number {
-        return this.#list.size();
+        return this.#vector.size;
     }
 
     /**
@@ -226,7 +274,19 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
      * @returns {ImmutableList} A new list that is sorted according to the specified comparator.
      */
     public sort(comparator?: OrderComparator<TElement>): ImmutableList<TElement> {
-        return new ImmutableList(this.#list.toArray().sort(comparator), this.comparer);
+        return this.#from(Array.from(this.#vector).sort(comparator));
+    }
+
+    #from(elements: Iterable<TElement>): ImmutableList<TElement> {
+        return ImmutableList.create(elements, this.comparer);
+    }
+
+    #toList(): List<TElement> {
+        return new List(this.#vector, this.comparer);
+    }
+
+    #with(vector: PersistentVector<TElement>): ImmutableList<TElement> {
+        return vector === this.#vector ? this : new ImmutableList(vector, this.comparer);
     }
 
     public override get comparator(): EqualityComparator<TElement> {
@@ -234,7 +294,7 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
     }
 
     public override get length(): number {
-        return this.#list.length;
+        return this.#vector.size;
     }
 }
 
