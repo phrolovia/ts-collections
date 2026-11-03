@@ -40,4 +40,11 @@ describe("#join()", () => {
         ];
         expect(joinedData.toArray()).to.deep.equal(expectedOutputDataList);
     });
+    test("should match keys with Object.is, keeping -0 apart from 0 and NaN equal to itself", () => {
+        const outer = [0, -0, NaN, 1];
+        const inner = [-0, NaN, NaN, 2];
+        const joined = join(outer, new List(inner), x => x, x => x, (o, i) => [o, i]).toArray();
+        expect(joined).to.deep.equal([[-0, -0], [NaN, NaN], [NaN, NaN]]);
+        expect(Object.is(joined[0][0], -0)).to.be.true;
+    });
 });

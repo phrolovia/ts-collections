@@ -38,11 +38,12 @@ export class Lookup<TKey, TElement> extends AbstractEnumerable<IGroup<TKey, TEle
         }
         const lookup: Lookup<TKey, TValue> = new Lookup<TKey, TValue>(keyComparator);
         for (const element of source) {
-            const group = lookup.#lookupTree.find(p => keyComparator(keySelector(element), p.key) === 0);
+            const key = keySelector(element);
+            const group = lookup.#lookupTree.findBy(key, g => g.key, keyComparator);
             if (group) {
                 (group.source as List<TValue>).add(valueSelector(element));
             } else {
-                lookup.#lookupTree.insert(new Group(keySelector(element), new List<TValue>([valueSelector(element)])));
+                lookup.#lookupTree.insert(new Group(key, new List<TValue>([valueSelector(element)])));
             }
         }
         return lookup;
