@@ -1,5 +1,6 @@
 import { LinkedList } from "../../src/list/LinkedList";
 import { SortedSet } from "../../src/set/SortedSet";
+import { NoElementsException } from "../../src/shared/NoElementsException";
 import { Person } from "../models/Person";
 import { SimpleObject } from "../models/SimpleObject";
 
@@ -88,6 +89,12 @@ describe("SortedSet", () => {
     });
 
     describe("#headSet()", () => {
+        test("should keep every smaller element when the bound is not in the set", () => {
+            const set = new SortedSet([7, 1, 3]);
+            expect(set.headSet(5).toArray()).to.deep.equal([1, 3]);
+            expect(set.headSet(3).toArray()).to.deep.equal([1]);
+            expect(set.headSet(3, true).toArray()).to.deep.equal([1, 3]);
+        });
         const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const headSet = set.headSet(4);
         const headSetInclusive = set.headSet(4, true);
@@ -321,6 +328,12 @@ describe("SortedSet", () => {
         });
     });
     describe("#subSet()", () => {
+        test("should keep the elements between bounds that are not in the set", () => {
+            const set = new SortedSet([1, 3, 5, 7, 9]);
+            expect(set.subSet(2, 8).toArray()).to.deep.equal([3, 5, 7]);
+            expect(set.subSet(3, 7).toArray()).to.deep.equal([3, 5]);
+            expect(set.subSet(3, 7, false, true).toArray()).to.deep.equal([5, 7]);
+        });
         const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const incExcSubset = set.subSet(3, 7, true, false);
         const incIncSubset = set.subSet(3, 7, true, true);
@@ -349,6 +362,12 @@ describe("SortedSet", () => {
         });
     });
     describe("#tailSet()", () => {
+        test("should keep every larger element when the bound is not in the set", () => {
+            const set = new SortedSet([7, 1, 3]);
+            expect(set.tailSet(2).toArray()).to.deep.equal([3, 7]);
+            expect(set.tailSet(3).toArray()).to.deep.equal([7]);
+            expect(set.tailSet(3, true).toArray()).to.deep.equal([3, 7]);
+        });
         const set = new SortedSet([1, 2, 3, 3, 3, 4, 5, 6, 7, 7, 8]);
         const tailSet = set.tailSet(4);
         const tailSetInclusive = set.tailSet(4, true);
@@ -363,6 +382,24 @@ describe("SortedSet", () => {
             expect(tailSetInclusive.toArray()).to.deep.equal([4, 5, 6, 7, 8]);
             expect(tailSetInclusive.length).to.eq(5);
             expect(tailSetInclusive.contains(4)).to.be.true;
+        });
+    });
+    describe("#first() and #last()", () => {
+        test("should return the smallest and largest elements under the set's comparator", () => {
+            const set = new SortedSet([5, 1, 9, 3], (a: number, b: number) => b - a);
+            expect(set.first()).to.equal(9);
+            expect(set.last()).to.equal(1);
+            expect(set.firstOrDefault()).to.equal(9);
+            expect(set.lastOrDefault()).to.equal(1);
+            expect(set.first(x => x < 5)).to.equal(3);
+            expect(set.last(x => x > 1)).to.equal(3);
+        });
+        test("should throw or return null when the set is empty", () => {
+            const set = new SortedSet<number>();
+            expect(() => set.first()).toThrow(NoElementsException);
+            expect(() => set.last()).toThrow(NoElementsException);
+            expect(set.firstOrDefault()).to.be.null;
+            expect(set.lastOrDefault()).to.be.null;
         });
     });
 });
