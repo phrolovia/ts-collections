@@ -35,4 +35,8 @@ describe("#last()", () => {
         expect(lastSuccess.data).to.eq(Person.Mel);
         expectTypeOf(lastSuccess).toEqualTypeOf<ApiResponseSuccess<Person>>();
     });
+    test("should read the last array element directly", () => {
+        expect(last([1, 2, 3])).to.equal(3);
+        expect(() => last<number>([])).toThrow(NoElementsException);
+    });
 });

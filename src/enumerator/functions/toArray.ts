@@ -14,5 +14,8 @@ import { from } from "./from";
  * ```
  */
 export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
+    if (Array.isArray(source)) {
+        return source.slice();
+    }
     return from(source).toArray();
 };

@@ -9,4 +9,10 @@ describe("#toArray()", () => {
         expect(array instanceof Array).to.be.true;
         expect(array).to.deep.equal([1, 2, 3, 4, 5]);
     });
+    test("should copy an array source", () => {
+        const array = [1, 2, 3];
+        const copy = toArray(array);
+        expect(copy).to.deep.equal(array);
+        expect(copy).not.to.equal(array);
+    });
 });

@@ -1,3 +1,4 @@
+import { IndexOutOfBoundsException } from "../../shared/IndexOutOfBoundsException";
 import { from } from "./from";
 
 /**
@@ -19,5 +20,11 @@ export const elementAt = <TElement>(
     source: Iterable<TElement>,
     index: number
 ): TElement => {
+    if (Array.isArray(source)) {
+        if (!Number.isInteger(index) || index < 0 || index >= source.length) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        return source[index];
+    }
     return from(source).elementAt(index);
 };
