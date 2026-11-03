@@ -64,6 +64,23 @@ export class PersistentVector<TElement> {
         }
     }
 
+    /**
+     * Removes the last element. The vector must not be empty.
+     */
+    public pop(): PersistentVector<TElement> {
+        if (this.#size === 1) {
+            return this.#update(0, 0, this.#owned === undefined ? [] : this.#own([]));
+        }
+        let shift = this.#shift;
+        let root = this.#popFrom(this.#root, shift, this.#size - 1) as VectorNode;
+        // Drop levels left with a single child so that push's overflow check stays valid.
+        while (shift > 0 && root.length === 1) {
+            root = root[0] as VectorNode;
+            shift -= BITS;
+        }
+        return this.#update(this.#size - 1, shift, root);
+    }
+
     public push(element: TElement): PersistentVector<TElement> {
         let shift = this.#shift;
         let root: VectorNode;
@@ -74,6 +91,21 @@ export class PersistentVector<TElement> {
             root = this.#pushInto(this.#root, shift, this.#size, element);
         }
         return this.#update(this.#size + 1, shift, root);
+    }
+
+    /**
+     * Appends all elements, editing nodes in place when this vector is not mutable already.
+     * Returns this vector if the iterable is empty.
+     */
+    public pushAll(elements: Iterable<TElement>): PersistentVector<TElement> {
+        const target = this.#owned === undefined ? this.asMutable() : this;
+        for (const element of elements) {
+            target.push(element);
+        }
+        if (target === this) {
+            return this;
+        }
+        return target.#size === this.#size ? this : target.asImmutable();
     }
 
     public set(index: number, element: TElement): PersistentVector<TElement> {
@@ -99,6 +131,23 @@ export class PersistentVector<TElement> {
     #own(node: VectorNode): VectorNode {
         this.#owned?.add(node);
         return node;
+    }
+
+    // Removes the element at the given (last) index; returns undefined when the node becomes empty.
+    #popFrom(node: VectorNode, level: number, index: number): VectorNode | undefined {
+        const slot = (index >>> level) & MASK;
+        const target = this.#editable(node);
+        if (level === 0) {
+            target.length = slot;
+        } else {
+            const child = this.#popFrom(node[slot] as VectorNode, level - BITS, index);
+            if (child === undefined) {
+                target.length = slot;
+            } else {
+                target[slot] = child;
+            }
+        }
+        return target.length === 0 ? undefined : target;
     }
 
     #pushInto(node: VectorNode, level: number, index: number, element: unknown): VectorNode {

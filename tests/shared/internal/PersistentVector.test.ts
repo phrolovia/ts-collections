@@ -54,4 +54,45 @@ describe("PersistentVector", () => {
         expect(Array.from(original)).to.deep.equal(Array.from({ length: 100 }, (_, i) => i));
         expect(frozen.push(1)).not.to.equal(frozen);
     });
+    test("should pop elements across trie levels without modifying earlier versions", () => {
+        const count = 32 * 32 + 33;
+        const full = PersistentVector.empty<number>().pushAll(Array.from({ length: count }, (_, i) => i));
+        let vector = full;
+        for (let size = count; size > 0; --size) {
+            expect(vector.size).to.equal(size);
+            expect(vector.get(size - 1)).to.equal(size - 1);
+            vector = vector.pop();
+        }
+        expect(vector.size).to.equal(0);
+        expect(Array.from(vector)).to.deep.equal([]);
+        expect(Array.from(full)).to.deep.equal(Array.from({ length: count }, (_, i) => i));
+
+        // Pushing after the trie shrank must rebuild the levels correctly.
+        let regrown = full;
+        for (let i = 0; i < 40; ++i) {
+            regrown = regrown.pop();
+        }
+        for (let i = 0; i < 100; ++i) {
+            regrown = regrown.push(-i);
+        }
+        expect(regrown.size).to.equal(count + 60);
+        expect(regrown.get(count - 41)).to.equal(count - 41);
+        expect(regrown.get(count - 40)).to.equal(0);
+        expect(regrown.get(count + 59)).to.equal(-99);
+        expect(Array.from(regrown).length).to.equal(count + 60);
+    });
+    test("should pop in place in mutable mode", () => {
+        const original = PersistentVector.empty<number>().pushAll([1, 2, 3, 4]);
+        const mutable = original.asMutable();
+        expect(mutable.pop()).to.equal(mutable);
+        mutable.pop();
+        expect(Array.from(mutable.asImmutable())).to.deep.equal([1, 2]);
+        expect(Array.from(original)).to.deep.equal([1, 2, 3, 4]);
+    });
+    test("should return the same vector when pushing no elements", () => {
+        const vector = PersistentVector.empty<number>().push(1);
+        expect(vector.pushAll([])).to.equal(vector);
+        expect(Array.from(vector.pushAll([2, 3]))).to.deep.equal([1, 2, 3]);
+        expect(Array.from(vector)).to.deep.equal([1]);
+    });
 });

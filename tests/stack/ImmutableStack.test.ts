@@ -166,4 +166,31 @@ describe("ImmutableStack", () => {
             expect(stack.length).to.equal(3);
         });
     });
+
+    describe("persistence", () => {
+        test("should add elements to the top of a non-empty stack", () => {
+            const stack = ImmutableStack.create([1, 2, 3]);
+            expect(stack.add(4).toArray()).to.deep.equal([4, 3, 2, 1]);
+            expect(stack.addAll([4, 5]).toArray()).to.deep.equal([5, 4, 3, 2, 1]);
+            expect(stack.addAll([])).to.equal(stack);
+            expect(stack.toArray()).to.deep.equal([3, 2, 1]);
+        });
+        test("should keep every version intact while pushing and popping", () => {
+            const versions: Array<ImmutableStack<number>> = [ImmutableStack.create<number>()];
+            for (let i = 0; i < 1000; ++i) {
+                versions.push(versions[i].push(i));
+            }
+            const branch = versions[500].pop().push(-1);
+            for (let i = 0; i <= 1000; ++i) {
+                expect(versions[i].size()).to.equal(i);
+                expect(versions[i].peek()).to.equal(i === 0 ? null : i - 1);
+            }
+            expect(branch.toArray().slice(0, 2)).to.deep.equal([-1, 498]);
+            expect(branch.size()).to.equal(500);
+        });
+        test("should return the same stack when popping an empty stack", () => {
+            const stack = ImmutableStack.create<number>();
+            expect(stack.pop()).to.equal(stack);
+        });
+    });
 });
