@@ -1,3 +1,4 @@
+import { NoElementsException } from "../../shared/NoElementsException";
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
 import { from } from "./from";
 
@@ -44,5 +45,11 @@ export function last<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): TElement | TFiltered {
+    if (!predicate && Array.isArray(source)) {
+        if (source.length === 0) {
+            throw new NoElementsException();
+        }
+        return source[source.length - 1];
+    }
     return from(source).last(predicate as Predicate<TElement> | undefined);
 }

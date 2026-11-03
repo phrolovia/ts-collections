@@ -21,5 +21,8 @@ export const elementAtOrDefault = <TElement>(
     source: Iterable<TElement>,
     index: number
 ): TElement | null => {
+    if (Array.isArray(source)) {
+        return Number.isInteger(index) && index >= 0 && index < source.length ? source[index] : null;
+    }
     return from(source).elementAtOrDefault(index);
 };

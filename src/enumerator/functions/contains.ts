@@ -1,3 +1,4 @@
+import { Comparators } from "../../shared/Comparators";
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { from } from "./from";
 
@@ -23,5 +24,9 @@ export const contains = <TElement>(
     element: TElement,
     comparator?: EqualityComparator<TElement>
 ): boolean => {
+    // Set.has uses SameValueZero, which agrees with the default Object.is comparator except on zeros.
+    if (source instanceof Set && (comparator == null || comparator === Comparators.equalityComparator) && element !== 0) {
+        return source.has(element);
+    }
     return from(source).contains(element, comparator);
 };

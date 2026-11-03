@@ -21,4 +21,13 @@ describe("#contains()", () => {
         const sequence = [Person.Noemi, Person.Vanessa];
         expect(contains(sequence, Person.Noemi2, (a, b) => a.name === b.name)).to.be.true;
     });
+    test("should look elements up in a Set with Object.is semantics", () => {
+        const set = new Set([0, NaN, "a"]);
+        expect(contains(set, NaN)).to.be.true;
+        expect(contains(set, "a")).to.be.true;
+        expect(contains(set, "b")).to.be.false;
+        expect(contains(set, 0)).to.be.true;
+        expect(contains(set, -0)).to.be.false;
+        expect(contains(set, "A", (x, y) => String(x).toLowerCase() === String(y).toLowerCase())).to.be.true;
+    });
 });

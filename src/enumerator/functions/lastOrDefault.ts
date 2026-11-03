@@ -48,5 +48,8 @@ export function lastOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): TElement | TFiltered | null {
+    if (!predicate && Array.isArray(source)) {
+        return source.length === 0 ? null : source[source.length - 1];
+    }
     return from(source).lastOrDefault(predicate as Predicate<TElement> | undefined);
 }

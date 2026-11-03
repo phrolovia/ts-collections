@@ -11,4 +11,11 @@ describe("#elementAtOrDefault()", () => {
         const list = new List([1, 2, 3, 4, 5]);
         expect(elementAtOrDefault(list, 5)).to.be.null;
     });
+    test("should index arrays directly and return null outside them", () => {
+        const array = [10, 20, 30];
+        expect(elementAtOrDefault(array, 0)).to.equal(10);
+        expect(elementAtOrDefault(array, 3)).to.be.null;
+        expect(elementAtOrDefault(array, -1)).to.be.null;
+        expect(elementAtOrDefault(array, 0.5)).to.be.null;
+    });
 });
