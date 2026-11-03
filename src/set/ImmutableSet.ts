@@ -1,24 +1,38 @@
-import { contains } from "../enumerator/functions/contains";
 import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
 import { EnumerableSet } from "./EnumerableSet";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { Predicate } from "../shared/Predicate";
 import { registerImmutableSetFactory } from "../enumerator/Enumerator";
+import { OrderedHashTrie } from "../shared/internal/OrderedHashTrie";
 
+/**
+ * Immutable set backed by a persistent hash array mapped trie.
+ * Updates share structure with the original set instead of copying it, so `add` and `remove`
+ * run in O(log32 n). Elements are compared like `Set` does and iterate in insertion order.
+ */
 export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
-    readonly #set: EnumerableSet<TElement>;
+    readonly #trie: OrderedHashTrie<TElement, true>;
 
-    private constructor(iterable?: Iterable<TElement>) {
+    private constructor(trie: OrderedHashTrie<TElement, true>) {
         super();
-        this.#set = new EnumerableSet(iterable);
+        this.#trie = trie;
     }
 
-    public static create<TElement>(iterable?: Iterable<TElement>): ImmutableSet<TElement> {
-        return new ImmutableSet(iterable);
+    public static create<TElement>(iterable: Iterable<TElement> = []): ImmutableSet<TElement> {
+        return new ImmutableSet(ImmutableSet.#addAllTo(OrderedHashTrie.empty(), iterable));
+    }
+
+    static #addAllTo<TElement>(trie: OrderedHashTrie<TElement, true>, iterable: Iterable<TElement>): OrderedHashTrie<TElement, true> {
+        for (const element of iterable) {
+            trie = trie.set(element, true);
+        }
+        return trie;
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#set;
+        for (const entry of this.#trie) {
+            yield entry.key;
+        }
     }
 
     /**
@@ -27,7 +41,7 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set with the added element.
      */
     public add(element: TElement): ImmutableSet<TElement> {
-        return new ImmutableSet([...this.#set, element]);
+        return this.#withTrie(this.#trie.set(element, true));
     }
 
     /**
@@ -36,7 +50,7 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set with the added elements.
      */
     public addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        return new ImmutableSet([...this.#set, ...collection]);
+        return this.#withTrie(ImmutableSet.#addAllTo(this.#trie, collection));
     }
 
     /**
@@ -44,15 +58,11 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} An empty set.
      */
     public clear(): ImmutableSet<TElement> {
-        return new ImmutableSet<TElement>([]);
+        return this.#withTrie(OrderedHashTrie.empty());
     }
 
     public override contains(element: TElement): boolean {
-        return this.#set.contains(element);
-    }
-
-    public override count(predicate?: Predicate<TElement>): number {
-        return this.#set.count(predicate);
+        return this.#trie.find(element) !== undefined;
     }
 
     /**
@@ -61,7 +71,7 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set that contains elements from this set that are not in the provided collection.
      */
     public exceptWith<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        return new ImmutableSet(this.#set.where(x => !contains(collection, x)));
+        return this.removeAll(collection);
     }
 
     /**
@@ -70,27 +80,27 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set that contains elements that are in both this set and the provided collection.
      */
     public intersectWith<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        return new ImmutableSet(this.#set.where(x => contains(collection, x)));
+        return this.retainAll(collection);
     }
 
     public isProperSubsetOf(collection: Iterable<TElement>): boolean {
-        return this.#set.isProperSubsetOf(collection);
+        return this.#view().isProperSubsetOf(collection);
     }
 
     public isProperSupersetOf(collection: Iterable<TElement>): boolean {
-        return this.#set.isProperSupersetOf(collection);
+        return this.#view().isProperSupersetOf(collection);
     }
 
     public isSubsetOf(collection: Iterable<TElement>): boolean {
-        return this.#set.isSubsetOf(collection);
+        return this.#view().isSubsetOf(collection);
     }
 
     public isSupersetOf(collection: Iterable<TElement>): boolean {
-        return this.#set.isSupersetOf(collection);
+        return this.#view().isSupersetOf(collection);
     }
 
     public overlaps(collection: Iterable<TElement>): boolean {
-        return this.#set.overlaps(collection);
+        return this.#view().overlaps(collection);
     }
 
     /**
@@ -99,7 +109,7 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set without the specified element.
      */
     public remove(element: TElement): ImmutableSet<TElement> {
-        return new ImmutableSet(this.#set.where(x => x !== element));
+        return this.#withTrie(this.#trie.remove(element));
     }
 
     /**
@@ -108,7 +118,11 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set without the elements in the specified collection.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        return new ImmutableSet(this.#set.where(x => !contains(collection, x)));
+        let trie = this.#trie;
+        for (const element of collection) {
+            trie = trie.remove(element);
+        }
+        return this.#withTrie(trie);
     }
 
     /**
@@ -117,7 +131,13 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set without the elements that satisfy the specified predicate.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutableSet<TElement> {
-        return new ImmutableSet(this.#set.where(x => !predicate(x)));
+        let trie = this.#trie;
+        for (const entry of this.#trie) {
+            if (predicate(entry.key)) {
+                trie = trie.remove(entry.key);
+            }
+        }
+        return this.#withTrie(trie);
     }
 
     /**
@@ -130,7 +150,7 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
         if (collection === this) {
             return this;
         }
-        return new ImmutableSet<TElement>([...collection]);
+        return ImmutableSet.create<TElement>(collection);
     }
 
     /**
@@ -139,21 +159,36 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set with only the elements in the specified collection.
      */
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        const set = this.#set.toEnumerableSet();
-        set.retainAll(collection);
-        return new ImmutableSet(set);
+        const retained = new Set<TElement>(collection);
+        let trie = this.#trie;
+        for (const entry of this.#trie) {
+            if (!retained.has(entry.key)) {
+                trie = trie.remove(entry.key);
+            }
+        }
+        return this.#withTrie(trie);
     }
 
     public size(): number {
-        return this.#set.size();
+        return this.#trie.size;
+    }
+
+    // Subset queries scan both collections anyway, so they run on a temporary EnumerableSet.
+    #view(): EnumerableSet<TElement> {
+        return new EnumerableSet(this);
+    }
+
+    // Returns this set when an operation left the trie unchanged.
+    #withTrie(trie: OrderedHashTrie<TElement, true>): ImmutableSet<TElement> {
+        return trie === this.#trie ? this : new ImmutableSet(trie);
     }
 
     public override get comparator(): EqualityComparator<TElement> {
-        return this.#set.comparator;
+        return this.comparer;
     }
 
     public override get length(): number {
-        return this.#set.length;
+        return this.#trie.size;
     }
 }
 
