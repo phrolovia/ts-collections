@@ -47,6 +47,9 @@ export { ImmutableStack } from "./stack/ImmutableStack";
 
 export * from "./enumerator/functions/functions";
 
+export { AbstractGraph } from "./graph/AbstractGraph";
+export { DirectedGraph } from "./graph/DirectedGraph";
+export { UndirectedGraph } from "./graph/UndirectedGraph";
 export { breadthFirst } from "./graph/functions/breadthFirst";
 export { depthFirst } from "./graph/functions/depthFirst";
 export { shortestPath } from "./graph/functions/shortestPath";
@@ -78,7 +81,9 @@ export type { IDictionary } from "./dictionary/IDictionary";
 export type { IReadonlyDictionary } from "./dictionary/IReadonlyDictionary";
 export type { IImmutableDictionary } from "./dictionary/IImmutableDictionary";
 export type { ISet } from "./set/ISet";
+export type { GraphEdge } from "./graph/GraphEdge";
 export type { GraphPath } from "./graph/GraphPath";
+export type { IGraph } from "./graph/IGraph";
 
 export type { Accumulator } from "./shared/Accumulator";
 export type { EqualityComparator } from "./shared/EqualityComparator";
