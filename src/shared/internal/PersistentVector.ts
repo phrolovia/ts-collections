@@ -11,7 +11,7 @@ type VectorNode = Array<unknown>;
  * {@link asMutable} returns a copy that `push` and `set` modify in place, copying a shared
  * node only the first time it changes. {@link asImmutable} freezes it again.
  */
-export class PersistentVector<TElement> {
+export class PersistentVector<TElement> implements Iterable<TElement> {
     static readonly #empty = new PersistentVector<never>(0, 0, [], undefined);
 
     #owned: WeakSet<VectorNode> | undefined;
@@ -39,7 +39,7 @@ export class PersistentVector<TElement> {
     }
 
     /**
-     * Freezes a mutable vector and returns it. The vector must not be modified afterwards.
+     * Freezes a mutable vector and returns it. The vector must not be modified afterward.
      */
     public asImmutable(): PersistentVector<TElement> {
         this.#owned = undefined;
