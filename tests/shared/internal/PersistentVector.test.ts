@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { PersistentVector } from "../../../src/dictionary/internal/PersistentVector";
+import { PersistentVector } from "../../../src/shared/internal/PersistentVector";
 
 describe("PersistentVector", () => {
     test("should push and read elements across several trie levels", () => {

@@ -10,7 +10,7 @@ import { EnumerableSet } from "../set/EnumerableSet";
 import { select } from "../enumerator/functions/select";
 import { registerImmutableDictionaryFactory } from "../enumerator/Enumerator";
 import type { IImmutableCollection } from "../core/IImmutableCollection";
-import { OrderedHashTrie } from "./internal/OrderedHashTrie";
+import { OrderedHashTrie } from "../shared/internal/OrderedHashTrie";
 
 /**
  * Immutable dictionary backed by a persistent hash array mapped trie.

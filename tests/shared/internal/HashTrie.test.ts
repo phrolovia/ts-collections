@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { type BitmapNode, emptyRoot, find, insert, remove, TrieEntry } from "../../../src/dictionary/internal/HashTrie";
+import { type BitmapNode, emptyRoot, find, insert, remove, TrieEntry } from "../../../src/shared/internal/HashTrie";
 
 const entry = (hash: number, key: string, value = key) => new TrieEntry(hash, key, value, 0);
 
