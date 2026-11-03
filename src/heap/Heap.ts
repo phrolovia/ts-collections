@@ -25,8 +25,8 @@ export class Heap<TElement> extends AbstractRandomAccessCollection<TElement> {
         }
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#heap;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#heap[Symbol.iterator]();
     }
 
     /**

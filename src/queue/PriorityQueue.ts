@@ -16,8 +16,8 @@ export class PriorityQueue<TElement> extends AbstractCollection<TElement> {
         this.addAll(iterable);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#queue;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#queue[Symbol.iterator]();
     }
 
     /**

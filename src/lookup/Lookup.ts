@@ -49,8 +49,8 @@ export class Lookup<TKey, TElement> extends AbstractEnumerable<IGroup<TKey, TEle
         return lookup;
     }
 
-    * [Symbol.iterator](): Iterator<IGroup<TKey, TElement>> {
-        yield* this.#lookupTree;
+    [Symbol.iterator](): Iterator<IGroup<TKey, TElement>> {
+        return this.#lookupTree[Symbol.iterator]();
     }
 
     public get(key: TKey): IEnumerable<TElement> {

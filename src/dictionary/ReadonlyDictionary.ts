@@ -13,8 +13,8 @@ export class ReadonlyDictionary<TKey, TValue> extends AbstractReadonlyDictionary
         this.#dictionary = dictionary;
     }
 
-    * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
-        yield* this.#dictionary;
+    [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
+        return this.#dictionary[Symbol.iterator]();
     }
 
     public containsKey(key: TKey): boolean {

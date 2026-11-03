@@ -41,8 +41,8 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         }
     }
 
-    * [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
-        yield* this.#keyValueTree;
+    [Symbol.iterator](): Iterator<KeyValuePair<TKey, TValue>> {
+        return this.#keyValueTree[Symbol.iterator]();
     }
 
     public add(key: TKey, value: TValue): TValue {

@@ -21,8 +21,8 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         this.#tree = new RedBlackTree<TElement>(iterable, comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#tree;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#tree[Symbol.iterator]();
     }
 
     public add(element: TElement): boolean {

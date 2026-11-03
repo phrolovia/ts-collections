@@ -11,8 +11,8 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
         this.#set = new Set(iterable);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#set;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#set[Symbol.iterator]();
     }
 
     public add(element: TElement): boolean {

@@ -127,8 +127,8 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
         });
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.iterable;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.iterable[Symbol.iterator]();
     }
 
     public aggregate(accumulator: Accumulator<TElement, TElement>): TElement;

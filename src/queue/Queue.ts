@@ -12,8 +12,8 @@ export class Queue<TElement> extends AbstractCollection<TElement> {
         this.#queue = new LinkedList<TElement>(iterable, comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#queue;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#queue[Symbol.iterator]();
     }
 
     /**

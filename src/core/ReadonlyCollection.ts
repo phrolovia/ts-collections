@@ -11,8 +11,8 @@ export class ReadonlyCollection<TElement> extends AbstractReadonlyCollection<TEl
         this.#collection = collection;
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#collection;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#collection[Symbol.iterator]();
     }
 
     public override contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
