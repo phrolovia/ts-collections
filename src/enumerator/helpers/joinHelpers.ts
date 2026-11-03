@@ -1,6 +1,5 @@
-import { Comparators } from "../../shared/Comparators";
 import type { EqualityComparator } from "../../shared/EqualityComparator";
-import { identityKey } from "../../shared/internal/membership";
+import { identityKey, isDefaultEquality } from "../../shared/internal/membership";
 import type { JoinSelector } from "../../shared/JoinSelector";
 import type { Selector } from "../../shared/Selector";
 
@@ -17,7 +16,7 @@ export class JoinGroups<TKey, TValue> {
 
     public constructor(comparator: EqualityComparator<TKey>) {
         this.#comparator = comparator;
-        this.#index = comparator === Comparators.equalityComparator ? new Map() : null;
+        this.#index = isDefaultEquality(comparator) ? new Map() : null;
     }
 
     public add(key: TKey, value: TValue): void {

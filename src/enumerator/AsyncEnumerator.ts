@@ -1,5 +1,4 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
-import { AsyncEnumerable } from "./AsyncEnumerable";
 import { CircularLinkedList } from "../list/CircularLinkedList";
 import { CircularQueue } from "../queue/CircularQueue";
 import { Dictionary } from "../dictionary/Dictionary";
@@ -50,9 +49,10 @@ import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { Selector } from "../shared/Selector";
 import type { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import type { ZipManyZipper, Zipper } from "../shared/Zipper";
-import { identityKey } from "../shared/internal/membership";
+import { identityKey, isDefaultEquality } from "../shared/internal/membership";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
 import { buildGroupsAsync, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
+import { KeySet, type SortedKeysFactory } from "./helpers/keySetHelpers";
 import { findMedian } from "./helpers/medianHelpers";
 import { findPercentile } from "./helpers/percentileHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -68,6 +68,8 @@ import { IAsyncEnumerable } from "./IAsyncEnumerable";
 import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedAsyncEnumerable } from "./IOrderedAsyncEnumerable";
+
+const createSortedKeys: SortedKeysFactory = <TKey>(comparator: OrderComparator<TKey>) => new SortedSet<TKey>([], comparator);
 
 export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
@@ -315,7 +317,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public async disjoint<TSecond>(iterable: AsyncIterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): Promise<boolean> {
-        if (!comparator || comparator === Comparators.equalityComparator) {
+        if (!comparator || isDefaultEquality(comparator)) {
             const seen = new Set<TElement | TSecond>();
             for await (const element of this) {
                 seen.add(element);
@@ -370,7 +372,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             largeArray = leftKeys as Array<TKey | TSecondKey>;
         }
 
-        if (!keyComparator || keyComparator === Comparators.equalityComparator) {
+        if (!keyComparator || isDefaultEquality(keyComparator)) {
             const largeSet = new Set(largeArray);
             for (const key of smallArray) {
                 if (largeSet.has(key)) {
@@ -1350,28 +1352,12 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* exceptByGenerator<TKey>(iterable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterableIterator<TElement> {
-        const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
-        const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
-
-        const {value: first, done} = await new AsyncEnumerator(() => iterable)[Symbol.asyncIterator]().next();
-        if (done) {
-            return yield* this;
-        }
-
-        const firstKey = keySelector(first);
-        const keyCollection = typeof comparator(firstKey, firstKey) === "number" ? keySet : keyList;
-
-        keyCollection.add(firstKey);
-
+        const keys = new KeySet<TKey>(comparator, createSortedKeys);
         for await (const element of iterable) {
-            const key = keySelector(element);
-            keyCollection.add(key);
+            keys.add(keySelector(element));
         }
-
         for await (const element of this) {
-            const key = keySelector(element);
-            if (!keyCollection.contains(key)) {
-                keyCollection.add(key);
+            if (keys.add(keySelector(element))) {
                 yield element;
             }
         }
@@ -1421,7 +1407,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 }
             }
             yield* orderedGroups;
-        } else if (keyComparator === Comparators.equalityComparator) {
+        } else if (isDefaultEquality(keyComparator)) {
             // The default comparator is Object.is, which a Map can index once -0 has its own key.
             const groupMap = new Map<unknown, IGroup<TKey, TElement>>();
             for await (const element of this) {
@@ -1466,7 +1452,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     private async* groupJoinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         // Group keys are compared as keyCompare(groupKey, key), so a custom comparator gets its arguments flipped.
-        const lookupStore = new JoinGroups<TKey, TInner>(keyCompare === Comparators.equalityComparator
+        const lookupStore = new JoinGroups<TKey, TInner>(isDefaultEquality(keyCompare)
             ? keyCompare
             : (key: TKey, groupKey: TKey) => keyCompare(groupKey, key));
 
@@ -1506,28 +1492,15 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* intersectByGenerator<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey> | OrderComparator<TKey>): AsyncIterableIterator<TElement> {
-        const keySet = new SortedSet<TKey>([], comparator as OrderComparator<TKey>);
-        const keyList = new List<TKey>([], comparator as EqualityComparator<TKey>);
-
-        const {value: first, done} = await new AsyncEnumerator(() => enumerable)[Symbol.asyncIterator]().next();
-        if (done) {
-            return yield* AsyncEnumerable.empty<TElement>();
-        }
-
-        const firstKey = keySelector(first);
-        const keyCollection = typeof comparator(firstKey, firstKey) === "number" ? keySet : keyList;
-        keyCollection.add(firstKey);
-
+        const keys = new KeySet<TKey>(comparator, createSortedKeys);
         for await (const element of enumerable) {
-            const key = keySelector(element);
-            if (!keyCollection.contains(key)) {
-                keyCollection.add(key);
-            }
+            keys.add(keySelector(element));
+        }
+        if (keys.size === 0) {
+            return;
         }
         for await (const element of this) {
-            const key = keySelector(element);
-            if (keyCollection.contains(key)) {
-                keyCollection.remove(key);
+            if (keys.delete(keySelector(element))) {
                 yield element;
             }
         }
@@ -1897,29 +1870,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     private async* unionByGenerator<TKey>(enumerable: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, comparator?: EqualityComparator<TKey>): AsyncIterableIterator<TElement> {
-        const seenKeys = new Map<TKey, boolean>();
-        comparator ??= Comparators.equalityComparator;
-
-        const isDefaultComparator = comparator === Comparators.equalityComparator;
+        const keys = new KeySet<TKey>(comparator ?? Comparators.equalityComparator, createSortedKeys);
         for await (const source of [this, enumerable]) {
             for await (const element of source) {
-                const key = keySelector(element);
-                let exists = false;
-
-                if (isDefaultComparator) {
-                    exists = seenKeys.has(key);
-                } else {
-                    for (const seenKey of seenKeys.keys()) {
-                        if (comparator(key, seenKey)) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!exists) {
+                if (keys.add(keySelector(element))) {
                     yield element;
-                    seenKeys.set(key, true);
                 }
             }
         }
