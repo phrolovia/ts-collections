@@ -234,4 +234,53 @@ describe("ImmutableSortedDictionary", () => {
             expect(values.contains("value3")).to.be.false;
         });
     });
+
+    describe("persistence", () => {
+        test("should match a sorted model through random edits without changing earlier versions", () => {
+            let dictionary = ImmutableSortedDictionary.create<number, number>();
+            const model = new Map<number, number>();
+            const sortedEntries = () => Array.from(model).sort((a, b) => a[0] - b[0]);
+            const snapshots: Array<[ImmutableSortedDictionary<number, number>, Array<[number, number]>]> = [];
+            let seed = 5;
+            const random = (bound: number) => (seed = (seed * 1103515245 + 12345) % 2147483648) % bound;
+            for (let step = 0; step < 3000; ++step) {
+                const key = random(800);
+                const op = random(4);
+                if (op === 0) {
+                    dictionary = dictionary.remove(key);
+                    model.delete(key);
+                } else if (op === 1 && model.has(key)) {
+                    dictionary = dictionary.set(key, -step);
+                    model.set(key, -step);
+                } else {
+                    dictionary = dictionary.put(key, step);
+                    model.set(key, step);
+                }
+                if (step % 300 === 0) {
+                    snapshots.push([dictionary, sortedEntries()]);
+                }
+            }
+            expect(Array.from(dictionary.entries())).to.deep.equal(sortedEntries());
+            for (const [key, value] of model) {
+                expect(dictionary.get(key)).to.equal(value);
+            }
+            for (const [snapshot, expected] of snapshots) {
+                expect(Array.from(snapshot.entries())).to.deep.equal(expected);
+            }
+        });
+        test("should return the same dictionary when nothing changes", () => {
+            const dictionary = ImmutableSortedDictionary.create<number, string>([[1, "a"], [2, "b"]]);
+            expect(dictionary.remove(3)).to.equal(dictionary);
+            expect(dictionary.put(1, "a")).to.equal(dictionary);
+            expect(dictionary.set(2, "b")).to.equal(dictionary);
+        });
+        test("should reject duplicate and missing keys", () => {
+            const dictionary = ImmutableSortedDictionary.create<number, string>([[2, "b"], [1, "a"]]);
+            expect(() => dictionary.add(1, "x")).to.throw("Key already exists: 1");
+            expect(() => dictionary.set(3, "x")).to.throw();
+            expect(() => ImmutableSortedDictionary.create<number, string>([[1, "a"], [2, "b"], [1, "c"]])).to.throw("Key already exists: 1");
+            expect(dictionary.keys().toArray()).to.deep.equal([1, 2]);
+            expect(dictionary.values().toArray()).to.deep.equal(["a", "b"]);
+        });
+    });
 });

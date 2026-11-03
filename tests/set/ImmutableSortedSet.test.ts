@@ -331,4 +331,62 @@ describe("ImmutableSortedSet", () => {
             expect(set.length).to.eq(3);
         });
     });
+
+    describe("persistence", () => {
+        test("should match a sorted model through random edits without changing earlier versions", () => {
+            let set = ImmutableSortedSet.create<number>();
+            const model = new Set<number>();
+            const snapshots: Array<[ImmutableSortedSet<number>, Array<number>]> = [];
+            let seed = 3;
+            const random = (bound: number) => (seed = (seed * 1103515245 + 12345) % 2147483648) % bound;
+            for (let step = 0; step < 3000; ++step) {
+                const element = random(1000);
+                if (random(3) === 0) {
+                    set = set.remove(element);
+                    model.delete(element);
+                } else {
+                    set = set.add(element);
+                    model.add(element);
+                }
+                if (step % 300 === 0) {
+                    snapshots.push([set, Array.from(model).sort((a, b) => a - b)]);
+                }
+            }
+            expect(set.toArray()).to.deep.equal(Array.from(model).sort((a, b) => a - b));
+            expect(set.size()).to.equal(model.size);
+            for (const [snapshot, expected] of snapshots) {
+                expect(snapshot.toArray()).to.deep.equal(expected);
+            }
+        });
+        test("should return the same set when nothing changes", () => {
+            const set = ImmutableSortedSet.create([3, 1, 2]);
+            expect(set.add(2)).to.equal(set);
+            expect(set.remove(4)).to.equal(set);
+            expect(set.addAll([1, 3])).to.equal(set);
+            expect(set.removeAll([5])).to.equal(set);
+            expect(set.removeIf(e => e > 3)).to.equal(set);
+            expect(set.retainAll([1, 2, 3, 4])).to.equal(set);
+        });
+        test("should keep the first of equal elements when created", () => {
+            const byLength = (a: string, b: string) => a.length - b.length;
+            const set = ImmutableSortedSet.create(["bb", "a", "cc", "d"], byLength);
+            expect(set.toArray()).to.deep.equal(["a", "bb"]);
+        });
+        test("should handle range bounds that are not in the set", () => {
+            const set = ImmutableSortedSet.create([10, 20, 30, 40]);
+            expect(set.headSet(25).toArray()).to.deep.equal([10, 20]);
+            expect(set.tailSet(25).toArray()).to.deep.equal([30, 40]);
+            expect(set.subSet(15, 35).toArray()).to.deep.equal([20, 30]);
+            expect(set.subSet(10, 40, true, true).toArray()).to.deep.equal([10, 20, 30, 40]);
+            expect(set.headSet(5).toArray()).to.deep.equal([]);
+        });
+        test("should combine with other sets", () => {
+            const set = ImmutableSortedSet.create([1, 2, 3, 4, 5]);
+            expect(set.exceptWith([2, 4, 6]).toArray()).to.deep.equal([1, 3, 5]);
+            expect(set.intersectWith([4, 2, 6]).toArray()).to.deep.equal([2, 4]);
+            expect(set.isSubsetOf([0, 1, 2, 3, 4, 5])).to.be.true;
+            expect(set.isProperSupersetOf([1, 2])).to.be.true;
+            expect(set.overlaps([9, 5])).to.be.true;
+        });
+    });
 });

@@ -1,29 +1,48 @@
-import { contains } from "../enumerator/functions/contains";
 import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomAccessImmutableCollection";
 import { SortedSet } from "./SortedSet";
 import { Comparators } from "../shared/Comparators";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate } from "../shared/Predicate";
 import { registerImmutableSortedSetFactory } from "../enumerator/Enumerator";
+import { find, fromSorted, insert, nodes, remove, type Tree } from "../shared/internal/SortedTree";
 
+/**
+ * Immutable sorted set backed by a persistent weight-balanced tree. `add` and `remove` copy only
+ * the O(log n) nodes on the path to the element and share the rest with the original set.
+ */
 export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
-    readonly #set: SortedSet<TElement>;
+    readonly #tree: Tree<TElement, null>;
+    #view: SortedSet<TElement> | undefined;
 
-    private constructor(iterable: Iterable<TElement> = [] as TElement[],
-                        comparator: OrderComparator<TElement> = Comparators.orderComparator) {
+    private constructor(tree: Tree<TElement, null>, comparator: OrderComparator<TElement>) {
         super((e1, e2) => comparator(e1, e2) === 0);
-        this.#set = new SortedSet(iterable, comparator);
+        this.#tree = tree;
         this.#comparator = comparator;
     }
 
     public static create<TElement>(iterable?: Iterable<TElement>,
                                    comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet(iterable, comparator);
+        const order = comparator ?? Comparators.orderComparator;
+        return new ImmutableSortedSet(ImmutableSortedSet.#build(iterable ?? [], order), order);
+    }
+
+    // Sorts the elements and keeps the first of each run of equal ones, like adding them in order.
+    static #build<TElement>(elements: Iterable<TElement>, comparator: OrderComparator<TElement>): Tree<TElement, null> {
+        const sorted = Array.from(elements).sort(comparator);
+        const unique: Array<TElement> = [];
+        for (const element of sorted) {
+            if (unique.length === 0 || comparator(unique[unique.length - 1], element) !== 0) {
+                unique.push(element);
+            }
+        }
+        return fromSorted(unique, new Array<null>(unique.length).fill(null));
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#set;
+        for (const node of nodes(this.#tree)) {
+            yield node.key;
+        }
     }
 
     /**
@@ -32,7 +51,7 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set with the added element.
      */
     public add(element: TElement): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet(this.#set.append(element), this.#comparator);
+        return this.#with(insert(this.#tree, element, null, this.#comparator, false));
     }
 
     /**
@@ -41,7 +60,11 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set with the added elements.
      */
     public addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet([...this.#set, ...collection], this.#comparator);
+        let tree = this.#tree;
+        for (const element of collection) {
+            tree = insert(tree, element, null, this.#comparator, false);
+        }
+        return this.#with(tree);
     }
 
     /**
@@ -49,21 +72,15 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} An empty set.
      */
     public clear(): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet<TElement>([], this.#comparator);
+        return this.#with(null);
     }
 
     public override contains(element: TElement): boolean {
-        return this.#set.contains(element);
+        return find(this.#tree, element, this.#comparator) !== null;
     }
 
-    public override count(predicate?: Predicate<TElement>): number {
-        return this.#set.count(predicate);
-    }
-
-    public exceptWith(other: Iterable<TElement>) {
-        const set = this.#set.toEnumerableSet();
-        set.exceptWith(other);
-        return new ImmutableSortedSet(set, this.#comparator);
+    public exceptWith(other: Iterable<TElement>): ImmutableSortedSet<TElement> {
+        return this.removeAll(other);
     }
 
 
@@ -74,8 +91,15 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set that contains the first n elements of this set.
      */
     public headSet(toElement: TElement, inclusive: boolean = false): ImmutableSortedSet<TElement> {
-        const headSet = this.#set.headSet(toElement, inclusive);
-        return new ImmutableSortedSet(headSet, this.#comparator);
+        const head: Array<TElement> = [];
+        for (const node of nodes(this.#tree)) {
+            const order = this.#comparator(node.key, toElement);
+            if (order > 0 || (order === 0 && !inclusive)) {
+                break;
+            }
+            head.push(node.key);
+        }
+        return this.#fromSorted(head);
     }
 
     /**
@@ -84,29 +108,27 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set that contains elements that are in both this set and the provided collection.
      */
     public intersectWith(other: Iterable<TElement>): ImmutableSortedSet<TElement> {
-        const set = this.#set.toEnumerableSet();
-        set.intersectWith(other);
-        return new ImmutableSortedSet(set, this.#comparator);
+        return this.retainAll(other);
     }
 
     public isProperSubsetOf(other: Iterable<TElement>): boolean {
-        return this.#set.isProperSubsetOf(other);
+        return this.#sortedView().isProperSubsetOf(other);
     }
 
     public isProperSupersetOf(other: Iterable<TElement>): boolean {
-        return this.#set.isProperSupersetOf(other);
+        return this.#sortedView().isProperSupersetOf(other);
     }
 
     public isSubsetOf(other: Iterable<TElement>): boolean {
-        return this.#set.isSubsetOf(other);
+        return this.#sortedView().isSubsetOf(other);
     }
 
     public isSupersetOf(other: Iterable<TElement>): boolean {
-        return this.#set.isSupersetOf(other);
+        return this.#sortedView().isSupersetOf(other);
     }
 
     public overlaps(other: Iterable<TElement>): boolean {
-        return this.#set.overlaps(other);
+        return this.#sortedView().overlaps(other);
     }
 
 
@@ -116,7 +138,7 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set with the removed element.
      */
     public remove(element: TElement): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet(this.#set.where(e => e !== element), this.#comparator);
+        return this.#with(remove(this.#tree, element, this.#comparator));
     }
 
     /**
@@ -125,7 +147,11 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set without the elements in the specified collection.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet(this.#set.where(e => !contains(collection, e)), this.#comparator);
+        let tree = this.#tree;
+        for (const element of collection) {
+            tree = remove(tree, element, this.#comparator);
+        }
+        return this.#with(tree);
     }
 
     /**
@@ -134,7 +160,13 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set without the elements that satisfy the predicate.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutableSortedSet<TElement> {
-        return new ImmutableSortedSet(this.#set.where(e => !predicate(e)), this.#comparator);
+        const kept: Array<TElement> = [];
+        for (const node of nodes(this.#tree)) {
+            if (!predicate(node.key)) {
+                kept.push(node.key);
+            }
+        }
+        return kept.length === this.size() ? this : this.#fromSorted(kept);
     }
 
     /**
@@ -147,7 +179,7 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
         if (collection === this) {
             return this;
         }
-        return new ImmutableSortedSet<TElement>([...collection], this.#comparator);
+        return ImmutableSortedSet.create<TElement>(collection, this.#comparator);
     }
 
     /**
@@ -156,13 +188,12 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set with only the elements in the specified collection.
      */
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSortedSet<TElement> {
-        const set = this.#set.toEnumerableSet();
-        set.retainAll(collection);
-        return new ImmutableSortedSet(set, this.#comparator);
+        const retained = ImmutableSortedSet.#build<TElement>(collection, this.#comparator);
+        return this.removeIf(element => find(retained, element, this.#comparator) === null);
     }
 
     public size(): number {
-        return this.#set.size();
+        return this.#tree === null ? 0 : this.#tree.size;
     }
 
     /**
@@ -174,8 +205,15 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set that contains elements that are in the specified range.
      */
     public subSet(fromElement: TElement, toElement: TElement, fromInclusive: boolean = false, toInclusive: boolean = false): ImmutableSortedSet<TElement> {
-        const subSet = this.#set.subSet(fromElement, toElement, fromInclusive, toInclusive);
-        return new ImmutableSortedSet(subSet, this.#comparator);
+        const sub: Array<TElement> = [];
+        for (const node of nodes(this.#tree, { key: fromElement, inclusive: fromInclusive, comparator: this.#comparator })) {
+            const order = this.#comparator(node.key, toElement);
+            if (order > 0 || (order === 0 && !toInclusive)) {
+                break;
+            }
+            sub.push(node.key);
+        }
+        return this.#fromSorted(sub);
     }
 
     /**
@@ -185,8 +223,24 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
      * @returns {ImmutableSortedSet} A new set that contains elements that are greater than or equal to the specified element.
      */
     public tailSet(fromElement: TElement, inclusive: boolean = false): ImmutableSortedSet<TElement> {
-        const tailSet = this.#set.tailSet(fromElement, inclusive);
-        return new ImmutableSortedSet(tailSet, this.#comparator);
+        const tail: Array<TElement> = [];
+        for (const node of nodes(this.#tree, { key: fromElement, inclusive, comparator: this.#comparator })) {
+            tail.push(node.key);
+        }
+        return this.#fromSorted(tail);
+    }
+
+    #fromSorted(elements: Array<TElement>): ImmutableSortedSet<TElement> {
+        return new ImmutableSortedSet(fromSorted(elements, new Array<null>(elements.length).fill(null)), this.#comparator);
+    }
+
+    // Built on first use for the subset queries; the tree never changes, so the view stays valid.
+    #sortedView(): SortedSet<TElement> {
+        return this.#view ??= new SortedSet(this, this.#comparator);
+    }
+
+    #with(tree: Tree<TElement, null>): ImmutableSortedSet<TElement> {
+        return tree === this.#tree ? this : new ImmutableSortedSet(tree, this.#comparator);
     }
 
     public override get comparator(): OrderComparator<TElement> {
@@ -194,7 +248,7 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
     }
 
     public override get length(): number {
-        return this.#set.length;
+        return this.size();
     }
 }
 
