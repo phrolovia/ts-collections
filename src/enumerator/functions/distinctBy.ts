@@ -11,7 +11,7 @@ import type { IEnumerable } from "../IEnumerable";
  * @param keySelector Selector used to project each element to the key used for distinctness.
  * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
  * @returns {IEnumerable<TElement>} A sequence that contains the first occurrence of each unique key.
- * @remarks Each element's key is evaluated exactly once; cache expensive key computations when possible.
+ * @remarks Each element's key is evaluated exactly once; cache expensive key computations when possible. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match.
  * @example
  * ```typescript
  * const products = [

@@ -13,7 +13,7 @@ import type { IGroup } from "../IGroup";
  * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
  * @param hashSelector Optional hash selector. When provided together with `keyComparator`, the sequence will use a bucketed approach for faster grouping based on the hash values.
  * @returns {IEnumerable<IGroup<TKey, TElement>>} A sequence of groups, each exposing the key and the elements that share it.
- * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
+ * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration. Without a comparator, or with the default one, groups are found through a hash map. Any other comparator is checked against every group's key, which is quadratic when there are many groups: supply {@link hashSelector}, or project a key that the default comparator can match. The grouping runs again each time the result is enumerated; materialise it with `toArray` or `toLookup` to reuse it.
  * @example
  * ```typescript
  * const products = [
