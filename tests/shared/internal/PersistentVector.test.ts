@@ -34,4 +34,24 @@ describe("PersistentVector", () => {
         expect(Array.from(left)).to.deep.equal([1, 2, 3]);
         expect(Array.from(right)).to.deep.equal([1, 2, 4]);
     });
+    test("should edit a mutable copy in place without changing the original", () => {
+        let original = PersistentVector.empty<number>();
+        for (let i = 0; i < 100; ++i) {
+            original = original.push(i);
+        }
+        const mutable = original.asMutable();
+        expect(mutable.push(100)).to.equal(mutable);
+        expect(mutable.set(5, -5)).to.equal(mutable);
+        for (let i = 101; i < 2000; ++i) {
+            mutable.push(i);
+        }
+        const frozen = mutable.asImmutable();
+        expect(frozen.size).to.equal(2000);
+        expect(frozen.get(5)).to.equal(-5);
+        expect(frozen.get(1999)).to.equal(1999);
+        expect(original.size).to.equal(100);
+        expect(original.get(5)).to.equal(5);
+        expect(Array.from(original)).to.deep.equal(Array.from({ length: 100 }, (_, i) => i));
+        expect(frozen.push(1)).not.to.equal(frozen);
+    });
 });

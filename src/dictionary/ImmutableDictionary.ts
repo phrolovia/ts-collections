@@ -1,4 +1,3 @@
-import type { Dictionary } from "./Dictionary";
 import { Comparators } from "../shared/Comparators";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
@@ -38,16 +37,16 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         valueComparator?: EqualityComparator<TValue>
     ): ImmutableDictionary<TKey, TValue> {
         const comparator = valueComparator ?? Comparators.equalityComparator;
-        let trie = OrderedHashTrie.empty<TKey, TValue>();
+        const trie = OrderedHashTrie.empty<TKey, TValue>().asMutable();
         for (const pair of iterable) {
             const [key, value] = pair instanceof KeyValuePair ? [pair.key, pair.value] : pair;
-            if (trie.find(key) !== undefined) {
+            const size = trie.size;
+            if (trie.set(key, value).size === size) {
                 throw new InvalidArgumentException(`Key already exists: ${String(key)}`);
             }
-            trie = trie.set(key, value);
         }
         return new ImmutableDictionary(
-            trie,
+            trie.asImmutable(),
             comparator,
             (p1: KeyValuePair<TKey, TValue>, p2: KeyValuePair<TKey, TValue>) => Comparators.equalityComparator(p1.key, p2.key) && comparator(p1.value, p2.value)
         );
@@ -60,10 +59,12 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
     }
 
     public add(key: TKey, value: TValue): ImmutableDictionary<TKey, TValue> {
-        if (this.containsKey(key)) {
+        // A single upsert; the key already existed if the size did not grow.
+        const trie = this.#trie.set(key, value);
+        if (trie.size === this.#trie.size) {
             throw new InvalidArgumentException(`Key already exists: ${String(key)}`);
         }
-        return this.#withTrie(this.#trie.set(key, value));
+        return this.#withTrie(trie);
     }
 
     public override clear(): ImmutableDictionary<TKey, TValue> {
@@ -107,10 +108,12 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
     }
 
     public override set(key: TKey, value: TValue): ImmutableDictionary<TKey, TValue> {
-        if (!this.containsKey(key)) {
+        // A single upsert; the key was missing if the size grew.
+        const trie = this.#trie.set(key, value);
+        if (trie.size !== this.#trie.size) {
             throw new KeyNotFoundException(String(key));
         }
-        return this.#withTrie(this.#trie.set(key, value));
+        return this.#withTrie(trie);
     }
 
     public override size(): number {
@@ -131,6 +134,6 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
     }
 }
 
-registerImmutableDictionaryFactory(<TKey, TValue>(dictionary: Dictionary<TKey, TValue>): ImmutableDictionary<TKey, TValue> => {
-    return ImmutableDictionary.create<TKey, TValue>(dictionary, dictionary.valueComparator);
+registerImmutableDictionaryFactory(<TKey, TValue>(source: Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> => {
+    return ImmutableDictionary.create<TKey, TValue>(source, valueComparator);
 });

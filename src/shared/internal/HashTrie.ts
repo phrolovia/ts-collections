@@ -4,6 +4,12 @@ const BITS = 5;
 const MASK = (1 << BITS) - 1;
 
 /**
+ * Edit token of a trie being built in place. Nodes created under a token may be mutated by
+ * later edits that pass the same token; every other node is copied before it changes.
+ */
+export type TrieOwner = object;
+
+/**
  * A leaf of the trie. Entries are immutable and may be shared between trie versions.
  * `index` is the entry's slot in the insertion-order vector of {@link OrderedHashTrie}.
  */
@@ -23,7 +29,8 @@ export class TrieEntry<TKey, TValue> {
 export class CollisionNode<TKey, TValue> {
     public constructor(
         public readonly hash: number,
-        public readonly entries: ReadonlyArray<TrieEntry<TKey, TValue>>
+        public entries: Array<TrieEntry<TKey, TValue>>,
+        public readonly owner: TrieOwner | undefined
     ) {
     }
 }
@@ -34,15 +41,29 @@ export class CollisionNode<TKey, TValue> {
  */
 export class BitmapNode<TKey, TValue> {
     public constructor(
-        public readonly bitmap: number,
-        public readonly children: ReadonlyArray<TrieNode<TKey, TValue>>
+        public bitmap: number,
+        public children: Array<TrieNode<TKey, TValue>>,
+        public readonly owner: TrieOwner | undefined
     ) {
     }
 }
 
 export type TrieNode<TKey, TValue> = BitmapNode<TKey, TValue> | CollisionNode<TKey, TValue> | TrieEntry<TKey, TValue>;
 
-const EMPTY_ROOT = new BitmapNode<never, never>(0, []);
+/**
+ * Describes what the last {@link upsert} or {@link remove} call did. Reusing one object
+ * avoids allocating a result per call; read it right after the call that filled it.
+ */
+export interface TrieChange {
+    /** The entry that was added or that replaced `previous`; undefined if nothing changed. */
+    entry: TrieEntry<unknown, unknown> | undefined;
+    /** The entry that was replaced or removed, if any. */
+    previous: TrieEntry<unknown, unknown> | undefined;
+}
+
+export const lastChange: TrieChange = { entry: undefined, previous: undefined };
+
+const EMPTY_ROOT = new BitmapNode<never, never>(0, [], undefined);
 
 export const emptyRoot = <TKey, TValue>(): BitmapNode<TKey, TValue> => EMPTY_ROOT;
 
@@ -61,7 +82,7 @@ export const find = <TKey, TValue>(root: BitmapNode<TKey, TValue>, hash: number,
         shift += BITS;
     }
     if (node instanceof TrieEntry) {
-        return node.hash === hash && sameValueZero(node.key, key) ? node : undefined;
+        return node.hash === hash && (node.key === key || sameValueZero(node.key, key)) ? node : undefined;
     }
     if (node.hash !== hash) {
         return undefined;
@@ -70,48 +91,91 @@ export const find = <TKey, TValue>(root: BitmapNode<TKey, TValue>, hash: number,
 };
 
 /**
- * Returns a new root that contains the entry, replacing any entry with the same key.
- * Only the nodes on the path to the entry are copied.
+ * Maps the key to the value in a single pass and reports the outcome in {@link lastChange}.
+ * A new key gets `index`; an existing key keeps its index. Returns the same root, with
+ * `lastChange.entry` undefined, if the key is already mapped to that exact value.
+ * Only nodes on the path to the key are copied, or mutated when they belong to `owner`.
  */
-export const insert = <TKey, TValue>(root: BitmapNode<TKey, TValue>, entry: TrieEntry<TKey, TValue>): BitmapNode<TKey, TValue> => {
-    return insertInto(root, entry, 0) as BitmapNode<TKey, TValue>;
+export const upsert = <TKey, TValue>(
+    root: BitmapNode<TKey, TValue>,
+    hash: number,
+    key: TKey,
+    value: TValue,
+    index: number,
+    owner?: TrieOwner
+): BitmapNode<TKey, TValue> => {
+    lastChange.entry = undefined;
+    lastChange.previous = undefined;
+    return upsertInto(root, hash, key, value, index, owner, 0) as BitmapNode<TKey, TValue>;
 };
 
 /**
- * Returns a new root without the entry for the key. Returns the same root if the key is absent.
+ * Removes the key in a single pass and reports the removed entry in `lastChange.previous`.
+ * Returns the same root, with `lastChange.previous` undefined, if the key is absent.
  */
-export const remove = <TKey, TValue>(root: BitmapNode<TKey, TValue>, hash: number, key: TKey): BitmapNode<TKey, TValue> => {
-    const result = removeFrom(root, hash, key, 0);
-    return (result ?? EMPTY_ROOT) as BitmapNode<TKey, TValue>;
+export const remove = <TKey, TValue>(root: BitmapNode<TKey, TValue>, hash: number, key: TKey, owner?: TrieOwner): BitmapNode<TKey, TValue> => {
+    lastChange.entry = undefined;
+    lastChange.previous = undefined;
+    const result = removeFrom(root, hash, key, owner, 0);
+    return (result ?? (owner === undefined ? EMPTY_ROOT : new BitmapNode(0, [], owner))) as BitmapNode<TKey, TValue>;
 };
 
-const insertInto = <TKey, TValue>(node: TrieNode<TKey, TValue>, entry: TrieEntry<TKey, TValue>, shift: number): TrieNode<TKey, TValue> => {
+const createEntry = <TKey, TValue>(hash: number, key: TKey, value: TValue, index: number, previous?: TrieEntry<TKey, TValue>): TrieEntry<TKey, TValue> => {
+    const entry = new TrieEntry(hash, key, value, previous?.index ?? index);
+    lastChange.entry = entry;
+    lastChange.previous = previous;
+    return entry;
+};
+
+const upsertInto = <TKey, TValue>(
+    node: TrieNode<TKey, TValue>,
+    hash: number,
+    key: TKey,
+    value: TValue,
+    index: number,
+    owner: TrieOwner | undefined,
+    shift: number
+): TrieNode<TKey, TValue> => {
     if (node instanceof BitmapNode) {
-        const bit = 1 << ((entry.hash >>> shift) & MASK);
+        const bit = 1 << ((hash >>> shift) & MASK);
         const position = popCount(node.bitmap & (bit - 1));
         if ((node.bitmap & bit) === 0) {
-            const children = node.children.slice();
-            children.splice(position, 0, entry);
-            return new BitmapNode(node.bitmap | bit, children);
+            const entry = createEntry(hash, key, value, index);
+            const target = editable(node, owner);
+            target.children.splice(position, 0, entry);
+            target.bitmap |= bit;
+            return target;
         }
-        const children = node.children.slice();
-        children[position] = insertInto(node.children[position], entry, shift + BITS);
-        return new BitmapNode(node.bitmap, children);
+        const child = node.children[position];
+        const newChild = upsertInto(child, hash, key, value, index, owner, shift + BITS);
+        if (newChild === child) {
+            return node;
+        }
+        const target = editable(node, owner);
+        target.children[position] = newChild;
+        return target;
     }
-    if (node.hash !== entry.hash) {
-        return branch(node, entry, shift);
+    if (node.hash !== hash) {
+        return branch(node, createEntry(hash, key, value, index), shift, owner);
     }
     if (node instanceof TrieEntry) {
-        return sameValueZero(node.key, entry.key) ? entry : new CollisionNode(entry.hash, [node, entry]);
+        if (!sameValueZero(node.key, key)) {
+            return new CollisionNode(hash, [node, createEntry(hash, key, value, index)], owner);
+        }
+        return Object.is(node.value, value) ? node : createEntry(hash, key, value, index, node);
     }
-    const position = node.entries.findIndex(e => sameValueZero(e.key, entry.key));
-    const entries = node.entries.slice();
+    const position = node.entries.findIndex(e => sameValueZero(e.key, key));
+    if (position !== -1 && Object.is(node.entries[position].value, value)) {
+        return node;
+    }
+    const entry = createEntry(hash, key, value, index, position === -1 ? undefined : node.entries[position]);
+    const target = node.owner !== undefined && node.owner === owner ? node : new CollisionNode(node.hash, node.entries.slice(), owner);
     if (position === -1) {
-        entries.push(entry);
+        target.entries.push(entry);
     } else {
-        entries[position] = entry;
+        target.entries[position] = entry;
     }
-    return new CollisionNode(node.hash, entries);
+    return target;
 };
 
 // Builds the smallest subtree holding two leaves whose hashes differ.
@@ -119,22 +183,33 @@ const insertInto = <TKey, TValue>(node: TrieNode<TKey, TValue>, entry: TrieEntry
 const branch = <TKey, TValue>(
     existing: TrieEntry<TKey, TValue> | CollisionNode<TKey, TValue>,
     entry: TrieEntry<TKey, TValue>,
-    shift: number
+    shift: number,
+    owner: TrieOwner | undefined
 ): BitmapNode<TKey, TValue> => {
     const existingFragment = (existing.hash >>> shift) & MASK;
     const entryFragment = (entry.hash >>> shift) & MASK;
     if (existingFragment === entryFragment) {
-        return new BitmapNode(1 << existingFragment, [branch(existing, entry, shift + BITS)]);
+        return new BitmapNode(1 << existingFragment, [branch(existing, entry, shift + BITS, owner)], owner);
     }
     const children = existingFragment < entryFragment ? [existing, entry] : [entry, existing];
-    return new BitmapNode((1 << existingFragment) | (1 << entryFragment), children);
+    return new BitmapNode((1 << existingFragment) | (1 << entryFragment), children, owner);
 };
 
 // Returns the same node when the key is absent and undefined when the node becomes empty.
 // Below the root, a branch left with a single leaf collapses into that leaf so the trie stays shallow.
-const removeFrom = <TKey, TValue>(node: TrieNode<TKey, TValue>, hash: number, key: TKey, shift: number): TrieNode<TKey, TValue> | undefined => {
+const removeFrom = <TKey, TValue>(
+    node: TrieNode<TKey, TValue>,
+    hash: number,
+    key: TKey,
+    owner: TrieOwner | undefined,
+    shift: number
+): TrieNode<TKey, TValue> | undefined => {
     if (node instanceof TrieEntry) {
-        return node.hash === hash && sameValueZero(node.key, key) ? undefined : node;
+        if (node.hash === hash && sameValueZero(node.key, key)) {
+            lastChange.previous = node;
+            return undefined;
+        }
+        return node;
     }
     if (node instanceof CollisionNode) {
         if (node.hash !== hash) {
@@ -144,12 +219,13 @@ const removeFrom = <TKey, TValue>(node: TrieNode<TKey, TValue>, hash: number, ke
         if (position === -1) {
             return node;
         }
+        lastChange.previous = node.entries[position];
         if (node.entries.length === 2) {
             return node.entries[1 - position];
         }
-        const entries = node.entries.slice();
-        entries.splice(position, 1);
-        return new CollisionNode(node.hash, entries);
+        const target = node.owner !== undefined && node.owner === owner ? node : new CollisionNode(node.hash, node.entries.slice(), owner);
+        target.entries.splice(position, 1);
+        return target;
     }
 
     const bit = 1 << ((hash >>> shift) & MASK);
@@ -158,7 +234,7 @@ const removeFrom = <TKey, TValue>(node: TrieNode<TKey, TValue>, hash: number, ke
     }
     const position = popCount(node.bitmap & (bit - 1));
     const child = node.children[position];
-    const newChild = removeFrom(child, hash, key, shift + BITS);
+    const newChild = removeFrom(child, hash, key, owner, shift + BITS);
     if (newChild === child) {
         return node;
     }
@@ -169,16 +245,21 @@ const removeFrom = <TKey, TValue>(node: TrieNode<TKey, TValue>, hash: number, ke
         if (shift > 0 && node.children.length === 2 && !(node.children[1 - position] instanceof BitmapNode)) {
             return node.children[1 - position];
         }
-        const children = node.children.slice();
-        children.splice(position, 1);
-        return new BitmapNode(node.bitmap ^ bit, children);
+        const target = editable(node, owner);
+        target.children.splice(position, 1);
+        target.bitmap ^= bit;
+        return target;
     }
     if (shift > 0 && node.children.length === 1 && !(newChild instanceof BitmapNode)) {
         return newChild;
     }
-    const children = node.children.slice();
-    children[position] = newChild;
-    return new BitmapNode(node.bitmap, children);
+    const target = editable(node, owner);
+    target.children[position] = newChild;
+    return target;
+};
+
+const editable = <TKey, TValue>(node: BitmapNode<TKey, TValue>, owner: TrieOwner | undefined): BitmapNode<TKey, TValue> => {
+    return node.owner !== undefined && node.owner === owner ? node : new BitmapNode(node.bitmap, node.children.slice(), owner);
 };
 
 const popCount = (value: number): number => {

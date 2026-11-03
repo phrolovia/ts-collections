@@ -19,14 +19,11 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
     }
 
     public static create<TElement>(iterable: Iterable<TElement> = []): ImmutableSet<TElement> {
-        return new ImmutableSet(ImmutableSet.#addAllTo(OrderedHashTrie.empty(), iterable));
-    }
-
-    static #addAllTo<TElement>(trie: OrderedHashTrie<TElement, true>, iterable: Iterable<TElement>): OrderedHashTrie<TElement, true> {
+        const trie = OrderedHashTrie.empty<TElement, true>().asMutable();
         for (const element of iterable) {
-            trie = trie.set(element, true);
+            trie.set(element, true);
         }
-        return trie;
+        return new ImmutableSet(trie.asImmutable());
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -50,7 +47,11 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set with the added elements.
      */
     public addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        return this.#withTrie(ImmutableSet.#addAllTo(this.#trie, collection));
+        return this.#edit(trie => {
+            for (const element of collection) {
+                trie.set(element, true);
+            }
+        });
     }
 
     /**
@@ -118,11 +119,11 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set without the elements in the specified collection.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
-        let trie = this.#trie;
-        for (const element of collection) {
-            trie = trie.remove(element);
-        }
-        return this.#withTrie(trie);
+        return this.#edit(trie => {
+            for (const element of collection) {
+                trie.remove(element);
+            }
+        });
     }
 
     /**
@@ -131,13 +132,13 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      * @returns {ImmutableSet} A new set without the elements that satisfy the specified predicate.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutableSet<TElement> {
-        let trie = this.#trie;
-        for (const entry of this.#trie) {
-            if (predicate(entry.key)) {
-                trie = trie.remove(entry.key);
+        return this.#edit(trie => {
+            for (const entry of this.#trie) {
+                if (predicate(entry.key)) {
+                    trie.remove(entry.key);
+                }
             }
-        }
-        return this.#withTrie(trie);
+        });
     }
 
     /**
@@ -160,17 +161,25 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
      */
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableSet<TElement> {
         const retained = new Set<TElement>(collection);
-        let trie = this.#trie;
-        for (const entry of this.#trie) {
-            if (!retained.has(entry.key)) {
-                trie = trie.remove(entry.key);
+        return this.#edit(trie => {
+            for (const entry of this.#trie) {
+                if (!retained.has(entry.key)) {
+                    trie.remove(entry.key);
+                }
             }
-        }
-        return this.#withTrie(trie);
+        });
     }
 
     public size(): number {
         return this.#trie.size;
+    }
+
+    // Applies a bulk change to a mutable copy of the trie, so shared nodes are copied at most once.
+    // Each bulk operation only adds or only removes, so an unchanged size means nothing changed.
+    #edit(change: (trie: OrderedHashTrie<TElement, true>) => void): ImmutableSet<TElement> {
+        const trie = this.#trie.asMutable();
+        change(trie);
+        return trie.size === this.#trie.size ? this : new ImmutableSet(trie.asImmutable());
     }
 
     // Subset queries scan both collections anyway, so they run on a temporary EnumerableSet.

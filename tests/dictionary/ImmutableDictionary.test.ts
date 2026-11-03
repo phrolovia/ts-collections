@@ -330,5 +330,14 @@ describe("ImmutableDictionary", () => {
             expect(dictionary.put("k4", 8).size()).to.equal(4);
             expect(dictionary.size()).to.equal(3);
         });
+        test("should throw from Enumerable#toImmutableDictionary when keys repeat", () => {
+            expect(() => from([1, 2, 3]).toImmutableDictionary(n => n % 2, n => n)).toThrow(InvalidArgumentException);
+        });
+        test("should create from a sequence of KeyValuePairs with Enumerable#toImmutableDictionary", () => {
+            const source = [new KeyValuePair("a", 1), new KeyValuePair("b", 2)];
+            const dictionary = from(source).toImmutableDictionary(p => p.key, p => p.value * 10, (a, b) => a === b);
+            expect(Array.from(dictionary.entries())).to.deep.equal([["a", 10], ["b", 20]]);
+            expect(dictionary.containsValue(20)).to.be.true;
+        });
     });
 });
