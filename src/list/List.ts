@@ -1,5 +1,6 @@
 import { AbstractList } from "./AbstractList";
 import { Comparators } from "../shared/Comparators";
+import type { Predicate } from "../shared/Predicate";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
@@ -89,6 +90,23 @@ export class List<TElement> extends AbstractList<TElement> {
         const element = this.#data[index];
         this.#data.splice(index, 1);
         return element;
+    }
+
+    public override removeIf(predicate: Predicate<TElement>): boolean {
+        // Compacts the kept elements to the front in place, then drops the tail.
+        const data = this.#data;
+        let write = 0;
+        for (let read = 0; read < data.length; ++read) {
+            const element = data[read];
+            if (!predicate(element)) {
+                data[write++] = element;
+            }
+        }
+        if (write === data.length) {
+            return false;
+        }
+        data.length = write;
+        return true;
     }
 
     public set(index: number, element: TElement): TElement {

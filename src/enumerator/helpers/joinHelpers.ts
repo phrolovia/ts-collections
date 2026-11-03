@@ -1,13 +1,10 @@
 import { Comparators } from "../../shared/Comparators";
 import type { EqualityComparator } from "../../shared/EqualityComparator";
+import { identityKey } from "../../shared/internal/membership";
 import type { JoinSelector } from "../../shared/JoinSelector";
 import type { Selector } from "../../shared/Selector";
 
-const MINUS_ZERO = Symbol("-0");
 const NO_GROUPS: ReadonlyArray<never> = [];
-
-// Map keys use SameValueZero, so -0 gets its own key to keep the Object.is semantics of the default comparator.
-export const hashKey = (key: unknown): unknown => Object.is(key, -0) ? MINUS_ZERO : key;
 
 /**
  * Groups values by key in first-seen order. With the default comparator the groups are indexed by
@@ -31,13 +28,13 @@ export class JoinGroups<TKey, TValue> {
         }
         const created = { key, elements: [value] };
         this.groups.push(created);
-        this.#index?.set(hashKey(key), created);
+        this.#index?.set(identityKey(key), created);
     }
 
     // Returns the first group whose key matches, comparing as comparator(key, group.key).
     public find(key: TKey): JoinGroup<TKey, TValue> | undefined {
         if (this.#index) {
-            return this.#index.get(hashKey(key));
+            return this.#index.get(identityKey(key));
         }
         for (const group of this.groups) {
             if (this.#comparator(key, group.key)) {
@@ -50,7 +47,7 @@ export class JoinGroups<TKey, TValue> {
     // Returns every group whose key matches; a comparator that is not transitive may match several.
     public matching(key: TKey): ReadonlyArray<JoinGroup<TKey, TValue>> {
         if (this.#index) {
-            const group = this.#index.get(hashKey(key));
+            const group = this.#index.get(identityKey(key));
             return group ? [group] : NO_GROUPS;
         }
         return this.groups.filter(group => this.#comparator(key, group.key));

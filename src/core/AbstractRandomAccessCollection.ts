@@ -1,24 +1,17 @@
 import { AbstractCollection } from "./AbstractCollection";
+import { Comparators } from "../shared/Comparators";
+import { membership } from "../shared/internal/membership";
 import type { Predicate } from "../shared/Predicate";
 import type { IRandomAccessCollection } from "./IRandomAccessCollection";
 
 export abstract class AbstractRandomAccessCollection<TElement> extends AbstractCollection<TElement> implements IRandomAccessCollection<TElement> {
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        const elementsToRetain = Array.from(collection);
-        const removedElements = new Set<TElement>();
-        for (const element of this) {
-            const found = this.comparer
-                ? elementsToRetain.some(e => this.comparer(e, element))
-                : (elementsToRetain as TElement[]).includes(element);
-
-            if (!found) {
-                removedElements.add(element);
-            }
-        }
-        if (removedElements.size > 0) {
-            return this.removeAll(removedElements);
-        }
-        return false;
+        // Retained elements are compared as comparer(retained, element), hence the flipped comparator.
+        const comparer = this.comparer === Comparators.equalityComparator
+            ? this.comparer
+            : (element: TElement, retained: TElement) => this.comparer(retained, element);
+        const retains = membership<TElement>(collection, comparer);
+        return this.removeIf(element => !retains(element));
     }
 
     abstract remove(element: TElement): boolean;

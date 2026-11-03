@@ -50,8 +50,9 @@ import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { Selector } from "../shared/Selector";
 import type { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import type { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { identityKey } from "../shared/internal/membership";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
-import { buildGroupsAsync, hashKey, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
+import { buildGroupsAsync, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
 import { findMedian } from "./helpers/medianHelpers";
 import { findPercentile } from "./helpers/percentileHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -1425,7 +1426,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
             const groupMap = new Map<unknown, IGroup<TKey, TElement>>();
             for await (const element of this) {
                 const key = keySelector(element);
-                const hash = hashKey(key);
+                const hash = identityKey(key);
                 const group = groupMap.get(hash);
                 if (group) {
                     (group.source as List<TElement>).add(element);

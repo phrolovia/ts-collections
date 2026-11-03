@@ -49,8 +49,9 @@ import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { identityKey } from "../shared/internal/membership";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
-import { buildGroupsSync, hashKey, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
+import { buildGroupsSync, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
 import { findMedian } from "./helpers/medianHelpers";
 import { findPercentile } from "./helpers/percentileHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -1486,7 +1487,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             const groupMap = new Map<unknown, IGroup<TKey, TElement>>();
             for (const item of this) {
                 const key = keySelector(item);
-                const hash = hashKey(key);
+                const hash = identityKey(key);
                 const group = groupMap.get(hash);
                 if (group) {
                     (group.source as List<TElement>).add(item);
