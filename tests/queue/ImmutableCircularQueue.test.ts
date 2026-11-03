@@ -175,4 +175,38 @@ describe("ImmutableCircularQueue", () => {
             expect(queue.capacity).to.equal(5);
         });
     });
+    describe("persistence", () => {
+        test("should match an array model and leave earlier versions unchanged", () => {
+            const capacity = 50;
+            let queue = ImmutableCircularQueue.create<number>(capacity);
+            let model: number[] = [];
+            const snapshots: Array<[ImmutableCircularQueue<number>, number[]]> = [];
+            let seed = 7;
+            const random = (bound: number) => (seed = (seed * 1103515245 + 12345) % 2147483648) % bound;
+            for (let step = 0; step < 5000; ++step) {
+                const action = random(10);
+                if (action < 5) {
+                    queue = queue.enqueue(step);
+                    model = [...model, step].slice(-capacity);
+                } else if (action < 8) {
+                    queue = queue.poll();
+                    model = model.slice(1);
+                } else {
+                    const batch = Array.from({ length: random(80) }, (_, i) => step * 100 + i);
+                    queue = queue.addAll(batch);
+                    model = [...model, ...batch].slice(-capacity);
+                }
+                expect(queue.size()).toBe(model.length);
+                expect(queue.peek()).toBe(model.length === 0 ? null : model[0]);
+                if (step % 250 === 0) {
+                    snapshots.push([queue, model]);
+                }
+            }
+            expect(queue.toArray()).toEqual(model);
+            for (const [snapshot, expected] of snapshots) {
+                expect(snapshot.toArray()).toEqual(expected);
+                expect(snapshot.isFull()).toBe(expected.length === capacity);
+            }
+        });
+    });
 });

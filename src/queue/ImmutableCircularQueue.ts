@@ -2,23 +2,29 @@ import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { registerImmutableCircularQueueFactory } from "../enumerator/Enumerator";
+import { PersistentVector } from "../shared/internal/PersistentVector";
+
+// Below this many discarded slots, the vector is never compacted.
+const MIN_COMPACTION_SIZE = 32;
 
 /**
  * An immutable circular queue maintains a bounded history of elements. When the capacity is exceeded,
  * the oldest element is discarded and the queue keeps the most recent values.
+ *
+ * The elements live in a persistent vector behind a start offset, as in {@link ImmutableQueue}:
+ * enqueuing appends and discarding advances the offset, so updates share structure instead of
+ * copying the queue. The discarded prefix is dropped once it outgrows the queue.
  */
 export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #capacity: number;
-    readonly #elements: readonly TElement[];
+    readonly #items: PersistentVector<TElement>;
+    readonly #start: number;
 
-    private constructor(capacity: number, elements?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
+    private constructor(capacity: number, items: PersistentVector<TElement>, start: number, comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        const normalizedCapacity = Number.isFinite(capacity) ? Math.max(0, Math.trunc(capacity)) : 0;
-        this.#capacity = normalizedCapacity;
-        const source = elements ? Array.from(elements) : [];
-        this.#elements = normalizedCapacity === 0
-            ? []
-            : source.slice(Math.max(0, source.length - normalizedCapacity));
+        this.#capacity = capacity;
+        this.#items = items;
+        this.#start = start;
     }
 
     public static create<TElement>(): ImmutableCircularQueue<TElement>;
@@ -50,11 +56,25 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
             comparer = comparator;
         }
 
-        return new ImmutableCircularQueue<TElement>(capacity, elements, comparer);
+        const normalizedCapacity = Number.isFinite(capacity) ? Math.max(0, Math.trunc(capacity)) : 0;
+        return ImmutableCircularQueue.#from<TElement>(normalizedCapacity, elements ?? [], comparer);
+    }
+
+    // Keeps the last `capacity` elements of the iterable.
+    static #from<TElement>(capacity: number, elements: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement> {
+        const source = capacity === 0 ? [] : Array.from(elements);
+        const retained = source.length > capacity ? source.slice(source.length - capacity) : source;
+        return new ImmutableCircularQueue<TElement>(capacity, PersistentVector.empty<TElement>().pushAll(retained), 0, comparator);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#elements;
+        let index = 0;
+        for (const leaf of this.#items.leaves()) {
+            for (let slot = Math.max(this.#start - index, 0); slot < leaf.length; ++slot) {
+                yield leaf[slot];
+            }
+            index += leaf.length;
+        }
     }
 
     /**
@@ -66,10 +86,7 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (this.#capacity === 0) {
             return this;
         }
-        const elements = this.isFull()
-            ? [...this.#elements.slice(1), element]
-            : [...this.#elements, element];
-        return new ImmutableCircularQueue<TElement>(this.#capacity, elements, this.comparer);
+        return this.#with(this.#items.push(element), this.isFull() ? this.#start + 1 : this.#start);
     }
 
     /**
@@ -82,11 +99,8 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (this.#capacity === 0) {
             return this;
         }
-        const appended = [...this.#elements, ...collection];
-        const retained = appended.length > this.#capacity
-            ? appended.slice(appended.length - this.#capacity)
-            : appended;
-        return new ImmutableCircularQueue<TElement>(this.#capacity, retained, this.comparer);
+        const items = this.#items.pushAll(collection);
+        return items === this.#items ? this : this.#with(items, Math.max(this.#start, items.size - this.#capacity));
     }
 
     /**
@@ -96,7 +110,7 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
     public override clear(): ImmutableCircularQueue<TElement> {
         return this.isEmpty()
             ? this
-            : new ImmutableCircularQueue<TElement>(this.#capacity, [], this.comparer);
+            : new ImmutableCircularQueue<TElement>(this.#capacity, PersistentVector.empty<TElement>(), 0, this.comparer);
     }
 
     /**
@@ -108,7 +122,7 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (this.isEmpty()) {
             throw new NoElementsException();
         }
-        return new ImmutableCircularQueue<TElement>(this.#capacity, this.#elements.slice(1), this.comparer);
+        return this.#with(this.#items, this.#start + 1);
     }
 
     /**
@@ -130,11 +144,11 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (this.isEmpty()) {
             throw new NoElementsException();
         }
-        return this.#elements[0];
+        return this.#items.get(this.#start);
     }
 
     public override isEmpty(): boolean {
-        return this.#elements.length === 0;
+        return this.size() === 0;
     }
 
     /**
@@ -151,7 +165,7 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
      * @returns {TElement | null} The head of the queue or null if the queue is empty.
      */
     public peek(): TElement | null {
-        return this.isEmpty() ? null : this.#elements[0];
+        return this.isEmpty() ? null : this.#items.get(this.#start);
     }
 
     /**
@@ -163,7 +177,7 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (this.isEmpty()) {
             return this;
         }
-        return new ImmutableCircularQueue<TElement>(this.#capacity, this.#elements.slice(1), this.comparer);
+        return this.#with(this.#items, this.#start + 1);
     }
 
     /**
@@ -180,11 +194,24 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         if (collection === this) {
             return this;
         }
-        return new ImmutableCircularQueue<TElement>(this.#capacity, [...collection], this.comparer);
+        return ImmutableCircularQueue.#from<TElement>(this.#capacity, collection, this.comparer);
     }
 
     public override size(): number {
-        return this.#elements.length;
+        return this.#items.size - this.#start;
+    }
+
+    // Wraps the window [start, items.size), rebuilding the vector once the discarded prefix outgrows it.
+    #with(items: PersistentVector<TElement>, start: number): ImmutableCircularQueue<TElement> {
+        const remaining = items.size - start;
+        if (start >= MIN_COMPACTION_SIZE && start > remaining) {
+            const compacted = PersistentVector.empty<TElement>().asMutable();
+            for (let index = start; index < items.size; ++index) {
+                compacted.push(items.get(index));
+            }
+            return new ImmutableCircularQueue<TElement>(this.#capacity, compacted.asImmutable(), 0, this.comparer);
+        }
+        return new ImmutableCircularQueue<TElement>(this.#capacity, items, start, this.comparer);
     }
 
     /**
@@ -199,7 +226,7 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
     }
 
     public override get length(): number {
-        return this.#elements.length;
+        return this.size();
     }
 }
 
