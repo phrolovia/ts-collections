@@ -27,8 +27,8 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         return new ImmutableList(PersistentVector.empty<TElement>().pushAll(iterable ?? []), comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#vector;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#vector[Symbol.iterator]();
     }
 
     /**

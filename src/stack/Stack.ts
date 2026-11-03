@@ -13,8 +13,8 @@ export class Stack<TElement> extends AbstractCollection<TElement> {
         this.#stack = new LinkedList<TElement>(reverse(iterable), comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#stack;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#stack[Symbol.iterator]();
     }
 
     /**

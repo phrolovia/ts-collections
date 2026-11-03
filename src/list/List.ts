@@ -21,8 +21,8 @@ export class List<TElement> extends AbstractList<TElement> {
         }
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#data;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#data[Symbol.iterator]();
     }
 
     public override add(element: TElement): boolean {

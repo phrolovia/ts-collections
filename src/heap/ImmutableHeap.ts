@@ -32,8 +32,8 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
         return new ImmutableHeap(PersistentHeap.create(iterable ?? [], order), order);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#heap;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#heap[Symbol.iterator]();
     }
 
     /**

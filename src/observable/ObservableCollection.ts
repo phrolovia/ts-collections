@@ -17,8 +17,8 @@ export class ObservableCollection<TElement> extends AbstractEnumerable<TElement>
         this.#list = new List(iterable ?? [], comparator);
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#list;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#list[Symbol.iterator]();
     }
 
     public add(element: TElement): boolean {

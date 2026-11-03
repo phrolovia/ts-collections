@@ -66,8 +66,19 @@ import { IEnumerable } from "./IEnumerable";
 import { IGroup } from "./IGroup";
 import { IOrderedEnumerable } from "./IOrderedEnumerable";
 
+// A persistent list of the parts that append, concat and prepend added around a base sequence.
+type ChainPart<TElement> = { readonly next: ChainPart<TElement> | null; readonly part: Iterable<TElement> } | null;
+
+type Chain<TElement> = {
+    readonly back: ChainPart<TElement>;
+    readonly base: Iterable<TElement>;
+    readonly front: ChainPart<TElement>;
+};
+
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     readonly #MINUS_ZERO_SENTINEL = Symbol("-0");
+    // Set when this enumerator only joins parts around a base, so further joins extend the same chain.
+    #chain: Chain<TElement> | undefined;
     readonly #normalizeZero = <TKey>(k: unknown): TKey | symbol => Object.is(k, -0) ? this.#MINUS_ZERO_SENTINEL : k as TKey | symbol;
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
@@ -78,8 +89,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public constructor(private readonly iterable: () => Iterable<TElement>) {
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.iterable();
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.iterable()[Symbol.iterator]();
     }
 
     public aggregate(accumulator: Accumulator<TElement, TElement>): TElement;
@@ -140,7 +151,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public append(element: TElement): IEnumerable<TElement> {
-        return new Enumerator(() => this.appendGenerator(element));
+        const chain = this.#chainOrSelf();
+        return Enumerator.#chained({ ...chain, back: { next: chain.back, part: [element] } });
     }
 
     public atLeast(count: number, predicate?: Predicate<TElement>): boolean {
@@ -200,6 +212,10 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<TResult>(() => this.castGenerator());
     }
 
+    #chainOrSelf(): Chain<TElement> {
+        return this.#chain ?? { back: null, base: this, front: null };
+    }
+
     public chunk(size: number): IEnumerable<IEnumerable<TElement>> {
         if (size < 1) {
             throw new InvalidArgumentException("Size must be greater than 0.", "size");
@@ -219,7 +235,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public concat(iterable: Iterable<TElement>): IEnumerable<TElement> {
-        return new Enumerator(() => this.concatGenerator(iterable));
+        const chain = this.#chainOrSelf();
+        return Enumerator.#chained({ ...chain, back: { next: chain.back, part: iterable } });
     }
 
     public contains(element: TElement, comparator?: EqualityComparator<TElement>): boolean {
@@ -742,7 +759,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public prepend(element: TElement): IEnumerable<TElement> {
-        return new Enumerator(() => this.prependGenerator(element));
+        const chain = this.#chainOrSelf();
+        return Enumerator.#chained({ ...chain, front: { next: chain.front, part: [element] } });
     }
 
     public product(this: Iterable<number>): number;
@@ -1228,9 +1246,26 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         return new Enumerator<[TElement, ...UnpackIterableTuple<TIterable>]>(() => this.zipManyWithoutZipperGenerator(iterables));
     }
 
-    private* appendGenerator(element: TElement): IterableIterator<TElement> {
-        yield* this;
-        yield element;
+    static* #chainGenerator<TElement>(chain: Chain<TElement>): IterableIterator<TElement> {
+        for (let front = chain.front; front !== null; front = front.next) {
+            yield* front.part;
+        }
+        yield* chain.base;
+        const back: Array<Iterable<TElement>> = [];
+        for (let part = chain.back; part !== null; part = part.next) {
+            back.push(part.part);
+        }
+        for (let index = back.length - 1; index >= 0; --index) {
+            yield* back[index];
+        }
+    }
+
+    // Joining parts one generator at a time nests a frame per call, which overflows the stack for
+    // long chains; keeping the parts in one chain visits each element through a single generator.
+    static #chained<TElement>(chain: Chain<TElement>): Enumerator<TElement> {
+        const enumerator = new Enumerator<TElement>(() => Enumerator.#chainGenerator(chain));
+        enumerator.#chain = chain;
+        return enumerator;
     }
 
     private* cartesianGenerator<TSecond>(iterable: Iterable<TSecond>): IterableIterator<[TElement, TSecond]> {
@@ -1313,11 +1348,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 yield item;
             }
         }
-    }
-
-    private* concatGenerator(enumerable: Iterable<TElement>): IterableIterator<TElement> {
-        yield* this;
-        yield* enumerable;
     }
 
     private* cycleGenerator(count?: number): IterableIterator<TElement> {
@@ -1701,11 +1731,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* permutationsGenerator(size?: number): IterableIterator<IEnumerable<TElement>> {
         const distinctElements = Array.from(this.distinct());
         yield* permutationsGenerator(distinctElements, size);
-    }
-
-    private* prependGenerator(item: TElement): IterableIterator<TElement> {
-        yield item;
-        yield* this;
     }
 
     private* reverseGenerator(): IterableIterator<TElement> {

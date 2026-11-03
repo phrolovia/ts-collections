@@ -73,8 +73,8 @@ export class PersistentHeap<TElement> {
         }
     }
 
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#items;
+    [Symbol.iterator](): Iterator<TElement> {
+        return this.#items[Symbol.iterator]();
     }
 
     public add(element: TElement): PersistentHeap<TElement> {
