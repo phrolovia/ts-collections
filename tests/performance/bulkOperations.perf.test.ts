@@ -49,4 +49,19 @@ describe("Bulk collection operation performance", () => {
         expect(elapsed).toBeLessThan(1000);
         expect(sorted.toArray()).toEqual(half);
     });
+    test("should read the edges and ranges of a SortedSet without scanning it", () => {
+        const sorted = new SortedSet(elements);
+        let sizes: number[] = [];
+        const elapsed = timed(() => {
+            for (let i = 0; i < 10000; ++i) {
+                sorted.first();
+                sorted.last();
+            }
+            for (let i = 0; i < 1000; ++i) {
+                sizes = [sorted.headSet(10).size(), sorted.tailSet(COUNT - 11).size(), sorted.subSet(COUNT / 2, COUNT / 2 + 10).size()];
+            }
+        });
+        expect(elapsed).toBeLessThan(1000);
+        expect(sizes).toEqual([10, 10, 10]);
+    });
 });

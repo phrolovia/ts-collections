@@ -35,6 +35,32 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         }
     }
 
+    /**
+     * Yields the elements in order, starting at the first element that is greater than `from`,
+     * or equal to it when `inclusive` is true. Reaching the start takes O(log n).
+     */
+    public* ascendingFrom(from: TElement, inclusive: boolean): IterableIterator<TElement> {
+        const stack: Array<INode<TElement>> = [];
+        // Descend to the start, keeping the ancestors that still lie ahead on the stack.
+        let current = this.root;
+        while (current != null) {
+            const order = this.orderComparator(from, current.getData());
+            if (order < 0 || (order === 0 && inclusive)) {
+                stack.push(current);
+                current = order === 0 ? null : current.getLeft();
+            } else {
+                current = current.getRight();
+            }
+        }
+        while (stack.length > 0) {
+            const node = stack.pop() as INode<TElement>;
+            yield node.getData();
+            for (let next = node.getRight(); next != null; next = next.getLeft()) {
+                stack.push(next);
+            }
+        }
+    }
+
     public clear(): void {
         this.root = null;
         this.treeSize = 0;
@@ -65,6 +91,28 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
             return;
         }
         super.forEach(action);
+    }
+
+    /**
+     * Returns the largest element, or null when the tree is empty.
+     */
+    public getMaxData(): TElement | null {
+        let node = this.root;
+        while (node?.getRight() != null) {
+            node = node.getRight();
+        }
+        return node == null ? null : node.getData();
+    }
+
+    /**
+     * Returns the smallest element, or null when the tree is empty.
+     */
+    public getMinData(): TElement | null {
+        let node = this.root;
+        while (node?.getLeft() != null) {
+            node = node.getLeft();
+        }
+        return node == null ? null : node.getData();
     }
 
     public getRootData(): TElement | null {
