@@ -23,6 +23,7 @@
         "test": "vitest run --reporter=verbose --exclude **/*.perf.test.ts",
         "test:perf": "vitest run --reporter=verbose .perf.test",
         "test:all": "npm run test:non-perf && npm run test:perf",
+        "test:declarations": "node node_modules/typescript-5.9/bin/tsc -p tests/declarations",
         "test:coverage": "vitest run --reporter=verbose --coverage",
         "test:ui": "vitest --ui"
     },
@@ -95,6 +96,7 @@
         "ts-node": "^10.9.2",
         "typedoc": "^0.28.20",
         "typescript": "^5.9.3",
+        "typescript-5.9": "npm:typescript@5.9.3",
         "vite": "^8.3.5",
         "vite-plugin-dts": "^5.1.2",
         "vitest": "^5.1.0"

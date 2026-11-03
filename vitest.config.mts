@@ -8,6 +8,7 @@ export default defineConfig({
         },
         exclude: [
             "tests/setup.ts",
+            "tests/declarations/**",
             "tests/helpers/**",
             "tests/models/**",
             "docs/**",
