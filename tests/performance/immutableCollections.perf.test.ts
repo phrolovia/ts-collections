@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { ImmutableHeap, ImmutableList, ImmutablePriorityQueue, ImmutableQueue, ImmutableSortedDictionary, ImmutableSortedSet, ImmutableStack } from "../../src";
+import { ImmutableCircularQueue, ImmutableHeap, ImmutableList, ImmutablePriorityQueue, ImmutableQueue, ImmutableSortedDictionary, ImmutableSortedSet, ImmutableStack } from "../../src";
 
 const COUNT = 100000;
 
@@ -93,5 +93,19 @@ describe("Immutable collection update performance", () => {
         expect(elapsed).toBeLessThan(2000);
         expect(heap.peek()).toBe(COUNT / 10);
         expect(queue.front()).toBe(COUNT / 10);
+    });
+    test("should update a large ImmutableCircularQueue one element at a time efficiently", () => {
+        let queue = ImmutableCircularQueue.create<number>(COUNT);
+        const elapsed = timed(() => {
+            for (let i = 0; i < 2 * COUNT; ++i) {
+                queue = queue.enqueue(i);
+            }
+            for (let i = 0; i < COUNT / 2; ++i) {
+                queue = queue.dequeue();
+            }
+        });
+        expect(elapsed).toBeLessThan(1000);
+        expect(queue.size()).toBe(COUNT / 2);
+        expect(queue.front()).toBe(COUNT + COUNT / 2);
     });
 });
