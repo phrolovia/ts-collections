@@ -92,6 +92,12 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
     }
 
 
+    public override retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
+        // Sorting the retained elements once lets each tree element be checked by binary search.
+        const retained: TElement[] = Array.from(collection).sort(this.orderComparator);
+        return this.removeIf(element => !this.#sortedContains(retained, element));
+    }
+
     public size(): number {
         return this.treeSize;
     }
@@ -173,6 +179,24 @@ export abstract class AbstractTree<TElement> extends AbstractRandomAccessCollect
         } else {
             return this.findByRecursive(root.getRight(), key, selector, comparator);
         }
+    }
+
+    #sortedContains(sorted: ReadonlyArray<TElement>, element: TElement): boolean {
+        let low = 0;
+        let high = sorted.length - 1;
+        while (low <= high) {
+            const middle = (low + high) >>> 1;
+            const order = this.orderComparator(sorted[middle], element);
+            if (order === 0 || Object.is(sorted[middle], element)) {
+                return true;
+            }
+            if (order < 0) {
+                low = middle + 1;
+            } else {
+                high = middle - 1;
+            }
+        }
+        return false;
     }
 
     private findRecursive(root: INode<TElement> | null, predicate: Predicate<TElement>): TElement | null {

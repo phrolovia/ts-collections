@@ -828,6 +828,21 @@ describe("LinkedList", () => {
     });
 
     describe("#removeAll()", () => {
+        test("should read a one-shot iterable once and remove every match", () => {
+            const list = new LinkedList([1, 2, 3, 2, 4, 1]);
+            const removals = function* () {
+                yield 2;
+                yield 1;
+            };
+            expect(list.removeAll(removals())).to.be.true;
+            expect(list.toArray()).to.deep.equal([3, 4]);
+        });
+        test("should keep -0 and 0 apart with the default comparator", () => {
+            const list = new LinkedList([0, -0, NaN, 1]);
+            list.removeAll([-0, NaN]);
+            expect(list.toArray()).to.deep.equal([0, 1]);
+            expect(Object.is(list.get(0), 0)).to.be.true;
+        });
         test("should remove the elements of second list from first list", () => {
             const list1 = new LinkedList([Person.Alice, Person.Lucrezia, Person.Noemi, Person.Priscilla, Person.Vanessa, Person.Viola]);
             const list2 = new LinkedList([Person.Vanessa, Person.Viola, Person.Noemi2]);
@@ -907,6 +922,12 @@ describe("LinkedList", () => {
     });
 
     describe("#retainAll()", () => {
+        test("should keep duplicates of retained elements in order", () => {
+            const list = new LinkedList([3, 1, 2, 3, 1]);
+            expect(list.retainAll([1, 3])).to.be.true;
+            expect(list.toArray()).to.deep.equal([3, 1, 3, 1]);
+            expect(list.retainAll([1, 3])).to.be.false;
+        });
         test("should remove elements that are not in the specified list", () => {
             const list1 = new LinkedList([3, 4, 1, 2, 5]);
             const list2 = new LinkedList([5, 4]);

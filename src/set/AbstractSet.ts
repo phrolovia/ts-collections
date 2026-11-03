@@ -2,6 +2,7 @@ import { from } from "../enumerator/functions/from";
 import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessCollection";
 import { Comparators } from "../shared/Comparators";
 import type { EqualityComparator } from "../shared/EqualityComparator";
+import { membership } from "../shared/internal/membership";
 import type { ISet } from "./ISet";
 
 export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollection<TElement> implements ISet<TElement> {
@@ -32,9 +33,9 @@ export abstract class AbstractSet<TElement> extends AbstractRandomAccessCollecti
         if (this.size() > this.getIterableSize(other)) {
             return false;
         }
-        const enumerable = from(other);
+        const contains = membership<TElement>(other, Comparators.equalityComparator);
         for (const element of this) {
-            if (!enumerable.contains(element)) {
+            if (!contains(element)) {
                 return false;
             }
         }

@@ -3,6 +3,7 @@ import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
+import { membership } from "../shared/internal/membership";
 import type { IList } from "./IList";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
@@ -120,33 +121,29 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
     }
 
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        const oldSize = this.size();
-        let index = 0;
-        const indices: number[] = [];
-        for (const element of this) {
-            for (const e of collection) {
-                if (this.comparer(element, e)) {
-                    indices.push(index);
-                    break;
-                }
-            }
-            index++;
-        }
-        indices.sort((a, b) => b - a);
-        for (const i of indices) {
-            this.removeAt(i);
-        }
-        return this.size() !== oldSize;
+        const contains = membership<TElement>(collection, this.comparer);
+        return this.removeIf(contains);
     }
 
+    /**
+     * Removes the matching elements in one pass and re-adds the rest, so the cost stays linear
+     * for lists whose positional removal is not O(1).
+     */
     public removeIf(predicate: Predicate<TElement>): boolean {
-        const oldSize = this.size();
-        for (let index = this.size() - 1; index >= 0; --index) {
-            if (predicate(this.get(index))) {
-                this.removeAt(index);
+        const kept: TElement[] = [];
+        for (const element of this) {
+            if (!predicate(element)) {
+                kept.push(element);
             }
         }
-        return this.size() !== oldSize;
+        if (kept.length === this.size()) {
+            return false;
+        }
+        this.clear();
+        for (const element of kept) {
+            this.add(element);
+        }
+        return true;
     }
 
     public abstract addAt(element: TElement, index: number): boolean;
