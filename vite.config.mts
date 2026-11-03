@@ -5,7 +5,7 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
     build: {
         lib: {
-            entry: resolve(__dirname, "./src/index.ts"),
+            entry: resolve(import.meta.dirname, "./src/index.ts"),
             name: "ts-collections",
             formats: ["es"],
             fileName: (_format, entryName): string => `${entryName}.mjs`
@@ -20,7 +20,7 @@ export default defineConfig({
     plugins: [
         dts({
             entryRoot: "src",
-            rollupTypes: true
+            bundleTypes: true
         })
     ], // emit TS declaration files
 } satisfies UserConfig)
