@@ -86,7 +86,15 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
         comparator?: OrderComparator<TElement>,
     ) {
         super(comparator);
-        for (const element of iterable) {
+        const elements = Array.isArray(iterable) ? iterable as TElement[] : Array.from(iterable);
+        const ascending = this.ascendingRun(elements);
+        if (ascending) {
+            this.root = this.buildBalanced(ascending, 0, ascending.length - 1, 0, Math.floor(Math.log2(ascending.length)));
+            (this.root as RedBlackNode<TElement> | null)?.setColor(RedBlackNode.BLACK);
+            this.treeSize = ascending.length;
+            return;
+        }
+        for (const element of elements) {
             this.add(element);
         }
     }
@@ -251,6 +259,44 @@ export class RedBlackTree<TElement> extends AbstractTree<TElement> {
             }
         }
         return false;
+    }
+
+    // Returns the elements without repeats when they are in ascending order, or null otherwise.
+    private ascendingRun(elements: TElement[]): TElement[] | null {
+        const run: TElement[] = [];
+        for (let index = 0; index < elements.length; ++index) {
+            const element = elements[index];
+            if (index > 0) {
+                const order = this.orderComparator(run[run.length - 1], element);
+                if (order > 0) {
+                    return null;
+                }
+                if (order === 0) {
+                    // add keeps the first of equal elements, so the later one is dropped.
+                    continue;
+                }
+            }
+            run.push(element);
+        }
+        return run;
+    }
+
+    // Splits at the middle, so only the deepest level can be partly filled. Colouring that level red
+    // and the rest black gives every path the same number of black nodes.
+    private buildBalanced(elements: TElement[], low: number, high: number, depth: number, redDepth: number): RedBlackNode<TElement> | null {
+        if (low > high) {
+            return null;
+        }
+        const middle = (low + high) >>> 1;
+        const node = new RedBlackNode<TElement>(elements[middle]);
+        node.setColor(depth === redDepth ? RedBlackNode.RED : RedBlackNode.BLACK);
+        const left = this.buildBalanced(elements, low, middle - 1, depth + 1, redDepth);
+        const right = this.buildBalanced(elements, middle + 1, high, depth + 1, redDepth);
+        node.setLeft(left);
+        node.setRight(right);
+        left?.setParent(node);
+        right?.setParent(node);
+        return node;
     }
 
     private canMoveLeft(node: RedBlackNode<TElement>): boolean {
