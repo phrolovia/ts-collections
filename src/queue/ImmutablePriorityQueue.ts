@@ -1,19 +1,20 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
-import { Heap } from "../heap/Heap";
 import { Comparators } from "../shared/Comparators";
 import { NoElementsException } from "../shared/NoElementsException";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate } from "../shared/Predicate";
+import { PersistentHeap } from "../shared/internal/PersistentHeap";
+import { contains } from "../enumerator/functions/contains";
 import { registerImmutablePriorityQueueFactory } from "../enumerator/Enumerator";
 
 export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
-    readonly #heap: Heap<TElement>;
+    readonly #heap: PersistentHeap<TElement>;
 
-    private constructor(iterable?: Iterable<TElement>, comparator?: OrderComparator<TElement>) {
+    private constructor(heap: PersistentHeap<TElement>, comparator: OrderComparator<TElement>) {
         super();
-        this.#comparator = comparator ?? Comparators.orderComparator;
-        this.#heap = new Heap(this.#comparator, iterable ?? []);
+        this.#comparator = comparator;
+        this.#heap = heap;
     }
 
     /**
@@ -24,7 +25,8 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new immutable priority queue.
      */
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement> {
-        return new ImmutablePriorityQueue(iterable, comparator);
+        const order = comparator ?? Comparators.orderComparator;
+        return new ImmutablePriorityQueue(PersistentHeap.create(iterable ?? [], order), order);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -43,9 +45,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue with the added element.
      */
     public override add(element: TElement): ImmutablePriorityQueue<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        newHeap.add(element);
-        return new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator);
+        return this.#with(this.#heap.add(element));
     }
 
     /**
@@ -56,13 +56,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue with the added elements.
      */
     public override addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutablePriorityQueue<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        let added = false;
-        for (const element of collection) {
-            newHeap.add(element);
-            added = true;
-        }
-        return added ? new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.addAll(collection));
     }
 
     /**
@@ -70,7 +64,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} An empty priority queue with the same comparator.
      */
     public override clear(): ImmutablePriorityQueue<TElement> {
-        return this.isEmpty() ? this : new ImmutablePriorityQueue<TElement>([], this.#comparator);
+        return this.isEmpty() ? this : this.#with(PersistentHeap.create([], this.#comparator));
     }
 
     /**
@@ -90,7 +84,12 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {boolean} True if this collection contains all the elements, false otherwise.
      */
     public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return this.#heap.containsAll(collection);
+        for (const element of collection) {
+            if (!this.#heap.contains(element)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -102,9 +101,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
         if (this.isEmpty()) {
             throw new NoElementsException();
         }
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        newHeap.poll();
-        return new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator);
+        return this.#with(this.#heap.poll());
     }
 
     /**
@@ -134,7 +131,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {boolean} True if the queue is empty, false otherwise.
      */
     public override isEmpty(): boolean {
-        return this.#heap.isEmpty();
+        return this.#heap.size === 0;
     }
 
     /**
@@ -151,12 +148,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue with the highest priority element removed, or an empty queue if the original was empty.
      */
     public poll(): ImmutablePriorityQueue<TElement> {
-        if (this.isEmpty()) {
-            return this;
-        }
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        newHeap.poll();
-        return new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator);
+        return this.#with(this.#heap.poll());
     }
 
     /**
@@ -166,9 +158,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue without the specified element, or the original queue if the element was not found.
      */
     public remove(element: TElement): ImmutablePriorityQueue<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        const removed = newHeap.remove(element);
-        return removed ? new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.remove(element));
     }
 
     /**
@@ -178,9 +168,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue without the specified elements.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutablePriorityQueue<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        const changed = newHeap.removeAll(collection);
-        return changed ? new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.removeWhere(e => contains(collection, e)));
     }
 
     /**
@@ -190,9 +178,7 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
      * @returns {ImmutablePriorityQueue<TElement>} A new priority queue without the elements satisfying the predicate.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutablePriorityQueue<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        const changed = newHeap.removeIf(predicate);
-        return changed ? new ImmutablePriorityQueue<TElement>(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.removeWhere(predicate));
     }
 
     /**
@@ -205,23 +191,27 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
         if (collection === this) {
             return this;
         }
-        return new ImmutablePriorityQueue<TElement>([...collection], this.#comparator);
+        return this.#with(PersistentHeap.create<TElement>(collection, this.#comparator));
     }
 
     public override size(): number {
-        return this.#heap.size();
+        return this.#heap.size;
     }
 
     /**
      * Gets the order comparator used by the priority queue.
      * @returns {OrderComparator<TElement>} The comparator.
      */
+    #with(heap: PersistentHeap<TElement>): ImmutablePriorityQueue<TElement> {
+        return heap === this.#heap ? this : new ImmutablePriorityQueue(heap, this.#comparator);
+    }
+
     public override get comparator(): OrderComparator<TElement> {
         return this.#comparator;
     }
 
     public override get length(): number {
-        return this.#heap.length;
+        return this.#heap.size;
     }
 }
 

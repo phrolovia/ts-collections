@@ -2,7 +2,8 @@ import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection
 import { Comparators } from "../shared/Comparators";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate } from "../shared/Predicate";
-import { Heap } from "./Heap";
+import { PersistentHeap } from "../shared/internal/PersistentHeap";
+import { contains } from "../enumerator/functions/contains";
 
 /**
  * An immutable binary heap that returns a new instance whenever it is modified.
@@ -11,12 +12,12 @@ import { Heap } from "./Heap";
  */
 export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
-    readonly #heap: Heap<TElement>;
+    readonly #heap: PersistentHeap<TElement>;
 
-    private constructor(iterable?: Iterable<TElement>, comparator?: OrderComparator<TElement>) {
+    private constructor(heap: PersistentHeap<TElement>, comparator: OrderComparator<TElement>) {
         super();
-        this.#comparator = comparator ?? Comparators.orderComparator;
-        this.#heap = new Heap(this.#comparator, iterable ?? []);
+        this.#comparator = comparator;
+        this.#heap = heap;
     }
 
     /**
@@ -27,7 +28,8 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap instance containing the supplied elements.
      */
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: OrderComparator<TElement>): ImmutableHeap<TElement> {
-        return new ImmutableHeap(iterable, comparator);
+        const order = comparator ?? Comparators.orderComparator;
+        return new ImmutableHeap(PersistentHeap.create(iterable ?? [], order), order);
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -40,9 +42,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap with the added element.
      */
     public override add(element: TElement): ImmutableHeap<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        newHeap.add(element);
-        return new ImmutableHeap(newHeap, this.#comparator);
+        return this.#with(this.#heap.add(element));
     }
 
     /**
@@ -52,13 +52,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap with the added elements, or this heap if the collection was empty.
      */
     public override addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableHeap<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        let changed = false;
-        for (const element of collection) {
-            newHeap.add(element);
-            changed = true;
-        }
-        return changed ? new ImmutableHeap(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.addAll(collection));
     }
 
     /**
@@ -66,7 +60,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} An empty heap with the same comparator.
      */
     public override clear(): ImmutableHeap<TElement> {
-        return this.isEmpty() ? this : new ImmutableHeap([], this.#comparator);
+        return this.isEmpty() ? this : this.#with(PersistentHeap.create([], this.#comparator));
     }
 
     /**
@@ -85,7 +79,12 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {boolean} True if all elements are present; otherwise, false.
      */
     public override containsAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
-        return this.#heap.containsAll(collection);
+        for (const element of collection) {
+            if (!this.#heap.contains(element)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -93,7 +92,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {boolean} True if the heap is empty, false otherwise.
      */
     public override isEmpty(): boolean {
-        return this.#heap.isEmpty();
+        return this.#heap.size === 0;
     }
 
     /**
@@ -109,12 +108,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap without the root element, or this heap if it was empty.
      */
     public poll(): ImmutableHeap<TElement> {
-        if (this.isEmpty()) {
-            return this;
-        }
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        newHeap.poll();
-        return new ImmutableHeap(newHeap, this.#comparator);
+        return this.#with(this.#heap.poll());
     }
 
     /**
@@ -123,9 +117,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap without the element, or this heap if the element was not found.
      */
     public remove(element: TElement): ImmutableHeap<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        const removed = newHeap.remove(element);
-        return removed ? new ImmutableHeap(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.remove(element));
     }
 
     /**
@@ -135,9 +127,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap without the specified elements, or this heap if no elements were removed.
      */
     public removeAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableHeap<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        const removed = newHeap.removeAll(collection);
-        return removed ? new ImmutableHeap(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.removeWhere(e => contains(collection, e)));
     }
 
     /**
@@ -146,9 +136,7 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
      * @returns {ImmutableHeap<TElement>} A new heap without the matching elements, or this heap if no elements were removed.
      */
     public removeIf(predicate: Predicate<TElement>): ImmutableHeap<TElement> {
-        const newHeap = new Heap(this.#comparator, this.#heap);
-        const removed = newHeap.removeIf(predicate);
-        return removed ? new ImmutableHeap(newHeap, this.#comparator) : this;
+        return this.#with(this.#heap.removeWhere(predicate));
     }
 
     /**
@@ -161,22 +149,26 @@ export class ImmutableHeap<TElement> extends AbstractImmutableCollection<TElemen
         if (collection === this) {
             return this;
         }
-        return new ImmutableHeap(collection as Iterable<TElement>, this.#comparator);
+        return this.#with(PersistentHeap.create<TElement>(collection, this.#comparator));
     }
 
     public override size(): number {
-        return this.#heap.size();
+        return this.#heap.size;
     }
 
     /**
      * Gets the comparator that defines the ordering of the heap.
      * @returns {OrderComparator<TElement>} The comparator used by this heap.
      */
+    #with(heap: PersistentHeap<TElement>): ImmutableHeap<TElement> {
+        return heap === this.#heap ? this : new ImmutableHeap(heap, this.#comparator);
+    }
+
     public override get comparator(): OrderComparator<TElement> {
         return this.#comparator;
     }
 
     public override get length(): number {
-        return this.#heap.length;
+        return this.#heap.size;
     }
 }
