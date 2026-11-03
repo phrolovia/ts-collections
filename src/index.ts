@@ -47,6 +47,14 @@ export { ImmutableStack } from "./stack/ImmutableStack";
 
 export * from "./enumerator/functions/functions";
 
+export { breadthFirst } from "./graph/functions/breadthFirst";
+export { depthFirst } from "./graph/functions/depthFirst";
+export { shortestPath } from "./graph/functions/shortestPath";
+export { stronglyConnectedComponents } from "./graph/functions/stronglyConnectedComponents";
+export { topologicalSort } from "./graph/functions/topologicalSort";
+
+export { CycleDetectedException } from "./shared/CycleDetectedException";
+
 export { binarySearch } from "./utils/binarySearch";
 export { reverseInPlace } from "./utils/reverseInPlace";
 export { shuffleInPlace } from "./utils/shuffleInPlace";
@@ -70,6 +78,7 @@ export type { IDictionary } from "./dictionary/IDictionary";
 export type { IReadonlyDictionary } from "./dictionary/IReadonlyDictionary";
 export type { IImmutableDictionary } from "./dictionary/IImmutableDictionary";
 export type { ISet } from "./set/ISet";
+export type { GraphPath } from "./graph/GraphPath";
 
 export type { Accumulator } from "./shared/Accumulator";
 export type { EqualityComparator } from "./shared/EqualityComparator";
