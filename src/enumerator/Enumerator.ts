@@ -49,9 +49,10 @@ import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import { ZipManyZipper, Zipper } from "../shared/Zipper";
-import { identityKey } from "../shared/internal/membership";
+import { identityKey, isDefaultEquality } from "../shared/internal/membership";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
 import { buildGroupsSync, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
+import { KeySet, type SortedKeysFactory } from "./helpers/keySetHelpers";
 import { findMedian } from "./helpers/medianHelpers";
 import { findPercentile } from "./helpers/percentileHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -76,10 +77,8 @@ type Chain<TElement> = {
 };
 
 export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
-    readonly #MINUS_ZERO_SENTINEL = Symbol("-0");
     // Set when this enumerator only joins parts around a base, so further joins extend the same chain.
     #chain: Chain<TElement> | undefined;
-    readonly #normalizeZero = <TKey>(k: unknown): TKey | symbol => Object.is(k, -0) ? this.#MINUS_ZERO_SENTINEL : k as TKey | symbol;
     private static readonly DIMENSION_MISMATCH_EXCEPTION = new DimensionMismatchException();
     private static readonly MORE_THAN_ONE_ELEMENT_EXCEPTION = new MoreThanOneElementException();
     private static readonly MORE_THAN_ONE_MATCHING_ELEMENT_EXCEPTION = new MoreThanOneMatchingElementException();
@@ -332,7 +331,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public disjoint<TSecond>(iterable: Iterable<TSecond>, comparator?: EqualityComparator<TElement | TSecond>): boolean {
         comparator ??= Comparators.equalityComparator as EqualityComparator<TElement | TSecond>;
-        if (comparator === Comparators.equalityComparator) {
+        if (isDefaultEquality(comparator)) {
             const set = new Set<TElement | TSecond>(this);
             if (set.size === 0) {
                 return true;
@@ -362,7 +361,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
 
     public disjointBy<TSecond, TKey, TSecondKey>(iterable: Iterable<TSecond>, keySelector: Selector<TElement, TKey>, otherKeySelector: Selector<TSecond, TSecondKey>, keyComparator?: EqualityComparator<TKey | TSecondKey>): boolean {
         const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey | TSecondKey, TSecondKey | TKey>;
-        if (keyComparer === Comparators.equalityComparator) {
+        if (isDefaultEquality(keyComparer)) {
             const leftKeys = new Set<TKey | TSecondKey>();
             for (const element of this) {
                 leftKeys.add(keySelector(element));
@@ -1399,63 +1398,12 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* exceptByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
-        const isDefaultComparator = keyComparator === Comparators.equalityComparator;
-
-        if (isDefaultComparator) {
-            const keySet = new Set<TKey | symbol>();
-
-            for (const item of iterable) {
-                keySet.add(this.#normalizeZero(keySelector(item)));
-            }
-            for (const item of this) {
-                const key = this.#normalizeZero<TKey>(keySelector(item));
-                if (!keySet.has(key)) {
-                    keySet.add(key);
-                    yield item;
-                }
-            }
-            return;
-        }
-
-        if (!sortedSetFactory) {
-            throw new Error("SortedSet factory is not registered.");
-        }
-        const keySet = sortedSetFactory<TKey>([], keyComparator as OrderComparator<TKey>);
-        if (!listFactory) {
-            throw new Error("List factory is not registered.");
-        }
-        const keyList = listFactory<TKey>([], keyComparator as EqualityComparator<TKey>);
-
-        const {value: first, done} = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
-        if (done) {
-            const {value: first, done} = new Enumerator<TElement>(() => this)[Symbol.iterator]().next();
-            if (done) {
-                return yield* this;
-            }
-            const firstKey = keySelector(first);
-            const keyCollection = typeof keyComparator(firstKey, firstKey) === "number" ? keySet : keyList;
-            for (const item of this) {
-                const key = keySelector(item);
-                if (!keyCollection.contains(key)) {
-                    keyCollection.add(key);
-                    yield item;
-                }
-            }
-            return;
-        }
-
-        const firstKey = keySelector(first);
-        const keyCollection = typeof keyComparator(firstKey, firstKey) === "number" ? keySet : keyList;
+        const keys = new KeySet<TKey>(keyComparator, createSortedKeys);
         for (const item of iterable) {
-            const key = keySelector(item);
-            if (!keyCollection.contains(key)) {
-                keyCollection.add(key);
-            }
+            keys.add(keySelector(item));
         }
         for (const item of this) {
-            const key = keySelector(item);
-            if (!keyCollection.contains(key)) {
-                keyCollection.add(key);
+            if (keys.add(keySelector(item))) {
                 yield item;
             }
         }
@@ -1512,7 +1460,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 }
             }
             yield* orderedGroups;
-        } else if (keyComparator === Comparators.equalityComparator) {
+        } else if (isDefaultEquality(keyComparator)) {
             // The default comparator is Object.is, which a Map can index once -0 has its own key.
             const groupMap = new Map<unknown, IGroup<TKey, TElement>>();
             for (const item of this) {
@@ -1557,7 +1505,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     private* groupJoinGenerator<TInner, TKey, TResult>(innerEnumerable: IEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
         // Group keys are compared as keyCompare(groupKey, key), so a custom comparator gets its arguments flipped.
-        const lookupStore = new JoinGroups<TKey, TInner>(keyCompare === Comparators.equalityComparator
+        const lookupStore = new JoinGroups<TKey, TInner>(isDefaultEquality(keyCompare)
             ? keyCompare
             : (key: TKey, groupKey: TKey) => keyCompare(groupKey, key));
 
@@ -1596,51 +1544,15 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* intersectByGenerator<TKey>(iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
-        const isDefaultComparator = keyComparator === Comparators.equalityComparator;
-
-        if (isDefaultComparator) {
-            const keySet = new Set<TKey | symbol>();
-
-            for (const item of iterable) {
-                keySet.add(this.#normalizeZero(keySelector(item)));
-            }
-            if (keySet.size === 0) {
-                return;
-            }
-            for (const item of this) {
-                const key = this.#normalizeZero<TKey>(keySelector(item));
-                if (keySet.delete(key)) {
-                    yield item;
-                }
-            }
+        const keys = new KeySet<TKey>(keyComparator, createSortedKeys);
+        for (const item of iterable) {
+            keys.add(keySelector(item));
+        }
+        if (keys.size === 0) {
             return;
         }
-
-        if (!sortedSetFactory) {
-            throw new Error("SortedSet factory is not registered.");
-        }
-        const keySet = sortedSetFactory<TKey>([], keyComparator as OrderComparator<TKey>);
-        if (!listFactory) {
-            throw new Error("List factory is not registered.");
-        }
-        const keyList = listFactory<TKey>([], keyComparator as EqualityComparator<TKey>);
-
-        const {value: first, done} = new Enumerator<TElement>(() => iterable)[Symbol.iterator]().next();
-        if (done) {
-            return yield* Enumerable.empty<TElement>();
-        }
-
-        const firstKey = keySelector(first);
-        const keyCollection = typeof keyComparator(firstKey, firstKey) === "number" ? keySet : keyList;
-        for (const item of iterable) {
-            const key = keySelector(item);
-            if (!keyCollection.contains(key)) {
-                keyCollection.add(key);
-            }
-        }
         for (const item of this) {
-            const key = keySelector(item);
-            if (keyCollection.remove(key)) {
+            if (keys.delete(keySelector(item))) {
                 yield item;
             }
         }
@@ -2002,39 +1914,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* unionByGenerator<TKey>(enumerable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): IterableIterator<TElement> {
-        const isDefaultComparator = comparator === Comparators.equalityComparator;
-
-        if (isDefaultComparator) {
-            const seenKeys = new Set<TKey>();
-            for (const source of [this, enumerable]) {
-                for (const item of source) {
-                    const key = keySelector(item);
-                    if (!seenKeys.has(key)) {
-                        seenKeys.add(key);
-                        yield item;
-                    }
-                }
-            }
-        } else {
-            const seenKeysMap = new Map<TKey, boolean>();
-            const findExistingKey = (targetKey: TKey): TKey | undefined => {
-                for (const existingKey of seenKeysMap.keys()) {
-                    if (comparator(targetKey, existingKey)) {
-                        return existingKey;
-                    }
-                }
-                return undefined;
-            };
-
-            for (const source of [this, enumerable]) {
-                for (const item of source) {
-                    const key = keySelector(item);
-                    const existingKey = findExistingKey(key);
-
-                    if (existingKey === undefined) {
-                        seenKeysMap.set(key, true);
-                        yield item;
-                    }
+        const keys = new KeySet<TKey>(comparator, createSortedKeys);
+        for (const source of [this, enumerable]) {
+            for (const item of source) {
+                if (keys.add(keySelector(item))) {
+                    yield item;
                 }
             }
         }
@@ -2263,6 +2147,13 @@ let queueFactory: QueueFactory | undefined;
 let sortedDictionaryFactory: SortedDictionaryFactory | undefined;
 let sortedSetFactory: SortedSetFactory | undefined;
 let stackFactory: StackFactory | undefined;
+
+const createSortedKeys: SortedKeysFactory = <TKey>(comparator: OrderComparator<TKey>) => {
+    if (!sortedSetFactory) {
+        throw new Error("SortedSet factory is not registered.");
+    }
+    return sortedSetFactory<TKey>([], comparator);
+};
 
 export const registerCircularLinkedListFactory = (factory: CircularLinkedListFactory): void => {
     circularLinkedListFactory = factory;

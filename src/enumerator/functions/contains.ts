@@ -1,5 +1,5 @@
-import { Comparators } from "../../shared/Comparators";
 import type { EqualityComparator } from "../../shared/EqualityComparator";
+import { isDefaultEquality } from "../../shared/internal/membership";
 import { from } from "./from";
 
 /**
@@ -25,7 +25,7 @@ export const contains = <TElement>(
     comparator?: EqualityComparator<TElement>
 ): boolean => {
     // Set.has uses SameValueZero, which agrees with the default Object.is comparator except on zeros.
-    if (source instanceof Set && (comparator == null || comparator === Comparators.equalityComparator) && element !== 0) {
+    if (source instanceof Set && (comparator == null || isDefaultEquality(comparator)) && element !== 0) {
         return source.has(element);
     }
     return from(source).contains(element, comparator);

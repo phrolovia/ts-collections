@@ -1,13 +1,12 @@
 import { AbstractCollection } from "./AbstractCollection";
-import { Comparators } from "../shared/Comparators";
-import { membership } from "../shared/internal/membership";
+import { isDefaultEquality, membership } from "../shared/internal/membership";
 import type { Predicate } from "../shared/Predicate";
 import type { IRandomAccessCollection } from "./IRandomAccessCollection";
 
 export abstract class AbstractRandomAccessCollection<TElement> extends AbstractCollection<TElement> implements IRandomAccessCollection<TElement> {
     public retainAll<TSource extends TElement>(collection: Iterable<TSource>): boolean {
         // Retained elements are compared as comparer(retained, element), hence the flipped comparator.
-        const comparer = this.comparer === Comparators.equalityComparator
+        const comparer = isDefaultEquality(this.comparer)
             ? this.comparer
             : (element: TElement, retained: TElement) => this.comparer(retained, element);
         const retains = membership<TElement>(collection, comparer);
