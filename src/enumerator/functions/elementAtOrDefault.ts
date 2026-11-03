@@ -1,3 +1,4 @@
+import { asIndexed } from "../../shared/internal/collectionAccess";
 import { from } from "./from";
 
 /**
@@ -23,6 +24,10 @@ export const elementAtOrDefault = <TElement>(
 ): TElement | null => {
     if (Array.isArray(source)) {
         return Number.isInteger(index) && index >= 0 && index < source.length ? source[index] : null;
+    }
+    const indexed = asIndexed(source);
+    if (indexed) {
+        return Number.isInteger(index) && index >= 0 && index < indexed.size() ? indexed.get(index) : null;
     }
     return from(source).elementAtOrDefault(index);
 };

@@ -1,4 +1,5 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
+import { asHashedSet } from "../../shared/internal/collectionAccess";
 import { isDefaultEquality } from "../../shared/internal/membership";
 import { from } from "./from";
 
@@ -25,8 +26,14 @@ export const contains = <TElement>(
     comparator?: EqualityComparator<TElement>
 ): boolean => {
     // Set.has uses SameValueZero, which agrees with the default Object.is comparator except on zeros.
-    if (source instanceof Set && (comparator == null || isDefaultEquality(comparator)) && element !== 0) {
-        return source.has(element);
+    if ((comparator == null || isDefaultEquality(comparator)) && element !== 0) {
+        if (source instanceof Set) {
+            return source.has(element);
+        }
+        const hashed = asHashedSet(source);
+        if (hashed) {
+            return hashed.contains(element);
+        }
     }
     return from(source).contains(element, comparator);
 };

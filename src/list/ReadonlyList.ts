@@ -2,6 +2,7 @@ import { AbstractReadonlyCollection } from "../core/AbstractReadonlyCollection";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { IList } from "./IList";
 import type { IReadonlyList } from "./IReadonlyList";
+import { registerIndexedType } from "../shared/internal/collectionAccess";
 
 export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: IList<TElement>;
@@ -51,3 +52,5 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
         return this.#list.size();
     }
 }
+
+registerIndexedType(ReadonlyList);

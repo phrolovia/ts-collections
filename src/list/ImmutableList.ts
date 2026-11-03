@@ -9,6 +9,7 @@ import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { IReadonlyList } from "./IReadonlyList";
 import { registerImmutableListFactory } from "../enumerator/Enumerator";
+import { registerIndexedType } from "../shared/internal/collectionAccess";
 
 /**
  * Immutable list backed by a persistent vector. `add`, `set`, `get` and removing the last element
@@ -301,3 +302,5 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
 registerImmutableListFactory(<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> => {
     return ImmutableList.create(iterable, comparator);
 });
+
+registerIndexedType(ImmutableList);

@@ -2,6 +2,7 @@ import { AbstractSet } from "./AbstractSet";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { Predicate } from "../shared/Predicate";
 import { registerEnumerableSetFactory } from "../enumerator/Enumerator";
+import { registerHashedSetType } from "../shared/internal/collectionAccess";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {
     readonly #set: Set<TElement>;
@@ -81,3 +82,5 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
 registerEnumerableSetFactory(<TElement>(iterable: Iterable<TElement>): EnumerableSet<TElement> => {
     return new EnumerableSet(iterable);
 });
+
+registerHashedSetType(EnumerableSet);

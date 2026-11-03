@@ -1,4 +1,5 @@
 import type { Predicate } from "../../shared/Predicate";
+import { asSized } from "../../shared/internal/collectionAccess";
 import { from } from "./from";
 
 /**
@@ -28,6 +29,10 @@ export const count = <TElement>(
         }
         if (source instanceof Set || source instanceof Map) {
             return source.size;
+        }
+        const sized = asSized(source);
+        if (sized) {
+            return sized.size();
         }
     }
     return from(source).count(predicate);
