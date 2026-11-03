@@ -4,6 +4,7 @@ import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate } from "../shared/Predicate";
 import type { Selector } from "../shared/Selector";
 import type { IReadonlyCollection } from "./IReadonlyCollection";
+import { registerSizedType } from "../shared/internal/collectionAccess";
 
 export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnumerable<TElement> implements IReadonlyCollection<TElement> {
     protected constructor(comparator?: EqualityComparator<TElement>) {
@@ -61,3 +62,5 @@ export abstract class AbstractReadonlyCollection<TElement> extends AbstractEnume
 
     abstract get length(): number;
 }
+
+registerSizedType(AbstractReadonlyCollection);

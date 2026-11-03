@@ -4,6 +4,7 @@ import { NoElementsException } from "../shared/NoElementsException";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
 import { membership } from "../shared/internal/membership";
+import { registerIndexedType } from "../shared/internal/collectionAccess";
 import type { IList } from "./IList";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
@@ -158,3 +159,5 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
 
     public abstract sort(comparator?: OrderComparator<TElement>): void;
 }
+
+registerIndexedType(AbstractList);

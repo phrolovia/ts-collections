@@ -1,5 +1,6 @@
 import { NoElementsException } from "../../shared/NoElementsException";
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
+import { asIndexed } from "../../shared/internal/collectionAccess";
 import { from } from "./from";
 
 /**
@@ -50,6 +51,14 @@ export function last<TElement, TFiltered extends TElement>(
             throw new NoElementsException();
         }
         return source[source.length - 1];
+    }
+    const indexed = predicate ? null : asIndexed(source);
+    if (indexed) {
+        const size = indexed.size();
+        if (size === 0) {
+            throw new NoElementsException();
+        }
+        return indexed.get(size - 1);
     }
     return from(source).last(predicate as Predicate<TElement> | undefined);
 }

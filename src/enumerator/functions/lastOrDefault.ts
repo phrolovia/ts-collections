@@ -1,4 +1,5 @@
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
+import { asIndexed } from "../../shared/internal/collectionAccess";
 import { from } from "./from";
 
 /**
@@ -50,6 +51,11 @@ export function lastOrDefault<TElement, TFiltered extends TElement>(
 ): TElement | TFiltered | null {
     if (!predicate && Array.isArray(source)) {
         return source.length === 0 ? null : source[source.length - 1];
+    }
+    const indexed = predicate ? null : asIndexed(source);
+    if (indexed) {
+        const size = indexed.size();
+        return size === 0 ? null : indexed.get(size - 1);
     }
     return from(source).lastOrDefault(predicate as Predicate<TElement> | undefined);
 }

@@ -1,4 +1,5 @@
 import { IndexOutOfBoundsException } from "../../shared/IndexOutOfBoundsException";
+import { asIndexed } from "../../shared/internal/collectionAccess";
 import { from } from "./from";
 
 /**
@@ -25,6 +26,13 @@ export const elementAt = <TElement>(
             throw new IndexOutOfBoundsException(index);
         }
         return source[index];
+    }
+    const indexed = asIndexed(source);
+    if (indexed) {
+        if (!Number.isInteger(index) || index < 0 || index >= indexed.size()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        return indexed.get(index);
     }
     return from(source).elementAt(index);
 };
