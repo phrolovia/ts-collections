@@ -1023,11 +1023,16 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
-        const dictionary = this.toDictionary(keySelector, valueSelector, valueComparator);
         if (!immutableDictionaryFactory) {
             throw new Error("ImmutableDictionary factory is not registered.");
         }
-        return immutableDictionaryFactory(dictionary);
+        // Builds the dictionary straight from the pairs instead of going through a Dictionary first.
+        const pairs = this.select(item => {
+            const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+            const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+            return [key, value] as [TKey, TValue];
+        });
+        return immutableDictionaryFactory(pairs, valueComparator);
     }
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
@@ -2109,7 +2114,8 @@ type ImmutableCircularQueueFactory = <TElement>(
 ) => ImmutableCircularQueue<TElement>;
 
 type ImmutableDictionaryFactory = <TKey, TValue>(
-    source: Dictionary<TKey, TValue>
+    source: Iterable<[TKey, TValue]>,
+    valueComparator?: EqualityComparator<TValue>
 ) => ImmutableDictionary<TKey, TValue>;
 
 type ImmutableListFactory = <TElement>(
