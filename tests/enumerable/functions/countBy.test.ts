@@ -25,4 +25,9 @@ describe("#countBy()", () => {
         const record = countBy(str.split(" "), s => s).toObject(p => p.key, p => p.value);
         expect(record).to.deep.equal({ apple: 2, banana: 2, strawberry: 1, lemon: 1 });
     });
+    test("should count keys with Object.is semantics", () => {
+        const counts = countBy([0, -0, -0, NaN, NaN], x => x).select(p => [p.key, p.value]).toArray();
+        expect(counts).to.deep.equal([[0, 1], [-0, 2], [NaN, 2]]);
+        expect(Object.is(counts[1][0], -0)).to.be.true;
+    });
 });

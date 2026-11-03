@@ -7,6 +7,7 @@ import { single } from "../../../src/enumerator/functions/single";
 import { toArray } from "../../../src/enumerator/functions/toArray";
 import { toList } from "../../../src/enumerator/functions/toList";
 import { where } from "../../../src/enumerator/functions/where";
+import { List } from "../../../src/list/List";
 import { School } from "../../models/School";
 import { SchoolStudents } from "../../models/SchoolStudents";
 import { Student } from "../../models/Student";
@@ -51,5 +52,15 @@ describe("#groupJoin()", () => {
             "Students of Academy: "
         ];
         expect(finalOutput).to.deep.equal(expectedOutput);
+    });
+    test("should group with Object.is key semantics and keep the comparator argument order", () => {
+        const counts = groupJoin([0, -0, 5], new List([-0, -0, 0]), x => x, x => x, (o, inner) => inner.count()).toArray();
+        expect(counts).to.deep.equal([1, 2, 0]);
+        const calls: Array<[number, number]> = [];
+        groupJoin([1], new List([2]), x => x, x => x, (o, inner) => inner.count(), (a, b) => {
+            calls.push([a, b]);
+            return a === b;
+        }).toArray();
+        expect(calls).to.deep.equal([[2, 1]]);
     });
 });

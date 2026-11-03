@@ -51,8 +51,7 @@ import type { Selector } from "../shared/Selector";
 import type { UnpackAsyncIterableTuple } from "../shared/UnpackAsyncIterableTuple";
 import type { ZipManyZipper, Zipper } from "../shared/Zipper";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
-import { findGroupInStore, findOrCreateGroupEntry, GroupJoinLookup } from "./helpers/groupJoinHelpers";
-import { buildGroupsAsync, processOuterElement } from "./helpers/joinHelpers";
+import { buildGroupsAsync, hashKey, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
 import { findMedian } from "./helpers/medianHelpers";
 import { findPercentile } from "./helpers/percentileHelpers";
 import { permutationsGenerator } from "./helpers/permutationsGenerator";
@@ -1421,6 +1420,22 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 }
             }
             yield* orderedGroups;
+        } else if (keyComparator === Comparators.equalityComparator) {
+            // The default comparator is Object.is, which a Map can index once -0 has its own key.
+            const groupMap = new Map<unknown, IGroup<TKey, TElement>>();
+            for await (const element of this) {
+                const key = keySelector(element);
+                const hash = hashKey(key);
+                const group = groupMap.get(hash);
+                if (group) {
+                    (group.source as List<TElement>).add(element);
+                } else {
+                    const newList = new List<TElement>([element]);
+                    const newGroup = new Group<TKey, TElement>(key, newList);
+                    groupMap.set(hash, newGroup);
+                }
+            }
+            yield* groupMap.values();
         } else {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
             const findExistingKey = (targetKey: TKey): TKey | undefined => {
@@ -1449,18 +1464,18 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     private async* groupJoinGenerator<TInner, TKey, TResult>(inner: IAsyncEnumerable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator: EqualityComparator<TKey>): AsyncIterableIterator<TResult> {
         const keyCompare = keyComparator ?? Comparators.equalityComparator;
-        const lookupStore: Array<GroupJoinLookup<TKey, TInner>> = [];
+        // Group keys are compared as keyCompare(groupKey, key), so a custom comparator gets its arguments flipped.
+        const lookupStore = new JoinGroups<TKey, TInner>(keyCompare === Comparators.equalityComparator
+            ? keyCompare
+            : (key: TKey, groupKey: TKey) => keyCompare(groupKey, key));
 
         for await (const innerElement of inner) {
-            const innerKey = innerKeySelector(innerElement);
-            const group = findOrCreateGroupEntry(lookupStore, innerKey, keyCompare);
-            group.push(innerElement);
+            lookupStore.add(innerKeySelector(innerElement), innerElement);
         }
 
         for await (const element of this) {
-            const outerKey = outerKeySelector(element);
-            const joinedEntries = findGroupInStore(lookupStore, outerKey, keyCompare);
-            yield resultSelector(element, Enumerable.from(joinedEntries ?? []));
+            const joinedEntries = lookupStore.find(outerKeySelector(element));
+            yield resultSelector(element, Enumerable.from(joinedEntries?.elements ?? []));
         }
     }
 
@@ -1543,7 +1558,6 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
                 outerElement,
                 outerKey,
                 groups,
-                keyCompare,
                 resultSelector,
                 effectiveLeftJoin
             );
@@ -1621,12 +1635,10 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
         for await (const innerElement of inner) {
             const innerKey = innerKeySelector(innerElement);
             let foundMatch = false;
-            for (const group of groups) {
-                if (keyComparator(innerKey, group.key)) {
-                    for (const outerElement of group.elements) {
-                        yield resultSelector(outerElement, innerElement);
-                        foundMatch = true;
-                    }
+            for (const group of groups.matching(innerKey)) {
+                for (const outerElement of group.elements) {
+                    yield resultSelector(outerElement, innerElement);
+                    foundMatch = true;
                 }
             }
             if (!foundMatch) {
