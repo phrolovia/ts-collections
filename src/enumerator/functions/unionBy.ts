@@ -13,7 +13,7 @@ import type { IEnumerable } from "../IEnumerable";
  * @param comparator Optional equality comparator that determines whether two keys are considered the same. Defaults to the library's standard equality comparator.
  * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from {@link source} followed by elements from {@link other} whose keys were not previously observed.
  * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link keySelector} or {@link comparator}.
- * @remarks Keys are buffered to ensure uniqueness while elements remain lazily produced. Provide {@link comparator} when keys require structural equality semantics.
+ * @remarks Keys are buffered to ensure uniqueness while elements remain lazily produced. Provide {@link comparator} when keys require structural equality semantics. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match.
  * @example
  * ```typescript
  * const products1 = [

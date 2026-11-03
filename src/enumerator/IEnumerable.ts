@@ -521,7 +521,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * Eliminates duplicate elements from the sequence using an optional comparator.
      * @param keyComparator Optional equality comparator used to determine whether two elements are identical. Defaults to the library's standard equality comparison.
      * @returns {IEnumerable<TElement>} A sequence that yields each distinct element once.
-     * @remarks Elements are compared by value; when using custom types, provide an appropriate comparator to avoid reference-based comparisons.
+     * @remarks Elements are compared by value; when using custom types, provide an appropriate comparator to avoid reference-based comparisons. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match with {@link distinctBy}.
      * @example
      * ```typescript
      * const numbers = from([1, 2, 2, 3, 1, 4, 5, 5]);
@@ -537,7 +537,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keySelector Selector used to project each element to the key used for distinctness.
      * @param keyComparator Optional equality comparator used to compare keys. Defaults to the library's standard equality comparison.
      * @returns {IEnumerable<TElement>} A sequence that contains the first occurrence of each unique key.
-     * @remarks When keys are expensive to compute, consider memoisation because each element's key is evaluated exactly once.
+     * @remarks When keys are expensive to compute, consider memoisation because each element's key is evaluated exactly once. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match.
      * @example
      * ```typescript
      * const products = from([
@@ -652,7 +652,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param iterable Sequence whose elements should be removed from the current sequence.
      * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IEnumerable<TElement>} A sequence containing the elements from this sequence that do not appear in `iterable`.
-     * @remarks The original ordering and duplicate occurrences from this sequence are preserved. The `iterable` is fully enumerated to build the exclusion set.
+     * @remarks The original ordering of this sequence is preserved and each element is yielded at most once. The `iterable` is fully enumerated to build the exclusion set. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match with {@link exceptBy}.
      * @example
      * ```typescript
      * const numbers1 = from([1, 2, 3, 4, 5]);
@@ -670,7 +670,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keySelector Selector used to project each element to the key used for comparison.
      * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IEnumerable<TElement>} A sequence that contains the elements from this sequence whose keys are absent from `iterable`.
-     * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. The exclusion keys are materialised by fully enumerating `iterable`.
+     * @remarks Source ordering is preserved and duplicate elements with distinct keys remain. The exclusion keys are materialised by fully enumerating `iterable`. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match.
      * @example
      * ```typescript
      * const products1 = from([
@@ -779,7 +779,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keyComparator Optional equality comparator used to match keys. Defaults to the library's standard equality comparison.
      * @param hashSelector Optional hash selector. When provided, the sequence will use a bucketed approach for faster grouping based on the hash values.
      * @returns {IEnumerable<IGroup<TKey, TElement>>} A sequence of groups, each exposing the key and the elements that share it.
-     * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration.
+     * @remarks The source sequence is enumerated once when the result is iterated. Elements within each group preserve their original order, and group contents are cached for repeated enumeration. Without a comparator, or with the default one, groups are found through a hash map. Any other comparator is checked against every group's key, which is quadratic when there are many groups: supply {@link hashSelector}, or project a key that the default comparator can match. The grouping runs again each time the result is enumerated; materialise it with `toArray` or `toLookup` to reuse it.
      * @example
      * ```typescript
      * const products = from([
@@ -873,7 +873,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param iterable Sequence whose elements are compared against the current sequence.
      * @param comparator Optional comparator used to determine element equality. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IEnumerable<TElement>} A sequence containing the intersection of the two sequences.
-     * @remarks The original ordering of this sequence is preserved. The `iterable` is fully enumerated to build the inclusion set prior to yielding results.
+     * @remarks The original ordering of this sequence is preserved. The `iterable` is fully enumerated to build the inclusion set prior to yielding results. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match with {@link intersectBy}.
      * @example
      * ```typescript
      * const numbers1 = from([1, 2, 3, 4, 5]);
@@ -891,7 +891,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param keySelector Selector used to project each element to the key used for comparison.
      * @param keyComparator Optional comparator used to compare keys. Both equality and order comparators are supported; defaults to the library's standard equality comparison when omitted.
      * @returns {IEnumerable<TElement>} A sequence containing the intersection of the two sequences based on matching keys.
-     * @remarks The `iterable` is fully enumerated to materialise the inclusion keys before yielding results. Source ordering is preserved.
+     * @remarks The `iterable` is fully enumerated to materialise the inclusion keys before yielding results. Source ordering is preserved. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match.
      * @example
      * ```typescript
      * const products1 = from([
@@ -2419,7 +2419,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional equality comparator that determines whether two elements are considered the same. Defaults to the library's standard equality comparator.
      * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from this sequence followed by elements from {@link iterable} that are not already present according to {@link comparator}.
      * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link comparator}.
-     * @remarks Elements from the original sequence always appear before contributions from {@link iterable}. The method caches only the comparison keys needed to detect duplicates and enumerates each input at most once.
+     * @remarks Elements from the original sequence always appear before contributions from {@link iterable}. The method caches only the comparison keys needed to detect duplicates and enumerates each input at most once. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match with {@link unionBy}.
      * @example
      * ```typescript
      * const numbers1 = from([1, 2, 3, 4, 5]);
@@ -2438,7 +2438,7 @@ export interface IEnumerable<TElement> extends Iterable<TElement> {
      * @param comparator Optional equality comparator that determines whether two keys are considered the same. Defaults to the library's standard equality comparator.
      * @returns {IEnumerable<TElement>} A deferred sequence containing the distinct elements from this sequence followed by elements from {@link iterable} whose keys were not previously observed.
      * @throws {unknown} Re-throws any error thrown while iterating either sequence or executing {@link keySelector} or {@link comparator}.
-     * @remarks Keys are buffered to ensure uniqueness while the elements themselves remain lazily produced. Provide {@link comparator} when keys require structural equality semantics.
+     * @remarks Keys are buffered to ensure uniqueness while the elements themselves remain lazily produced. Provide {@link comparator} when keys require structural equality semantics. With the default comparator the keys are hashed, so the operation takes linear time, and an order comparator keeps them in a sorted set. Any other equality comparator has to be checked against every key kept so far, which is quadratic when there are many distinct keys: for large inputs, prefer projecting a key that the default comparator can match.
      * @example
      * ```typescript
      * const products1 = from([
