@@ -137,4 +137,43 @@ describe("ImmutableQueue", () => {
             expect(queue.length).to.equal(3);
         });
     });
+
+    describe("persistence", () => {
+        test("should match an array model through interleaved enqueues and dequeues", () => {
+            let queue = ImmutableQueue.create<number>();
+            const model: Array<number> = [];
+            const snapshots: Array<[ImmutableQueue<number>, Array<number>]> = [];
+            let next = 0;
+            for (let step = 0; step < 3000; ++step) {
+                if (model.length === 0 || step % 3 !== 0) {
+                    queue = queue.enqueue(next);
+                    model.push(next++);
+                } else {
+                    queue = queue.dequeue();
+                    model.shift();
+                }
+                if (step % 250 === 0) {
+                    snapshots.push([queue, model.slice()]);
+                }
+            }
+            while (model.length > 0) {
+                expect(queue.front()).to.equal(model[0]);
+                queue = queue.dequeue();
+                model.shift();
+            }
+            expect(queue.isEmpty()).to.be.true;
+            for (const [snapshot, expected] of snapshots) {
+                expect(snapshot.size()).to.equal(expected.length);
+                expect(snapshot.toArray()).to.deep.equal(expected);
+            }
+        });
+        test("should branch from a shared queue without affecting it", () => {
+            const base = ImmutableQueue.create([1, 2, 3]);
+            const left = base.dequeue().enqueue(4);
+            const right = base.enqueue(5);
+            expect(base.toArray()).to.deep.equal([1, 2, 3]);
+            expect(left.toArray()).to.deep.equal([2, 3, 4]);
+            expect(right.toArray()).to.deep.equal([1, 2, 3, 5]);
+        });
+    });
 });

@@ -1,33 +1,54 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
-import { Stack } from "./Stack";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import { registerImmutableStackFactory } from "../enumerator/Enumerator";
 
+// A node of a singly linked list. Stacks share their tails, so push and pop are O(1).
+interface StackNode<TElement> {
+    readonly next: StackNode<TElement> | null;
+    readonly value: TElement;
+}
+
 export class ImmutableStack<TElement> extends AbstractImmutableCollection<TElement> {
-    readonly #stack: Stack<TElement>;
+    readonly #size: number;
+    readonly #top: StackNode<TElement> | null;
 
-    private constructor(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>) {
+    private constructor(top: StackNode<TElement> | null, size: number, comparator?: EqualityComparator<TElement>) {
         super(comparator);
-        this.#stack = new Stack(iterable, comparator);
-    }
-
-    public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
-        return new ImmutableStack(iterable, comparator);
-    }
-
-    * [Symbol.iterator](): Iterator<TElement> {
-        yield* this.#stack;
+        this.#top = top;
+        this.#size = size;
     }
 
     /**
-     * Adds the given element to this stack.
+     * Creates a stack from the given elements. The last element of the iterable becomes the top of the stack.
+     */
+    public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
+        const [top, size] = ImmutableStack.#pushAll(null, 0, iterable ?? []);
+        return new ImmutableStack(top, size, comparator);
+    }
+
+    static #pushAll<TElement>(top: StackNode<TElement> | null, size: number, elements: Iterable<TElement>): [StackNode<TElement> | null, number] {
+        for (const value of elements) {
+            top = { value, next: top };
+            ++size;
+        }
+        return [top, size];
+    }
+
+    * [Symbol.iterator](): Iterator<TElement> {
+        for (let node = this.#top; node !== null; node = node.next) {
+            yield node.value;
+        }
+    }
+
+    /**
+     * Adds the given element to the top of this stack. This method is equivalent to {@link push}.
      * @template TElement The type of elements in the stack.
      * @param element The element that will be added to this stack.
      * @returns {ImmutableStack} A new stack with the added element.
      */
     public override add(element: TElement): ImmutableStack<TElement> {
-        return new ImmutableStack(this.#stack.prepend(element), this.comparer);
+        return this.push(element);
     }
 
     /**
@@ -39,7 +60,8 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} A new stack with the added elements.
      */
     public override addAll<TSource extends TElement>(collection: Iterable<TSource>): ImmutableStack<TElement> {
-        return new ImmutableStack([...this.#stack, ...collection], this.comparer);
+        const [top, size] = ImmutableStack.#pushAll(this.#top, this.#size, collection);
+        return top === this.#top ? this : new ImmutableStack(top, size, this.comparer);
     }
 
     /**
@@ -47,7 +69,11 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} An empty stack.
      */
     public override clear(): ImmutableStack<TElement> {
-        return new ImmutableStack([], this.comparer);
+        return new ImmutableStack<TElement>(null, 0, this.comparer);
+    }
+
+    public override isEmpty(): boolean {
+        return this.#top === null;
     }
 
     /**
@@ -57,16 +83,19 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {TElement | null} The top of the stack or null if the stack is empty.
      */
     public peek(): TElement | null {
-        return this.#stack.peek();
+        return this.#top === null ? null : this.#top.value;
     }
 
     /**
      * Removes the element at the top of the stack and returns the new stack.
      * @template TElement The type of elements in the stack.
-     * @returns {ImmutableStack} A new stack with the top element removed.
+     * @returns {ImmutableStack} A new stack with the top element removed, or this stack if it is empty.
      */
     public pop(): ImmutableStack<TElement> {
-        return new ImmutableStack(this.#stack.reverse().skipLast(1), this.comparer);
+        if (this.#top === null) {
+            return this;
+        }
+        return new ImmutableStack(this.#top.next, this.#size - 1, this.comparer);
     }
 
     /**
@@ -76,7 +105,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @returns {ImmutableStack} A new stack with the added element.
      */
     public push(element: TElement): ImmutableStack<TElement> {
-        return new ImmutableStack(this.#stack.reverse().append(element), this.comparer);
+        return new ImmutableStack({ value: element, next: this.#top }, this.#size + 1, this.comparer);
     }
 
     /**
@@ -89,11 +118,11 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
         if (collection === this) {
             return this;
         }
-        return new ImmutableStack(collection as Iterable<TElement>, this.comparer);
+        return ImmutableStack.create<TElement>(collection, this.comparer);
     }
 
     public override size(): number {
-        return this.#stack.size();
+        return this.#size;
     }
 
     /**
@@ -104,10 +133,10 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
      * @throws {Error} If the stack is empty.
      */
     public top(): TElement {
-        if (this.#stack.isEmpty()) {
+        if (this.#top === null) {
             throw new NoElementsException();
         }
-        return this.#stack.peek() as TElement;
+        return this.#top.value;
     }
 
     public override get comparator(): EqualityComparator<TElement> {
@@ -115,7 +144,7 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
     }
 
     public override get length(): number {
-        return this.#stack.length;
+        return this.#size;
     }
 }
 
