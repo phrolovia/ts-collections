@@ -49,6 +49,7 @@ import { Predicate, TypePredicate } from "../shared/Predicate";
 import { Selector } from "../shared/Selector";
 import { UnpackIterableTuple } from "../shared/UnpackIterableTuple";
 import { ZipManyZipper, Zipper } from "../shared/Zipper";
+import { asSized } from "../shared/internal/collectionAccess";
 import { identityKey, isDefaultEquality } from "../shared/internal/membership";
 import { shuffleInPlace } from "../utils/shuffleInPlace";
 import { buildGroupsSync, JoinGroups, processOuterElement } from "./helpers/joinHelpers";
@@ -787,7 +788,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public rotate(shift: number): IEnumerable<TElement> {
-        return new Enumerator(() => this.rotateGenerator(shift));
+        return new Enumerator(() => this.rotateIterable(shift));
     }
 
     public scan(accumulator: Accumulator<TElement, TElement>): IEnumerable<TElement>;
@@ -985,7 +986,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toArray(): TElement[] {
-        return Array.from(this);
+        // Array.from copies an array without the iterator protocol.
+        return Array.from(this.iterable());
     }
 
     public toCircularLinkedList(comparator?: EqualityComparator<TElement, TElement>): CircularLinkedList<TElement> {
@@ -1675,6 +1677,24 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             return yield* this.rotateLeftGenerator(shift);
         }
         return yield* this.rotateRightGenerator(shift);
+    }
+
+    // Rotates a finite source with slices: any source for a right rotation, which buffers everything
+    // anyway, and an array or library collection for a left one. Other left rotations stream.
+    private rotateIterable(shift: number): Iterable<TElement> {
+        if (!Number.isInteger(shift) || shift === 0) {
+            return this.rotateGenerator(shift);
+        }
+        const source = this.iterable();
+        if (shift > 0 && !Array.isArray(source) && asSized(source) == null) {
+            return this.rotateLeftGenerator(shift);
+        }
+        const elements = Array.isArray(source) ? source as TElement[] : Array.from(source);
+        if (elements.length === 0) {
+            return elements;
+        }
+        const offset = ((shift % elements.length) + elements.length) % elements.length;
+        return elements.slice(offset).concat(elements.slice(0, offset));
     }
 
     private* rotateLeftGenerator(shift: number): IterableIterator<TElement> {
