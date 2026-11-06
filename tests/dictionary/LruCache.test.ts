@@ -59,6 +59,66 @@ describe("LruCache", () => {
         });
     });
 
+    describe("#setCapacity()", () => {
+        test("should evict the least recently used entries when shrinking", () => {
+            const evicted: string[] = [];
+            const cache = new LruCache<string, number>(4, (key, value) => evicted.push(`${key}=${value}`));
+            cache.add("a", 1);
+            cache.add("b", 2);
+            cache.add("c", 3);
+            cache.add("d", 4);
+            cache.get("a");
+            cache.setCapacity(2);
+            expect(cache.capacity).toBe(2);
+            expect(evicted).toEqual(["b=2", "c=3"]);
+            expect(keysOf(cache)).toEqual(["d", "a"]);
+        });
+        test("should not evict when growing or when the entries still fit", () => {
+            const evicted: string[] = [];
+            const cache = new LruCache<string, number>(2, key => evicted.push(key));
+            cache.add("a", 1);
+            cache.add("b", 2);
+            cache.setCapacity(2);
+            cache.setCapacity(3);
+            expect(cache.capacity).toBe(3);
+            cache.add("c", 3);
+            expect(evicted).toEqual([]);
+            expect(keysOf(cache)).toEqual(["a", "b", "c"]);
+            cache.add("d", 4);
+            expect(evicted).toEqual(["a"]);
+        });
+        test("should leave the cache unchanged when the capacity is invalid", () => {
+            const cache = new LruCache<string, number>(2);
+            cache.add("a", 1);
+            cache.add("b", 2);
+            for (const capacity of [0, -1, 1.5, Number.NaN]) {
+                expect(() => cache.setCapacity(capacity)).toThrow(InvalidArgumentException);
+            }
+            expect(cache.capacity).toBe(2);
+            expect(keysOf(cache)).toEqual(["a", "b"]);
+        });
+        test("should fit the new capacity even if onEvict throws", () => {
+            const cache = new LruCache<string, number>(3, () => {
+                throw new Error("onEvict failed");
+            });
+            cache.add("a", 1);
+            cache.add("b", 2);
+            cache.add("c", 3);
+            expect(() => cache.setCapacity(1)).toThrow("onEvict failed");
+            expect(cache.capacity).toBe(1);
+            expect(keysOf(cache)).toEqual(["c"]);
+        });
+        test("should finish evicting before calling onEvict", () => {
+            const sizes: number[] = [];
+            const cache: LruCache<string, number> = new LruCache<string, number>(3, () => sizes.push(cache.size()));
+            cache.add("a", 1);
+            cache.add("b", 2);
+            cache.add("c", 3);
+            cache.setCapacity(1);
+            expect(sizes).toEqual([1, 1]);
+        });
+    });
+
     describe("dictionary behaviour", () => {
         test("should reject duplicate keys and missing keys", () => {
             const cache = new LruCache<string, number>(3);

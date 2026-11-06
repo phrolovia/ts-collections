@@ -32,6 +32,7 @@ const route: GraphPath<number> | null = shortestPath(1, 3, n => [n + 1]);
 
 const bag = new MultiSet(["x", "y", "x"]);
 const cache = new LruCache<string, number>(2, (key: string, value: number) => void [key, value]);
+cache.setCapacity(3);
 const codes = new BiMap<string, number>([["one", 1]]);
 const groups = new DisjointSet([1, 2, 3]);
 const intervals = new IntervalTree<number, string>([[1, 5, "a"]]);
