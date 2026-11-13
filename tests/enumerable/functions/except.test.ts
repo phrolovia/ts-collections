@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { except } from "../../../src/enumerator/functions/except";
 import { Person } from "../../models/Person";
-import "../../../src/set/SortedSet";
 
 describe("#except()", () => {
     test("should return [1,2,3]", () => {

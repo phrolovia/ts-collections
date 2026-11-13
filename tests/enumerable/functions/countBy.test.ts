@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import { countBy } from "../../../src/enumerator/functions/countBy";
 import { List } from "../../../src/list/List";
 import { Person } from "../../models/Person";
-import "../../../src/enumerator/Group";
 
 describe("#countBy()", () => {
     const list = new List([Person.Suzuha, Person.Suzuha2, Person.Kaori]);

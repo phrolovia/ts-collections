@@ -1,7 +1,6 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
-import { registerImmutableQueueFactory } from "../enumerator/Enumerator";
 import { PersistentVector } from "../shared/internal/PersistentVector";
 
 // Below this many dequeued slots, the vector is never compacted.
@@ -154,7 +153,3 @@ export class ImmutableQueue<TElement> extends AbstractImmutableCollection<TEleme
         return this.size();
     }
 }
-
-registerImmutableQueueFactory(<TElement>(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> => {
-    return ImmutableQueue.create(iterable, comparator);
-});

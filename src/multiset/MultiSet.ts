@@ -2,7 +2,6 @@ import { AbstractRandomAccessCollection } from "../core/AbstractRandomAccessColl
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { Enumerator } from "../enumerator/Enumerator";
 import type { IEnumerable } from "../enumerator/IEnumerable";
-import { registerHashedSetType } from "../shared/internal/collectionAccess";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import type { Predicate } from "../shared/Predicate";
 
@@ -22,6 +21,11 @@ export class MultiSet<TElement> extends AbstractRandomAccessCollection<TElement>
         for (const element of iterable) {
             this.add(element);
         }
+    }
+
+    /** @internal contains(element) hashes with SameValueZero, like a native Set. Read by shared/internal/collectionAccess. */
+    protected get isHashedSetSource(): true {
+        return true;
     }
 
     * [Symbol.iterator](): Iterator<TElement> {
@@ -181,5 +185,3 @@ export class MultiSet<TElement> extends AbstractRandomAccessCollection<TElement>
         return this.#size;
     }
 }
-
-registerHashedSetType(MultiSet);

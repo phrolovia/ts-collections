@@ -1,11 +1,9 @@
-import type { SortedDictionary } from "./SortedDictionary";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { OrderComparator } from "../shared/OrderComparator";
 import { AbstractImmutableDictionary } from "./AbstractImmutableDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import type { ISet } from "../set/ISet";
 import { SortedSet } from "../set/SortedSet";
-import { registerImmutableSortedDictionaryFactory } from "../enumerator/Enumerator";
 import type { IImmutableCollection } from "../core/IImmutableCollection";
 import { Comparators } from "../shared/Comparators";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
@@ -135,7 +133,3 @@ export class ImmutableSortedDictionary<TKey, TValue> extends AbstractImmutableDi
         return this.size();
     }
 }
-
-registerImmutableSortedDictionaryFactory(<TKey, TValue>(dictionary: SortedDictionary<TKey, TValue>): ImmutableSortedDictionary<TKey, TValue> => {
-    return ImmutableSortedDictionary.create(dictionary, dictionary.keyComparator, dictionary.valueComparator);
-});

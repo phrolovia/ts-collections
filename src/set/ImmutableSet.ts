@@ -2,7 +2,6 @@ import { AbstractRandomAccessImmutableCollection } from "../core/AbstractRandomA
 import { EnumerableSet } from "./EnumerableSet";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { Predicate } from "../shared/Predicate";
-import { registerImmutableSetFactory } from "../enumerator/Enumerator";
 import { OrderedHashTrie } from "../shared/internal/OrderedHashTrie";
 
 /**
@@ -200,7 +199,3 @@ export class ImmutableSet<TElement> extends AbstractRandomAccessImmutableCollect
         return this.#trie.size;
     }
 }
-
-registerImmutableSetFactory(<TElement>(iterable: Iterable<TElement>): ImmutableSet<TElement> => {
-    return ImmutableSet.create(iterable);
-});

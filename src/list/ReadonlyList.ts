@@ -2,7 +2,6 @@ import { AbstractReadonlyCollection } from "../core/AbstractReadonlyCollection";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { IList } from "./IList";
 import type { IReadonlyList } from "./IReadonlyList";
-import { registerIndexedType } from "../shared/internal/collectionAccess";
 
 export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement> implements IReadonlyList<TElement> {
     readonly #list: IList<TElement>;
@@ -10,6 +9,11 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
     public constructor(list: IList<TElement>) {
         super(list.comparator as EqualityComparator<TElement>);
         this.#list = list;
+    }
+
+    /** @internal get(index) returns the element that iteration yields at that position. Read by shared/internal/collectionAccess. */
+    protected get isIndexedSource(): true {
+        return true;
     }
 
     [Symbol.iterator](): Iterator<TElement> {
@@ -52,5 +56,3 @@ export class ReadonlyList<TElement> extends AbstractReadonlyCollection<TElement>
         return this.#list.size();
     }
 }
-
-registerIndexedType(ReadonlyList);

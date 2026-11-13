@@ -1,8 +1,6 @@
 import { AbstractSet } from "./AbstractSet";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import type { Predicate } from "../shared/Predicate";
-import { registerEnumerableSetFactory } from "../enumerator/Enumerator";
-import { registerHashedSetType } from "../shared/internal/collectionAccess";
 
 export class EnumerableSet<TElement> extends AbstractSet<TElement> {
     readonly #set: Set<TElement>;
@@ -10,6 +8,11 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
     public constructor(iterable: Iterable<TElement> = []) {
         super();
         this.#set = new Set(iterable);
+    }
+
+    /** @internal contains(element) hashes with SameValueZero, like a native Set. Read by shared/internal/collectionAccess. */
+    protected get isHashedSetSource(): true {
+        return true;
     }
 
     [Symbol.iterator](): Iterator<TElement> {
@@ -78,9 +81,3 @@ export class EnumerableSet<TElement> extends AbstractSet<TElement> {
         return this.#set.size;
     }
 }
-
-registerEnumerableSetFactory(<TElement>(iterable: Iterable<TElement>): EnumerableSet<TElement> => {
-    return new EnumerableSet(iterable);
-});
-
-registerHashedSetType(EnumerableSet);

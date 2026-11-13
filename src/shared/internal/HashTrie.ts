@@ -63,7 +63,7 @@ export interface TrieChange {
 
 export const lastChange: TrieChange = { entry: undefined, previous: undefined };
 
-const EMPTY_ROOT = new BitmapNode<never, never>(0, [], undefined);
+const EMPTY_ROOT = /* @__PURE__ */ new BitmapNode<never, never>(0, [], undefined);
 
 export const emptyRoot = <TKey, TValue>(): BitmapNode<TKey, TValue> => EMPTY_ROOT;
 

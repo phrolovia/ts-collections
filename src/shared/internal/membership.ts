@@ -1,7 +1,7 @@
 import { Comparators } from "../Comparators";
 import type { EqualityComparator } from "../EqualityComparator";
 
-const MINUS_ZERO = Symbol("-0");
+const MINUS_ZERO = /* @__PURE__ */ Symbol("-0");
 
 /**
  * Maps a value to a Map or Set key with Object.is semantics. Maps and Sets use SameValueZero,

@@ -7,7 +7,6 @@ import { KeyValuePair } from "./KeyValuePair";
 import type { ISet } from "../set/ISet";
 import { EnumerableSet } from "../set/EnumerableSet";
 import { select } from "../enumerator/functions/select";
-import { registerImmutableDictionaryFactory } from "../enumerator/Enumerator";
 import type { IImmutableCollection } from "../core/IImmutableCollection";
 import { OrderedHashTrie } from "../shared/internal/OrderedHashTrie";
 
@@ -133,7 +132,3 @@ export class ImmutableDictionary<TKey, TValue> extends AbstractImmutableDictiona
         return this.#trie.size;
     }
 }
-
-registerImmutableDictionaryFactory(<TKey, TValue>(source: Iterable<[TKey, TValue]>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> => {
-    return ImmutableDictionary.create<TKey, TValue>(source, valueComparator);
-});

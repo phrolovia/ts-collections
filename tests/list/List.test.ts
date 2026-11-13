@@ -26,7 +26,6 @@ import { Person } from "../models/Person";
 import { School } from "../models/School";
 import { SchoolStudents } from "../models/SchoolStudents";
 import { Student } from "../models/Student";
-import "../../src/lookup/Lookup";
 
 describe("List", () => {
     const personNameComparator = (p1: Person, p2: Person) =>

@@ -1,7 +1,6 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
-import { registerImmutableStackFactory } from "../enumerator/Enumerator";
 
 // A node of a singly linked list. Stacks share their tails, so push and pop are O(1).
 interface StackNode<TElement> {
@@ -147,7 +146,3 @@ export class ImmutableStack<TElement> extends AbstractImmutableCollection<TEleme
         return this.#size;
     }
 }
-
-registerImmutableStackFactory(<TElement>(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> => {
-    return ImmutableStack.create(iterable, comparator);
-});

@@ -8,7 +8,6 @@ import type { OrderComparator } from "../shared/OrderComparator";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import type { ISet } from "../set/ISet";
-import { registerSortedDictionaryFactory } from "../enumerator/Enumerator";
 import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
@@ -114,7 +113,3 @@ export class SortedDictionary<TKey, TValue> extends AbstractDictionary<TKey, TVa
         return this.#keyValueTree.length;
     }
 }
-
-registerSortedDictionaryFactory(<TKey, TValue>(iterable: Iterable<KeyValuePair<TKey, TValue>>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> => {
-    return new SortedDictionary(iterable, keyComparator, valueComparator);
-});
