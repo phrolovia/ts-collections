@@ -1,8 +1,4 @@
-// Global test setup to register factories that are wired
-// via side-effect imports in the source modules.
+// Load the library through its entry point before any test imports a module directly, so the modules
+// are evaluated in the order src/index.ts sets up (see the comment at its top).
 
-import "../src/enumerator/OrderedEnumerator";
-import "../src/enumerator/OrderedAsyncEnumerator";
-import "../src/enumerator/Group";
-import "../src/lookup/Lookup";
-
+import "../src";

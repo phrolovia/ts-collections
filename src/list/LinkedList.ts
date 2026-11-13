@@ -5,7 +5,6 @@ import { IndexOutOfBoundsException } from "../shared/IndexOutOfBoundsException";
 import { InvalidArgumentException } from "../shared/InvalidArgumentException";
 import { NoElementsException } from "../shared/NoElementsException";
 import type { OrderComparator } from "../shared/OrderComparator";
-import { registerLinkedListFactory } from "../enumerator/Enumerator";
 
 class Node<TElement> {
     public item: TElement;
@@ -323,7 +322,3 @@ export class LinkedList<TElement> extends AbstractList<TElement> {
         this.#listSize = size;
     }
 }
-
-registerLinkedListFactory(<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): LinkedList<TElement> => {
-    return new LinkedList(iterable ?? ([] as TElement[]), comparator);
-});

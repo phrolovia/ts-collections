@@ -1,7 +1,6 @@
 import { AbstractImmutableCollection } from "../core/AbstractImmutableCollection";
 import type { EqualityComparator } from "../shared/EqualityComparator";
 import { NoElementsException } from "../shared/NoElementsException";
-import { registerImmutableCircularQueueFactory } from "../enumerator/Enumerator";
 import { PersistentVector } from "../shared/internal/PersistentVector";
 
 // Below this many discarded slots, the vector is never compacted.
@@ -229,10 +228,3 @@ export class ImmutableCircularQueue<TElement> extends AbstractImmutableCollectio
         return this.size();
     }
 }
-
-registerImmutableCircularQueueFactory(<TElement>(source: Iterable<TElement>, capacityOrComparator?: number | EqualityComparator<TElement>, comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement> => {
-    if (typeof capacityOrComparator === "number") {
-        return ImmutableCircularQueue.create(capacityOrComparator, source, comparator);
-    }
-    return ImmutableCircularQueue.create(source, capacityOrComparator);
-});

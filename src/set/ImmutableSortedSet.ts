@@ -3,7 +3,6 @@ import { SortedSet } from "./SortedSet";
 import { Comparators } from "../shared/Comparators";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate } from "../shared/Predicate";
-import { registerImmutableSortedSetFactory } from "../enumerator/Enumerator";
 import { find, fromSorted, insert, nodes, remove, type Tree } from "../shared/internal/SortedTree";
 
 /**
@@ -251,7 +250,3 @@ export class ImmutableSortedSet<TElement> extends AbstractRandomAccessImmutableC
         return this.size();
     }
 }
-
-registerImmutableSortedSetFactory(<TElement>(iterable: Iterable<TElement>, comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> => {
-    return ImmutableSortedSet.create(iterable, comparator);
-});

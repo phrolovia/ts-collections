@@ -1,4 +1,4 @@
-const objectIds = new WeakMap<object, number>();
+const objectIds = /* @__PURE__ */ new WeakMap<object, number>();
 let nextObjectId = 1;
 
 /**

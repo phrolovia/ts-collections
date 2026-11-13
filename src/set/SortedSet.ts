@@ -6,7 +6,6 @@ import type { OrderComparator } from "../shared/OrderComparator";
 import { NoElementsException } from "../shared/NoElementsException";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { ISet } from "./ISet";
-import { registerSortedSetFactory } from "../enumerator/Enumerator";
 
 export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<TElement> {
     readonly #orderComparator: OrderComparator<TElement>;
@@ -135,7 +134,3 @@ export class SortedSet<TElement> extends AbstractSet<TElement> implements ISet<T
         return this.#tree.length;
     }
 }
-
-registerSortedSetFactory(<TElement>(iterable: Iterable<TElement>, comparator?: OrderComparator<TElement>): SortedSet<TElement> => {
-    return new SortedSet(iterable, comparator);
-});

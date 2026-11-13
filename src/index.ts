@@ -1,5 +1,9 @@
-export { AbstractEnumerable } from "./enumerator/AbstractEnumerable";
+// Enumerator has to be the first module that loads. It imports the collections that its conversion
+// methods create, and those extend AbstractEnumerable, which reaches Enumerator again through its
+// methods. Entering that cycle at Enumerator evaluates every base class before the classes that extend
+// it; entering it at a collection or a base class would evaluate a subclass before its base.
 export { Enumerator } from "./enumerator/Enumerator";
+export { AbstractEnumerable } from "./enumerator/AbstractEnumerable";
 export { AsyncEnumerator } from "./enumerator/AsyncEnumerator";
 export { OrderedEnumerator } from "./enumerator/OrderedEnumerator";
 export { OrderedAsyncEnumerator } from "./enumerator/OrderedAsyncEnumerator";

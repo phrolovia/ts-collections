@@ -8,8 +8,6 @@ import { PersistentVector } from "../shared/internal/PersistentVector";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
 import type { IReadonlyList } from "./IReadonlyList";
-import { registerImmutableListFactory } from "../enumerator/Enumerator";
-import { registerIndexedType } from "../shared/internal/collectionAccess";
 
 /**
  * Immutable list backed by a persistent vector. `add`, `set`, `get` and removing the last element
@@ -22,6 +20,11 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
     private constructor(vector: PersistentVector<TElement>, comparator?: EqualityComparator<TElement>) {
         super(comparator);
         this.#vector = vector;
+    }
+
+    /** @internal get(index) returns the element that iteration yields at that position. Read by shared/internal/collectionAccess. */
+    protected get isIndexedSource(): true {
+        return true;
     }
 
     public static create<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
@@ -298,9 +301,3 @@ export class ImmutableList<TElement> extends AbstractRandomAccessImmutableCollec
         return this.#vector.size;
     }
 }
-
-registerImmutableListFactory(<TElement>(iterable?: Iterable<TElement>, comparator?: EqualityComparator<TElement>): ImmutableList<TElement> => {
-    return ImmutableList.create(iterable, comparator);
-});
-
-registerIndexedType(ImmutableList);

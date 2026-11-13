@@ -4,13 +4,17 @@ import { NoElementsException } from "../shared/NoElementsException";
 import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate, TypePredicate } from "../shared/Predicate";
 import { membership } from "../shared/internal/membership";
-import { registerIndexedType } from "../shared/internal/collectionAccess";
 import type { IList } from "./IList";
 
 export abstract class AbstractList<TElement> extends AbstractRandomAccessCollection<TElement> implements IList<TElement> {
 
     protected constructor(comparator?: EqualityComparator<TElement>) {
         super(comparator);
+    }
+
+    /** @internal get(index) returns the element that iteration yields at that position. Read by shared/internal/collectionAccess. */
+    protected get isIndexedSource(): true {
+        return true;
     }
 
     public add(element: TElement): boolean {
@@ -159,5 +163,3 @@ export abstract class AbstractList<TElement> extends AbstractRandomAccessCollect
 
     public abstract sort(comparator?: OrderComparator<TElement>): void;
 }
-
-registerIndexedType(AbstractList);

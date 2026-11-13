@@ -696,31 +696,19 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public order(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement> {
-        if (!orderedAsyncEnumerableFactory) {
-            throw new Error("OrderedAsyncEnumerable factory is not registered.");
-        }
-        return orderedAsyncEnumerableFactory(this, item => item, true, false, comparator);
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, item => item, true, false, comparator);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
-        if (!orderedAsyncEnumerableFactory) {
-            throw new Error("OrderedAsyncEnumerable factory is not registered.");
-        }
-        return orderedAsyncEnumerableFactory(this, keySelector, true, false, comparator);
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
-        if (!orderedAsyncEnumerableFactory) {
-            throw new Error("OrderedAsyncEnumerable factory is not registered.");
-        }
-        return orderedAsyncEnumerableFactory(this, keySelector, false, false, comparator);
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
     }
 
     public orderDescending(comparator?: OrderComparator<TElement>): IOrderedAsyncEnumerable<TElement> {
-        if (!orderedAsyncEnumerableFactory) {
-            throw new Error("OrderedAsyncEnumerable factory is not registered.");
-        }
-        return orderedAsyncEnumerableFactory(this, item => item, false, false, comparator);
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, item => item, false, false, comparator);
     }
 
     public pairwise(resultSelector: PairwiseSelector<TElement, TElement>): IAsyncEnumerable<[TElement, TElement]> {
@@ -981,17 +969,11 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
-        if (!orderedAsyncEnumerableFactory) {
-            throw new Error("OrderedAsyncEnumerable factory is not registered.");
-        }
-        return orderedAsyncEnumerableFactory(this, keySelector, true, true, comparator);
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
     }
 
     public thenByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
-        if (!orderedAsyncEnumerableFactory) {
-            throw new Error("OrderedAsyncEnumerable factory is not registered.");
-        }
-        return orderedAsyncEnumerableFactory(this, keySelector, false, true, comparator);
+        return OrderedAsyncEnumerator.createOrderedEnumerable(this, keySelector, false, true, comparator);
     }
 
     public async toArray(): Promise<TElement[]> {
@@ -1100,8 +1082,7 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
 
     public async toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): Promise<ILookup<TKey, TValue>> {
         const sequence = Enumerable.from(await this.toArray());
-        // lookupFactory is registered via registerLookupFactory in Lookup.ts and used through Enumerator helpers.
-        // We simply delegate through Enumerable (which will call into Enumerator's toLookup).
+        // Delegates to Enumerator's toLookup.
         return sequence.toLookup(keySelector, valueSelector, keyComparator);
     }
 
@@ -1953,16 +1934,56 @@ export class AsyncEnumerator<TElement> implements IAsyncEnumerable<TElement> {
     }
 }
 
-type OrderedAsyncEnumerableFactory = <TElement, TKey>(
-    source: AsyncIterable<TElement>,
-    keySelector: Selector<TElement, TKey>,
-    ascending: boolean,
-    viaThenBy?: boolean,
-    comparator?: OrderComparator<TKey>
-) => IOrderedAsyncEnumerable<TElement>;
+// Lives here rather than in its own module: AsyncEnumerator creates it, and it extends AsyncEnumerator.
+export class OrderedAsyncEnumerator<TElement> extends AsyncEnumerator<TElement> implements IOrderedAsyncEnumerable<TElement> {
+    public constructor(public readonly orderedValueGroups: () => AsyncIterable<AsyncIterable<TElement>>) {
+        super(async function* () {
+            for await (const group of orderedValueGroups()) {
+                yield* group;
+            }
+        });
+    }
 
-let orderedAsyncEnumerableFactory: OrderedAsyncEnumerableFactory | undefined;
+    public static createOrderedEnumerable<TElement, TKey>(source: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>): IOrderedAsyncEnumerable<TElement> {
+        const keyValueGenerator = async function* <TKey>(source: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, comparator?: OrderComparator<TKey>): AsyncIterable<AsyncIterable<TElement>> {
+            comparator ??= Comparators.orderComparator;
+            const sortMap = await OrderedAsyncEnumerator.createKeyValueMap(source, keySelector);
+            const sortedKeys = Array.from(sortMap.keys()).sort(comparator);
+            if (ascending) {
+                for (const key of sortedKeys) {
+                    yield sortMap.get(key) as AsyncIterable<TElement>;
+                }
+            } else {
+                for (const key of sortedKeys.reverse()) {
+                    yield sortMap.get(key) as AsyncIterable<TElement>;
+                }
+            }
+        };
+        if (source instanceof OrderedAsyncEnumerator && viaThenBy) {
+            return new OrderedAsyncEnumerator<TElement>(async function* () {
+                for await (const group of source.orderedValueGroups()) {
+                    yield* keyValueGenerator(group, keySelector, ascending, comparator);
+                }
+            });
+        } else {
+            return new OrderedAsyncEnumerator<TElement>(() => keyValueGenerator(source, keySelector, ascending, comparator));
+        }
+    }
 
-export const registerOrderedAsyncEnumerableFactory = (factory: OrderedAsyncEnumerableFactory): void => {
-    orderedAsyncEnumerableFactory = factory;
-};
+    private static async createKeyValueMap<TElement, TKey>(source: AsyncIterable<TElement>, keySelector: Selector<TElement, TKey>): Promise<Map<TKey, AsyncIterable<TElement>>> {
+        const sortMap: Map<TKey, TElement[]> = new Map<TKey, TElement[]>();
+        for await (const element of source) {
+            const key = keySelector(element);
+            const value = sortMap.get(key);
+            if (value) {
+                value.push(element);
+            } else {
+                sortMap.set(key, [element]);
+            }
+        }
+        const asyncEnumerable = (values: TElement[]) => new AsyncEnumerator(async function* () {
+            yield* values;
+        });
+        return new Map<TKey, AsyncIterable<TElement>>(Array.from(sortMap.entries()).map(([key, value]) => [key, asyncEnumerable(value)]));
+    }
+}

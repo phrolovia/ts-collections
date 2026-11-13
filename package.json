@@ -6,6 +6,7 @@
     "module": "dist/index.mjs",
     "type": "module",
     "types": "dist/index.d.ts",
+    "sideEffects": false,
     "exports": {
         ".": {
             "import": "./dist/index.mjs",
@@ -24,6 +25,7 @@
         "test:perf": "vitest run --reporter=verbose .perf.test",
         "test:all": "npm run test:non-perf && npm run test:perf",
         "test:declarations": "node node_modules/typescript-5.9/bin/tsc -p tests/declarations",
+        "test:tree-shaking": "node scripts/check-tree-shaking.mjs",
         "test:coverage": "vitest run --reporter=verbose --coverage",
         "test:ui": "vitest --ui"
     },

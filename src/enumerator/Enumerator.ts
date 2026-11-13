@@ -1,28 +1,29 @@
 import { KeyValuePair } from "../dictionary/KeyValuePair";
 import { Enumerable } from "./Enumerable";
-import type { Group } from "./Group";
-import type { CircularLinkedList } from "../list/CircularLinkedList";
-import type { CircularQueue } from "../queue/CircularQueue";
-import type { Dictionary } from "../dictionary/Dictionary";
-import type { EnumerableSet } from "../set/EnumerableSet";
-import type { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
-import type { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
-import type { ImmutableList } from "../list/ImmutableList";
-import type { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
-import type { ImmutableQueue } from "../queue/ImmutableQueue";
-import type { ImmutableSet } from "../set/ImmutableSet";
-import type { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
-import type { ImmutableSortedSet } from "../set/ImmutableSortedSet";
-import type { ImmutableStack } from "../stack/ImmutableStack";
-import type { LinkedList } from "../list/LinkedList";
-import type { List } from "../list/List";
-import type { PriorityQueue } from "../queue/PriorityQueue";
-import type { Queue } from "../queue/Queue";
-import type { SortedDictionary } from "../dictionary/SortedDictionary";
-import type { SortedSet } from "../set/SortedSet";
-import type { Stack } from "../stack/Stack";
+import { Group } from "./Group";
+import { CircularLinkedList } from "../list/CircularLinkedList";
+import { CircularQueue } from "../queue/CircularQueue";
+import { Dictionary } from "../dictionary/Dictionary";
+import { EnumerableSet } from "../set/EnumerableSet";
+import { ImmutableCircularQueue } from "../queue/ImmutableCircularQueue";
+import { ImmutableDictionary } from "../dictionary/ImmutableDictionary";
+import { ImmutableList } from "../list/ImmutableList";
+import { ImmutablePriorityQueue } from "../queue/ImmutablePriorityQueue";
+import { ImmutableQueue } from "../queue/ImmutableQueue";
+import { ImmutableSet } from "../set/ImmutableSet";
+import { ImmutableSortedDictionary } from "../dictionary/ImmutableSortedDictionary";
+import { ImmutableSortedSet } from "../set/ImmutableSortedSet";
+import { ImmutableStack } from "../stack/ImmutableStack";
+import { LinkedList } from "../list/LinkedList";
+import { List } from "../list/List";
+import { PriorityQueue } from "../queue/PriorityQueue";
+import { Queue } from "../queue/Queue";
+import { SortedDictionary } from "../dictionary/SortedDictionary";
+import { SortedSet } from "../set/SortedSet";
+import { Stack } from "../stack/Stack";
 
 import type { ILookup } from "../lookup/ILookup";
+import { Lookup } from "../lookup/Lookup";
 import { Accumulator } from "../shared/Accumulator";
 import { Comparators } from "../shared/Comparators";
 import { DimensionMismatchException } from "../shared/DimensionMismatchException";
@@ -688,31 +689,19 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public order(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
-        if (!orderedEnumerableFactory) {
-            throw new Error("OrderedEnumerable factory is not registered.");
-        }
-        return orderedEnumerableFactory(this, k => k, true, false, comparator);
+        return OrderedEnumerator.createOrderedEnumerable(this, k => k, true, false, comparator);
     }
 
     public orderBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        if (!orderedEnumerableFactory) {
-            throw new Error("OrderedEnumerable factory is not registered.");
-        }
-        return orderedEnumerableFactory(this, keySelector, true, false, comparator);
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, false, comparator);
     }
 
     public orderByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        if (!orderedEnumerableFactory) {
-            throw new Error("OrderedEnumerable factory is not registered.");
-        }
-        return orderedEnumerableFactory(this, keySelector, false, false, comparator);
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, false, comparator);
     }
 
     public orderDescending(comparator?: OrderComparator<TElement>): IOrderedEnumerable<TElement> {
-        if (!orderedEnumerableFactory) {
-            throw new Error("OrderedEnumerable factory is not registered.");
-        }
-        return orderedEnumerableFactory(this, k => k, false, false, comparator);
+        return OrderedEnumerator.createOrderedEnumerable(this, k => k, false, false, comparator);
     }
 
     public pairwise(resultSelector?: PairwiseSelector<TElement, TElement>): IEnumerable<[TElement, TElement]> {
@@ -722,11 +711,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public partition<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>];
     public partition(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public partition<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TElement>, IEnumerable<TElement>] | [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] {
-        if (!listFactory) {
-            throw new Error("List factory is not registered.");
-        }
-        const trueItems = listFactory<TElement>();
-        const falseItems = listFactory<TElement>();
+        const trueItems = new List<TElement>();
+        const falseItems = new List<TElement>();
         for (const item of this) {
             if (predicate(item)) {
                 trueItems.add(item);
@@ -901,11 +887,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     public span<TFiltered extends TElement>(predicate: TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>];
     public span(predicate: Predicate<TElement>): [IEnumerable<TElement>, IEnumerable<TElement>];
     public span<TFiltered extends TElement>(predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
-        if (!listFactory) {
-            throw new Error("List factory is not registered.");
-        }
-        const span = listFactory<TElement>();
-        const rest = listFactory<TElement>();
+        const span = new List<TElement>();
+        const rest = new List<TElement>();
         let found = false;
         for (const item of this) {
             if (found) {
@@ -972,17 +955,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public thenBy<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        if (!orderedEnumerableFactory) {
-            throw new Error("OrderedEnumerable factory is not registered.");
-        }
-        return orderedEnumerableFactory(this, keySelector, true, true, comparator);
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, true, true, comparator);
     }
 
     public thenByDescending<TKey>(keySelector: Selector<TElement, TKey>, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
-        if (!orderedEnumerableFactory) {
-            throw new Error("OrderedEnumerable factory is not registered.");
-        }
-        return orderedEnumerableFactory(this, keySelector, false, true, comparator);
+        return OrderedEnumerator.createOrderedEnumerable(this, keySelector, false, true, comparator);
     }
 
     public toArray(): TElement[] {
@@ -991,10 +968,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toCircularLinkedList(comparator?: EqualityComparator<TElement, TElement>): CircularLinkedList<TElement> {
-        if (!circularLinkedListFactory) {
-            throw new Error("CircularLinkedList factory is not registered.");
-        }
-        return circularLinkedListFactory(this, comparator);
+        return new CircularLinkedList(this, comparator);
     }
 
     public toCircularQueue(comparator?: EqualityComparator<TElement>): CircularQueue<TElement>;
@@ -1003,17 +977,18 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         capacityOrComparator?: number | EqualityComparator<TElement>,
         comparator?: EqualityComparator<TElement>
     ): CircularQueue<TElement> {
-        if (!circularQueueFactory) {
-            throw new Error("CircularQueue factory is not registered.");
+        if (typeof capacityOrComparator === "number") {
+            const queue = new CircularQueue<TElement>(capacityOrComparator, comparator);
+            queue.addAll(this);
+            return queue;
         }
-        return circularQueueFactory(this, capacityOrComparator, comparator);
+        const queue = new CircularQueue<TElement>(undefined, capacityOrComparator);
+        queue.addAll(this);
+        return queue;
     }
 
     public toDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> {
-        if (!dictionaryFactory) {
-            throw new Error("Dictionary factory is not registered.");
-        }
-        const dictionary = dictionaryFactory<TKey, TValue>(Enumerable.empty(), valueComparator);
+        const dictionary = new Dictionary<TKey, TValue>(Enumerable.empty(), valueComparator);
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
@@ -1023,10 +998,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toEnumerableSet(): EnumerableSet<TElement> {
-        if (!enumerableSetFactory) {
-            throw new Error("EnumerableSet factory is not registered.");
-        }
-        return enumerableSetFactory(this);
+        return new EnumerableSet(this);
     }
 
     public toImmutableCircularQueue(comparator?: EqualityComparator<TElement>): ImmutableCircularQueue<TElement>;
@@ -1035,94 +1007,61 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         capacityOrComparator?: number | EqualityComparator<TElement>,
         comparator?: EqualityComparator<TElement>
     ): ImmutableCircularQueue<TElement> {
-        if (!immutableCircularQueueFactory) {
-            throw new Error("ImmutableCircularQueue factory is not registered.");
+        if (typeof capacityOrComparator === "number") {
+            return ImmutableCircularQueue.create(capacityOrComparator, this, comparator);
         }
-        return immutableCircularQueueFactory(this, capacityOrComparator, comparator);
+        return ImmutableCircularQueue.create(this, capacityOrComparator);
     }
 
     public toImmutableDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, valueComparator?: EqualityComparator<TValue>): ImmutableDictionary<TKey, TValue> {
-        if (!immutableDictionaryFactory) {
-            throw new Error("ImmutableDictionary factory is not registered.");
-        }
         // Builds the dictionary straight from the pairs instead of going through a Dictionary first.
         const pairs = this.select(item => {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
             return [key, value] as [TKey, TValue];
         });
-        return immutableDictionaryFactory(pairs, valueComparator);
+        return ImmutableDictionary.create<TKey, TValue>(pairs, valueComparator);
     }
 
     public toImmutableList(comparator?: EqualityComparator<TElement>): ImmutableList<TElement> {
-        if (!immutableListFactory) {
-            throw new Error("ImmutableList factory is not registered.");
-        }
-        return immutableListFactory(this, comparator);
+        return ImmutableList.create(this, comparator);
     }
 
     public toImmutablePriorityQueue(comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement> {
-        if (!immutablePriorityQueueFactory) {
-            throw new Error("ImmutablePriorityQueue factory is not registered.");
-        }
-        return immutablePriorityQueueFactory(this, comparator);
+        return ImmutablePriorityQueue.create(this, comparator);
     }
 
     public toImmutableQueue(comparator?: EqualityComparator<TElement>): ImmutableQueue<TElement> {
-        if (!immutableQueueFactory) {
-            throw new Error("ImmutableQueue factory is not registered.");
-        }
-        return immutableQueueFactory(this, comparator);
+        return ImmutableQueue.create(this, comparator);
     }
 
     public toImmutableSet(): ImmutableSet<TElement> {
-        if (!immutableSetFactory) {
-            throw new Error("ImmutableSet factory is not registered.");
-        }
-        return immutableSetFactory(this);
+        return ImmutableSet.create(this);
     }
 
     public toImmutableSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): ImmutableSortedDictionary<TKey, TValue> {
         const dictionary = this.toSortedDictionary(keySelector, valueSelector, keyComparator, valueComparator);
-        if (!immutableSortedDictionaryFactory) {
-            throw new Error("ImmutableSortedDictionary factory is not registered.");
-        }
-        return immutableSortedDictionaryFactory(dictionary);
+        return ImmutableSortedDictionary.create(dictionary, dictionary.keyComparator, dictionary.valueComparator);
     }
 
     public toImmutableSortedSet(comparator?: OrderComparator<TElement>): ImmutableSortedSet<TElement> {
-        if (!immutableSortedSetFactory) {
-            throw new Error("ImmutableSortedSet factory is not registered.");
-        }
-        return immutableSortedSetFactory(this, comparator);
+        return ImmutableSortedSet.create(this, comparator);
     }
 
     public toImmutableStack(comparator?: EqualityComparator<TElement>): ImmutableStack<TElement> {
-        if (!immutableStackFactory) {
-            throw new Error("ImmutableStack factory is not registered.");
-        }
-        return immutableStackFactory(this, comparator);
+        return ImmutableStack.create(this, comparator);
     }
 
     public toLinkedList(comparator?: EqualityComparator<TElement>): LinkedList<TElement> {
-        if (!linkedListFactory) {
-            throw new Error("LinkedList factory is not registered.");
-        }
-        return linkedListFactory(this, comparator);
+        return new LinkedList(this, comparator);
     }
 
     public toList(comparator?: EqualityComparator<TElement>): List<TElement> {
-        if (!listFactory) {
-            throw new Error("List factory is not registered.");
-        }
-        return listFactory(this, comparator);
+        return new List(this, comparator);
     }
 
     public toLookup<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>): ILookup<TKey, TValue> {
-        if (!lookupFactory) {
-            throw new Error("Lookup factory is not registered.");
-        }
-        return lookupFactory(this, keySelector, valueSelector, keyComparator);
+        return Lookup.create(this, keySelector, valueSelector, keyComparator);
     }
 
     public toMap<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>): Map<TKey, TValue> {
@@ -1145,17 +1084,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toPriorityQueue(comparator?: OrderComparator<TElement>): PriorityQueue<TElement> {
-        if (!priorityQueueFactory) {
-            throw new Error("PriorityQueue factory is not registered.");
-        }
-        return priorityQueueFactory(this, comparator);
+        return new PriorityQueue(this, comparator);
     }
 
     public toQueue(comparator?: EqualityComparator<TElement>): Queue<TElement> {
-        if (!queueFactory) {
-            throw new Error("Queue factory is not registered.");
-        }
-        return queueFactory(this, comparator);
+        return new Queue(this, comparator);
     }
 
     public toSet(): Set<TElement> {
@@ -1163,10 +1096,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toSortedDictionary<TKey, TValue>(keySelector: Selector<TElement, TKey>, valueSelector: Selector<TElement, TValue>, keyComparator?: OrderComparator<TKey>, valueComparator?: EqualityComparator<TValue>): SortedDictionary<TKey, TValue> {
-        if (!sortedDictionaryFactory) {
-            throw new Error("SortedDictionary factory is not registered.");
-        }
-        const dictionary = sortedDictionaryFactory<TKey, TValue>([], keyComparator, valueComparator);
+        const dictionary = new SortedDictionary<TKey, TValue>([], keyComparator, valueComparator);
         for (const item of this) {
             const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
             const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
@@ -1176,17 +1106,11 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     public toSortedSet(comparator?: OrderComparator<TElement>): SortedSet<TElement> {
-        if (!sortedSetFactory) {
-            throw new Error("SortedSet factory is not registered.");
-        }
-        return sortedSetFactory(this, comparator);
+        return new SortedSet(this, comparator);
     }
 
     public toStack(comparator?: EqualityComparator<TElement>): Stack<TElement> {
-        if (!stackFactory) {
-            throw new Error("Stack factory is not registered.");
-        }
-        return stackFactory(this, comparator);
+        return new Stack(this, comparator);
     }
 
     public union(iterable: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> {
@@ -1291,10 +1215,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const iterator = this[Symbol.iterator]();
         let next = iterator.next();
         while (!next.done) {
-            if (!listFactory) {
-                throw new Error("List factory is not registered.");
-            }
-            const chunk = listFactory<TElement>();
+            const chunk = new List<TElement>();
             for (let index = 0; index < size; ++index) {
                 if (next.done) {
                     break;
@@ -1314,10 +1235,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
             return yield* [];
         }
 
-        if (!listFactory) {
-            throw new Error("List factory is not registered.");
-        }
-        const items = listFactory<TElement>();
+        const items = new List<TElement>();
         while (!next.done) {
             items.add(next.value);
             next = iterator.next();
@@ -1327,7 +1245,7 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
         const seen = new Set<string>();
 
         for (let cx = 0; cx < combinationCount; ++cx) {
-            const combination = listFactory<TElement>();
+            const combination = new List<TElement>();
             for (let vx = 0; vx < items.length; ++vx) {
                 if ((cx & (1 << vx)) !== 0) {
                     combination.add(items.elementAt(vx));
@@ -1416,13 +1334,6 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 
     private* groupByGenerator<TKey>(keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IterableIterator<IGroup<TKey, TElement>> {
-        const factory = listFactory;
-        if (!factory) {
-            throw new Error("List factory is not registered.");
-        }
-        if (!groupFactory) {
-            throw new Error("Group factory is not registered.");
-        }
         if (!keyComparator) {
             const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
             for (const item of this) {
@@ -1431,8 +1342,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 if (group) {
                     (group.source as List<TElement>).add(item);
                 } else {
-                    const newList = factory<TElement>([item]);
-                    const newGroup = groupFactory(key, newList);
+                    const newList = new List<TElement>([item]);
+                    const newGroup = new Group(key, newList);
                     groupMap.set(key, newGroup);
                 }
             }
@@ -1455,8 +1366,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 if (found) {
                     (found.group.source as List<TElement>).add(item);
                 } else {
-                    const newList = factory<TElement>([item]);
-                    const newGroup = groupFactory(key, newList);
+                    const newList = new List<TElement>([item]);
+                    const newGroup = new Group(key, newList);
                     bucket.push({ canonicalKey: key, group: newGroup });
                     orderedGroups.push(newGroup);
                 }
@@ -1472,8 +1383,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                 if (group) {
                     (group.source as List<TElement>).add(item);
                 } else {
-                    const newList = factory<TElement>([item]);
-                    const newGroup = groupFactory(key, newList);
+                    const newList = new List<TElement>([item]);
+                    const newGroup = new Group(key, newList);
                     groupMap.set(hash, newGroup);
                 }
             }
@@ -1495,8 +1406,8 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
                     const group = groupMap.get(existingKey)!;
                     (group.source as List<TElement>).add(item);
                 } else {
-                    const newList = factory<TElement>([item]);
-                    const newGroup = groupFactory(key, newList);
+                    const newList = new List<TElement>([item]);
+                    const newGroup = new Group(key, newList);
                     groupMap.set(key, newGroup);
                 }
             }
@@ -2021,248 +1932,55 @@ export class Enumerator<TElement> implements IOrderedEnumerable<TElement> {
     }
 }
 
+const createSortedKeys: SortedKeysFactory = <TKey>(comparator: OrderComparator<TKey>) => new SortedSet<TKey>([], comparator);
 
-/** Factories For Concrete Classes **/
-
-type CircularLinkedListFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => CircularLinkedList<TElement>;
-
-type CircularQueueFactory = <TElement>(
-    source: Iterable<TElement>,
-    capacityOrComparator?: number | EqualityComparator<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => CircularQueue<TElement>;
-
-type DictionaryFactory = <TKey, TValue>(
-    iterable?: Iterable<KeyValuePair<TKey, TValue>>,
-    valueComparator?: EqualityComparator<TValue>
-) => Dictionary<TKey, TValue>;
-
-type EnumerableSetFactory = <TElement>(
-    source: Iterable<TElement>
-) => EnumerableSet<TElement>;
-
-type GroupFactory = <TKey, TElement>(
-    key: TKey,
-    source: IEnumerable<TElement>
-) => Group<TKey, TElement>;
-
-type ImmutableCircularQueueFactory = <TElement>(
-    source: Iterable<TElement>,
-    capacityOrComparator?: number | EqualityComparator<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => ImmutableCircularQueue<TElement>;
-
-type ImmutableDictionaryFactory = <TKey, TValue>(
-    source: Iterable<[TKey, TValue]>,
-    valueComparator?: EqualityComparator<TValue>
-) => ImmutableDictionary<TKey, TValue>;
-
-type ImmutableListFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => ImmutableList<TElement>;
-
-type ImmutablePriorityQueueFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: OrderComparator<TElement>
-) => ImmutablePriorityQueue<TElement>;
-
-type ImmutableQueueFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => ImmutableQueue<TElement>;
-
-type ImmutableSetFactory = <TElement>(
-    source: Iterable<TElement>
-) => ImmutableSet<TElement>;
-
-type ImmutableSortedDictionaryFactory = <TKey, TValue>(
-    source: SortedDictionary<TKey, TValue>
-) => ImmutableSortedDictionary<TKey, TValue>;
-
-type ImmutableSortedSetFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: OrderComparator<TElement>
-) => ImmutableSortedSet<TElement>;
-
-type ImmutableStackFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => ImmutableStack<TElement>;
-
-type LinkedListFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => LinkedList<TElement>;
-
-type ListFactory = <TElement>(
-    source?: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => List<TElement>;
-
-type LookupFactory = <TSource, TKey, TValue>(
-    source: Iterable<TSource>,
-    keySelector: Selector<TSource, TKey>,
-    valueSelector: Selector<TSource, TValue>,
-    keyComparator?: OrderComparator<TKey>
-) => ILookup<TKey, TValue>;
-
-type OrderedEnumerableFactory = <TElement, TKey>(
-    source: Iterable<TElement>,
-    keySelector: Selector<TElement, TKey>,
-    ascending: boolean,
-    viaThenBy?: boolean,
-    comparator?: OrderComparator<TKey>
-) => IOrderedEnumerable<TElement>;
-
-type PriorityQueueFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: OrderComparator<TElement>
-) => PriorityQueue<TElement>;
-
-type QueueFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => Queue<TElement>;
-
-type SortedDictionaryFactory = <TKey, TValue>(
-    source: Iterable<KeyValuePair<TKey, TValue>>,
-    keyComparator?: OrderComparator<TKey>,
-    valueComparator?: EqualityComparator<TValue>
-) => SortedDictionary<TKey, TValue>;
-
-type SortedSetFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: OrderComparator<TElement>
-) => SortedSet<TElement>;
-
-type StackFactory = <TElement>(
-    source: Iterable<TElement>,
-    comparator?: EqualityComparator<TElement>
-) => Stack<TElement>;
-
-let circularLinkedListFactory: CircularLinkedListFactory | undefined;
-let circularQueueFactory: CircularQueueFactory | undefined;
-let dictionaryFactory: DictionaryFactory | undefined;
-let enumerableSetFactory: EnumerableSetFactory | undefined;
-let groupFactory: GroupFactory | undefined;
-let immutableCircularQueueFactory: ImmutableCircularQueueFactory | undefined;
-let immutableDictionaryFactory: ImmutableDictionaryFactory | undefined;
-let immutableListFactory: ImmutableListFactory | undefined;
-let immutablePriorityQueueFactory: ImmutablePriorityQueueFactory | undefined;
-let immutableQueueFactory: ImmutableQueueFactory | undefined;
-let immutableSetFactory: ImmutableSetFactory | undefined;
-let immutableSortedDictionaryFactory: ImmutableSortedDictionaryFactory | undefined;
-let immutableSortedSetFactory: ImmutableSortedSetFactory | undefined;
-let immutableStackFactory: ImmutableStackFactory | undefined;
-let linkedListFactory: LinkedListFactory | undefined;
-let listFactory: ListFactory | undefined;
-let lookupFactory: LookupFactory | undefined;
-let orderedEnumerableFactory: OrderedEnumerableFactory | undefined;
-let priorityQueueFactory: PriorityQueueFactory | undefined;
-let queueFactory: QueueFactory | undefined;
-let sortedDictionaryFactory: SortedDictionaryFactory | undefined;
-let sortedSetFactory: SortedSetFactory | undefined;
-let stackFactory: StackFactory | undefined;
-
-const createSortedKeys: SortedKeysFactory = <TKey>(comparator: OrderComparator<TKey>) => {
-    if (!sortedSetFactory) {
-        throw new Error("SortedSet factory is not registered.");
+// Lives here rather than in its own module: Enumerator creates it, and it extends Enumerator.
+export class OrderedEnumerator<TElement> extends Enumerator<TElement> implements IOrderedEnumerable<TElement> {
+    public constructor(public readonly orderedValueGroups: () => Iterable<Iterable<TElement>>) {
+        super(function* () {
+            for (const group of orderedValueGroups()) {
+                yield* group;
+            }
+        });
     }
-    return sortedSetFactory<TKey>([], comparator);
-};
 
-export const registerCircularLinkedListFactory = (factory: CircularLinkedListFactory): void => {
-    circularLinkedListFactory = factory;
-};
+    public static createOrderedEnumerable<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, viaThenBy?: boolean, comparator?: OrderComparator<TKey>): IOrderedEnumerable<TElement> {
+        const keyValueGenerator = function* <TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, ascending: boolean, comparator?: OrderComparator<TKey>): Iterable<Iterable<TElement>> {
+            comparator ??= Comparators.orderComparator;
+            const sortMap = OrderedEnumerator.createKeyValueMap(source, keySelector);
+            const sortedKeys = Array.from(sortMap.keys()).sort(comparator);
+            if (ascending) {
+                for (const key of sortedKeys) {
+                    yield sortMap.get(key) as Iterable<TElement>;
+                }
+            } else {
+                for (const key of sortedKeys.reverse()) {
+                    yield sortMap.get(key) as Iterable<TElement>;
+                }
+            }
+        }
+        if (source instanceof OrderedEnumerator && viaThenBy) {
+            return new OrderedEnumerator<TElement>(function* () {
+                for (const group of source.orderedValueGroups()) {
+                    yield* keyValueGenerator(group, keySelector, ascending, comparator);
+                }
+            });
+        } else {
+            return new OrderedEnumerator<TElement>(() => keyValueGenerator(source, keySelector, ascending, comparator));
+        }
+    }
 
-export const registerCircularQueueFactory = (factory: CircularQueueFactory): void => {
-    circularQueueFactory = factory;
-};
-
-export const registerDictionaryFactory = (factory: DictionaryFactory): void => {
-    dictionaryFactory = factory;
-};
-
-export const registerEnumerableSetFactory = (factory: EnumerableSetFactory): void => {
-    enumerableSetFactory = factory;
-};
-
-export const registerGroupFactory = (factory: GroupFactory): void => {
-    groupFactory = factory;
-};
-
-export const registerImmutableCircularQueueFactory = (factory: ImmutableCircularQueueFactory): void => {
-    immutableCircularQueueFactory = factory;
-};
-
-export const registerImmutableDictionaryFactory = (factory: ImmutableDictionaryFactory): void => {
-    immutableDictionaryFactory = factory;
-};
-
-export const registerImmutableListFactory = (factory: ImmutableListFactory): void => {
-    immutableListFactory = factory;
-};
-
-export const registerImmutablePriorityQueueFactory = (factory: ImmutablePriorityQueueFactory): void => {
-    immutablePriorityQueueFactory = factory;
-};
-
-export const registerImmutableQueueFactory = (factory: ImmutableQueueFactory): void => {
-    immutableQueueFactory = factory;
-};
-
-export const registerImmutableSetFactory = (factory: ImmutableSetFactory): void => {
-    immutableSetFactory = factory;
-};
-
-export const registerImmutableSortedDictionaryFactory = (factory: ImmutableSortedDictionaryFactory): void => {
-    immutableSortedDictionaryFactory = factory;
-};
-
-export const registerImmutableSortedSetFactory = (factory: ImmutableSortedSetFactory): void => {
-    immutableSortedSetFactory = factory;
-};
-
-export const registerImmutableStackFactory = (factory: ImmutableStackFactory): void => {
-    immutableStackFactory = factory;
-};
-
-export const registerLinkedListFactory = (factory: LinkedListFactory): void => {
-    linkedListFactory = factory;
-};
-
-export const registerListFactory = (factory: ListFactory): void => {
-    listFactory = factory;
-};
-
-export const registerLookupFactory = (factory: LookupFactory): void => {
-    lookupFactory = factory;
-};
-
-export const registerOrderedEnumerableFactory = (factory: OrderedEnumerableFactory): void => {
-    orderedEnumerableFactory = factory;
-};
-
-export const registerPriorityQueueFactory = (factory: PriorityQueueFactory): void => {
-    priorityQueueFactory = factory;
-};
-
-export const registerQueueFactory = (factory: QueueFactory): void => {
-    queueFactory = factory;
-};
-
-export const registerSortedDictionaryFactory = (factory: SortedDictionaryFactory): void => {
-    sortedDictionaryFactory = factory;
-};
-
-export const registerSortedSetFactory = (factory: SortedSetFactory): void => {
-    sortedSetFactory = factory;
-};
-
-export const registerStackFactory = (factory: StackFactory): void => {
-    stackFactory = factory;
-};
+    private static createKeyValueMap<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>): Map<TKey, Iterable<TElement>> {
+        const sortMap: Map<TKey, TElement[]> = new Map<TKey, TElement[]>();
+        for (const element of source) {
+            const key = keySelector(element);
+            const value = sortMap.get(key);
+            if (value) {
+                value.push(element);
+            } else {
+                sortMap.set(key, [element]);
+            }
+        }
+        return sortMap;
+    }
+}

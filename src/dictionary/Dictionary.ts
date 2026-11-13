@@ -7,7 +7,6 @@ import { KeyNotFoundException } from "../shared/KeyNotFoundException";
 import { AbstractDictionary } from "./AbstractDictionary";
 import { KeyValuePair } from "./KeyValuePair";
 import type { ISet } from "../set/ISet";
-import { registerDictionaryFactory } from "../enumerator/Enumerator";
 import type { IImmutableCollection } from "../core/IImmutableCollection";
 
 export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
@@ -113,7 +112,3 @@ export class Dictionary<TKey, TValue> extends AbstractDictionary<TKey, TValue> {
         return this.#dictionary.size;
     }
 }
-
-registerDictionaryFactory(<TKey, TValue>(iterable?: Iterable<KeyValuePair<TKey, TValue>>, valueComparator?: EqualityComparator<TValue>): Dictionary<TKey, TValue> => {
-    return new Dictionary(iterable ?? ([] as Array<KeyValuePair<TKey, TValue>>), valueComparator);
-});

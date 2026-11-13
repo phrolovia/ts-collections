@@ -5,7 +5,6 @@ import type { OrderComparator } from "../shared/OrderComparator";
 import type { Predicate } from "../shared/Predicate";
 import { PersistentHeap } from "../shared/internal/PersistentHeap";
 import { contains } from "../enumerator/functions/contains";
-import { registerImmutablePriorityQueueFactory } from "../enumerator/Enumerator";
 
 export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollection<TElement> {
     readonly #comparator: OrderComparator<TElement>;
@@ -214,7 +213,3 @@ export class ImmutablePriorityQueue<TElement> extends AbstractImmutableCollectio
         return this.#heap.size;
     }
 }
-
-registerImmutablePriorityQueueFactory(<TElement>(iterable: Iterable<TElement>, comparator?: OrderComparator<TElement>): ImmutablePriorityQueue<TElement> => {
-    return ImmutablePriorityQueue.create(iterable, comparator);
-});
