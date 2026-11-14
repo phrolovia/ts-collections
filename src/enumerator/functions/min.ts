@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Returns the smallest numeric value produced for the elements in the sequence.
@@ -27,8 +27,22 @@ import { from } from "./from";
 export function min(source: Iterable<number>): number;
 export function min<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
 export function min<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
-    if (selector != null) {
-        return from(source).min(selector);
+    let min: number | null = null;
+    if (!selector) {
+        for (const item of source) {
+            min = Math.min(min ?? Number.POSITIVE_INFINITY, item as unknown as number);
+        }
+        if (min == null) {
+            throw new NoElementsException();
+        }
+        return min;
+    } else {
+        for (const item of source) {
+            min = Math.min(min ?? Number.POSITIVE_INFINITY, selector(item));
+        }
+        if (min == null) {
+            throw new NoElementsException();
+        }
+        return min;
     }
-    return from(source as Iterable<number>).min();
 }

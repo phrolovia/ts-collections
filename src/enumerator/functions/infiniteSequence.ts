@@ -1,5 +1,5 @@
-import { Enumerable } from "../Enumerable";
 import { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Generates an infinite numeric sequence starting from the specified value with the given step increment.
@@ -24,5 +24,11 @@ import { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const infiniteSequence = (start: number, step: number): IEnumerable<number> => {
-    return Enumerable.infiniteSequence(start, step);
+    return new Enumerator(function* () {
+        let ix = start;
+        while (true) {
+            yield ix;
+            ix += step;
+        }
+    });
 };

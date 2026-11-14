@@ -1,6 +1,6 @@
 import type { PairwiseSelector } from "../../shared/PairwiseSelector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Creates a deferred sequence of adjacent element pairs drawn from the source iterable.
@@ -20,5 +20,18 @@ export const pairwise = <TElement>(
     source: Iterable<TElement>,
     resultSelector?: PairwiseSelector<TElement, TElement>
 ): IEnumerable<[TElement, TElement]> => {
-    return from(source).pairwise(resultSelector);
+    const selector = resultSelector ?? ((first: TElement, second: TElement): [TElement, TElement] => [first, second]);
+    return new Enumerator(() => pairwiseGenerator(source, selector));
 };
+
+function* pairwiseGenerator<TElement>(source: Iterable<TElement>, resultSelector: PairwiseSelector<TElement, TElement>): IterableIterator<[TElement, TElement]> {
+    const iterator = source[Symbol.iterator]();
+    let next = iterator.next();
+    while (!next.done) {
+        const previous = next;
+        next = iterator.next();
+        if (!next.done) {
+            yield resultSelector(previous.value, next.value);
+        }
+    }
+}

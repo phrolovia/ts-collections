@@ -38,7 +38,10 @@ import type { ZipManyZipper, Zipper } from "../shared/Zipper";
 import type { ImmutableStack } from "../stack/ImmutableStack";
 import type { Stack } from "../stack/Stack";
 import { Enumerator } from "./Enumerator";
-import { ensureSequenceArgumentValidity } from "./helpers/sequenceHelpers";
+import { infiniteSequence } from "./functions/infiniteSequence";
+import { range } from "./functions/range";
+import { repeat } from "./functions/repeat";
+import { sequence } from "./functions/sequence";
 import type { IEnumerable } from "./IEnumerable";
 import type { IGroup } from "./IGroup";
 import type { IOrderedEnumerable } from "./IOrderedEnumerable";
@@ -71,13 +74,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
     }
 
     public static infiniteSequence(start: number, step: number): IEnumerable<number> {
-        return new Enumerator(function* () {
-            let ix = start;
-            while (true) {
-                yield ix;
-                ix += step;
-            }
-        });
+        return infiniteSequence(start, step);
     }
 
     /**
@@ -87,11 +84,7 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
      * @returns {IEnumerable<number>} An enumerable range of numbers.
      */
     public static range(start: number, count: number): IEnumerable<number> {
-        return new Enumerator(function* () {
-            for (let ix = 0; ix < count; ++ix) {
-                yield start + ix;
-            }
-        });
+        return range(start, count);
     }
 
     /**
@@ -103,28 +96,11 @@ export class Enumerable<TElement> implements IEnumerable<TElement> {
      * @returns {IEnumerable<TElement>} An Iterable representing the repeated elements.
      */
     public static repeat<TSource>(element: TSource, count: number): IEnumerable<TSource> {
-        return new Enumerator(function* () {
-            for (let ix = 0; ix < count; ++ix) {
-                yield element;
-            }
-        });
+        return repeat(element, count);
     }
 
     public static sequence(start: number, end: number, step: number): IEnumerable<number> {
-        ensureSequenceArgumentValidity(start, end, step);
-        return new Enumerator(function* () {
-            if (start < end) {
-                for (let ix = start; ix <= end; ix += step) {
-                    yield ix;
-                }
-            } else if (start > end) {
-                for (let ix = start; ix >= end; ix += step) {
-                    yield ix;
-                }
-            } else {
-                yield start;
-            }
-        });
+        return sequence(start, end, step);
     }
 
     [Symbol.iterator](): Iterator<TElement> {

@@ -1,5 +1,6 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { accumulatePairStatsFromSingleIterable } from "../helpers/statisticsHelpers";
+import { InsufficientElementException } from "../../shared/InsufficientElementException";
 
 /**
  * Calculates the covariance between two numeric projections of {@link source}.
@@ -27,7 +28,15 @@ export const covarianceBy = <TElement>(
     source: Iterable<TElement>,
     leftSelector: Selector<TElement, number>,
     rightSelector: Selector<TElement, number>,
-    sample?: boolean
+    sample: boolean = true
 ): number => {
-    return from(source).covarianceBy(leftSelector, rightSelector, sample);
+    const stats = accumulatePairStatsFromSingleIterable(source, leftSelector, rightSelector);
+
+    if (stats.count < 2) {
+        throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+    }
+
+    return sample
+        ? stats.sumSqXY / (stats.count - 1)
+        : stats.sumSqXY / stats.count;
 };

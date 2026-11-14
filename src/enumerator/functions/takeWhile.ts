@@ -1,6 +1,6 @@
 import type { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Returns consecutive leading elements while a type guard predicate continues to succeed, narrowing the element type.
@@ -47,5 +47,22 @@ export function takeWhile<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
 ): IEnumerable<TElement> | IEnumerable<TFiltered> {
-    return from(source).takeWhile(predicate as IndexedPredicate<TElement>);
+    return new Enumerator(() => takeWhileGenerator(source, predicate as IndexedPredicate<TElement>));
+}
+
+function* takeWhileGenerator<TElement>(source: Iterable<TElement>, predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    let index = 0;
+    let takeEnded = false;
+    for (const item of source) {
+        if (!takeEnded) {
+            if (predicate(item, index)) {
+                yield item;
+                ++index;
+            } else {
+                takeEnded = true;
+            }
+        } else {
+            break;
+        }
+    }
 }

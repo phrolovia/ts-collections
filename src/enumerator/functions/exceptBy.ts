@@ -1,8 +1,10 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { OrderComparator } from "../../shared/OrderComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Comparators } from "../../shared/Comparators";
+import { Enumerator, createSortedKeys } from "../Enumerator";
+import { KeySet } from "../helpers/keySetHelpers";
 
 /**
  * Returns the elements of {@link source} whose projected keys are not present in {@link other}.
@@ -39,5 +41,18 @@ export const exceptBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>
 ): IEnumerable<TElement> => {
-    return from(source).exceptBy(other, keySelector, keyComparator);
+    keyComparator ??= Comparators.equalityComparator;
+    return new Enumerator(() => exceptByGenerator(source, other, keySelector, keyComparator));
 };
+
+function* exceptByGenerator<TElement, TKey>(source: Iterable<TElement>, iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
+    const keys = new KeySet<TKey>(keyComparator, createSortedKeys);
+    for (const item of iterable) {
+        keys.add(keySelector(item));
+    }
+    for (const item of source) {
+        if (keys.add(keySelector(item))) {
+            yield item;
+        }
+    }
+}

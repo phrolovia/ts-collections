@@ -1,5 +1,5 @@
-import { Enumerable } from "../Enumerable";
 import type { IEnumerable } from "../../enumerator/IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Creates a sequence that repeats the specified element a fixed number of times.
@@ -15,5 +15,9 @@ import type { IEnumerable } from "../../enumerator/IEnumerable";
  * ```
  */
 export const repeat = <TElement>(element: TElement, count: number): IEnumerable<TElement> => {
-    return Enumerable.repeat(element, count);
+    return new Enumerator(function* () {
+        for (let ix = 0; ix < count; ++ix) {
+            yield element;
+        }
+    });
 };

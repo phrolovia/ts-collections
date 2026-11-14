@@ -1,6 +1,6 @@
 import { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
 import { IEnumerable } from "../IEnumerable";
-import { from } from "./from";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Skips elements until a type guard predicate returns `true`, then yields that element and the remainder, narrowing the element type.
@@ -45,5 +45,20 @@ export function skipUntil<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
 ): IEnumerable<TElement> | IEnumerable<TFiltered> {
-    return from(source).skipUntil(predicate);
+    return new Enumerator(() => skipUntilGenerator(source, predicate));
+}
+
+function* skipUntilGenerator<TElement>(source: Iterable<TElement>, predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    let index = 0;
+    let skipping = true;
+
+    for (const item of source) {
+        if (skipping && predicate(item, index)) {
+            skipping = false;
+        }
+        if (!skipping) {
+            yield item;
+        }
+        index++;
+    }
 }

@@ -39,5 +39,18 @@ export function span<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
-    return from(source).span(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    const span: TElement[] = [];
+    const rest: TElement[] = [];
+    let found = false;
+    for (const item of source) {
+        if (found) {
+            rest.push(item);
+        } else if (predicate(item)) {
+            span.push(item);
+        } else {
+            found = true;
+            rest.push(item);
+        }
+    }
+    return [from(span), from(rest)] as [IEnumerable<TFiltered>, IEnumerable<TElement>] | [IEnumerable<TElement>, IEnumerable<TElement>];
 }

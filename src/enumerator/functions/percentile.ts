@@ -1,6 +1,6 @@
 import type { PercentileStrategy } from "../../shared/PercentileStrategy";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { findPercentile } from "../helpers/percentileHelpers";
 
 /**
  * Calculates a percentile of the numeric values produced by {@link source}.
@@ -29,8 +29,8 @@ import { from } from "./from";
 export function percentile(source: Iterable<number>, percent: number, strategy?: PercentileStrategy): number;
 export function percentile<TElement>(source: Iterable<TElement>, percent: number, selector: Selector<TElement, number>, strategy?: PercentileStrategy): number;
 export function percentile<TElement>(source: Iterable<TElement>, percent: number, selectorOrStrategy?: Selector<TElement, number> | PercentileStrategy, strategy?: PercentileStrategy): number {
-    if (typeof selectorOrStrategy === "function") {
-        return from(source).percentile(percent, selectorOrStrategy, strategy);
-    }
-    return from(source as Iterable<number>).percentile(percent, selectorOrStrategy ?? strategy);
+    const selector = typeof selectorOrStrategy === "function" ? selectorOrStrategy : undefined;
+    const actualStrategy = typeof selectorOrStrategy === "function" ? strategy : selectorOrStrategy ?? strategy;
+    const numericData = selector ? Array.from(source, selector) : Array.from(source) as unknown as number[];
+    return findPercentile(numericData, percent, actualStrategy);
 }

@@ -1,9 +1,12 @@
-import type { KeyValuePair } from "../../dictionary/KeyValuePair";
 import type { Accumulator } from "../../shared/Accumulator";
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { Selector } from "../../shared/Selector";
 import type { IEnumerable } from "../IEnumerable";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
+import { groupBy } from "./groupBy";
+import { KeyValuePair } from "../../dictionary/KeyValuePair";
+import { select } from "./select";
+import { aggregate } from "./aggregate";
 
 /**
  * Groups elements by a computed key and aggregates each group by applying an accumulator within that group.
@@ -47,5 +50,9 @@ export const aggregateBy = <TElement, TKey, TAccumulate = TElement>(
     accumulator: Accumulator<TElement, TAccumulate>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<KeyValuePair<TKey, TAccumulate>> => {
-    return from(source).aggregateBy(keySelector, seedSelector, accumulator, keyComparator);
+    const groups = groupBy(source, keySelector, keyComparator ?? Comparators.equalityComparator);
+    return select(groups, group => {
+        const seed = seedSelector instanceof Function ? seedSelector(group.key) : seedSelector;
+        return new KeyValuePair(group.key, aggregate(group.source, accumulator, seed));
+    });
 };

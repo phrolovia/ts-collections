@@ -1,5 +1,6 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Returns every n-th element of the sequence, starting with the first.
@@ -20,5 +21,18 @@ export const step = <TElement>(
     source: Iterable<TElement>,
     step: number
 ): IEnumerable<TElement> => {
-    return from(source).step(step);
+    if (step < 1) {
+        throw new InvalidArgumentException("Step must be greater than 0.", "step");
+    }
+    return new Enumerator(() => stepGenerator(source, step));
 };
+
+function* stepGenerator<TElement>(source: Iterable<TElement>, step: number): IterableIterator<TElement> {
+    let index = 0;
+    for (const item of source) {
+        if (index % step === 0) {
+            yield item;
+        }
+        ++index;
+    }
+}

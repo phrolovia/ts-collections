@@ -1,6 +1,7 @@
 import type { OrderComparator } from "../../shared/OrderComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Returns the element whose projected key is smallest according to the provided comparator.
@@ -28,5 +29,17 @@ export const minBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     comparator?: OrderComparator<TKey>
 ): TElement => {
-    return from(source).minBy(keySelector, comparator);
+    let min: TElement | null = null;
+    let minKey: TKey | null = null;
+    for (const item of source) {
+        const key = keySelector(item);
+        if (minKey == null || (comparator ?? Comparators.orderComparator)(key, minKey) < 0) {
+            min = item;
+            minKey = key;
+        }
+    }
+    if (min == null) {
+        throw new NoElementsException();
+    }
+    return min;
 };

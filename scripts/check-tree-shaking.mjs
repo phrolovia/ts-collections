@@ -14,6 +14,13 @@ const cases = [
         maxBytes: 1_000
     },
     {
+        // Functions that return a value loop over the source themselves, without an enumerable.
+        name: "value functions",
+        code: `import { median, sum } from "${dist}"; export default median([3, 1, 2]) + sum([1, 2, 3]);`,
+        expected: 8,
+        maxBytes: 2_000
+    },
+    {
         name: "an exception",
         code: `import { CycleDetectedException } from "${dist}"; export default new CycleDetectedException([1, 2, 1]) instanceof Error;`,
         expected: true,

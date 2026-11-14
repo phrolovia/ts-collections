@@ -1,5 +1,4 @@
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
-import { from } from "./from";
 
 /**
  * Returns the first element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
@@ -48,5 +47,10 @@ export function firstOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): TElement | TFiltered | null {
-    return from(source).firstOrDefault(predicate as Predicate<TElement> | undefined);
+    for (const item of source) {
+        if (!predicate || predicate(item)) {
+            return item;
+        }
+    }
+    return null;
 }

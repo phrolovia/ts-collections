@@ -1,6 +1,6 @@
 import type { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Filters {@link source} using a type guard predicate and narrows the resulting element type.
@@ -40,5 +40,15 @@ export function where<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
 ): IEnumerable<TElement> | IEnumerable<TFiltered> {
-    return from(source).where(predicate as IndexedPredicate<TElement>);
+    return new Enumerator<TElement>(() => whereGenerator(source, predicate as IndexedPredicate<TElement>));
+}
+
+function* whereGenerator<TElement>(source: Iterable<TElement>, predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    let index = 0;
+    for (const d of source) {
+        if (predicate(d, index)) {
+            yield d;
+        }
+        ++index;
+    }
 }

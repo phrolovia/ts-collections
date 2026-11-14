@@ -1,5 +1,6 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
+import { Enumerator, List } from "../Enumerator";
 
 /**
  * Generates the unique combinations that can be built from the elements in the sequence.
@@ -20,5 +21,42 @@ export const combinations = <TElement>(
     source: Iterable<TElement>,
     size?: number
 ): IEnumerable<IEnumerable<TElement>> => {
-    return from(source).combinations(size);
+    if (size != null && size < 0) {
+        throw new InvalidArgumentException("Size must be greater than or equal to 0.", "size");
+    }
+    return new Enumerator(() => combinationsGenerator(source, size));
 };
+
+function* combinationsGenerator<TElement>(source: Iterable<TElement>, size?: number): IterableIterator<IEnumerable<TElement>> {
+    const iterator = source[Symbol.iterator]();
+
+    let next = iterator.next();
+    if (next.done) {
+        return yield* [];
+    }
+
+    const items = new List<TElement>();
+    while (!next.done) {
+        items.add(next.value);
+        next = iterator.next();
+    }
+
+    const combinationCount = 1 << items.length;
+    const seen = new Set<string>();
+
+    for (let cx = 0; cx < combinationCount; ++cx) {
+        const combination = new List<TElement>();
+        for (let vx = 0; vx < items.length; ++vx) {
+            if ((cx & (1 << vx)) !== 0) {
+                combination.add(items.elementAt(vx));
+            }
+        }
+        if (size == null || combination.length === size) {
+            const key = combination.aggregate((acc, cur) => acc + cur, ",");
+            if (!seen.has(key)) {
+                seen.add(key);
+                yield combination;
+            }
+        }
+    }
+}

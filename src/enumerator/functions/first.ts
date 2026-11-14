@@ -1,5 +1,6 @@
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
-import { from } from "./from";
+import { NoMatchingElementException } from "../../shared/NoMatchingElementException";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Returns the first element in the sequence, optionally filtered by a predicate or type guard.
@@ -44,5 +45,10 @@ export function first<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): TElement | TFiltered {
-    return from(source).first(predicate as Predicate<TElement> | undefined);
+    for (const item of source) {
+        if (!predicate || predicate(item)) {
+            return item;
+        }
+    }
+    throw predicate ? new NoMatchingElementException() : new NoElementsException();
 }

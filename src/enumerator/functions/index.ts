@@ -1,5 +1,5 @@
 import type { IEnumerable } from "../IEnumerable";
-import { from } from "./from";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Enumerates the sequence while exposing the zero-based index alongside each element.
@@ -15,5 +15,12 @@ import { from } from "./from";
  * ```
  */
 export const index = <TElement>(source: Iterable<TElement>): IEnumerable<[number, TElement]> => {
-    return from(source).index();
+    return new Enumerator<[number, TElement]>(() => indexGenerator(source));
 };
+
+function* indexGenerator<TElement>(source: Iterable<TElement>): IterableIterator<[number, TElement]> {
+    let index = 0;
+    for (const item of source) {
+        yield [index++, item];
+    }
+}

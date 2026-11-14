@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Returns a deferred sequence that yields the source elements in reverse order.
@@ -15,5 +15,9 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const reverse = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
-    return from(source).reverse();
+    return new Enumerator(() => reverseGenerator(source));
 };
+
+function* reverseGenerator<TElement>(source: Iterable<TElement>): IterableIterator<TElement> {
+    yield* Array.from(source).reverse();
+}

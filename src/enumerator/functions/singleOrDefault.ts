@@ -1,5 +1,6 @@
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
-import { from } from "./from";
+import { MoreThanOneMatchingElementException } from "../../shared/MoreThanOneMatchingElementException";
+import { MoreThanOneElementException } from "../../shared/MoreThanOneElementException";
 
 /**
  * Returns the only element that satisfies the provided type guard predicate, or `null` when no such element exists.
@@ -52,5 +53,19 @@ export function singleOrDefault<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): TElement | TFiltered | null {
-    return from(source).singleOrDefault(predicate as Predicate<TElement> | undefined);
+    let result: TElement | null = null;
+    let found = false;
+
+    for (const item of source) {
+        if (!predicate || predicate(item)) {
+            if (found) {
+                throw predicate
+                    ? new MoreThanOneMatchingElementException()
+                    : new MoreThanOneElementException();
+            }
+            result = item;
+            found = true;
+        }
+    }
+    return result;
 }

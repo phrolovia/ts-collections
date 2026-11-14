@@ -1,6 +1,6 @@
 import type { IndexedAction } from "../../shared/IndexedAction";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Invokes the specified action for each element while yielding the original elements unchanged.
@@ -23,5 +23,13 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const tap = <TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IEnumerable<TElement> => {
-    return from(source).tap(action);
+    return new Enumerator(() => tapGenerator(source, action));
 };
+
+function* tapGenerator<TElement>(source: Iterable<TElement>, action: IndexedAction<TElement>): IterableIterator<TElement> {
+    let index = 0;
+    for (const item of source) {
+        action(item, index++);
+        yield item;
+    }
+}

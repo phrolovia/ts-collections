@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { KeyValuePair } from "../../dictionary/KeyValuePair";
 
 /**
  * Materialises {@link source} into a `Map` keyed by the provided selector.
@@ -27,5 +27,11 @@ export const toMap = <TElement, TKey, TValue>(
     keySelector: Selector<TElement, TKey>,
     valueSelector: Selector<TElement, TValue>
 ): Map<TKey, TValue> => {
-    return from(source).toMap(keySelector, valueSelector);
+    const map = new Map<TKey, TValue>();
+    for (const item of source) {
+        const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+        const value = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+        map.set(key, value);
+    }
+    return map;
 };

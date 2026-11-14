@@ -1,5 +1,6 @@
-import { Enumerable } from "../Enumerable";
 import { IEnumerable } from "../IEnumerable";
+import { ensureSequenceArgumentValidity } from "../helpers/sequenceHelpers";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Generates a numeric sequence from the specified start value to the end value (inclusive) with the given step.
@@ -30,5 +31,18 @@ export const sequence = (
     end: number,
     step: number
 ): IEnumerable<number> => {
-    return Enumerable.sequence(start, end, step);
+    ensureSequenceArgumentValidity(start, end, step);
+    return new Enumerator(function* () {
+        if (start < end) {
+            for (let ix = start; ix <= end; ix += step) {
+                yield ix;
+            }
+        } else if (start > end) {
+            for (let ix = start; ix >= end; ix += step) {
+                yield ix;
+            }
+        } else {
+            yield start;
+        }
+    });
 }

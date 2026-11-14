@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { KeyValuePair } from "../../dictionary/KeyValuePair";
 
 /**
  * Materialises {@link source} into a plain object keyed by the provided selector.
@@ -27,5 +27,10 @@ export const toObject = <TElement, TKey extends PropertyKey, TValue>(
     keySelector: Selector<TElement, TKey>,
     valueSelector: Selector<TElement, TValue>
 ): Record<TKey, TValue> => {
-    return from(source).toObject(keySelector, valueSelector);
+    const obj: Record<TKey, TValue> = {} as Record<TKey, TValue>;
+    for (const item of source) {
+        const key = item instanceof KeyValuePair ? keySelector?.(item) ?? item.key : keySelector(item);
+        obj[key] = item instanceof KeyValuePair ? valueSelector?.(item) ?? item.value : valueSelector(item);
+    }
+    return obj;
 };

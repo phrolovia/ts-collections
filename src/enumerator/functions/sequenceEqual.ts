@@ -1,5 +1,5 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
 
 /**
  * Determines whether {@link source} and another iterable contain equal elements in the same order.
@@ -27,5 +27,23 @@ export const sequenceEqual = <TElement>(
     other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
 ): boolean => {
-    return from(source).sequenceEqual(other, comparator);
+    comparator ??= Comparators.equalityComparator;
+    const iterator = source[Symbol.iterator]();
+    const otherIterator = other[Symbol.iterator]();
+    let first = iterator.next();
+    let second = otherIterator.next();
+    if (first.done && second.done) {
+        return true;
+    }
+    while (!first.done && !second.done) {
+        if (!comparator(first.value, second.value)) {
+            return false;
+        }
+        first = iterator.next();
+        second = otherIterator.next();
+        if (first.done && second.done) {
+            return true;
+        }
+    }
+    return false;
 };

@@ -1,5 +1,5 @@
-import { Enumerable } from "../Enumerable";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Generates a numeric range beginning at the specified start value.
@@ -14,5 +14,9 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const range = (start: number, count: number): IEnumerable<number> => {
-    return Enumerable.range(start, count);
+    return new Enumerator(function* () {
+        for (let ix = 0; ix < count; ++ix) {
+            yield start + ix;
+        }
+    });
 };

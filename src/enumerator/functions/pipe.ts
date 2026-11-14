@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { PipeOperator } from "../../shared/PipeOperator";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Applies a user-defined pipeline to {@link source} and returns the operator's result.
@@ -26,5 +26,6 @@ export const pipe = <TElement, TResult>(
     source: Iterable<TElement>,
     operator: PipeOperator<TElement, TResult>
 ): TResult => {
-    return from(source).pipe(operator);
+    // The operator gets an enumerable over the source, as it does from an enumerable's pipe method.
+    return operator(new Enumerator(() => source));
 }

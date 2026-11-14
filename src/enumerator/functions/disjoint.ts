@@ -1,5 +1,6 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
+import { isDefaultEquality } from "../../shared/internal/membership";
 
 /**
  * Determines whether {@link source} and {@link other} share no equivalent elements.
@@ -25,5 +26,31 @@ export const disjoint = <TElement, TSecond>(
     other: Iterable<TSecond>,
     comparator?: EqualityComparator<TElement | TSecond>
 ): boolean => {
-    return from(source).disjoint(other, comparator);
+    comparator ??= Comparators.equalityComparator as EqualityComparator<TElement | TSecond>;
+    if (isDefaultEquality(comparator)) {
+        const set = new Set<TElement | TSecond>(source);
+        if (set.size === 0) {
+            return true;
+        }
+        for (const element of other) {
+            if (set.has(element)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const leftArray = Array.from(source);
+    if (leftArray.length === 0) {
+        return true;
+    }
+
+    for (const rightElement of other) {
+        for (const leftElement of leftArray) {
+            if (comparator(leftElement, rightElement)) {
+                return false;
+            }
+        }
+    }
+    return true;
 };

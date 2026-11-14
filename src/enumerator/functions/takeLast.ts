@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Returns up to the specified number of trailing elements from {@link source}.
@@ -22,5 +22,31 @@ export const takeLast = <TElement>(
     source: Iterable<TElement>,
     count: number
 ): IEnumerable<TElement> => {
-    return from(source).takeLast(count);
+    return new Enumerator(() => takeLastGenerator(source, count));
 };
+
+function* takeLastGenerator<TElement>(source: Iterable<TElement>, count: number): IterableIterator<TElement> {
+    if (count <= 0) {
+        return;
+    }
+
+    const buffer = new Array<TElement>(count);
+    let bufferSize = 0;
+    let startIndex = 0;
+
+    for (const item of source) {
+        const nextIndex = (startIndex + bufferSize) % count;
+        buffer[nextIndex] = item;
+
+        if (bufferSize < count) {
+            bufferSize++;
+        } else {
+            startIndex = (startIndex + 1) % count;
+        }
+    }
+
+    for (let i = 0; i < bufferSize; i++) {
+        const readIndex = (startIndex + i) % count;
+        yield buffer[readIndex];
+    }
+}

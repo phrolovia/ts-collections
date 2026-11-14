@@ -1,5 +1,8 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
+import { Enumerator } from "../Enumerator";
+import { distinct } from "./distinct";
+import { permutationsGenerator } from "../helpers/permutationsGenerator";
 
 /**
  * Generates permutations from the distinct elements of the source iterable.
@@ -20,5 +23,8 @@ export const permutations = <TElement>(
     source: Iterable<TElement>,
     size?: number
 ): IEnumerable<IEnumerable<TElement>> => {
-    return from(source).permutations(size);
+    if (size != null && size < 1) {
+        throw new InvalidArgumentException("Size must be greater than 0.", "size");
+    }
+    return new Enumerator(() => permutationsGenerator(Array.from(distinct(source)), size));
 };

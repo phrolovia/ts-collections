@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Returns up to the specified number of leading elements from {@link source}.
@@ -22,5 +22,17 @@ export const take = <TElement>(
     source: Iterable<TElement>,
     count: number
 ): IEnumerable<TElement> => {
-    return from(source).take(count);
+    return new Enumerator(() => takeGenerator(source, count));
 };
+
+function* takeGenerator<TElement>(source: Iterable<TElement>, count: number): IterableIterator<TElement> {
+    let index = 0;
+    for (const item of source) {
+        if (index < count) {
+            yield item;
+            index++;
+        } else {
+            break;
+        }
+    }
+}

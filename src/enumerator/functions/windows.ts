@@ -1,5 +1,7 @@
 import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Produces a sequence of sliding windows of fixed size over {@link source}.
@@ -21,5 +23,34 @@ export const windows = <TElement>(
     source: Iterable<TElement>,
     size: number
 ): IEnumerable<IEnumerable<TElement>> => {
-    return from(source).windows(size);
+    if (size < 1) {
+        throw new InvalidArgumentException("Size must be greater than 0.", "size");
+    }
+    return new Enumerator<IEnumerable<TElement>>(() => windowsGenerator(source, size));
 };
+
+function* windowsGenerator<TElement>(source: Iterable<TElement>, size: number): IterableIterator<IEnumerable<TElement>> {
+    const iterator = source[Symbol.iterator]();
+    const buffer = new Array<TElement>(size);
+    let count = 0;
+    let start = 0;
+
+    for (let item = iterator.next(); !item.done; item = iterator.next()) {
+        if (count < size) {
+            buffer[count] = item.value;
+            count++;
+
+            if (count === size) {
+                yield from(buffer.slice(0, size));
+            }
+        } else {
+            buffer[start] = item.value;
+            start = (start + 1) % size;
+            const window = new Array<TElement>(size);
+            for (let i = 0; i < size; i++) {
+                window[i] = buffer[(start + i) % size];
+            }
+            yield from(window);
+        }
+    }
+}

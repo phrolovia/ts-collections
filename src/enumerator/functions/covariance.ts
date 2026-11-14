@@ -1,5 +1,6 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { resolveNumberSelector, accumulatePairStatsFromIterables } from "../helpers/statisticsHelpers";
+import { InsufficientElementException } from "../../shared/InsufficientElementException";
 
 /**
  * Calculates the covariance between {@link source} and {@link other}.
@@ -28,7 +29,13 @@ export const covariance = <TElement, TSecond>(
     other: Iterable<TSecond>,
     selector?: Selector<TElement, number>,
     otherSelector?: Selector<TSecond, number>,
-    sample?: boolean
+    sample: boolean = true
 ): number => {
-    return from(source).covariance(other, selector, otherSelector, sample);
+    const stats = accumulatePairStatsFromIterables(source, other, resolveNumberSelector(selector), resolveNumberSelector(otherSelector));
+    if (stats.count < 2) {
+        throw new InsufficientElementException("Covariance requires at least two pairs of elements.");
+    }
+    return sample
+        ? stats.sumSqXY / (stats.count - 1)
+        : stats.sumSqXY / stats.count;
 };

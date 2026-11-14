@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Computes the sum of the numeric values produced for each element.
@@ -26,8 +26,14 @@ import { from } from "./from";
 export function sum(source: Iterable<number>): number;
 export function sum<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
 export function sum<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
-    if (selector != null) {
-        return from(source).sum(selector);
+    let total: number = 0;
+    let hasElements = false;
+    for (const d of source) {
+        total += selector?.(d) ?? d as unknown as number;
+        hasElements = true;
     }
-    return from(source as Iterable<number>).sum();
+    if (!hasElements) {
+        throw new NoElementsException();
+    }
+    return total;
 }

@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Computes the arithmetic mean of the numeric values produced for each element in the sequence.
@@ -27,8 +27,14 @@ import { from } from "./from";
 export function average(source: Iterable<number>): number;
 export function average<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
 export function average<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
-    if (selector != null) {
-        return from(source).average(selector);
+    let total: number = 0;
+    let count: number = 0;
+    for (const d of source) {
+        total += selector?.(d) ?? d as unknown as number;
+        count++;
     }
-    return from(source as Iterable<number>).average();
+    if (count === 0) {
+        throw new NoElementsException();
+    }
+    return total / count;
 }

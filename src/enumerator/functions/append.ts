@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { addToBack } from "../helpers/chainHelpers";
 
 /**
  * Creates a sequence that yields the current elements followed by the supplied element.
@@ -19,5 +19,5 @@ export const append = <TElement>(
     source: Iterable<TElement>,
     element: TElement
 ): IEnumerable<TElement> => {
-    return from(source).append(element);
+    return addToBack(source, [element]);
 };

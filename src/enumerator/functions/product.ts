@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Computes the multiplicative aggregate of the values produced for each element in the source iterable.
@@ -26,8 +26,14 @@ import { from } from "./from";
 export function product(source: Iterable<number>): number;
 export function product<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
 export function product<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
-    if (selector != null) {
-        return from(source).product(selector);
+    let total: number = 1;
+    let hasElements = false;
+    for (const d of source) {
+        total *= selector?.(d) ?? d as unknown as number;
+        hasElements = true;
     }
-    return from(source as Iterable<number>).product();
+    if (!hasElements) {
+        throw new NoElementsException();
+    }
+    return total;
 }

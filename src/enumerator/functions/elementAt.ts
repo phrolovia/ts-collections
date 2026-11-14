@@ -1,6 +1,5 @@
 import { IndexOutOfBoundsException } from "../../shared/IndexOutOfBoundsException";
 import { asIndexed } from "../../shared/internal/collectionAccess";
-import { from } from "./from";
 
 /**
  * Retrieves the element at the specified zero-based index.
@@ -34,5 +33,15 @@ export const elementAt = <TElement>(
         }
         return indexed.get(index);
     }
-    return from(source).elementAt(index);
+    if (index < 0) {
+        throw new IndexOutOfBoundsException(index);
+    }
+    let ix: number = 0;
+    for (const item of source) {
+        if (index === ix) {
+            return item;
+        }
+        ++ix;
+    }
+    throw new IndexOutOfBoundsException(index);
 };

@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Returns the largest numeric value produced for the elements in the sequence.
@@ -27,8 +27,22 @@ import { from } from "./from";
 export function max(source: Iterable<number>): number;
 export function max<TElement>(source: Iterable<TElement>, selector: Selector<TElement, number>): number;
 export function max<TElement>(source: Iterable<TElement>, selector?: Selector<TElement, number>): number {
-    if (selector != null) {
-        return from(source).max(selector);
+    let max: number | null = null;
+    if (!selector) {
+        for (const item of source) {
+            max = Math.max(max ?? Number.NEGATIVE_INFINITY, item as unknown as number);
+        }
+        if (max == null) {
+            throw new NoElementsException();
+        }
+        return max;
+    } else {
+        for (const item of source) {
+            max = Math.max(max ?? Number.NEGATIVE_INFINITY, selector(item));
+        }
+        if (max == null) {
+            throw new NoElementsException();
+        }
+        return max;
     }
-    return from(source as Iterable<number>).max();
 }

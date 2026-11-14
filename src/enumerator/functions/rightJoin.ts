@@ -2,7 +2,9 @@ import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { JoinSelector } from "../../shared/JoinSelector";
 import type { Selector } from "../../shared/Selector";
 import type { IEnumerable } from "../IEnumerable";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
+import { Enumerator } from "../Enumerator";
+import { buildGroupsSync } from "../helpers/joinHelpers";
 
 /**
  * Produces a projection from the sequence and a second sequence by matching elements that share an identical join key. Inner elements with no match are included once with `null` as the outer value.
@@ -54,5 +56,24 @@ export const rightJoin = <TElement, TInner, TKey, TResult>(
     resultSelector: JoinSelector<TElement | null, TInner, TResult>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TResult> => {
-    return from(source).rightJoin(from(innerEnumerable), outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    keyComparator ??= Comparators.equalityComparator;
+    return new Enumerator(() => rightJoinGenerator(source, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
 };
+
+function* rightJoinGenerator<TElement, TInner, TKey, TResult>(source: Iterable<TElement>, innerEnumerable: Iterable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement | null, TInner, TResult>, keyComparator: EqualityComparator<TKey>): IterableIterator<TResult> {
+    const groups = buildGroupsSync(source, outerKeySelector, keyComparator);
+
+    for (const innerElement of innerEnumerable) {
+        const innerKey = innerKeySelector(innerElement);
+        let foundMatch = false;
+        for (const group of groups.matching(innerKey)) {
+            for (const outerElement of group.elements) {
+                yield resultSelector(outerElement, innerElement);
+                foundMatch = true;
+            }
+        }
+        if (!foundMatch) {
+            yield resultSelector(null, innerElement);
+        }
+    }
+}

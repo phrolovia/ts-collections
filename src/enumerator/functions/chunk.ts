@@ -1,5 +1,6 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
+import { Enumerator, List } from "../Enumerator";
 
 /**
  * Splits the sequence into contiguous subsequences containing at most the specified number of elements.
@@ -20,5 +21,24 @@ export const chunk = <TElement>(
     source: Iterable<TElement>,
     size: number
 ): IEnumerable<IEnumerable<TElement>> => {
-    return from(source).chunk(size);
+    if (size < 1) {
+        throw new InvalidArgumentException("Size must be greater than 0.", "size");
+    }
+    return new Enumerator(() => chunkGenerator(source, size));
 };
+
+function* chunkGenerator<TElement>(source: Iterable<TElement>, size: number): IterableIterator<IEnumerable<TElement>> {
+    const iterator = source[Symbol.iterator]();
+    let next = iterator.next();
+    while (!next.done) {
+        const chunk = new List<TElement>();
+        for (let index = 0; index < size; ++index) {
+            if (next.done) {
+                break;
+            }
+            chunk.add(next.value);
+            next = iterator.next();
+        }
+        yield chunk;
+    }
+}

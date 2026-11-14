@@ -1,7 +1,7 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { OrderComparator } from "../../shared/OrderComparator";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { exceptBy } from "./exceptBy";
 
 /**
  * Returns the elements of {@link source} that are not present in {@link other}.
@@ -24,5 +24,5 @@ export const except = <TElement>(
     other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement> | OrderComparator<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).except(other, comparator);
+    return exceptBy(source, other, element => element, comparator);
 };

@@ -1,6 +1,6 @@
 import type { IndexedSelector } from "../../shared/IndexedSelector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Transforms each element and its zero-based index into a new value.
@@ -21,5 +21,12 @@ export const select = <TElement, TResult>(
     source: Iterable<TElement>,
     selector: IndexedSelector<TElement, TResult>
 ): IEnumerable<TResult> => {
-    return from(source).select(selector);
+    return new Enumerator<TResult>(() => selectGenerator(source, selector));
 };
+
+function* selectGenerator<TElement, TResult>(source: Iterable<TElement>, selector: IndexedSelector<TElement, TResult>): IterableIterator<TResult> {
+    let index = 0;
+    for (const d of source) {
+        yield selector(d, index++);
+    }
+}

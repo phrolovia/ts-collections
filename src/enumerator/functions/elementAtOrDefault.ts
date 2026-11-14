@@ -1,5 +1,4 @@
 import { asIndexed } from "../../shared/internal/collectionAccess";
-import { from } from "./from";
 
 /**
  * Retrieves the element at the specified zero-based index or returns `null` when the index is out of range.
@@ -29,5 +28,12 @@ export const elementAtOrDefault = <TElement>(
     if (indexed) {
         return Number.isInteger(index) && index >= 0 && index < indexed.size() ? indexed.get(index) : null;
     }
-    return from(source).elementAtOrDefault(index);
+    let ix: number = 0;
+    for (const item of source) {
+        if (index === ix) {
+            return item;
+        }
+        ++ix;
+    }
+    return null;
 };

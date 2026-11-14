@@ -1,6 +1,6 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { unionBy } from "./unionBy";
 
 /**
  * Creates a set-style union between {@link source} and {@link other} using an equality comparator.
@@ -24,5 +24,5 @@ export const union = <TElement>(
     other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).union(other, comparator);
+    return unionBy(source, other, element => element, comparator);
 };

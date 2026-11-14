@@ -1,6 +1,6 @@
 import type { OrderComparator } from "../../shared/OrderComparator";
-import { from } from "./from";
 import type { IOrderedEnumerable } from "../IOrderedEnumerable";
+import { OrderedEnumerator } from "../Enumerator";
 
 /**
  * Sorts the elements of the sequence in ascending order using the provided comparator.
@@ -20,5 +20,5 @@ export const order = <TElement>(
     source: Iterable<TElement>,
     comparator?: OrderComparator<TElement>
 ): IOrderedEnumerable<TElement> => {
-    return from(source).order(comparator);
+    return OrderedEnumerator.createOrderedEnumerable(source, k => k, true, false, comparator);
 };

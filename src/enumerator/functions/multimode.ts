@@ -1,6 +1,7 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
+import { modes } from "../helpers/modeHelpers";
 
 /**
  * Produces the elements whose occurrence count is tied for the highest frequency in {@link source}.
@@ -21,5 +22,5 @@ export const multimode = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector?: Selector<TElement, TKey>
 ): IEnumerable<TElement> => {
-    return from(source).multimode(keySelector);
+    return new Enumerator(() => modes(source, keySelector));
 };

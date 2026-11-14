@@ -1,7 +1,7 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { OrderComparator } from "../../shared/OrderComparator";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { intersectBy } from "./intersectBy";
 
 /**
  * Returns the elements common to {@link source} and {@link other}.
@@ -24,5 +24,5 @@ export const intersect = <TElement>(
     other: Iterable<TElement>,
     comparator?: EqualityComparator<TElement> | OrderComparator<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).intersect(other, comparator);
+    return intersectBy(source, other, element => element, comparator);
 };

@@ -15,5 +15,5 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const from = <TElement>(source: Iterable<TElement>): IEnumerable<TElement> => {
-    return Enumerable.from(source);
+    return new Enumerable(source);
 };
