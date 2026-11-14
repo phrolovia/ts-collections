@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Inserts the specified separator between adjoining elements.
@@ -20,5 +20,16 @@ export const intersperse = <TElement, TSeparator>(
     source: Iterable<TElement>,
     separator: TSeparator
 ): IEnumerable<TElement | TSeparator> => {
-    return from(source).intersperse(separator);
+    return new Enumerator(() => intersperseGenerator(source, separator));
 };
+
+function* intersperseGenerator<TElement, TSeparator = TElement>(source: Iterable<TElement>, separator: TSeparator): IterableIterator<TElement | TSeparator> {
+    let index = 0;
+    for (const item of source) {
+        if (index !== 0) {
+            yield separator;
+        }
+        yield item;
+        ++index;
+    }
+}

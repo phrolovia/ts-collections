@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Omits a specified number of elements from the end of the sequence.
@@ -19,5 +19,27 @@ export const skipLast = <TElement>(
     source: Iterable<TElement>,
     count: number
 ): IEnumerable<TElement> => {
-    return from(source).skipLast(count);
+    return new Enumerator(() => skipLastGenerator(source, count));
 };
+
+function* skipLastGenerator<TElement>(source: Iterable<TElement>, count: number): IterableIterator<TElement> {
+    if (count <= 0) {
+        yield* source;
+        return;
+    }
+
+    const buffer: TElement[] = new Array(count);
+    let bufferSize = 0;
+    let index = 0;
+
+    for (const item of source) {
+        if (bufferSize === count) {
+            yield buffer[index];
+        }
+        buffer[index] = item;
+        index = (index + 1) % count;
+        if (bufferSize < count) {
+            bufferSize++;
+        }
+    }
+}

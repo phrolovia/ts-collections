@@ -1,7 +1,8 @@
 import type { InferredType } from "../../shared/InferredType";
 import type { ObjectType } from "../../shared/ObjectType";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
+import { ClassType } from "../../shared/ObjectType";
 
 /**
  * Filters the sequence, keeping only elements assignable to the specified type.
@@ -25,5 +26,17 @@ export const ofType = <TElement, TResult extends ObjectType>(
     source: Iterable<TElement>,
     type: TResult
 ): IEnumerable<InferredType<TResult>> => {
-    return from(source).ofType(type);
+    return new Enumerator<InferredType<TResult>>(() => ofTypeGenerator(source, type));
 };
+
+function* ofTypeGenerator<TElement, TResult extends ObjectType>(source: Iterable<TElement>, type: TResult): IterableIterator<InferredType<TResult>> {
+    const isOfType = typeof type === "string"
+        ? ((item: unknown): boolean => typeof item === type) as (item: unknown) => item is InferredType<TResult>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+        : (item: unknown): item is InferredType<TResult> => item instanceof (ClassType(type) as Function);
+    for (const item of source) {
+        if (isOfType(item)) {
+            yield item;
+        }
+    }
+}

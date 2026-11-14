@@ -1,6 +1,7 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
+import { isDefaultEquality } from "../../shared/internal/membership";
 
 /**
  * Determines whether the key projections of {@link source} and {@link other} are mutually exclusive.
@@ -32,5 +33,38 @@ export const disjointBy = <TElement, TSecond, TKey, TSecondKey>(
     otherKeySelector: Selector<TSecond, TSecondKey>,
     keyComparator?: EqualityComparator<TKey | TSecondKey>
 ): boolean => {
-    return from(source).disjointBy(other, keySelector, otherKeySelector, keyComparator);
+    const keyComparer = keyComparator ?? Comparators.equalityComparator as EqualityComparator<TKey | TSecondKey>;
+    if (isDefaultEquality(keyComparer)) {
+        const leftKeys = new Set<TKey | TSecondKey>();
+        for (const element of source) {
+            leftKeys.add(keySelector(element));
+        }
+        if (leftKeys.size === 0) {
+            return true;
+        }
+        for (const element of other) {
+            if (leftKeys.has(otherKeySelector(element))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const leftKeys: Array<TKey | TSecondKey> = [];
+    for (const element of source) {
+        leftKeys.push(keySelector(element));
+    }
+    const rightKeys: Array<TKey | TSecondKey> = [];
+    for (const element of other) {
+        rightKeys.push(otherKeySelector(element));
+    }
+    const [small, large] = leftKeys.length < rightKeys.length ? [leftKeys, rightKeys] : [rightKeys, leftKeys];
+    for (const key of small) {
+        for (const otherKey of large) {
+            if (keyComparer(key, otherKey)) {
+                return false;
+            }
+        }
+    }
+    return true;
 };

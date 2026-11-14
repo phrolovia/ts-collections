@@ -1,6 +1,7 @@
 import type { OrderComparator } from "../../shared/OrderComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Returns the element whose projected key is greatest according to the provided comparator.
@@ -28,5 +29,17 @@ export const maxBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     comparator?: OrderComparator<TKey>
 ): TElement => {
-    return from(source).maxBy(keySelector, comparator);
+    let max: TElement | null = null;
+    let maxKey: TKey | null = null;
+    for (const item of source) {
+        const key = keySelector(item);
+        if (maxKey == null || (comparator ?? Comparators.orderComparator)(key, maxKey) > 0) {
+            max = item;
+            maxKey = key;
+        }
+    }
+    if (max == null) {
+        throw new NoElementsException();
+    }
+    return max;
 };

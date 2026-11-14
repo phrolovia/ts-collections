@@ -39,5 +39,14 @@ export function partition<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement> | TypePredicate<TElement, TFiltered>
 ): [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>] {
-    return from(source).partition(predicate as Predicate<TElement>) as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
+    const trueItems: TElement[] = [];
+    const falseItems: TElement[] = [];
+    for (const item of source) {
+        if (predicate(item)) {
+            trueItems.push(item);
+        } else {
+            falseItems.push(item);
+        }
+    }
+    return [from(trueItems), from(falseItems)] as [IEnumerable<TFiltered>, IEnumerable<Exclude<TElement, TFiltered>>] | [IEnumerable<TElement>, IEnumerable<TElement>];
 }

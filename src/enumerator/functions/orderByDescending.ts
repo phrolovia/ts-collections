@@ -1,7 +1,7 @@
 import type { OrderComparator } from "../../shared/OrderComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IOrderedEnumerable } from "../IOrderedEnumerable";
+import { OrderedEnumerator } from "../Enumerator";
 
 /**
  * Sorts the elements of a sequence in descending order by using a specified comparer.
@@ -31,5 +31,5 @@ export const orderByDescending = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     comparator?: OrderComparator<TKey>
 ): IOrderedEnumerable<TElement> => {
-    return from(source).orderByDescending(keySelector, comparator);
+    return OrderedEnumerator.createOrderedEnumerable(source, keySelector, false, false, comparator);
 };

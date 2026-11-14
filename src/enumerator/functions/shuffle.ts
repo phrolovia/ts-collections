@@ -1,5 +1,6 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
+import { shuffleInPlace } from "../../utils/shuffleInPlace";
 
 /**
  * Returns a deferred sequence whose elements appear in random order.
@@ -17,5 +18,11 @@ import type { IEnumerable } from "../IEnumerable";
 export const shuffle = <TElement>(
     source: Iterable<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).shuffle();
+    return new Enumerator(() => shuffleGenerator(source));
 };
+
+function* shuffleGenerator<TElement>(source: Iterable<TElement>): IterableIterator<TElement> {
+    const array = Array.from(source);
+    shuffleInPlace(array);
+    yield* array;
+}

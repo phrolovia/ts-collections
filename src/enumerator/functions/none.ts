@@ -1,5 +1,4 @@
 import type { Predicate } from "../../shared/Predicate";
-import { from } from "./from";
 
 /**
  * Determines whether the sequence contains no elements that satisfy the optional predicate.
@@ -23,5 +22,13 @@ export const none = <TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): boolean => {
-    return from(source).none(predicate);
+    if (!predicate) {
+        return !!source[Symbol.iterator]().next().done;
+    }
+    for (const d of source) {
+        if (predicate(d)) {
+            return false;
+        }
+    }
+    return true;
 };

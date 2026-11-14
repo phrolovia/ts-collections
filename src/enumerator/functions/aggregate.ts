@@ -1,6 +1,6 @@
 import type { Accumulator } from "../../shared/Accumulator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Combines the elements of the sequence by applying an accumulator to each element and optionally projecting the final result.
@@ -33,12 +33,28 @@ export function aggregate<TElement, TAccumulate = TElement, TResult = TAccumulat
     seed?: TAccumulate,
     resultSelector?: Selector<TAccumulate, TResult>
 ): TAccumulate | TResult {
-    const enumerable = from(source);
-    if (resultSelector !== undefined) {
-        return enumerable.aggregate(accumulator, seed as TAccumulate, resultSelector);
+    let accumulatedValue: TAccumulate;
+    if (seed == null) {
+        const iterator = source[Symbol.iterator]();
+        const first = iterator.next();
+        if (first.done) {
+            throw new NoElementsException();
+        }
+        accumulatedValue = first.value as unknown as TAccumulate;
+        let next = iterator.next();
+        while (!next.done) {
+            accumulatedValue = accumulator(accumulatedValue, next.value);
+            next = iterator.next();
+        }
+    } else {
+        accumulatedValue = seed;
+        for (const element of source) {
+            accumulatedValue = accumulator(accumulatedValue, element);
+        }
     }
-    if (seed !== undefined) {
-        return enumerable.aggregate(accumulator, seed);
+    if (resultSelector) {
+        return resultSelector(accumulatedValue);
+    } else {
+        return accumulatedValue;
     }
-    return enumerable.aggregate(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as TAccumulate;
 }

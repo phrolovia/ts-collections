@@ -1,5 +1,4 @@
 import type { IndexedAction } from "../../shared/IndexedAction";
-import { from } from "./from";
 
 /**
  * Executes the provided callback for every element in the sequence.
@@ -21,5 +20,8 @@ export const forEach = <TElement>(
     source: Iterable<TElement>,
     action: IndexedAction<TElement>
 ): void => {
-    return from(source).forEach(action);
+    let index = 0;
+    for (const item of source) {
+        action(item, index++);
+    }
 };

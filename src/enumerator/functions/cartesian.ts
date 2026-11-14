@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Produces the cartesian product between {@link source} and {@link other}.
@@ -20,5 +20,17 @@ export const cartesian = <TElement, TSecond>(
     source: Iterable<TElement>,
     other: Iterable<TSecond>
 ): IEnumerable<[TElement, TSecond]> => {
-    return from(source).cartesian(other);
+    return new Enumerator(() => cartesianGenerator(source, other));
+}
+
+function* cartesianGenerator<TElement, TSecond>(source: Iterable<TElement>, iterable: Iterable<TSecond>): IterableIterator<[TElement, TSecond]> {
+    const cache = Array.isArray(iterable) ? iterable as TSecond[] : [...iterable];
+    if (cache.length === 0) {
+        return;
+    }
+    for (const element of source) {
+        for (let cx = 0; cx < cache.length; cx++) {
+            yield [element, cache[cx]];
+        }
+    }
 }

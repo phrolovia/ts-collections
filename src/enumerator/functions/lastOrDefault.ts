@@ -1,6 +1,5 @@
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
 import { asIndexed } from "../../shared/internal/collectionAccess";
-import { from } from "./from";
 
 /**
  * Returns the last element in the sequence or `null` when the sequence is empty or no element satisfies the predicate.
@@ -57,5 +56,11 @@ export function lastOrDefault<TElement, TFiltered extends TElement>(
         const size = indexed.size();
         return size === 0 ? null : indexed.get(size - 1);
     }
-    return from(source).lastOrDefault(predicate as Predicate<TElement> | undefined);
+    let result: TElement | null = null;
+    for (const item of source) {
+        if (!predicate || predicate(item)) {
+            result = item;
+        }
+    }
+    return result;
 }

@@ -1,5 +1,4 @@
 import type { Predicate } from "../../shared/Predicate";
-import { from } from "./from";
 
 /**
  * Determines whether every element in the sequence satisfies the supplied predicate.
@@ -23,5 +22,10 @@ export const all = <TElement>(
     source: Iterable<TElement>,
     predicate: Predicate<TElement>
 ): boolean => {
-    return from(source).all(predicate);
+    for (const d of source) {
+        if (!predicate(d)) {
+            return false;
+        }
+    }
+    return true;
 };

@@ -1,4 +1,3 @@
-import { from } from "./from";
 
 /**
  * Materialises {@link source} into a native `Set`.
@@ -16,5 +15,5 @@ import { from } from "./from";
 export const toSet = <TElement>(
     source: Iterable<TElement>
 ): Set<TElement> => {
-    return from(source).toSet();
+    return new Set(source);
 };

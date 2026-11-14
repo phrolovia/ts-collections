@@ -1,5 +1,5 @@
 import type { Predicate } from "../../shared/Predicate";
-import { from } from "./from";
+import { InvalidArgumentException } from "../../shared/InvalidArgumentException";
 
 /**
  * Determines whether {@link source} contains exactly {@link count} elements that satisfy the optional predicate.
@@ -23,5 +23,18 @@ export const exactly = <TElement>(
     count: number,
     predicate?: Predicate<TElement>
 ): boolean => {
-    return from(source).exactly(count, predicate);
+    if (count < 0) {
+        throw new InvalidArgumentException("Count must be greater than or equal to 0.", "count");
+    }
+
+    let actualCount = 0;
+    for (const item of source) {
+        if (predicate == null || predicate(item)) {
+            actualCount++;
+        }
+        if (actualCount > count) {
+            return false;
+        }
+    }
+    return actualCount === count;
 };

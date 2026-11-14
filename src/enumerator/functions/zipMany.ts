@@ -1,7 +1,7 @@
 import type { ZipManyZipper } from "../../shared/Zipper";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
 import type { UnpackIterableTuple } from "../../shared/UnpackIterableTuple";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Zips {@link source} with the iterables supplied in {@link iterables}, producing aligned tuples.
@@ -57,8 +57,25 @@ export function zipMany<TElement, TIterable extends readonly Iterable<unknown>[]
     if (hasZipper) {
         const iterables = iterablesAndZipper.slice(0, -1) as [...TIterable];
         const zipper = lastArg as ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>;
-        return from(source).zipMany(...iterables, zipper);
+        return new Enumerator<TResult>(() => zipManyWithZipperGenerator(source, iterables, zipper));
     }
     const iterables = iterablesAndZipper as [...TIterable];
-    return from(source).zipMany(...iterables);
+    return new Enumerator<[TElement, ...UnpackIterableTuple<TIterable>]>(() => zipManyWithoutZipperGenerator(source, iterables));
+}
+
+function* zipManyWithZipperGenerator<TElement, TIterable extends readonly Iterable<unknown>[], TResult>(source: Iterable<TElement>, iterables: readonly [...TIterable], zipper: ZipManyZipper<[TElement, ...UnpackIterableTuple<TIterable>], TResult>): IterableIterator<TResult> {
+    for (const values of zipManyWithoutZipperGenerator(source, iterables)) {
+        yield zipper(values as readonly [TElement, ...UnpackIterableTuple<TIterable>]);
+    }
+}
+
+function* zipManyWithoutZipperGenerator<TElement, TIterable extends readonly Iterable<unknown>[]>(source: Iterable<TElement>, iterables: readonly [...TIterable]): IterableIterator<[TElement, ...UnpackIterableTuple<TIterable>]> {
+    const iterators = [source, ...iterables].map(i => i[Symbol.iterator]());
+    while (true) {
+        const results = iterators.map(i => i.next());
+        if (results.some(result => result.done)) {
+            break;
+        }
+        yield results.map(result => result.value) as [TElement, ...UnpackIterableTuple<TIterable>];
+    }
 }

@@ -1,4 +1,3 @@
-import { from } from "./from";
 
 /**
  * Materialises {@link source} into an array.
@@ -17,5 +16,5 @@ export const toArray = <TElement>(source: Iterable<TElement>): TElement[] => {
     if (Array.isArray(source)) {
         return source.slice();
     }
-    return from(source).toArray();
+    return Array.from(source);
 };

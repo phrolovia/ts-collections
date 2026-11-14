@@ -1,8 +1,10 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { OrderComparator } from "../../shared/OrderComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Comparators } from "../../shared/Comparators";
+import { Enumerator, createSortedKeys } from "../Enumerator";
+import { KeySet } from "../helpers/keySetHelpers";
 
 /**
  * Returns the elements whose keys are common to {@link source} and {@link other}.
@@ -39,5 +41,21 @@ export const intersectBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     keyComparator?: EqualityComparator<TKey> | OrderComparator<TKey>
 ): IEnumerable<TElement> => {
-    return from(source).intersectBy(other, keySelector, keyComparator);
+    keyComparator ??= Comparators.equalityComparator;
+    return new Enumerator(() => intersectByGenerator(source, other, keySelector, keyComparator));
 };
+
+function* intersectByGenerator<TElement, TKey>(source: Iterable<TElement>, iterable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator: EqualityComparator<TKey> | OrderComparator<TKey>): IterableIterator<TElement> {
+    const keys = new KeySet<TKey>(keyComparator, createSortedKeys);
+    for (const item of iterable) {
+        keys.add(keySelector(item));
+    }
+    if (keys.size === 0) {
+        return;
+    }
+    for (const item of source) {
+        if (keys.delete(keySelector(item))) {
+            yield item;
+        }
+    }
+}

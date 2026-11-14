@@ -102,4 +102,20 @@ export const processOuterElement = function* <TElement, TInner, TKey, TResult>(
     }
 }
 
+// The inner join (leftJoin false) and the left join of outer with inner.
+export const joinGenerator = function* <TElement, TInner, TKey, TResult>(
+    outer: Iterable<TElement>,
+    inner: Iterable<TInner>,
+    outerKeySelector: Selector<TElement, TKey>,
+    innerKeySelector: Selector<TInner, TKey>,
+    resultSelector: JoinSelector<TElement, TInner, TResult>,
+    keyComparator: EqualityComparator<TKey>,
+    leftJoin: boolean
+): IterableIterator<TResult> {
+    const groups = buildGroupsSync(inner, innerKeySelector, keyComparator);
+    for (const outerElement of outer) {
+        yield* processOuterElement(outerElement, outerKeySelector(outerElement), groups, resultSelector, leftJoin);
+    }
+};
+
 export type JoinGroup<TKey, TInner> = { key: TKey; elements: TInner[] };

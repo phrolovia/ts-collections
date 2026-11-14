@@ -1,6 +1,6 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { unionBy } from "./unionBy";
 
 /**
  * Eliminates duplicate elements from the sequence using an optional comparator.
@@ -20,5 +20,5 @@ export const distinct = <TElement>(
     source: Iterable<TElement>,
     keyComparator?: EqualityComparator<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).distinct(keyComparator);
+    return unionBy(source, [], element => element, keyComparator);
 };

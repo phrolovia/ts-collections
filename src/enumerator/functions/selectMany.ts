@@ -1,6 +1,6 @@
 import type { IndexedSelector } from "../../shared/IndexedSelector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Projects each element and index into an iterable and flattens the results into a single sequence.
@@ -21,5 +21,13 @@ export const selectMany = <TElement, TResult>(
     source: Iterable<TElement>,
     selector: IndexedSelector<TElement, Iterable<TResult>>
 ): IEnumerable<TResult> => {
-    return from(source).selectMany(selector);
+    return new Enumerator(() => selectManyGenerator(source, selector));
 };
+
+function* selectManyGenerator<TElement, TResult>(source: Iterable<TElement>, selector: IndexedSelector<TElement, Iterable<TResult>>): IterableIterator<TResult> {
+    let index = 0;
+    for (const item of source) {
+        yield* selector(item, index);
+        ++index;
+    }
+}

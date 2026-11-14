@@ -1,6 +1,6 @@
 import { IndexedPredicate, IndexedTypePredicate } from "../../shared/IndexedPredicate";
 import { IEnumerable } from "../IEnumerable";
-import { from } from "./from";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Returns consecutive leading elements until a type guard predicate returns `true`, then stops.
@@ -45,5 +45,16 @@ export function takeUntil<TElement, TFiltered extends TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement> | IndexedTypePredicate<TElement, TFiltered>
 ): IEnumerable<TElement> | IEnumerable<TFiltered> {
-    return from(source).takeUntil(predicate);
+    return new Enumerator(() => takeUntilGenerator(source, predicate));
+}
+
+function* takeUntilGenerator<TElement>(source: Iterable<TElement>, predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    let index = 0;
+    for (const item of source) {
+        if (predicate(item, index)) {
+            break;
+        }
+        yield item;
+        index++;
+    }
 }

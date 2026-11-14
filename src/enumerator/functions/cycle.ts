@@ -1,5 +1,7 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
+import { none } from "./none";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Repeats the sequence the specified number of times, or indefinitely when no count is provided.
@@ -20,5 +22,20 @@ export const cycle = <TElement>(
     source: Iterable<TElement>,
     count?: number
 ): IEnumerable<TElement> => {
-    return from(source).cycle(count);
+    return new Enumerator(() => cycleGenerator(source, count));
 };
+
+function* cycleGenerator<TElement>(source: Iterable<TElement>, count?: number): IterableIterator<TElement> {
+    if (none(source)) {
+        throw new NoElementsException();
+    }
+    if (count == null) {
+        while (true) {
+            yield* source;
+        }
+    } else {
+        for (let i = 0; i < count; ++i) {
+            yield* source;
+        }
+    }
+}

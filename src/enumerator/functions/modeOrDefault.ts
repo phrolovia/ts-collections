@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { modes } from "../helpers/modeHelpers";
 
 /**
  * Returns the element that appears most frequently in {@link source}, or `null` when the iterable is empty.
@@ -20,5 +20,6 @@ export const modeOrDefault = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector?: Selector<TElement, TKey>
 ): TElement | null => {
-    return from(source).modeOrDefault(keySelector);
+    const first = modes(source, keySelector).next();
+    return first.done ? null : first.value;
 };

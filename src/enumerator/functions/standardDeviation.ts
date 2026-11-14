@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { variance } from "./variance";
 
 /**
  * Calculates the standard deviation of the numeric values produced by {@link source}.
@@ -21,5 +21,6 @@ export const standardDeviation = <TElement>(
     selector?: Selector<TElement, number>,
     sample?: boolean
 ): number => {
-    return from(source).standardDeviation(selector, sample);
+    const result = variance(source, selector, sample);
+    return Number.isNaN(result) ? result : Math.sqrt(result);
 };

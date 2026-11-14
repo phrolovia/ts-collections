@@ -1,7 +1,7 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import { asHashedSet } from "../../shared/internal/collectionAccess";
 import { isDefaultEquality } from "../../shared/internal/membership";
-import { from } from "./from";
+import { Comparators } from "../../shared/Comparators";
 
 /**
  * Determines whether the sequence contains a specific element using an optional comparator.
@@ -35,5 +35,11 @@ export const contains = <TElement>(
             return hashed.contains(element);
         }
     }
-    return from(source).contains(element, comparator);
+    comparator ??= Comparators.equalityComparator;
+    for (const e of source) {
+        if (comparator(e, element)) {
+            return true;
+        }
+    }
+    return false;
 };

@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Supplies fallback content when the sequence contains no elements.
@@ -23,5 +23,16 @@ export const defaultIfEmpty = <TElement>(
     source: Iterable<TElement>,
     value?: TElement | null
 ): IEnumerable<TElement | null> => {
-    return from(source).defaultIfEmpty(value);
+    return new Enumerator(() => defaultIfEmptyGenerator(source, value));
 };
+
+function* defaultIfEmptyGenerator<TElement>(source: Iterable<TElement>, value?: TElement | null): IterableIterator<TElement | null> {
+    const iterator = source[Symbol.iterator]();
+    const first = iterator.next();
+    if (!first.done) {
+        yield first.value;
+        yield* iterator as IterableIterator<TElement>;
+    } else {
+        yield value ?? null;
+    }
+}

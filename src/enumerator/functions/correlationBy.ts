@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { accumulatePairStatsFromSingleIterable, findCorrelation } from "../helpers/statisticsHelpers";
 
 /**
  * Computes the Pearson correlation coefficient between two numeric projections of {@link source}.
@@ -28,5 +28,6 @@ export const correlationBy = <TElement>(
     leftSelector: Selector<TElement, number>,
     rightSelector: Selector<TElement, number>
 ): number => {
-    return from(source).correlationBy(leftSelector, rightSelector);
+    const stats = accumulatePairStatsFromSingleIterable(source, leftSelector, rightSelector);
+    return findCorrelation(stats);
 };

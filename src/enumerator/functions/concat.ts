@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { addToBack } from "../helpers/chainHelpers";
 
 /**
  * Appends the specified iterable to the end of the sequence.
@@ -20,5 +20,5 @@ export const concat = <TElement>(
     source: Iterable<TElement>,
     other: Iterable<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).concat(from(other));
+    return addToBack(source, other);
 };

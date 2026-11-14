@@ -3,6 +3,10 @@ import type { JoinSelector } from "../../shared/JoinSelector";
 import type { Selector } from "../../shared/Selector";
 import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Comparators } from "../../shared/Comparators";
+import { Enumerator } from "../Enumerator";
+import { JoinGroups } from "../helpers/joinHelpers";
+import { isDefaultEquality } from "../../shared/internal/membership";
 
 /**
  * Correlates each element of the sequence with a collection of matching elements from another sequence.
@@ -53,5 +57,23 @@ export const groupJoin = <TElement, TInner, TKey, TResult>(
     resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TResult> => {
-    return from(source).groupJoin(from(innerEnumerable), outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    keyComparator ??= Comparators.equalityComparator;
+    return new Enumerator(() => groupJoinGenerator(source, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator));
 };
+
+function* groupJoinGenerator<TElement, TInner, TKey, TResult>(source: Iterable<TElement>, innerEnumerable: Iterable<TInner>, outerKeySelector: Selector<TElement, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: JoinSelector<TElement, IEnumerable<TInner>, TResult>, keyComparator?: EqualityComparator<TKey>): IterableIterator<TResult> {
+    const keyCompare = keyComparator ?? Comparators.equalityComparator;
+    // Group keys are compared as keyCompare(groupKey, key), so a custom comparator gets its arguments flipped.
+    const lookupStore = new JoinGroups<TKey, TInner>(isDefaultEquality(keyCompare)
+        ? keyCompare
+        : (key: TKey, groupKey: TKey) => keyCompare(groupKey, key));
+
+    for (const innerElement of innerEnumerable) {
+        lookupStore.add(innerKeySelector(innerElement), innerElement);
+    }
+
+    for (const element of source) {
+        const joinedEntries = lookupStore.find(outerKeySelector(element));
+        yield resultSelector(element, from(joinedEntries?.elements ?? []));
+    }
+}

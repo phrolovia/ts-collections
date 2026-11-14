@@ -13,5 +13,5 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const empty = <TElement>(): IEnumerable<TElement> => {
-    return Enumerable.empty();
+    return new Enumerable<TElement>([]);
 };

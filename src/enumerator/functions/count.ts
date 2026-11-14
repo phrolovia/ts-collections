@@ -1,6 +1,5 @@
 import type { Predicate } from "../../shared/Predicate";
 import { asSized } from "../../shared/internal/collectionAccess";
-import { from } from "./from";
 
 /**
  * Counts the number of elements in the sequence, optionally restricted by a predicate.
@@ -35,5 +34,11 @@ export const count = <TElement>(
             return sized.size();
         }
     }
-    return from(source).count(predicate);
+    let total = 0;
+    for (const item of source) {
+        if (!predicate || predicate(item)) {
+            ++total;
+        }
+    }
+    return total;
 };

@@ -1,8 +1,9 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
 import type { IGroup } from "../IGroup";
+import { Enumerator, List, Group } from "../Enumerator";
+import { isDefaultEquality, identityKey } from "../../shared/internal/membership";
 
 /**
  * Partitions the sequence into groups based on keys projected from each element.
@@ -36,5 +37,87 @@ export const groupBy = <TElement, TKey>(
     keyComparator?: EqualityComparator<TKey>,
     hashSelector?: Selector<TElement, PropertyKey>
 ): IEnumerable<IGroup<TKey, TElement>> => {
-    return from(source).groupBy(keySelector, keyComparator, hashSelector);
+    return new Enumerator(() => groupByGenerator(source, keySelector, keyComparator, hashSelector));
 };
+
+function* groupByGenerator<TElement, TKey>(source: Iterable<TElement>, keySelector: Selector<TElement, TKey>, keyComparator?: EqualityComparator<TKey>, hashSelector?: Selector<TElement, PropertyKey>): IterableIterator<IGroup<TKey, TElement>> {
+    if (!keyComparator) {
+        const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+        for (const item of source) {
+            const key = keySelector(item);
+            const group = groupMap.get(key);
+            if (group) {
+                (group.source as List<TElement>).add(item);
+            } else {
+                const newList = new List<TElement>([item]);
+                const newGroup = new Group(key, newList);
+                groupMap.set(key, newGroup);
+            }
+        }
+        yield* groupMap.values();
+    } else if (hashSelector) {
+        type BucketEntry = { canonicalKey: TKey; group: IGroup<TKey, TElement> };
+        const bucketMap = new Map<PropertyKey, BucketEntry[]>();
+        const orderedGroups: IGroup<TKey, TElement>[] = [];
+        for (const item of source) {
+            const key = keySelector(item);
+            const hash = hashSelector(item);
+            let bucket = bucketMap.get(hash);
+            let found: BucketEntry | undefined;
+            if (bucket) {
+                found = bucket.find(entry => keyComparator(entry.canonicalKey, key));
+            } else {
+                bucket = [];
+                bucketMap.set(hash, bucket);
+            }
+            if (found) {
+                (found.group.source as List<TElement>).add(item);
+            } else {
+                const newList = new List<TElement>([item]);
+                const newGroup = new Group(key, newList);
+                bucket.push({ canonicalKey: key, group: newGroup });
+                orderedGroups.push(newGroup);
+            }
+        }
+        yield* orderedGroups;
+    } else if (isDefaultEquality(keyComparator)) {
+        // The default comparator is Object.is, which a Map can index once -0 has its own key.
+        const groupMap = new Map<unknown, IGroup<TKey, TElement>>();
+        for (const item of source) {
+            const key = keySelector(item);
+            const hash = identityKey(key);
+            const group = groupMap.get(hash);
+            if (group) {
+                (group.source as List<TElement>).add(item);
+            } else {
+                const newList = new List<TElement>([item]);
+                const newGroup = new Group(key, newList);
+                groupMap.set(hash, newGroup);
+            }
+        }
+        yield* groupMap.values();
+    } else {
+        const groupMap = new Map<TKey, IGroup<TKey, TElement>>();
+        const findExistingKey = (targetKey: TKey): TKey | undefined => {
+            for (const existingKey of groupMap.keys()) {
+                if (keyComparator(existingKey, targetKey)) {
+                    return existingKey;
+                }
+            }
+            return undefined;
+        };
+        for (const item of source) {
+            const key = keySelector(item);
+            const existingKey = findExistingKey(key);
+            if (existingKey !== undefined) {
+                const group = groupMap.get(existingKey)!;
+                (group.source as List<TElement>).add(item);
+            } else {
+                const newList = new List<TElement>([item]);
+                const newGroup = new Group(key, newList);
+                groupMap.set(key, newGroup);
+            }
+        }
+        yield* groupMap.values();
+    }
+}

@@ -1,8 +1,10 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { JoinSelector } from "../../shared/JoinSelector";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Comparators } from "../../shared/Comparators";
+import { Enumerator } from "../Enumerator";
+import { joinGenerator } from "../helpers/joinHelpers";
 
 /**
  * Produces a projection from the sequence and a second sequence by matching elements that share an identical join key.
@@ -54,5 +56,6 @@ export const join = <TElement, TInner, TKey, TResult>(
     resultSelector: JoinSelector<TElement, TInner, TResult>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TResult> => {
-    return from(source).join(from(innerEnumerable), outerKeySelector, innerKeySelector, resultSelector, keyComparator);
+    keyComparator ??= Comparators.equalityComparator;
+    return new Enumerator(() => joinGenerator(source, innerEnumerable, outerKeySelector, innerKeySelector, resultSelector, keyComparator, false));
 };

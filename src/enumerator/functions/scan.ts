@@ -1,6 +1,7 @@
 import type { Accumulator } from "../../shared/Accumulator";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Accumulates the sequence and emits each intermediate result.
@@ -26,8 +27,30 @@ export function scan<TElement, TAccumulate = TElement>(
     accumulator: Accumulator<TElement, TAccumulate>,
     seed?: TAccumulate
 ): IEnumerable<TAccumulate> {
-    if (seed !== undefined) {
-        return from(source).scan(accumulator, seed);
+    return new Enumerator(() => scanGenerator(source, accumulator, seed));
+}
+
+function* scanGenerator<TElement, TAccumulate>(source: Iterable<TElement>, accumulator: Accumulator<TElement, TAccumulate>, seed?: TAccumulate): IterableIterator<TAccumulate> {
+    let accumulatedValue: TAccumulate;
+    if (seed == null) {
+        const iterator = source[Symbol.iterator]();
+        const first = iterator.next();
+        if (first.done) {
+            throw new NoElementsException();
+        }
+        accumulatedValue = first.value as unknown as TAccumulate;
+        yield accumulatedValue;
+        let next = iterator.next();
+        while (!next.done) {
+            accumulatedValue = accumulator(accumulatedValue, next.value);
+            yield accumulatedValue;
+            next = iterator.next();
+        }
+    } else {
+        accumulatedValue = seed;
+        for (const element of source) {
+            accumulatedValue = accumulator(accumulatedValue, element);
+            yield accumulatedValue;
+        }
     }
-    return from(source).scan(accumulator as unknown as Accumulator<TElement, TElement>) as unknown as IEnumerable<TAccumulate>;
 }

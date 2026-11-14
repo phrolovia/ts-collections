@@ -1,6 +1,6 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { MedianTieStrategy } from "../../shared/MedianTieStrategy";
+import { findMedian } from "../helpers/medianHelpers";
 
 /**
  * Calculates the median of the numeric values produced by {@link source}.
@@ -32,5 +32,6 @@ export const median = <TElement>(
     selector?: Selector<TElement, number>,
     tie?: MedianTieStrategy
 ): number => {
-    return from(source).median(selector, tie);
+    const numericData = selector ? Array.from(source, selector) : Array.from(source) as unknown as number[];
+    return findMedian(numericData, tie);
 };

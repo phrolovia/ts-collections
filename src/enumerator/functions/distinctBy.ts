@@ -1,7 +1,7 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { unionBy } from "./unionBy";
 
 /**
  * Eliminates duplicate elements by comparing keys computed for each element.
@@ -33,5 +33,5 @@ export const distinctBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     keyComparator?: EqualityComparator<TKey>
 ): IEnumerable<TElement> => {
-    return from(source).distinctBy(keySelector, keyComparator);
+    return unionBy(source, [], keySelector, keyComparator);
 };

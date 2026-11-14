@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Reinterprets each element in the sequence as the specified result type.
@@ -18,5 +18,11 @@ import type { IEnumerable } from "../IEnumerable";
 export const cast = <TResult, TElement = unknown>(
     source: Iterable<TElement>
 ): IEnumerable<TResult> => {
-    return from(source).cast<TResult>();
+    return new Enumerator<TResult>(() => castGenerator(source));
 };
+
+function* castGenerator<TElement, TResult>(source: Iterable<TElement>): IterableIterator<TResult> {
+    for (const item of source) {
+        yield item as unknown as TResult;
+    }
+}

@@ -1,6 +1,6 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { distinctUntilChangedBy } from "./distinctUntilChangedBy";
 
 /**
  * Removes consecutive duplicate elements by comparing each element with its predecessor.
@@ -17,5 +17,5 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const distinctUntilChanged = <TElement>(source: Iterable<TElement>, comparator?: EqualityComparator<TElement>): IEnumerable<TElement> => {
-    return from(source).distinctUntilChanged(comparator);
+    return distinctUntilChangedBy(source, element => element, comparator);
 };

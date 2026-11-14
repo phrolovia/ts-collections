@@ -1,5 +1,4 @@
 import type { Predicate } from "../../shared/Predicate";
-import { from } from "./from";
 
 /**
  * Determines whether the sequence contains at least one element that matches the optional predicate.
@@ -23,5 +22,13 @@ export const any = <TElement>(
     source: Iterable<TElement>,
     predicate?: Predicate<TElement>
 ): boolean => {
-    return from(source).any(predicate);
+    if (!predicate) {
+        return !source[Symbol.iterator]().next().done;
+    }
+    for (const element of source) {
+        if (predicate(element)) {
+            return true;
+        }
+    }
+    return false;
 };

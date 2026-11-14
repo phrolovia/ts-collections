@@ -1,6 +1,6 @@
 import type { IndexedPredicate } from "../../shared/IndexedPredicate";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Skips elements while a predicate returns `true` and then yields the remaining elements.
@@ -20,5 +20,20 @@ export const skipWhile = <TElement>(
     source: Iterable<TElement>,
     predicate: IndexedPredicate<TElement>
 ): IEnumerable<TElement> => {
-    return from(source).skipWhile(predicate);
+    return new Enumerator(() => skipWhileGenerator(source, predicate));
 };
+
+function* skipWhileGenerator<TElement>(source: Iterable<TElement>, predicate: IndexedPredicate<TElement>): IterableIterator<TElement> {
+    let index = 0;
+    let skipEnded = false;
+    for (const item of source) {
+        if (skipEnded) {
+            yield item;
+        } else if (predicate(item, index)) {
+            index++;
+        } else {
+            skipEnded = true;
+            yield item;
+        }
+    }
+}

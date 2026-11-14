@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Skips a specified number of elements before yielding the remainder of the sequence.
@@ -19,5 +19,15 @@ export const skip = <TElement>(
     source: Iterable<TElement>,
     count: number
 ): IEnumerable<TElement> => {
-    return from(source).skip(count);
+    return new Enumerator(() => skipGenerator(source, count));
 };
+
+function* skipGenerator<TElement>(source: Iterable<TElement>, count: number): IterableIterator<TElement> {
+    let index = 0;
+    for (const item of source) {
+        if (index >= count) {
+            yield item;
+        }
+        ++index;
+    }
+}

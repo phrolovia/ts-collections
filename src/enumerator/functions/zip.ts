@@ -1,6 +1,6 @@
 import type { Zipper } from "../../shared/Zipper";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Combines {@link source} with {@link other} and optionally projects each aligned pair using {@link zipper}.
@@ -29,9 +29,19 @@ export const zip = <TElement, TSecond, TResult = [TElement, TSecond]>(
     other: Iterable<TSecond>,
     zipper?: Zipper<TElement, TSecond, TResult>
 ): IEnumerable<[TElement, TSecond]> | IEnumerable<TResult> => {
-    if (zipper) {
-        return from(source).zip(other, zipper);
-    } else {
-        return from(source).zip(other);
-    }
+    return new Enumerator(() => zipGenerator(source, other, zipper));
 };
+
+function* zipGenerator<TElement, TSecond, TResult = [TElement, TSecond]>(source: Iterable<TElement>, iterable: Iterable<TSecond>, zipper?: Zipper<TElement, TSecond, TResult>): IterableIterator<TResult> {
+    const iterator = source[Symbol.iterator]();
+    const otherIterator = iterable[Symbol.iterator]();
+    while (true) {
+        const first = iterator.next();
+        const second = otherIterator.next();
+        if (first.done || second.done) {
+            break;
+        } else {
+            yield zipper?.(first.value, second.value) ?? [first.value, second.value] as TResult;
+        }
+    }
+}

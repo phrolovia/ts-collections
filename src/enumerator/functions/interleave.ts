@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Interleaves the sequence with another iterable, yielding elements in alternating order.
@@ -18,5 +18,22 @@ import type { IEnumerable } from "../IEnumerable";
  * ```
  */
 export const interleave = <TElement, TSecond>(source: Iterable<TElement>, other: Iterable<TSecond>): IEnumerable<TElement | TSecond> => {
-    return from(source).interleave(other);
+    return new Enumerator(() => interleaveGenerator(source, other));
 };
+
+function* interleaveGenerator<TElement, TSecond>(source: Iterable<TElement>, other: Iterable<TSecond>): IterableIterator<TElement | TSecond> {
+    const sourceIterator = source[Symbol.iterator]();
+    const otherIterator = other[Symbol.iterator]();
+    let e1 = sourceIterator.next();
+    let e2 = otherIterator.next();
+    while (!e1.done || !e2.done) {
+        if (!e1.done) {
+            yield e1.value;
+            e1 = sourceIterator.next();
+        }
+        if (!e2.done) {
+            yield e2.value;
+            e2 = otherIterator.next();
+        }
+    }
+}

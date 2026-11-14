@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Enumerator } from "../Enumerator";
 
 /**
  * Filters out `null` and `undefined` values from the sequence.
@@ -16,5 +16,13 @@ import type { IEnumerable } from "../IEnumerable";
 export const compact = <TElement>(
     source: Iterable<TElement>,
 ): IEnumerable<NonNullable<TElement>> => {
-    return from(source).compact();
+    return new Enumerator(() => compactGenerator(source));
 };
+
+function* compactGenerator<TElement>(source: Iterable<TElement>): IterableIterator<NonNullable<TElement>> {
+    for (const item of source) {
+        if (item != null) {
+            yield item;
+        }
+    }
+}

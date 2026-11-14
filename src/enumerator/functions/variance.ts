@@ -1,5 +1,5 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { resolveNumberSelector, accumulateSingleStats } from "../helpers/statisticsHelpers";
 
 /**
  * Calculates the variance of the numeric values produced by {@link source}.
@@ -19,7 +19,14 @@ import { from } from "./from";
 export const variance = <TElement>(
     source: Iterable<TElement>,
     selector?: Selector<TElement, number>,
-    sample?: boolean
+    sample: boolean = true
 ): number => {
-    return from(source).variance(selector, sample);
+    const numberSelector = resolveNumberSelector(selector);
+    const stats = accumulateSingleStats(source, numberSelector);
+
+    if (stats.count === 0 || (sample && stats.count < 2)) {
+        return Number.NaN;
+    }
+
+    return sample ? stats.sumSq / (stats.count - 1) : stats.sumSq / stats.count;
 };

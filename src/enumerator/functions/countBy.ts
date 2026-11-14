@@ -1,8 +1,11 @@
-import type { KeyValuePair } from "../../dictionary/KeyValuePair";
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Comparators } from "../../shared/Comparators";
+import { groupBy } from "./groupBy";
+import { KeyValuePair } from "../../dictionary/KeyValuePair";
+import { select } from "./select";
+import { count } from "./count";
 
 /**
  * Counts the occurrences of elements grouped by a derived key.
@@ -34,5 +37,5 @@ export const countBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     comparator?: EqualityComparator<TKey>
 ): IEnumerable<KeyValuePair<TKey, number>> => {
-    return from(source).countBy(keySelector, comparator);
+    return select(groupBy(source, keySelector, comparator ?? Comparators.equalityComparator), group => new KeyValuePair(group.key, count(group.source)));
 };

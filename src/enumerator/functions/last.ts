@@ -1,7 +1,7 @@
 import { NoElementsException } from "../../shared/NoElementsException";
 import type { Predicate, TypePredicate } from "../../shared/Predicate";
 import { asIndexed } from "../../shared/internal/collectionAccess";
-import { from } from "./from";
+import { NoMatchingElementException } from "../../shared/NoMatchingElementException";
 
 /**
  * Returns the last element in the sequence, optionally filtered by a predicate or type guard.
@@ -60,5 +60,21 @@ export function last<TElement, TFiltered extends TElement>(
         }
         return indexed.get(size - 1);
     }
-    return from(source).last(predicate as Predicate<TElement> | undefined);
+    let found = false;
+    let result: TElement | null = null;
+
+    for (const item of source) {
+        if (!predicate || predicate(item)) {
+            result = item;
+            found = true;
+        }
+    }
+
+    if (!found) {
+        throw predicate
+            ? new NoMatchingElementException()
+            : new NoElementsException();
+    }
+
+    return result as TElement;
 }

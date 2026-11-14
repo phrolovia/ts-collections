@@ -1,5 +1,5 @@
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { addToFront } from "../helpers/chainHelpers";
 
 /**
  * Returns a deferred sequence that yields the supplied element before the source iterable.
@@ -19,5 +19,5 @@ export const prepend = <TElement>(
     source: Iterable<TElement>,
     element: TElement
 ): IEnumerable<TElement> => {
-    return from(source).prepend(element);
+    return addToFront(source, [element]);
 };

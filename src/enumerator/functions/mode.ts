@@ -1,5 +1,6 @@
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
+import { modes } from "../helpers/modeHelpers";
+import { NoElementsException } from "../../shared/NoElementsException";
 
 /**
  * Returns the element that appears most frequently in {@link source}.
@@ -21,5 +22,9 @@ export const mode = <TElement, TKey>(
     source: Iterable<TElement>,
     keySelector?: Selector<TElement, TKey>,
 ): TElement => {
-    return from(source).mode(keySelector);
+    const first = modes(source, keySelector).next();
+    if (first.done) {
+        throw new NoElementsException();
+    }
+    return first.value;
 };

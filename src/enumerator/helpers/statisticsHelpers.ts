@@ -1,4 +1,5 @@
 import type { Selector } from "../../shared/Selector";
+import { DimensionMismatchException } from "../../shared/DimensionMismatchException";
 import { InsufficientElementException } from "../../shared/InsufficientElementException";
 
 const defaultNumberSelector = (value: unknown): number => value as number;
@@ -79,8 +80,7 @@ export const accumulatePairStatsFromIterables = <TLeft, TRight>(
     left: Iterable<TLeft>,
     right: Iterable<TRight>,
     leftSelector: Selector<TLeft, number>,
-    rightSelector: Selector<TRight, number>,
-    dimensionMismatchError: Error
+    rightSelector: Selector<TRight, number>
 ): PairStats => {
     const leftIterator = left[Symbol.iterator]();
     const rightIterator = right[Symbol.iterator]();
@@ -95,7 +95,7 @@ export const accumulatePairStatsFromIterables = <TLeft, TRight>(
         }
 
         if (nextLeft.done !== nextRight.done) {
-            throw dimensionMismatchError;
+            throw new DimensionMismatchException();
         }
         accumulator.add(leftSelector(nextLeft.value), rightSelector(nextRight.value));
     }

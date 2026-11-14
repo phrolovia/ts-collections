@@ -1,7 +1,9 @@
 import type { EqualityComparator } from "../../shared/EqualityComparator";
 import type { Selector } from "../../shared/Selector";
-import { from } from "./from";
 import type { IEnumerable } from "../IEnumerable";
+import { Comparators } from "../../shared/Comparators";
+import { Enumerator, createSortedKeys } from "../Enumerator";
+import { KeySet } from "../helpers/keySetHelpers";
 
 /**
  * Creates a set-style union between {@link source} and {@link other} by comparing keys projected from each element.
@@ -40,5 +42,17 @@ export const unionBy = <TElement, TKey>(
     keySelector: Selector<TElement, TKey>,
     comparator?: EqualityComparator<TKey>
 ): IEnumerable<TElement> => {
-    return from(source).unionBy(other, keySelector, comparator);
+    comparator ??= Comparators.equalityComparator;
+    return new Enumerator(() => unionByGenerator(source, other, keySelector, comparator));
 };
+
+function* unionByGenerator<TElement, TKey>(source: Iterable<TElement>, enumerable: Iterable<TElement>, keySelector: Selector<TElement, TKey>, comparator: EqualityComparator<TKey>): IterableIterator<TElement> {
+    const keys = new KeySet<TKey>(comparator, createSortedKeys);
+    for (const part of [source, enumerable]) {
+        for (const item of part) {
+            if (keys.add(keySelector(item))) {
+                yield item;
+            }
+        }
+    }
+}
